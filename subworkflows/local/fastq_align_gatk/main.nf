@@ -6,13 +6,7 @@ include { CHANNEL_APPLYBQSR_CREATE_CSV                      } from '../../../sub
 include { CHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../../../subworkflows/local/channel_variant_calling_create_csv/main'
 
 // Convert BAM files to FASTQ files
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT       } from '../../../subworkflows/local/bam_convert_samtools/main'
 include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI         } from '../../../subworkflows/local/bam_convert_samtools/main'
-
-// Convert fastq.gz.spring files to fastq.gz files
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R1_FQ   } from '../../../modules/nf-core/spring/decompress/main'
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R2_FQ   } from '../../../modules/nf-core/spring/decompress/main'
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_FQ_PAIR } from '../../../modules/nf-core/spring/decompress/main'
 
 // Run FASTQC
 include { FASTQC                                            } from '../../../modules/nf-core/fastqc/main'
@@ -55,6 +49,7 @@ include { BAM_APPLYBQSR_SPARK                               } from '../../../sub
 workflow FASTQ_ALIGN_GATK {
     take:
         input_fastq
+        input_sample
         dict
         fasta
         fasta_fai
@@ -232,7 +227,6 @@ workflow FASTQ_ALIGN_GATK {
         }
 
         // Gather used softwares versions
-        versions = versions.mix(CONVERT_FASTQ_INPUT.out.versions)
         versions = versions.mix(FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.versions)
     }
 
@@ -492,79 +486,3 @@ workflow FASTQ_ALIGN_GATK {
     versions
 
 }
-
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    FUNCTIONS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-// Add readgroup to meta and remove lane
-def addReadgroupToMeta(meta, files) {
-    def CN = params.seq_center ? "CN:${params.seq_center}\\t" : ''
-    def flowcell = flowcellLaneFromFastq(files[0])
-
-    // Check if flowcell ID matches
-    if ( flowcell && flowcell != flowcellLaneFromFastq(files[1]) ){
-        error("Flowcell ID does not match for paired reads of sample ${meta.id} - ${files}")
-    }
-
-    // If we cannot read the flowcell ID from the fastq file, then we don't use it
-    def sample_lane_id = flowcell ? "${meta.flowcell}.${meta.sample}.${meta.lane}" : "${meta.sample}.${meta.lane}"
-
-    // Don't use a random element for ID, it breaks resuming
-    def read_group = "\"@RG\\tID:${sample_lane_id}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
-    meta  = meta - meta.subMap('lane') + [read_group: read_group.toString()]
-    return [ meta, files ]
-}
-
-// Parse first line of a FASTQ file, return the flowcell id and lane number.
-def flowcellLaneFromFastq(path) {
-    // First line of FASTQ file contains sequence identifier plus optional description
-    def firstLine = readFirstLineOfFastq(path)
-    def flowcell_id = null
-
-    // Expected format from ILLUMINA
-    // cf https://en.wikipedia.org/wiki/FASTQ_format#Illumina_sequence_identifiers
-    // Five fields:
-    // @<instrument>:<lane>:<tile>:<x-pos>:<y-pos>...
-    // Seven fields or more (from CASAVA 1.8+):
-    // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>..."
-
-    def fields = firstLine ? firstLine.split(':') : []
-    if (fields.size() == 5) {
-        // Get the instrument name as flowcell ID
-        flowcell_id = fields[0].substring(1)
-    } else if (fields.size() >= 7) {
-        // Get the actual flowcell ID
-        flowcell_id = fields[2]
-    } else if (fields.size() != 0) {
-        log.warn "FASTQ file(${path}): Cannot extract flowcell ID from ${firstLine}"
-    }
-    return flowcell_id
-}
-
-// Get first line of a FASTQ file
-def readFirstLineOfFastq(path) {
-    def line = null
-    try {
-        path.withInputStream {
-            InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
-            Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
-            BufferedReader buffered = new BufferedReader(decoder)
-            line = buffered.readLine()
-            assert line.startsWith('@')
-        }
-    } catch (Exception e) {
-        log.warn "FASTQ file(${path}): Error streaming"
-        log.warn "${e.message}"
-    }
-    return line
-}
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    THE END
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/

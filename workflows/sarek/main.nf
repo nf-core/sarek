@@ -194,6 +194,8 @@ workflow SAREK {
             [ [ id:'null' ], [] ],  // fasta_fai
             interleave_input)
 
+        versions = versions.mix(CONVERT_FASTQ_INPUT.out.versions)
+
         // Gather fastq (inputed or converted)
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
         // But not sure how to handle that with the samplesheet
@@ -203,6 +205,7 @@ workflow SAREK {
         // PREPROCESSING
         FASTQ_ALIGN_GATK(
             input_fastq,
+            input_sample,
             dict,
             fasta,
             fasta_fai,
