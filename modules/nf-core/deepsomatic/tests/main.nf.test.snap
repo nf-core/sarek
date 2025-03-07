@@ -1,0 +1,20 @@
+{
+    "tumor_normal_pair": {
+        "content": [
+            [
+                "tumor_vs_normal_out.vcf.gz"
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,d64cbd049771dd1a8d0885499ea16f11"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-10-22T21:52:00.932502018"
+    }
+}
