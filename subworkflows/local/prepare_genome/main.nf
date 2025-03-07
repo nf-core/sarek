@@ -12,7 +12,6 @@ include { BWA_INDEX as BWAMEM1_INDEX                } from '../../../modules/nf-
 include { BWAMEM2_INDEX                             } from '../../../modules/nf-core/bwamem2/index/main'
 include { DRAGMAP_HASHTABLE                         } from '../../../modules/nf-core/dragmap/hashtable/main'
 include { GATK4_CREATESEQUENCEDICTIONARY            } from '../../../modules/nf-core/gatk4/createsequencedictionary/main'
-include { MSISENSORPRO_SCAN                         } from '../../../modules/nf-core/msisensorpro/scan/main'
 include { SAMTOOLS_FAIDX                            } from '../../../modules/nf-core/samtools/faidx/main'
 include { TABIX_TABIX as TABIX_BCFTOOLS_ANNOTATIONS } from '../../../modules/nf-core/tabix/tabix/main'
 include { TABIX_TABIX as TABIX_DBSNP                } from '../../../modules/nf-core/tabix/tabix/main'
@@ -50,7 +49,6 @@ workflow PREPARE_GENOME {
     DRAGMAP_HASHTABLE(fasta) // If aligner is dragmap
 
     GATK4_CREATESEQUENCEDICTIONARY(fasta)
-    MSISENSORPRO_SCAN(fasta)
     SAMTOOLS_FAIDX(fasta, [ [ id:'no_fai' ], [] ] )
 
     // the following are flattened and mapped in case the user supplies more than one value for the param
@@ -105,7 +103,6 @@ workflow PREPARE_GENOME {
     versions = versions.mix(BWAMEM2_INDEX.out.versions)
     versions = versions.mix(DRAGMAP_HASHTABLE.out.versions)
     versions = versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
-    versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
     versions = versions.mix(SAMTOOLS_FAIDX.out.versions)
     versions = versions.mix(TABIX_BCFTOOLS_ANNOTATIONS.out.versions)
     versions = versions.mix(TABIX_DBSNP.out.versions)
@@ -125,7 +122,6 @@ workflow PREPARE_GENOME {
     germline_resource_tbi    = TABIX_GERMLINE_RESOURCE.out.tbi.map{ meta, tbi -> [tbi] }.collect()      // path: germline_resource.vcf.gz.tbi
     known_snps_tbi           = TABIX_KNOWN_SNPS.out.tbi.map{ meta, tbi -> [tbi] }.collect()             // path: {known_indels*}.vcf.gz.tbi
     known_indels_tbi         = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }.collect()           // path: {known_indels*}.vcf.gz.tbi
-    msisensorpro_scan        = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }                   // path: genome_msi.list
     pon_tbi                  = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }.collect()                    // path: pon.vcf.gz.tbi
 
     allele_files    // path: allele_files
