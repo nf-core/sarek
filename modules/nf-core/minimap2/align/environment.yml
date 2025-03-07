@@ -1,0 +1,8 @@
+channels:
+  - conda-forge
+  - bioconda
+
+dependencies:
+  - bioconda::htslib=1.20
+  - bioconda::minimap2=2.28
+  - bioconda::samtools=1.20

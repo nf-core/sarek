@@ -1,0 +1,97 @@
+{
+    "Run with profile test | --aligner minimap2 --save_reference | skip QC/recal/md": {
+        "content": [
+            10,
+            {
+                "BAM_TO_CRAM_MAPPING": {
+                    "samtools": 1.21
+                },
+                "INDEX_MERGE_BAM": {
+                    "samtools": 1.21
+                },
+                "MERGE_BAM": {
+                    "samtools": 1.21
+                },
+                "MINIMAP2_ALIGN": {
+                    "minimap2": "2.28-r1209",
+                    "samtools": 1.2
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0dev"
+                }
+            },
+            [
+                "csv",
+                "csv/mapped.csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/mapped",
+                "preprocessing/mapped/test",
+                "preprocessing/mapped/test/test.sorted.cram",
+                "preprocessing/mapped/test/test.sorted.cram.crai",
+                "reference",
+                "reference/intervals",
+                "reference/intervals/chr22_1-40001.bed",
+                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/intervals/genome.bed",
+                "reference/intervals/genome.bed.gz",
+                "reference/minimap2",
+                "reference/minimap2/genome.mmi"
+            ],
+            [
+                "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
+                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
+                "genome.mmi:md5,26530ed9abe1f1318efe2b2cf3c84eb8"
+            ],
+            [
+                [
+                    "test.sorted.cram",
+                    "d2957735610ee79298a5c2a0c8adea19"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-06T16:42:52.26903741"
+    },
+    "Run with profile test | --aligner minimap2 --save_reference --build_only_index": {
+        "content": [
+            5,
+            {
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0dev"
+                }
+            },
+            [
+                "csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/intervals",
+                "reference/intervals/chr22_1-40001.bed",
+                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/intervals/genome.bed",
+                "reference/intervals/genome.bed.gz",
+                "reference/minimap2",
+                "reference/minimap2/genome.mmi"
+            ],
+            [
+                "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
+                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
+                "genome.mmi:md5,26530ed9abe1f1318efe2b2cf3c84eb8"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-06T16:43:26.649350225"
+    }
+}
