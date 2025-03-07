@@ -162,6 +162,7 @@ We thank the following people for their extensive assistance in the development 
 - [Ken Brewer](https://github.com/kenibrewer)
 - [Lasse Westergaard Folkersen](https://github.com/lassefolkersen)
 - [Lucia Conde](https://github.com/lconde-ucl)
+- [Louis Le Nézet](https://github.com/LouisLeNezet)
 - [Malin Larsson](https://github.com/malinlarsson)
 - [Marcel Martin](https://github.com/marcelm)
 - [Nick Smith](https://github.com/nickhsmith)
