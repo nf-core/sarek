@@ -12,7 +12,6 @@ include { methodsDescriptionText                            } from '../../subwor
 // Create samplesheets to restart from different steps
 include { CHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../../subworkflows/local/channel_variant_calling_create_csv/main'
 
-
 // Convert BAM files to FASTQ files
 include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT       } from '../../subworkflows/local/bam_convert_samtools/main'
 include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI         } from '../../subworkflows/local/bam_convert_samtools/main'
