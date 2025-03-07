@@ -324,23 +324,6 @@ lofreq:
   - tests/csv/3.0/recalibrated_tumoronly.csv
   - tests/test_lofreq.yml
 
-## tiddit
-tiddit:
-  - conf/modules/tiddit.config
-  - modules/nf-core/svdb/merge/**.nf
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/tabix/bgziptabix/**
-  - modules/nf-core/tiddit/sv/**
-  - subworkflows/local/bam_variant_calling_germline_all/**
-  - subworkflows/local/bam_variant_calling_single_tiddit/**
-  - subworkflows/local/bam_variant_calling_somatic_all/**
-  - subworkflows/local/bam_variant_calling_somatic_tiddit/**
-  - subworkflows/local/bam_variant_calling_tumor_only_all/**
-  - tests/csv/3.0/recalibrated_germline.csv
-  - tests/csv/3.0/recalibrated_somatic.csv
-  - tests/csv/3.0/recalibrated_tumoronly.csv
-  - tests/test_tiddit.yml
-
 # sampleqc
 
 ## ngscheckmate

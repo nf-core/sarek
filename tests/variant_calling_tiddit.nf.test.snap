@@ -95,8 +95,7 @@
                 "sample1.recal.regions.bed.gz.csi:md5,f17cc9d960aa4a1e96548d570585cc8a",
                 "sample1.recal.cram.stats:md5,bcc229318527e414e69aaa5cd092ad9b",
                 "sample1.tiddit.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
-                "sample1.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
-                "sample1.tiddit.ploidies.tab:md5,fcfd2ecf6e7eef532e072757354c8a90"
+                "sample1.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
             [
                 [
@@ -109,7 +108,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.01.0"
         },
-        "timestamp": "2025-03-07T17:59:28.727793512"
+        "timestamp": "2025-03-07T18:52:29.942780406"
     },
     "-profile test --tools tiddit tumoronly": {
         "content": [
@@ -207,8 +206,7 @@
                 "sample2.recal.regions.bed.gz.csi:md5,4003c8833ed5e9b9f45282a6915c935e",
                 "sample2.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
                 "sample2.tiddit.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
-                "sample2.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
-                "sample2.tiddit.ploidies.tab:md5,5c5d70295c3957990502cb692e07a965"
+                "sample2.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
             [
                 [
@@ -221,7 +219,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.01.0"
         },
-        "timestamp": "2025-03-07T18:02:20.845928669"
+        "timestamp": "2025-03-07T18:55:00.188396762"
     },
     "-profile test --tools tiddit somatic": {
         "content": [
@@ -353,9 +351,7 @@
                 "sample3.tiddit.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample3.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
                 "sample4_vs_sample3.tiddit_sv_merge.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
-                "sample4_vs_sample3.tiddit_sv_merge.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "sample3.tiddit.ploidies.tab:md5,fcfd2ecf6e7eef532e072757354c8a90",
-                "sample4_vs_sample3.tiddit.ploidies.tab:md5,fcfd2ecf6e7eef532e072757354c8a90"
+                "sample4_vs_sample3.tiddit_sv_merge.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
             ],
             [
                 [
@@ -380,6 +376,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.01.0"
         },
-        "timestamp": "2025-03-07T18:01:02.90705744"
+        "timestamp": "2025-03-07T18:53:55.020113217"
     }
 }
