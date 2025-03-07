@@ -1,0 +1,7 @@
+name: tmb
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::tmb=1.3.0

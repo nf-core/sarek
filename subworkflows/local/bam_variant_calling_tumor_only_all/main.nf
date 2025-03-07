@@ -11,6 +11,7 @@ include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC } from '../bam_variant_cal
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA        } from '../bam_variant_calling_tumor_only_manta/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2      } from '../bam_variant_calling_tumor_only_mutect2/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ       } from '../bam_variant_calling_tumor_only_lofreq/main'
+include { MSISENSORPRO_MSITUMORONLY                   } from '../../../modules/nf-core/msisensorpro/msitumoronly/main'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
@@ -32,15 +33,17 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
     intervals_bed_gz_tbi_combined // channel: [mandatory] intervals/target regions in one file zipped
     mappability
+    msisensorpro_baseline         // channel: [optional]  msisensorpro_baseline
     panel_of_normals              // channel: [optional]  panel_of_normals
     panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
     joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
     wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
 
     main:
-    versions = Channel.empty()
+    versions        = Channel.empty()
 
-    //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
+    // TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
+
     vcf_freebayes   = Channel.empty()
     vcf_manta       = Channel.empty()
     vcf_mpileup     = Channel.empty()
@@ -109,6 +112,13 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
+    // MSISENSOR
+    if (tools.split(',').contains('msisensorpro') && msisensorpro_baseline) {
+        MSISENSORPRO_MSITUMORONLY(cram.combine(intervals_bed_combined), fasta.map{ meta, fasta -> [ fasta ] }, msisensorpro_baseline)
+
+        versions = versions.mix(MSISENSORPRO_MSITUMORONLY.out.versions)
+    }
+
     // MUTECT2
     if (tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
@@ -134,7 +144,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
     }
 
-    //LOFREQ
+    // LOFREQ
     if (tools.split(',').contains('lofreq')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ(
             cram,
