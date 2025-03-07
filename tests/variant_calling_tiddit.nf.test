@@ -85,7 +85,7 @@ nextflow_pipeline {
         }
     }
 
-    test("-profile test --tools tiddit tumor_only") {
+    test("-profile test --tools tiddit tumoronly") {
 
         when {
             params {
