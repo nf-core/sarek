@@ -3,7 +3,6 @@ include { CHANNEL_ALIGN_CREATE_CSV                          } from '../../../sub
 include { CHANNEL_MARKDUPLICATES_CREATE_CSV                 } from '../../../subworkflows/local/channel_markduplicates_create_csv/main'
 include { CHANNEL_BASERECALIBRATOR_CREATE_CSV               } from '../../../subworkflows/local/channel_baserecalibrator_create_csv/main'
 include { CHANNEL_APPLYBQSR_CREATE_CSV                      } from '../../../subworkflows/local/channel_applybqsr_create_csv/main'
-include { CHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../../../subworkflows/local/channel_variant_calling_create_csv/main'
 
 // Convert BAM files to FASTQ files
 include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI         } from '../../../subworkflows/local/bam_convert_samtools/main'
