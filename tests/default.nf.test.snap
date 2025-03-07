@@ -264,9 +264,8 @@
                 "variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi"
             ],
             [
-                "test.bam:md5,ac82d9f3abc82d2972ccda57ea246c79",
-                "test.bam.bai:md5,bebc6d7cedda5b0825a2e1688fd1fe49",
-                "test.recal.cram.crai:md5,8a9921b4bf6737013e4bf2915d71e2de",
+                "test.bam.bai:md5,582f2bc9b324c0bff59555704b460305",
+                "test.recal.cram.crai:md5,ae49d5f58e0d6017ad9c91b1b41fc6a3",
                 "bcftools_stats_indel-lengths.txt:md5,deccb75341ca46a6f09658f7fd9e348b",
                 "bcftools_stats_vqc_Count_Indels.txt:md5,7b2a64880b653ccf0400ed9073e290dd",
                 "bcftools_stats_vqc_Count_SNP.txt:md5,72e934e0e8ed9b9712105bbd66dd9ffd",
@@ -346,6 +345,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-07T15:31:50.389814266"
+        "timestamp": "2025-03-07T15:48:28.148939642"
     }
 }

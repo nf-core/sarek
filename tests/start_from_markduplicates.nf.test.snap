@@ -223,9 +223,8 @@
                 "samtools/test.stats"
             ],
             [
-                "test.bam:md5,dbb45a04eb47042b3adcec2bcc4050b8",
                 "test.bam.bai:md5,446113f14951a30697f10a4ef261ddd6",
-                "test.recal.cram.crai:md5,751519ae9f84d1e633b7e569a6c68bda",
+                "test.recal.cram.crai:md5,8fc978a7303986740c4995dbcf44087b",
                 "fastqc-status-check-heatmap.txt:md5,0fa5985599ec56486d3736a433bb3498",
                 "fastqc_overrepresented_sequences_plot.txt:md5,3eb3d2e1295c56df7f77eb41af604610",
                 "fastqc_per_base_n_content_plot.txt:md5,37a34f65cd1ab632f42e2bcf46ab87ad",
@@ -273,13 +272,19 @@
                     "test.recal.cram",
                     "463ac3b905fbf4ddf113a94dbfa8d69f"
                 ]
+            ],
+            [
+                [
+                    "test.bam",
+                    "2f11e4fe3390b8ad0a1852616fd1da04"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-07T10:49:31.882182903"
+        "timestamp": "2025-03-07T15:46:57.026401163"
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --tools null": {
         "content": [
@@ -424,9 +429,8 @@
                 "samtools/test.stats"
             ],
             [
-                "test.bam:md5,7e7a7ba9111835b2aa1f27e231d9afe5",
-                "test.bam.bai:md5,2e5f883d78bbed4088a295dc7f348e24",
-                "test.recal.cram.crai:md5,aaa9e7b658b6eaf578fa444db8b5ca23",
+                "test.bam.bai:md5,9f347a62e4bfd1a148fee8a34727cf01",
+                "test.recal.cram.crai:md5,d511d1c5089905b234afa50da659fcc1",
                 "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt:md5,902745b5a1915e5c1a25267b11bebbe7",
                 "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt:md5,832ed176357d6a5b4e50c718f5e4a704",
                 "mosdepth-coverage-per-contig-single.txt:md5,76d816c3f71faf2009c8a6f88092a2f3",
@@ -463,13 +467,19 @@
                     "test.recal.cram",
                     "463ac3b905fbf4ddf113a94dbfa8d69f"
                 ]
+            ],
+            [
+                [
+                    "test.bam",
+                    "2f11e4fe3390b8ad0a1852616fd1da04"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-07T10:51:15.22902237"
+        "timestamp": "2025-03-07T15:48:41.668691903"
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --skip_tools markduplicates --tools null": {
         "content": [
@@ -614,13 +624,14 @@
                     "test.recal.cram",
                     "463ac3b905fbf4ddf113a94dbfa8d69f"
                 ]
-            ]
+            ],
+            "No BAM files"
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-06T10:46:09.592272262"
+        "timestamp": "2025-03-07T15:40:06.283434969"
     },
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --skip_tools markduplicates --tools null": {
         "content": [
@@ -828,12 +839,13 @@
                 "test.sorted.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d",
                 "test.stats:md5,a15b3a5e59337db312d66020c7bb93ac"
             ],
-            "No CRAM files"
+            "No CRAM files",
+            "No BAM files"
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-07T10:50:23.082763914"
+        "timestamp": "2025-03-07T15:38:29.082900463"
     }
 }

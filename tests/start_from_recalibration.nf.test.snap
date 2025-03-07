@@ -129,6 +129,7 @@
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "multiqc_fastqc.txt:md5,81cdbafcc448128aa7f6a0b7dd2a82c3"
             ],
+            "No BAM files",
             [
                 
             ]
@@ -137,7 +138,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-07T11:02:13.823035591"
+        "timestamp": "2025-03-07T15:42:11.542403579"
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
@@ -247,6 +248,7 @@
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],
+            "No BAM files",
             "No CRAM files",
             [
                 [
@@ -263,7 +265,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-25T11:49:59.953841611"
+        "timestamp": "2025-03-07T15:44:18.249143061"
     },
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
@@ -465,6 +467,7 @@
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],
+            "No BAM files",
             "No CRAM files",
             [
                 [
@@ -481,7 +484,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-07T11:03:02.087380331"
+        "timestamp": "2025-03-07T15:42:59.403010113"
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null": {
         "content": [
@@ -539,6 +542,7 @@
                 "test.recal.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d",
                 "test.recal.cram.stats:md5,1aacf5ac46a0e600925934cf9ee92fc4"
             ],
+            "No BAM files",
             [
                 [
                     "test.recal.cram",
@@ -550,6 +554,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-06T10:51:41.125442685"
+        "timestamp": "2025-03-07T15:43:36.239220537"
     }
 }
