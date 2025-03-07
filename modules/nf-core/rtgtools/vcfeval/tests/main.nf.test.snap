@@ -1,0 +1,677 @@
+{
+    "homo_sapiens - [vcf, tbi, truth, truth_tbi, truth_bed, regions_bed], sdf": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp.vcf.gz:md5,5171021307097220337dbcaccc860495"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp.vcf.gz.tbi:md5,092a7a3162e7cff25d273525751eb284"
+                    ]
+                ],
+                "10": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.weighted_roc.tsv.gz:md5,de36bf613b3dacf4a043311336bb4a94"
+                    ]
+                ],
+                "11": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.summary.txt:md5,f4c8df93c8bdab603036bbc27b4a28c3"
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.phasing.txt:md5,31988234bee208cacb3de90dabe1797f"
+                    ]
+                ],
+                "13": [
+                    "versions.yml:md5,a228f0d9e8b205b4cc7c485151a77bb0"
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fn.vcf.gz:md5,fc419367818700d47df073615aeb9077"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fn.vcf.gz.tbi:md5,092a7a3162e7cff25d273525751eb284"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fp.vcf.gz:md5,5171021307097220337dbcaccc860495"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fp.vcf.gz.tbi:md5,092a7a3162e7cff25d273525751eb284"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp-baseline.vcf.gz:md5,fc419367818700d47df073615aeb9077"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp-baseline.vcf.gz.tbi:md5,092a7a3162e7cff25d273525751eb284"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.snp_roc.tsv.gz:md5,11d7393a16c25ac0a092382fecafee9b"
+                    ]
+                ],
+                "9": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.non_snp_roc.tsv.gz:md5,eb0910409b8b088655defbd152103b81"
+                    ]
+                ],
+                "baseline_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp-baseline.vcf.gz.tbi:md5,092a7a3162e7cff25d273525751eb284"
+                    ]
+                ],
+                "baseline_vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp-baseline.vcf.gz:md5,fc419367818700d47df073615aeb9077"
+                    ]
+                ],
+                "fn_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fn.vcf.gz.tbi:md5,092a7a3162e7cff25d273525751eb284"
+                    ]
+                ],
+                "fn_vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fn.vcf.gz:md5,fc419367818700d47df073615aeb9077"
+                    ]
+                ],
+                "fp_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fp.vcf.gz.tbi:md5,092a7a3162e7cff25d273525751eb284"
+                    ]
+                ],
+                "fp_vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fp.vcf.gz:md5,5171021307097220337dbcaccc860495"
+                    ]
+                ],
+                "non_snp_roc": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.non_snp_roc.tsv.gz:md5,eb0910409b8b088655defbd152103b81"
+                    ]
+                ],
+                "phasing": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.phasing.txt:md5,31988234bee208cacb3de90dabe1797f"
+                    ]
+                ],
+                "snp_roc": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.snp_roc.tsv.gz:md5,11d7393a16c25ac0a092382fecafee9b"
+                    ]
+                ],
+                "summary": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.summary.txt:md5,f4c8df93c8bdab603036bbc27b4a28c3"
+                    ]
+                ],
+                "tp_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp.vcf.gz.tbi:md5,092a7a3162e7cff25d273525751eb284"
+                    ]
+                ],
+                "tp_vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp.vcf.gz:md5,5171021307097220337dbcaccc860495"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,a228f0d9e8b205b4cc7c485151a77bb0"
+                ],
+                "weighted_roc": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.weighted_roc.tsv.gz:md5,de36bf613b3dacf4a043311336bb4a94"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-30T15:17:31.564974666"
+    },
+    "homo_sapiens - [vcf, [], truth, [], [], []], sdf": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp.vcf.gz:md5,5125ee41457c9d93f46b19e32788edb4"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp.vcf.gz.tbi:md5,a0e9ac2d38c04bd591ab8f857c5c9133"
+                    ]
+                ],
+                "10": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.weighted_roc.tsv.gz:md5,5dfacd641b080cc8ad22eebec015c698"
+                    ]
+                ],
+                "11": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.summary.txt:md5,f33feb32f84958fb931063044fba369b"
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.phasing.txt:md5,133677dbd8be657439ea2b03fdfb8795"
+                    ]
+                ],
+                "13": [
+                    "versions.yml:md5,a228f0d9e8b205b4cc7c485151a77bb0"
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fn.vcf.gz:md5,df96e4e4014cdb3050cb6f221f0cdca9"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fn.vcf.gz.tbi:md5,092a7a3162e7cff25d273525751eb284"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fp.vcf.gz:md5,d4bfa2c7271351ca19589f0f57f210b7"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fp.vcf.gz.tbi:md5,092a7a3162e7cff25d273525751eb284"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp-baseline.vcf.gz:md5,920af25c3c18a438b11440702562fa35"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp-baseline.vcf.gz.tbi:md5,95938320b425e28cf06c45ab45ad0360"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.snp_roc.tsv.gz:md5,85edc0101bb9e8d3edc11abe4fdcda93"
+                    ]
+                ],
+                "9": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.non_snp_roc.tsv.gz:md5,30283ede3bcc5dd247f8a84bf345bf9a"
+                    ]
+                ],
+                "baseline_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp-baseline.vcf.gz.tbi:md5,95938320b425e28cf06c45ab45ad0360"
+                    ]
+                ],
+                "baseline_vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp-baseline.vcf.gz:md5,920af25c3c18a438b11440702562fa35"
+                    ]
+                ],
+                "fn_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fn.vcf.gz.tbi:md5,092a7a3162e7cff25d273525751eb284"
+                    ]
+                ],
+                "fn_vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fn.vcf.gz:md5,df96e4e4014cdb3050cb6f221f0cdca9"
+                    ]
+                ],
+                "fp_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fp.vcf.gz.tbi:md5,092a7a3162e7cff25d273525751eb284"
+                    ]
+                ],
+                "fp_vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fp.vcf.gz:md5,d4bfa2c7271351ca19589f0f57f210b7"
+                    ]
+                ],
+                "non_snp_roc": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.non_snp_roc.tsv.gz:md5,30283ede3bcc5dd247f8a84bf345bf9a"
+                    ]
+                ],
+                "phasing": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.phasing.txt:md5,133677dbd8be657439ea2b03fdfb8795"
+                    ]
+                ],
+                "snp_roc": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.snp_roc.tsv.gz:md5,85edc0101bb9e8d3edc11abe4fdcda93"
+                    ]
+                ],
+                "summary": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.summary.txt:md5,f33feb32f84958fb931063044fba369b"
+                    ]
+                ],
+                "tp_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp.vcf.gz.tbi:md5,a0e9ac2d38c04bd591ab8f857c5c9133"
+                    ]
+                ],
+                "tp_vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp.vcf.gz:md5,5125ee41457c9d93f46b19e32788edb4"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,a228f0d9e8b205b4cc7c485151a77bb0"
+                ],
+                "weighted_roc": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.weighted_roc.tsv.gz:md5,5dfacd641b080cc8ad22eebec015c698"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-30T15:18:04.344989466"
+    },
+    "homo_sapiens - [vcf, tbi, truth, truth_tbi, truth_bed, regions_bed], sdf - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "10": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.weighted_roc.tsv.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "11": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "12": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.phasing.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "13": [
+                    "versions.yml:md5,a228f0d9e8b205b4cc7c485151a77bb0"
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fn.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fn.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fp.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fp.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp-baseline.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp-baseline.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.snp_roc.tsv.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "9": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.non_snp_roc.tsv.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "baseline_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp-baseline.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "baseline_vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp-baseline.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "fn_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fn.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "fn_vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fn.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "fp_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fp.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "fp_vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fp.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "non_snp_roc": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.non_snp_roc.tsv.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "phasing": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.phasing.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "snp_roc": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.snp_roc.tsv.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "summary": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tp_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tp_vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tp.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,a228f0d9e8b205b4cc7c485151a77bb0"
+                ],
+                "weighted_roc": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.weighted_roc.tsv.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-30T15:23:21.165461388"
+    }
+}
