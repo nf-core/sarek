@@ -1,0 +1,33 @@
+- name: Run all variant callers and check for existence of normalized vcf-files
+  command: nextflow run main.nf -profile test --input ./tests/csv/3.0/mapped_joint_bam.csv --normalize_vcfs --tools deepvariant,freebayes,haplotypecaller,manta,mpileup,strelka,tiddit --step variant_calling --outdir results
+  tags:
+    - normalize_vcfs
+  files:
+    - path: results/variant_calling/normalized/testN/testN.deepvariant.norm.vcf.gz
+    - path: results/variant_calling/normalized/testT/testT.deepvariant.norm.vcf.gz
+    - path: results/variant_calling/normalized/testN/testN.deepvariant.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testT/testT.deepvariant.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testN/testN.freebayes.norm.vcf.gz
+    - path: results/variant_calling/normalized/testT/testT.freebayes.norm.vcf.gz
+    - path: results/variant_calling/normalized/testN/testN.freebayes.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testT/testT.freebayes.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testN/testN.haplotypecaller.norm.vcf.gz
+    - path: results/variant_calling/normalized/testT/testT.haplotypecaller.norm.vcf.gz
+    - path: results/variant_calling/normalized/testN/testN.haplotypecaller.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testT/testT.haplotypecaller.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testN/testN.manta.norm.vcf.gz
+    - path: results/variant_calling/normalized/testT/testT.manta.norm.vcf.gz
+    - path: results/variant_calling/normalized/testN/testN.manta.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testT/testT.manta.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testN/testN.bcftools.norm.vcf.gz
+    - path: results/variant_calling/normalized/testT/testT.bcftools.norm.vcf.gz
+    - path: results/variant_calling/normalized/testN/testN.bcftools.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testT/testT.bcftools.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testN/testN.strelka.norm.vcf.gz
+    - path: results/variant_calling/normalized/testT/testT.strelka.norm.vcf.gz
+    - path: results/variant_calling/normalized/testN/testN.strelka.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testT/testT.strelka.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testN/testN.tiddit.norm.vcf.gz
+    - path: results/variant_calling/normalized/testT/testT.tiddit.norm.vcf.gz
+    - path: results/variant_calling/normalized/testN/testN.tiddit.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testT/testT.tiddit.norm.vcf.gz.tbi
