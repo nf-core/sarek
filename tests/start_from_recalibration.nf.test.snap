@@ -533,7 +533,6 @@
                 "reports/samtools/test/test.recal.cram.stats"
             ],
             [
-                "test.recal.cram.crai:md5,dcd94c389053ae12ed4eb2fe17a56be0",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
@@ -554,6 +553,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-07T15:43:36.239220537"
+        "timestamp": "2025-03-07T15:56:59.471619786"
     }
 }

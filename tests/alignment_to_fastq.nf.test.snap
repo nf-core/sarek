@@ -237,8 +237,6 @@
                 "samtools/test.stats"
             ],
             [
-                "test.bam.bai:md5,ca4c863011c7d05725a1f3c8596284bb",
-                "test.recal.cram.crai:md5,c3de85ff8803ab5000f95ec70b539810",
                 "fastqc-status-check-heatmap.txt:md5,0c9e61033b0669f20e27dce8f4b3b25c",
                 "fastqc_overrepresented_sequences_plot.txt:md5,204591ae3929c2d5c7af72d3012c1675",
                 "fastqc_per_base_n_content_plot.txt:md5,bc7b5536aa1867577c34defe2fc2af3f",
@@ -297,6 +295,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-07T15:29:39.135217314"
+        "timestamp": "2025-03-07T15:53:58.625212013"
     }
 }
