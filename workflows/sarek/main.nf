@@ -38,6 +38,9 @@ include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO                  } from '../../subwor
 // Map input reads to reference genome
 include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON          } from '../../subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main'
 
+// Map input reads to reference genome using GPU
+include { FASTQ_ALIGN_PARABRICKS                            } from '../../subworkflows/local/fastq_align_parabricks/main'  
+
 // Merge and index BAM files (optional)
 include { BAM_MERGE_INDEX_SAMTOOLS                          } from '../../subworkflows/local/bam_merge_index_samtools/main'
 
@@ -242,7 +245,7 @@ workflow SAREK {
         }
 
         // Trimming and/or splitting
-        if (params.trim_fastq || params.split_fastq > 0) {
+        if (params.trim_fastq || params.split_fastq > 0 || !params.gpu_aligner) {
 
             save_trimmed_fail = false
             save_merged = false
@@ -609,7 +612,6 @@ workflow SAREK {
             cram_variant_calling = Channel.empty().mix(ch_cram_for_bam_baserecalibrator)
         }
     }
-
 
     if (params.step == 'variant_calling') {
 
