@@ -340,18 +340,18 @@
                 "samtools/test_bam.stats"
             ],
             [
-                "test.bam:md5,d65d87e0f00a269fb9452a12bd0dcd6f",
-                "test.bam.bai:md5,ceea685d9d091f40e46158376ec8df62",
-                "test2.bam:md5,15497f6cc41260e4d0e715d7e0976531",
-                "test2.bam.bai:md5,ae2a0f04b99ada05c7e5ed78a20c4acf",
-                "test3.bam:md5,a5c1e950447a971c8c8f4a6708b0be3b",
-                "test3.bam.bai:md5,5dd91fcb32a8fe06a68348866cd6a9df",
-                "test_bam.bam:md5,2a250fb783931066d77d9fbd9b16624a",
+                "test.bam:md5,a334bd14626326172040346b66aafb59",
+                "test.bam.bai:md5,76caac6a0cace0bcd466ad1b7b8de09d",
+                "test2.bam:md5,292f512c7736b0bca4479da25f228ccb",
+                "test2.bam.bai:md5,50229997e8f49e7be98eee9f18dec6d0",
+                "test3.bam:md5,c1444f53152f0ab8752e0f39ecf59004",
+                "test3.bam.bai:md5,a4d3155d69c0eb4259f35a1eaaf9d062",
+                "test_bam.bam:md5,6e54c525d86fcb8d36eb65b5d2b32c01",
                 "test_bam.bam.bai:md5,d95a2e5c569ecdafa65a08e6364e3b20",
-                "test.recal.cram.crai:md5,726f41913aafec830eb7513d0ee765db",
-                "test2.recal.cram.crai:md5,42e89d92a45c6a0c338cf24b42ec7551",
+                "test.recal.cram.crai:md5,29abef0a6f74fd1577dd5a0b1f6d55d1",
+                "test2.recal.cram.crai:md5,b591e072539a2f04a6377294837ac040",
                 "test3.recal.cram.crai:md5,b0492ca66244a828ff6e606de15423f3",
-                "test_bam.recal.cram.crai:md5,b0f8717995fb32ede1c0a36a3f0791ef",
+                "test_bam.recal.cram.crai:md5,a6ce73fe3ebc0e7b90f6a0b5ae2d7016",
                 "fastqc-status-check-heatmap.txt:md5,de62b83776610478e5d6a3adbc6a9bbc",
                 "fastqc_adapter_content_plot.txt:md5,eafed69132feeb2315e840c2d2ebd7ff",
                 "fastqc_overrepresented_sequences_plot.txt:md5,36b5440af4638da42bbbd0182c3fd647",
@@ -432,6 +432,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-06T11:13:41.465516698"
+        "timestamp": "2025-03-07T10:26:08.420545337"
     }
 }

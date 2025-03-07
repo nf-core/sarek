@@ -237,8 +237,8 @@
                 "samtools/test.stats"
             ],
             [
-                "test.bam:md5,bf15b5ee93cf46fa61a480c509414e2d",
-                "test.bam.bai:md5,ca4c863011c7d05725a1f3c8596284bb",
+                "test.bam:md5,7640894ff94ef5beca3e774a6be1272b",
+                "test.bam.bai:md5,27e0c2eb1decf0121e05098eade32ab5",
                 "test.recal.cram.crai:md5,c3de85ff8803ab5000f95ec70b539810",
                 "fastqc-status-check-heatmap.txt:md5,0c9e61033b0669f20e27dce8f4b3b25c",
                 "fastqc_overrepresented_sequences_plot.txt:md5,204591ae3929c2d5c7af72d3012c1675",
@@ -283,6 +283,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-06T11:16:08.961962359"
+        "timestamp": "2025-03-07T10:34:03.509509106"
     }
 }
