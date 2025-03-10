@@ -1,0 +1,111 @@
+name: "purecn_normaldb"
+description: Build a normal database for coverage normalization from all the (GC-normalized)
+  normal coverage files. N.B. as reported in
+  https://www.bioconductor.org/packages/devel/bioc/vignettes/PureCN/inst/doc/Quick.html,
+  it is advised to provide a normal panel (VCF format) to precompute mapping bias
+  for faster runtimes.
+keywords:
+  - copy number alteration calling
+  - normal database
+  - panel of normals
+  - hybrid capture sequencing
+  - targeted sequencing
+  - DNA sequencing
+tools:
+  - "purecn":
+      description: "Copy number calling and SNV classification using targeted short
+        read sequencing"
+      homepage: "https://bioconductor.org/packages/release/bioc/html/PureCN.html"
+      documentation: "https://bioconductor.org/packages/release/bioc/html/PureCN.html"
+      tool_dev_url: "https://github.com/lima1/PureCN"
+      doi: "10.1186/s13029-016-0060-z"
+      licence: ["Artistic-2.0"]
+      args_id: "$args"
+      identifier: biotools:purecn
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - coverage_files:
+        type: file
+        description: Coverage files from normal samples
+        pattern: "*.txt.gz"
+    - normal_vcf:
+        type: file
+        description: |
+          Normal panel in VCF format, used to precompute mapping bias
+          for faster runtimes. Optional.
+        pattern: "*.vcf.gz"
+    - normal_vcf_tbi:
+        type: file
+        description: Normal panel in VCF format
+        pattern: "*.vcf.gz.tbi"
+  - - genome:
+        type: string
+        description: Genome build
+  - - assay:
+        type: string
+        description: Assay name
+output:
+  - rds:
+      - meta:
+          type: file
+          description: File containing the generated panel of normals
+          pattern: "normalDB*.rds"
+      - normalDB*.rds:
+          type: file
+          description: File containing the generated panel of normals
+          pattern: "normalDB*.rds"
+  - png:
+      - meta:
+          type: file
+          description: Plot of interval weights calculated from the panel of normals
+          pattern: "interval_weights*.png"
+      - interval_weights*.png:
+          type: file
+          description: Plot of interval weights calculated from the panel of normals
+          pattern: "interval_weights*.png"
+  - bias_rds:
+      - meta:
+          type: file
+          description: Calculated mapping bias from the normal files
+          pattern: "mapping_bias*.rds"
+      - mapping_bias*.rds:
+          type: file
+          description: Calculated mapping bias from the normal files
+          pattern: "mapping_bias*.rds"
+  - bias_bed:
+      - meta:
+          type: file
+          description: Calculated mapping bias sites from the normal files
+          pattern: "mapping_bias_hq_sites*.bed"
+      - mapping_bias_hq_sites*.bed:
+          type: file
+          description: Calculated mapping bias sites from the normal files
+          pattern: "mapping_bias_hq_sites*.bed"
+  - low_cov_bed:
+      - meta:
+          type: file
+          description: |
+            BED with possibly low coverage targets identified, only
+            generated if there are low coverage targets
+          pattern: "low_coverage_targets*.bed"
+      - low_coverage_targets*.bed:
+          type: file
+          description: |
+            BED with possibly low coverage targets identified, only
+            generated if there are low coverage targets
+          pattern: "low_coverage_targets*.bed"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@aldosr"
+  - "@lbeltrame"
+maintainers:
+  - "@aldosr"
+  - "@lbeltrame"

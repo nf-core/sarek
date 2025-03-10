@@ -1,0 +1,96 @@
+name: "gatk4_collectreadcounts"
+description: Collects read counts at specified intervals. The count for each interval
+  is calculated by counting the number of read starts that lie in the interval.
+keywords:
+  - collectreadcounts
+  - bam
+  - cram
+  - gatk4
+tools:
+  - gatk4:
+      description: Genome Analysis Toolkit (GATK4). Developed in the Data Sciences Platform
+        at the Broad Institute, the toolkit offers a wide variety of tools with a primary
+        focus on variant discovery and genotyping. Its powerful processing engine and
+        high-performance computing features make it capable of taking on projects of
+        any size.
+      homepage: https://gatk.broadinstitute.org/hc/en-us
+      documentation: https://gatk.broadinstitute.org/hc/en-us/articles/360037593911-CombineGVCFs
+      tool_dev_url: https://github.com/broadinstitute/gatk
+      doi: 10.1158/1538-7445.AM2017-3590
+      licence: ["Apache-2.0"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input:
+        type: file
+        description: BAM/CRAM/SAM file
+        pattern: "*.{bam,cram,sam}"
+    - input_index:
+        type: file
+        description: BAM/CRAM/SAM index file
+        pattern: "*.{bai,crai,sai}"
+    - intervals:
+        type: file
+        description: A file containing the specified intervals
+        pattern: "*.{bed,intervals}"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test' ]
+    - fasta:
+        type: file
+        description: Optional - Reference FASTA
+        pattern: "*.{fasta,fa}"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test' ]
+    - fai:
+        type: file
+        description: Optional - Index of the reference FASTA file
+        pattern: "*.fai"
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test' ]
+    - dict:
+        type: file
+        description: Optional - Sequence dictionary of the reference FASTA file
+        pattern: "*.dict"
+output:
+  - hdf5:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.hdf5":
+          type: file
+          description: The read counts in hdf5 format
+          pattern: "*.hdf5"
+  - tsv:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.tsv":
+          type: file
+          description: The read counts in TSV format
+          pattern: "*.tsv"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@nvnieuwk"
+maintainers:
+  - "@nvnieuwk"
