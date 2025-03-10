@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "muse_call"
+description: pre-filtering and calculating position-specific summary statistics using
+  the Markov substitution model
+keywords:
+  - variant calling
+  - somatic
+  - wgs
+  - wxs
+  - vcf
+tools:
+  - "MuSE":
+      description: "Somatic point mutation caller based on Markov substitution model
+        for molecular evolution"
+      homepage: "https://bioinformatics.mdanderson.org/public-software/muse/"
+      documentation: "https://github.com/wwylab/MuSE"
+      tool_dev_url: "https://github.com/wwylab/MuSE"
+      doi: "10.1101/gr.278456.123"
+      licence: ["https://github.com/danielfan/MuSE/blob/master/LICENSE"]
+      identifier: ""
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+    - tumor_bam:
+        type: file
+        description: Sorted tumor BAM file
+        pattern: "*.bam"
+    - tumor_bai:
+        type: file
+        description: Index file for the tumor BAM file
+        pattern: "*.bai"
+    - normal_bam:
+        type: file
+        description: Sorted matched normal BAM file
+        pattern: "*.bam"
+    - normal_bai:
+        type: file
+        description: Index file for the normal BAM file
+        pattern: "*.bai"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          e.g. `[ id:'test' ]`
+    - reference:
+        type: file
+        description: reference genome file
+        pattern: ".fasta"
+output:
+  - txt:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "*.MuSE.txt":
+          type: file
+          description: position-specific summary statistics
+          pattern: "*.MuSE.txt"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@famosab"
+maintainers:
+  - "@famosab"

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [1744](https://github.com/nf-core/sarek/pull/1744) - Add MuSE as new somatic variant caller
 - [1817](https://github.com/nf-core/sarek/pull/1817) - Added new contributor
 
 ### Changed
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+| `MuSE`     |             | 2.1.2       |
 
 ### Parameters
 

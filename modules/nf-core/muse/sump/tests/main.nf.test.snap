@@ -1,0 +1,55 @@
+{
+    "human - txt - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,b464e1a4b351fa27cea9141b8ab79bb7"
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,b464e1a4b351fa27cea9141b8ab79bb7"
+                ]
+            },
+            {
+                "MUSE_SUMP": {
+                    "MuSE": "v2.1.2",
+                    "bgzip": 1.21
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-18T10:48:48.403588"
+    },
+    "human - txt": {
+        "content": [
+            [
+                "versions.yml:md5,b464e1a4b351fa27cea9141b8ab79bb7"
+            ],
+            11,
+            "VcfFile [chromosomes=[], sampleCount=2, variantCount=0, phased=true, phasedAutodetect=true]"
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-18T10:48:40.369312"
+    }
+}

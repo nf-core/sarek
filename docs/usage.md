@@ -583,7 +583,8 @@ This list is by no means exhaustive and it will depend on the specific analysis 
 | [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2)                 |  x  |  x  |   x    |     -     |     x      |           x            |
 | [lofreq](https://github.com/CSB5/lofreq)                                                                |  x  |  x  |   x    |     -     |     x      |           -            |
 | [mpileup](https://www.htslib.org/doc/samtools-mpileup.html)                                             |  x  |  x  |   x    |     x     |     x      |           -            |
-| [Strelka](https://github.com/Illumina/strelka)                                                          |  x  |  x  |   x    |     x     |     -      |           x            |
+| [MuSE](https://github.com/wwylab/MuSE)                                                                  |  x  |  x  |   x    |     -     |     -      |           x            |
+| [Strelka](https://github.com/Illumina/strelka)                                                          |  x  |  x  |   -    |     -     |     -      |           x            |
 | [Manta](https://github.com/Illumina/manta)                                                              |  x  |  x  |   x    |     x     |     x      |           x            |
 | [indexcov](https://github.com/brentp/goleft/tree/master/indexcov)                                       |  x  |  -  |   -    |     x     |     -      |           x            |
 | [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                          |  x  |  x  |   x    |     x     |     x      |           x            |
