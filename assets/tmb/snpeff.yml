@@ -1,0 +1,119 @@
+## Describe the fields
+## For definition, provide the expected key:values
+## Note that several keys/values can be defined
+
+###############################################
+## SnpEff Parsing
+
+## Tags
+tag: "ANN"
+sep: "&"
+
+## Annotation flags
+
+isCoding:
+  1:
+    - chromosome_number_variation
+    - coding_sequence_variant
+    - conservative_inframe_deletion
+    - conservative_inframe_insertion
+    - disruptive_inframe_deletion
+    - disruptive_inframe_insertion
+    - exon_loss
+    - exon_loss_variant
+    - exon_variant
+    - frameshift_variant
+    - gene_variant
+    - initiator_codon_variant
+    - missense_variant
+    - rare_amino_acid_variant
+    - splice_acceptor_variant
+    - splice_donor_variant
+    - splice_region_variant
+    - start_lost
+    - start_retained
+    - stop_gained
+    - stop_lost
+    - stop_retained_variant
+    - synonymous_variant
+    - transcript_ablation
+    - transcript_amplification
+    - transcript_variant
+
+isNonCoding:
+  1:
+    - 3_prime_UTR_truncation
+    - 3_prime_UTR_variant
+    - 5_prime_UTR_premature_start_codon_gain_variant
+    - 5_prime_UTR_truncation
+    - 5_prime_UTR_variant
+    - conserved_intergenic_variant
+    - conserved_intron_variant
+    - downstream_gene_variant
+    - feature_elongation
+    - feature_truncation
+    - intergenic_region
+    - intragenic_variant
+    - intron_variant
+    - mature_miRNA_variant
+    - miRNA
+    - NMD_transcript_variant
+    - non_coding_transcript_exon_variant
+    - non_coding_transcript_variant
+    - regulatory_region_ablation
+    - regulatory_region_amplification
+    - regulatory_region_variant
+    - TF_binding_site_variant
+    - TFBS_ablation
+    - TFBS_amplification
+    - upstream_gene_variant
+
+isSplicing:
+  1:
+    - splice_donor_variant
+    - splice_acceptor_variant
+    - splice_region_variant
+
+isSynonymous:
+  1:
+    - start_retained_variant
+    - stop_retained_variant
+    - synonymous_variant
+
+isNonSynonymous:
+  1:
+    - frameshift_variant
+    - missense_variant
+    - rare_amino_acid_variant
+    - splice_acceptor_variant
+    - splice_donor_variant
+    - splice_region_variant
+    - start_lost
+    - stop_gained
+    - stop_lost
+
+## Databases
+cancerDb:
+  cosmic:
+    - cosmic_coding_ID
+    - cosmic_noncoding_ID
+
+polymDb:
+  1k:
+    - kg_AMR_AF
+    - kg_AFR_AF
+    - kg_EAS_AF
+    - kg_EUR_AF
+    - kg_SAS_AF
+    - KG_AF_GLOBAL
+
+  gnomad:
+    - GnomAD
+    - gnomAD_genomes_AF
+    - AF
+
+  esp:
+    - ESP_AF_GLOBAL
+
+  dbsnp:
+    - dbSNPBuildID

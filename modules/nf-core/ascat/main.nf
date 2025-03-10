@@ -195,6 +195,4 @@ process ASCAT {
     echo ' ascat: 3.0.0' >> versions.yml
 
     """
-
-
 }

@@ -49,7 +49,7 @@
   exit_code: 1
   stdout:
     contains:
-      - "Sentieon BWA is currently not compatible with FGBio UMI handeling. Please choose a different aligner."
+      - "Sentieon BWA is currently not compatible with FGBio UMI handling. Please choose a different aligner."
 # - name: Run UMI TSO test
 #   command: nextflow run main.nf -profile test,umi_tso --outdir results
 #   tags:
