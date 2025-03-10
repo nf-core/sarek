@@ -27,3 +27,4 @@ reports/snpeff/*/snpEff_summary.html
 reports/vcftools/**/*.TsTv.qual
 variant_calling/**/*.vcf.{gz,gz.tbi}
 variant_calling/controlfreec/*/config.txt
+variant_calling/tiddit/*/*.tiddit.ploidies.tab
