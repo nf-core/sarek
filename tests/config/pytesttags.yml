@@ -108,23 +108,6 @@ deepvariant:
   - tests/csv/3.0/recalibrated_germline.csv
   - tests/test_deepvariant.yml
 
-## freebayes
-freebayes:
-  - conf/modules/freebayes.config
-  - modules/nf-core/bcftools/sort/**
-  - modules/nf-core/freebayes/**
-  - modules/nf-core/gatk4/mergevcfs/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/tabix/tabix/**
-  - subworkflows/local/bam_variant_calling_freebayes/**
-  - subworkflows/local/bam_variant_calling_germline_all/**
-  - subworkflows/local/bam_variant_calling_somatic_all/**
-  - subworkflows/local/bam_variant_calling_tumor_only_all/**
-  - tests/csv/3.0/fastq_pair.csv
-  - tests/csv/3.0/fastq_single.csv
-  - tests/csv/3.0/recalibrated_tumoronly.csv
-  - tests/test_freebayes.yml
-
 ## haplotypecaller
 haplotypecaller:
   - conf/modules/haplotypecaller.config
