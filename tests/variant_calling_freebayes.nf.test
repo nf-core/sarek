@@ -7,6 +7,8 @@ nextflow_pipeline {
 
     test("-profile test --tools freebayes germline") {
 
+        // nextflow run main.nf -profile test,targeted --tools freebayes --outdir results
+
         when {
             params {
                 modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
@@ -46,6 +48,8 @@ nextflow_pipeline {
     }
 
     test("-profile test --tools freebayes --no_intervals germline") {
+
+        // nextflow run main.nf -profile test --tools freebayes --no_intervals --outdir results
 
         when {
             params {
@@ -87,7 +91,15 @@ nextflow_pipeline {
 
     }
 
+    // nextflow run main.nf -profile test,pair,targeted --tools freebayes --outdir results  SOMATIC
+
+    // nextflow run main.nf -profile test,pair,targeted --tools freebayes --no_intervals --outdir results SOMATIC
+
+    // nextflow run main.nf -profile test,tools_tumoronly --tools freebayes --outdir results
+
     test("-profile test --tools freebayes --no_intervals tumoronly") {
+
+        // nextflow run main.nf -profile test,tools_tumoronly --tools freebayes --no_intervals --outdir results
 
         when {
             params {
