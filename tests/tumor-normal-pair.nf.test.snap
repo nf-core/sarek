@@ -364,6 +364,7 @@
                 "test2_vs_test.strelka.somatic_snvs.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test2_vs_test.strelka.somatic_snvs.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
             ],
+            "No BAM files",
             [
                 [
                     "test.md.cram",
@@ -403,8 +404,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-26T13:04:54.962893907"
+        "timestamp": "2025-03-10T11:15:56.116509694"
     }
 }

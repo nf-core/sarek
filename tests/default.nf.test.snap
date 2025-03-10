@@ -304,6 +304,7 @@
                 "test.strelka.variants.FILTER.summary:md5,ad417bc96d31223f61170987975d8128",
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
+            "No BAM files",
             [
                 [
                     "test.md.cram",
@@ -327,8 +328,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-26T13:01:57.593464342"
+        "timestamp": "2025-03-10T11:13:17.000556982"
     }
 }
