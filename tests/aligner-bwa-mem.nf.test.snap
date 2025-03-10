@@ -1,7 +1,7 @@
 {
     "-profile test --aligner bwa-mem --save_reference skip QC/recal/md": {
         "content": [
-            11,
+            10,
             {
                 "BAM_TO_CRAM_MAPPING": {
                     "samtools": 1.21
@@ -14,9 +14,6 @@
                     "samtools": 1.21
                 },
                 "MERGE_BAM": {
-                    "samtools": 1.21
-                },
-                "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
                 "Workflow": {
@@ -44,9 +41,7 @@
                 "reference/intervals/chr22_1-40001.bed",
                 "reference/intervals/chr22_1-40001.bed.gz",
                 "reference/intervals/genome.bed",
-                "reference/intervals/genome.bed.gz",
-                "samtools",
-                "samtools/test.stats"
+                "reference/intervals/genome.bed.gz"
             ],
             [
                 "genome.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
@@ -57,8 +52,7 @@
                 "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
-                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
-                "test.stats:md5,6843bcaa64f38859f8fa2744b46cb07e"
+                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
             ],
             [
                 [
@@ -71,7 +65,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-06T09:53:28.653102415"
+        "timestamp": "2025-03-10T11:15:40.732126092"
     },
     "-profile test --aligner bwa-mem --save_reference --build_only_index": {
         "content": [

@@ -1,7 +1,7 @@
 {
     "-profile test --save_mapped skip QC/recal/md": {
         "content": [
-            11,
+            10,
             {
                 "BAM_TO_CRAM_MAPPING": {
                     "samtools": 1.21
@@ -14,9 +14,6 @@
                     "samtools": 1.21
                 },
                 "MERGE_BAM": {
-                    "samtools": 1.21
-                },
-                "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
                 "Workflow": {
@@ -33,13 +30,9 @@
                 "preprocessing/mapped/test",
                 "preprocessing/mapped/test/test.sorted.cram",
                 "preprocessing/mapped/test/test.sorted.cram.crai",
-                "reference",
-                "samtools",
-                "samtools/test.stats"
+                "reference"
             ],
-            [
-                "test.stats:md5,6843bcaa64f38859f8fa2744b46cb07e"
-            ],
+            "No stable content",
             [
                 [
                     "test.sorted.cram",
@@ -52,6 +45,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-07T15:35:06.218357893"
+        "timestamp": "2025-03-10T11:13:00.011014027"
     }
 }

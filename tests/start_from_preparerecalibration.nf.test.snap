@@ -527,8 +527,6 @@
                 "csv",
                 "csv/markduplicates.csv",
                 "csv/recalibrated.csv",
-                "index",
-                "index/test.recal.cram.crai",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt",
@@ -563,6 +561,7 @@
                 "preprocessing/recalibrated",
                 "preprocessing/recalibrated/test",
                 "preprocessing/recalibrated/test/test.recal.cram",
+                "preprocessing/recalibrated/test/test.recal.cram.crai",
                 "reference",
                 "reports",
                 "reports/mosdepth",
@@ -599,6 +598,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-07T15:54:39.910076732"
+        "timestamp": "2025-03-10T11:16:24.311853581"
     }
 }

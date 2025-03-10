@@ -67,25 +67,11 @@
                 }
             },
             [
-                "cram",
-                "cram/test.bam",
-                "cram/test.bam.bai",
-                "cram/test2.bam",
-                "cram/test2.bam.bai",
-                "cram/test3.bam",
-                "cram/test3.bam.bai",
-                "cram/test_bam.bam",
-                "cram/test_bam.bam.bai",
                 "csv",
                 "csv/mapped.csv",
                 "csv/markduplicates.csv",
                 "csv/markduplicates_no_table.csv",
                 "csv/recalibrated.csv",
-                "index",
-                "index/test.recal.cram.crai",
-                "index/test2.recal.cram.crai",
-                "index/test3.recal.cram.crai",
-                "index/test_bam.recal.cram.crai",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/fastqc-status-check-heatmap.txt",
@@ -222,9 +208,17 @@
                 "preprocessing/mapped/test_bam/test_bam.sorted.bam.bai",
                 "preprocessing/markduplicates",
                 "preprocessing/markduplicates/test",
+                "preprocessing/markduplicates/test/test.md.bam",
+                "preprocessing/markduplicates/test/test.md.bam.bai",
                 "preprocessing/markduplicates/test2",
+                "preprocessing/markduplicates/test2/test2.md.bam",
+                "preprocessing/markduplicates/test2/test2.md.bam.bai",
                 "preprocessing/markduplicates/test3",
+                "preprocessing/markduplicates/test3/test3.md.bam",
+                "preprocessing/markduplicates/test3/test3.md.bam.bai",
                 "preprocessing/markduplicates/test_bam",
+                "preprocessing/markduplicates/test_bam/test_bam.md.bam",
+                "preprocessing/markduplicates/test_bam/test_bam.md.bam.bai",
                 "preprocessing/recal_table",
                 "preprocessing/recal_table/test",
                 "preprocessing/recal_table/test/test.recal.table",
@@ -326,18 +320,17 @@
                 "reports/mosdepth/test_bam/test_bam.recal.regions.bed.gz.csi",
                 "reports/samtools",
                 "reports/samtools/test",
+                "reports/samtools/test/test.md.cram.stats",
                 "reports/samtools/test/test.recal.cram.stats",
                 "reports/samtools/test2",
+                "reports/samtools/test2/test2.md.cram.stats",
                 "reports/samtools/test2/test2.recal.cram.stats",
                 "reports/samtools/test3",
+                "reports/samtools/test3/test3.md.cram.stats",
                 "reports/samtools/test3/test3.recal.cram.stats",
                 "reports/samtools/test_bam",
-                "reports/samtools/test_bam/test_bam.recal.cram.stats",
-                "samtools",
-                "samtools/test.stats",
-                "samtools/test2.stats",
-                "samtools/test3.stats",
-                "samtools/test_bam.stats"
+                "reports/samtools/test_bam/test_bam.md.cram.stats",
+                "reports/samtools/test_bam/test_bam.recal.cram.stats"
             ],
             [
                 "fastqc-status-check-heatmap.txt:md5,de62b83776610478e5d6a3adbc6a9bbc",
@@ -360,12 +353,12 @@
                 "mosdepth_perchrom.txt:md5,7c01ea3a011867911ed0b612acb42007",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
                 "multiqc_fastqc.txt:md5,ae908328010c1f8a5eb15ca080b92993",
-                "multiqc_samtools_stats.txt:md5,99243243bbf3c4c55eb7c6ca81d45104",
+                "multiqc_samtools_stats.txt:md5,137755a62d41b88763718fa5f6266132",
                 "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,4413ff2a4bfb99428c44a541eb431656",
-                "samtools_alignment_plot.txt:md5,4810fa18107cb764f5f6500df52617d6",
+                "samtools-stats-dp.txt:md5,1dc593231b888b9f832e61dd71e0161b",
+                "samtools_alignment_plot.txt:md5,35a1db2ce8dbe1b59576cc8edb57095e",
                 "test.md.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test.md.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test.md.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
@@ -406,33 +399,17 @@
                 "test_bam.recal.mosdepth.summary.txt:md5,dbe376360e437c89190139ef0ae6769a",
                 "test_bam.recal.regions.bed.gz:md5,0e5ed846b9b11717e42e93eec60f4ffc",
                 "test_bam.recal.regions.bed.gz.csi:md5,633cc0252eb2246a0943aec7e7512e3e",
+                "test.md.cram.stats:md5,7d0a7d3d4ca6bf21702e7775b1777fb8",
                 "test.recal.cram.stats:md5,269fd4151ac69c1de63e2224310386a0",
+                "test2.md.cram.stats:md5,9036c85b25e11a3340a6c1006a8d614a",
                 "test2.recal.cram.stats:md5,816dbaf70f47a5f44444a97282a6bbb0",
+                "test3.md.cram.stats:md5,d8cfbfe40816feedcbc30aba0ae863a5",
                 "test3.recal.cram.stats:md5,46a3b9cf59fd06bf6c4b8f91b18d4f01",
-                "test_bam.recal.cram.stats:md5,0459edb604f03ef29359826eb60a44a9",
-                "test.stats:md5,7d0a7d3d4ca6bf21702e7775b1777fb8",
-                "test2.stats:md5,9036c85b25e11a3340a6c1006a8d614a",
-                "test3.stats:md5,d8cfbfe40816feedcbc30aba0ae863a5",
-                "test_bam.stats:md5,742cc3262b1c1b0710092b5288ed9d9a"
+                "test_bam.md.cram.stats:md5,742cc3262b1c1b0710092b5288ed9d9a",
+                "test_bam.recal.cram.stats:md5,0459edb604f03ef29359826eb60a44a9"
             ],
             "No CRAM files",
             [
-                [
-                    "test.bam",
-                    "59ecc5c82c7af1283eea7507c590c831"
-                ],
-                [
-                    "test2.bam",
-                    "59ecc5c82c7af1283eea7507c590c831"
-                ],
-                [
-                    "test3.bam",
-                    "59ecc5c82c7af1283eea7507c590c831"
-                ],
-                [
-                    "test_bam.bam",
-                    "6934a96fff1eaa2f70b31ab7e11d3598"
-                ],
                 [
                     "test.sorted.bam",
                     "59ecc5c82c7af1283eea7507c590c831"
@@ -447,6 +424,22 @@
                 ],
                 [
                     "test_bam.sorted.bam",
+                    "6934a96fff1eaa2f70b31ab7e11d3598"
+                ],
+                [
+                    "test.md.bam",
+                    "59ecc5c82c7af1283eea7507c590c831"
+                ],
+                [
+                    "test2.md.bam",
+                    "59ecc5c82c7af1283eea7507c590c831"
+                ],
+                [
+                    "test3.md.bam",
+                    "59ecc5c82c7af1283eea7507c590c831"
+                ],
+                [
+                    "test_bam.md.bam",
                     "6934a96fff1eaa2f70b31ab7e11d3598"
                 ],
                 [
@@ -471,6 +464,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-07T15:54:31.668247978"
+        "timestamp": "2025-03-10T11:13:03.085460403"
     }
 }

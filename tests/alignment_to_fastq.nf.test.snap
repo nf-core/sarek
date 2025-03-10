@@ -67,16 +67,11 @@
                 }
             },
             [
-                "cram",
-                "cram/test.bam",
-                "cram/test.bam.bai",
                 "csv",
                 "csv/mapped.csv",
                 "csv/markduplicates.csv",
                 "csv/markduplicates_no_table.csv",
                 "csv/recalibrated.csv",
-                "index",
-                "index/test.recal.cram.crai",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/fastqc-status-check-heatmap.txt",
@@ -200,6 +195,8 @@
                 "preprocessing/mapped/test/test.sorted.bam.bai",
                 "preprocessing/markduplicates",
                 "preprocessing/markduplicates/test",
+                "preprocessing/markduplicates/test/test.md.bam",
+                "preprocessing/markduplicates/test/test.md.bam.bai",
                 "preprocessing/recal_table",
                 "preprocessing/recal_table/test",
                 "preprocessing/recal_table/test/test.recal.table",
@@ -232,9 +229,8 @@
                 "reports/mosdepth/test/test.recal.regions.bed.gz.csi",
                 "reports/samtools",
                 "reports/samtools/test",
-                "reports/samtools/test/test.recal.cram.stats",
-                "samtools",
-                "samtools/test.stats"
+                "reports/samtools/test/test.md.cram.stats",
+                "reports/samtools/test/test.recal.cram.stats"
             ],
             [
                 "fastqc-status-check-heatmap.txt:md5,0c9e61033b0669f20e27dce8f4b3b25c",
@@ -256,12 +252,12 @@
                 "mosdepth_perchrom.txt:md5,76d816c3f71faf2009c8a6f88092a2f3",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
                 "multiqc_fastqc.txt:md5,6fa90a9d9daa7d4839e4b7ebfcdc6201",
-                "multiqc_samtools_stats.txt:md5,6ee03b93afb13d2f764ba107e4076223",
+                "multiqc_samtools_stats.txt:md5,db577e0a516ecd42c0a193586fc8b99c",
                 "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,bcee06512137701c0a05bc902184a537",
-                "samtools_alignment_plot.txt:md5,301dda049c8aa2f848c98c81f584c315",
+                "samtools-stats-dp.txt:md5,ef82cfdd058c212c0bba38ceb32ec2f8",
+                "samtools_alignment_plot.txt:md5,22572fcd0791878ed37ae2f48213cee2",
                 "test.md.mosdepth.global.dist.txt:md5,9cb9b181119256ed17a77dcf44d58285",
                 "test.md.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.md.mosdepth.summary.txt:md5,dbe376360e437c89190139ef0ae6769a",
@@ -272,17 +268,17 @@
                 "test.recal.mosdepth.summary.txt:md5,dbe376360e437c89190139ef0ae6769a",
                 "test.recal.regions.bed.gz:md5,0e5ed846b9b11717e42e93eec60f4ffc",
                 "test.recal.regions.bed.gz.csi:md5,633cc0252eb2246a0943aec7e7512e3e",
-                "test.recal.cram.stats:md5,1ef19ce72bf2cb61d2dc4aede12bec94",
-                "test.stats:md5,2cc3430db9e2007da1464dd616aa8427"
+                "test.md.cram.stats:md5,2cc3430db9e2007da1464dd616aa8427",
+                "test.recal.cram.stats:md5,1ef19ce72bf2cb61d2dc4aede12bec94"
             ],
             "No CRAM files",
             [
                 [
-                    "test.bam",
+                    "test.sorted.bam",
                     "6934a96fff1eaa2f70b31ab7e11d3598"
                 ],
                 [
-                    "test.sorted.bam",
+                    "test.md.bam",
                     "6934a96fff1eaa2f70b31ab7e11d3598"
                 ],
                 [
@@ -295,6 +291,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-07T15:53:58.625212013"
+        "timestamp": "2025-03-10T11:12:56.110042256"
     }
 }
