@@ -9,10 +9,11 @@ umi:
   - modules/nf-core/fgbio/callmolecularconsensusreads/**
   - modules/nf-core/fgbio/fastqtobam/**
   - modules/nf-core/fgbio/groupreadsbyumi/**
+  - modules/nf-core/minimap2/align/**
   - modules/nf-core/mosdepth/**
   - modules/nf-core/samblaster/**
   - modules/nf-core/samtools/bam2fq/**
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/**
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_minimap2_sentieon/**
   - subworkflows/local/fastq_create_umi_consensus_fgbio/**
   - tests/csv/3.0/fastq_umi.csv
   - tests/test_umi.yml
@@ -31,7 +32,7 @@ fastp:
 sentieon/bwamem:
   - conf/modules/aligner.config
   - modules/nf-core/sentieon/bwamem/**
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_minimap2_sentieon/**
   - tests/csv/3.0/fastq_single.csv
   - tests/test_sentieon_aligner_bwamem.yml
 
