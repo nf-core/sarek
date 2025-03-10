@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [1817](https://github.com/nf-core/sarek/pull/1817) - Added new contributor
+
 ### Changed
 
 - [1810](https://github.com/nf-core/sarek/pull/1810) - Move non-informative information in the CHANGELOG for the end user to its own Developer section
@@ -45,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1810](https://github.com/nf-core/sarek/pull/1810) - Implement automatic sharding for nf-test tests
 - [1810](https://github.com/nf-core/sarek/pull/1810) - Skip all CI but linting on docs changes
 - [1812](https://github.com/nf-core/sarek/pull/1812) - move gatk preprocessing to sbwf
+- [1820](https://github.com/nf-core/sarek/pull/1820) - Migrate pipeline pytest manta tests to nf-test
 
 #### Fixed
 
