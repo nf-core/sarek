@@ -112,7 +112,7 @@
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for duplicate marking, variant calling and/or for annotation.",
                     "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper, Strelka\n- Structural Variants: indexcov, Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, mpileup, Mutect2, Lofreq, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Strelka2\n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC\n- Microsatellite Instability: MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively), and bcftools annotate (needs `--bcftools_annotation`).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
-                    "pattern": "^((ascat|bcfann|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|lofreq|sentieon_dnascope|sentieon_haplotyper|manta|indexcov|merge|mpileup|msisensorpro|mutect2|ngscheckmate|sentieon_dedup|snpeff|strelka|tiddit|vep)?,?)*(?<!,)$"
+                    "pattern": "^((ascat|bcfann|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|lofreq|sentieon_dnascope|sentieon_haplotyper|manta|indexcov|merge|mpileup|msisensorpro|mutect2|ngscheckmate|sentieon_dedup|snpeff|strelka|tiddit|tmb|vep)?,?)*(?<!,)$"
                 },
                 "skip_tools": {
                     "type": "string",
@@ -402,6 +402,13 @@
                     "fa_icon": "fas fa-tape",
                     "description": "Option for concatenating germline vcf-files.",
                     "help_text": "Concatenating the germline vcf-files from each applied variant-caller into one vcf-file using bfctools concat."
+                },
+                "tmb_effgenomesize": {
+                    "type": "integer",
+                    "fa_icon": "fas fa-clock",
+                    "description": "Effective genome size",
+                    "help_text": "The effective size is an important parameter of TMB calculation which can have a strong impact on the results. It is calculated from the intervals bed file if effgenomesize is not defined.",
+                    "hidden": true
                 }
             }
         },
@@ -757,6 +764,16 @@
                     "mimetype": "text/plain",
                     "description": "Path to Control-FREEC mappability file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "msisensorpro_scan": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file-alt",
+                    "description": "Path to MSIsensorpro reference genome microsatellites information file."
+                },
+                "msisensorpro_baseline": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file-alt",
+                    "description": "Path to MSIsensorpro custom baseline file for tumor-only analysis."
                 },
                 "ngscheckmate_bed": {
                     "type": "string",

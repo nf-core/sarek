@@ -1,0 +1,10 @@
+## Describe the fields
+## For definition, provide the expected key:values
+## Note that several keys/values can be defined
+##
+###############################################
+
+freq: "AF"
+depth: "DP"
+altDepth: "AD"
+maxVaf: "1"

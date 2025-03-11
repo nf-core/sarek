@@ -17,12 +17,15 @@ workflow VCF_ANNOTATE_SNPEFF {
     SNPEFF_SNPEFF(ch_vcf, val_snpeff_db, ch_snpeff_cache)
     TABIX_BGZIPTABIX(SNPEFF_SNPEFF.out.vcf)
 
+    // Add annotation to meta to use the right config for TMB
+    ch_vcf_tbi = TABIX_BGZIPTABIX.out.gz_tbi.map{ meta, vcf, tbi -> [ meta + [ annotation:'snpeff' ], vcf, tbi ] }
+
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(SNPEFF_SNPEFF.out.versions)
     ch_versions = ch_versions.mix(TABIX_BGZIPTABIX.out.versions)
 
     emit:
-    vcf_tbi  = TABIX_BGZIPTABIX.out.gz_tbi // channel: [ val(meta), path(vcf), path(tbi) ]
+    vcf_tbi  = ch_vcf_tbi                  // channel: [ val(meta), path(vcf), path(tbi) ]
     reports  = SNPEFF_SNPEFF.out.report    // channel: [ path(html) ]
     versions = ch_versions                 // channel: [ path(versions.yml) ]
 }

@@ -155,7 +155,7 @@ workflow  SAMPLESHEET_TO_CHANNEL{
     }
 
     input_sample.filter{ it[0].status == 0 }.ifEmpty{ // In this case, the sample-sheet contains no normal/germline-samples
-        def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller', 'msisensorpro']
+        def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller']
         def requested_tools_requiring_normal_samples = []
         tools_requiring_normal_samples.each{ tool_requiring_normal_samples ->
             if (tools.split(',').contains(tool_requiring_normal_samples)) requested_tools_requiring_normal_samples.add(tool_requiring_normal_samples)
@@ -166,7 +166,7 @@ workflow  SAMPLESHEET_TO_CHANNEL{
     }
     }
 
-    // Fails when wrongfull extension for intervals file
+    // Fails when wrongful extension for intervals file
     if (wes && !step == 'annotate') {
         if (intervals && !intervals.endsWith("bed"))  error("Target file specified with `--intervals` must be in BED format for targeted data")
         else log.warn("Intervals file was provided without parameter `--wes`: Pipeline will assume this is Whole-Genome-Sequencing data.")
@@ -177,7 +177,7 @@ workflow  SAMPLESHEET_TO_CHANNEL{
     }
 
     if (step == 'mapping' && aligner.contains("sentieon-bwamem") && umi_read_structure) {
-        error("Sentieon BWA is currently not compatible with FGBio UMI handeling. Please choose a different aligner.")
+        error("Sentieon BWA is currently not compatible with FGBio UMI handling. Please choose a different aligner.")
     }
 
     if (tools && tools.split(',').contains("sentieon_haplotyper") && joint_germline && (!sentieon_haplotyper_emit_mode || !(sentieon_haplotyper_emit_mode.contains('gvcf')))) {
