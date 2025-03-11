@@ -14,7 +14,6 @@ include { CHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../../subwor
 
 // Convert BAM files to FASTQ files
 include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT       } from '../../subworkflows/local/bam_convert_samtools/main'
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI         } from '../../subworkflows/local/bam_convert_samtools/main'
 
 // Convert fastq.gz.spring files to fastq.gz files
 include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R1_FQ   } from '../../modules/nf-core/spring/decompress/main'
@@ -113,8 +112,7 @@ workflow SAREK {
     reports          = Channel.empty()
     versions         = Channel.empty()
 
-    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
-
+    if (params.step == 'mapping') {
         // Figure out if input is bam, fastq, or spring
         input_sample_type = input_sample.branch{
             bam:                 it[0].data_type == "bam"
@@ -171,7 +169,9 @@ workflow SAREK {
             reports = reports.mix(FASTQC.out.zip.collect{ _meta, logs -> logs })
             versions = versions.mix(FASTQC.out.versions.first())
         }
+    }
 
+    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
         // PREPROCESSING
         FASTQ_ALIGN_GATK(
             input_fastq,
