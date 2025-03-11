@@ -758,6 +758,16 @@
                     "description": "Path to Control-FREEC mappability file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
+                "msisensorpro_scan": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file-alt",
+                    "description": "Path to MSIsensorpro reference genome microsatellites information file."
+                },
+                "msisensorpro_baseline": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file-alt",
+                    "description": "Path to MSIsensorpro custom baseline file for tumor-only analysis."
+                },
                 "ngscheckmate_bed": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
