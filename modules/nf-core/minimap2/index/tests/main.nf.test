@@ -1,0 +1,32 @@
+nextflow_process {
+
+    name "Test Process MINIMAP2_INDEX"
+    script "../main.nf"
+    process "MINIMAP2_INDEX"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "minimap2"
+    tag "minimap2/index"
+
+    test("minimap2 index") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
+
+}

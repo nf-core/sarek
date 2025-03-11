@@ -12,6 +12,7 @@ include { BWA_INDEX as BWAMEM1_INDEX                } from '../../../modules/nf-
 include { BWAMEM2_INDEX                             } from '../../../modules/nf-core/bwamem2/index/main'
 include { DRAGMAP_HASHTABLE                         } from '../../../modules/nf-core/dragmap/hashtable/main'
 include { GATK4_CREATESEQUENCEDICTIONARY            } from '../../../modules/nf-core/gatk4/createsequencedictionary/main'
+include { MINIMAP2_INDEX                            } from '../../../modules/nf-core/minimap2/index/main'
 include { MSISENSORPRO_SCAN                         } from '../../../modules/nf-core/msisensorpro/scan/main'
 include { SAMTOOLS_FAIDX                            } from '../../../modules/nf-core/samtools/faidx/main'
 include { TABIX_TABIX as TABIX_BCFTOOLS_ANNOTATIONS } from '../../../modules/nf-core/tabix/tabix/main'
@@ -48,6 +49,7 @@ workflow PREPARE_GENOME {
     BWAMEM1_INDEX(fasta)     // If aligner is bwa-mem
     BWAMEM2_INDEX(fasta)     // If aligner is bwa-mem2
     DRAGMAP_HASHTABLE(fasta) // If aligner is dragmap
+    MINIMAP2_INDEX(fasta)    // If aligner is minimap2
 
     GATK4_CREATESEQUENCEDICTIONARY(fasta)
     MSISENSORPRO_SCAN(fasta)
@@ -106,6 +108,7 @@ workflow PREPARE_GENOME {
     versions = versions.mix(DRAGMAP_HASHTABLE.out.versions)
     versions = versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
     versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
+    versions = versions.mix(MINIMAP2_INDEX.out.versions)
     versions = versions.mix(SAMTOOLS_FAIDX.out.versions)
     versions = versions.mix(TABIX_BCFTOOLS_ANNOTATIONS.out.versions)
     versions = versions.mix(TABIX_DBSNP.out.versions)
@@ -125,6 +128,7 @@ workflow PREPARE_GENOME {
     germline_resource_tbi    = TABIX_GERMLINE_RESOURCE.out.tbi.map{ meta, tbi -> [tbi] }.collect()      // path: germline_resource.vcf.gz.tbi
     known_snps_tbi           = TABIX_KNOWN_SNPS.out.tbi.map{ meta, tbi -> [tbi] }.collect()             // path: {known_indels*}.vcf.gz.tbi
     known_indels_tbi         = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }.collect()           // path: {known_indels*}.vcf.gz.tbi
+    minimap2                 = MINIMAP2_INDEX.out.index.collect()                                       // path: genome.mmi
     msisensorpro_scan        = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }                   // path: genome_msi.list
     pon_tbi                  = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }.collect()                    // path: pon.vcf.gz.tbi
 
