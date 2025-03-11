@@ -1270,11 +1270,11 @@
             [
                 [
                     "test.freebayes.vcf.gz",
-                    "6bff03734643a36d0ebdd8418e50e368"
+                    "dff55f30153f2d0fb3ed12aa14f8566c"
                 ],
                 [
                     "test2_vs_test.freebayes.vcf.gz",
-                    "8a6e345298cf0d32cc2a972c165e248a"
+                    "6a587996b12ee306042c9a95282829c0"
                 ]
             ]
         ],
@@ -1612,7 +1612,7 @@
             [
                 [
                     "test.freebayes.vcf.gz",
-                    "e07c4bbfe56b178304b97e15ddd26341"
+                    "a66068355e30ea9f01ddc83e54ed2e26"
                 ]
             ]
         ],
