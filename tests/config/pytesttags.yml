@@ -235,20 +235,6 @@ sentieon/haplotyper_joint_germline:
   - tests/csv/3.0/mapped_joint_bam.csv
   - tests/test_sentieon_haplotyper_joint_germline.yml
 
-## mpileup
-mpileup:
-  - conf/modules/mpileup.config
-  - modules/nf-core/cat/cat/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/samtools/mpileup/**
-  - subworkflows/local/bam_variant_calling_germline_all/**
-  - subworkflows/local/bam_variant_calling_mpileup/**
-  - subworkflows/local/bam_variant_calling_somatic_all/**
-  - subworkflows/local/bam_variant_calling_tumor_only_all/**
-  - tests/csv/3.0/recalibrated_germline.csv
-  - tests/csv/3.0/recalibrated_tumoronly.csv
-  - tests/test_mpileup.yml
-
 ## msisensorpro
 msisensorpro:
   - conf/modules/msisensorpro.config
