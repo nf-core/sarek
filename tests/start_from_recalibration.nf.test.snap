@@ -37,7 +37,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-11T13:29:43.487760581"
+        "timestamp": "2025-03-11T13:38:05.186917182"
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
@@ -164,7 +164,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-07T15:44:18.249143061"
+        "timestamp": "2025-03-11T13:37:30.336211705"
     },
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
@@ -291,7 +291,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-11T13:28:25.608199617"
+        "timestamp": "2025-03-11T13:36:47.984423607"
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null": {
         "content": [
@@ -359,6 +359,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-10T11:16:27.533745209"
+        "timestamp": "2025-03-11T13:36:05.556087237"
     }
 }

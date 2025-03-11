@@ -177,7 +177,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-11T13:24:52.647381885"
+        "timestamp": "2025-03-11T13:37:46.358094577"
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --tools null": {
         "content": [
@@ -357,7 +357,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-11T13:26:28.702168771"
+        "timestamp": "2025-03-11T13:39:20.497650346"
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --skip_tools markduplicates --tools null": {
         "content": [
@@ -506,7 +506,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-11T13:25:39.917435644"
+        "timestamp": "2025-03-11T13:38:32.150920872"
     },
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --skip_tools markduplicates --tools null": {
         "content": [
@@ -630,6 +630,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-11T13:23:21.533776724"
+        "timestamp": "2025-03-11T13:36:57.025681096"
     }
 }
