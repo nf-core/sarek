@@ -170,6 +170,9 @@ workflow SAREK {
             versions = versions.mix(FASTQC.out.versions.first())
         }
     }
+    else {
+        input_fastq = Channel.empty().mix( input_sample )
+    }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
         // PREPROCESSING
