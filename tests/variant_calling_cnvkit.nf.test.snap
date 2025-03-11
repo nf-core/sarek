@@ -146,8 +146,6 @@
                 "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multi_intervals.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
                 "reference.cnn:md5,891454915f82d0eeda0be13d71e0d5d7",
-                "sample1.cnvcall.vcf:md5,76686a44fd4b51213b474464b4a8f784",
-                "test.paired_end.recalibrated.sorted-diagram.pdf:md5,a4729f16d397d215292e0ed7f1cdf4b4",
                 "test.paired_end.recalibrated.sorted-scatter.png:md5,2a82254094015efde86e78f38c6487f0",
                 "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.paired_end.recalibrated.sorted.bintest.cns:md5,8d0301673b584a6a8d88bdaad87ba09d",
@@ -159,8 +157,6 @@
                 "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,4153756b30abc934f10717c023bd262f",
                 "cnvkit.reference.antitarget-tmp.bed:md5,3d4d20f9f23b39970865d29ef239d20b",
                 "cnvkit.reference.target-tmp.bed:md5,657b25dbda8516624efa8cb2cf3716ca",
-                "sample2.cnvcall.vcf:md5,88fe2757d945eb1c0fcd7dc3d8c5617a",
-                "test2.paired_end.recalibrated.sorted-diagram.pdf:md5,aef4b3acba296a3faeff556ee1bf5538",
                 "test2.paired_end.recalibrated.sorted-scatter.png:md5,d9a4a27a7a93eca23108b43dea09c140",
                 "test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,067115082c4af4b64d58c0dc3a3642e4",
                 "test2.paired_end.recalibrated.sorted.bintest.cns:md5,7a66b5f63acb05e6dfb0784c215851ec",
@@ -173,10 +169,8 @@
                 "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multi_intervals.target.bed:md5,f9e727147a7cbca46c2b9b2de3ecae91",
                 "reference.cnn:md5,e0aefc1c8a40e6919dc9cfb686e51f7c",
-                "sample4_vs_sample3.cnvcall.vcf:md5,5a5569978dbe12bfaa0399d76120e21e",
                 "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,826087b08d380135a271e2774c94084c",
-                "test2.paired_end.recalibrated.sorted-diagram.pdf:md5,77755cb6e32adcd0a22646dd69bf8235",
                 "test2.paired_end.recalibrated.sorted-scatter.png:md5,b0bec8dbcccad43b186521b8265f7684",
                 "test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test2.paired_end.recalibrated.sorted.bintest.cns:md5,b5ccf48e99562082026e94f8d8aa1133",
@@ -186,13 +180,27 @@
                 "test2.paired_end.recalibrated.sorted.genemetrics.tsv:md5,5ec3555520f502f00f551ae7900a3824",
                 "test2.paired_end.recalibrated.sorted.somatic.call.cns:md5,1cb4febd5c88d306277f3c4c3117d68c",
                 "test2.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,62c2d1f8765618c454bf4455c2298344"
+            ],
+            [
+                [
+                    "sample1.cnvcall.vcf",
+                    "6f8c517f62715c47674c79ffd1e9babb"
+                ],
+                [
+                    "sample2.cnvcall.vcf",
+                    "35662b51f071469c6227be15114eb824"
+                ],
+                [
+                    "sample4_vs_sample3.cnvcall.vcf",
+                    "d41d8cd98f00b204e9800998ecf8427e"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.01.0"
         },
-        "timestamp": "2025-03-11T15:38:04.084076413"
+        "timestamp": "2025-03-11T16:51:08.251908028"
     },
     "-profile test --tools cnvkit --input recalibrated_germline.csv": {
         "content": [
@@ -268,8 +276,6 @@
                 "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multi_intervals.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
                 "reference.cnn:md5,891454915f82d0eeda0be13d71e0d5d7",
-                "sample1.cnvcall.vcf:md5,76686a44fd4b51213b474464b4a8f784",
-                "test.paired_end.recalibrated.sorted-diagram.pdf:md5,6bd6c79fdccc99d09814098bad228b02",
                 "test.paired_end.recalibrated.sorted-scatter.png:md5,2a82254094015efde86e78f38c6487f0",
                 "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.paired_end.recalibrated.sorted.bintest.cns:md5,8d0301673b584a6a8d88bdaad87ba09d",
@@ -279,13 +285,19 @@
                 "test.paired_end.recalibrated.sorted.genemetrics.tsv:md5,5ec3555520f502f00f551ae7900a3824",
                 "test.paired_end.recalibrated.sorted.germline.call.cns:md5,5bba48aecc2282971b9d4c562bec4591",
                 "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,4153756b30abc934f10717c023bd262f"
+            ],
+            [
+                [
+                    "sample1.cnvcall.vcf",
+                    "6f8c517f62715c47674c79ffd1e9babb"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.01.0"
         },
-        "timestamp": "2025-03-11T15:33:07.473214403"
+        "timestamp": "2025-03-11T16:46:40.673616812"
     },
     "-profile test --tools cnvkit somatic --input recalibrated_somatic.csv": {
         "content": [
@@ -392,8 +404,6 @@
                 "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multi_intervals.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
                 "reference.cnn:md5,891454915f82d0eeda0be13d71e0d5d7",
-                "sample3.cnvcall.vcf:md5,76686a44fd4b51213b474464b4a8f784",
-                "test.paired_end.recalibrated.sorted-diagram.pdf:md5,70c33fd2a68a910c69f05f24d5b3f2d9",
                 "test.paired_end.recalibrated.sorted-scatter.png:md5,2a82254094015efde86e78f38c6487f0",
                 "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.paired_end.recalibrated.sorted.bintest.cns:md5,8d0301673b584a6a8d88bdaad87ba09d",
@@ -406,10 +416,8 @@
                 "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multi_intervals.target.bed:md5,f9e727147a7cbca46c2b9b2de3ecae91",
                 "reference.cnn:md5,e0aefc1c8a40e6919dc9cfb686e51f7c",
-                "sample4_vs_sample3.cnvcall.vcf:md5,5a5569978dbe12bfaa0399d76120e21e",
                 "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,826087b08d380135a271e2774c94084c",
-                "test2.paired_end.recalibrated.sorted-diagram.pdf:md5,0de2bc244384eec75f460bd5f3d51ae5",
                 "test2.paired_end.recalibrated.sorted-scatter.png:md5,b0bec8dbcccad43b186521b8265f7684",
                 "test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test2.paired_end.recalibrated.sorted.bintest.cns:md5,b5ccf48e99562082026e94f8d8aa1133",
@@ -419,13 +427,23 @@
                 "test2.paired_end.recalibrated.sorted.genemetrics.tsv:md5,5ec3555520f502f00f551ae7900a3824",
                 "test2.paired_end.recalibrated.sorted.somatic.call.cns:md5,1cb4febd5c88d306277f3c4c3117d68c",
                 "test2.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,62c2d1f8765618c454bf4455c2298344"
+            ],
+            [
+                [
+                    "sample3.cnvcall.vcf",
+                    "6f8c517f62715c47674c79ffd1e9babb"
+                ],
+                [
+                    "sample4_vs_sample3.cnvcall.vcf",
+                    "d41d8cd98f00b204e9800998ecf8427e"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.01.0"
         },
-        "timestamp": "2025-03-11T15:34:44.352982498"
+        "timestamp": "2025-03-11T16:48:08.35830014"
     },
     "-profile test --tools cnvkit --input recalibrated_tumoronly.csv": {
         "content": [
@@ -499,8 +517,6 @@
                 "sample2.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
                 "cnvkit.reference.antitarget-tmp.bed:md5,3d4d20f9f23b39970865d29ef239d20b",
                 "cnvkit.reference.target-tmp.bed:md5,657b25dbda8516624efa8cb2cf3716ca",
-                "sample2.cnvcall.vcf:md5,88fe2757d945eb1c0fcd7dc3d8c5617a",
-                "test2.paired_end.recalibrated.sorted-diagram.pdf:md5,8e1403fee29b29b0e0620663fa5e411f",
                 "test2.paired_end.recalibrated.sorted-scatter.png:md5,d9a4a27a7a93eca23108b43dea09c140",
                 "test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,067115082c4af4b64d58c0dc3a3642e4",
                 "test2.paired_end.recalibrated.sorted.bintest.cns:md5,7a66b5f63acb05e6dfb0784c215851ec",
@@ -510,12 +526,18 @@
                 "test2.paired_end.recalibrated.sorted.genemetrics.tsv:md5,5ec3555520f502f00f551ae7900a3824",
                 "test2.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,e6d0190c1c37ce6e41f76ca5b24ccca3",
                 "test2.paired_end.recalibrated.sorted.tumor_only.call.cns:md5,70a308c6db7acf1a5fd623936cac6412"
+            ],
+            [
+                [
+                    "sample2.cnvcall.vcf",
+                    "35662b51f071469c6227be15114eb824"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.01.0"
         },
-        "timestamp": "2025-03-11T15:36:06.786409434"
+        "timestamp": "2025-03-11T16:49:22.231267173"
     }
 }
