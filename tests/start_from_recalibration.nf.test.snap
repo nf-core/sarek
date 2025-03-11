@@ -1,5 +1,5 @@
 {
-    "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null ": {
+    "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null": {
         "content": [
             9,
             {
@@ -53,6 +53,7 @@
                 "test.recal.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d",
                 "test.recal.cram.stats:md5,1aacf5ac46a0e600925934cf9ee92fc4"
             ],
+            "No BAM files",
             [
                 [
                     "test.recal.cram",
@@ -61,12 +62,12 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-09T17:22:03.443847"
+        "timestamp": "2025-03-11T13:36:05.556087237"
     },
-    "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka ": {
+    "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
             10,
             {
@@ -174,17 +175,26 @@
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-
+                [
+                    "test.strelka.genome.vcf.gz",
+                    "325ea84ccf1ec1cf7a6c5c4aae1c0d1"
+                ],
+                [
+                    "test.strelka.variants.vcf.gz",
+                    "3a3b3e67614ec91f4f0b88999dff454b"
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-09T17:20:43.396817"
+        "timestamp": "2025-03-11T13:36:47.984423607"
     },
-    "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka ": {
+    "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
             10,
             {
@@ -292,17 +302,26 @@
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-
+                [
+                    "test.strelka.genome.vcf.gz",
+                    "325ea84ccf1ec1cf7a6c5c4aae1c0d1"
+                ],
+                [
+                    "test.strelka.variants.vcf.gz",
+                    "3a3b3e67614ec91f4f0b88999dff454b"
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-09T17:23:40.285914"
+        "timestamp": "2025-03-11T13:37:30.336211705"
     },
-    "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null ": {
+    "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null": {
         "content": [
             6,
             {
@@ -331,14 +350,15 @@
             [
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ],
+            "No BAM files",
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-09T17:19:08.093003"
+        "timestamp": "2025-03-11T13:38:05.186917182"
     }
 }

@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("-profile test --tools strelka --only_paired_variant_calling") {
+    test("-profile test --tools manta --only_paired_variant_calling") {
 
         when {
             params {
@@ -16,7 +16,7 @@ nextflow_pipeline {
                 input = "${projectDir}/tests/csv/3.0/recalibrated.csv"
                 outdir = "$outputDir"
                 step = "variant_calling"
-                tools = 'strelka'
+                tools = 'manta'
                 only_paired_variant_calling = true
             }
         }
@@ -46,7 +46,7 @@ nextflow_pipeline {
         }
     }
 
-    test("-profile test --tools strelka germline") {
+    test("-profile test --tools manta germline") {
 
         when {
             params {
@@ -57,7 +57,7 @@ nextflow_pipeline {
                 input = "${projectDir}/tests/csv/3.0/recalibrated_germline.csv"
                 outdir = "$outputDir"
                 step = "variant_calling"
-                tools = 'strelka'
+                tools = 'manta'
             }
         }
 
@@ -86,7 +86,7 @@ nextflow_pipeline {
         }
     }
 
-    test("-profile test --tools strelka --no_intervals germline") {
+    test("-profile test --tools manta --no_intervals germline") {
 
         when {
             params {
@@ -98,7 +98,7 @@ nextflow_pipeline {
                 outdir = "$outputDir"
                 no_intervals = true
                 step = "variant_calling"
-                tools = 'strelka'
+                tools = 'manta'
             }
         }
 
@@ -127,7 +127,7 @@ nextflow_pipeline {
         }
     }
 
-    test("-profile test --tools strelka somatic") {
+    test("-profile test --tools manta somatic") {
 
         when {
             params {
@@ -138,7 +138,7 @@ nextflow_pipeline {
                 input = "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv"
                 outdir = "$outputDir"
                 step = "variant_calling"
-                tools = 'strelka'
+                tools = 'manta'
             }
         }
 
@@ -167,7 +167,7 @@ nextflow_pipeline {
         }
     }
 
-    test("-profile test --tools strelka --no_intervals somatic") {
+    test("-profile test --tools manta --no_intervals somatic") {
 
         when {
             params {
@@ -179,7 +179,88 @@ nextflow_pipeline {
                 outdir = "$outputDir"
                 no_intervals = true
                 step = "variant_calling"
-                tools = 'strelka'
+                tools = 'manta'
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path,
+                    // All vcf files
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
+                ).match() }
+            )
+        }
+    }
+
+    test("-profile test --tools manta tumoronly") {
+
+        when {
+            params {
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+                fasta = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta'
+                fasta_fai = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai'
+                intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed'
+                input = "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv"
+                outdir = "$outputDir"
+                step = "variant_calling"
+                tools = 'manta'
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path,
+                    // All vcf files
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
+                ).match() }
+            )
+        }
+    }
+
+    test("-profile test --tools manta --no_intervals tumoronly") {
+
+        when {
+            params {
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+                fasta = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta'
+                fasta_fai = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai'
+                intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed'
+                input = "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv"
+                outdir = "$outputDir"
+                no_intervals = true
+                step = "variant_calling"
+                tools = 'manta'
             }
         }
 

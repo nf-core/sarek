@@ -1,14 +1,20 @@
 {
-    "Run with profile test,alignment_to_fastq": {
+    "-profile test --input bam_for_remapping.csv --save_mapped --save_output_as_bam": {
         "content": [
             27,
             {
-                "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
-                },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
                     "samtools": 1.2
+                },
+                "CAT_FASTQ": {
+                    "cat": 9.5
+                },
+                "COLLATE_FASTQ_MAP": {
+                    "samtools": 1.21
+                },
+                "COLLATE_FASTQ_UNMAP": {
+                    "samtools": 1.21
                 },
                 "CRAM_TO_BAM": {
                     "samtools": 1.21
@@ -35,20 +41,26 @@
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
                 },
-                "MERGE_BAM": {
-                    "samtools": 1.21
-                },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.8"
+                },
+                "SAMTOOLS_MERGE_UNMAP": {
+                    "samtools": 1.21
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "STRELKA_SINGLE": {
-                    "strelka": "2.9.10"
+                "SAMTOOLS_VIEW_MAP_MAP": {
+                    "samtools": 1.21
                 },
-                "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                "SAMTOOLS_VIEW_MAP_UNMAP": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_VIEW_UNMAP_MAP": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_VIEW_UNMAP_UNMAP": {
+                    "samtools": 1.21
                 },
                 "Workflow": {
                     "nf-core/sarek": "v3.6.0dev"
@@ -60,16 +72,10 @@
                 "csv/markduplicates.csv",
                 "csv/markduplicates_no_table.csv",
                 "csv/recalibrated.csv",
-                "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
-                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
-                "multiqc/multiqc_data/bcftools_stats_vqc_Count_SNP.txt",
-                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transitions.txt",
-                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transversions.txt",
                 "multiqc/multiqc_data/fastqc-status-check-heatmap.txt",
-                "multiqc/multiqc_data/fastqc_adapter_content_plot.txt",
+                "multiqc/multiqc_data/fastqc_overrepresented_sequences_plot.txt",
                 "multiqc/multiqc_data/fastqc_per_base_n_content_plot.txt",
                 "multiqc/multiqc_data/fastqc_per_base_sequence_quality_plot.txt",
                 "multiqc/multiqc_data/fastqc_per_sequence_gc_content_plot_Counts.txt",
@@ -89,7 +95,6 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
-                "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_fastqc.txt",
@@ -104,17 +109,10 @@
                 "multiqc/multiqc_data/picard_histogram_2.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
-                "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
-                "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-status-check-heatmap.pdf",
-                "multiqc/multiqc_plots/pdf/fastqc_adapter_content_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_overrepresented_sequences_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_per_base_n_content_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_per_base_sequence_quality_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Counts.pdf",
@@ -137,16 +135,9 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
-                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
-                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
                 "multiqc/multiqc_plots/png/fastqc-status-check-heatmap.png",
-                "multiqc/multiqc_plots/png/fastqc_adapter_content_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_overrepresented_sequences_plot.png",
                 "multiqc/multiqc_plots/png/fastqc_per_base_n_content_plot.png",
                 "multiqc/multiqc_plots/png/fastqc_per_base_sequence_quality_plot.png",
                 "multiqc/multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Counts.png",
@@ -169,16 +160,9 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
-                "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
-                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
                 "multiqc/multiqc_plots/svg/fastqc-status-check-heatmap.svg",
-                "multiqc/multiqc_plots/svg/fastqc_adapter_content_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_overrepresented_sequences_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc_per_base_n_content_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc_per_base_sequence_quality_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Counts.svg",
@@ -201,8 +185,6 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
-                "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
-                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
@@ -224,21 +206,12 @@
                 "preprocessing/recalibrated/test/test.recal.bam.bai",
                 "reference",
                 "reports",
-                "reports/bcftools",
-                "reports/bcftools/strelka",
-                "reports/bcftools/strelka/test",
-                "reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt",
                 "reports/fastqc",
-                "reports/fastqc/test-test_L1",
-                "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.html",
-                "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.zip",
-                "reports/fastqc/test-test_L1/test-test_L1_2_fastqc.html",
-                "reports/fastqc/test-test_L1/test-test_L1_2_fastqc.zip",
-                "reports/fastqc/test-test_L2",
-                "reports/fastqc/test-test_L2/test-test_L2_1_fastqc.html",
-                "reports/fastqc/test-test_L2/test-test_L2_1_fastqc.zip",
-                "reports/fastqc/test-test_L2/test-test_L2_2_fastqc.html",
-                "reports/fastqc/test-test_L2/test-test_L2_2_fastqc.zip",
+                "reports/fastqc/test-1",
+                "reports/fastqc/test-1/test-1_1_fastqc.html",
+                "reports/fastqc/test-1/test-1_1_fastqc.zip",
+                "reports/fastqc/test-1/test-1_2_fastqc.html",
+                "reports/fastqc/test-1/test-1_2_fastqc.zip",
                 "reports/markduplicates",
                 "reports/markduplicates/test",
                 "reports/markduplicates/test/test.md.cram.metrics",
@@ -257,79 +230,67 @@
                 "reports/samtools",
                 "reports/samtools/test",
                 "reports/samtools/test/test.md.cram.stats",
-                "reports/samtools/test/test.recal.cram.stats",
-                "reports/vcftools",
-                "reports/vcftools/strelka",
-                "reports/vcftools/strelka/test",
-                "reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary",
-                "reports/vcftools/strelka/test/test.strelka.variants.TsTv.count",
-                "reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual",
-                "variant_calling",
-                "variant_calling/strelka",
-                "variant_calling/strelka/test",
-                "variant_calling/strelka/test/test.strelka.genome.vcf.gz",
-                "variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi",
-                "variant_calling/strelka/test/test.strelka.variants.vcf.gz",
-                "variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi"
+                "reports/samtools/test/test.recal.cram.stats"
             ],
             [
-                "bcftools_stats_indel-lengths.txt:md5,deccb75341ca46a6f09658f7fd9e348b",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,7b2a64880b653ccf0400ed9073e290dd",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,72e934e0e8ed9b9712105bbd66dd9ffd",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,72e934e0e8ed9b9712105bbd66dd9ffd",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,72e934e0e8ed9b9712105bbd66dd9ffd",
-                "fastqc-status-check-heatmap.txt:md5,a020b9689ddeb4abec16b4854fe452f1",
-                "fastqc_adapter_content_plot.txt:md5,2e1b72be741319e7fadbbb39d7e5b37d",
-                "fastqc_per_base_n_content_plot.txt:md5,ad3b971a6bb4e8ba6c844c8a03584eb8",
-                "fastqc_per_base_sequence_quality_plot.txt:md5,1bc03889d243a944253ac637d81ae10c",
-                "fastqc_per_sequence_gc_content_plot_Counts.txt:md5,2c42d140ce06c08dad2b58f397c23239",
-                "fastqc_per_sequence_gc_content_plot_Percentages.txt:md5,59e22821d350bfb97c37ffd9088f5ad9",
-                "fastqc_per_sequence_quality_scores_plot.txt:md5,f33615cc98bb6225f39545a415fa7c0f",
-                "fastqc_sequence_counts_plot.txt:md5,7f0f19a58e8e54e792a751fd04a9ae13",
-                "fastqc_sequence_duplication_levels_plot.txt:md5,92b02e250ff78725deb9a10d510fcecc",
-                "fastqc_sequence_length_distribution_plot.txt:md5,fb04dce68ec566314125bc9438211b28",
-                "fastqc_top_overrepresented_sequences_table.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt:md5,20b2630a7400c9c279bf8c0c66341f7d",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt:md5,b9b943621e50c7f3e75a37871667d5ed",
-                "mosdepth-coverage-per-contig-single.txt:md5,264db67a99d2c90ea7b075e33c201b77",
-                "mosdepth-cumcoverage-dist-id.txt:md5,5235e965da7ebe3bfebb24ffa88defff",
-                "mosdepth_cov_dist.txt:md5,8d0d7cb485a7bffb07da17b28f827120",
-                "mosdepth_cumcov_dist.txt:md5,8d0d7cb485a7bffb07da17b28f827120",
-                "mosdepth_perchrom.txt:md5,264db67a99d2c90ea7b075e33c201b77",
-                "multiqc_bcftools_stats.txt:md5,103ba59d44fc60e9308e64bbd0d0e504",
-                "multiqc_citations.txt:md5,ace4ca89138a5f1e2be289c157c00bd9",
-                "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
-                "multiqc_samtools_stats.txt:md5,0f1e4c6c497d9a952765f9f3068ea4b9",
+                "fastqc-status-check-heatmap.txt:md5,0c9e61033b0669f20e27dce8f4b3b25c",
+                "fastqc_overrepresented_sequences_plot.txt:md5,204591ae3929c2d5c7af72d3012c1675",
+                "fastqc_per_base_n_content_plot.txt:md5,bc7b5536aa1867577c34defe2fc2af3f",
+                "fastqc_per_base_sequence_quality_plot.txt:md5,2c16d19197f73195d3369744fb281189",
+                "fastqc_per_sequence_gc_content_plot_Counts.txt:md5,71ce73a79821c103d82139250280c146",
+                "fastqc_per_sequence_gc_content_plot_Percentages.txt:md5,144b778df9c67bb144b32193544777fb",
+                "fastqc_per_sequence_quality_scores_plot.txt:md5,735220d7946ff36b933daf1de284747b",
+                "fastqc_sequence_counts_plot.txt:md5,bcd6fbad2fcbfcd6e78f7392945471cb",
+                "fastqc_sequence_duplication_levels_plot.txt:md5,65c8986b4ea2983999508c5d8fce0df5",
+                "fastqc_sequence_length_distribution_plot.txt:md5,8f2a67d6bf43abce206aa77c2959b420",
+                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt:md5,627a84e2b0dd5dc5a11aadbb20107c01",
+                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt:md5,d727e4f305ac9d995de9596ee6824eaf",
+                "mosdepth-coverage-per-contig-single.txt:md5,76d816c3f71faf2009c8a6f88092a2f3",
+                "mosdepth-cumcoverage-dist-id.txt:md5,3af8f7d8ed7d1fdff6118e0098258192",
+                "mosdepth_cov_dist.txt:md5,4a2236db76d75e45012f6d7c180c90d6",
+                "mosdepth_cumcov_dist.txt:md5,4a2236db76d75e45012f6d7c180c90d6",
+                "mosdepth_perchrom.txt:md5,76d816c3f71faf2009c8a6f88092a2f3",
+                "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
+                "multiqc_fastqc.txt:md5,6fa90a9d9daa7d4839e4b7ebfcdc6201",
+                "multiqc_samtools_stats.txt:md5,db577e0a516ecd42c0a193586fc8b99c",
                 "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,c94f4d3ffa3f510552f90e173fdd9f9d",
-                "samtools_alignment_plot.txt:md5,717f499a3543e7ee4c7a8454bf80aeca",
-                "vcftools_tstv_by_count.txt:md5,50efc5214fe2c39f21efb66a710d2ed6",
-                "test.strelka.variants.bcftools_stats.txt:md5,86bd4938eed920d36f3f5937102a2967",
-                "test.md.mosdepth.global.dist.txt:md5,b61e1acee11a6ddf7ce3232a5948a6a0",
-                "test.md.mosdepth.region.dist.txt:md5,1a382f98d488d2ae3df83a0d87caafc1",
-                "test.md.mosdepth.summary.txt:md5,839108358878ada89e1eaddf6e0541ba",
-                "test.md.regions.bed.gz:md5,6fdaec99e739dc0f47fe55dd64dfe93e",
-                "test.md.regions.bed.gz.csi:md5,5f9c60279af78e3aeafc96a8c11fb35f",
-                "test.recal.mosdepth.global.dist.txt:md5,b61e1acee11a6ddf7ce3232a5948a6a0",
-                "test.recal.mosdepth.region.dist.txt:md5,1a382f98d488d2ae3df83a0d87caafc1",
-                "test.recal.mosdepth.summary.txt:md5,839108358878ada89e1eaddf6e0541ba",
-                "test.recal.regions.bed.gz:md5,6fdaec99e739dc0f47fe55dd64dfe93e",
-                "test.recal.regions.bed.gz.csi:md5,5f9c60279af78e3aeafc96a8c11fb35f",
-                "test.md.cram.stats:md5,7d19da3fc342afe0884c944f97a578b1",
-                "test.recal.cram.stats:md5,820d123e746d1abdc90fd8710828082e",
-                "test.strelka.variants.FILTER.summary:md5,ad417bc96d31223f61170987975d8128",
-                "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
+                "samtools-stats-dp.txt:md5,ef82cfdd058c212c0bba38ceb32ec2f8",
+                "samtools_alignment_plot.txt:md5,22572fcd0791878ed37ae2f48213cee2",
+                "test.md.mosdepth.global.dist.txt:md5,9cb9b181119256ed17a77dcf44d58285",
+                "test.md.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
+                "test.md.mosdepth.summary.txt:md5,dbe376360e437c89190139ef0ae6769a",
+                "test.md.regions.bed.gz:md5,0e5ed846b9b11717e42e93eec60f4ffc",
+                "test.md.regions.bed.gz.csi:md5,633cc0252eb2246a0943aec7e7512e3e",
+                "test.recal.mosdepth.global.dist.txt:md5,9cb9b181119256ed17a77dcf44d58285",
+                "test.recal.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
+                "test.recal.mosdepth.summary.txt:md5,dbe376360e437c89190139ef0ae6769a",
+                "test.recal.regions.bed.gz:md5,0e5ed846b9b11717e42e93eec60f4ffc",
+                "test.recal.regions.bed.gz.csi:md5,633cc0252eb2246a0943aec7e7512e3e",
+                "test.md.cram.stats:md5,2cc3430db9e2007da1464dd616aa8427",
+                "test.recal.cram.stats:md5,1ef19ce72bf2cb61d2dc4aede12bec94"
             ],
+            "No CRAM files",
             [
-
+                [
+                    "test.sorted.bam",
+                    "6934a96fff1eaa2f70b31ab7e11d3598"
+                ],
+                [
+                    "test.md.bam",
+                    "6934a96fff1eaa2f70b31ab7e11d3598"
+                ],
+                [
+                    "test.recal.bam",
+                    "95a95d43e1db35c58b311dee4338c05b"
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-09T17:49:40.35031"
+        "timestamp": "2025-03-10T11:12:56.110042256"
     }
 }

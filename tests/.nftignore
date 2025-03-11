@@ -1,6 +1,7 @@
 .DS_Store
 annotation/**/*.vcf.{gz,gz.tbi}
 csv/*.csv
+multiqc/multiqc_data/fastqc_top_overrepresented_sequences_table.txt
 multiqc/multiqc_data/gatk-base-recalibrator-reported-empirical-plot.txt
 multiqc/multiqc_data/gatk_base_recalibrator.txt
 multiqc/multiqc_data/multiqc.log
@@ -26,3 +27,4 @@ reports/snpeff/*/snpEff_summary.html
 reports/vcftools/**/*.TsTv.qual
 variant_calling/**/*.vcf.{gz,gz.tbi}
 variant_calling/controlfreec/*/config.txt
+variant_calling/tiddit/*/*.tiddit.ploidies.tab
