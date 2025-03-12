@@ -1,5 +1,5 @@
 {
-    "Run with profile test | --tools merge,snpeff,vep": {
+    "-profile test --tools merge,snpeff,vep": {
         "content": [
             7,
             {
@@ -16,7 +16,7 @@
                     "tabix": 1.2
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0"
+                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -97,15 +97,29 @@
                 "vep-general-stats.txt:md5,71c994ae4221384f4e22459723d29cd0",
                 "vep.txt:md5,20570f3e4e51407b860a31d7e1d59de0",
                 "test_snpEff.genes.txt:md5,130536bf0237d7f3f746d32aaa32840a"
+            ],
+            [
+                [
+                    "test_VEP.ann.vcf.gz",
+                    "d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                [
+                    "test_snpEff.ann.vcf.gz",
+                    "fd266e623365c7d1837bc9eb088fe70c"
+                ],
+                [
+                    "test_snpEff_VEP.ann.vcf.gz",
+                    "d41d8cd98f00b204e9800998ecf8427e"
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.1",
-            "nextflow": "24.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-10-29T10:03:16.229715"
+        "timestamp": "2025-02-24T17:16:02.176798697"
     },
-    "Run with profile test | --tools merge": {
+    "-profile test --tools merge": {
         "content": [
             5,
             {
@@ -122,7 +136,7 @@
                     "tabix": 1.2
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0"
+                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -194,12 +208,18 @@
                 "snpeff_variant_effects_region.txt:md5,05efd324edadced17ba3cd2b7714af57",
                 "vep-general-stats.txt:md5,57563be109a57f6edfa427b2b2c310ba",
                 "vep.txt:md5,bf54f689bb0ccab5e1566e48373f768c"
+            ],
+            [
+                [
+                    "test_snpEff_VEP.ann.vcf.gz",
+                    "d41d8cd98f00b204e9800998ecf8427e"
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.1",
-            "nextflow": "24.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-10-29T09:56:59.385257"
+        "timestamp": "2025-02-24T17:14:45.665437291"
     }
 }

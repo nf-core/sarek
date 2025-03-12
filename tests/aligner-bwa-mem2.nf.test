@@ -5,12 +5,11 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("Run with profile test | --aligner bwa-mem2 --save_reference | skip QC/recal/md") {
+    test("-profile test --aligner bwa-mem2 --save_reference skip QC/recal/md") {
 
         when {
             params {
                 aligner = 'bwa-mem2'
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 outdir = "$outputDir"
                 save_reference = true
                 skip_tools = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
@@ -25,7 +24,9 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             // cram_files: All cram files
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
+            // Fasta file for cram verification with nft-bam
+            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -38,13 +39,13 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] }
+                    cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] }
                 ).match() }
             )
         }
     }
 
-    test("Run with profile test | --aligner bwa-mem2 --save_reference --build_only_index") {
+    test("-profile test --aligner bwa-mem2 --save_reference --build_only_index") {
 
         when {
             params {
