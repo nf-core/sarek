@@ -18,7 +18,7 @@ nextflow_pipeline {
                 trim_fastq          = true
                 save_trimmed        = true
                 outdir              = "$outputDir"
-                 // Base directory for nf-core/modules test data
+                // Base directory for nf-core/modules test data
                 modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 // Input data
                 input = "${projectDir}/tests/csv/3.0/fastq_single.csv"
@@ -68,7 +68,7 @@ nextflow_pipeline {
                 split_fastq       = 150000
                 tools             = null
                 outdir            = "$outputDir"
-                 // Base directory for nf-core/modules test data
+                // Base directory for nf-core/modules test data
                 modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 // Input data
                 input = "${projectDir}/tests/csv/3.0/fastq_single.csv"
