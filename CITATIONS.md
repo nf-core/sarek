@@ -150,6 +150,10 @@
 
   > Wilm et al. LoFreq: A sequence-quality aware, ultra-sensitive variant caller for uncovering cell-population heterogeneity from high-throughput sequencing datasets. Nucleic Acids Res. 2012; 40(22):11189-201.
 
+- [MuSE](https://pubmed.ncbi.nlm.nih.gov/38589250/)
+
+  > Ji S, Zhu T, Sethia A, Wang W. Accelerated somatic mutation calling for whole-genome and whole-exome sequencing data from heterogenous tumor samples. Genome Res. 2024 May 15;34(4):633-641. doi: 10.1101/gr.278456.123. PMID: 38589250; PMCID: PMC11146589.
+
 ## R packages
 
 - [R](https://www.R-project.org/)
