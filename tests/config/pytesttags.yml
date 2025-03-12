@@ -108,35 +108,6 @@ deepvariant:
   - tests/csv/3.0/recalibrated_germline.csv
   - tests/test_deepvariant.yml
 
-## haplotypecaller
-haplotypecaller:
-  - conf/modules/haplotypecaller.config
-  - modules/nf-core/gatk4/cnnscorevariants/**
-  - modules/nf-core/gatk4/filtervarianttranches/**
-  - modules/nf-core/gatk4/haplotypecaller/**
-  - modules/nf-core/gatk4/mergevcfs/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/samtools/index/**
-  - modules/nf-core/samtools/merge/**
-  - subworkflows/local/bam_merge_index_samtools/**
-  - subworkflows/local/bam_variant_calling_germline_all/**
-  - subworkflows/local/bam_variant_calling_haplotypecaller/**
-  - subworkflows/local/vcf_variant_filtering_gatk/**
-  - tests/csv/3.0/mapped_single_bam.csv
-  - tests/test_haplotypecaller.yml
-
-haplotypecaller_skip_filter:
-  - conf/modules/haplotypecaller.config
-  - modules/nf-core/gatk4/haplotypecaller/**
-  - modules/nf-core/gatk4/mergevcfs/**
-  - modules/nf-core/samtools/index/**
-  - modules/nf-core/samtools/merge/**
-  - subworkflows/local/bam_merge_index_samtools/**
-  - subworkflows/local/bam_variant_calling_germline_all/**
-  - subworkflows/local/bam_variant_calling_haplotypecaller/**
-  - tests/csv/3.0/mapped_single_bam.csv
-  - tests/test_haplotypecaller_skip_filter.yml
-
 ## sentieon/dnascope
 sentieon/dnascope:
   - conf/modules/sentieon_dnascope.config
