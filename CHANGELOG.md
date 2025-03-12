@@ -55,6 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1825](https://github.com/nf-core/sarek/pull/1825) - Migrate pipeline pytest cnvkit tests to nf-test
 - [1826](https://github.com/nf-core/sarek/pull/1826) - Migrate pipeline pytest mpileup tests to nf-test
 - [1827](https://github.com/nf-core/sarek/pull/1827) - Migrate pipeline pytest haplotypecaller tests to nf-test
+- [1830](https://github.com/nf-core/sarek/pull/1830) - Migrate pipeline pytest fastp tests to nf-test
 
 #### Fixed
 
