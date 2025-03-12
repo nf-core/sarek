@@ -355,6 +355,16 @@
                         "git_sha": "cf17ca47590cc578dfb47db1c2a44ef86f89976d",
                         "installed_by": ["modules"]
                     },
+                    "muse/call": {
+                        "branch": "master",
+                        "git_sha": "a14b4f333e54f58ac3125db6959c8a43957fd5c8",
+                        "installed_by": ["modules"]
+                    },
+                    "muse/sump": {
+                        "branch": "master",
+                        "git_sha": "a14b4f333e54f58ac3125db6959c8a43957fd5c8",
+                        "installed_by": ["modules"]
+                    },
                     "ngscheckmate/ncm": {
                         "branch": "master",
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
