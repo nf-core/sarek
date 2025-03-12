@@ -52,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1821](https://github.com/nf-core/sarek/pull/1821) - Migrate pipeline pytest freebayes tests to nf-test
 - [1826](https://github.com/nf-core/sarek/pull/1826) - Migrate pipeline pytest mpileup tests to nf-test
 - [1827](https://github.com/nf-core/sarek/pull/1827) - Migrate pipeline pytest haplotypecaller tests to nf-test
+- [1828](https://github.com/nf-core/sarek/pull/1828) - Migrate pipeline pytest lofreq tests to nf-test
 
 #### Fixed
 
