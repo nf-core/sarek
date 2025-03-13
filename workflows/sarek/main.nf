@@ -28,7 +28,7 @@ include { CRAM_SAMPLEQC                                     } from '../../subwor
 
 // Preprocessing
 include { FASTQ_ALIGN_GATK                                  } from '../../subworkflows/local/fastq_align_gatk/main'
-include { FASTQ_ALIGN_PARABRICKS                            } from '../../subworkflows/local/fastq_align_parabricks/main'  
+include { FASTQ_ALIGN_PARABRICKS                            } from '../../subworkflows/local/fastq_align_parabricks/main'
 
 // Variant calling on a single normal sample
 include { BAM_VARIANT_CALLING_GERMLINE_ALL                  } from '../../subworkflows/local/bam_variant_calling_germline_all/main'

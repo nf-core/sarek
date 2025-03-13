@@ -41,13 +41,13 @@ workflow FASTQ_ALIGN_PARABRICKS {
 
     ch_versions = ch_versions.mix(CRAM_SAMPLEQC.versions)
 
-    cram_variant_calling = 
+    cram_variant_calling =
         PARABRICKS_FQ2BAM.out.cram
         .join(PARABRICKS_FQ2BAM.out.crai, failOnDuplicate: true, failOnMismatch: true)
 
     CHANNEL_ALIGN_CREATE_CSV(
         cram_variant_calling,
-        params.outdir, 
+        params.outdir,
         params.save_output_as_bam
     )
 
