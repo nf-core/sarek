@@ -12,7 +12,9 @@ multiqc/multiqc_data/multiqc_software_versions.txt
 multiqc/multiqc_data/multiqc_sources.txt
 multiqc/multiqc_data/picard_deduplication.txt
 multiqc/multiqc_data/vcftools_tstv_by_qual.txt
-multiqc/multiqc_plots/{svg,pdf,png}/*.{svg,pdf,png}
+multiqc/multiqc_plots/svg/*.svg
+multiqc/multiqc_plots/pdf/*.pdf
+multiqc/multiqc_plots/png/*.png
 multiqc/multiqc_report.html
 no_intervals.{bed,bed.gz,bed.gz.tbi}
 pipeline_info/*.{html,json,txt,yml}
@@ -20,6 +22,7 @@ preprocessing/**/*.{md,recal,sorted}.{bam,bam.bai,cram,cram.crai,table}
 reference/dragmap/hash_table.{cfg,cfg.bin}
 reference/dragmap/hash_table_stats.txt
 reports/EnsemblVEP/*/*.ann.summary.html
+reports/fastp/**/*.fastp.{log,html}
 reports/fastqc/**/*_fastqc.{html,zip}
 reports/markduplicates/**/*.md.cram.metrics
 reports/snpeff/*/*_snpEff.csv
