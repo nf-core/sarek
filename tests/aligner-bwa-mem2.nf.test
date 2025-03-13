@@ -4,7 +4,7 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    tag "gpu"
+    tag "cpu"
 
     test("-profile test --aligner bwa-mem2 --save_reference skip QC/recal/md") {
 
