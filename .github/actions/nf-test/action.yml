@@ -80,6 +80,7 @@ runs:
           --tap=test.tap \
           --verbose \
           --ci \
+          --changed-since HEAD^ \
           --shard ${{ inputs.shard }}/${{ inputs.total_shards }} \
           --filter function,workflow,pipeline
 
