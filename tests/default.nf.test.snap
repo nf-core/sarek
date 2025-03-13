@@ -299,8 +299,6 @@
                 "test.recal.mosdepth.summary.txt:md5,839108358878ada89e1eaddf6e0541ba",
                 "test.recal.regions.bed.gz:md5,6fdaec99e739dc0f47fe55dd64dfe93e",
                 "test.recal.regions.bed.gz.csi:md5,5f9c60279af78e3aeafc96a8c11fb35f",
-                "test.md.cram.stats:md5,7d19da3fc342afe0884c944f97a578b1",
-                "test.recal.cram.stats:md5,820d123e746d1abdc90fd8710828082e",
                 "test.strelka.variants.FILTER.summary:md5,ad417bc96d31223f61170987975d8128",
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],

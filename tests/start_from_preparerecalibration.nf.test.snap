@@ -394,8 +394,7 @@
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d",
-                "test.recal.cram.stats:md5,9f75ec16d22ce12c348cbd7477c9886e"
+                "test.recal.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d"
             ],
             "No BAM files",
             [

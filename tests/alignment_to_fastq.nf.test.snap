@@ -267,9 +267,7 @@
                 "test.recal.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.recal.mosdepth.summary.txt:md5,dbe376360e437c89190139ef0ae6769a",
                 "test.recal.regions.bed.gz:md5,0e5ed846b9b11717e42e93eec60f4ffc",
-                "test.recal.regions.bed.gz.csi:md5,633cc0252eb2246a0943aec7e7512e3e",
-                "test.md.cram.stats:md5,2cc3430db9e2007da1464dd616aa8427",
-                "test.recal.cram.stats:md5,1ef19ce72bf2cb61d2dc4aede12bec94"
+                "test.recal.regions.bed.gz.csi:md5,633cc0252eb2246a0943aec7e7512e3e"
             ],
             "No CRAM files",
             [

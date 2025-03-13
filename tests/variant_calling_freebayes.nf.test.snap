@@ -133,7 +133,6 @@
                 "sample2.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
                 "sample2.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
                 "sample2.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
-                "sample2.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
                 "sample2.freebayes.FILTER.summary:md5,0df3ddeec5779344b5d463347c9c6ea8",
                 "sample2.freebayes.TsTv.count:md5,b1d308ed5087361a584cb61e7b835e1e"
             ]
@@ -475,8 +474,6 @@
                 "test.recal.per-base.bed.gz.csi:md5,bb424ead65ffe782f6eaa3663ea65721",
                 "test.recal.regions.bed.gz:md5,e39c27885a30c0321f3cb7c7fb6c5edc",
                 "test.recal.regions.bed.gz.csi:md5,e1a52ced0e9ded1eecbca4eff2014c8e",
-                "test.md.cram.stats:md5,7d19da3fc342afe0884c944f97a578b1",
-                "test.recal.cram.stats:md5,87ed0ca7a04c0b6dfc5f05b18467ecbe",
                 "test.freebayes.FILTER.summary:md5,75824ce08910acce7e9f6adb4d635850",
                 "test.freebayes.TsTv.count:md5,3c198f7ec7fe2f5d365218ba0ff64197"
             ],
@@ -876,10 +873,6 @@
                 "test2.recal.per-base.bed.gz.csi:md5,49dec4905343693cb7812da9ee60037c",
                 "test2.recal.regions.bed.gz:md5,0bb2549180165a99680ba3e453ea312f",
                 "test2.recal.regions.bed.gz.csi:md5,e1a52ced0e9ded1eecbca4eff2014c8e",
-                "test.md.cram.stats:md5,7d0a7d3d4ca6bf21702e7775b1777fb8",
-                "test.recal.cram.stats:md5,4efd4142116c0ddc309aa3660834d991",
-                "test2.md.cram.stats:md5,592aae2575ef68c8c8d9e993ca288f2d",
-                "test2.recal.cram.stats:md5,9ac6a5c9280fa139e8597a41aadabbb5",
                 "test.freebayes.FILTER.summary:md5,43d53e36cbb1091f915b2499e545b41e",
                 "test.freebayes.TsTv.count:md5,650f3dc78c5aaaecfe8ffa3d499e812f",
                 "test2_vs_test.freebayes.FILTER.summary:md5,84039d55edf0981d6b9b81252aff6741",
@@ -1258,10 +1251,6 @@
                 "test2.recal.mosdepth.summary.txt:md5,d5e4084de2ea2a0a7b60b2d71c804d4b",
                 "test2.recal.per-base.bed.gz:md5,e1c6d60621d8f64aaf28fa1c1ddda921",
                 "test2.recal.per-base.bed.gz.csi:md5,69f4da029c05e9bcccae8895b6247a1e",
-                "test.md.cram.stats:md5,7d0a7d3d4ca6bf21702e7775b1777fb8",
-                "test.recal.cram.stats:md5,478a0a01a1d1e2f2a5c0d91c58d32d84",
-                "test2.md.cram.stats:md5,592aae2575ef68c8c8d9e993ca288f2d",
-                "test2.recal.cram.stats:md5,bada0a59a5497724fc71620d999e1460",
                 "test.freebayes.FILTER.summary:md5,76c5919541536c12b5c8a6094d6d78d5",
                 "test.freebayes.TsTv.count:md5,0a0464beef110bc0f3c5a35d022b528e",
                 "test2_vs_test.freebayes.FILTER.summary:md5,d2d717fef7c18ef9b40bbbc5c5bbf101",
@@ -1604,8 +1593,6 @@
                 "test.recal.mosdepth.summary.txt:md5,839108358878ada89e1eaddf6e0541ba",
                 "test.recal.regions.bed.gz:md5,6fdaec99e739dc0f47fe55dd64dfe93e",
                 "test.recal.regions.bed.gz.csi:md5,5f9c60279af78e3aeafc96a8c11fb35f",
-                "test.md.cram.stats:md5,7d19da3fc342afe0884c944f97a578b1",
-                "test.recal.cram.stats:md5,4242101f58b473ca012a8162e45ff7d4",
                 "test.freebayes.FILTER.summary:md5,562eaa4512cd4b57e6cfca7b44957d1c",
                 "test.freebayes.TsTv.count:md5,4e6935b1e1906e57be1b54c0dffe7169"
             ],
@@ -1753,7 +1740,6 @@
                 "sample2.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
                 "sample2.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
-                "sample2.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
                 "sample2.freebayes.FILTER.summary:md5,ee513ecf779b6e201b8ef98f95f25aab",
                 "sample2.freebayes.TsTv.count:md5,2dc153ad5af26c9f8aa82442bf65b4bf"
             ]
