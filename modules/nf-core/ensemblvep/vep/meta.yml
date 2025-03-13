@@ -63,15 +63,24 @@ input:
 output:
   - vcf:
       - meta:
-          type: file
+          type: map
           description: |
-            annotated vcf (optional)
-          pattern: "*.ann.vcf.gz"
+            Map with sample information
       - "*.vcf.gz":
           type: file
           description: |
             annotated vcf (optional)
-          pattern: "*.ann.vcf.gz"
+          pattern: "*.vcf.gz"
+  - tbi:
+      - meta:
+          type: map
+          description: |
+            Map with sample information
+      - "*.vcf.gz.tbi":
+          type: file
+          description: |
+            annotated vcf index (optional)
+          pattern: "*.vcf.gz.tbi"
   - tab:
       - meta:
           type: file
