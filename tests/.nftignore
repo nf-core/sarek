@@ -2,6 +2,8 @@
 annotation/**/*.vcf.{gz,gz.tbi}
 csv/*.csv
 multiqc/multiqc_data/fastqc_top_overrepresented_sequences_table.txt
+multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt
+multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt
 multiqc/multiqc_data/gatk-base-recalibrator-reported-empirical-plot.txt
 multiqc/multiqc_data/gatk_base_recalibrator.txt
 multiqc/multiqc_data/multiqc.log
@@ -12,9 +14,7 @@ multiqc/multiqc_data/multiqc_software_versions.txt
 multiqc/multiqc_data/multiqc_sources.txt
 multiqc/multiqc_data/picard_deduplication.txt
 multiqc/multiqc_data/vcftools_tstv_by_qual.txt
-multiqc/multiqc_plots/svg/*.svg
-multiqc/multiqc_plots/pdf/*.pdf
-multiqc/multiqc_plots/png/*.png
+multiqc/multiqc_plots/{svg,pdf,png}/*.{svg,pdf,png}
 multiqc/multiqc_report.html
 no_intervals.{bed,bed.gz,bed.gz.tbi}
 pipeline_info/*.{html,json,txt,yml}
@@ -25,6 +25,7 @@ reports/EnsemblVEP/*/*.ann.summary.html
 reports/fastp/**/*.fastp.{log,html}
 reports/fastqc/**/*_fastqc.{html,zip}
 reports/markduplicates/**/*.md.cram.metrics
+reports/samtools/**/**.recal.cram.stats
 reports/snpeff/*/*_snpEff.csv
 reports/snpeff/*/snpEff_summary.html
 reports/vcftools/**/*.TsTv.qual
