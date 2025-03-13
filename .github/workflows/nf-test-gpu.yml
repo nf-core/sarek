@@ -1,4 +1,4 @@
-name: Run nf-test
+name: Run nf-test on GPU
 on:
   push:
     branches:
@@ -22,11 +22,8 @@ on:
     inputs:
       runners:
         description: "Runners to test on"
-        type: choice
-        options:
-          - "ubuntu-latest"
-          - "self-hosted"
-        default: "ubuntu-latest"
+        type: string
+        default: "gpu"
 
 # Cancel if a newer run is started
 concurrency:
@@ -69,7 +66,7 @@ jobs:
           NFT_VER: ${{ env.NFT_VER }}
         with:
           max_shards: 7
-          tags: "cpu"
+          tags: "gpu"
 
       - name: debug
         run: |
@@ -77,8 +74,8 @@ jobs:
           echo ${{ steps.set-shards.outputs.total_shards }}
 
   nf-test:
-    runs-on: ${{ github.event.inputs.runners || github.run_number > 1 && 'ubuntu-latest' || 'self-hosted' }}
-    name: "${{ matrix.profile }} | ${{ matrix.NXF_VER }} | ${{ matrix.shard }}/${{ needs.nf-test-changes.outputs.total_shards }}"
+    runs-on: "gpu"
+    name: "GPU | ${{ matrix.profile }} | ${{ matrix.NXF_VER }} | ${{ matrix.shard }}/${{ needs.nf-test-changes.outputs.total_shards }}"
     needs: [nf-test-changes]
     if: ${{ needs.nf-test-changes.outputs.total_shards != '0' }}
     strategy:
@@ -121,7 +118,8 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
-          tags: "cpu"
+          tags: "gpu"
+
   confirm-pass:
     runs-on: ${{ github.event.inputs.runners || github.run_number > 1 && 'ubuntu-latest' || 'self-hosted' }}
     needs: [nf-test]

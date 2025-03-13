@@ -4,6 +4,7 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
+    tag "cpu"
 
     test("trimming | -profile test,trimming --save_trimmed") {
 
