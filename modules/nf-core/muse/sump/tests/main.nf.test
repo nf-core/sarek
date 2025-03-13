@@ -1,0 +1,82 @@
+nextflow_process {
+
+    name "Test Process MUSE_SUMP"
+    script "../main.nf"
+    process "MUSE_SUMP"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "muse"
+    tag "muse/sump"
+
+    test("human - txt") {
+
+        config "./nextflow.config"
+
+        when {
+            params {
+                module_args = '-E'
+            }
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/muse/MuSE-call.chr21.hg38.paired_end.recal.MuSE.txt', checkIfExists: true)
+                ]
+                input[1] = [
+                    [ id:'reference' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.versions,
+                    path(process.out.vcf.get(0).get(1)).vcf.header.getColumnCount(),
+                    path(process.out.vcf.get(0).get(1)).vcf.summary
+                    ).match()
+                }
+            )
+        }
+
+    }
+
+    test("human - txt - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/muse/MuSE-call.chr21.hg38.paired_end.recal.MuSE.txt', checkIfExists: true)
+                ]
+                input[1] = [
+                    [ id:'reference' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out,
+                    path(process.out.versions[0]).yaml
+                    ).match() 
+                }
+            )
+        }
+
+    }
+
+}
