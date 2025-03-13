@@ -200,12 +200,12 @@
                 "test-test_L1_2.fastp.fastq.gz:md5,e366994a1db55b5ed3cd12482f33cee7",
                 "test-test_L2_1.fastp.fastq.gz:md5,f1a5c524cae7be9b5ca9a4138f847cfa",
                 "test-test_L2_2.fastp.fastq.gz:md5,e366994a1db55b5ed3cd12482f33cee7",
-                "test-test_L1.fastp.html:md5,1c7dc021081938ac36a4bdea6e2c9b53",
+                "test-test_L1.fastp.html:md5,f9dc33f90889de9a2ab2c867c511f3c1",
                 "test-test_L1.fastp.json:md5,5db85a1cc8441aaf8e92185da899ab51",
-                "test-test_L1.fastp.log:md5,0e842eee73039df8218c3db54097a695",
-                "test-test_L2.fastp.html:md5,455d3810c6ae8163f47aa5e696bd2c4b",
+                "test-test_L1.fastp.log:md5,a913fc9516c830729f014bf2d199068f",
+                "test-test_L2.fastp.html:md5,4e6c86624cbf7a486f40e698df691d3e",
                 "test-test_L2.fastp.json:md5,5ede98d4f6bbad75b32a6861748ee8c9",
-                "test-test_L2.fastp.log:md5,731ae5ba90ac1fa89d806ef51c605583",
+                "test-test_L2.fastp.log:md5,fd5fe1e47ee3ac8cf74e73e9cf3494ed",
                 "test.md.mosdepth.global.dist.txt:md5,3b27db27d3af8a49213b0f0ca5a3a691",
                 "test.md.mosdepth.region.dist.txt:md5,3e33ce923c2e9348c001cc34960d4d90",
                 "test.md.mosdepth.summary.txt:md5,2de9c6803d74a7157c626320cf916587",
@@ -235,7 +235,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-12T13:50:56.417502"
+        "timestamp": "2025-03-13T11:52:10.336919"
     },
     "split fastq | -profile test,split_fastq": {
         "content": [
@@ -430,8 +430,8 @@
                 "fastqc_sequence_counts_plot.txt:md5,7f0f19a58e8e54e792a751fd04a9ae13",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,92b02e250ff78725deb9a10d510fcecc",
                 "fastqc_sequence_length_distribution_plot.txt:md5,fb04dce68ec566314125bc9438211b28",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt:md5,afad164c98a063b2088227be8f8b321d",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt:md5,4f6d976f2a76d2cb42a89de43fc304c5",
+                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt:md5,3c0abc72341c407e7c4bec18b8b93a02",
+                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt:md5,42339d6db3c2a1510ca90927939224bd",
                 "mosdepth-coverage-per-contig-single.txt:md5,709f5e6e408e4f5761bf5435fa891792",
                 "mosdepth-cumcoverage-dist-id.txt:md5,ab5c082eedccdcd3a6b0a0b16eab76fb",
                 "mosdepth_cov_dist.txt:md5,7e72113dc0c2a58fc194b5a3460e9482",
@@ -462,12 +462,12 @@
                 "0004.test-test_L1_2.fastp.fastq.gz:md5,9fed0306de48317ab68706bec5cb0b38",
                 "0004.test-test_L2_1.fastp.fastq.gz:md5,7ca0af52f3421aa547d3b8c494a9979a",
                 "0004.test-test_L2_2.fastp.fastq.gz:md5,9fed0306de48317ab68706bec5cb0b38",
-                "test-test_L1.fastp.html:md5,9322440fc2841afaba3fd9952b2f18ea",
+                "test-test_L1.fastp.html:md5,6524894f178699959214a88af2640533",
                 "test-test_L1.fastp.json:md5,c7d31d315a2ca5fb9f7e11a2e429c769",
-                "test-test_L1.fastp.log:md5,cb6c6931905007a61f30ef4cba31763e",
-                "test-test_L2.fastp.html:md5,028a288e6938b459fb1fa4a93ca62870",
+                "test-test_L1.fastp.log:md5,a6b7936cdea3905370750debfc0b292a",
+                "test-test_L2.fastp.html:md5,c168d47462dcee9805ad927558ed6df7",
                 "test-test_L2.fastp.json:md5,185b418ebc6a34fed285a50adfe3f38c",
-                "test-test_L2.fastp.log:md5,7bc92fa460bb490248f05c48002f47e3",
+                "test-test_L2.fastp.log:md5,634f35924e2095d444581c9033fb1473",
                 "test.md.mosdepth.global.dist.txt:md5,5b1d05c1e4bee145233d363f02edd18b",
                 "test.md.mosdepth.region.dist.txt:md5,1266123c1dd631e97aaf82a63162ed33",
                 "test.md.mosdepth.summary.txt:md5,8d6d2a2d898fbf2e5bb4954c3a5857d9",
@@ -479,7 +479,7 @@
                 "test.recal.regions.bed.gz:md5,e8d15607e26a3d7c4f045fde542e129b",
                 "test.recal.regions.bed.gz.csi:md5,a3ac5a5d620082a4a1061656742d8e30",
                 "test.md.cram.stats:md5,f0c2d695d79101af0e4beb53239f5a9e",
-                "test.recal.cram.stats:md5,c3e85a375e34e64f40f128eff0ef294f"
+                "test.recal.cram.stats:md5,843cad924c914789e349ba1b95784461"
             ],
             "No BAM files",
             [
@@ -497,6 +497,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-12T13:53:44.284805"
+        "timestamp": "2025-03-13T11:54:52.022046"
     }
 }
