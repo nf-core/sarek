@@ -29,9 +29,10 @@ workflow FASTQ_ALIGN_PARABRICKS {
 
     ch_versions = ch_versions.mix(PARABRICKS_FQ2BAM.versions)
 
-    cram_variant_calling = PARABRICKS_FQ2BAM.out.cram
+    cram_out = PARABRICKS_FQ2BAM.out.cram
 
-    CRAM_SAMPLEQC(cram_variant_calling,
+    CRAM_SAMPLEQC(
+            cram_out,
             ch_ngscheckmate_bed,
             ch_fasta,
             params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
@@ -40,17 +41,18 @@ workflow FASTQ_ALIGN_PARABRICKS {
 
     ch_versions = ch_versions.mix(CRAM_SAMPLEQC.versions)
 
+    cram_variant_calling = 
+        PARABRICKS_FQ2BAM.out.cram
+        .join(PARABRICKS_FQ2BAM.out.crai, failOnDuplicate: true, failOnMismatch: true)
+
     CHANNEL_ALIGN_CREATE_CSV(
-        PARABRICKS_FQ2BAM.out.cram.join(PARABRICKS_FQ2BAM.out.crai, failOnDuplicate: true, failOnMismatch: true), 
+        cram_variant_calling,
         params.outdir, 
         params.save_output_as_bam
     )
 
     emit:
-    // TODO nf-core: edit emitted channels
-    cram      = cram          // channel: [ val(meta), [ bam ] ]
-    crai      = SAMTOOLS_INDEX.out.bai          // channel: [ val(meta), [ bai ] ]
-
-    versions = ch_versions                     // channel: [ versions.yml ]
+    cram      = cram_variant_calling            // channel: [ val(meta), [ bam ] ]
+    versions  = ch_versions              // channel: [ versions.yml ]
 }
 

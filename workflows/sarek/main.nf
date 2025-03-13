@@ -176,26 +176,47 @@ workflow SAREK {
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
-        // PREPROCESSING
-        FASTQ_ALIGN_GATK(
-            input_fastq,
-            input_sample,
-            dict,
-            fasta,
-            fasta_fai,
-            index_alignment,
-            intervals_and_num_intervals,
-            intervals_for_preprocessing,
-            known_sites_indels,
-            known_sites_indels_tbi)
 
-        // Gather preprocessing output
-        cram_variant_calling = Channel.empty()
-        cram_variant_calling = cram_variant_calling.mix(FASTQ_ALIGN_GATK.out.cram_variant_calling)
+        if (params.gpu) {
+            FASTQ_ALIGN_PARABRICKS(
+                input_fastq,
+                fasta,
+                fasta_fai,
+                intervals_and_num_intervals,
+                known_sites_indels,
+                "cram",
+                ngscheckmate_bed,
+                intervals_for_preprocessing)
 
-        // Gather used softwares versions
-        reports = reports.mix(FASTQ_ALIGN_GATK.out.reports)
-        versions = versions.mix(FASTQ_ALIGN_GATK.out.versions)
+                // Gather preprocessing output
+                cram_variant_calling = Channel.empty()
+                cram_variant_calling = cram_variant_calling.mix(FASTQ_ALIGN_PARABRICKS.out.cram)
+
+                // Gather used softwares versions
+                versions = versions.mix(FASTQ_ALIGN_PARABRICKS.out.versions)
+        } else {
+            // PREPROCESSING
+            FASTQ_ALIGN_GATK(
+                input_fastq,
+                input_sample,
+                dict,
+                fasta,
+                fasta_fai,
+                index_alignment,
+                intervals_and_num_intervals,
+                intervals_for_preprocessing,
+                known_sites_indels,
+                known_sites_indels_tbi)
+
+            // Gather preprocessing output
+            cram_variant_calling = Channel.empty()
+            cram_variant_calling = cram_variant_calling.mix(FASTQ_ALIGN_GATK.out.cram_variant_calling)
+
+            // Gather used softwares versions
+            reports = reports.mix(FASTQ_ALIGN_GATK.out.reports)
+            versions = versions.mix(FASTQ_ALIGN_GATK.out.versions)
+        }
+
     }
 
     if (params.step == 'variant_calling') {
