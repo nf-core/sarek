@@ -50,8 +50,6 @@
                 "reference"
             ],
             [
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt:md5,d2650a5bec510d798e347f36a4d00e2d",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt:md5,f2123f7ee3d060c1547efc6247a04e42",
                 "multiqc_citations.txt:md5,3815a9f79e41890653a0e0d602c92ac9"
             ],
             "No BAM files",
@@ -387,8 +385,6 @@
                 "reports/samtools/test/test.recal.cram.stats"
             ],
             [
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt:md5,d2650a5bec510d798e347f36a4d00e2d",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt:md5,f2123f7ee3d060c1547efc6247a04e42",
                 "multiqc_citations.txt:md5,3815a9f79e41890653a0e0d602c92ac9",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",

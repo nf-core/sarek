@@ -96,8 +96,6 @@
                 "reports/samtools/test/test.sorted.cram.stats"
             ],
             [
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt:md5,d2650a5bec510d798e347f36a4d00e2d",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt:md5,f2123f7ee3d060c1547efc6247a04e42",
                 "mosdepth-coverage-per-contig-single.txt:md5,8b48f3336b063dcb1e086928b28a2cc6",
                 "mosdepth-cumcoverage-dist-id.txt:md5,3148977f0c4684ba681ee298d677fe38",
                 "mosdepth_cov_dist.txt:md5,9a531d5a5c05e568a1aeb2e738ac23c4",
@@ -257,8 +255,6 @@
                 "reports/samtools/test/test.recal.cram.stats"
             ],
             [
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt:md5,902745b5a1915e5c1a25267b11bebbe7",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt:md5,832ed176357d6a5b4e50c718f5e4a704",
                 "mosdepth-coverage-per-contig-single.txt:md5,76d816c3f71faf2009c8a6f88092a2f3",
                 "mosdepth-cumcoverage-dist-id.txt:md5,3af8f7d8ed7d1fdff6118e0098258192",
                 "mosdepth_cov_dist.txt:md5,4a2236db76d75e45012f6d7c180c90d6",
@@ -411,8 +407,6 @@
                 "reports/samtools/test/test.sorted.cram.stats"
             ],
             [
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt:md5,d2650a5bec510d798e347f36a4d00e2d",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt:md5,f2123f7ee3d060c1547efc6247a04e42",
                 "mosdepth-coverage-per-contig-single.txt:md5,8b48f3336b063dcb1e086928b28a2cc6",
                 "mosdepth-cumcoverage-dist-id.txt:md5,3148977f0c4684ba681ee298d677fe38",
                 "mosdepth_cov_dist.txt:md5,9a531d5a5c05e568a1aeb2e738ac23c4",
@@ -582,8 +576,6 @@
                 "reports/samtools/test/test.recal.cram.stats"
             ],
             [
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt:md5,902745b5a1915e5c1a25267b11bebbe7",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt:md5,832ed176357d6a5b4e50c718f5e4a704",
                 "mosdepth-coverage-per-contig-single.txt:md5,76d816c3f71faf2009c8a6f88092a2f3",
                 "mosdepth-cumcoverage-dist-id.txt:md5,3af8f7d8ed7d1fdff6118e0098258192",
                 "mosdepth_cov_dist.txt:md5,4a2236db76d75e45012f6d7c180c90d6",

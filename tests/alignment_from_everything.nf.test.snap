@@ -344,8 +344,6 @@
                 "fastqc_sequence_counts_plot.txt:md5,674147ee973b56cff1a8bed894d18d3f",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,5dbfcf6fcbbd054e17fb460985b078c2",
                 "fastqc_sequence_length_distribution_plot.txt:md5,893426c7b64f5fe3279733eb63c6abf9",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt:md5,c1b778ed3c2bd805c189e2b59f5eb2e0",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt:md5,83c8d998a9bb7575bbcdb67f1c117a9f",
                 "mosdepth-coverage-per-contig-single.txt:md5,7c01ea3a011867911ed0b612acb42007",
                 "mosdepth-cumcoverage-dist-id.txt:md5,c013414788f3acfff722a725b5c4938e",
                 "mosdepth_cov_dist.txt:md5,fc5e17338b2ed362a0e1f76add3a50fe",
