@@ -17,14 +17,6 @@ umi:
   - tests/csv/3.0/fastq_umi.csv
   - tests/test_umi.yml
 
-## fastp
-fastp:
-  - conf/modules/trimming.config
-  - modules/nf-core/fastp/**
-  - modules/nf-core/mosdepth/**
-  - tests/csv/3.0/fastq_single.csv
-  - tests/test_fastp.yml
-
 ## aligner
 
 ### sentieon/bwamem
