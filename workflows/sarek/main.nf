@@ -181,7 +181,7 @@ workflow SAREK {
             FASTQ_PREPROCESS_PARABRICKS(
                 input_fastq,
                 fasta,
-                fasta_fai,
+                index_alignment,
                 intervals_and_num_intervals,
                 known_sites_indels,
                 "cram",
