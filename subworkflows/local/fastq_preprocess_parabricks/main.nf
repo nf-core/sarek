@@ -27,7 +27,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
         val_output_fmt
     )
 
-    ch_versions = ch_versions.mix(PARABRICKS_FQ2BAM.versions)
+    ch_versions = ch_versions.mix(PARABRICKS_FQ2BAM.out.versions)
 
     cram_out = PARABRICKS_FQ2BAM.out.cram
 
