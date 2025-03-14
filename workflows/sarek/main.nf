@@ -177,7 +177,7 @@ workflow SAREK {
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
 
-        if (params.gpu) {
+        if (params.aligner == 'parabricks') {
             FASTQ_PREPROCESS_PARABRICKS(
                 input_fastq,
                 fasta,
