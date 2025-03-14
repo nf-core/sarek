@@ -52,7 +52,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     )
 
     emit:
-    cram      = cram_variant_calling            // channel: [ val(meta), [ bam ] ]
+    cram      = cram_variant_calling     // channel: [ val(meta), cram, crai ]
     versions  = ch_versions              // channel: [ versions.yml ]
 }
 
