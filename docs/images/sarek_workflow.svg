@@ -11,8 +11,8 @@
    viewBox="0 0 713.43371 1463.2735"
    sodipodi:docname="sarek_workflow.svg"
    inkscape:export-filename="sarek_workflow.png"
-   inkscape:export-xdpi="600"
-   inkscape:export-ydpi="600"
+   inkscape:export-xdpi="89.945282"
+   inkscape:export-ydpi="89.945282"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -3381,43 +3381,43 @@
    y="0"><tspan
      x="21.957031"
      y="845.03542"
-     id="tspan1">Germline
+     id="tspan2">Germline
 </tspan><tspan
      x="21.957031"
      y="876.23543"
-     id="tspan4"><tspan
+     id="tspan16"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan3">• deepvariant, freebayes
+       id="tspan15">• deepvariant, freebayes
 </tspan></tspan><tspan
      x="21.957031"
      y="907.43544"
-     id="tspan6"><tspan
+     id="tspan18"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan5">   GATK haplotypecaller,
+       id="tspan17">   GATK haplotypecaller,
 </tspan></tspan><tspan
      x="21.957031"
      y="938.63545"
-     id="tspan8"><tspan
+     id="tspan20"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan7">   Sentieon haplotyper 
+       id="tspan19">   Sentieon haplotyper 
 </tspan></tspan><tspan
      x="21.957031"
      y="969.83547"
-     id="tspan10"><tspan
+     id="tspan22"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan9">   mpileup, strelka2
+       id="tspan21">   mpileup, strelka2
 </tspan></tspan><tspan
      x="21.957031"
      y="1001.0355"
-     id="tspan12"><tspan
+     id="tspan24"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan11">• indexcov,manta, tiddit
+       id="tspan23">• indexcov,manta, tiddit
 </tspan></tspan><tspan
      x="21.957031"
      y="1032.2355"
-     id="tspan14"><tspan
+     id="tspan26"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan13">• cnvkit</tspan></tspan></text></g><g
+       id="tspan25">• cnvkit</tspan></tspan></text></g><g
    transform="matrix(0.60699338,0,0,-0.60699338,1601.5501,2205.8332)"
    style="display:inline"
    inkscape:label="Sarek"
