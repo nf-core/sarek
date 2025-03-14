@@ -27,8 +27,8 @@ include { FASTQC                                            } from '../../module
 include { CRAM_SAMPLEQC                                     } from '../../subworkflows/local/cram_sampleqc/main'
 
 // Preprocessing
-include { FASTQ_ALIGN_GATK                                  } from '../../subworkflows/local/fastq_align_gatk/main'
-include { FASTQ_ALIGN_PARABRICKS                            } from '../../subworkflows/local/fastq_align_parabricks/main'
+include { FASTQ_PREPROCESS_GATK                                  } from '../../subworkflows/local/fastq_preprocess_gatk/main'
+include { FASTQ_PREPROCESS_PARABRICKS                            } from '../../subworkflows/local/fastq_preprocess_parabricks/main'
 
 // Variant calling on a single normal sample
 include { BAM_VARIANT_CALLING_GERMLINE_ALL                  } from '../../subworkflows/local/bam_variant_calling_germline_all/main'
@@ -178,7 +178,7 @@ workflow SAREK {
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
 
         if (params.gpu) {
-            FASTQ_ALIGN_PARABRICKS(
+            FASTQ_PREPROCESS_PARABRICKS(
                 input_fastq,
                 fasta,
                 fasta_fai,
@@ -190,13 +190,13 @@ workflow SAREK {
 
                 // Gather preprocessing output
                 cram_variant_calling = Channel.empty()
-                cram_variant_calling = cram_variant_calling.mix(FASTQ_ALIGN_PARABRICKS.out.cram)
+                cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_PARABRICKS.out.cram)
 
                 // Gather used softwares versions
-                versions = versions.mix(FASTQ_ALIGN_PARABRICKS.out.versions)
+                versions = versions.mix(FASTQ_PREPROCESS_PARABRICKS.out.versions)
         } else {
             // PREPROCESSING
-            FASTQ_ALIGN_GATK(
+            FASTQ_PREPROCESS_GATK(
                 input_fastq,
                 input_sample,
                 dict,
@@ -210,11 +210,11 @@ workflow SAREK {
 
             // Gather preprocessing output
             cram_variant_calling = Channel.empty()
-            cram_variant_calling = cram_variant_calling.mix(FASTQ_ALIGN_GATK.out.cram_variant_calling)
+            cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_GATK.out.cram_variant_calling)
 
             // Gather used softwares versions
-            reports = reports.mix(FASTQ_ALIGN_GATK.out.reports)
-            versions = versions.mix(FASTQ_ALIGN_GATK.out.versions)
+            reports = reports.mix(FASTQ_PREPROCESS_GATK.out.reports)
+            versions = versions.mix(FASTQ_PREPROCESS_GATK.out.versions)
         }
 
     }

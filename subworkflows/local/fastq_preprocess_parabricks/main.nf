@@ -2,7 +2,7 @@ include { PARABRICKS_FQ2BAM        } from '../../../modules/nf-core/parabricks/f
 include { CRAM_SAMPLEQC            } from '../../../subworkflows/local/cram_sampleqc/main.nf'
 include { CHANNEL_ALIGN_CREATE_CSV } from '../../../subworkflows/local/channel_align_create_csv/main'
 
-workflow FASTQ_ALIGN_PARABRICKS {
+workflow FASTQ_PREPROCESS_PARABRICKS {
 
     take:
     ch_reads // channel: [mandatory] meta, reads
