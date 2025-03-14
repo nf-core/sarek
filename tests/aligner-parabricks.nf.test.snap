@@ -115,14 +115,13 @@
                 "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
                 "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
             ],
-            [
-                
-            ]
+            "No CRAM files",
+            "No BAM files"
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.5"
         },
-        "timestamp": "2025-03-14T14:03:48.138556573"
+        "timestamp": "2025-03-14T14:40:46.887702596"
     }
 }
