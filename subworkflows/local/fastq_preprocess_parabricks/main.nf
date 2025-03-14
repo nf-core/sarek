@@ -39,7 +39,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
             ch_intervals_for_preprocessing
     )
 
-    ch_versions = ch_versions.mix(CRAM_SAMPLEQC.versions)
+    ch_versions = ch_versions.mix(CRAM_SAMPLEQC.out.versions)
 
     cram_variant_calling =
         PARABRICKS_FQ2BAM.out.cram
