@@ -4,8 +4,8 @@ process GATK4SPARK_APPLYBQSR {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gatk4-spark:4.5.0.0--hdfd78af_0':
-        'biocontainers/gatk4-spark:4.5.0.0--hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/gatk4-spark:4.6.1.0--hdfd78af_0':
+        'biocontainers/gatk4-spark:4.6.1.0--hdfd78af_0' }"
 
     input:
     tuple val(meta), path(input), path(input_index), path(bqsr_table), path(intervals)
@@ -14,8 +14,8 @@ process GATK4SPARK_APPLYBQSR {
     path  dict
 
     output:
-    tuple val(meta), path("*.bam") , emit: bam,  optional: true
-    tuple val(meta), path("*.cram"), emit: cram, optional: true
+    tuple val(meta), path("${prefix}.bam") , emit: bam,  optional: true
+    tuple val(meta), path("${prefix}.cram"), emit: cram, optional: true
     path "versions.yml"            , emit: versions
 
     when:
@@ -23,7 +23,7 @@ process GATK4SPARK_APPLYBQSR {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     def interval_command = intervals ? "--intervals $intervals" : ""
 
     def avail_mem = 3072
@@ -52,7 +52,7 @@ process GATK4SPARK_APPLYBQSR {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.bam
     touch ${prefix}.cram
