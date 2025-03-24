@@ -107,6 +107,9 @@
                 "pattern": "^\\S+\\.vcf(\\.gz)?$",
                 "format": "file-path",
                 "exists": true
+            },
+            "variantcaller": {
+                "type": "string"
             }
         },
         "anyOf": [
