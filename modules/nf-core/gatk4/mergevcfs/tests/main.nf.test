@@ -24,6 +24,7 @@ nextflow_process {
                 { assert process.success },
                 {
                     assert snapshot(
+                        process.out.versions,
                         file(process.out.vcf.get(0).get(1)).name,
                         file(process.out.tbi.get(0).get(1)).name
                     ).match("test_gatk4_mergevcfs")
@@ -48,6 +49,7 @@ nextflow_process {
                 { assert process.success },
                 {
                     assert snapshot(
+                        process.out.versions,
                         file(process.out.vcf.get(0).get(1)).name,
                         file(process.out.tbi.get(0).get(1)).name
                     ).match("test_gatk4_mergevcfs_no_dict")
@@ -75,6 +77,7 @@ nextflow_process {
                 { assert process.success },
                 {
                     assert snapshot(
+                        process.out.versions,
                         file(process.out.vcf.get(0).get(1)).name,
                         file(process.out.tbi.get(0).get(1)).name
                     ).match("test_gatk4_mergevcfs_no_dict_stub")

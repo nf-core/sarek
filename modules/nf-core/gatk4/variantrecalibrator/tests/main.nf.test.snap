@@ -1,0 +1,133 @@
+{
+    "homo sapiens - vcf - allele specificity": {
+        "content": [
+            [
+                "versions.yml:md5,fb9c98d8bd2f8335179f7c037c63bb0d"
+            ],
+            "test.recal",
+            "test.recal.idx",
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.tranches:md5,ad52fa69325c758f458a30ee5b43d6b5"
+                ]
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2024-11-06T10:19:03.416258473"
+    },
+    "homo sapiens - vcf - no allele specificity": {
+        "content": [
+            [
+                "versions.yml:md5,fb9c98d8bd2f8335179f7c037c63bb0d"
+            ],
+            "test.recal",
+            "test.recal.idx",
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.tranches:md5,c029e52fd63a893e1154cc9144a19eeb"
+                ]
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2024-11-06T10:26:53.032044124"
+    },
+    "homo sapiens - vcf - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.recal:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.idx:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tranches:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "testplots.R:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    "versions.yml:md5,fb9c98d8bd2f8335179f7c037c63bb0d"
+                ],
+                "idx": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.idx:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "plots": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "testplots.R:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "recal": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.recal:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tranches": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tranches:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,fb9c98d8bd2f8335179f7c037c63bb0d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2024-11-06T10:14:43.858797367"
+    }
+}

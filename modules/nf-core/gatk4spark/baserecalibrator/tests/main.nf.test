@@ -1,0 +1,160 @@
+nextflow_process {
+
+    name "Test Process GATK4SPARK_BASERECALIBRATOR"
+    script "../main.nf"
+    config "./nextflow.config"
+    process "GATK4SPARK_BASERECALIBRATOR"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "gatk4spark"
+    tag "gatk4spark/baserecalibrator"
+
+    test("sarscov2 - bam") {
+        when {
+            process {
+                """
+                input_bam = [ [ id:'test' ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                    []
+                ]
+                fasta = file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
+                fai = file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true)
+                dict = file(params.test_data['sarscov2']['genome']['genome_dict'], checkIfExists: true)
+                sites = file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true)
+                sites_tbi = file(params.test_data['sarscov2']['illumina']['test_vcf_gz_tbi'], checkIfExists: true)
+
+                input = [input_bam, fasta, fai, dict, sites, sites_tbi]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    test("homo sapiens - cram") {
+        when {
+            process {
+                """
+                input_cram = [ [ id:'test' ], // meta map
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram_crai'], checkIfExists: true),
+                    []
+                ]
+                fasta = file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)
+                fai = file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true)
+                dict = file(params.test_data['homo_sapiens']['genome']['genome_dict'], checkIfExists: true)
+                sites = file(params.test_data['homo_sapiens']['illumina']['test_haplotc_cnn_vcf_gz'], checkIfExists: true)
+                sites_tbi = file(params.test_data['homo_sapiens']['illumina']['test_haplotc_cnn_vcf_gz_tbi'], checkIfExists: true)
+
+                input = [input_cram, fasta, fai, dict, sites, sites_tbi]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - bam - intervals") {
+        when {
+            process {
+                """
+                input_bam = [ [ id:'test' ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['genome']['test_bed'], checkIfExists: true)
+                ]
+                fasta = file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
+                fai = file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true)
+                dict = file(params.test_data['sarscov2']['genome']['genome_dict'], checkIfExists: true)
+                sites = file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true)
+                sites_tbi = file(params.test_data['sarscov2']['illumina']['test_vcf_gz_tbi'], checkIfExists: true)
+
+                input = [input_bam, fasta, fai, dict, sites, sites_tbi]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - bam - multi sites") {
+        when {
+            process {
+                """
+                input_bam = [ [ id:'test' ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                    []
+                ]
+                fasta = file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
+                fai = file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true)
+                dict = file(params.test_data['sarscov2']['genome']['genome_dict'], checkIfExists: true)
+                sites = [ file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true), file(params.test_data['sarscov2']['illumina']['test2_vcf_gz'], checkIfExists: true)]
+                sites_tbi = [ file(params.test_data['sarscov2']['illumina']['test_vcf_gz_tbi'], checkIfExists: true), file(params.test_data['sarscov2']['illumina']['test2_vcf_gz_tbi'], checkIfExists: true)]
+                input = [input_bam, fasta, fai, dict, sites, sites_tbi]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - bam - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input_bam = [ [ id:'test' ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                    []
+                ]
+                fasta = file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
+                fai = file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true)
+                dict = file(params.test_data['sarscov2']['genome']['genome_dict'], checkIfExists: true)
+                sites = file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true)
+                sites_tbi = file(params.test_data['sarscov2']['illumina']['test_vcf_gz_tbi'], checkIfExists: true)
+
+                input = [input_bam, fasta, fai, dict, sites, sites_tbi]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}

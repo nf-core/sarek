@@ -1,0 +1,167 @@
+{
+    "sarscov2 - bam - multi sites": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.table:md5,e2e43abdc0c943c1a54dae816d0b9ea7"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,d98a4e7d4b5c7b7c59268214c538bd58"
+                ],
+                "table": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.table:md5,e2e43abdc0c943c1a54dae816d0b9ea7"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,d98a4e7d4b5c7b7c59268214c538bd58"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2024-11-06T11:52:50.311106222"
+    },
+    "sarscov2 - bam - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.table:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,d98a4e7d4b5c7b7c59268214c538bd58"
+                ],
+                "table": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.table:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,d98a4e7d4b5c7b7c59268214c538bd58"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2024-11-06T11:38:35.054385124"
+    },
+    "homo sapiens - cram": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.table:md5,ab82f81e027d8762b01c631b4ef792c0"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,d98a4e7d4b5c7b7c59268214c538bd58"
+                ],
+                "table": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.table:md5,ab82f81e027d8762b01c631b4ef792c0"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,d98a4e7d4b5c7b7c59268214c538bd58"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2024-11-06T12:03:12.23567219"
+    },
+    "sarscov2 - bam - intervals": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.table:md5,9ecb5f00a2229291705addc09c0ec231"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,d98a4e7d4b5c7b7c59268214c538bd58"
+                ],
+                "table": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.table:md5,9ecb5f00a2229291705addc09c0ec231"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,d98a4e7d4b5c7b7c59268214c538bd58"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2024-11-06T11:51:34.077518575"
+    },
+    "sarscov2 - bam": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.table:md5,e2e43abdc0c943c1a54dae816d0b9ea7"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,d98a4e7d4b5c7b7c59268214c538bd58"
+                ],
+                "table": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.table:md5,e2e43abdc0c943c1a54dae816d0b9ea7"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,d98a4e7d4b5c7b7c59268214c538bd58"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2024-11-06T11:49:36.893419883"
+    }
+}
