@@ -569,7 +569,7 @@
                 "bcftools_annotations_tbi": {
                     "type": "string",
                     "format": "file-path",
-                    "pattern": "^\\S+\\.tbi$",
+                    "pattern": "^\\S+\\.vcf\\.gz\\.tbi$",
                     "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Index file for `bcftools_annotations`"
