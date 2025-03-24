@@ -217,8 +217,6 @@
                 "test.recal.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test.recal.thresholds.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
                 "test.recal.thresholds.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "test.md.cram.stats:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "test.recal.cram.stats:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test.strelka.variants.012:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test.strelka.variants.012.indv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test.strelka.variants.012.pos:md5,d41d8cd98f00b204e9800998ecf8427e",

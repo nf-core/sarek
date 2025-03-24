@@ -123,7 +123,6 @@
                 "test.recal.mosdepth.summary.txt:md5,4f0d231060cbde4efdd673863bd2fb59",
                 "test.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
                 "test.recal.per-base.bed.gz.csi:md5,6f322dc9250522a701bd68bd18fa8294",
-                "test.recal.cram.stats:md5,a15b3a5e59337db312d66020c7bb93ac",
                 "test.haplotypecaller.FILTER.summary:md5,87a84b5f8ac3d3cbeeef7d60afcdbfe7",
                 "test.haplotypecaller.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
@@ -270,7 +269,6 @@
                 "test.recal.per-base.bed.gz.csi:md5,6f322dc9250522a701bd68bd18fa8294",
                 "test.recal.regions.bed.gz:md5,0c8215fbea7b0bf7aba9d1781575f905",
                 "test.recal.regions.bed.gz.csi:md5,e1a52ced0e9ded1eecbca4eff2014c8e",
-                "test.recal.cram.stats:md5,a15b3a5e59337db312d66020c7bb93ac",
                 "test.haplotypecaller.FILTER.summary:md5,87a84b5f8ac3d3cbeeef7d60afcdbfe7",
                 "test.haplotypecaller.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
@@ -419,7 +417,6 @@
                 "test.recal.mosdepth.summary.txt:md5,4f0d231060cbde4efdd673863bd2fb59",
                 "test.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
                 "test.recal.per-base.bed.gz.csi:md5,6f322dc9250522a701bd68bd18fa8294",
-                "test.recal.cram.stats:md5,a15b3a5e59337db312d66020c7bb93ac",
                 "test.haplotypecaller.filtered.FILTER.summary:md5,4e2ceea7f3ff998004691fd71192d9ee",
                 "test.haplotypecaller.filtered.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
@@ -578,7 +575,6 @@
                 "test.recal.per-base.bed.gz.csi:md5,6f322dc9250522a701bd68bd18fa8294",
                 "test.recal.regions.bed.gz:md5,0c8215fbea7b0bf7aba9d1781575f905",
                 "test.recal.regions.bed.gz.csi:md5,e1a52ced0e9ded1eecbca4eff2014c8e",
-                "test.recal.cram.stats:md5,a15b3a5e59337db312d66020c7bb93ac",
                 "test.haplotypecaller.filtered.FILTER.summary:md5,4e2ceea7f3ff998004691fd71192d9ee",
                 "test.haplotypecaller.filtered.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],

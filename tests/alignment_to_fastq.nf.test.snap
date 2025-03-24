@@ -243,8 +243,6 @@
                 "fastqc_sequence_counts_plot.txt:md5,bcd6fbad2fcbfcd6e78f7392945471cb",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,65c8986b4ea2983999508c5d8fce0df5",
                 "fastqc_sequence_length_distribution_plot.txt:md5,8f2a67d6bf43abce206aa77c2959b420",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt:md5,627a84e2b0dd5dc5a11aadbb20107c01",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt:md5,d727e4f305ac9d995de9596ee6824eaf",
                 "mosdepth-coverage-per-contig-single.txt:md5,76d816c3f71faf2009c8a6f88092a2f3",
                 "mosdepth-cumcoverage-dist-id.txt:md5,3af8f7d8ed7d1fdff6118e0098258192",
                 "mosdepth_cov_dist.txt:md5,4a2236db76d75e45012f6d7c180c90d6",
@@ -267,9 +265,7 @@
                 "test.recal.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.recal.mosdepth.summary.txt:md5,dbe376360e437c89190139ef0ae6769a",
                 "test.recal.regions.bed.gz:md5,0e5ed846b9b11717e42e93eec60f4ffc",
-                "test.recal.regions.bed.gz.csi:md5,633cc0252eb2246a0943aec7e7512e3e",
-                "test.md.cram.stats:md5,2cc3430db9e2007da1464dd616aa8427",
-                "test.recal.cram.stats:md5,1ef19ce72bf2cb61d2dc4aede12bec94"
+                "test.recal.regions.bed.gz.csi:md5,633cc0252eb2246a0943aec7e7512e3e"
             ],
             "No CRAM files",
             [
