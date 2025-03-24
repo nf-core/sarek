@@ -48,4 +48,40 @@ nextflow_process {
             )
         }
     }
+
+    test("test_SNPEFF_SNPEFF - stub") {
+
+        options "-stub"
+
+        setup {
+            run("SNPEFF_DOWNLOAD") {
+                script "../../download/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([[id:params.snpeff_db], params.snpeff_db])
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                ])
+                input[1] = params.snpeff_db
+                input[2] = SNPEFF_DOWNLOAD.out.cache
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+            )
+        }
+    }
 }

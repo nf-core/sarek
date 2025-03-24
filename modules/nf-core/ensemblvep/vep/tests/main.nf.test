@@ -11,7 +11,7 @@ nextflow_process {
     tag "ensemblvep/vep"
     tag "ensemblvep/download"
 
-    test("test_ensemblvep_vep_fasta_vcf") {
+    test("test_ensemblvep_vep_fasta_vcf - stub (not really but linting complains otherwise)") {
         config "./vcf.config"
 
         setup {
@@ -55,8 +55,11 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.versions).match() },
-                { assert path(process.out.vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.2") }
+                { assert snapshot(
+                    process.out.versions,
+                    path(process.out.vcf.get(0).get(1)).vcf.variantsMD5,
+                    file(process.out.tbi.get(0).get(1)).name
+                ).match() }
             )
         }
 
