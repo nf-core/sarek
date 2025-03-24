@@ -42,11 +42,7 @@
                     "vcftools": "0.1.16"
                 },
                 "Workflow": {
-<<<<<<< HEAD
-                    "nf-core/sarek": "v3.5.1"
-=======
                     "nf-core/sarek": "v3.6.0dev"
->>>>>>> 42cabd7b3ae98834106b957395678ab7484def5e
                 }
             },
             [
