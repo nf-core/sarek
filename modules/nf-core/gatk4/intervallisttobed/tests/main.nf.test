@@ -1,0 +1,58 @@
+nextflow_process {
+
+    name "Test Process GATK4_INTERVALLISTTOBED"
+    script "../main.nf"
+    process "GATK4_INTERVALLISTTOBED"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "gatk4"
+    tag "gatk4/intervallisttobed"
+
+    test("homo sapiens - bed") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/chr21/sequence/genome.interval_list", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    test("homo sapiens - bed - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/chr21/sequence/genome.interval_list", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}

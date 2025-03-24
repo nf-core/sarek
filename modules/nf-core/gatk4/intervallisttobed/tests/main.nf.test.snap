@@ -1,5 +1,5 @@
 {
-    "test-gatk4-gatherpileupsummaries - stub": {
+    "homo sapiens - bed": {
         "content": [
             {
                 "0": [
@@ -8,23 +8,23 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.out.pileups.table:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.bed:md5,9046675d01199fbbee79f2bc1c5dce52"
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,585747d3136a5bf0563bbbe229690526"
+                    "versions.yml:md5,27876d5035fa3f6d4750152ed4033259"
                 ],
-                "table": [
+                "bed": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
-                        "test.out.pileups.table:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.bed:md5,9046675d01199fbbee79f2bc1c5dce52"
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,585747d3136a5bf0563bbbe229690526"
+                    "versions.yml:md5,27876d5035fa3f6d4750152ed4033259"
                 ]
             }
         ],
@@ -32,9 +32,9 @@
             "nf-test": "0.9.1",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2024-10-31T11:08:38.118444526"
+        "timestamp": "2024-11-04T13:44:42.715318379"
     },
-    "test-gatk4-gatherpileupsummaries": {
+    "homo sapiens - bed - stub": {
         "content": [
             {
                 "0": [
@@ -43,23 +43,23 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.out.pileups.table:md5,8e0ca6f66e112bd2f7ec1d31a2d62469"
+                        "test.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,585747d3136a5bf0563bbbe229690526"
+                    "versions.yml:md5,27876d5035fa3f6d4750152ed4033259"
                 ],
-                "table": [
+                "bed": [
                     [
                         {
                             "id": "test",
                             "single_end": false
                         },
-                        "test.out.pileups.table:md5,8e0ca6f66e112bd2f7ec1d31a2d62469"
+                        "test.bed:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,585747d3136a5bf0563bbbe229690526"
+                    "versions.yml:md5,27876d5035fa3f6d4750152ed4033259"
                 ]
             }
         ],
@@ -67,6 +67,6 @@
             "nf-test": "0.9.1",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2024-10-31T11:08:17.759423015"
+        "timestamp": "2024-11-04T13:45:01.440631153"
     }
 }

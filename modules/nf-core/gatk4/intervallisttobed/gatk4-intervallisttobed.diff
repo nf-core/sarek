@@ -1,10 +1,10 @@
-Changes in module 'nf-core/gatk4/intervallisttobed'
+Changes in component 'nf-core/gatk4/intervallisttobed'
 'modules/nf-core/gatk4/intervallisttobed/environment.yml' is unchanged
 'modules/nf-core/gatk4/intervallisttobed/meta.yml' is unchanged
 Changes in 'gatk4/intervallisttobed/main.nf':
 --- modules/nf-core/gatk4/intervallisttobed/main.nf
 +++ modules/nf-core/gatk4/intervallisttobed/main.nf
-@@ -40,4 +40,18 @@
+@@ -52,4 +52,18 @@
          gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
      END_VERSIONS
      """
@@ -24,4 +24,6 @@ Changes in 'gatk4/intervallisttobed/main.nf':
 +    """
  }
 
+'modules/nf-core/gatk4/intervallisttobed/tests/main.nf.test' is unchanged
+'modules/nf-core/gatk4/intervallisttobed/tests/main.nf.test.snap' is unchanged
 ************************************************************

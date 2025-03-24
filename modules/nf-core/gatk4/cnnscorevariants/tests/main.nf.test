@@ -1,0 +1,77 @@
+nextflow_process {
+
+    name "Test Process GATK4_CNNSCOREVARIANTS"
+    script "../main.nf"
+    process "GATK4_CNNSCOREVARIANTS"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "gatk4"
+    tag "gatk4/cnnscorevariants"
+
+    test("homo sapiens - vcf") {
+        when {
+            process {
+                """
+                input_vcf = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/gvcf/test.genome.vcf.gz", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/gvcf/test.genome.vcf.gz.tbi", checkIfExists: true),
+                    [],
+                    []
+                ]
+                fasta  = file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)
+                fai    = file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta.fai", checkIfExists: true)
+                dict   = file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.dict", checkIfExists: true)
+
+                input = [input_vcf, fasta, fai, dict, [], []]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.versions,
+                    path(process.out.vcf[0][1]).vcf.variantsMD5,
+                    file(process.out.tbi[0][1]).name,
+                ).match() }
+            )
+        }
+
+    }
+
+    test("homo sapiens - vcf - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input_vcf = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/gvcf/test.genome.vcf.gz", checkIfExists: true),
+                    file(params.modules_testdata_base_path + "genomics/homo_sapiens/illumina/gvcf/test.genome.vcf.gz.tbi", checkIfExists: true),
+                    [],
+                    []
+                ]
+                fasta  = file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta", checkIfExists: true)
+                fai    = file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.fasta.fai", checkIfExists: true)
+                dict   = file(params.modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.dict", checkIfExists: true)
+
+                input = [input_vcf, fasta, fai, dict, [], []]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}
