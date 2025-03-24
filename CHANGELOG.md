@@ -5,8 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-<<<<<<< HEAD
-=======
 ## dev
 
 ### Added
@@ -43,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1806](https://github.com/nf-core/sarek/pull/1806) - Use `nft-vcf` for nf-test vcf assertions
 - [1814](https://github.com/nf-core/sarek/pull/1814) - Added link to Bluesky
 - [1829](https://github.com/nf-core/sarek/pull/1829) - Add muse as variant caller to images
+- [1835](https://github.com/nf-core/sarek/pull/1835) - Add GPU testing possibilities
 
 #### Changed
 
@@ -72,7 +71,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [1814](https://github.com/nf-core/sarek/pull/1814) - Removed link to Twitter/X
 
->>>>>>> 42cabd7b3ae98834106b957395678ab7484def5e
 ## [3.5.1](https://github.com/nf-core/sarek/releases/tag/3.5.1) - Akkatjåkkå
 
 Akkatjåkkå is another glacier.
