@@ -457,7 +457,7 @@
                 "dbnsfp_tbi": {
                     "type": "string",
                     "format": "file-path",
-                    "pattern": "^\\S+\\.(csi|tbi)$",
+                    "pattern": "^\\S+\\.vcf\\.gz\\.(csi|tbi)$",
                     "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to dbNSFP tabix indexed file.",
@@ -500,7 +500,7 @@
                 "spliceai_snv_tbi": {
                     "type": "string",
                     "format": "file-path",
-                    "pattern": "^\\S+\\.(csi|tbi)$",
+                    "pattern": "^\\S+\\\\.vcf\\.gz.(csi|tbi)$",
                     "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to spliceai raw scores snv tabix indexed file.",
@@ -518,7 +518,7 @@
                 "spliceai_indel_tbi": {
                     "type": "string",
                     "format": "file-path",
-                    "pattern": "^\\S+\\.(csi|tbi)$",
+                    "pattern": "^\\S+\\.vcf\\.gz\\.(csi|tbi)$",
                     "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to spliceai raw scores indel tabix indexed file.",
