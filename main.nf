@@ -62,6 +62,10 @@ params.vep_species             = getGenomeAttribute('vep_species')
 
 aligner = params.aligner
 
+// bbsplit params initialize
+skip_bbsplit = params.skip_bbsplit
+bbsplit_fasta_list = params.bbsplit_fasta_list
+bbsplit_index = params.bbsplit_index
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
@@ -257,11 +261,6 @@ workflow NFCORE_SAREK {
             snpeff_cache = ANNOTATION_CACHE_INITIALISATION.out.snpeff_cache
             vep_cache    = ANNOTATION_CACHE_INITIALISATION.out.ensemblvep_cache
     }
-
-    // bbsplit params initialize
-    skip_bbsplit = params.skip_bbsplit
-    bbsplit_fasta_list = params.bbsplit_fasta_list
-    bbsplit_index = params.bbsplit_index
 
     //
     // WORKFLOW: Run pipeline
