@@ -419,6 +419,11 @@
                     "help_text": "PCR indel model used to weed out false positive indels more or less aggressively. The possible MODELs are: NONE (used for PCR free samples), and HOSTILE, AGGRESSIVE and CONSERVATIVE, in order of decreasing aggressiveness. The default value is CONSERVATIVE.",
                     "pattern": "^(NONE|HOSTILE|AGGRESSIVE|CONSERVATIVE)(?<!,)$"
                 },
+                "gatk_pcr_indel_model": {
+                    "type": "string",
+                    "default": "CONSERVATIVE",
+                    "help_text": "Option for selecting the PCR indel model used by GATK HaplotypeCaller."
+                },
                 "concatenate_vcfs": {
                     "type": "boolean",
                     "fa_icon": "fas fa-tape",
