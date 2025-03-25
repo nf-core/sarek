@@ -320,6 +320,11 @@
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
+                    "gunzip": {
+                        "branch": "master",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "installed_by": ["modules"]
+                    },
                     "lofreq/callparallel": {
                         "branch": "master",
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
