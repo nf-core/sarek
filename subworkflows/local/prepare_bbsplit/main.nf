@@ -14,8 +14,10 @@ workflow PREPARE_BBSPLIT {
     ch_versions = Channel.empty()
 
     // Create a simple value channel for the fasta file
-    fasta_file = fasta.map { meta, path -> path }.first()
-    ch_fasta = Channel.value(fasta_file)
+    ch_fasta = fasta
+        .map { meta, path -> path }
+        .first()
+        .map { path -> file(path) }
     //
     // Uncompress BBSplit index or generate from scratch if required
     //
