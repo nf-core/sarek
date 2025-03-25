@@ -130,8 +130,6 @@
                 "sample4.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
                 "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
                 "sample4.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
-                "sample3.recal.cram.stats:md5,bcc229318527e414e69aaa5cd092ad9b",
-                "sample4.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
                 "sample4_vs_sample3.muse.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample4_vs_sample3.muse.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "sample4_vs_sample3.MuSE.txt:md5,06f2eb941e03ea238ca8d864985aa6f1"
@@ -334,8 +332,6 @@
                 "sample4.recal.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4.recal.thresholds.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
                 "sample4.recal.thresholds.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample3.recal.cram.stats:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample4.recal.cram.stats:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.muse.012:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.muse.012.indv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.muse.012.pos:md5,d41d8cd98f00b204e9800998ecf8427e",
