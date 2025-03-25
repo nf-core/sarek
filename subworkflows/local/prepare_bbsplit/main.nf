@@ -1,17 +1,29 @@
 //
 // Uncompress and prepare reference genome files
 //
+include { GUNZIP as GUNZIP_FASTA            } from '../../../modules/nf-core/gunzip'
 include { UNTAR as UNTAR_BBSPLIT_INDEX      } from '../../../modules/nf-core/untar'
 include { BBMAP_BBSPLIT                     } from '../../../modules/nf-core/bbmap/bbsplit'
 
 workflow PREPARE_BBSPLIT {
     take:
+    fasta                    //      file: /path/to/genome.fasta
     bbsplit_fasta_list   //      file: /path/to/bbsplit_fasta_list.txt
     bbsplit_index        // directory: /path/to/rsem/index/
 
     main:
 
     ch_versions = Channel.empty()
+
+    //
+    // Uncompress genome fasta file if required
+    //
+    if (fasta.endsWith('.gz')) {
+        ch_fasta    = GUNZIP_FASTA ( [ [:], file(fasta, checkIfExists: true) ] ).gunzip.map { it[1] }
+        ch_versions = ch_versions.mix(GUNZIP_FASTA.out.versions)
+    } else {
+        ch_fasta = Channel.value(file(fasta, checkIfExists: true))
+    }
 
     //
     // Uncompress BBSplit index or generate from scratch if required
