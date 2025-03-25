@@ -17,14 +17,6 @@ umi:
   - tests/csv/3.0/fastq_umi.csv
   - tests/test_umi.yml
 
-## fastp
-fastp:
-  - conf/modules/trimming.config
-  - modules/nf-core/fastp/**
-  - modules/nf-core/mosdepth/**
-  - tests/csv/3.0/fastq_single.csv
-  - tests/test_fastp.yml
-
 ## aligner
 
 ### sentieon/bwamem
@@ -217,16 +209,6 @@ mutect2:
   - subworkflows/local/bam_variant_calling_tumor_only_mutect2/**
   - tests/csv/3.0/recalibrated_tumoronly.csv
   - tests/test_mutect2.yml
-
-## lofreq
-lofreq:
-  - conf/modules/lofreq.config
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/lofreq/callparallel/**
-  - subworkflows/local/bam_variant_calling_tumor_only_all/**
-  - subworkflows/local/bam_variant_calling_tumor_only_lofreq/**
-  - tests/csv/3.0/recalibrated_tumoronly.csv
-  - tests/test_lofreq.yml
 
 # sampleqc
 

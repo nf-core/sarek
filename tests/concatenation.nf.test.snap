@@ -208,8 +208,6 @@
                 "testT.recal.mosdepth.summary.txt:md5,024649a659caff330dfbef4ac3560542",
                 "testT.recal.regions.bed.gz:md5,14b36a2cf428840aab471f95cfbe399f",
                 "testT.recal.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d",
-                "testN.recal.cram.stats:md5,a15b3a5e59337db312d66020c7bb93ac",
-                "testT.recal.cram.stats:md5,fae549c0c944f6cc34dd6d9b9569e3d3",
                 "testN.freebayes.FILTER.summary:md5,2ec507a210cf7de0425b6c8028a6edf8",
                 "testN.freebayes.TsTv.count:md5,4913577b275634ea33077dd023325dee",
                 "testT.freebayes.FILTER.summary:md5,50f90bd0cdd1e95c10d7e5d88d0346f8",

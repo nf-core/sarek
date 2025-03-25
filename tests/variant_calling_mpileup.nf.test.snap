@@ -122,7 +122,6 @@
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
                 "sample2.recal.regions.bed.gz.csi:md5,4003c8833ed5e9b9f45282a6915c935e",
-                "sample2.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
                 "sample2.bcftools.FILTER.summary:md5,8766995f3e4119ef30dfdaa9fb3752ce",
                 "sample2.bcftools.TsTv.count:md5,01df95fcb4df593f7e1b214d90ebdb59"
             ],
@@ -265,7 +264,6 @@
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
                 "sample1.recal.regions.bed.gz.csi:md5,f17cc9d960aa4a1e96548d570585cc8a",
-                "sample1.recal.cram.stats:md5,bcc229318527e414e69aaa5cd092ad9b",
                 "sample1.bcftools.FILTER.summary:md5,83a10512eb9d035f409a84db7e620c28",
                 "sample1.bcftools.TsTv.count:md5,bfa998e75cbcb3da66f823cf39ef1e48"
             ],
@@ -408,7 +406,6 @@
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
                 "sample2.recal.regions.bed.gz.csi:md5,4003c8833ed5e9b9f45282a6915c935e",
-                "sample2.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
                 "sample2.bcftools.FILTER.summary:md5,f295c70f174e7705fc2bac607aedbfda",
                 "sample2.bcftools.TsTv.count:md5,e5d20f81fc97f7ee97fb6cb6bd851047"
             ],
@@ -548,7 +545,6 @@
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
                 "sample1.recal.regions.bed.gz.csi:md5,f17cc9d960aa4a1e96548d570585cc8a",
-                "sample1.recal.cram.stats:md5,bcc229318527e414e69aaa5cd092ad9b",
                 "sample1.bcftools.FILTER.summary:md5,9b62595b026decf12e9198d531e4307a",
                 "sample1.bcftools.TsTv.count:md5,6c937125d7bac4c491bea50f18cba43a"
             ],

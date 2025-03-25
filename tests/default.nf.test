@@ -4,6 +4,7 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
+    tag "cpu"
 
     test("-profile test") {
 
@@ -61,7 +62,7 @@ nextflow_pipeline {
         then {
             assertAll(
                 { assert workflow.failed},
-                { assert workflow.stderr.toString().contains("Sample ID must be provided and cannot contain spaces") }
+                { assert workflow.stderr.toString().contains("Sample ID must be provided, cannot contain spaces and must be a string value") }
             )
         }
     }
