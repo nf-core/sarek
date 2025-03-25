@@ -4,6 +4,7 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
+    tag "cpu"
 
     test("-profile test --input bam_and_fastq_and_spring.csv --save_mapped --save_output_as_bam") {
 

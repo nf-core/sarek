@@ -93,7 +93,6 @@
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
                 "sample1.recal.regions.bed.gz.csi:md5,f17cc9d960aa4a1e96548d570585cc8a",
-                "sample1.recal.cram.stats:md5,bcc229318527e414e69aaa5cd092ad9b",
                 "sample1.tiddit.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample1.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
@@ -204,7 +203,6 @@
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
                 "sample2.recal.regions.bed.gz.csi:md5,4003c8833ed5e9b9f45282a6915c935e",
-                "sample2.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
                 "sample2.tiddit.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample2.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
@@ -346,8 +344,6 @@
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
                 "sample4.recal.regions.bed.gz.csi:md5,4003c8833ed5e9b9f45282a6915c935e",
-                "sample3.recal.cram.stats:md5,bcc229318527e414e69aaa5cd092ad9b",
-                "sample4.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
                 "sample3.tiddit.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample3.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
                 "sample4_vs_sample3.tiddit_sv_merge.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",

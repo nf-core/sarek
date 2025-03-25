@@ -330,8 +330,7 @@
                 "test.recal.mosdepth.region.dist.txt:md5,3e33ce923c2e9348c001cc34960d4d90",
                 "test.recal.mosdepth.summary.txt:md5,2de9c6803d74a7157c626320cf916587",
                 "test.recal.regions.bed.gz:md5,bb0ca9679342566559b7c5ed0b4e25b3",
-                "test.recal.regions.bed.gz.csi:md5,eba5aca0b8f72759192bbdd29330278e",
-                "test.md.cram.stats:md5,f44dadb50affac49500eefad04cb77ea"
+                "test.recal.regions.bed.gz.csi:md5,eba5aca0b8f72759192bbdd29330278e"
             ],
             "No BAM files",
             [
@@ -706,8 +705,7 @@
                 "test.recal.mosdepth.region.dist.txt:md5,1266123c1dd631e97aaf82a63162ed33",
                 "test.recal.mosdepth.summary.txt:md5,8d6d2a2d898fbf2e5bb4954c3a5857d9",
                 "test.recal.regions.bed.gz:md5,e8d15607e26a3d7c4f045fde542e129b",
-                "test.recal.regions.bed.gz.csi:md5,a3ac5a5d620082a4a1061656742d8e30",
-                "test.md.cram.stats:md5,f0c2d695d79101af0e4beb53239f5a9e"
+                "test.recal.regions.bed.gz.csi:md5,a3ac5a5d620082a4a1061656742d8e30"
             ],
             "No BAM files",
             [

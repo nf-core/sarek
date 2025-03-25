@@ -5,6 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
     tag "sentieon"
+    tag "cpu"
 
     test("stub") {
 
