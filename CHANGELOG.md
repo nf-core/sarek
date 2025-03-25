@@ -60,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1828](https://github.com/nf-core/sarek/pull/1828) - Migrate pipeline pytest lofreq tests to nf-test
 - [1831](https://github.com/nf-core/sarek/pull/1831) - Migrate pipeline pytest fastp tests to nf-test
 - [1832](https://github.com/nf-core/sarek/pull/1832) - Update all annotation related modules and subworkflows
+- [1846](https://github.com/nf-core/sarek/pull/1846) - Runs on custom runners :rocket: thanks to [RunsOn](https://runs-on.com/)
 
 #### Fixed
 
