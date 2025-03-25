@@ -18,12 +18,13 @@ workflow PREPARE_BBSPLIT {
     //
     // Uncompress genome fasta file if required
     //
-    if (fasta.endsWith('.gz')) {
-        ch_fasta    = GUNZIP_FASTA ( [ [:], file(fasta, checkIfExists: true) ] ).gunzip.map { it[1] }
-        ch_versions = ch_versions.mix(GUNZIP_FASTA.out.versions)
-    } else {
-        ch_fasta = Channel.value(file(fasta, checkIfExists: true))
-    }
+//     if (fasta.endsWith('.gz')) {
+//         ch_fasta    = GUNZIP_FASTA ( [ [:], file(fasta, checkIfExists: true) ] ).gunzip.map { it[1] }
+//         ch_versions = ch_versions.mix(GUNZIP_FASTA.out.versions)
+//     } else {
+//         ch_fasta = Channel.value(file(fasta, checkIfExists: true))
+//     }
+    ch_fasta = Channel.value(file(fasta, checkIfExists: true))
 
     //
     // Uncompress BBSplit index or generate from scratch if required
