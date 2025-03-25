@@ -10,29 +10,28 @@
             "patient": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Patient ID must be provided and cannot contain spaces",
+                "errorMessage": "Patient ID must be provided, cannot contain spaces and must be a string value",
                 "meta": ["patient"]
             },
             "sample": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Sample ID must be provided and cannot contain spaces",
+                "errorMessage": "Sample ID must be provided, cannot contain spaces and must be a string value",
                 "meta": ["sample"]
             },
             "sex": {
-                "errorMessage": "Sex cannot contain spaces",
+                "errorMessage": "Sex must be one of 'XX', 'XY', or 'NA'",
                 "meta": ["sex"],
+                "enum": ["XX", "XY", "NA"],
                 "default": "NA",
-                "type": "string",
-                "pattern": "^\\S+$"
+                "type": "string"
             },
             "status": {
                 "type": "integer",
                 "errorMessage": "Status can only be 0 (normal) or 1 (tumor). Defaults to 0, if none is supplied.",
                 "meta": ["status"],
                 "default": 0,
-                "minimum": 0,
-                "maximum": 1
+                "enum": [0, 1]
             },
             "lane": {
                 "type": "string",
@@ -40,70 +39,70 @@
                 "meta": ["lane"]
             },
             "fastq_1": {
-                "errorMessage": "FastQ file for reads 1 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
+                "errorMessage": "FastQ file for reads 1 cannot contain spaces, has to be a string, has to exist and must have extension '.fq.gz' or '.fastq.gz'",
                 "type": "string",
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
                 "format": "file-path",
                 "exists": true
             },
             "fastq_2": {
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
+                "errorMessage": "FastQ file for reads 2 cannot contain spaces, has to be a string, has to exist and must have extension '.fq.gz' or '.fastq.gz'",
                 "type": "string",
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
                 "format": "file-path",
                 "exists": true
             },
             "spring_1": {
-                "errorMessage": "Gzipped and spring-compressed FastQ file for reads 1 cannot contain spaces and must have extension '.fq.gz.spring' or '.fastq.gz.spring'",
+                "errorMessage": "Gzipped and spring-compressed FastQ file for reads 1 cannot contain spaces, has to be a string, has to exist and must have extension '.fq.gz.spring' or '.fastq.gz.spring'",
                 "type": "string",
                 "pattern": "^\\S+\\.f(ast)?q\\.gz.spring$",
                 "format": "file-path",
                 "exists": true
             },
             "spring_2": {
-                "errorMessage": "Gzipped and spring-compressed FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz.spring' or '.fastq.gz.spring'",
+                "errorMessage": "Gzipped and spring-compressed FastQ file for reads 2 cannot contain spaces, has to be a string, has to exist and must have extension '.fq.gz.spring' or '.fastq.gz.spring'",
                 "type": "string",
                 "pattern": "^\\S+\\.f(ast)?q\\.gz.spring$",
                 "format": "file-path",
                 "exists": true
             },
             "table": {
-                "errorMessage": "Recalibration table cannot contain spaces and must have extension '.table'",
+                "errorMessage": "Recalibration table cannot contain spaces, has to be a string, has to exist and must have extension '.table'",
                 "type": "string",
                 "pattern": "^\\S+\\.table$",
                 "format": "file-path",
                 "exists": true
             },
             "cram": {
-                "errorMessage": "CRAM file cannot contain spaces and must have extension '.cram'",
+                "errorMessage": "CRAM file cannot contain spaces, has to be a string, has to exist and must have extension '.cram'",
                 "type": "string",
                 "pattern": "^\\S+\\.cram$",
                 "format": "file-path",
                 "exists": true
             },
             "crai": {
-                "errorMessage": "CRAM index file cannot contain spaces and must have extension '.crai'",
+                "errorMessage": "CRAM index file cannot contain spaces, has to be a string, has to exist and must have extension '.crai'",
                 "type": "string",
                 "pattern": "^\\S+\\.crai$",
                 "format": "file-path",
                 "exists": true
             },
             "bam": {
-                "errorMessage": "BAM file cannot contain spaces and must have extension '.bam'",
+                "errorMessage": "BAM file cannot contain spaces, has to be a string, has to exist and must have extension '.bam'",
                 "type": "string",
                 "pattern": "^\\S+\\.bam$",
                 "format": "file-path",
                 "exists": true
             },
             "bai": {
-                "errorMessage": "BAM index file cannot contain spaces and must have extension '.bai'",
+                "errorMessage": "BAM index file cannot contain spaces, has to be a string, has to exist and must have extension '.bai'",
                 "type": "string",
                 "pattern": "^\\S+\\.bai$",
                 "format": "file-path",
                 "exists": true
             },
             "vcf": {
-                "errorMessage": "VCF file for reads 1 cannot contain spaces and must have extension '.vcf' or '.vcf.gz'",
+                "errorMessage": "VCF file for reads 1 cannot contain spaces, has to be a string, has to exist and must have extension '.vcf' or '.vcf.gz'",
                 "type": "string",
                 "pattern": "^\\S+\\.vcf(\\.gz)?$",
                 "format": "file-path",
