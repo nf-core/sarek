@@ -6,7 +6,7 @@ include { BBMAP_BBSPLIT                     } from '../../../modules/nf-core/bbm
 
 workflow PREPARE_BBSPLIT {
     take:
-    tuple val(meta), path(fasta)  // Input as tuple of meta and path
+    fasta // Input as tuple of meta and path
     bbsplit_fasta_list  // channel: [ meta, /path/to/bbsplit_fasta_list.txt ]
     bbsplit_index       // channel: [ meta, /path/to/rsem/index/ ]
 
@@ -14,7 +14,8 @@ workflow PREPARE_BBSPLIT {
     ch_versions = Channel.empty()
 
     // Create a simple value channel for the fasta file
-    ch_fasta = Channel.value(fasta)
+    fasta_file = fasta.map { meta, path -> path }.first()
+    ch_fasta = Channel.value(fasta_file)
     //
     // Uncompress BBSplit index or generate from scratch if required
     //
