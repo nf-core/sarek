@@ -9,6 +9,7 @@ include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_TUMOR  } from '../bam_variant_c
 include { BAM_VARIANT_CALLING_SOMATIC_ASCAT             } from '../bam_variant_calling_somatic_ascat/main'
 include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC      } from '../bam_variant_calling_somatic_controlfreec/main'
 include { BAM_VARIANT_CALLING_SOMATIC_MANTA             } from '../bam_variant_calling_somatic_manta/main'
+include { BAM_VARIANT_CALLING_SOMATIC_MUSE              } from '../bam_variant_calling_somatic_muse/main'
 include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2           } from '../bam_variant_calling_somatic_mutect2/main'
 include { BAM_VARIANT_CALLING_SOMATIC_STRELKA           } from '../bam_variant_calling_somatic_strelka/main'
 include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_calling_somatic_tiddit/main'
@@ -50,9 +51,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     vcf_freebayes       = Channel.empty()
     vcf_manta           = Channel.empty()
-    vcf_strelka         = Channel.empty()
     out_msisensorpro    = Channel.empty()
+    vcf_muse            = Channel.empty()
     vcf_mutect2         = Channel.empty()
+    vcf_strelka         = Channel.empty()
     vcf_tiddit          = Channel.empty()
     out_indexcov        = Channel.empty()
 
@@ -198,6 +200,23 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSISOMATIC.out.output_report)
     }
 
+    // MuSE
+    if (tools.split(',').contains('muse')) {
+        cram_normal = cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai ] }
+        cram_tumor = cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, tumor_crai ] }
+        BAM_VARIANT_CALLING_SOMATIC_MUSE(
+            cram_normal,
+            cram_tumor,
+            fasta,
+            fasta_fai,
+            dbsnp,
+            dbsnp_tbi
+        )
+
+        vcf_muse   = BAM_VARIANT_CALLING_SOMATIC_MUSE.out.vcf
+        versions   = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUSE.out.versions)
+    }
+
     // MUTECT2
     if (tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
@@ -242,6 +261,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_all = Channel.empty().mix(
         vcf_freebayes,
         vcf_manta,
+        vcf_muse,
         vcf_mutect2,
         vcf_strelka,
         vcf_tiddit
@@ -253,6 +273,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_all
     vcf_freebayes
     vcf_manta
+    vcf_muse
     vcf_mutect2
     vcf_strelka
     vcf_tiddit
