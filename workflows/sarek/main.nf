@@ -122,21 +122,21 @@ workflow SAREK {
     reports          = Channel.empty()
     versions         = Channel.empty()
 
-     /*
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         VALIDATE INPUTS
-     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        VALIDATE INPUTS
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
 
-     // Check if file with list of fastas is provided when running BBSplit
-     if (!params.skip_bbsplit && !params.bbsplit_index && params.bbsplit_fasta_list) {
-         ch_bbsplit_fasta_list = file(params.bbsplit_fasta_list)
-         if (ch_bbsplit_fasta_list.isEmpty()) {exit 1, "File provided with --bbsplit_fasta_list is empty: ${ch_bbsplit_fasta_list.getName()}!"}
-     }
+    // Check if file with list of fastas is provided when running BBSplit
+    if (!params.skip_bbsplit && !params.bbsplit_index && params.bbsplit_fasta_list) {
+        ch_bbsplit_fasta_list = file(params.bbsplit_fasta_list)
+        if (ch_bbsplit_fasta_list.isEmpty()) {exit 1, "File provided with --bbsplit_fasta_list is empty: ${ch_bbsplit_fasta_list.getName()}!"}
+    }
 
-     // Check alignment parameters
-     def prepareToolIndices  = []
-     if (!params.skip_bbsplit) { prepareToolIndices << 'bbsplit' }
+    // Check alignment parameters
+    def prepareToolIndices  = []
+    if (!params.skip_bbsplit) { prepareToolIndices << 'bbsplit' }
 
     // PREPROCESSING
     if (params.step == 'mapping') {
