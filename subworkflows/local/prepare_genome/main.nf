@@ -118,7 +118,7 @@ workflow PREPARE_GENOME {
         if (bbsplit_index) {
             if (bbsplit_index.endsWith('.tar.gz')) {
                 ch_bbsplit_index = UNTAR_BBSPLIT_INDEX ( [ [:], bbsplit_index ] ).untar.map { it[1] }
-                ch_versions      = ch_versions.mix(UNTAR_BBSPLIT_INDEX.out.versions)
+                versions         = versions.mix(UNTAR_BBSPLIT_INDEX.out.versions)
             } else {
                 ch_bbsplit_index = Channel.value(file(bbsplit_index))
             }
@@ -133,6 +133,7 @@ workflow PREPARE_GENOME {
                 .set { ch_bbsplit_fasta_list }
 
             ch_bbsplit_index = BBMAP_BBSPLIT ( [ [:], [] ], [], ch_fasta, ch_bbsplit_fasta_list, true ).index
+        }
     }
     // Gather versions of all tools used
     versions = versions.mix(BWAMEM1_INDEX.out.versions)
