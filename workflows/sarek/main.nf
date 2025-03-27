@@ -50,11 +50,6 @@ include { VCF_ANNOTATE_ALL                                  } from '../../subwor
 // MULTIQC
 include { MULTIQC                                           } from '../../modules/nf-core/multiqc/main'
 
-// Remove genomic contaminants using bbsplit
-include { PREPARE_GENOME                                    } from '../subworkflows/local/prepare_genome'
-include { PREPARE_BBSPLIT                                    } from '../subworkflows/local/prepare_bbsplit'
-include { BBMAP_BBSPLIT } from '../modules/nf-core/bbmap/bbsplit/main'
-
 
 
 /*
