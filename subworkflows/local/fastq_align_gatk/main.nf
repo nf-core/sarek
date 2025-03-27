@@ -42,6 +42,9 @@ include { BAM_BASERECALIBRATOR_SPARK                        } from '../../../sub
 include { BAM_APPLYBQSR                                     } from '../../../subworkflows/local/bam_applybqsr/main'
 include { BAM_APPLYBQSR_SPARK                               } from '../../../subworkflows/local/bam_applybqsr_spark/main'
 
+// remove genomic contaminants with bbsplit
+include { BBMAP_BBSPLIT } from '../../../modules/nf-core/bbmap/bbsplit/main'
+
 workflow FASTQ_ALIGN_GATK {
     take:
         input_fastq
@@ -54,6 +57,7 @@ workflow FASTQ_ALIGN_GATK {
         intervals_for_preprocessing
         known_sites_indels
         known_sites_indels_tbi
+        bbsplit_index
 
     main:
 
@@ -127,6 +131,25 @@ workflow FASTQ_ALIGN_GATK {
         } else {
             reads_for_alignment = reads_for_fastp
         }
+
+        //
+        // MODULE: Remove genome contaminant reads
+        //
+        if (!params.skip_bbsplit) {
+            // prepare genome for bbsplit ...
+            ch_versions = Channel.empty()
+            BBMAP_BBSPLIT (
+                reads_for_alignment,
+                bbsplit_index,
+                [],
+                [ [], [] ],
+                false
+            )
+            .primary_fastq
+            .set { reads_for_alignment }
+            ch_versions = ch_versions.mix(BBMAP_BBSPLIT.out.versions.first())
+        }
+
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         // First, we must calculate number of lanes for each sample (meta.n_fastq)

@@ -149,7 +149,10 @@ workflow NFCORE_SAREK {
         germline_resource,
         known_indels,
         known_snps,
-        pon)
+        pon,
+        params.bbsplit_fasta_list
+        params.bbsplit_index
+        )
 
     // Gather built indices or get them from the params
     // Built from the fasta file:
@@ -163,6 +166,8 @@ workflow NFCORE_SAREK {
                                     : PREPARE_GENOME.out.bwamem2
     dragmap     = params.dragmap    ? Channel.fromPath(params.dragmap).map{ it -> [ [id:'dragmap'], it ] }.collect()
                                     : PREPARE_GENOME.out.hashtable
+    // get index from bbsplit
+    bbsplit_index           = PREPARE_GENOME.out.bbsplit_index
 
     // Gather index for mapping given the chosen aligner
     index_alignment = (aligner == "bwa-mem" || aligner == "sentieon-bwamem") ? bwa :

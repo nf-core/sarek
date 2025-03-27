@@ -134,10 +134,6 @@ workflow SAREK {
         if (ch_bbsplit_fasta_list.isEmpty()) {exit 1, "File provided with --bbsplit_fasta_list is empty: ${ch_bbsplit_fasta_list.getName()}!"}
     }
 
-    // Check alignment parameters
-    def prepareToolIndices  = []
-    if (!params.skip_bbsplit) { prepareToolIndices << 'bbsplit' }
-
     // PREPROCESSING
     if (params.step == 'mapping') {
         // Figure out if input is bam, fastq, or spring
@@ -213,7 +209,8 @@ workflow SAREK {
             intervals_and_num_intervals,
             intervals_for_preprocessing,
             known_sites_indels,
-            known_sites_indels_tbi)
+            known_sites_indels_tbi,
+            bbsplit_index)
 
         // Gather preprocessing output
         cram_variant_calling = Channel.empty()
