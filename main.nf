@@ -149,7 +149,7 @@ workflow NFCORE_SAREK {
         known_indels,
         known_snps,
         pon,
-        params.bbsplit_fasta_list
+        params.bbsplit_fasta_list,
         params.bbsplit_index
         )
 
