@@ -1,13 +1,19 @@
 {
     "-profile test --aligner parabricks": {
         "content": [
-            8,
+            11,
             {
                 "FASTQC": {
                     "fastqc": "0.12.1"
                 },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.8"
+                },
                 "PARABRICKS_FQ2BAM": {
                     "pbrun": "4.4.0-1"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
                 },
                 "Workflow": {
                     "nf-core/sarek": "v3.6.0dev"
@@ -46,10 +52,24 @@
                 "reports/fastqc/test-test_L2/test-test_L2_1_fastqc.html",
                 "reports/fastqc/test-test_L2/test-test_L2_1_fastqc.zip",
                 "reports/fastqc/test-test_L2/test-test_L2_2_fastqc.html",
-                "reports/fastqc/test-test_L2/test-test_L2_2_fastqc.zip"
+                "reports/fastqc/test-test_L2/test-test_L2_2_fastqc.zip",
+                "reports/mosdepth",
+                "reports/mosdepth/test-test_L1",
+                "reports/mosdepth/test-test_L1/test-test_L1.md.mosdepth.global.dist.txt",
+                "reports/mosdepth/test-test_L1/test-test_L1.md.mosdepth.region.dist.txt",
+                "reports/mosdepth/test-test_L1/test-test_L1.md.mosdepth.summary.txt",
+                "reports/mosdepth/test-test_L1/test-test_L1.md.regions.bed.gz",
+                "reports/mosdepth/test-test_L1/test-test_L1.md.regions.bed.gz.csi",
+                "reports/mosdepth/test-test_L1/test-test_L1.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/test-test_L1/test-test_L1.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/test-test_L1/test-test_L1.recal.mosdepth.summary.txt",
+                "reports/mosdepth/test-test_L1/test-test_L1.recal.regions.bed.gz",
+                "reports/mosdepth/test-test_L1/test-test_L1.recal.regions.bed.gz.csi",
+                "samtools",
+                "samtools/test-test_L1.stats"
             ],
             [
-                "test-test_L1.cram:md5,f366812c146fb57e53492db0d7e72fe2",
+                "test-test_L1.cram:md5,9f70087735b40f78804ce9ceac4d78ee",
                 "test-test_L1.cram.crai:md5,a15a46839ef102c1e8102df8f820d994",
                 "genome.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
                 "genome.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
@@ -59,7 +79,18 @@
                 "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
-                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
+                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
+                "test-test_L1.md.mosdepth.global.dist.txt:md5,7efd6401982256cf805d32489666cc77",
+                "test-test_L1.md.mosdepth.region.dist.txt:md5,51ea5f44541cba3a0c4084e66b3010b2",
+                "test-test_L1.md.mosdepth.summary.txt:md5,6199a81261f1d3b9d69b66ea4e1cb972",
+                "test-test_L1.md.regions.bed.gz:md5,6cc7cad2758603997e82d3b1272478d2",
+                "test-test_L1.md.regions.bed.gz.csi:md5,a3ac5a5d620082a4a1061656742d8e30",
+                "test-test_L1.recal.mosdepth.global.dist.txt:md5,7efd6401982256cf805d32489666cc77",
+                "test-test_L1.recal.mosdepth.region.dist.txt:md5,51ea5f44541cba3a0c4084e66b3010b2",
+                "test-test_L1.recal.mosdepth.summary.txt:md5,6199a81261f1d3b9d69b66ea4e1cb972",
+                "test-test_L1.recal.regions.bed.gz:md5,6cc7cad2758603997e82d3b1272478d2",
+                "test-test_L1.recal.regions.bed.gz.csi:md5,a3ac5a5d620082a4a1061656742d8e30",
+                "test-test_L1.stats:md5,34ba0c231dbfd9ea082448e7fa18e8a3"
             ],
             [
                 [
@@ -73,6 +104,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.2"
         },
-        "timestamp": "2025-03-28T14:31:53.619345078"
+        "timestamp": "2025-03-28T14:41:00.607127746"
     }
 }

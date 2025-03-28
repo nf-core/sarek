@@ -39,22 +39,21 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
 
     ch_versions = ch_versions.mix(PARABRICKS_FQ2BAM.out.versions)
 
-    cram_out = PARABRICKS_FQ2BAM.out.cram
+    cram_variant_calling =
+        PARABRICKS_FQ2BAM.out.cram
+        .join(PARABRICKS_FQ2BAM.out.crai, failOnDuplicate: true, failOnMismatch: true)
+
 
     CRAM_SAMPLEQC(
-            cram_out,
-            ch_ngscheckmate_bed,
-            ch_fasta,
-            params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
-            ch_intervals_for_preprocessing
+        cram_variant_calling,
+        ch_ngscheckmate_bed,
+        ch_fasta,
+        params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
+        ch_intervals_for_preprocessing
     )
 
     ch_versions = ch_versions.mix(CRAM_SAMPLEQC.out.versions)
     ch_reports = ch_reports.mix(CRAM_SAMPLEQC.out.reports.collect{ _meta, report -> [ report ] })
-
-    cram_variant_calling =
-        cram_out
-        .join(PARABRICKS_FQ2BAM.out.crai, failOnDuplicate: true, failOnMismatch: true)
 
     CHANNEL_ALIGN_CREATE_CSV(
         cram_variant_calling,
