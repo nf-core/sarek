@@ -133,6 +133,7 @@ workflow PREPARE_GENOME {
                 .set { ch_bbsplit_fasta_list }
 
             ch_bbsplit_index = BBMAP_BBSPLIT ( [ [:], [] ], [], ch_fasta, ch_bbsplit_fasta_list, true ).index
+            versions         = versions.mix(BBMAP_BBSPLIT.out.versions)
         }
     }
     // Gather versions of all tools used
@@ -148,7 +149,6 @@ workflow PREPARE_GENOME {
     versions = versions.mix(TABIX_KNOWN_INDELS.out.versions)
     versions = versions.mix(TABIX_KNOWN_SNPS.out.versions)
     versions = versions.mix(TABIX_PON.out.versions)
-    versions = versions.mix(BBMAP_BBSPLIT.out.versions)
 
     emit:
     bcftools_annotations_tbi = TABIX_BCFTOOLS_ANNOTATIONS.out.tbi.map{ meta, tbi -> [tbi] }.collect()   // path: bcftools_annotations.vcf.gz.tbi
