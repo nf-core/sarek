@@ -184,16 +184,17 @@ workflow SAREK {
                 index_alignment,
                 intervals_and_num_intervals,
                 known_sites_indels,
-                "cram",
                 ngscheckmate_bed,
-                intervals_for_preprocessing)
+                intervals_for_preprocessing,
+                "cram")
 
-                // Gather preprocessing output
-                cram_variant_calling = Channel.empty()
-                cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_PARABRICKS.out.cram)
+            // Gather preprocessing output
+            cram_variant_calling = Channel.empty()
+            cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_PARABRICKS.out.cram)
 
-                // Gather used softwares versions
-                versions = versions.mix(FASTQ_PREPROCESS_PARABRICKS.out.versions)
+            // Gather used softwares versions
+            reports = reports.mix(FASTQ_PREPROCESS_PARABRICKS.out.reports)
+            versions = versions.mix(FASTQ_PREPROCESS_PARABRICKS.out.versions)
         } else {
             // PREPROCESSING
             FASTQ_PREPROCESS_GATK(

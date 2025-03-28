@@ -14,7 +14,7 @@ include { FASTP                                             } from '../../../mod
 include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO                  } from '../../../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
 
 // Map input reads to reference genome
-include { FASTQ_ALIGN          } from '../../../subworkflows/local/fastq_align/main'
+include { FASTQ_ALIGN                                       } from '../../../subworkflows/local/fastq_align/main'
 
 // Merge and index BAM files (optional)
 include { BAM_MERGE_INDEX_SAMTOOLS                          } from '../../../subworkflows/local/bam_merge_index_samtools/main'
