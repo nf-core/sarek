@@ -19,12 +19,12 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     ch_reports  = Channel.empty()
 
     // Adjust ch_interval_file
-    ch_interval_file = ch_interval_file.map { file, num -> 
+    ch_interval_file = ch_interval_file.map { file, num ->
         [['id': 'interval_file', 'num':num], file]
     }
 
     // Adjust ch_known_sites
-    ch_known_sites= ch_known_sites.collect().map { files -> 
+    ch_known_sites= ch_known_sites.collect().map { files ->
         [['id': 'known_sites'], files]
     }
 
