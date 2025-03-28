@@ -105,6 +105,7 @@ workflow PREPARE_GENOME {
     } else chr_files = Channel.fromPath(chr_dir).collect()
 
     // prepare genome for bbsplit
+    ch_bbsplit_index = Channel.empty()
     if (!params.skip_bbsplit){
         // Create a simple value channel for the fasta file
         ch_fasta = fasta
@@ -163,7 +164,7 @@ workflow PREPARE_GENOME {
     known_indels_tbi         = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }.collect()           // path: {known_indels*}.vcf.gz.tbi
     msisensorpro_scan        = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }                   // path: genome_msi.list
     pon_tbi                  = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }.collect()                    // path: pon.vcf.gz.tbi
-    bbsplit_index            = ch_bbsplit_index                                                         // channel: path(bbsplit/index/)
+    bbsplit_index            = params.skip_bbsplit ? Channel.empty() : ch_bbsplit_index  // Conditional emission                                                         // channel: path(bbsplit/index/)
 
     allele_files    // path: allele_files
     chr_files       // path: chr_files
