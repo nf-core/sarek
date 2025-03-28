@@ -8,16 +8,25 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     ch_reads                        // channel: [mandatory] meta, reads
     ch_fasta                        // channel: [mandatory] meta, fasta
     ch_index                        // channel: [mandatory] meta, index - bwa index
-    ch_interval_file                // channel: [optional] meta, intervals_bed_combined
-    ch_known_sites                  // channel [optional] known_sites_indels
+    ch_interval_file                // channel: [optional]  meta, intervals_bed_combined
+    ch_known_sites                  // channel: [optional]  known_sites_indels
     ch_ngscheckmate_bed             // channel: [mandatory] meta, ngscheckmate_bed
-    ch_intervals_for_preprocessing  // channel: [optional] meta, intervals_for_preprocessing
+    ch_intervals_for_preprocessing  // channel: [optional]  meta, intervals_for_preprocessing
     val_output_fmt                  // either bam or cram
 
     main:
-
     ch_versions = Channel.empty()
     ch_reports  = Channel.empty()
+
+    // Adjust ch_interval_file
+    ch_interval_file = ch_interval_file.map { file, num -> 
+        [['id': 'interval_file', 'num':num], file]
+    }
+
+    // Adjust ch_known_sites
+    ch_known_sites= ch_known_sites.collect().map { files -> 
+        [['id': 'known_sites'], files]
+    }
 
     PARABRICKS_FQ2BAM(
         ch_reads,           // channel: [ val(meta), reads ]
@@ -32,8 +41,6 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
 
     cram_out = PARABRICKS_FQ2BAM.out.cram
 
-    cram_out.view(tag: 'cram')
-
     CRAM_SAMPLEQC(
             cram_out,
             ch_ngscheckmate_bed,
@@ -46,7 +53,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     ch_reports = ch_reports.mix(CRAM_SAMPLEQC.out.reports.collect{ _meta, report -> [ report ] })
 
     cram_variant_calling =
-        PARABRICKS_FQ2BAM.out.cram
+        cram_out
         .join(PARABRICKS_FQ2BAM.out.crai, failOnDuplicate: true, failOnMismatch: true)
 
     CHANNEL_ALIGN_CREATE_CSV(

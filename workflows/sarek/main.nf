@@ -27,8 +27,8 @@ include { FASTQC                                            } from '../../module
 include { CRAM_SAMPLEQC                                     } from '../../subworkflows/local/cram_sampleqc/main'
 
 // Preprocessing
-include { FASTQ_PREPROCESS_GATK                                  } from '../../subworkflows/local/fastq_preprocess_gatk/main'
-include { FASTQ_PREPROCESS_PARABRICKS                            } from '../../subworkflows/local/fastq_preprocess_parabricks/main'
+include { FASTQ_PREPROCESS_GATK                             } from '../../subworkflows/local/fastq_preprocess_gatk/main'
+include { FASTQ_PREPROCESS_PARABRICKS                       } from '../../subworkflows/local/fastq_preprocess_parabricks/main'
 
 // Variant calling on a single normal sample
 include { BAM_VARIANT_CALLING_GERMLINE_ALL                  } from '../../subworkflows/local/bam_variant_calling_germline_all/main'
@@ -178,6 +178,8 @@ workflow SAREK {
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
 
         if (params.aligner == 'parabricks') {
+            // this does not work
+            println("with if")
             FASTQ_PREPROCESS_PARABRICKS(
                 input_fastq,
                 fasta,
@@ -195,7 +197,7 @@ workflow SAREK {
             // Gather used softwares versions
             reports = reports.mix(FASTQ_PREPROCESS_PARABRICKS.out.reports)
             versions = versions.mix(FASTQ_PREPROCESS_PARABRICKS.out.versions)
-        } else {
+        } else if (params.aligner == 'bwa') {
             // PREPROCESSING
             FASTQ_PREPROCESS_GATK(
                 input_fastq,
@@ -216,6 +218,25 @@ workflow SAREK {
             // Gather used softwares versions
             reports = reports.mix(FASTQ_PREPROCESS_GATK.out.reports)
             versions = versions.mix(FASTQ_PREPROCESS_GATK.out.versions)
+        } else {
+            println("with else")
+            FASTQ_PREPROCESS_PARABRICKS(
+                input_fastq,
+                fasta,
+                index_alignment,
+                intervals_and_num_intervals,
+                known_sites_indels,
+                ngscheckmate_bed,
+                intervals_for_preprocessing,
+                "cram")
+
+            // Gather preprocessing output
+            cram_variant_calling = Channel.empty()
+            cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_PARABRICKS.out.cram)
+
+            // Gather used softwares versions
+            reports = reports.mix(FASTQ_PREPROCESS_PARABRICKS.out.reports)
+            versions = versions.mix(FASTQ_PREPROCESS_PARABRICKS.out.versions)
         }
 
     }
