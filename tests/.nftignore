@@ -18,8 +18,7 @@ multiqc/multiqc_plots/{svg,pdf,png}/*.{svg,pdf,png}
 multiqc/multiqc_report.html
 no_intervals.{bed,bed.gz,bed.gz.tbi}
 pipeline_info/*.{html,json,txt,yml}
-preprocessing/parabricks/**/*.{cram,cram.crai}
-preprocessing/**/*.{md,recal,sorted}.{bam,bam.bai,cram,cram.crai,table}
+preprocessing/**/*.{bam,bam.bai,cram,cram.crai,table}
 reference/dragmap/hash_table.{cfg,cfg.bin}
 reference/dragmap/hash_table_stats.txt
 reports/EnsemblVEP/*/*.ann.summary.html
