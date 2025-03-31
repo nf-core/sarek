@@ -187,8 +187,6 @@ workflow SAREK {
                 index_alignment,
                 intervals_and_num_intervals,
                 known_sites_indels,
-                ngscheckmate_bed,
-                intervals_for_preprocessing,
                 "cram")
 
             // Gather preprocessing output
