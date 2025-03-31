@@ -159,8 +159,9 @@ workflow NFCORE_SAREK {
                                     : PREPARE_GENOME.out.hashtable
 
     // Gather index for mapping given the chosen aligner
-    index_alignment = (params.aligner == "bwa-mem" || params.aligner == "sentieon-bwamem") ? bwa :
-        (params.aligner == "bwa-mem2" || params.aligner == "parabricks") ? bwamem2 :
+    aligner         = params.aligner
+    index_alignment = (aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks") ? bwa :
+        aligner == "bwa-mem2" ? bwamem2 :
         dragmap
 
     // TODO: add a params for msisensorpro_scan
@@ -261,6 +262,7 @@ workflow NFCORE_SAREK {
     //
     SAREK(samplesheet,
         allele_files,
+        aligner,
         bcftools_annotations,
         bcftools_annotations_tbi,
         bcftools_header_lines,

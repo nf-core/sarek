@@ -61,6 +61,7 @@ workflow SAREK {
     take:
         input_sample
         allele_files
+        aligner
         bcftools_annotations
         bcftools_annotations_tbi
         bcftools_header_lines
@@ -177,7 +178,7 @@ workflow SAREK {
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
 
-        if (params.aligner == 'parabricks') {
+        if (aligner == 'parabricks') {
             // this does not work
             println("with if")
             FASTQ_PREPROCESS_PARABRICKS(
@@ -197,7 +198,7 @@ workflow SAREK {
             // Gather used softwares versions
             reports = reports.mix(FASTQ_PREPROCESS_PARABRICKS.out.reports)
             versions = versions.mix(FASTQ_PREPROCESS_PARABRICKS.out.versions)
-        } else if (params.aligner == 'bwa') {
+        } else if (aligner == 'bwa') {
             // PREPROCESSING
             FASTQ_PREPROCESS_GATK(
                 input_fastq,
