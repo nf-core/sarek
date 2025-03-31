@@ -179,8 +179,7 @@ workflow SAREK {
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
 
         if (aligner == 'parabricks') {
-            // this does not work
-            println("with if")
+            // PREPROCESSING WITH PARABRICKS
             FASTQ_PREPROCESS_PARABRICKS(
                 input_fastq,
                 fasta,
@@ -196,7 +195,7 @@ workflow SAREK {
             // Gather used softwares versions
             reports = reports.mix(FASTQ_PREPROCESS_PARABRICKS.out.reports)
             versions = versions.mix(FASTQ_PREPROCESS_PARABRICKS.out.versions)
-        } else if (aligner == 'bwa') {
+        } else {
             // PREPROCESSING
             FASTQ_PREPROCESS_GATK(
                 input_fastq,
@@ -217,23 +216,6 @@ workflow SAREK {
             // Gather used softwares versions
             reports = reports.mix(FASTQ_PREPROCESS_GATK.out.reports)
             versions = versions.mix(FASTQ_PREPROCESS_GATK.out.versions)
-        } else {
-            println("with else")
-            FASTQ_PREPROCESS_PARABRICKS(
-                input_fastq,
-                fasta,
-                index_alignment,
-                intervals_and_num_intervals,
-                known_sites_indels,
-                "cram")
-
-            // Gather preprocessing output
-            cram_variant_calling = Channel.empty()
-            cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_PARABRICKS.out.cram)
-
-            // Gather used softwares versions
-            reports = reports.mix(FASTQ_PREPROCESS_PARABRICKS.out.reports)
-            versions = versions.mix(FASTQ_PREPROCESS_PARABRICKS.out.versions)
         }
 
     }

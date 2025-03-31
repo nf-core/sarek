@@ -135,8 +135,6 @@
                 "fastqc_sequence_length_distribution_plot.txt:md5,fb04dce68ec566314125bc9438211b28",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
-                "test-test_L1.cram:md5,1aabb06eecb3a2ad4b7ceaceb4ea5417",
-                "test-test_L1.cram.crai:md5,a15a46839ef102c1e8102df8f820d994",
                 "genome.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
                 "genome.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
                 "genome.bwt:md5,815eded87e4cb6b0f1daab5c4d6e30af",
@@ -164,6 +162,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.2"
         },
-        "timestamp": "2025-03-31T10:29:17.596831202"
+        "timestamp": "2025-03-31T11:19:12.690323594"
     }
 }

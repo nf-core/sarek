@@ -10,6 +10,7 @@ nextflow_pipeline {
 
         when {
             params {
+                aligner = 'parabricks'
                 outdir = "$outputDir"
                 save_reference = true
                 tools = ''
