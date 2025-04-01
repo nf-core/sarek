@@ -33,20 +33,20 @@ ref_index=/data1/shahs3/reference/ref-sarcoma/GRCh38/v45/GRCh38.primary_assembly
 cd ${outdir}
 
 nextflow run apsteinberg/sarek \
-  -c ${HOME}/nanoseq/conf/iris.config \
-  -profile singularity,slurm \
-  --input ${samplesheet} \
-  --outdir ${outdir} \
-  -work-dir ${outdir}/work \
-  --trim_fastq \
-  --aligner bwa-mem \
-  --save_mapped \
-  --save_output_as_bam \
-  --fasta ${refgenome} \
-  --fasta_fai ${ref_index} \
-  --igenomes_ignore \
-  --skip_tools baserecalibrator \
-  --email preskaa@mskcc.org
+    -c ${HOME}/nanoseq/conf/iris.config \
+    -profile singularity,slurm \
+    --input ${samplesheet} \
+    --outdir ${outdir} \
+    -work-dir ${outdir}/work \
+    --trim_fastq \
+    --aligner bwa-mem \
+    --save_mapped \
+    --save_output_as_bam \
+    --fasta ${refgenome} \
+    --fasta_fai ${ref_index} \
+    --igenomes_ignore \
+    --skip_tools baserecalibrator \
+    --email preskaa@mskcc.org
 
 
 #nextflow run apsteinberg/nanoseq -resume 6c03bf60-99ea-41cd-a949-c30986899f14
