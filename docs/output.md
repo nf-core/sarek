@@ -28,6 +28,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Base Quality Score Recalibration](#base-quality-score-recalibration)
     - [GATK BaseRecalibrator (Spark)](#gatk-baserecalibrator-spark)
     - [GATK ApplyBQSR (Spark)](#gatk-applybqsr-spark)
+  - [Parabricks FQ2BAM](#parabricks-fq2bam)
   - [CSV files](#csv-files)
 - [Variant Calling](#variant-calling)
   - [SNVs and small indels](#snvs-and-small-indels)
@@ -288,6 +289,25 @@ The resulting recalibrated CRAM files are delivered to the user. Recalibrated CR
   - CRAM file and index
 - if `--save_output_as_bam`:
   - `<sample>.recal.bam` and `<sample>.recal.bam.bai` - BAM file and index
+  </details>
+
+### Parabricks FQ2BAM
+
+:::info
+This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
+:::
+
+[Parabricks FQ2BAM](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html) runs as alternative to GATK preprocessing, enables by `--aligner parabricks --profile <docker/singularity>,gpu`.
+
+The resulting recalibrated CRAM files are delivered to the user.
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+**Output directory: `{outdir}/preprocessing/parabricks/<sample>/`**
+
+- `<sample>.cram` and `<sample>.cram.crai`
+  - CRAM file and index
   </details>
 
 ### CSV files
