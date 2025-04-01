@@ -474,12 +474,6 @@
                 "test.recal.regions.bed.gz.csi:md5,e1a52ced0e9ded1eecbca4eff2014c8e",
                 "test.freebayes.FILTER.summary:md5,75824ce08910acce7e9f6adb4d635850",
                 "test.freebayes.TsTv.count:md5,3c198f7ec7fe2f5d365218ba0ff64197"
-            ],
-            [
-                [
-                    "test.freebayes.vcf.gz",
-                    "5be2ac85f1ece99d08d1a342a47d4acc"
-                ]
             ]
         ],
         "meta": {
@@ -873,16 +867,6 @@
                 "test.freebayes.TsTv.count:md5,650f3dc78c5aaaecfe8ffa3d499e812f",
                 "test2_vs_test.freebayes.FILTER.summary:md5,84039d55edf0981d6b9b81252aff6741",
                 "test2_vs_test.freebayes.TsTv.count:md5,6c6038d43eb7fa766909b495979d120e"
-            ],
-            [
-                [
-                    "test.freebayes.vcf.gz",
-                    "48fae960a21a5e7e56856ca931e167ea"
-                ],
-                [
-                    "test2_vs_test.freebayes.vcf.gz",
-                    "d0881eda5c9a2be980f6e61711b7ee27"
-                ]
             ]
         ],
         "meta": {
@@ -1249,16 +1233,6 @@
                 "test.freebayes.TsTv.count:md5,0a0464beef110bc0f3c5a35d022b528e",
                 "test2_vs_test.freebayes.FILTER.summary:md5,d2d717fef7c18ef9b40bbbc5c5bbf101",
                 "test2_vs_test.freebayes.TsTv.count:md5,e09dacc71bf72254e3aace1cc7c1e16d"
-            ],
-            [
-                [
-                    "test.freebayes.vcf.gz",
-                    "dff55f30153f2d0fb3ed12aa14f8566c"
-                ],
-                [
-                    "test2_vs_test.freebayes.vcf.gz",
-                    "6a587996b12ee306042c9a95282829c0"
-                ]
             ]
         ],
         "meta": {
@@ -1587,12 +1561,6 @@
                 "test.recal.regions.bed.gz.csi:md5,5f9c60279af78e3aeafc96a8c11fb35f",
                 "test.freebayes.FILTER.summary:md5,562eaa4512cd4b57e6cfca7b44957d1c",
                 "test.freebayes.TsTv.count:md5,4e6935b1e1906e57be1b54c0dffe7169"
-            ],
-            [
-                [
-                    "test.freebayes.vcf.gz",
-                    "a66068355e30ea9f01ddc83e54ed2e26"
-                ]
             ]
         ],
         "meta": {

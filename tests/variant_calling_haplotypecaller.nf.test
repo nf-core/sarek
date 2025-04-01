@@ -10,6 +10,7 @@ nextflow_pipeline {
 
         when {
             params {
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed'
                 input = "${projectDir}/tests/csv/3.0/mapped_single_bam.csv"
                 outdir = "$outputDir"
@@ -49,6 +50,7 @@ nextflow_pipeline {
 
         when {
             params {
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed'
                 input = "${projectDir}/tests/csv/3.0/mapped_single_bam.csv"
                 outdir = "$outputDir"
@@ -89,6 +91,7 @@ nextflow_pipeline {
 
         when {
             params {
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed'
                 input = "${projectDir}/tests/csv/3.0/mapped_single_bam.csv"
                 outdir = "$outputDir"

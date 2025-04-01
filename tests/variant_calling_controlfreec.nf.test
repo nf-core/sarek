@@ -10,6 +10,7 @@ nextflow_pipeline {
 
         when {
             params {
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 chr_dir = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz'
                 dbsnp = params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz'
                 dbsnp_tbi = params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi'
@@ -49,6 +50,7 @@ nextflow_pipeline {
 
         when {
             params {
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 chr_dir = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz'
                 dbsnp = params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz'
                 dbsnp_tbi = params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi'
@@ -88,6 +90,7 @@ nextflow_pipeline {
         options "-stub"
         when {
             params {
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 chr_dir = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz'
                 dbsnp = params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz'
                 dbsnp_tbi = params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi'
@@ -127,6 +130,7 @@ nextflow_pipeline {
         options "-stub"
         when {
             params {
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 chr_dir = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz'
                 dbsnp = params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz'
                 dbsnp_tbi = params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi'
