@@ -28,6 +28,8 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -38,7 +40,9 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable files' : stable_path
+                    stable_path.isEmpty() ? 'No stable files' : stable_path,
+                    // vcf files
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
@@ -61,6 +65,8 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -71,11 +77,12 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable files' : stable_path
+                    stable_path.isEmpty() ? 'No stable files' : stable_path,
+                    // vcf files
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
-
     }
 
     test("-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv") {
@@ -103,6 +110,8 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -113,7 +122,9 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path
+                    stable_path,
+                    // vcf files
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
@@ -140,6 +151,8 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -150,12 +163,13 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path
+                    stable_path,
+                    // vcf files
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
     }
-
 
     test("-profile test,tools_tumoronly --tools freebayes --input recalibrated_tumoronly.csv") {
 
@@ -183,6 +197,8 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -193,7 +209,9 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path
+                    stable_path,
+                    // vcf files
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
@@ -226,6 +244,8 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -236,7 +256,9 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path
+                    stable_path,
+                    // vcf files
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
