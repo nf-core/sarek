@@ -14,7 +14,6 @@ nextflow_pipeline {
 
         when {
             params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed'
                 outdir = "$outputDir"
                 tools = 'freebayes'
@@ -54,7 +53,6 @@ nextflow_pipeline {
 
         when {
             params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 outdir = "$outputDir"
                 no_intervals = true
                 tools = 'freebayes'
@@ -97,7 +95,6 @@ nextflow_pipeline {
 
         when {
             params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed'
                 input = "${projectDir}/tests/csv/3.0/fastq_pair.csv"
                 outdir = "$outputDir"
@@ -140,7 +137,6 @@ nextflow_pipeline {
 
         when {
             params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 input = "${projectDir}/tests/csv/3.0/fastq_pair.csv"
                 outdir = "$outputDir"
                 no_intervals = true
@@ -181,7 +177,6 @@ nextflow_pipeline {
 
         when {
             params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 fasta = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta'
                 fasta_fai = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai'
                 intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed'
@@ -223,7 +218,6 @@ nextflow_pipeline {
 
         when {
             params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 fasta = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta'
                 fasta_fai = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai'
                 intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed'
