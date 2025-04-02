@@ -12,7 +12,6 @@ nextflow_pipeline {
             params {
                 outdir = "$outputDir"
                 save_mapped = true
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 skip_tools = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
                 tools = ''
             }

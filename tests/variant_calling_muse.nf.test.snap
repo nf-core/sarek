@@ -1,5 +1,5 @@
 {
-    "Run with profile test | --tools muse | somatic": {
+    "-profile test --tools muse --input recalibrated_somatic.csv": {
         "content": [
             18,
             {
@@ -151,7 +151,7 @@
         },
         "timestamp": "2025-02-24T10:09:35.350085828"
     },
-    "Run with profile test | --tools muse | somatic | stub": {
+    "-profile test --tools muse --input recalibrated_somatic.csv -stub": {
         "content": [
             17,
             {

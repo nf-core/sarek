@@ -301,7 +301,7 @@
                 "cf_chrom_len": {
                     "type": "string",
                     "format": "file-path",
-                    "pattern": "^\\S+\\fai$",
+                    "pattern": "^\\S+\\.(fai|len)$",
                     "exists": true,
                     "fa_icon": "fas fa-ruler-horizontal",
                     "description": "Specify a custom chromosome length file.",
