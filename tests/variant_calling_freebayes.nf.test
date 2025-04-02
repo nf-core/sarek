@@ -79,7 +79,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path.isEmpty() ? 'No stable files' : stable_path,
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[8..16], path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
@@ -165,7 +165,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[8..16], path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
@@ -217,7 +217,7 @@ nextflow_pipeline {
         }
     }
 
-    test("-profile test --tools freebayes --no_intervals tumoronly") {
+    test("-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv") {
 
         // -profile test,tools_tumoronly --tools freebayes --no_intervals
 
@@ -226,7 +226,6 @@ nextflow_pipeline {
                 modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 fasta = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta'
                 fasta_fai = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai'
-                intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed'
                 input = "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv"
                 outdir = "$outputDir"
                 step = "variant_calling"
@@ -258,7 +257,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[8..16], path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
