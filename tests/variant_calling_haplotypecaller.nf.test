@@ -132,7 +132,6 @@ nextflow_pipeline {
 
         when {
             params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 input = "${projectDir}/tests/csv/3.0/mapped_single_bam.csv"
                 outdir = "$outputDir"
                 step = "variant_calling"
