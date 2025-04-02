@@ -71,6 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1809](https://github.com/nf-core/sarek/pull/1809) - Deals with nf-test snapshoting empty lists in a better way (https://github.com/nf-core/sarek/issues/1807)
 - [1814](https://github.com/nf-core/sarek/pull/1814) - Fix link to GHA CI broken by [1810](https://github.com/nf-core/sarek/pull/1810)
 - [1845](https://github.com/nf-core/sarek/pull/1845) - Modifying `.nftignore` should retrigger nf-test (cf https://github.com/nf-core/tools/pull/3508)
+- [1855](https://github.com/nf-core/sarek/pull/1855) - Fix json schema cf_chrom_len input broken by [1842](https://github.com/nf-core/sarek/pull/1842)
 
 #### Removed
 
