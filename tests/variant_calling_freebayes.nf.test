@@ -41,8 +41,8 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path.isEmpty() ? 'No stable files' : stable_path,
-                    // vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.summary] }
+                    // All vcf files
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
@@ -78,8 +78,8 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path.isEmpty() ? 'No stable files' : stable_path,
-                    // vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    // All vcf files
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
@@ -123,8 +123,8 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path,
-                    // vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.summary] }
+                    // All vcf files
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
@@ -164,8 +164,8 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path,
-                    // vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    // All vcf files
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
@@ -210,8 +210,8 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path,
-                    // vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.summary] }
+                    // All vcf files
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
@@ -257,8 +257,8 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path,
-                    // vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.summary] }
+                    // All vcf files
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
