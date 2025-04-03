@@ -43,7 +43,10 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.failed},
                 { assert snapshot(
-                    workflow.stderr.toString()
+                    "stderr",
+                    workflow.stderr.toString().split(","),
+                    "stdout",
+                    workflow.stdout.toString().split(",")
                 ).match() }
             )
         }
