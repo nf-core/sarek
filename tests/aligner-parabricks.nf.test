@@ -5,6 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
     tag "gpu"
+    profile "test,gpu"
 
     test("-profile test --aligner parabricks") {
 
