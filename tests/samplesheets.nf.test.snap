@@ -3,12 +3,12 @@
         "content": [
             "stderr",
             [
-                "[]"
+                "[Patient [test] has more than 1 sample [2] with status 0 and 1 sample with status 1.]"
             ],
             "stdout",
             [
                 "[N E X T F L O W  ~  version 24.10.5",
-                " Launching `/home/max/workspace/sarek/tests/../main.nf` [naughty_kirch] DSL2 - revision: 3954909713",
+                " Launching `/home/max/workspace/sarek/tests/../main.nf` [grave_cray] DSL2 - revision: 3954909713",
                 " ",
                 " -\u001b[2m----------------------------------------------------\u001b[0m-",
                 "                                         \u001b[0;32m",
@@ -87,7 +87,7 @@
                 "   \u001b[0;34mmodules_testdata_base_path: \u001b[0;32mhttps://raw.githubusercontent.com/nf-core/test-datasets/modules/data/\u001b[0m",
                 " ",
                 " \u001b[1mCore Nextflow options\u001b[0m",
-                "   \u001b[0;34mrunName                   : \u001b[0;32mnaughty_kirch\u001b[0m",
+                "   \u001b[0;34mrunName                   : \u001b[0;32mgrave_cray\u001b[0m",
                 "   \u001b[0;34mcontainerEngine           : \u001b[0;32mdocker\u001b[0m",
                 "   \u001b[0;34mlaunchDir                 : \u001b[0;32m/home/max/tests/1e1065f4a2408e973edb10f0281c108\u001b[0m",
                 "   \u001b[0;34mworkDir                   : \u001b[0;32m/home/max/tests/1e1065f4a2408e973edb10f0281c108/work\u001b[0m",
@@ -139,7 +139,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-03T12:21:29.02029256"
+        "timestamp": "2025-04-03T12:36:30.306541125"
     },
     "-profile test --input tests/csv/3.0/sample_with_space.csv": {
         "content": [
