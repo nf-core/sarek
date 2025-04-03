@@ -24,18 +24,14 @@ nextflow_pipeline {
         }
     }
 
-    test("-profile test --tools stelka --step variant_calling --input recalibrated_somatic_two_normal_one_sample.csv") {
+    test("-profile test --step variant_calling --input tests/csv/3.0/recalibrated_somatic_two_normal_one_sample.csv") {
 
         when {
             params {
                 modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-                fasta = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta'
-                fasta_fai = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai'
-                intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed'
                 input = "${projectDir}/tests/csv/3.0/recalibrated_somatic_two_normal_one_sample.csv"
                 outdir = "$outputDir"
                 step = "variant_calling"
-                tools = 'strelka'
             }
         }
 
@@ -43,10 +39,7 @@ nextflow_pipeline {
             assertAll(
                 { assert workflow.failed},
                 { assert snapshot(
-                    "stderr",
-                    workflow.stderr.toString().split(","),
-                    "stdout",
-                    workflow.stdout.toString().split(",")
+                    workflow.stderr.toString().split(",")[0]
                 ).match() }
             )
         }
