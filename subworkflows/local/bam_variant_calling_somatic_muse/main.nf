@@ -15,13 +15,15 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
     cram_tumor    // channel: [mandatory] [ meta, tumor_cram, tumor_crai]
     fasta         // channel: [mandatory] [ meta, fasta ]
     fai           // channel: [mandatory] [ meta, fai ]
-    dbsnp         // channel: [optional]  [ dbsnp ]
-    dbsnp_tbi     // channel: [optional]  [ dbsnp_tbi ]
+    dbsnp         // channel: [mandatory] [ dbsnp ]
+    dbsnp_tbi     // channel: [mandatory] [ dbsnp_tbi ]
 
     main:
     versions = Channel.empty()
-    ch_dbsnp = dbsnp.combine(dbsnp_tbi)
-
+    ch_dbsnp = dbsnp.map{ it -> [ [id:it.name], it ] }
+    ch_dbsnp_tbi = dbsnp_tbi.map{ it -> [ [id:it.baseName], it ] }
+    ch_dbsnp_with_tbi = ch_dbsnp.join(ch_dbsnp_tbi, by: [0])  // Join by meta.id
+    
     CRAM_TO_BAM_TUMOR(
         cram_tumor,
         fasta,
@@ -55,7 +57,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
 
     MUSE_SUMP(
         MUSE_CALL.out.txt,
-        ch_dbsnp.map{ it -> [ [ id:it.baseName ], it[0], it[1] ] }
+        ch_dbsnp_with_tbi
     )
 
     // add variantcaller to meta map
