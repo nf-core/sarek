@@ -55,8 +55,11 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
         fasta
     )
 
+    ch_muse_call_out = MUSE_CALL.out.txt
+    ch_muse_call_out.view()
+
     MUSE_SUMP(
-        MUSE_CALL.out.txt,
+        ch_muse_call_out,
         ch_dbsnp_with_tbi
     )
 
