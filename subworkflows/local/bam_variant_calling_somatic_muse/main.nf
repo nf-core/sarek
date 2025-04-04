@@ -23,7 +23,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
     ch_dbsnp = dbsnp.map{ it -> [ [id:it.name], it ] }
     ch_dbsnp_tbi = dbsnp_tbi.map{ it -> [ [id:it.baseName], it ] }
     ch_dbsnp_with_tbi = ch_dbsnp.join(ch_dbsnp_tbi, by: [0])  // Join by meta.id
-    
+ 
     CRAM_TO_BAM_TUMOR(
         cram_tumor,
         fasta,
