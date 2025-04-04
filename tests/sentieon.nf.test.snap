@@ -100,8 +100,6 @@
                 "reports/samtools/test/test.recal.cram.stats"
             ],
             [
-                "test.cram:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "test.cram.crai:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test-test_L1.html:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test-test_L1.zip:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test-test_L2.html:md5,d41d8cd98f00b204e9800998ecf8427e",
