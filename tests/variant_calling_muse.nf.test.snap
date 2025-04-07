@@ -661,7 +661,6 @@
                 [
                     "sample4_vs_sample3.MuSE.txt",
                     [
-                        "##MuSE_call=\"MuSE -E -f genome.fasta -O sample4_vs_sample3 -n 12 call sample4.bam sample3.bam\"",
                         "##TUMOR=\"Sample=tumour,File=sample4.bam\"",
                         "##NORMAL=\"Sample=normal,File=sample3.bam\"",
                         "##contig=<ID=chr21,length=46709983>",
