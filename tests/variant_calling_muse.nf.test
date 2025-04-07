@@ -42,7 +42,9 @@ nextflow_pipeline {
             def bam_files   = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
             def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
             // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
+            def vcf_files   = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
+            // Mtxt_files: MuSE txt files
+            def txt_files   = getAllFilesFromDir(params.outdir, include: ['**/*.MuSE.txt'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -54,6 +56,8 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path,
+                    // MuSE txt files will differ in their first line (holds Build Date & Time) between conda and docker/singularity
+                    txt_files.collect{ file -> [ file.getName(), file.readLines()[1..-1] ] }, 
                     // All bam files
                     bam_files.collect{ file -> [ file.getName(), bam(file.toString(), fasta).getReadsMD5() ] },
                     // All vcf files
