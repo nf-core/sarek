@@ -15,7 +15,7 @@ nextflow_process {
 
         when {
             params {
-                module_args = '-E'
+                module_args = '-E' // '-G' for WGS data
             }
             process {
                 """
@@ -72,7 +72,7 @@ nextflow_process {
                 { assert snapshot(
                     process.out,
                     path(process.out.versions[0]).yaml
-                    ).match() 
+                    ).match()
                 }
             )
         }

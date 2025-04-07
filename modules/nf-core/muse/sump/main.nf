@@ -4,16 +4,17 @@ process MUSE_SUMP {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/35/3567f6162ff718c648175c5e7b5f848eaa27811d0cb3ad53def8f0a1c8893efa/data':
-        'community.wave.seqera.io/library/muse_tabix:df58ca78bd9447b7' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/f9/f951cafbcec988c70d08bec486d40d902db4114bb1aaee89fd68155fdc3273da/data':
+        'community.wave.seqera.io/library/muse_tabix:cf4c19969fa62f63' }"
 
     input:
-    tuple val(meta), path(muse_call_txt)
+    tuple val(meta) , path(muse_call_txt)
     tuple val(meta2), path(ref_vcf), path(ref_vcf_tbi)
 
     output:
-    tuple val(meta), path("*.vcf.gz"), emit: vcf
-    path "versions.yml"              , emit: versions
+    tuple val(meta), path("*.vcf.gz")    , emit: vcf
+    tuple val(meta), path("*.vcf.gz.tbi"), emit: tbi
+    path "versions.yml"                  , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -32,10 +33,11 @@ process MUSE_SUMP {
         -O ${prefix}.vcf
 
     bgzip $args2 --threads $task.cpus ${prefix}.vcf
+    tabix -p vcf ${prefix}.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        MuSE: \$( MuSE --version | sed -e "s/MuSE, version //g" | sed -e "s/MuSE //g" )
+        MuSE: \$( MuSE --version | sed -e "s/MuSE, version //g" | sed -e "s/MuSE v//g")
         bgzip: \$( bgzip --version | sed -n 's/bgzip (htslib) \\([0-9.]*\\)/\\1/p' )
     END_VERSIONS
     """
@@ -44,10 +46,11 @@ process MUSE_SUMP {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     echo "" | gzip > ${prefix}.vcf.gz
+    touch ${prefix}.vcf.gz.tbi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        MuSE: \$( MuSE --version | sed -e "s/MuSE, version //g" | sed -e "s/MuSE //g" )
+        MuSE: \$( MuSE --version | sed -e "s/MuSE, version //g" | sed -e "s/MuSE v//g")
         bgzip: \$( bgzip --version | sed -n 's/bgzip (htslib) \\([0-9.]*\\)/\\1/p' )
     END_VERSIONS
     """
