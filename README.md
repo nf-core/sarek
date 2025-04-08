@@ -51,18 +51,18 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `CNVkit`
   - `Control-FREEC`
   - `DeepVariant`
+  - `freebayes`
   - `GATK HaplotypeCaller`
+  - `GATK Mutect2`
+  - `indexcov`
   - `Lofreq`
-  - `MSIsensor-pro`
   - `Manta`
+  - `mpileup`
+  - `MSIsensor-pro`
   - `MuSE`
-  - `Mutect2`
   - `Sentieon Haplotyper`
   - `Strelka2`
   - `TIDDIT`
-  - `freebayes`
-  - `indexcov`
-  - `mpileup`
 - Post-variant calling options (`BCFtools concat` for germline vcfs, `BCFtools norm` for all vcfs)
 - Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`)
 - Summarise and represent QC (`MultiQC`)
