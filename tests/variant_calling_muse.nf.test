@@ -57,7 +57,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // MuSE txt files will differ in their first line (holds Build Date & Time) between conda and docker/singularity
-                    txt_files.collect{ file -> [ file.getName(), file.readLines()[2..-1] ] },
+                    txt_files.collect{ file -> [ file.getName(), file.readLines()[2..-1].md5 ] },
                     // All bam files
                     bam_files.collect{ file -> [ file.getName(), bam(file.toString(), fasta).getReadsMD5() ] },
                     // All vcf files
