@@ -35,4 +35,5 @@ variant_calling/**/*.vcf
 variant_calling/**/*.vcf.{gz,gz.tbi}
 variant_calling/cnvkit/*/*.pdf
 variant_calling/controlfreec/*/config.txt
+variant_calling/muse/*/*.MuSE.txt
 variant_calling/tiddit/*/*.tiddit.ploidies.tab
