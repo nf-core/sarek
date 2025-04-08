@@ -287,7 +287,7 @@
                 },
                 "ascat_ploidy": {
                     "type": "number",
-                    "minimum": 0,
+                    "minimum": 0.0,
                     "fa_icon": "fas fa-bacon",
                     "help_text": "ASCAT: optional argument to override ASCAT optimization and supply psi parameter (expert parameter, do not adapt unless you know what you are doing). See [here](https://raw.githubusercontent.com/VanLoo-lab/ascat/master/man/ASCAT-manual.pdf)",
                     "description": "Overwrite ASCAT ploidy."
@@ -346,7 +346,7 @@
                 },
                 "cf_ploidy": {
                     "type": "string",
-                    "default": 2,
+                    "default": "2",
                     "fa_icon": "fas fa-bacon",
                     "help_text": "In case of doubt, you can set different values and Control-FREEC will select the one that explains most observed CNAs Example: ploidy=2 , ploidy=2,3,4. For more details, see the [manual](http://boevalab.inf.ethz.ch/FREEC/tutorial.html).",
                     "description": "Genome ploidy used by ControlFREEC"
