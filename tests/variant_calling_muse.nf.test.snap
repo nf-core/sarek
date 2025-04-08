@@ -661,7 +661,7 @@
                 [
                     "sample4_vs_sample3.MuSE.txt",
                     [
-                        "##MuSE_call=\"MuSE -E -f genome.fasta -O sample4_vs_sample3 -n 12 call sample4.bam sample3.bam\"",
+                        "##MuSE_call=\"MuSE -E -f genome.fasta -O sample4_vs_sample3 -n 4 call sample4.bam sample3.bam\"",
                         "##TUMOR=\"Sample=tumour,File=sample4.bam\"",
                         "##NORMAL=\"Sample=normal,File=sample3.bam\"",
                         "##contig=<ID=chr21,length=46709983>",
@@ -695,7 +695,7 @@
                 [
                     "sample6_vs_sample5.MuSE.txt",
                     [
-                        "##MuSE_call=\"MuSE -E -f genome.fasta -O sample6_vs_sample5 -n 12 call sample6.bam sample5.bam\"",
+                        "##MuSE_call=\"MuSE -E -f genome.fasta -O sample6_vs_sample5 -n 4 call sample6.bam sample5.bam\"",
                         "##TUMOR=\"Sample=tumour_copy,File=sample6.bam\"",
                         "##NORMAL=\"Sample=normal,File=sample5.bam\"",
                         "##contig=<ID=chr21,length=46709983>",
@@ -754,12 +754,34 @@
                     "sample6_vs_sample5.muse.vcf.gz",
                     "d41d8cd98f00b204e9800998ecf8427e"
                 ]
+            ],
+            [
+                [
+                    "sample4_vs_sample3.muse.TsTv.count",
+                    [
+                        "ALT_ALLELE_COUNT\tN_Ts\tN_Tv\tTs/Tv",
+                        "0\t0\t0\t-nan",
+                        "1\t0\t0\t-nan",
+                        "2\t0\t0\t-nan",
+                        "3\t0\t0\t-nan"
+                    ]
+                ],
+                [
+                    "sample6_vs_sample5.muse.TsTv.count",
+                    [
+                        "ALT_ALLELE_COUNT\tN_Ts\tN_Tv\tTs/Tv",
+                        "0\t0\t0\t-nan",
+                        "1\t0\t0\t-nan",
+                        "2\t0\t0\t-nan",
+                        "3\t0\t0\t-nan"
+                    ]
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-04-07T13:56:03.728249985"
+        "timestamp": "2025-04-08T10:59:43.394634967"
     }
 }

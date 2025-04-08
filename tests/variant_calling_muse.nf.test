@@ -45,6 +45,7 @@ nextflow_pipeline {
             def vcf_files   = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
             // Mtxt_files: MuSE txt files
             def txt_files   = getAllFilesFromDir(params.outdir, include: ['**/*.MuSE.txt'])
+            def count_files = getAllFilesFromDir(params.outdir, include: ['**/*.TsTv.count'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -61,7 +62,8 @@ nextflow_pipeline {
                     // All bam files
                     bam_files.collect{ file -> [ file.getName(), bam(file.toString(), fasta).getReadsMD5() ] },
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] },
+                    count_files.collect{ file -> [ file.getName(), file.readLines() ] },
                 ).match() }
             )
         }
