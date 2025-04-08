@@ -29,6 +29,7 @@ reports/samtools/**/**.cram.stats
 reports/snpeff/*/*_snpEff.csv
 reports/snpeff/*/snpEff_summary.html
 reports/vcftools/**/*.TsTv.qual
+reports/vcftools/muse/**/*.muse.TsTv.count
 variant_calling/**/*.vcf
 variant_calling/**/*.vcf.{gz,gz.tbi}
 variant_calling/cnvkit/*/*.pdf
