@@ -449,18 +449,6 @@
                     "sample4_vs_sample3.muse.vcf.gz",
                     "d41d8cd98f00b204e9800998ecf8427e"
                 ]
-            ],
-            [
-                [
-                    "sample4_vs_sample3.muse.TsTv.count",
-                    [
-                        "ALT_ALLELE_COUNT\tN_Ts\tN_Tv\tTs/Tv",
-                        "0\t0\t0\t-nan",
-                        "1\t0\t0\t-nan",
-                        "2\t0\t0\t-nan",
-                        "3\t0\t0\t-nan"
-                    ]
-                ]
             ]
         ],
         "meta": {
