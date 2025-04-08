@@ -344,8 +344,6 @@
                 "fastqc_sequence_counts_plot.txt:md5,674147ee973b56cff1a8bed894d18d3f",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,5dbfcf6fcbbd054e17fb460985b078c2",
                 "fastqc_sequence_length_distribution_plot.txt:md5,893426c7b64f5fe3279733eb63c6abf9",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt:md5,c1b778ed3c2bd805c189e2b59f5eb2e0",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt:md5,83c8d998a9bb7575bbcdb67f1c117a9f",
                 "mosdepth-coverage-per-contig-single.txt:md5,7c01ea3a011867911ed0b612acb42007",
                 "mosdepth-cumcoverage-dist-id.txt:md5,c013414788f3acfff722a725b5c4938e",
                 "mosdepth_cov_dist.txt:md5,fc5e17338b2ed362a0e1f76add3a50fe",
@@ -398,21 +396,64 @@
                 "test_bam.recal.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test_bam.recal.mosdepth.summary.txt:md5,dbe376360e437c89190139ef0ae6769a",
                 "test_bam.recal.regions.bed.gz:md5,0e5ed846b9b11717e42e93eec60f4ffc",
-                "test_bam.recal.regions.bed.gz.csi:md5,633cc0252eb2246a0943aec7e7512e3e",
-                "test.md.cram.stats:md5,7d0a7d3d4ca6bf21702e7775b1777fb8",
-                "test.recal.cram.stats:md5,269fd4151ac69c1de63e2224310386a0",
-                "test2.md.cram.stats:md5,9036c85b25e11a3340a6c1006a8d614a",
-                "test2.recal.cram.stats:md5,816dbaf70f47a5f44444a97282a6bbb0",
-                "test3.md.cram.stats:md5,d8cfbfe40816feedcbc30aba0ae863a5",
-                "test3.recal.cram.stats:md5,46a3b9cf59fd06bf6c4b8f91b18d4f01",
-                "test_bam.md.cram.stats:md5,742cc3262b1c1b0710092b5288ed9d9a",
-                "test_bam.recal.cram.stats:md5,0459edb604f03ef29359826eb60a44a9"
+                "test_bam.recal.regions.bed.gz.csi:md5,633cc0252eb2246a0943aec7e7512e3e"
+            ],
+            "No CRAM files",
+            [
+                [
+                    "test.sorted.bam",
+                    "59ecc5c82c7af1283eea7507c590c831"
+                ],
+                [
+                    "test2.sorted.bam",
+                    "59ecc5c82c7af1283eea7507c590c831"
+                ],
+                [
+                    "test3.sorted.bam",
+                    "59ecc5c82c7af1283eea7507c590c831"
+                ],
+                [
+                    "test_bam.sorted.bam",
+                    "6934a96fff1eaa2f70b31ab7e11d3598"
+                ],
+                [
+                    "test.md.bam",
+                    "59ecc5c82c7af1283eea7507c590c831"
+                ],
+                [
+                    "test2.md.bam",
+                    "59ecc5c82c7af1283eea7507c590c831"
+                ],
+                [
+                    "test3.md.bam",
+                    "59ecc5c82c7af1283eea7507c590c831"
+                ],
+                [
+                    "test_bam.md.bam",
+                    "6934a96fff1eaa2f70b31ab7e11d3598"
+                ],
+                [
+                    "test.recal.bam",
+                    "654909615a48db30bdc14ec4d9d7d17c"
+                ],
+                [
+                    "test2.recal.bam",
+                    "654909615a48db30bdc14ec4d9d7d17c"
+                ],
+                [
+                    "test3.recal.bam",
+                    "654909615a48db30bdc14ec4d9d7d17c"
+                ],
+                [
+                    "test_bam.recal.bam",
+                    "95a95d43e1db35c58b311dee4338c05b"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-26T12:58:14.008667739"
+        "timestamp": "2025-03-10T11:13:03.085460403"
     }
 }

@@ -4,12 +4,12 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
+    tag "cpu"
 
     test("-profile test --input tests/csv/3.0/mapped_single_bam.csv --step prepare_recalibration --tools null") {
 
         when {
             params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 outdir = "$outputDir"
                 input = "${projectDir}/tests/csv/3.0/mapped_single_bam.csv"
                 step  = 'prepare_recalibration'
@@ -22,6 +22,8 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // bam_files: All bam files
+            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
             // cram_files: All cram files
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
             // Fasta file for cram verification with nft-bam
@@ -38,6 +40,8 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path,
+                    // All bam files
+                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> [file.getName(), bam(file.toString()).readsMD5] },
                     // All cram files
                     cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] }
                 ).match() }
@@ -63,6 +67,8 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // bam_files: All bam files
+            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
             // cram_files: All cram files
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
             // Fasta file for cram verification with nft-bam
@@ -81,6 +87,57 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path,
+                    // All bam files
+                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> [file.getName(), bam(file.toString()).readsMD5] },
+                    // All cram files
+                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] },
+                    // All vcf files
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
+                ).match() }
+            )
+        }
+    }
+
+    test("-profile test --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --skip_tools baserecalibrator --tools strelka") {
+
+        when {
+            params {
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+                outdir = "$outputDir"
+                input = "${projectDir}/tests/csv/3.0/mapped_single_cram.csv"
+                step  = 'prepare_recalibration'
+                skip_tools = "baserecalibrator"
+                tools = 'strelka'
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // bam_files: All bam files
+            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
+            // cram_files: All cram files
+            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
+            // Fasta file for cram verification with nft-bam
+            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path,
+                    // All bam files
+                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> [file.getName(), bam(file.toString()).readsMD5] },
                     // All cram files
                     cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] },
                     // All vcf files
@@ -108,6 +165,8 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // bam_files: All bam files
+            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
             // cram_files: All cram files
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
             // Fasta file for cram verification with nft-bam
@@ -124,53 +183,10 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path,
+                    // All bam files
+                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> [file.getName(), bam(file.toString()).readsMD5] },
                     // All cram files
-                    cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] }
-                ).match() }
-            )
-        }
-    }
-
-    test("-profile test --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --skip_tools baserecalibrator --tools strelka") {
-
-        when {
-            params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-                outdir = "$outputDir"
-                input = "${projectDir}/tests/csv/3.0/mapped_single_cram.csv"
-                step  = 'prepare_recalibration'
-                skip_tools = "baserecalibrator"
-                tools = 'strelka'
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
-            assertAll(
-                { assert workflow.success},
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path,
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] },
-                    // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] }
                 ).match() }
             )
         }

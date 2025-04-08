@@ -4,12 +4,12 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
+    tag "cpu"
 
     test("-profile test --tools merge") {
 
         when {
             params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 outdir = "$outputDir"
                 input = "${projectDir}/tests/csv/3.0/vcf_single.csv"
                 step  = 'annotate'
@@ -48,7 +48,6 @@ nextflow_pipeline {
 
         when {
             params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 outdir = "$outputDir"
                 input = "${projectDir}/tests/csv/3.0/vcf_single.csv"
                 step  = 'annotate'
