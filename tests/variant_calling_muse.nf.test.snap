@@ -380,7 +380,7 @@
                 "sample4.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
                 "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
                 "sample4.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
-                "sample4_vs_sample3.muse.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
+                "sample4_vs_sample3.muse.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423"
             ],
             [
                 [
