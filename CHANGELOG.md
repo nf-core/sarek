@@ -5,6 +5,82 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev
+
+### Added
+
+- [1744](https://github.com/nf-core/sarek/pull/1744) - Add MuSE as new somatic variant caller
+- [1817](https://github.com/nf-core/sarek/pull/1817) - Added new contributor
+- [1841](https://github.com/nf-core/sarek/pull/1841) - Add pcr-indel-model parameter for GATK HaplotypeCaller
+
+### Changed
+
+- [1810](https://github.com/nf-core/sarek/pull/1810) - Move non-informative information in the CHANGELOG for the end user to its own Developer section
+
+### Fixed
+
+- [1842](https://github.com/nf-core/sarek/pull/1842) - Updated the input validation of the pipeline to be more strict, thus preventing more issues when running the pipeline
+
+### Removed
+
+- [1806](https://github.com/nf-core/sarek/pull/1806) - Remove some files publication with the --concatenate_vcfs options
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `MuSE`     |             | 2.1.2       |
+
+### Parameters
+
+| Params | Status |
+| ------ | ------ |
+
+### Developer section
+
+#### Added
+
+- [1803](https://github.com/nf-core/sarek/pull/1803) - Back to dev
+- [1806](https://github.com/nf-core/sarek/pull/1806) - Use `nft-vcf` for nf-test vcf assertions
+- [1814](https://github.com/nf-core/sarek/pull/1814) - Added link to Bluesky
+- [1829](https://github.com/nf-core/sarek/pull/1829) - Add muse as variant caller to images
+- [1835](https://github.com/nf-core/sarek/pull/1835) - Add GPU testing possibilities
+
+#### Changed
+
+- [1761](https://github.com/nf-core/sarek/pull/1761) - Skip nf-test on docs changes
+- [1806](https://github.com/nf-core/sarek/pull/1806) - Migrate pipeline pytest vcf concatenation tests to nf-test
+- [1809](https://github.com/nf-core/sarek/pull/1809) - Replace `getReadsMD5()` by `readsMD5` from `nft-bam` plugin for more global cohesion with usage of `nft-vcf` plugin
+- [1810](https://github.com/nf-core/sarek/pull/1810) - Implement automatic sharding for nf-test tests
+- [1810](https://github.com/nf-core/sarek/pull/1810) - Skip all CI but linting on docs changes
+- [1812](https://github.com/nf-core/sarek/pull/1812) - Move gatk based preprocessing to local subworkflow
+- [1819](https://github.com/nf-core/sarek/pull/1819) - Migrate pipeline pytest tiddit tests to nf-test
+- [1820](https://github.com/nf-core/sarek/pull/1820) - Migrate pipeline pytest manta tests to nf-test
+- [1821](https://github.com/nf-core/sarek/pull/1821) - Migrate pipeline pytest freebayes tests to nf-test
+- [1825](https://github.com/nf-core/sarek/pull/1825) - Migrate pipeline pytest cnvkit tests to nf-test
+- [1826](https://github.com/nf-core/sarek/pull/1826) - Migrate pipeline pytest mpileup tests to nf-test
+- [1827](https://github.com/nf-core/sarek/pull/1827) - Migrate pipeline pytest haplotypecaller tests to nf-test
+- [1828](https://github.com/nf-core/sarek/pull/1828) - Migrate pipeline pytest lofreq tests to nf-test
+- [1831](https://github.com/nf-core/sarek/pull/1831) - Migrate pipeline pytest fastp tests to nf-test
+- [1832](https://github.com/nf-core/sarek/pull/1832) - Update all annotation related modules and subworkflows
+- [1847](https://github.com/nf-core/sarek/pull/1847) - Runs on custom runners :rocket: thanks to [RunsOn](https://runs-on.com/)
+- [1852](https://github.com/nf-core/sarek/pull/1852) - Ignore tests from modules
+- [1852](https://github.com/nf-core/sarek/pull/1852) - Improve some nf-test tests
+
+#### Fixed
+
+- [1806](https://github.com/nf-core/sarek/pull/1806) - Fix some nf-test assertions
+- [1809](https://github.com/nf-core/sarek/pull/1809) - Deals with nf-test snapshoting empty lists in a better way (https://github.com/nf-core/sarek/issues/1807)
+- [1814](https://github.com/nf-core/sarek/pull/1814) - Fix link to GHA CI broken by [1810](https://github.com/nf-core/sarek/pull/1810)
+- [1845](https://github.com/nf-core/sarek/pull/1845) - Modifying `.nftignore` should retrigger nf-test (cf https://github.com/nf-core/tools/pull/3508)
+- [1852](https://github.com/nf-core/sarek/pull/1852) - Modifying `assets/schema_input.json` and `nextflow_schema.json` should retrigger nf-test (cf https://github.com/nf-core/sarek/pull/1842)
+- [1852](https://github.com/nf-core/sarek/pull/1852) - Fix path to `license_message.py` script
+- [1855](https://github.com/nf-core/sarek/pull/1855) - Fix json schema cf_chrom_len input broken by [1842](https://github.com/nf-core/sarek/pull/1842)
+
+#### Removed
+
+- [1814](https://github.com/nf-core/sarek/pull/1814) - Removed link to Twitter/X
+
 ## [3.5.1](https://github.com/nf-core/sarek/releases/tag/3.5.1) - Akkatjåkkå
 
 Akkatjåkkå is another glacier.

@@ -52,6 +52,9 @@ process SNPEFF_SNPEFF {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.ann.vcf
+    touch ${prefix}.csv
+    touch ${prefix}.html
+    touch ${prefix}.genes.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -1,7 +1,20 @@
-name: pytest-workflow
+name: Run pytest tests
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
+  push:
+    branches:
+      - dev
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+      - "**/*.png"
+      - "**/*.svg"
   pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+      - "**/*.png"
+      - "**/*.svg"
   release:
     types: [published]
   merge_group:
@@ -31,8 +44,7 @@ jobs:
       # Expose matched filters as job 'tags' output variable
       tags: ${{ steps.filter.outputs.changes }}
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: frouioui/paths-filter@main
         id: filter
         with:
@@ -40,7 +52,7 @@ jobs:
           token: ""
 
   pytest:
-    name: ${{ matrix.tags }} ${{ matrix.profile }} NF ${{ matrix.NXF_VER }}
+    name: "${{ matrix.NXF_VER }} | ${{ matrix.profile }} | ${{ matrix.tags }}"
     runs-on: ubuntu-latest
     needs: pytest-changes
     if: needs.pytest-changes.outputs.tags != '[]'
@@ -69,7 +81,7 @@ jobs:
 
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Hash Github Workspace
         id: hash_workspace
@@ -86,11 +98,6 @@ jobs:
 
       - name: Install Python dependencies
         run: pip install --upgrade -r tests/requirements.txt
-
-      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4
-        with:
-          distribution: "temurin"
-          java-version: "17"
 
       - name: Install Nextflow ${{ matrix.NXF_VER }}
         uses: nf-core/setup-nextflow@v2
@@ -126,14 +133,14 @@ jobs:
 
       - name: Cache test data
         id: cache-testdata
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+        uses: actions/cache@v4.2.2
         with:
           path: test-datasets/
           key: ${{ steps.hash_workspace.outputs.digest }}
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           repository: nf-core/test-datasets
           ref: sarek3
@@ -193,7 +200,7 @@ jobs:
             !/home/ubuntu/pytest_workflow_*/*/work/singularity
             !${{ github.workspace }}/.singularity
 
-  confirm-pass:
+  confirm-pass-pytest:
     runs-on: ubuntu-latest
     needs:
       - pytest
