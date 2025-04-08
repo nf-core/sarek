@@ -115,16 +115,7 @@
                 "variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,752ba7e3a2a94d0b6a959f2961c95bbd",
-                "bcftools_stats_indel-lengths.txt:md5,654daf97f90303e750ceb161a51acf0b",
-                "bcftools_stats_variant_depths.txt:md5,96bf725e53c3cc0d5783a101c5c4d318",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,7d2e1f16ea740b70695195637390aacb",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,07aa0aae5080254475c9a3f9aa89c3ed",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,ebbced7c29dbed48bbb9ea447b8f8203",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,5d2a4e656f99700cd3014b232cd0bb12",
-                "multiqc_bcftools_stats.txt:md5,6f441afeb4283df235f1031f85b7803b",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,03dbda15144d024e68134dc2426b1ac6",
                 "sample2.freebayes.bcftools_stats.txt:md5,47adcedfdc355d4a35d2a9695962be13",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
@@ -156,9 +147,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.02.1"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-02T11:23:02.695201579"
+        "timestamp": "2025-04-08T18:30:38.526840255"
     },
     "-profile test --tools freebayes --no_intervals --wes --input fastq_pair.csv": {
         "content": [
@@ -464,13 +455,6 @@
                 "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,7d6c637bcb6ff70f4c79e14b58bc8346",
-                "bcftools_stats_indel-lengths.txt:md5,3bfed5190a6b3a179313663fd95646d1",
-                "bcftools_stats_variant_depths.txt:md5,393ee038639d61f8719567d14b221a7c",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,2cbb9b09f575f05fd843191eab183e3b",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,5838696a591fa8c08890292abf902c76",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,9dc7462c1ca09513897ebf959b2b1a52",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,ad20159d0ad8c17c476d3333b166e956",
                 "fastqc-status-check-heatmap.txt:md5,eeb4e7e7a45f4223c86bfe3aea81f90b",
                 "fastqc_adapter_content_plot.txt:md5,cc7a809f9f001c10646ee4199ccdb40f",
                 "fastqc_per_base_n_content_plot.txt:md5,1eba855ae0fa5b5ed4a1f90d1c97f759",
@@ -486,7 +470,6 @@
                 "mosdepth_cov_dist.txt:md5,717239843b7c0f2fd13da48f9480dfbb",
                 "mosdepth_cumcov_dist.txt:md5,717239843b7c0f2fd13da48f9480dfbb",
                 "mosdepth_perchrom.txt:md5,2df7b17a479e4119989eef6e38b894cc",
-                "multiqc_bcftools_stats.txt:md5,54b88fddc80d5efb6374a45bec1fed13",
                 "multiqc_citations.txt:md5,ace4ca89138a5f1e2be289c157c00bd9",
                 "multiqc_fastqc.txt:md5,2fd25e8c81f962594b801d5a9df3cd87",
                 "multiqc_samtools_stats.txt:md5,60aa328e68503436f51e9a9b13dc6665",
@@ -495,7 +478,6 @@
                 "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,d81e84864ecb732951a137e88d87a263",
                 "samtools_alignment_plot.txt:md5,e757696d1f7107df2bd4ad92f607272e",
-                "vcftools_tstv_by_count.txt:md5,0c9399440406944069407c84e3c1470f",
                 "test.freebayes.bcftools_stats.txt:md5,110684ce9105d6e9f4f1b2eb04b88bdc",
                 "test2_vs_test.freebayes.bcftools_stats.txt:md5,1e4b9bb2973f705991068d9ee4951267",
                 "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
@@ -554,9 +536,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.02.1"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-02T12:25:24.837177715"
+        "timestamp": "2025-04-08T18:29:02.544823211"
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20": {
         "content": [
@@ -840,13 +822,6 @@
                 "variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,2db9972d4363893c700741c4a6bd6e25",
-                "bcftools_stats_indel-lengths.txt:md5,42980d44ee190bf27ff6c5db1078a623",
-                "bcftools_stats_variant_depths.txt:md5,2fd52eddc3939f57132e9853d984c3c8",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,be0c907c41796213c49f90243ce1ada2",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,cde14c904562dba3a86138b611b842d4",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,f26f85662b7ad4bb844ff67360e74752",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,4d81d194a52fc828c1294262c77aa981",
                 "fastqc-status-check-heatmap.txt:md5,a020b9689ddeb4abec16b4854fe452f1",
                 "fastqc_adapter_content_plot.txt:md5,2e1b72be741319e7fadbbb39d7e5b37d",
                 "fastqc_per_base_n_content_plot.txt:md5,ad3b971a6bb4e8ba6c844c8a03584eb8",
@@ -862,7 +837,6 @@
                 "mosdepth_cov_dist.txt:md5,66f531e1c6f8efabddb86421022e8753",
                 "mosdepth_cumcov_dist.txt:md5,66f531e1c6f8efabddb86421022e8753",
                 "mosdepth_perchrom.txt:md5,3914c1896454cc5b176a66737524690d",
-                "multiqc_bcftools_stats.txt:md5,04c2b102ff5374eefebb0de66f628d1f",
                 "multiqc_citations.txt:md5,ace4ca89138a5f1e2be289c157c00bd9",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
                 "multiqc_samtools_stats.txt:md5,0f1e4c6c497d9a952765f9f3068ea4b9",
@@ -871,7 +845,6 @@
                 "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,c94f4d3ffa3f510552f90e173fdd9f9d",
                 "samtools_alignment_plot.txt:md5,717f499a3543e7ee4c7a8454bf80aeca",
-                "vcftools_tstv_by_count.txt:md5,13b39130adfd41f4a276785b1ce5ec9b",
                 "test.freebayes.bcftools_stats.txt:md5,9cf08a94d093de3ff335f3ef42e82f6d",
                 "test.md.mosdepth.global.dist.txt:md5,e4ce28ba1c331dc08bc53a0189908f77",
                 "test.md.mosdepth.region.dist.txt:md5,04d9f20dc5306990eec982a3c5a7d107",
@@ -910,9 +883,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.02.1"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-02T11:12:18.765215844"
+        "timestamp": "2025-04-08T18:00:29.549446541"
     },
     "-profile test --tools freebayes --no_intervals": {
         "content": [
@@ -1189,13 +1162,6 @@
                 "variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,4dae77110a788e9cc80001700fc8ffcf",
-                "bcftools_stats_indel-lengths.txt:md5,79e07f8fceab92f572336cb9ef9e7a8a",
-                "bcftools_stats_variant_depths.txt:md5,14744545b9d6c3f0d90e888c92cd031a",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,b64e48d6fead95569a017ce5d64ecb29",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,14469bc234077801d3b7ac55668c3ac4",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,8df43399ee093d12a70e7ed8997f8186",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,1d1d65f41455064ea4baae8341bc5c8a",
                 "fastqc-status-check-heatmap.txt:md5,a020b9689ddeb4abec16b4854fe452f1",
                 "fastqc_adapter_content_plot.txt:md5,2e1b72be741319e7fadbbb39d7e5b37d",
                 "fastqc_per_base_n_content_plot.txt:md5,ad3b971a6bb4e8ba6c844c8a03584eb8",
@@ -1211,7 +1177,6 @@
                 "mosdepth_cov_dist.txt:md5,8d0d7cb485a7bffb07da17b28f827120",
                 "mosdepth_cumcov_dist.txt:md5,8d0d7cb485a7bffb07da17b28f827120",
                 "mosdepth_perchrom.txt:md5,264db67a99d2c90ea7b075e33c201b77",
-                "multiqc_bcftools_stats.txt:md5,8fb4e38c6e4c19847ea30777731fea95",
                 "multiqc_citations.txt:md5,ace4ca89138a5f1e2be289c157c00bd9",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
                 "multiqc_samtools_stats.txt:md5,0f1e4c6c497d9a952765f9f3068ea4b9",
@@ -1220,7 +1185,6 @@
                 "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,c94f4d3ffa3f510552f90e173fdd9f9d",
                 "samtools_alignment_plot.txt:md5,717f499a3543e7ee4c7a8454bf80aeca",
-                "vcftools_tstv_by_count.txt:md5,399932ea5b5f6b5495b6d4cac4be2127",
                 "test.freebayes.bcftools_stats.txt:md5,4d453aa4634ba2211e3bc6cb0d7e1357",
                 "test.md.mosdepth.global.dist.txt:md5,b61e1acee11a6ddf7ce3232a5948a6a0",
                 "test.md.mosdepth.region.dist.txt:md5,1a382f98d488d2ae3df83a0d87caafc1",
@@ -1255,9 +1219,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.02.1"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-02T12:20:09.556975723"
+        "timestamp": "2025-04-08T18:23:06.975798858"
     },
     "-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv": {
         "content": [
@@ -1375,16 +1339,7 @@
                 "variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,e4d7eeeaa47bb59b3a3337e976b6e788",
-                "bcftools_stats_indel-lengths.txt:md5,654daf97f90303e750ceb161a51acf0b",
-                "bcftools_stats_variant_depths.txt:md5,ffbe1929e140bef978785b8f2e6c01c8",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,364a2436eedbdd51dcff83301c5cab9d",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,d891cc2cdfcd384fa68908d4ba063b31",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,7e7880eb68a9f0088fa7a443226f40e8",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,1295e3ce82d74d3a35bafb2bc89e04d3",
-                "multiqc_bcftools_stats.txt:md5,98aa637299e480e30db461c295553d17",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,3e9717ae9fe4c73ed95388afed66b550",
                 "sample2.freebayes.bcftools_stats.txt:md5,8ff00f5f0b238ea63c9199b9742d0692",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
@@ -1413,9 +1368,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.02.1"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-02T12:28:07.460559602"
+        "timestamp": "2025-04-08T18:32:15.017272282"
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv": {
         "content": [
@@ -1736,13 +1691,6 @@
                 "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,15f6005683d439ea035ee031fa6c4caf",
-                "bcftools_stats_indel-lengths.txt:md5,2c46a006aa8d44bbfd9d74e637a2241e",
-                "bcftools_stats_variant_depths.txt:md5,c35d53bdd795264badbd42ab19e0d4f3",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,a8d98bf846d778b1c95e2a18fab9f091",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,12eb750498832330167f273f5f06b41c",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,354d61d329680a354b7a76ba539806ce",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,26bc533ce764c2f578394028c2c93a0e",
                 "fastqc-status-check-heatmap.txt:md5,eeb4e7e7a45f4223c86bfe3aea81f90b",
                 "fastqc_adapter_content_plot.txt:md5,cc7a809f9f001c10646ee4199ccdb40f",
                 "fastqc_per_base_n_content_plot.txt:md5,1eba855ae0fa5b5ed4a1f90d1c97f759",
@@ -1758,7 +1706,6 @@
                 "mosdepth_cov_dist.txt:md5,39228a3796068f04cb37f864cee22727",
                 "mosdepth_cumcov_dist.txt:md5,39228a3796068f04cb37f864cee22727",
                 "mosdepth_perchrom.txt:md5,de1ecd6fa3832eb41174e63c2e645511",
-                "multiqc_bcftools_stats.txt:md5,71da34fb57a46b570b208beffd3f51aa",
                 "multiqc_citations.txt:md5,ace4ca89138a5f1e2be289c157c00bd9",
                 "multiqc_fastqc.txt:md5,2fd25e8c81f962594b801d5a9df3cd87",
                 "multiqc_samtools_stats.txt:md5,60aa328e68503436f51e9a9b13dc6665",
@@ -1767,7 +1714,6 @@
                 "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,d81e84864ecb732951a137e88d87a263",
                 "samtools_alignment_plot.txt:md5,e757696d1f7107df2bd4ad92f607272e",
-                "vcftools_tstv_by_count.txt:md5,beb3cb0c113772fe7adf660c4917e465",
                 "test.freebayes.bcftools_stats.txt:md5,b34d3aa4db414fc6776ce62c212c53d1",
                 "test2_vs_test.freebayes.bcftools_stats.txt:md5,300b53a10f1647e43719c9547a327e8a",
                 "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
@@ -1838,8 +1784,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.02.1"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-02T11:18:22.987781201"
+        "timestamp": "2025-04-08T18:26:04.601312039"
     }
 }
