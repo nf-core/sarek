@@ -43,7 +43,7 @@ nextflow_pipeline {
             def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
             // vcf_files: All vcf files
             def vcf_files   = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
-            // Mtxt_files: MuSE txt files
+            // txt_files: MuSE txt files
             def txt_files   = getAllFilesFromDir(params.outdir, include: ['**/*.MuSE.txt'])
             assertAll(
                 { assert workflow.success},
