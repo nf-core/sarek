@@ -35,9 +35,9 @@ process SENTIEON_DEDUP {
     def metrics = task.ext.metrics ?: "${prefix}.metrics"
     def input_list = bam.collect{"-i $it"}.join(' ')
     def prefix_basename = prefix.substring(0, prefix.lastIndexOf("."))
-    def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64 ?
-        "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; " :
-        ""
+    def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64
+        ? "export SENTIEON_LICENSE=\"\${PWD}/sentieon_license.lic\"; echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \${SENTIEON_LICENSE}; "
+        : ""
     """
     $sentieonLicense
 
