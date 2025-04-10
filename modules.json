@@ -290,6 +290,11 @@
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
+                    "gatk4/modelsegments": {
+                        "branch": "master",
+                        "git_sha": "0da07714026c511b6de026649359a4ab95781088",
+                        "installed_by": ["modules"]
+                    },
                     "gatk4/mutect2": {
                         "branch": "master",
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
