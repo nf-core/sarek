@@ -21,8 +21,7 @@
                     "format": "file-path",
                     "exists": true,
                     "schema": "assets/schema_input.json",
-                    "mimetype": "text/csv",
-                    "pattern": "^\\S+\\.csv$"
+                    "pattern": "^\\S+\\.(csv|tsv|yaml|yml|json)$"
                 },
                 "input_restart": {
                     "type": "string",
@@ -30,8 +29,7 @@
                     "fa_icon": "fas fa-file-csv",
                     "format": "file-path",
                     "exists": true,
-                    "mimetype": "text/csv",
-                    "pattern": "^\\S+\\.csv$",
+                    "pattern": "^\\S+\\.(csv|tsv|yaml|yml|json)$",
                     "hidden": true,
                     "schema": "assets/schema_input.json"
                 },
@@ -72,8 +70,7 @@
                         },
                         {
                             "type": "integer",
-                            "minimum": 0,
-                            "maximum": 0
+                            "const": 0
                         }
                     ],
                     "type": "integer",
@@ -87,11 +84,15 @@
                     "fa_icon": "fas fa-clock",
                     "description": "Estimate interval size.",
                     "help_text": "Intervals are parts of the chopped up genome used to speed up preprocessing and variant calling. See `--intervals` for more info. \n\nChanging this parameter, changes the number of intervals that are grouped and processed together. Bed files from target sequencing can contain thousands or small intervals. Spinning up a new process for each can be quite resource intensive. Instead it can be desired to process small intervals together on larger nodes. \nIn order to make use of this parameter, no runtime estimate can be present in the bed file (column 5). ",
-                    "default": 200000
+                    "default": 200000,
+                    "minimum": 1
                 },
                 "intervals": {
                     "type": "string",
                     "fa_icon": "fas fa-file-alt",
+                    "format": "file-path",
+                    "pattern": "\\S+\\.(bed|interval_list)$",
+                    "exists": true,
                     "help_text": "To speed up preprocessing and variant calling processes, the execution is parallelized across a reference chopped into smaller pieces.\n\nParts of preprocessing and variant calling are done by these intervals, the different resulting files are then merged.\nThis can parallelize processes, and push down wall clock time significantly.\n\nWe are aligning to the whole genome, and then run Base Quality Score Recalibration and Variant Calling on the supplied regions.\n\n**Whole Genome Sequencing:**\n\nThe (provided) intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs.\n\nWe are ignoring the `hs37d5` contig that contains concatenated decoy sequences.\n\nThe calling intervals can be defined using a .list or a BED file.\nA .list file contains one interval per line in the format `chromosome:start-end` (1-based coordinates).\nA BED file must be a tab-separated text file with one interval per line.\nThere must be at least three columns: chromosome, start, and end (0-based coordinates).\nAdditionally, the score column of the BED file can be used to provide an estimate of how many seconds it will take to call variants on that interval.\nThe fourth column remains unused.\n\n```\n|chr1|10000|207666|NA|47.3|\n```\nThis indicates that variant calling on the interval chr1:10001-207666 takes approximately 47.3 seconds.\n\nThe runtime estimate is used in two different ways.\nFirst, when there are multiple consecutive intervals in the file that take little time to compute, they are processed as a single job, thus reducing the number of processes that needs to be spawned.\nSecond, the jobs with largest processing time are started first, which reduces wall-clock time.\nIf no runtime is given, a time of 200000 nucleotides per second is assumed. See `--nucleotides_per_second` on how to customize this.\nActual figures vary from 2 nucleotides/second to 30000 nucleotides/second.\nIf you prefer, you can specify the full path to your reference genome when you run the pipeline:\n\n> **NB** If none provided, will be generated automatically from the FASTA reference\n> **NB** Use --no_intervals to disable automatic generation.\n\n**Targeted Sequencing:**\n\nThe recommended flow for targeted sequencing data is to use the workflow as it is, but also provide a `BED` file containing targets for all steps using the `--intervals` option. In addition, the parameter `--wes` should be set.\nIt is advised to pad the variant calling regions (exons or target) to some extent before submitting to the workflow.\n\nThe procedure is similar to whole genome sequencing, except that only BED file are accepted. See above for formatting description.\nAdding every exon as an interval in case of `WES` can generate >200K processes or jobs, much more forks, and similar number of directories in the Nextflow work directory. These are appropriately  grouped together to reduce number of processes run in parallel (see above and `--nucleotides_per_second` for details). \nFurthermore, primers and/or baits are not 100% specific, (certainly not for MHC and KIR, etc.), quite likely there going to be reads mapping to multiple locations.\nIf you are certain that the target is unique for your genome (all the reads will certainly map to only one location), and aligning to the whole genome is an overkill, it is actually better to change the reference itself.",
                     "description": "Path to target bed file in case of whole exome or targeted sequencing or intervals file."
                 },
@@ -112,7 +113,7 @@
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for duplicate marking, variant calling and/or for annotation.",
                     "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper, Strelka\n- Structural Variants: indexcov, Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, mpileup, Mutect2, Lofreq, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Strelka2\n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC\n- Microsatellite Instability: MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively), and bcftools annotate (needs `--bcftools_annotation`).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
-                    "pattern": "^((ascat|bcfann|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|lofreq|sentieon_dnascope|sentieon_haplotyper|manta|indexcov|merge|mpileup|msisensorpro|mutect2|ngscheckmate|sentieon_dedup|snpeff|strelka|tiddit|vep)?,?)*(?<!,)$"
+                    "pattern": "^((ascat|bcfann|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|lofreq|muse|sentieon_dnascope|sentieon_haplotyper|manta|indexcov|merge|mpileup|msisensorpro|mutect2|ngscheckmate|sentieon_dedup|snpeff|strelka|tiddit|vep)?,?)*(?<!,)$"
                 },
                 "skip_tools": {
                     "type": "string",
@@ -128,7 +129,6 @@
             "title": "FASTQ Preprocessing",
             "type": "object",
             "description": "Trim fastq file or handle UMIs",
-            "default": "",
             "fa_icon": "fas fa-cut",
             "properties": {
                 "trim_fastq": {
@@ -140,6 +140,7 @@
                 "clip_r1": {
                     "type": "integer",
                     "default": 0,
+                    "minimum": 0,
                     "fa_icon": "fas fa-cut",
                     "description": "Remove bp from the 5' end of read 1",
                     "help_text": "This may be useful if the qualities were very poor, or if there is some sort of unwanted bias at the 5' end. Corresponds to the FastP flag `--trim_front1`."
@@ -147,6 +148,7 @@
                 "clip_r2": {
                     "type": "integer",
                     "default": 0,
+                    "minimum": 0,
                     "description": "Remove bp from the 5' end of read 2",
                     "help_text": "This may be useful if the qualities were very poor, or if there is some sort of unwanted bias at the 5' end. Corresponds to the FastP flag `--trim_front2`.",
                     "fa_icon": "fas fa-cut"
@@ -154,6 +156,7 @@
                 "three_prime_clip_r1": {
                     "type": "integer",
                     "default": 0,
+                    "minimum": 0,
                     "fa_icon": "fas fa-cut",
                     "description": "Remove bp from the 3' end of read 1",
                     "help_text": "This may remove some unwanted bias from the 3'.  Corresponds to the FastP flag `--trim_tail1`."
@@ -161,13 +164,13 @@
                 "three_prime_clip_r2": {
                     "type": "integer",
                     "default": 0,
+                    "minimum": 0,
                     "fa_icon": "fas fa-cut",
                     "description": "Remove bp from the 3' end of read 2",
                     "help_text": "This may remove some unwanted bias from the 3' end. Corresponds to the FastP flag `--trim_tail2`."
                 },
                 "trim_nextseq": {
-                    "type": "integer",
-                    "default": 0,
+                    "type": "boolean",
                     "fa_icon": "fas fa-cut",
                     "description": "Removing poly-G tails.",
                     "help_text": "DetectS polyG in read tails and trim them. Corresponds to the FastP flag `--trim_poly_g`."
@@ -175,6 +178,7 @@
                 "length_required": {
                     "type": "integer",
                     "default": 15,
+                    "minimum": 1,
                     "fa_icon": "fas fa-cut",
                     "description": "Minimum length of reads to keep",
                     "help_text": "This is the minimum length of reads to keep after trimming. Corresponds to the FastP flag `--length_required` (default in FastP is 15bp)."
@@ -195,7 +199,7 @@
                     "default": "Adjacency",
                     "fa_icon": "fas fa-tape",
                     "description": "Default strategy with UMI",
-                    "help_text": "Available values: Identity, Edit, Adjacency, Paired"
+                    "enum": ["Identity", "Edit", "Adjacency", "Paired"]
                 },
                 "save_split_fastqs": {
                     "type": "boolean",
@@ -255,6 +259,7 @@
                 "ascat_min_base_qual": {
                     "type": "integer",
                     "default": 20,
+                    "minimum": 0,
                     "fa_icon": "fas fa-greater-than",
                     "description": "Overwrite Ascat min base quality required for a read to be counted.",
                     "help_text": "For more details see [here](https://raw.githubusercontent.com/VanLoo-lab/ascat/master/man/ASCAT-manual.pdf)"
@@ -262,6 +267,7 @@
                 "ascat_min_counts": {
                     "type": "integer",
                     "default": 10,
+                    "minimum": 0,
                     "fa_icon": "fas fa-align-center",
                     "description": "Overwrite Ascat minimum depth required in the normal for a SNP to be considered.",
                     "help_text": "For more details, see [here](https://raw.githubusercontent.com/VanLoo-lab/ascat/master/man/ASCAT-manual.pdf)."
@@ -269,12 +275,14 @@
                 "ascat_min_map_qual": {
                     "type": "integer",
                     "default": 35,
+                    "minimum": 0,
                     "fa_icon": "fas fa-balance-scale-left",
                     "description": "Overwrite Ascat min mapping quality required for a read to be counted.",
                     "help_text": "For more details, see [here](https://raw.githubusercontent.com/VanLoo-lab/ascat/master/man/ASCAT-manual.pdf)."
                 },
                 "ascat_ploidy": {
                     "type": "number",
+                    "minimum": 0.0,
                     "fa_icon": "fas fa-bacon",
                     "help_text": "ASCAT: optional argument to override ASCAT optimization and supply psi parameter (expert parameter, do not adapt unless you know what you are doing). See [here](https://raw.githubusercontent.com/VanLoo-lab/ascat/master/man/ASCAT-manual.pdf)",
                     "description": "Overwrite ASCAT ploidy."
@@ -287,9 +295,12 @@
                 },
                 "cf_chrom_len": {
                     "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.(fai|len)$",
+                    "exists": true,
                     "fa_icon": "fas fa-ruler-horizontal",
                     "description": "Specify a custom chromosome length file.",
-                    "help_text": "Control-FREEC requires a file containing all chromosome lenghts. By default the fasta.fai is used. If the fasta.fai file contains chromosomes not present in the intervals, it fails (see: https://github.com/BoevaLab/FREEC/issues/106).\n\nIn this case, a custom chromosome length can be specified. It must be of the same format as the fai, but only contain the relevant chromosomes.\n\n\n\n"
+                    "help_text": "Control-FREEC requires a file containing all chromosome lengths. By default the fasta.fai is used. If the fasta.fai file contains chromosomes not present in the intervals, it fails (see: https://github.com/BoevaLab/FREEC/issues/106).\n\nIn this case, a custom chromosome length can be specified. It must be of the same format as the fai, but only contain the relevant chromosomes.\n\n\n\n"
                 },
                 "cf_coeff": {
                     "type": "number",
@@ -307,6 +318,7 @@
                 "cf_contamination": {
                     "type": "integer",
                     "default": 0,
+                    "minimum": 0,
                     "fa_icon": "fas fa-broom",
                     "description": "Design known contamination value for Control-FREEC",
                     "help_text": "Details, see [ControlFREEC manual](http://boevalab.inf.ethz.ch/FREEC/tutorial.html)."
@@ -314,6 +326,7 @@
                 "cf_minqual": {
                     "type": "integer",
                     "default": 0,
+                    "minimum": 0,
                     "fa_icon": "fas fa-greater-than",
                     "description": "Minimal sequencing quality for a position to be considered in BAF analysis.",
                     "help_text": "Details, see [ControlFREEC manual](http://boevalab.inf.ethz.ch/FREEC/tutorial.html)."
@@ -321,13 +334,14 @@
                 "cf_mincov": {
                     "type": "integer",
                     "default": 0,
+                    "minimum": 0,
                     "fa_icon": "fas fa-align-center",
                     "description": "Minimal read coverage for a position to be considered in BAF analysis.",
                     "help_text": "Details, see [ControlFREEC manual](http://boevalab.inf.ethz.ch/FREEC/tutorial.html)."
                 },
                 "cf_ploidy": {
                     "type": "string",
-                    "default": 2,
+                    "default": "2",
                     "fa_icon": "fas fa-bacon",
                     "help_text": "In case of doubt, you can set different values and Control-FREEC will select the one that explains most observed CNAs Example: ploidy=2 , ploidy=2,3,4. For more details, see the [manual](http://boevalab.inf.ethz.ch/FREEC/tutorial.html).",
                     "description": "Genome ploidy used by ControlFREEC"
@@ -341,6 +355,8 @@
                 "cnvkit_reference": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.cnn$",
                     "help_text": "https://cnvkit.readthedocs.io/en/stable/pipeline.html?highlight=reference.cnn#batch",
                     "description": "Copy-number reference for CNVkit"
                 },
@@ -364,12 +380,18 @@
                 "pon": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.vcf\\.gz$",
+                    "exists": true,
                     "description": "Panel-of-normals VCF (bgzipped) for GATK Mutect2",
                     "help_text": "Without PON, there will be no calls with PASS in the INFO field, only an unfiltered VCF is written.\nIt is highly recommended to make your own PON, as it depends on sequencer and library preparation.\n\nThe pipeline is shipped with a panel-of-normals for `--genome GATK.GRCh38` provided by [GATK](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-). \n\nSee [PON documentation](https://gatk.broadinstitute.org/hc/en-us/articles/360042479112-CreateSomaticPanelOfNormals-BETA)\n> **NB** PON file should be bgzipped."
                 },
                 "pon_tbi": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.vcf\\.gz\\.tbi$",
+                    "exists": true,
                     "description": "Index of PON panel-of-normals VCF.",
                     "help_text": "If none provided, will be generated automatically from the PON bgzipped VCF file."
                 },
@@ -409,11 +431,16 @@
                     "format": "file-path",
                     "description": "Panel of normals generated by the GATK"
                 },
+                "gatk_pcr_indel_model": {
+                    "type": "string",
+                    "default": "CONSERVATIVE",
+                    "help_text": "Option for selecting the PCR indel model used by GATK HaplotypeCaller."
+                },
                 "concatenate_vcfs": {
                     "type": "boolean",
                     "fa_icon": "fas fa-tape",
                     "description": "Option for concatenating germline vcf-files.",
-                    "help_text": "Concatenating the germline vcf-files from each applied variant-caller into one vcf-file using bfctools concat."
+                    "help_text": "Concatenating the germline vcf-files from each applied variant-caller into one vcf-file using bcftools concat."
                 }
             }
         },
@@ -421,7 +448,6 @@
             "title": "Annotation",
             "type": "object",
             "description": "",
-            "default": "",
             "fa_icon": "fas fa-braille",
             "properties": {
                 "vep_include_fasta": {
@@ -438,12 +464,18 @@
                 },
                 "dbnsfp": {
                     "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.gz$",
+                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to dbNSFP processed file.",
                     "help_text": "To be used with `--vep_dbnsfp`.\ndbNSFP files and more information are available at https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#dbnsfp and https://sites.google.com/site/jpopgen/dbNSFP/"
                 },
                 "dbnsfp_tbi": {
                     "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.vcf\\.gz\\.(csi|tbi)$",
+                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to dbNSFP tabix indexed file.",
                     "help_text": "To be used with `--vep_dbnsfp`."
@@ -475,12 +507,18 @@
                 },
                 "spliceai_snv": {
                     "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.\\vcf\\.gz$",
+                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to spliceai raw scores snv file.",
                     "help_text": "To be used with `--vep_spliceai`."
                 },
                 "spliceai_snv_tbi": {
                     "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\\\.vcf\\.gz.(csi|tbi)$",
+                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to spliceai raw scores snv tabix indexed file.",
                     "help_text": "To be used with `--vep_spliceai`."
@@ -488,11 +526,17 @@
                 "spliceai_indel": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.vcf\\.gz$",
+                    "exists": true,
                     "description": "Path to spliceai raw scores indel file.",
                     "help_text": "To be used with `--vep_spliceai`."
                 },
                 "spliceai_indel_tbi": {
                     "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.vcf\\.gz\\.(csi|tbi)$",
+                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to spliceai raw scores indel tabix indexed file.",
                     "help_text": "To be used with `--vep_spliceai`."
@@ -533,11 +577,17 @@
                 },
                 "bcftools_annotations": {
                     "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.vcf\\.gz$",
+                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "A vcf file containing custom annotations to be used with bcftools annotate. Needs to be bgzipped."
                 },
                 "bcftools_annotations_tbi": {
                     "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.vcf\\.gz\\.tbi$",
+                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Index file for `bcftools_annotations`"
                 },
@@ -609,12 +659,18 @@
                 },
                 "ascat_alleles": {
                     "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.zip$",
+                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to ASCAT allele zip file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "ascat_loci": {
                     "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.zip$",
+                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to ASCAT loci zip file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
@@ -622,41 +678,59 @@
                 "ascat_loci_gc": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.zip$",
+                    "exists": true,
                     "description": "Path to ASCAT GC content correction file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "ascat_loci_rt": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.zip$",
+                    "exists": true,
                     "description": "Path to ASCAT RT (replictiming) correction file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "bwa": {
                     "type": "string",
+                    "format": "directory-path",
+                    "exists": true,
                     "fa_icon": "fas fa-copy",
                     "description": "Path to BWA mem indices.",
                     "help_text": "If you wish to recompute indices available on igenomes, set `--bwa false`.\n\n> **NB** If none provided, will be generated automatically from the FASTA reference. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "bwamem2": {
                     "type": "string",
+                    "format": "directory-path",
+                    "exists": true,
                     "fa_icon": "fas fa-copy",
                     "description": "Path to bwa-mem2 mem indices.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\n\nIf you wish to recompute indices available on igenomes, set `--bwamem2 false`.\n\n> **NB** If none provided, will be generated automatically from the FASTA reference, if `--aligner bwa-mem2` is specified. Combine with `--save_reference` to save for future runs."
                 },
                 "chr_dir": {
                     "type": "string",
+                    "format": "path",
+                    "exists": true,
                     "fa_icon": "fas fa-folder-open",
                     "description": "Path to chromosomes folder used with ControLFREEC.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "dbsnp": {
                     "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.vcf\\.gz$",
+                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to dbsnp file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "dbsnp_tbi": {
                     "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.vcf\\.gz\\.tbi$",
+                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to dbsnp index.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the dbsnp file. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -668,12 +742,17 @@
                 },
                 "dict": {
                     "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.dict$",
+                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to FASTA dictionary file.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "dragmap": {
                     "type": "string",
+                    "format": "directory-path",
+                    "exists": true,
                     "fa_icon": "fas fa-copy",
                     "description": "Path to dragmap indices.",
                     "help_text": "If you wish to recompute indices available on igenomes, set `--dragmap false`.\n\n> **NB** If none provided, will be generated automatically from the FASTA reference, if `--aligner dragmap` is specified. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -701,6 +780,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
+                    "pattern": "\\S+\\.vcf\\.gz$",
                     "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to GATK Mutect2 Germline Resource File.",
@@ -709,6 +789,7 @@
                 "germline_resource_tbi": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
+                    "pattern": "\\S+\\.vcf\\.gz\\.tbi$",
                     "format": "file-path",
                     "exists": true,
                     "mimetype": "text/plain",
@@ -742,6 +823,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-copy",
                     "format": "file-path",
+                    "pattern": "^\\S+\\.vcf\\.gz$",
                     "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to known snps file.",
@@ -751,6 +833,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-copy",
                     "format": "file-path",
+                    "pattern": "^\\S+\\.vcf\\.gz\\.tbi$",
                     "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to known snps file snps.",
@@ -765,6 +848,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
+                    "pattern": "^\\S+\\.gem$",
                     "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to Control-FREEC mappability file.",
@@ -774,6 +858,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
+                    "pattern": "^\\S+\\.bed$",
                     "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to SNP bed file for sample checking with NGSCheckMate",
@@ -783,6 +868,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
+                    "pattern": "^\\S+\\.model$",
                     "exists": true,
                     "mimetype": "text/plain",
                     "description": "Machine learning model for Sentieon Dnascope.",
@@ -791,6 +877,7 @@
                 "snpeff_cache": {
                     "type": "string",
                     "format": "directory-path",
+                    "exists": true,
                     "fa_icon": "fas fa-cloud-download-alt",
                     "default": "s3://annotation-cache/snpeff_cache/",
                     "description": "Path to snpEff cache.",
@@ -805,6 +892,7 @@
                 "vep_cache": {
                     "type": "string",
                     "format": "directory-path",
+                    "exists": true,
                     "fa_icon": "fas fa-cloud-download-alt",
                     "default": "s3://annotation-cache/vep_cache/",
                     "description": "Path to VEP cache.",

@@ -4,13 +4,13 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
+    tag "cpu"
 
     test("-profile test --input tests/csv/3.0/fastq_pair.csv") {
 
         when {
             params {
                 input = "${projectDir}/tests/csv/3.0/fastq_pair.csv"
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 outdir = "$outputDir"
             }
         }
@@ -20,6 +20,8 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // bam_files: All bam files
+            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
             // cram_files: All cram files
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
             // Fasta file for cram verification with nft-bam
@@ -38,6 +40,8 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path,
+                    // All bam files
+                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> [file.getName(), bam(file.toString()).readsMD5] },
                     // All cram files
                     cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] },
                     // All vcf files

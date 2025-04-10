@@ -44,8 +44,7 @@ jobs:
       # Expose matched filters as job 'tags' output variable
       tags: ${{ steps.filter.outputs.changes }}
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: frouioui/paths-filter@main
         id: filter
         with:
@@ -82,7 +81,7 @@ jobs:
 
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Hash Github Workspace
         id: hash_workspace
@@ -134,14 +133,14 @@ jobs:
 
       - name: Cache test data
         id: cache-testdata
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+        uses: actions/cache@v4.2.2
         with:
           path: test-datasets/
           key: ${{ steps.hash_workspace.outputs.digest }}
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           repository: nf-core/test-datasets
           ref: sarek3

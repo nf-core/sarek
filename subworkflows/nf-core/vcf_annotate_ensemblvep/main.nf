@@ -7,7 +7,7 @@ include { TABIX_TABIX    } from '../../../modules/nf-core/tabix/tabix/main'
 
 workflow VCF_ANNOTATE_ENSEMBLVEP {
     take:
-    ch_vcf                      // channel: [ val(meta), path(vcf), [path(custom_file1), path(custom_file2)... (optionnal)]]
+    ch_vcf                      // channel: [ val(meta), path(vcf), [path(custom_file1), path(custom_file2)... (optional)]]
     ch_fasta                    // channel: [ val(meta2), path(fasta) ] (optional)
     val_genome                  //   value: genome to use
     val_species                 //   value: species to use

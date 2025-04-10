@@ -13,7 +13,9 @@ inputs:
   paths:
     description: "Test paths"
     required: true
-
+  tags:
+    description: "Tags to pass as argument for nf-test --tag parameter"
+    required: true
 runs:
   using: "composite"
   steps:
@@ -57,7 +59,7 @@ runs:
       shell: bash
       run: |
         python -m pip install cryptography
-        nextflow secrets set SENTIEON_AUTH_DATA $(python3 tests/modules/nf-core/sentieon/license_message.py encrypt --key "$SENTIEON_ENCRYPTION_KEY" --message "$SENTIEON_LICENSE_MESSAGE")
+        nextflow secrets set SENTIEON_AUTH_DATA $(python3 bin/license_message.py encrypt --key "$SENTIEON_ENCRYPTION_KEY" --message "$SENTIEON_LICENSE_MESSAGE")
 
     - name: Install pdiff
       shell: bash
@@ -77,11 +79,12 @@ runs:
       run: |
         nf-test test \
           --profile=+${{ inputs.profile }} \
+          --tag ${{ inputs.tags }} \
           --tap=test.tap \
           --verbose \
           --ci \
+          --changed-since HEAD^ \
           --shard ${{ inputs.shard }}/${{ inputs.total_shards }} \
-          --filter function,workflow,pipeline
 
           # Save the absolute path of the test.tap file to the output
           echo "tap_file_path=$(realpath test.tap)" >> $GITHUB_OUTPUT

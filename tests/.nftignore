@@ -2,6 +2,8 @@
 annotation/**/*.vcf.{gz,gz.tbi}
 csv/*.csv
 multiqc/multiqc_data/fastqc_top_overrepresented_sequences_table.txt
+multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt
+multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt
 multiqc/multiqc_data/gatk-base-recalibrator-reported-empirical-plot.txt
 multiqc/multiqc_data/gatk_base_recalibrator.txt
 multiqc/multiqc_data/multiqc.log
@@ -20,10 +22,16 @@ preprocessing/**/*.{md,recal,sorted}.{bam,bam.bai,cram,cram.crai,table}
 reference/dragmap/hash_table.{cfg,cfg.bin}
 reference/dragmap/hash_table_stats.txt
 reports/EnsemblVEP/*/*.ann.summary.html
+reports/fastp/**/*.fastp.{log,html}
 reports/fastqc/**/*_fastqc.{html,zip}
 reports/markduplicates/**/*.md.cram.metrics
+reports/samtools/**/**.cram.stats
 reports/snpeff/*/*_snpEff.csv
 reports/snpeff/*/snpEff_summary.html
 reports/vcftools/**/*.TsTv.qual
+variant_calling/**/*.vcf
 variant_calling/**/*.vcf.{gz,gz.tbi}
+variant_calling/cnvkit/*/*.pdf
 variant_calling/controlfreec/*/config.txt
+variant_calling/muse/*/*.MuSE.txt
+variant_calling/tiddit/*/*.tiddit.ploidies.tab

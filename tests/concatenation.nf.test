@@ -4,6 +4,7 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
+    tag "cpu"
 
     test("-profile test --concatenate_vcfs --tools freebayes,haplotypecaller") {
 
@@ -13,7 +14,6 @@ nextflow_pipeline {
                 step = 'variant_calling'
                 concatenate_vcfs = true
                 tools = 'freebayes,haplotypecaller'
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 outdir = "$outputDir"
             }
         }

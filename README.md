@@ -62,6 +62,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `Strelka2`
   - `TIDDIT`
   - `Lofreq`
+  - `MuSE`
 - Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`)
 - Summarise and represent QC (`MultiQC`)
 
@@ -161,6 +162,7 @@ We thank the following people for their extensive assistance in the development 
 - [Ken Brewer](https://github.com/kenibrewer)
 - [Lasse Westergaard Folkersen](https://github.com/lassefolkersen)
 - [Lucia Conde](https://github.com/lconde-ucl)
+- [Louis Le Nézet](https://github.com/LouisLeNezet)
 - [Malin Larsson](https://github.com/malinlarsson)
 - [Marcel Martin](https://github.com/marcelm)
 - [Nick Smith](https://github.com/nickhsmith)

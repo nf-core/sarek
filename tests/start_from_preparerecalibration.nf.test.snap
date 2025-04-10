@@ -50,17 +50,16 @@
                 "reference"
             ],
             [
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt:md5,d2650a5bec510d798e347f36a4d00e2d",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt:md5,f2123f7ee3d060c1547efc6247a04e42",
                 "multiqc_citations.txt:md5,3815a9f79e41890653a0e0d602c92ac9"
             ],
+            "No BAM files",
             "No CRAM files"
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-25T11:13:54.836864751"
+        "timestamp": "2025-03-11T13:28:11.818641182"
     },
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step prepare_recalibration --skip_tools baserecalibrator --tools strelka": {
         "content": [
@@ -170,6 +169,7 @@
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],
+            "No BAM files",
             "No CRAM files",
             [
                 [
@@ -186,7 +186,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-25T11:21:36.207625522"
+        "timestamp": "2025-03-11T13:28:53.682399995"
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --skip_tools baserecalibrator --tools strelka": {
         "content": [
@@ -296,6 +296,7 @@
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],
+            "No BAM files",
             "No CRAM files",
             [
                 [
@@ -312,7 +313,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-25T11:24:01.982167502"
+        "timestamp": "2025-03-07T15:43:41.536174428"
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --tools null": {
         "content": [
@@ -384,16 +385,14 @@
                 "reports/samtools/test/test.recal.cram.stats"
             ],
             [
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt:md5,d2650a5bec510d798e347f36a4d00e2d",
-                "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt:md5,f2123f7ee3d060c1547efc6247a04e42",
                 "multiqc_citations.txt:md5,3815a9f79e41890653a0e0d602c92ac9",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d",
-                "test.recal.cram.stats:md5,9f75ec16d22ce12c348cbd7477c9886e"
+                "test.recal.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d"
             ],
+            "No BAM files",
             [
                 [
                     "test.recal.cram",
@@ -405,6 +404,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-25T11:16:42.803397837"
+        "timestamp": "2025-03-10T11:16:24.311853581"
     }
 }
