@@ -455,6 +455,11 @@
                         "git_sha": "eb7b70119bfb1877334c996d13e520c61b21067d",
                         "installed_by": ["modules"]
                     },
+                    "sentieon/tnscope": {
+                        "branch": "master",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "installed_by": ["modules"]
+                    },
                     "sentieon/varcal": {
                         "branch": "master",
                         "git_sha": "eb7b70119bfb1877334c996d13e520c61b21067d",
