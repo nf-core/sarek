@@ -78,4 +78,63 @@ nextflow_pipeline {
             )
         }
     }
+
+    test("-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv -with-stub") {
+        options "-stub"
+
+        when {
+            params {
+                input = "${projectDir}/tests/csv/3.0/mapped_single_cram.csv"
+                outdir = "$outputDir"
+                step = "variant_calling"
+                tools = 'deepvariant'
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size()
+                ).match() }
+            )
+        }
+    }
+
+    test("-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals -with-stub") {
+        options "-stub"
+
+        when {
+            params {
+                input = "${projectDir}/tests/csv/3.0/mapped_single_cram.csv"
+                outdir = "$outputDir"
+                step = "variant_calling"
+                tools = 'deepvariant'
+                no_intervals = true
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size()
+                ).match() }
+            )
+        }
+    }
 }
