@@ -222,21 +222,15 @@
             ],
             "No BAM files",
             [
-                [
-                    "test2.md.cram",
-                    "b186d05619be54618852b198c1b19198"
-                ],
-                [
-                    "test2.recal.cram",
-                    "c1eec6185153a1044bd296a1db065f7d"
-                ]
+                "test2.md.cram:md5,b186d05619be54618852b198c1b19198",
+                "test2.recal.cram:md5,c1eec6185153a1044bd296a1db065f7d"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-11T13:00:14.560870967"
+        "timestamp": "2025-04-11T13:19:22.247556411"
     },
     "-profile test,spark --input tests/csv/3.0/fastq_tumor_only.csv --use_gatk_spark baserecalibrator,markduplicates --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools": {
         "content": [
@@ -291,20 +285,14 @@
             ],
             "No BAM files",
             [
-                [
-                    "test2.md.cram",
-                    "b186d05619be54618852b198c1b19198"
-                ],
-                [
-                    "test2.recal.cram",
-                    "c1eec6185153a1044bd296a1db065f7d"
-                ]
+                "test2.md.cram:md5,b186d05619be54618852b198c1b19198",
+                "test2.recal.cram:md5,c1eec6185153a1044bd296a1db065f7d"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-11T13:01:56.310918155"
+        "timestamp": "2025-04-11T13:21:08.322592996"
     }
 }
