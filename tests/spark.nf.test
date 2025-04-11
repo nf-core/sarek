@@ -1,0 +1,96 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    tag "cpu"
+    profile "test,spark"
+
+    test("-profile test,spark --input tests/csv/3.0/fastq_tumor_only.csv --use_gatk_spark baserecalibrator,markduplicates") {
+
+        when {
+            params {
+                outdir         = "$outputDir"
+                input          = "${projectDir}/tests/csv/3.0/fastq_tumor_only.csv"
+                tools          = null
+                use_gatk_spark = 'baserecalibrator,markduplicates'
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // bam_files: All bam files
+            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
+            // cram_files: All cram files
+            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
+            // Fasta file for cram verification with nft-bam
+            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path,
+                    // All bam files
+                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> [file.getName(), bam(file.toString()).readsMD5] },
+                    // All cram files
+                    cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] }
+                ).match() }
+            )
+        }
+    }
+
+    test("-profile test,spark --input tests/csv/3.0/fastq_tumor_only.csv --use_gatk_spark baserecalibrator,markduplicates --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools") {
+
+        when {
+            params {
+                outdir         = "$outputDir"
+                input          = "${projectDir}/tests/csv/3.0/fastq_tumor_only.csv"
+                tools          = null
+                use_gatk_spark = 'baserecalibrator,markduplicates'
+                skip_tools     = 'fastqc,markduplicates_report,mosdepth,multiqc,samtools'
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // bam_files: All bam files
+            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
+            // cram_files: All cram files
+            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
+            // Fasta file for cram verification with nft-bam
+            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path,
+                    // All bam files
+                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> [file.getName(), bam(file.toString()).readsMD5] },
+                    // All cram files
+                    cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] }
+                ).match() }
+            )
+        }
+    }
+}
