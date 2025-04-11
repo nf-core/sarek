@@ -243,7 +243,6 @@
                 },
                 "markduplicates_pixel_distance": {
                     "type": "integer",
-                    "default": 100,
                     "help_text": "Pixel distance for GATK MarkDuplicates."
                 }
             }
