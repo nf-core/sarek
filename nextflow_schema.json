@@ -240,6 +240,10 @@
                     "description": "Enable usage of GATK Spark implementation for duplicate marking and/or base quality score recalibration",
                     "help_text": "Multiple separated with commas.\n\n> The GATK4 Base Quality Score recalibration tools `Baserecalibrator` and `ApplyBQSR` are currently available as Beta release. Use with caution!",
                     "pattern": "^((baserecalibrator|markduplicates)?,?)*(?<!,)$"
+                },
+                "markduplicates_pixel_distance": {
+                    "type": "integer",
+                    "help_text": "Pixel distance for GATK MarkDuplicates."
                 }
             }
         },

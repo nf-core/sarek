@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1744](https://github.com/nf-core/sarek/pull/1744) - Add MuSE as new somatic variant caller
 - [1817](https://github.com/nf-core/sarek/pull/1817) - Added new contributor
 - [1841](https://github.com/nf-core/sarek/pull/1841) - Add pcr-indel-model parameter for GATK HaplotypeCaller
+- [1848](https://github.com/nf-core/sarek/pull/1848) - Add parameter for setting pixel distance for GATK MarkDuplicates
 
 ### Changed
 
@@ -20,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [1842](https://github.com/nf-core/sarek/pull/1842) - Updated the input validation of the pipeline to be more strict, thus preventing more issues when running the pipeline
+- [1849](https://github.com/nf-core/sarek/pull/1849) - Fix bug in sample_lane_id definition in addReadgroupToMeta function
 - [1858](https://github.com/nf-core/sarek/pull/1858) - Fix bug in parameter validation
 
 ### Removed
@@ -67,6 +69,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1847](https://github.com/nf-core/sarek/pull/1847) - Runs on custom runners :rocket: thanks to [RunsOn](https://runs-on.com/)
 - [1852](https://github.com/nf-core/sarek/pull/1852) - Ignore tests from modules
 - [1852](https://github.com/nf-core/sarek/pull/1852) - Improve some nf-test tests
+- [1866](https://github.com/nf-core/sarek/pull/1866) - Migrate pipeline pytest deepvariant tests to nf-test
+- [1867](https://github.com/nf-core/sarek/pull/1867) - Migrate pipeline pytest gatk4spark tests to nf-test
 
 #### Fixed
 
@@ -77,6 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1852](https://github.com/nf-core/sarek/pull/1852) - Modifying `assets/schema_input.json` and `nextflow_schema.json` should retrigger nf-test (cf https://github.com/nf-core/sarek/pull/1842)
 - [1852](https://github.com/nf-core/sarek/pull/1852) - Fix path to `license_message.py` script
 - [1855](https://github.com/nf-core/sarek/pull/1855) - Fix json schema cf_chrom_len input broken by [1842](https://github.com/nf-core/sarek/pull/1842)
+- [1859](https://github.com/nf-core/sarek/pull/1859) - Fix: change dbsnp channel from queue to value in muse subworkflow, wrong implemented in [1744](https://github.com/nf-core/sarek/pull/1744)
 
 #### Removed
 

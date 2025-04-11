@@ -53,35 +53,7 @@ intervals:
   - tests/csv/3.0/fastq_single.csv
   - tests/test_intervals.yml
 
-## gatk4spark
-gatk4spark:
-  - conf/modules/markduplicates.config
-  - conf/modules/prepare_recalibration.config
-  - conf/modules/recalibrate.config
-  - modules/nf-core/gatk4spark/applybqsr/**
-  - modules/nf-core/gatk4spark/baserecalibrator/**
-  - modules/nf-core/gatk4/estimatelibrarycomplexity/**
-  - modules/nf-core/gatk4spark/markduplicates/**
-  - modules/nf-core/mosdepth/**
-  - subworkflows/local/bam_applybqsr_spark/**
-  - subworkflows/local/bam_baserecalibrator_spark/**
-  - subworkflows/local/bam_markduplicates_spark/**
-  - tests/csv/3.0/fastq_single.csv
-  - tests/test_gatk4spark.yml
-
 # variant calling
-
-## deepvariant
-deepvariant:
-  - conf/modules/deepvariant.config
-  - modules/nf-core/deepvariant/**
-  - modules/nf-core/gatk4/mergevcfs/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/tabix/tabix/**
-  - subworkflows/local/bam_variant_calling_deepvariant/**
-  - subworkflows/local/bam_variant_calling_germline_all/**
-  - tests/csv/3.0/recalibrated_germline.csv
-  - tests/test_deepvariant.yml
 
 ## sentieon/dnascope
 sentieon/dnascope:
