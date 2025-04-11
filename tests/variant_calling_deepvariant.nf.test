@@ -1,0 +1,81 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    tag "cpu"
+
+    test("-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv") {
+
+        when {
+            params {
+                input = "${projectDir}/tests/csv/3.0/mapped_single_cram.csv"
+                outdir = "$outputDir"
+                step = "variant_calling"
+                tools = 'deepvariant'
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path,
+                    // All vcf files
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
+                ).match() }
+            )
+        }
+    }
+
+    test("-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals") {
+
+        when {
+            params {
+                input = "${projectDir}/tests/csv/3.0/mapped_single_cram.csv"
+                outdir = "$outputDir"
+                step = "variant_calling"
+                tools = 'deepvariant'
+                no_intervals = true
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path,
+                    // All vcf files
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
+                ).match() }
+            )
+        }
+    }
+}

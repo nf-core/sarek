@@ -71,18 +71,6 @@ gatk4spark:
 
 # variant calling
 
-## deepvariant
-deepvariant:
-  - conf/modules/deepvariant.config
-  - modules/nf-core/deepvariant/**
-  - modules/nf-core/gatk4/mergevcfs/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/tabix/tabix/**
-  - subworkflows/local/bam_variant_calling_deepvariant/**
-  - subworkflows/local/bam_variant_calling_germline_all/**
-  - tests/csv/3.0/recalibrated_germline.csv
-  - tests/test_deepvariant.yml
-
 ## sentieon/dnascope
 sentieon/dnascope:
   - conf/modules/sentieon_dnascope.config
