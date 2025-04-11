@@ -157,6 +157,7 @@ We thank the following people for their extensive assistance in the development 
 - [James A. Fellows Yates](https://github.com/jfy133)
 - [Jesper Eisfeldt](https://github.com/J35P312)
 - [Johannes Alneberg](https://github.com/alneberg)
+- [Jonas Kjellin](https://github.com/kjellinjonas)
 - [José Fernández Navarro](https://github.com/jfnavarro)
 - [Júlia Mir Pedrol](https://github.com/mirpedrol)
 - [Ken Brewer](https://github.com/kenibrewer)
