@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [1842](https://github.com/nf-core/sarek/pull/1842) - Updated the input validation of the pipeline to be more strict, thus preventing more issues when running the pipeline
+- [1849](https://github.com/nf-core/sarek/pull/1849) - Fix bug in sample_lane_id definition in addReadgroupToMeta function
 
 ### Removed
 
