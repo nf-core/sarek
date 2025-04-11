@@ -41,18 +41,6 @@ sentieon/dedup:
   - tests/test_sentieon_dedup_from_bam.yml
   - tests/test_sentieon_dedup_from_cram.yml
 
-## intervals
-intervals:
-  - conf/modules/prepare_intervals.config
-  - modules/local/build_intervals/**
-  - modules/local/create_intervals_bed/**
-  - modules/nf-core/gatk4/intervallisttobed/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/tabix/bgziptabix/**
-  - subworkflows/local/prepare_intervals/**
-  - tests/csv/3.0/fastq_single.csv
-  - tests/test_intervals.yml
-
 # variant calling
 
 ## sentieon/dnascope
