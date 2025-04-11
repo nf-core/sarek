@@ -1,0 +1,126 @@
+name: sentieon_tnscope
+description: TNscope algorithm performs somatic variant calling on the tumor-normal
+  matched pair or the tumor only data, using a Haplotyper algorithm.
+keywords:
+  - tnscope
+  - sentieon
+  - variant_calling
+tools:
+  - sentieon:
+      description: |
+        Sentieon® provides complete solutions for secondary DNA/RNA analysis for a variety of sequencing platforms, including short and long reads.
+        Our software improves upon BWA, STAR, Minimap2, GATK, HaplotypeCaller, Mutect, and Mutect2 based pipelines and is deployable on any generic-CPU-based computing system.
+      homepage: https://www.sentieon.com/
+      documentation: https://www.sentieon.com/
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information.
+          e.g. [ id:'test', single_end:false ]
+    - bam:
+        type: file
+        description: BAM file.
+        pattern: "*.bam"
+    - bai:
+        type: file
+        description: BAI file
+        pattern: "*.bai"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          e.g. [ id:'test' ]
+    - fasta:
+        type: file
+        description: Genome fasta file
+        pattern: "*.{fa,fasta}"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          e.g. [ id:'test' ]
+    - fai:
+        type: file
+        description: Index of the genome fasta file
+        pattern: "*.fai"
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          e.g. [ id:'test' ]
+    - cosmic:
+        type: file
+        description: Single Nucleotide Polymorphism database (dbSNP) file
+        pattern: "*.vcf.gz"
+    - cosmic_tbi:
+        type: file
+        description: Index of the Single Nucleotide Polymorphism database (dbSNP) file
+        pattern: "*.vcf.gz.tbi"
+  - - meta5:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          e.g. [ id:'test' ]
+    - pon:
+        type: file
+        description: Single Nucleotide Polymorphism database (dbSNP) file
+        pattern: "*.vcf.gz"
+    - pon_tbi:
+        type: file
+        description: Index of the Single Nucleotide Polymorphism database (dbSNP) file
+        pattern: "*.vcf.gz.tbi"
+  - - meta6:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          e.g. [ id:'test' ]
+    - dbsnp:
+        type: file
+        description: Single Nucleotide Polymorphism database (dbSNP) file
+        pattern: "*.vcf.gz"
+    - dbsnp_tbi:
+        type: file
+        description: Index of the Single Nucleotide Polymorphism database (dbSNP) file
+        pattern: "*.vcf.gz.tbi"
+  - - meta7:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          e.g. [ id:'test' ]
+    - interval:
+        type: file
+        description: bed or interval_list file containing interval in the reference
+          that will be used in the analysis
+        pattern: "*.{bed,interval_list}"
+output:
+  - vcf:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing reference information.
+            e.g. [ id:'test', single_end:false ]
+      - "*.vcf.gz":
+          type: file
+          description: VCF file
+          pattern: "*.{vcf.gz}"
+  - index:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing reference information.
+            e.g. [ id:'test', single_end:false ]
+      - "*.vcf.gz.tbi":
+          type: file
+          description: Index of the VCF file
+          pattern: "*.vcf.gz.tbi"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@ramprasadn"
+maintainers:
+  - "@ramprasadn"
