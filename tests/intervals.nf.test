@@ -11,11 +11,12 @@ nextflow_pipeline {
         when {
             params {
                 intervals                  = "${params.modules_testdata_base_path}/genomics/homo_sapiens/genome/genome.multi_intervals.bed"
+                modules_testdata_base_path = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data"
                 nucleotides_per_second     = 20
-                tools                      = null
-                wes                        = true
                 outdir                     = "$outputDir"
                 skip_tools                 = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
+                tools                      = null
+                wes                        = true
             }
         }
 
@@ -51,9 +52,9 @@ nextflow_pipeline {
         when {
             params {
                 no_intervals = true
-                tools        = null
                 outdir       = "$outputDir"
                 skip_tools   = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
+                tools        = null
             }
         }
 
@@ -89,10 +90,10 @@ nextflow_pipeline {
         when {
             params {
                 intervals      = false
-                save_reference = true
-                tools          = null
                 outdir         = "$outputDir"
+                save_reference = true
                 skip_tools     = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
+                tools          = null
             }
         }
 
@@ -129,11 +130,12 @@ nextflow_pipeline {
         when {
             params {
                 intervals                  = "${params.modules_testdata_base_path}/genomics/homo_sapiens/genome/genome.multi_intervals.bed"
+                modules_testdata_base_path = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data"
                 nucleotides_per_second     = 20
-                tools                      = null
-                wes                        = true
                 outdir                     = "$outputDir"
                 skip_tools                 = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
+                tools                      = null
+                wes                        = true
             }
         }
 
@@ -160,9 +162,9 @@ nextflow_pipeline {
         when {
             params {
                 no_intervals = true
-                tools        = null
                 outdir       = "$outputDir"
                 skip_tools   = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
+                tools        = null
             }
         }
 
@@ -189,10 +191,10 @@ nextflow_pipeline {
         when {
             params {
                 intervals      = false
-                save_reference = true
-                tools          = null
                 outdir         = "$outputDir"
+                save_reference = true
                 skip_tools     = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
+                tools          = null
             }
         }
 
