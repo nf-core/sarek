@@ -1,25 +1,81 @@
 {
-    "-profile test --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
+    "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub": {
+        "content": [
+            7,
+            [
+                "csv",
+                "csv/mapped.csv",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/mapped",
+                "preprocessing/mapped/test",
+                "preprocessing/mapped/test/test.sorted.crai",
+                "preprocessing/mapped/test/test.sorted.cram",
+                "reference"
+            ],
+            [
+                "test.sorted.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
+        },
+        "timestamp": "2025-04-11T22:33:26.195311238"
+    },
+    "-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub": {
         "content": [
             10,
-            {
-                "BAM_TO_CRAM_MAPPING": {
-                    "samtools": 1.21
-                },
-                "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.2
-                },
-                "INDEX_MERGE_BAM": {
-                    "samtools": 1.21
-                },
-                "MERGE_BAM": {
-                    "samtools": 1.21
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
-                }
-            },
+            [
+                "build",
+                "build/fai.bed",
+                "csv",
+                "csv/mapped.csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/mapped",
+                "preprocessing/mapped/test",
+                "preprocessing/mapped/test/test.sorted.crai",
+                "preprocessing/mapped/test/test.sorted.cram",
+                "reference",
+                "reference/bwa",
+                "reference/bwa/genome.amb",
+                "reference/bwa/genome.ann",
+                "reference/bwa/genome.bwt",
+                "reference/bwa/genome.pac",
+                "reference/bwa/genome.sa",
+                "reference/intervals",
+                "reference/intervals/fai.bed.gz",
+                "reference/intervals/fai.stub.bed",
+                "reference/intervals/fai.stub.bed.gz"
+            ],
+            [
+                "fai.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "test.sorted.crai:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "genome.amb:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "genome.ann:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "genome.bwt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "genome.pac:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "genome.sa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "fai.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "fai.stub.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "fai.stub.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
+        },
+        "timestamp": "2025-04-11T22:34:10.116769366"
+    },
+    "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub": {
+        "content": [
+            9,
             [
                 "csv",
                 "csv/mapped.csv",
@@ -28,38 +84,19 @@
                 "preprocessing",
                 "preprocessing/mapped",
                 "preprocessing/mapped/test",
+                "preprocessing/mapped/test/test.sorted.crai",
                 "preprocessing/mapped/test/test.sorted.cram",
-                "preprocessing/mapped/test/test.sorted.cram.crai",
                 "reference"
             ],
-            "No stable content",
-            "No BAM files"
+            [
+                "test.sorted.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-11T21:36:09.980139674"
-    },
-    "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub": {
-        "content": [
-            7
-        ],
-        "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
-        },
-        "timestamp": "2025-04-11T21:39:51.989189365"
-    },
-    "-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub": {
-        "content": [
-            10
-        ],
-        "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
-        },
-        "timestamp": "2025-04-11T21:40:38.266394735"
+        "timestamp": "2025-04-11T22:32:37.847810163"
     },
     "-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
         "content": [
@@ -117,13 +154,59 @@
                 "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "fai.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7"
             ],
-            "No BAM files"
+            [
+                "test.sorted.cram:md5,5534c350547fd253f0f2b9450362bed"
+            ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-11T21:38:25.44657706"
+        "timestamp": "2025-04-11T22:24:56.365876387"
+    },
+    "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
+        "content": [
+            10,
+            {
+                "BAM_TO_CRAM_MAPPING": {
+                    "samtools": 1.21
+                },
+                "BWAMEM1_MEM": {
+                    "bwa": "0.7.18-r1243-dirty",
+                    "samtools": 1.2
+                },
+                "INDEX_MERGE_BAM": {
+                    "samtools": 1.21
+                },
+                "MERGE_BAM": {
+                    "samtools": 1.21
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.6.0dev"
+                }
+            },
+            [
+                "csv",
+                "csv/mapped.csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/mapped",
+                "preprocessing/mapped/test",
+                "preprocessing/mapped/test/test.sorted.cram",
+                "preprocessing/mapped/test/test.sorted.cram.crai",
+                "reference"
+            ],
+            "No stable content",
+            [
+                "test.sorted.cram:md5,5534c350547fd253f0f2b9450362bed"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
+        },
+        "timestamp": "2025-04-11T22:22:39.829375352"
     },
     "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
         "content": [
@@ -162,22 +245,14 @@
                 "reference"
             ],
             "No stable content",
-            "No BAM files"
+            [
+                "test.sorted.cram:md5,5534c350547fd253f0f2b9450362bed"
+            ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-11T21:37:18.389152434"
-    },
-    "-profile test --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub": {
-        "content": [
-            9
-        ],
-        "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
-        },
-        "timestamp": "2025-04-11T21:39:08.800209077"
+        "timestamp": "2025-04-11T22:23:47.403168484"
     }
 }

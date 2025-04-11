@@ -6,12 +6,12 @@ nextflow_pipeline {
     tag "pipeline_sarek"
     tag "cpu"
 
-    test("-profile test --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools") {
+    test("-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools") {
 
         when {
             params {
-                intervals                  = "${params.modules_testdata_base_path}/genomics/homo_sapiens/genome/genome.multi_intervals.bed"
                 modules_testdata_base_path = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data"
+                intervals                  = "${params.modules_testdata_base_path}/genomics/homo_sapiens/genome/genome.multi_intervals.bed"
                 nucleotides_per_second     = 20
                 outdir                     = "$outputDir"
                 skip_tools                 = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
@@ -124,13 +124,13 @@ nextflow_pipeline {
         }
     }
 
-    test("-profile test --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub") {
+    test("-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub") {
         options "-stub"
 
         when {
             params {
-                intervals                  = "${params.modules_testdata_base_path}/genomics/homo_sapiens/genome/genome.multi_intervals.bed"
                 modules_testdata_base_path = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data"
+                intervals                  = "${params.modules_testdata_base_path}/genomics/homo_sapiens/genome/genome.multi_intervals.bed"
                 nucleotides_per_second     = 20
                 outdir                     = "$outputDir"
                 skip_tools                 = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
@@ -142,6 +142,8 @@ nextflow_pipeline {
         then {
             // stable_name: All files + folders in ${params.outdir}/ with a stable name
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assert workflow.success
             assertAll(
                 { assert snapshot(
@@ -171,6 +173,8 @@ nextflow_pipeline {
         then {
             // stable_name: All files + folders in ${params.outdir}/ with a stable name
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assert workflow.success
             assertAll(
                 { assert snapshot(
@@ -201,6 +205,8 @@ nextflow_pipeline {
         then {
             // stable_name: All files + folders in ${params.outdir}/ with a stable name
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assert workflow.success
             assertAll(
                 { assert snapshot(
