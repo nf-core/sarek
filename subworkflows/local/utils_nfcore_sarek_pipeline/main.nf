@@ -21,6 +21,7 @@ include { logColours                } from '../../nf-core/utils_nfcore_pipeline'
 include { paramsSummaryMap          } from 'plugin/nf-schema'
 include { samplesheetToList         } from 'plugin/nf-schema'
 include { workflowCitation          } from '../../nf-core/utils_nfcore_pipeline'
+include { TOOL_SPECIFIC_CHECKS      } from '../tool_specific_checks'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -69,6 +70,10 @@ workflow PIPELINE_INITIALISATION {
     //
     // Custom validation for pipeline parameters
     //
+
+    if (params.tools) {
+        TOOL_SPECIFIC_CHECKS()
+    }
     validateInputParameters()
 
     // Check input path parameters to see if they exist
