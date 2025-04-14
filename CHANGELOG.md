@@ -70,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1852](https://github.com/nf-core/sarek/pull/1852) - Improve some nf-test tests
 - [1866](https://github.com/nf-core/sarek/pull/1866) - Migrate pipeline pytest deepvariant tests to nf-test
 - [1867](https://github.com/nf-core/sarek/pull/1867) - Migrate pipeline pytest gatk4spark tests to nf-test
+- [1868](https://github.com/nf-core/sarek/pull/1868) - Migrate pipeline pytest intervals tests to nf-test
 
 #### Fixed
 
