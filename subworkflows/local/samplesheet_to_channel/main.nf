@@ -50,7 +50,7 @@ workflow  SAMPLESHEET_TO_CHANNEL{
 
             // Check the condition and exit with an error if met
             if (status1_count == 1 && status0_count > 1) {
-                System.err.println("Patient [${patient}] has more than 1 sample [${status0_count}] with status 0 and 1 sample with status 1.")
+                System.err.println("Patient [${patient}] has more than one sample [${status0_count}] with normal status [0] and one sample with tumor status [1].")
                 error("Execution halted due to sample status inconsistency.")
             }
         }
