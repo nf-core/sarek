@@ -38,15 +38,15 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
       - [GATK Germline Single Sample Variant Calling](#gatk-germline-single-sample-variant-calling)
       - [GATK Joint Germline Variant Calling](#gatk-joint-germline-variant-calling)
     - [GATK Mutect2](#gatk-mutect2)
+    - [Lofreq](#lofreq)
+    - [MuSE](#muse)
     - [Sentieon DNAscope](#sentieon-dnascope)
       - [Sentieon DNAscope joint germline variant calling](#sentieon-dnascope-joint-germline-variant-calling)
     - [Sentieon Haplotyper](#sentieon-haplotyper)
       - [Sentieon Haplotyper joint germline variant calling](#sentieon-haplotyper-joint-germline-variant-calling)
     - [Strelka](#strelka)
-    - [Lofreq](#lofreq)
-    - [MuSE](#muse)
   - [Structural Variants](#structural-variants)
-    - [Indexcov](#indexcov)
+    - [indexcov](#indexcov)
     - [Manta](#manta)
     - [TIDDIT](#tiddit)
   - [Sample heterogeneity, ploidy and CNVs](#sample-heterogeneity-ploidy-and-cnvs)
@@ -56,6 +56,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Microsatellite instability (MSI)](#microsatellite-instability-msi)
     - [MSIsensorPro](#msisensorpro)
   - [Concatenation](#concatenation)
+  - [Normalization](#normalization)
 - [Variant annotation](#variant-annotation)
   - [snpEff](#snpeff)
   - [VEP](#vep)
@@ -82,7 +83,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 The default directory structure is as follows
 
-```
+```text
 {outdir}
 ├── csv
 ├── multiqc
