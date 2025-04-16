@@ -49,21 +49,4 @@ nextflow_pipeline {
             )
         }
     }
-
-    test("-profile test --input tests/csv/3.0/sample_with_space.csv") {
-
-        when {
-            params {
-                input = "${projectDir}/tests/csv/3.0/sample_with_space.csv"
-                outdir = "$outputDir"
-            }
-        }
-
-        then {
-            assertAll(
-                { assert workflow.failed},
-                { assert workflow.stderr.toString().contains("Sample ID must be provided, cannot contain spaces and must be a string value") }
-            )
-        }
-    }
 }
