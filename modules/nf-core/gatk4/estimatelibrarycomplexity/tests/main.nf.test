@@ -75,7 +75,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - bam - stub") {
+    test("homo sapiens - bam - stub") {
 
         options "-stub"
 

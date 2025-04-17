@@ -9,21 +9,9 @@ nextflow_process {
     tag "modules_nfcore"
     tag "ngscheckmate"
     tag "ngscheckmate/ncm"
-    tag "bedtools/makewindows"
     tag "bcftools/mpileup"
 
     setup {
-
-        run("BEDTOOLS_MAKEWINDOWS") {
-            script "../../../bedtools/makewindows/main.nf"
-            process {
-                """
-                input[0] = [ [ id:'test' ],
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true)
-                ]
-                """
-            }
-        }
 
         run("BCFTOOLS_MPILEUP", alias: "BCFTOOLS_MPILEUP1") {
             script "../../../bcftools/mpileup/main.nf"
@@ -67,6 +55,9 @@ nextflow_process {
         when {
             process {
                 """
+                bed_file = file('test_snp.bed')
+                bed_file.text = "MT192765.1\t1262\t1263\\nMT192765.1\t1263\t1264\\nMT192765.1\t1575\t1576"
+
                 input[0] = [ [ id: 'combined_bams' ],
                     [
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
@@ -75,7 +66,7 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.methylated.sorted.bam.bai', checkIfExists: true)
                     ]
                 ]
-                input[1] = BEDTOOLS_MAKEWINDOWS.out.bed
+                input[1] = Channel.of([ [id:'test_bed'], bed_file])
                 input[2] = [ [ id:'sarscov2' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 ]
@@ -102,8 +93,11 @@ nextflow_process {
         when {
             process {
                 """
+                bed_file = file('test_snp.bed')
+                bed_file.text = "MT192765.1\t1262\t1263\\nMT192765.1\t1263\t1264\\nMT192765.1\t1575\t1576"
+
                 input[0] = BCFTOOLS_MPILEUP1.out.vcf.combine(BCFTOOLS_MPILEUP2.out.vcf.map{it[1]}).map{meta, one, two -> [meta, [one, two]]}.map{meta, stuff -> [meta, stuff.flatten()]}
-                input[1] = BEDTOOLS_MAKEWINDOWS.out.bed
+                input[1] = Channel.of([ [id:'test_bed'], bed_file])
                 input[2] = [ [ id:'sarscov2' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 ]
@@ -116,7 +110,7 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(
                     process.out.corr_matrix,
-                    process.out.matched,
+                    file(process.out.matched[0][1]).name,
                     process.out.all,
                     file(process.out.pdf[0][1]).name,
                     process.out.versions
@@ -141,7 +135,7 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.methylated.sorted.bam.bai', checkIfExists: true)
                     ]
                 ]
-                input[1] = BEDTOOLS_MAKEWINDOWS.out.bed
+                input[1] = [ [ id:'bed' ], []]
                 input[2] = [ [ id:'sarscov2' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 ]
@@ -166,7 +160,7 @@ nextflow_process {
             process {
                 """
                 input[0] = BCFTOOLS_MPILEUP1.out.vcf.combine(BCFTOOLS_MPILEUP2.out.vcf.map{it[1]})
-                input[1] = BEDTOOLS_MAKEWINDOWS.out.bed
+                input[1] = [ [ id:'bed' ], []]
                 input[2] = [ [ id:'sarscov2' ],
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                 ]

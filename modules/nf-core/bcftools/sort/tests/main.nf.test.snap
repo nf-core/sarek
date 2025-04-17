@@ -22,7 +22,7 @@
                     
                 ],
                 "3": [
-                    "versions.yml:md5,2c9f26ca356ef71199c3a7d1742974cb"
+                    "versions.yml:md5,54b077078de3c204fb81688af4aae489"
                 ],
                 "csi": [
                     
@@ -44,15 +44,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,2c9f26ca356ef71199c3a7d1742974cb"
+                    "versions.yml:md5,54b077078de3c204fb81688af4aae489"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-06-05T12:06:05.201680777"
+        "timestamp": "2025-04-01T14:11:26.694501734"
     },
     "vcf": {
         "content": [
@@ -72,7 +72,7 @@
                     
                 ],
                 "3": [
-                    "versions.yml:md5,2c9f26ca356ef71199c3a7d1742974cb"
+                    "versions.yml:md5,54b077078de3c204fb81688af4aae489"
                 ],
                 "csi": [
                     
@@ -89,15 +89,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,2c9f26ca356ef71199c3a7d1742974cb"
+                    "versions.yml:md5,54b077078de3c204fb81688af4aae489"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-06-05T12:04:43.889971134"
+        "timestamp": "2025-04-01T14:10:49.218451505"
     },
     "sarscov2 - vcf_gz_index": {
         "content": [
@@ -121,14 +121,14 @@
                 
             ],
             [
-                "versions.yml:md5,2c9f26ca356ef71199c3a7d1742974cb"
+                "versions.yml:md5,54b077078de3c204fb81688af4aae489"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-06-05T12:04:55.385964497"
+        "timestamp": "2025-04-01T14:10:56.259159613"
     },
     "sarscov2 - vcf_gz_index_csi": {
         "content": [
@@ -152,14 +152,14 @@
                 
             ],
             [
-                "versions.yml:md5,2c9f26ca356ef71199c3a7d1742974cb"
+                "versions.yml:md5,54b077078de3c204fb81688af4aae489"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-06-05T12:05:06.662818922"
+        "timestamp": "2025-04-01T14:11:00.358141543"
     },
     "sarscov2 - vcf_gz_index - stub": {
         "content": [
@@ -184,7 +184,7 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,2c9f26ca356ef71199c3a7d1742974cb"
+                    "versions.yml:md5,54b077078de3c204fb81688af4aae489"
                 ],
                 "csi": [
                     [
@@ -206,15 +206,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,2c9f26ca356ef71199c3a7d1742974cb"
+                    "versions.yml:md5,54b077078de3c204fb81688af4aae489"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-06-05T12:05:40.012912381"
+        "timestamp": "2025-04-01T14:11:18.590986384"
     },
     "sarscov2 - vcf_gz_index_csi - stub": {
         "content": [
@@ -239,7 +239,7 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,2c9f26ca356ef71199c3a7d1742974cb"
+                    "versions.yml:md5,54b077078de3c204fb81688af4aae489"
                 ],
                 "csi": [
                     [
@@ -261,15 +261,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,2c9f26ca356ef71199c3a7d1742974cb"
+                    "versions.yml:md5,54b077078de3c204fb81688af4aae489"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-06-05T12:05:52.405673587"
+        "timestamp": "2025-04-01T14:11:22.65765844"
     },
     "sarscov2 - vcf - stub": {
         "content": [
@@ -289,7 +289,7 @@
                     
                 ],
                 "3": [
-                    "versions.yml:md5,2c9f26ca356ef71199c3a7d1742974cb"
+                    "versions.yml:md5,54b077078de3c204fb81688af4aae489"
                 ],
                 "csi": [
                     
@@ -306,15 +306,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,2c9f26ca356ef71199c3a7d1742974cb"
+                    "versions.yml:md5,54b077078de3c204fb81688af4aae489"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-06-05T12:05:29.117946461"
+        "timestamp": "2025-04-01T14:11:11.501401617"
     },
     "sarscov2 - vcf_gz_index_tbi": {
         "content": [
@@ -338,13 +338,13 @@
                 ]
             ],
             [
-                "versions.yml:md5,2c9f26ca356ef71199c3a7d1742974cb"
+                "versions.yml:md5,54b077078de3c204fb81688af4aae489"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-06-05T12:05:17.217274984"
+        "timestamp": "2025-04-01T14:11:07.401740499"
     }
 }

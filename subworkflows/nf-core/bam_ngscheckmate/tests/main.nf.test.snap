@@ -1,0 +1,99 @@
+{
+    "sarscov2 - bam - stub": {
+        "content": [
+            "test_bed_output_corr_matrix.txt",
+            "test_bed_matched.txt",
+            "test_bed_all.txt",
+            "test_bed.pdf",
+            [
+                "versions.yml:md5,73d5516e0d2dd84537b11e5eabcbe3ab",
+                "versions.yml:md5,d0f4716ff5035090e3129d50d029e7c8",
+                "versions.yml:md5,d0f4716ff5035090e3129d50d029e7c8"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
+        },
+        "timestamp": "2025-04-01T17:50:34.789565772"
+    },
+    "sarscov2 - cram": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test_bed"
+                    },
+                    "test_bed_output_corr_matrix.txt:md5,640035b6c072a17ef24ae89845109763"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test_bed"
+                    },
+                    "test_bed_matched.txt:md5,35339268c624c8bfda5d48d80ac6fbbc"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test_bed"
+                    },
+                    "test_bed_all.txt:md5,35339268c624c8bfda5d48d80ac6fbbc"
+                ]
+            ],
+            [
+                "d5b1e887b104cd33f18747abd377f47a",
+                "30feeb598a3730af169e3d14c56a05c2"
+            ],
+            "test_bed.pdf",
+            [
+                "versions.yml:md5,73d5516e0d2dd84537b11e5eabcbe3ab",
+                "versions.yml:md5,d0f4716ff5035090e3129d50d029e7c8",
+                "versions.yml:md5,d0f4716ff5035090e3129d50d029e7c8"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
+        },
+        "timestamp": "2025-04-01T16:46:55.771293323"
+    },
+    "sarscov2 - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test_bed"
+                    },
+                    "test_bed_output_corr_matrix.txt:md5,3a23347ff7071d5d8e273bfc29731d4a"
+                ]
+            ],
+            "test_bed_matched.txt",
+            [
+                [
+                    {
+                        "id": "test_bed"
+                    },
+                    "test_bed_all.txt:md5,7e6ca5eb3daf6f589ea20fa117269edf"
+                ]
+            ],
+            [
+                "9341ed6b9cca02d6b0b822308f4a48c6",
+                "3d6ba59b24dc0a699d9bd5a78bc76869"
+            ],
+            "test_bed.pdf",
+            [
+                "versions.yml:md5,73d5516e0d2dd84537b11e5eabcbe3ab",
+                "versions.yml:md5,d0f4716ff5035090e3129d50d029e7c8",
+                "versions.yml:md5,d0f4716ff5035090e3129d50d029e7c8"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
+        },
+        "timestamp": "2025-04-01T17:45:22.458317234"
+    }
+}

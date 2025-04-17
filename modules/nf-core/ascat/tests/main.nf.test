@@ -1,0 +1,131 @@
+nextflow_process {
+
+    name "Test Process ASCAT"
+    script "../main.nf"
+    process "ASCAT"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "ascat"
+
+    test("human - bam - GC") {
+
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id: 'test', single_end:false ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.markduplicates.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.markduplicates.sorted.bam.bai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.markduplicates.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.markduplicates.sorted.bam.bai', checkIfExists: true)
+                ]
+                input[1] = [file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_alleles_hg38_chr21.txt', checkIfExists: true)]
+                input[2] = [file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_loci_hg38_chr21.txt', checkIfExists: true)]
+                input[3] = []
+                input[4] = []
+                input[5] = []
+                input[6] = []
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(
+                    process.out.allelefreqs,
+                    process.out.bafs,
+                    process.out.cnvs,
+                    // Logrs Tumour has a float margin discrepancy in conda due to
+                    // log and mean transformation
+                    process.out.logrs.collect{it[1].collect{file(it).name}},
+                    process.out.metrics,
+                    // This discrepancy affect the png generated
+                    process.out.png.collect{it[1].collect{file(it).name}},
+                    process.out.purityploidy,
+                    process.out.segments,
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("human - cram - GC - RT") {
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id: 'test', single_end:false ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.markduplicates.sorted.cram', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.markduplicates.sorted.cram.crai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.markduplicates.sorted.cram', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.markduplicates.sorted.cram.crai', checkIfExists: true)
+                ]
+                input[1] = [file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_alleles_hg38_chr21.txt', checkIfExists: true)]
+                input[2] = [file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_loci_hg38_chr21.txt', checkIfExists: true)]
+                input[3] = []
+                input[4] = [file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)]
+                input[5] = [file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/GC_G1000_hg38_21.txt', checkIfExists: true)]
+                input[6] = [file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/RT_G1000_hg38_21.txt', checkIfExists: true)]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(
+                    process.out.allelefreqs,
+                    process.out.bafs,
+                    process.out.cnvs,
+                    // Logrs Tumour has a float margin discrepancy in conda due to
+                    // log and mean transformation
+                    process.out.logrs.collect{it[1].collect{file(it).name}},
+                    process.out.metrics,
+                    // This discrepancy affect the png generated
+                    process.out.png.collect{it[1].collect{file(it).name}},
+                    process.out.purityploidy,
+                    process.out.segments,
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("human - bam - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id: 'test', single_end:false ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam.bai', checkIfExists: true)
+                ]
+                input[1] = []
+                input[2] = []
+                input[3] = []
+                input[4] = []
+                input[5] = []
+                input[6] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

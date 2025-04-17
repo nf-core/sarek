@@ -1,0 +1,268 @@
+nextflow_process {
+
+    name "Test Process GATK4SPARK_BASERECALIBRATOR"
+    script "../main.nf"
+    config "./nextflow.config"
+    process "GATK4SPARK_BASERECALIBRATOR"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "gatk4spark"
+    tag "gatk4spark/baserecalibrator"
+
+    test("sarscov2 - bam") {
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                    []
+                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
+                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.dict', checkIfExists: true))
+                input[4] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true))
+                input[5] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true))
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert snapshot(
+                    process.out,
+                    path(process.out.versions[0]).yaml
+                ).match() }
+            )
+        }
+    }
+
+    test("homo sapiens - cram") {
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram.crai', checkIfExists: true),
+                    []
+                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.dict', checkIfExists: true))
+                input[4] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/haplotypecaller_calls/test_haplotcaller.cnn.vcf.gz', checkIfExists: true))
+                input[5] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/haplotypecaller_calls/test_haplotcaller.cnn.vcf.gz.tbi', checkIfExists: true))
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert snapshot(
+                    process.out,
+                    path(process.out.versions[0]).yaml
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2 - bam - intervals") {
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true)
+                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
+                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.dict', checkIfExists: true))
+                input[4] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true))
+                input[5] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true))
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert snapshot(
+                    process.out,
+                    path(process.out.versions[0]).yaml
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2 - bam - multi sites") {
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                    []
+                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
+                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.dict', checkIfExists: true))
+                input[4] = Channel.of([
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf.gz', checkIfExists: true)
+                ])
+                input[5] = Channel.of([
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf.gz.tbi', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert snapshot(
+                    process.out,
+                    path(process.out.versions[0]).yaml
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2 - bam -stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                    []
+                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
+                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.dict', checkIfExists: true))
+                input[4] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true))
+                input[5] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true))
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert snapshot(
+                    process.out,
+                    path(process.out.versions[0]).yaml
+                ).match() }
+            )
+        }
+    }
+
+    test("homo sapiens - cram -stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram.crai', checkIfExists: true),
+                    []
+                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true))
+                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.dict', checkIfExists: true))
+                input[4] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/haplotypecaller_calls/test_haplotcaller.cnn.vcf.gz', checkIfExists: true))
+                input[5] = Channel.of(file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/haplotypecaller_calls/test_haplotcaller.cnn.vcf.gz.tbi', checkIfExists: true))
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert snapshot(
+                    process.out,
+                    path(process.out.versions[0]).yaml
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2 - bam - intervals -stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true)
+                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
+                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.dict', checkIfExists: true))
+                input[4] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true))
+                input[5] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true))
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert snapshot(
+                    process.out,
+                    path(process.out.versions[0]).yaml
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2 - bam - multi sites -stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                    []
+                ])
+                input[1] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true))
+                input[2] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true))
+                input[3] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.dict', checkIfExists: true))
+                input[4] = Channel.of([
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf.gz', checkIfExists: true)
+                ])
+                input[5] = Channel.of([
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf.gz.tbi', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert snapshot(
+                    process.out,
+                    path(process.out.versions[0]).yaml
+                ).match() }
+            )
+        }
+    }
+}

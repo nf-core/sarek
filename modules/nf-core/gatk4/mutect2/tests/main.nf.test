@@ -8,10 +8,13 @@ nextflow_process {
     tag "modules_nfcore"
     tag "gatk4"
     tag "gatk4/mutect2"
+    config "./nextflow.config"
 
-    test("tumor_normal_pair") {
-        config "./pair.config"
+    test("human - bam - tumor_normal_pair") {
         when {
+            params {
+                module_args = "--normal-sample normal"
+            }
             process {
             """
             input[0] = [
@@ -55,7 +58,7 @@ nextflow_process {
                 { assert process.success },
                 {
                     assert snapshot(
-                        process.out.vcf.collect { file(it[1]).getName() },
+                        path(process.out.vcf.get(0).get(1)).vcf.variantsMD5,
                         process.out.tbi.collect { file(it[1]).getName() },
                         process.out.stats,
                         process.out.f1r2,
@@ -66,9 +69,12 @@ nextflow_process {
         }
     }
 
-    test("tumor_normal_pair_f1r2") {
-        config "./f1r2.config"
+    test("human - bam - tumor_normal_pair_f1r2") {
+
         when {
+            params {
+                module_args = "--normal-sample normal --f1r2-tar-gz test.f1r2.tar.gz"
+            }
             process {
             """
             input[0] = [
@@ -111,7 +117,7 @@ nextflow_process {
                 { assert process.success },
                 {
                     assert snapshot(
-                        process.out.vcf.collect { file(it[1]).getName() },
+                        path(process.out.vcf.get(0).get(1)).vcf.variantsMD5,
                         process.out.tbi.collect { file(it[1]).getName() },
                         process.out.stats,
                         process.out.f1r2.collect { file(it[1]).getName() },
@@ -121,8 +127,11 @@ nextflow_process {
             )
         }
     }
-    test("tumor_single"){
+    test("human - bam - tumor_only"){
         when {
+            params {
+                module_args = ''
+            }
             process {
             """
             input[0] = [
@@ -155,7 +164,7 @@ nextflow_process {
                 { assert process.success },
                 {
                     assert snapshot(
-                        process.out.vcf.collect { file(it[1]).getName() },
+                        path(process.out.vcf.get(0).get(1)).vcf.variantsMD5,
                         process.out.tbi.collect { file(it[1]).getName() },
                         process.out.stats,
                         process.out.f1r2,
@@ -165,8 +174,11 @@ nextflow_process {
             )
         }
     }
-    test("cram_input"){
+    test("human - cram"){
         when {
+            params {
+                module_args = ''
+            }
             process{
             """
             input[0] = [
@@ -199,7 +211,7 @@ nextflow_process {
                 { assert process.success },
                 {
                     assert snapshot(
-                        process.out.vcf.collect { file(it[1]).getName() },
+                        path(process.out.vcf.get(0).get(1)).vcf.variantsMD5,
                         process.out.tbi.collect { file(it[1]).getName() },
                         process.out.stats,
                         process.out.f1r2,
@@ -210,8 +222,11 @@ nextflow_process {
         }
     }
 
-    test("generate_pon") {
+    test("human - bam - generate_pon") {
         when {
+            params {
+                module_args = ''
+            }
             process {
             """
             input[0] = [
@@ -244,7 +259,7 @@ nextflow_process {
                 { assert process.success },
                 {
                     assert snapshot(
-                        process.out.vcf.collect { file(it[1]).getName() },
+                        path(process.out.vcf.get(0).get(1)).vcf.variantsMD5,
                         process.out.tbi.collect { file(it[1]).getName() },
                         process.out.stats,
                         process.out.f1r2,
@@ -255,8 +270,11 @@ nextflow_process {
         }
     }
 
-    test("mitochondria"){
+    test("mitochondria - bam"){
         when {
+            params {
+                module_args = "--mitochondria-mode"
+            }
             process {
             """
             input[0] = [
@@ -289,7 +307,7 @@ nextflow_process {
                 { assert process.success },
                 {
                     assert snapshot(
-                        process.out.vcf.collect { file(it[1]).getName() },
+                        path(process.out.vcf.get(0).get(1)).vcf.variantsMD5,
                         process.out.tbi.collect { file(it[1]).getName() },
                         process.out.stats,
                         process.out.f1r2,
@@ -300,9 +318,14 @@ nextflow_process {
         }
     }
 
-    test("tumor_normal_pair_f1r2_stubs"){
-        options "-stub-run"
+    test("human - bam - tumor_normal_pair_f1r2 - stub"){
+
+        options "-stub"
+
         when {
+            params {
+                module_args = ''
+            }
             process {
             """
             input[0] = [
@@ -343,15 +366,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                {
-                    assert snapshot(
-                        process.out.vcf.collect { file(it[1]).getName() },
-                        process.out.tbi.collect { file(it[1]).getName() },
-                        process.out.stats.collect { file(it[1]).getName() },
-                        process.out.f1r2.collect { file(it[1]).getName() },
-                        process.out.versions.collect { file(it[1]).getName() }
-                    ).match()
-                }
+                { assert snapshot(process.out).match() }
             )
         }
 

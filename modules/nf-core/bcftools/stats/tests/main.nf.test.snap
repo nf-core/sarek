@@ -2,7 +2,7 @@
     "sarscov2 - vcf_gz - reference": {
         "content": [
             [
-                "# This file was produced by bcftools stats (1.20+htslib-1.20) and can be plotted using plot-vcfstats.",
+                "# This file was produced by bcftools stats (1.21+htslib-1.21) and can be plotted using plot-vcfstats.",
                 "# The command line was:\tbcftools stats  --fasta-ref genome.fasta test.vcf.gz",
                 "#",
                 "# Definition of sets:",
@@ -11,15 +11,15 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-05-31T18:14:35.506777837"
+        "timestamp": "2025-04-01T14:12:00.636338532"
     },
     "sarscov2 - vcf_gz - exons": {
         "content": [
             [
-                "# This file was produced by bcftools stats (1.20+htslib-1.20) and can be plotted using plot-vcfstats.",
+                "# This file was produced by bcftools stats (1.21+htslib-1.21) and can be plotted using plot-vcfstats.",
                 "# The command line was:\tbcftools stats  --exons exons.tsv.gz test.vcf.gz",
                 "#",
                 "# Definition of sets:",
@@ -28,27 +28,27 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-05-31T18:14:30.57486244"
+        "timestamp": "2025-04-01T14:11:56.472662944"
     },
     "versions": {
         "content": [
             [
-                "versions.yml:md5,17cdf9d1ad31f6b1f5935dfcc9fe7b9a"
+                "versions.yml:md5,d8ba64d31cb19c789af4726840d8f5f4"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-05-31T18:16:27.637515559"
+        "timestamp": "2025-04-01T14:11:38.17663878"
     },
     "sarscov2 - vcf_gz - targets": {
         "content": [
             [
-                "# This file was produced by bcftools stats (1.20+htslib-1.20) and can be plotted using plot-vcfstats.",
+                "# This file was produced by bcftools stats (1.21+htslib-1.21) and can be plotted using plot-vcfstats.",
                 "# The command line was:\tbcftools stats  --targets-file test2.targets.tsv.gz test.vcf.gz",
                 "#",
                 "# Definition of sets:",
@@ -57,34 +57,34 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-05-31T18:14:25.732997442"
+        "timestamp": "2025-04-01T14:11:49.263021261"
     },
     "regions_versions": {
         "content": [
             [
-                "versions.yml:md5,17cdf9d1ad31f6b1f5935dfcc9fe7b9a"
+                "versions.yml:md5,d8ba64d31cb19c789af4726840d8f5f4"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-05-31T18:16:32.559884458"
+        "timestamp": "2025-04-01T14:11:45.263363932"
     },
     "targets_versions": {
         "content": [
             [
-                "versions.yml:md5,17cdf9d1ad31f6b1f5935dfcc9fe7b9a"
+                "versions.yml:md5,d8ba64d31cb19c789af4726840d8f5f4"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-05-31T18:16:37.512009805"
+        "timestamp": "2025-04-01T14:11:49.260150422"
     },
     "sarscov2 - vcf_gz - stub": {
         "content": [
@@ -98,7 +98,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,17cdf9d1ad31f6b1f5935dfcc9fe7b9a"
+                    "versions.yml:md5,d8ba64d31cb19c789af4726840d8f5f4"
                 ],
                 "stats": [
                     [
@@ -109,44 +109,44 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,17cdf9d1ad31f6b1f5935dfcc9fe7b9a"
+                    "versions.yml:md5,d8ba64d31cb19c789af4726840d8f5f4"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-06-03T11:57:09.614976125"
+        "timestamp": "2025-04-01T14:12:07.469893476"
     },
     "exon_versions": {
         "content": [
             [
-                "versions.yml:md5,17cdf9d1ad31f6b1f5935dfcc9fe7b9a"
+                "versions.yml:md5,d8ba64d31cb19c789af4726840d8f5f4"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-05-31T18:16:42.347397266"
+        "timestamp": "2025-04-01T14:11:56.46980859"
     },
     "ref_versions": {
         "content": [
             [
-                "versions.yml:md5,17cdf9d1ad31f6b1f5935dfcc9fe7b9a"
+                "versions.yml:md5,d8ba64d31cb19c789af4726840d8f5f4"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-05-31T18:16:47.26823622"
+        "timestamp": "2025-04-01T14:12:00.633746007"
     },
     "sarscov2 - vcf_gz": {
         "content": [
             [
-                "# This file was produced by bcftools stats (1.20+htslib-1.20) and can be plotted using plot-vcfstats.",
+                "# This file was produced by bcftools stats (1.21+htslib-1.21) and can be plotted using plot-vcfstats.",
                 "# The command line was:\tbcftools stats  test.vcf.gz",
                 "#",
                 "# Definition of sets:",
@@ -155,15 +155,15 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-05-31T18:16:27.670416598"
+        "timestamp": "2025-04-01T14:11:38.184907984"
     },
     "sarscov2 - vcf_gz - regions": {
         "content": [
             [
-                "# This file was produced by bcftools stats (1.20+htslib-1.20) and can be plotted using plot-vcfstats.",
+                "# This file was produced by bcftools stats (1.21+htslib-1.21) and can be plotted using plot-vcfstats.",
                 "# The command line was:\tbcftools stats  --regions-file test3.vcf.gz test.vcf.gz",
                 "#",
                 "# Definition of sets:",
@@ -172,9 +172,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2024-05-31T18:14:20.759094062"
+        "timestamp": "2025-04-01T14:11:45.266296334"
     }
 }

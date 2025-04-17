@@ -12,14 +12,14 @@
     "versions_with-files": {
         "content": [
             [
-                "versions.yml:md5,1e86368bd682668a6777ccf2cfd90689"
+                "versions.yml:md5,029e46832ac21665f3ba027974061ed0"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-05-15T12:45:43.679571"
+        "timestamp": "2024-10-31T11:04:55.625468064"
     },
     "human - vcf - stub": {
         "content": [
@@ -49,7 +49,7 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,1e86368bd682668a6777ccf2cfd90689"
+                    "versions.yml:md5,029e46832ac21665f3ba027974061ed0"
                 ],
                 "stats": [
                     [
@@ -76,39 +76,39 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,1e86368bd682668a6777ccf2cfd90689"
+                    "versions.yml:md5,029e46832ac21665f3ba027974061ed0"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-05-15T12:46:32.666273"
+        "timestamp": "2024-10-31T11:05:33.111919824"
     },
     "versions_use-val": {
         "content": [
             [
-                "versions.yml:md5,1e86368bd682668a6777ccf2cfd90689"
+                "versions.yml:md5,029e46832ac21665f3ba027974061ed0"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-05-15T12:46:03.876073"
+        "timestamp": "2024-10-31T11:05:19.277193087"
     },
     "versions_base": {
         "content": [
             [
-                "versions.yml:md5,1e86368bd682668a6777ccf2cfd90689"
+                "versions.yml:md5,029e46832ac21665f3ba027974061ed0"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-05-15T12:47:39.930795"
+        "timestamp": "2024-10-31T11:04:36.657284567"
     },
     "human - vcf - with-files": {
         "content": [

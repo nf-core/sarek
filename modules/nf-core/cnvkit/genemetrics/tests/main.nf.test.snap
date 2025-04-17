@@ -8,7 +8,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.tsv:md5,622e154a107301da6f456b4b3196b79d"
+                        "test.tsv:md5,5ec3555520f502f00f551ae7900a3824"
                     ]
                 ],
                 "1": [
@@ -20,7 +20,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.tsv:md5,622e154a107301da6f456b4b3196b79d"
+                        "test.tsv:md5,5ec3555520f502f00f551ae7900a3824"
                     ]
                 ],
                 "versions": [
@@ -29,10 +29,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
         },
-        "timestamp": "2024-08-28T11:17:13.604558"
+        "timestamp": "2024-12-18T17:21:17.917810184"
     },
     "test-cnvkit-genemetrics-with-cns": {
         "content": [
@@ -43,7 +43,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.tsv:md5,2a18eca552ea33faab1d39795d9e051c"
+                        "test.tsv:md5,5ec3555520f502f00f551ae7900a3824"
                     ]
                 ],
                 "1": [
@@ -55,7 +55,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.tsv:md5,2a18eca552ea33faab1d39795d9e051c"
+                        "test.tsv:md5,5ec3555520f502f00f551ae7900a3824"
                     ]
                 ],
                 "versions": [
@@ -64,9 +64,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
         },
-        "timestamp": "2024-08-28T11:17:04.195978"
+        "timestamp": "2024-12-18T17:21:03.855092906"
     }
 }

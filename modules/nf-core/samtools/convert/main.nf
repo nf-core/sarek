@@ -50,7 +50,7 @@ process SAMTOOLS_CONVERT {
 
     """
     touch ${prefix}.${output_extension}
-    touch ${prefix}.${index_extension}
+    touch ${prefix}.${output_extension}.${index_extension}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

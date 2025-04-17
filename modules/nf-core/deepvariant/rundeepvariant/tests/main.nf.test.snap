@@ -8,7 +8,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.vcf.gz:md5,8b8ab4a675f01e437aa72e1438a717d0"
+                        "test_out.vcf.gz:md5,cf14200d683c17a6e433bb076d487fee"
                     ]
                 ],
                 "1": [
@@ -17,7 +17,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.vcf.gz.tbi:md5,0000833138104e87b05eaa906821eb21"
+                        "test_out.vcf.gz.tbi:md5,e9bcd1d1f5280e0d76ed8fd31f27bd59"
                     ]
                 ],
                 "2": [
@@ -26,7 +26,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.g.vcf.gz:md5,0a629e1745926cfcedf4b169046a921a"
+                        "test_out.g.vcf.gz:md5,6251a87945e530ca61a989d7187d89dc"
                     ]
                 ],
                 "3": [
@@ -35,11 +35,11 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.g.vcf.gz.tbi:md5,49503913c28ec70a6f4aa52f6b357b4d"
+                        "test_out.g.vcf.gz.tbi:md5,32ca0d6713b96ed4ce07c79421bb04a9"
                     ]
                 ],
                 "4": [
-                    "versions.yml:md5,a251d8d9f5e8b737d8298eead96c0890"
+                    "versions.yml:md5,cd692ea876a00da762fd4608c9f40f01"
                 ],
                 "gvcf": [
                     [
@@ -47,7 +47,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.g.vcf.gz:md5,0a629e1745926cfcedf4b169046a921a"
+                        "test_out.g.vcf.gz:md5,6251a87945e530ca61a989d7187d89dc"
                     ]
                 ],
                 "gvcf_tbi": [
@@ -56,7 +56,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.g.vcf.gz.tbi:md5,49503913c28ec70a6f4aa52f6b357b4d"
+                        "test_out.g.vcf.gz.tbi:md5,32ca0d6713b96ed4ce07c79421bb04a9"
                     ]
                 ],
                 "vcf": [
@@ -65,7 +65,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.vcf.gz:md5,8b8ab4a675f01e437aa72e1438a717d0"
+                        "test_out.vcf.gz:md5,cf14200d683c17a6e433bb076d487fee"
                     ]
                 ],
                 "vcf_tbi": [
@@ -74,19 +74,19 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.vcf.gz.tbi:md5,0000833138104e87b05eaa906821eb21"
+                        "test_out.vcf.gz.tbi:md5,e9bcd1d1f5280e0d76ed8fd31f27bd59"
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,a251d8d9f5e8b737d8298eead96c0890"
+                    "versions.yml:md5,cd692ea876a00da762fd4608c9f40f01"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
         },
-        "timestamp": "2024-08-29T11:36:27.325363"
+        "timestamp": "2025-01-14T08:16:22.036932742"
     },
     "homo_sapiens - [bam, bai] - fasta - fai": {
         "content": [
@@ -97,7 +97,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.vcf.gz:md5,8b8ab4a675f01e437aa72e1438a717d0"
+                        "test_out.vcf.gz:md5,cf14200d683c17a6e433bb076d487fee"
                     ]
                 ],
                 "1": [
@@ -106,7 +106,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.vcf.gz.tbi:md5,0000833138104e87b05eaa906821eb21"
+                        "test_out.vcf.gz.tbi:md5,e9bcd1d1f5280e0d76ed8fd31f27bd59"
                     ]
                 ],
                 "2": [
@@ -115,7 +115,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.g.vcf.gz:md5,0a629e1745926cfcedf4b169046a921a"
+                        "test_out.g.vcf.gz:md5,6251a87945e530ca61a989d7187d89dc"
                     ]
                 ],
                 "3": [
@@ -124,11 +124,11 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.g.vcf.gz.tbi:md5,49503913c28ec70a6f4aa52f6b357b4d"
+                        "test_out.g.vcf.gz.tbi:md5,32ca0d6713b96ed4ce07c79421bb04a9"
                     ]
                 ],
                 "4": [
-                    "versions.yml:md5,a251d8d9f5e8b737d8298eead96c0890"
+                    "versions.yml:md5,cd692ea876a00da762fd4608c9f40f01"
                 ],
                 "gvcf": [
                     [
@@ -136,7 +136,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.g.vcf.gz:md5,0a629e1745926cfcedf4b169046a921a"
+                        "test_out.g.vcf.gz:md5,6251a87945e530ca61a989d7187d89dc"
                     ]
                 ],
                 "gvcf_tbi": [
@@ -145,7 +145,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.g.vcf.gz.tbi:md5,49503913c28ec70a6f4aa52f6b357b4d"
+                        "test_out.g.vcf.gz.tbi:md5,32ca0d6713b96ed4ce07c79421bb04a9"
                     ]
                 ],
                 "vcf": [
@@ -154,7 +154,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.vcf.gz:md5,8b8ab4a675f01e437aa72e1438a717d0"
+                        "test_out.vcf.gz:md5,cf14200d683c17a6e433bb076d487fee"
                     ]
                 ],
                 "vcf_tbi": [
@@ -163,19 +163,19 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.vcf.gz.tbi:md5,0000833138104e87b05eaa906821eb21"
+                        "test_out.vcf.gz.tbi:md5,e9bcd1d1f5280e0d76ed8fd31f27bd59"
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,a251d8d9f5e8b737d8298eead96c0890"
+                    "versions.yml:md5,cd692ea876a00da762fd4608c9f40f01"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
         },
-        "timestamp": "2024-08-29T11:34:41.779153"
+        "timestamp": "2025-01-14T08:13:35.621497498"
     },
     "homo_sapiens - [cram, crai, genome_bed] - fasta - fai": {
         "content": [
@@ -186,7 +186,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.vcf.gz:md5,8b8ab4a675f01e437aa72e1438a717d0"
+                        "test_out.vcf.gz:md5,cf14200d683c17a6e433bb076d487fee"
                     ]
                 ],
                 "1": [
@@ -195,7 +195,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.vcf.gz.tbi:md5,0000833138104e87b05eaa906821eb21"
+                        "test_out.vcf.gz.tbi:md5,e9bcd1d1f5280e0d76ed8fd31f27bd59"
                     ]
                 ],
                 "2": [
@@ -204,7 +204,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.g.vcf.gz:md5,0a629e1745926cfcedf4b169046a921a"
+                        "test_out.g.vcf.gz:md5,6251a87945e530ca61a989d7187d89dc"
                     ]
                 ],
                 "3": [
@@ -213,11 +213,11 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.g.vcf.gz.tbi:md5,49503913c28ec70a6f4aa52f6b357b4d"
+                        "test_out.g.vcf.gz.tbi:md5,32ca0d6713b96ed4ce07c79421bb04a9"
                     ]
                 ],
                 "4": [
-                    "versions.yml:md5,a251d8d9f5e8b737d8298eead96c0890"
+                    "versions.yml:md5,cd692ea876a00da762fd4608c9f40f01"
                 ],
                 "gvcf": [
                     [
@@ -225,7 +225,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.g.vcf.gz:md5,0a629e1745926cfcedf4b169046a921a"
+                        "test_out.g.vcf.gz:md5,6251a87945e530ca61a989d7187d89dc"
                     ]
                 ],
                 "gvcf_tbi": [
@@ -234,7 +234,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.g.vcf.gz.tbi:md5,49503913c28ec70a6f4aa52f6b357b4d"
+                        "test_out.g.vcf.gz.tbi:md5,32ca0d6713b96ed4ce07c79421bb04a9"
                     ]
                 ],
                 "vcf": [
@@ -243,7 +243,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.vcf.gz:md5,8b8ab4a675f01e437aa72e1438a717d0"
+                        "test_out.vcf.gz:md5,cf14200d683c17a6e433bb076d487fee"
                     ]
                 ],
                 "vcf_tbi": [
@@ -252,19 +252,19 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.vcf.gz.tbi:md5,0000833138104e87b05eaa906821eb21"
+                        "test_out.vcf.gz.tbi:md5,e9bcd1d1f5280e0d76ed8fd31f27bd59"
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,a251d8d9f5e8b737d8298eead96c0890"
+                    "versions.yml:md5,cd692ea876a00da762fd4608c9f40f01"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
         },
-        "timestamp": "2024-08-29T11:35:16.993129"
+        "timestamp": "2025-01-14T08:14:32.23781232"
     },
     "homo_sapiens - [cram, crai, genome_bed] - fasta - fai - par_bed": {
         "content": [
@@ -275,7 +275,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.vcf.gz:md5,d2e26d65dbbcea9b087ed191b5c9841c"
+                        "test_out.vcf.gz:md5,b79936a7bf53fa4ee7e5866664e37d56"
                     ]
                 ],
                 "1": [
@@ -284,7 +284,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.vcf.gz.tbi:md5,0801296d0356415bbf1ef8deb4ec84c3"
+                        "test_out.vcf.gz.tbi:md5,22f9f4c6c8c1faa8b129eddf32b445b8"
                     ]
                 ],
                 "2": [
@@ -293,7 +293,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.g.vcf.gz:md5,4fcaa9a8b55730d191382160c2b5bb0a"
+                        "test_out.g.vcf.gz:md5,c82ce85ed16dcabe411995c52aaffd85"
                     ]
                 ],
                 "3": [
@@ -302,11 +302,11 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.g.vcf.gz.tbi:md5,f468e846904733b3231ecf00ef7cd4a2"
+                        "test_out.g.vcf.gz.tbi:md5,6420a456b0507c70c8423293395c29bc"
                     ]
                 ],
                 "4": [
-                    "versions.yml:md5,a251d8d9f5e8b737d8298eead96c0890"
+                    "versions.yml:md5,cd692ea876a00da762fd4608c9f40f01"
                 ],
                 "gvcf": [
                     [
@@ -314,7 +314,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.g.vcf.gz:md5,4fcaa9a8b55730d191382160c2b5bb0a"
+                        "test_out.g.vcf.gz:md5,c82ce85ed16dcabe411995c52aaffd85"
                     ]
                 ],
                 "gvcf_tbi": [
@@ -323,7 +323,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.g.vcf.gz.tbi:md5,f468e846904733b3231ecf00ef7cd4a2"
+                        "test_out.g.vcf.gz.tbi:md5,6420a456b0507c70c8423293395c29bc"
                     ]
                 ],
                 "vcf": [
@@ -332,7 +332,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.vcf.gz:md5,d2e26d65dbbcea9b087ed191b5c9841c"
+                        "test_out.vcf.gz:md5,b79936a7bf53fa4ee7e5866664e37d56"
                     ]
                 ],
                 "vcf_tbi": [
@@ -341,18 +341,18 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test_out.vcf.gz.tbi:md5,0801296d0356415bbf1ef8deb4ec84c3"
+                        "test_out.vcf.gz.tbi:md5,22f9f4c6c8c1faa8b129eddf32b445b8"
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,a251d8d9f5e8b737d8298eead96c0890"
+                    "versions.yml:md5,cd692ea876a00da762fd4608c9f40f01"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.3"
         },
-        "timestamp": "2024-08-29T11:35:52.23093"
+        "timestamp": "2025-01-14T08:15:29.680851997"
     }
 }

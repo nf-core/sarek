@@ -12,7 +12,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,413fc0014d5dc41ab67d65f59f61a4a0"
+                    "versions.yml:md5,f7d3164566a7377bf766fb8b3933a34f"
                 ],
                 "table": [
                     [
@@ -24,15 +24,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,413fc0014d5dc41ab67d65f59f61a4a0"
+                    "versions.yml:md5,f7d3164566a7377bf766fb8b3933a34f"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-08-26T12:22:34.490694"
+        "timestamp": "2024-10-31T11:07:33.025431761"
     },
     "test-gatk4-gatherbqsrreports": {
         "content": [
@@ -47,7 +47,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,413fc0014d5dc41ab67d65f59f61a4a0"
+                    "versions.yml:md5,f7d3164566a7377bf766fb8b3933a34f"
                 ],
                 "table": [
                     [
@@ -59,14 +59,14 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,413fc0014d5dc41ab67d65f59f61a4a0"
+                    "versions.yml:md5,f7d3164566a7377bf766fb8b3933a34f"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-08-26T12:22:10.552951"
+        "timestamp": "2024-10-31T11:07:09.791064374"
     }
 }

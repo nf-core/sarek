@@ -93,23 +93,16 @@
                     {
                         "id": "test1"
                     },
-                    "test1_output_corr_matrix.txt:md5,0c86bdad2721c470fe6be119f291c8e5"
+                    "test1_output_corr_matrix.txt:md5,3a23347ff7071d5d8e273bfc29731d4a"
                 ]
             ],
+            "test1_matched.txt",
             [
                 [
                     {
                         "id": "test1"
                     },
-                    "test1_matched.txt:md5,fd74956dcac279b6f58e82ea73e344f8"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "test1"
-                    },
-                    "test1_all.txt:md5,fd74956dcac279b6f58e82ea73e344f8"
+                    "test1_all.txt:md5,7e6ca5eb3daf6f589ea20fa117269edf"
                 ]
             ],
             "test1.pdf",
@@ -118,10 +111,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.1"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-05-22T19:53:29.123160766"
+        "timestamp": "2025-03-05T15:40:36.013242151"
     },
     "sarscov2 - bam": {
         "content": [

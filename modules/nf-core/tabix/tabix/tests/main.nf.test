@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process TABIX_TABIX"
-    script "modules/nf-core/tabix/tabix/main.nf"
+    script "../main.nf"
     process "TABIX_TABIX"
 
     tag "modules"

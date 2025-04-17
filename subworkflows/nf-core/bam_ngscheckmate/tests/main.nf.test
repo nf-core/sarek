@@ -1,0 +1,147 @@
+nextflow_workflow {
+
+    name "Test Subworkflow BAM_NGSCHECKMATE"
+    script "../main.nf"
+    workflow "BAM_NGSCHECKMATE"
+
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "subworkflows/bam_ngscheckmate"
+    tag "samtools"
+    tag "samtools/sort"
+    tag "samtools/index"
+    tag "ngscheckmate/ncm"
+    tag "bcftools/mpileup"
+
+    config "./nextflow.config"
+
+    test("sarscov2 - bam") {
+
+        when {
+
+            workflow {
+                """
+
+                bed_file = file('test_snp.bed')
+                bed_file.text = "MT192765.1\t1262\t1263\\nMT192765.1\t1263\t1264\\nMT192765.1\t1575\t1576"
+
+                input[0] = Channel.fromList([
+                    [
+                        [ id:'test1' ],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                    ],
+                    [
+                        [ id:'test2' ],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.methylated.sorted.bam', checkIfExists: true)
+                    ]
+                ])
+                input[1] = Channel.of([ [id:'test_bed'], bed_file])
+                input[2] = Channel.of([
+                    [ id:'sarscov2'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.corr_matrix,
+                    file(workflow.out.matched[0][1]).name,
+                    workflow.out.all,
+                    workflow.out.vcf.collect {meta, vcf -> path(vcf).vcf.variantsMD5 },
+                    file(workflow.out.pdf[0][1]).name,
+                    workflow.out.versions
+                    ).match()}
+            )
+        }
+    }
+
+    test("sarscov2 - cram") {
+
+        when {
+
+            workflow {
+                """
+                bed_file = file('test_snp.bed')
+                bed_file.text = "chr22\t1981\t1982\\nchr22\t2122\t2123\\nchr22\t3139\t3140\\nchr22\t3265\t3266\\nchr22\t3412\t3413"
+
+                input[0] = Channel.fromList([[
+                            [ id:'test1' ],
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
+                        ],[
+                            [ id:'test2' ],
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.sorted.cram', checkIfExists: true)
+                        ]
+                ])
+                input[1] = Channel.of([ [id:'test_bed'], bed_file])
+                input[2] = Channel.of([
+                    [ id:'homo_sapiens'],
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                    ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.corr_matrix,
+                    workflow.out.matched,
+                    workflow.out.all,
+                    workflow.out.vcf.collect {meta, vcf -> path(vcf).vcf.variantsMD5 },
+                    file(workflow.out.pdf[0][1]).name,
+                    workflow.out.versions
+                    ).match()}
+            )
+        }
+    }
+
+    test("sarscov2 - bam - stub") {
+        options "-stub"
+        when {
+
+            workflow {
+                """
+
+                bed_file = file('test_snp.bed')
+                bed_file.text = "MT192765.1\t1262\t1263\\nMT192765.1\t1263\t1264\\nMT192765.1\t1575\t1576"
+
+                input[0] = Channel.fromList([
+                    [
+                        [ id:'test1' ],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                    ],
+                    [
+                        [ id:'test2' ],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.methylated.sorted.bam', checkIfExists: true)
+                    ]
+                ])
+                input[1] = Channel.of([ [id:'test_bed'], bed_file])
+                input[2] = Channel.of([
+                    [ id:'sarscov2'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    file(workflow.out.corr_matrix[0][1]).name,
+                    file(workflow.out.matched[0][1]).name,
+                    file(workflow.out.all[0][1]).name,
+                    // workflow.out.vcf.collect {meta, vcf -> path(vcf).vcf.variantsMD5 },
+                    file(workflow.out.pdf[0][1]).name,
+                    workflow.out.versions
+                    ).match()}
+            )
+        }
+    }
+
+}

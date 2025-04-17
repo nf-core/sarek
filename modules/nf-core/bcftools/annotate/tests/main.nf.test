@@ -9,7 +9,7 @@ nextflow_process {
     tag "bcftools"
     tag "bcftools/annotate"
 
-    test("sarscov2 - [vcf, tbi, annotation, annotation_tbi], [] - vcf_output") {
+    test("sarscov2 - [vcf, tbi, annotation, annotation_tbi], [], [] - vcf_output") {
 
         config "./vcf.config"
 
@@ -24,6 +24,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf.gz.tbi', checkIfExists: true)
                 ]
                 input[1] = []
+                input[2] = []
                 """
             }
         }
@@ -40,7 +41,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - [vcf, [], annotation, annotation_tbi], [] - vcf_output") {
+    test("sarscov2 - [vcf, [], annotation, annotation_tbi], [], [] - vcf_output") {
 
         config "./vcf.config"
 
@@ -55,6 +56,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf.gz.tbi', checkIfExists: true)
                 ]
                 input[1] = []
+                input[2] = []
                 """
             }
         }
@@ -70,7 +72,7 @@ nextflow_process {
         }
 
     }
-        test("sarscov2 - [vcf, tbi, annotation, annotation_tbi], [] - vcf_gz_index") {
+        test("sarscov2 - [vcf, tbi, annotation, annotation_tbi], [], [] - vcf_gz_index") {
 
         config "./vcf_gz_index.config"
 
@@ -85,6 +87,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf.gz.tbi', checkIfExists: true)
                 ]
                 input[1] = []
+                input[2] = []
                 """
             }
         }
@@ -104,7 +107,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - [vcf, tbi, annotation, annotation_tbi], [] - vcf_gz_index_csi") {
+    test("sarscov2 - [vcf, tbi, annotation, annotation_tbi], [], [] - vcf_gz_index_csi") {
 
         config "./vcf_gz_index_csi.config"
 
@@ -119,6 +122,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf.gz.tbi', checkIfExists: true)
                 ]
                 input[1] = []
+                input[2] = []
                 """
             }
         }
@@ -138,7 +142,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - [vcf, tbi, annotation, annotation_tbi], [] - vcf_gz_index_tbi") {
+    test("sarscov2 - [vcf, tbi, annotation, annotation_tbi], [], [] - vcf_gz_index_tbi") {
 
         config "./vcf_gz_index_tbi.config"
 
@@ -153,6 +157,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf.gz.tbi', checkIfExists: true)
                 ]
                 input[1] = []
+                input[2] = []
                 """
             }
         }
@@ -171,7 +176,8 @@ nextflow_process {
         }
 
     }
-    test("sarscov2 - [vcf, [], annotation, annotation_tbi], header - bcf_output") {
+
+    test("sarscov2 - [vcf, [], annotation, annotation_tbi], header, [] - bcf_output") {
 
         config "./bcf.config"
 
@@ -189,6 +195,7 @@ nextflow_process {
                     '##INFO=<ID=SGB,Number=1,Type=Float,Description="Segregation based metric.">',
                     '##INFO=<ID=MQ0F,Number=1,Type=Float,Description="Fraction of MQ0 reads (smaller is better)">'
                 ).collectFile(name:"headers.vcf", newLine:true)
+                input[2] = []
                 """
             }
         }
@@ -205,7 +212,43 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - [vcf, tbi, annotation, annotation_tbi], [] - stub") {
+    test("sarscov2 - [vcf, [], annotation, annotation_tbi], header, rename_chrs - vcf_gz_index") {
+
+        config "./vcf_gz_index.config"
+ 
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true),
+                    [],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf.gz.tbi', checkIfExists: true)
+                ]
+                input[1] = Channel.of(
+                    '##INFO=<ID=SGB,Number=1,Type=Float,Description="Segregation based metric.">',
+                    '##INFO=<ID=MQ0F,Number=1,Type=Float,Description="Fraction of MQ0 reads (smaller is better)">'
+                ).collectFile(name:"headers.vcf", newLine:true)
+                input[2] = Channel.of('MT192765.1 renamed').collectFile(name:"rename.txt", newLine:true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.vcf.get(0).get(1)).LinesGzip.contains("##contig=<ID=renamed,length=29829>")},
+                { assert snapshot(
+                    process.out.vcf.collect { it.collect { it instanceof Map ? it : file(it).name }},
+                    process.out.versions
+                ).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - [vcf, tbi, annotation, annotation_tbi], [], [] - stub") {
 
         config "./vcf.config"
         options "-stub"
@@ -221,6 +264,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf.gz.tbi', checkIfExists: true)
                 ]
                 input[1] = []
+                input[2] = []
                 """
             }
         }
@@ -234,7 +278,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - [vcf, tbi, annotation, annotation_tbi], [] - vcf_gz_index - stub") {
+    test("sarscov2 - [vcf, tbi, annotation, annotation_tbi], [], [] - vcf_gz_index - stub") {
 
         config "./vcf_gz_index.config"
         options "-stub"
@@ -250,6 +294,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf.gz.tbi', checkIfExists: true)
                 ]
                 input[1] = []
+                input[2] = []
                 """
             }
         }
@@ -264,7 +309,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - [vcf, tbi, annotation, annotation_tbi], [] - vcf_gz_index_csi - stub") {
+    test("sarscov2 - [vcf, tbi, annotation, annotation_tbi], [], [] - vcf_gz_index_csi - stub") {
 
         config "./vcf_gz_index_csi.config"
         options "-stub"
@@ -280,6 +325,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf.gz.tbi', checkIfExists: true)
                 ]
                 input[1] = []
+                input[2] = []
                 """
             }
         }
@@ -294,7 +340,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - [vcf, tbi, annotation, annotation_tbi], [] - vcf_gz_index_tbi - stub") {
+    test("sarscov2 - [vcf, tbi, annotation, annotation_tbi], [], [] - vcf_gz_index_tbi - stub") {
 
         config "./vcf_gz_index_tbi.config"
         options "-stub"
@@ -310,6 +356,7 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf.gz.tbi', checkIfExists: true)
                 ]
                 input[1] = []
+                input[2] = []
                 """
             }
         }

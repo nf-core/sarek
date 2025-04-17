@@ -4,55 +4,55 @@
             "test_cram.vcf.gz",
             "test_cram.vcf.gz.tbi",
             [
-                "versions.yml:md5,05431a0ab28c85412c8b3582e863a7ab"
+                "versions.yml:md5,2528212fed975c92514cf6641379e878"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-08-14T09:36:54.158605"
+        "timestamp": "2024-10-31T11:20:32.392608448"
     },
     "homo_sapiens - [cram, crai] - fasta - fai - dict - sites - sites_tbi": {
         "content": [
             "test_cram_sites.vcf.gz",
             "test_cram_sites.vcf.gz.tbi",
             [
-                "versions.yml:md5,05431a0ab28c85412c8b3582e863a7ab"
+                "versions.yml:md5,2528212fed975c92514cf6641379e878"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-08-14T09:37:13.77024"
+        "timestamp": "2024-10-31T11:20:49.012555768"
     },
     "homo_sapiens - [bam, bai] - fasta - fai - dict": {
         "content": [
             "test_bam.vcf.gz",
             "test_bam.vcf.gz.tbi",
             [
-                "versions.yml:md5,05431a0ab28c85412c8b3582e863a7ab"
+                "versions.yml:md5,2528212fed975c92514cf6641379e878"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-08-14T09:36:34.77631"
+        "timestamp": "2024-10-31T11:20:09.342159899"
     },
     "homo_sapiens - [cram, crai, dragstr_model] - fasta - fai - dict - sites - sites_tbi": {
         "content": [
             "test_cram_sites_dragstr.vcf.gz",
             "test_cram_sites_dragstr.vcf.gz.tbi",
             [
-                "versions.yml:md5,05431a0ab28c85412c8b3582e863a7ab"
+                "versions.yml:md5,2528212fed975c92514cf6641379e878"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-08-14T09:37:32.967085"
+        "timestamp": "2024-10-31T11:21:06.551678783"
     }
 }

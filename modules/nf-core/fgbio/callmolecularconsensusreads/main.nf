@@ -4,8 +4,8 @@ process FGBIO_CALLMOLECULARCONSENSUSREADS {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/fgbio:2.2.1--hdfd78af_0' :
-        'biocontainers/fgbio:2.2.1--hdfd78af_0' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/87/87626ef674e2f19366ae6214575a114fe80ce598e796894820550731706a84be/data' :
+        'community.wave.seqera.io/library/fgbio:2.4.0--913bad9d47ff8ddc' }"
 
     input:
     tuple val(meta), path(grouped_bam)

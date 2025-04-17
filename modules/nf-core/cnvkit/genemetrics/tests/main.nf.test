@@ -17,8 +17,8 @@ nextflow_process {
                 """
                 input[0] = [
 				    [ id:'test', single_end:false ], // meta map
-				    file('https://raw.githubusercontent.com/etal/cnvkit/v0.9.9/test/formats/amplicon.cnr', checkIfExists: true),
-				    file('https://raw.githubusercontent.com/etal/cnvkit/v0.9.9/test/formats/amplicon.cns', checkIfExists: true)
+				    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cnr/test2.paired_end.sorted.cnr', checkIfExists: true),
+				    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cnr/test2.paired_end.sorted.cns', checkIfExists: true)
 				]
 
                 """
@@ -40,7 +40,7 @@ nextflow_process {
                 """
                 input[0] = [
 				    [ id:'test', single_end:false ], // meta map
-				    file('https://raw.githubusercontent.com/etal/cnvkit/v0.9.9/test/formats/amplicon.cnr', checkIfExists: true),
+				    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cnr/test2.paired_end.sorted.cnr', checkIfExists: true),
 				    []
 				]
 

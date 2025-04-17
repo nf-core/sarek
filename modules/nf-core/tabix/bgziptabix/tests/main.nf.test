@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process TABIX_BGZIPTABIX"
-    script "modules/nf-core/tabix/bgziptabix/main.nf"
+    script "../main.nf"
     process "TABIX_BGZIPTABIX"
 
     tag "modules"
