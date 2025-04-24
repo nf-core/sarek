@@ -8,6 +8,7 @@ include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_NORMAL } from '../bam_variant_c
 include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_TUMOR  } from '../bam_variant_calling_mpileup/main'
 include { BAM_VARIANT_CALLING_SOMATIC_ASCAT             } from '../bam_variant_calling_somatic_ascat/main'
 include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC      } from '../bam_variant_calling_somatic_controlfreec/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ         } from '../bam_variant_calling_tumor_only_lofreq/main'
 include { BAM_VARIANT_CALLING_SOMATIC_MANTA             } from '../bam_variant_calling_somatic_manta/main'
 include { BAM_VARIANT_CALLING_SOMATIC_MUSE              } from '../bam_variant_calling_somatic_muse/main'
 include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2           } from '../bam_variant_calling_somatic_mutect2/main'
@@ -145,6 +146,25 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         versions   = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
+    // LOFREQ
+    // By adding lofreq here it can be executed side by side with somatic (paired) variant callers if all samples have a matched normal
+    if (tools.split(',').contains('lofreq')) {
+        // Remap channel to match module/subworkflow
+        cram_lofreq = cram.map{ meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, tumor_crai ] }
+        cram_lofreq.dump(tag:"cram_lofreq")
+
+        BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ(
+            cram_lofreq,
+            fasta,
+            fasta_fai,
+            intervals,
+            dict
+        )
+
+        vcf_lofreq = BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.vcf
+        versions   = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.versions)
+    }
+
     // MANTA
     if (tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_SOMATIC_MANTA(
@@ -272,6 +292,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     out_msisensorpro
     vcf_all
     vcf_freebayes
+    vcf_lofreq
     vcf_manta
     vcf_muse
     vcf_mutect2
