@@ -76,7 +76,7 @@
                 "reports/bcftools",
                 "reports/bcftools/lofreq",
                 "reports/bcftools/lofreq/sample2",
-                "reports/bcftools/lofreq/sample2/null.lofreq.bcftools_stats.txt",
+                "reports/bcftools/lofreq/sample2/sample2.lofreq.bcftools_stats.txt",
                 "reports/mosdepth",
                 "reports/mosdepth/sample2",
                 "reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt",
@@ -92,25 +92,25 @@
                 "reports/vcftools",
                 "reports/vcftools/lofreq",
                 "reports/vcftools/lofreq/sample2",
-                "reports/vcftools/lofreq/sample2/null.lofreq.FILTER.summary",
-                "reports/vcftools/lofreq/sample2/null.lofreq.TsTv.qual",
+                "reports/vcftools/lofreq/sample2/sample2.lofreq.FILTER.summary",
+                "reports/vcftools/lofreq/sample2/sample2.lofreq.TsTv.qual",
                 "variant_calling",
                 "variant_calling/lofreq",
-                "variant_calling/lofreq/null",
-                "variant_calling/lofreq/null/null.lofreq.vcf.gz",
-                "variant_calling/lofreq/null/null.lofreq.vcf.gz.tbi"
+                "variant_calling/lofreq/sample2",
+                "variant_calling/lofreq/sample2/sample2.lofreq.vcf.gz",
+                "variant_calling/lofreq/sample2/sample2.lofreq.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,da526ed2a2c27e6c60a6b09db78096b3",
-                "bcftools_stats_indel-lengths.txt:md5,ab5ea880d1386d23f0900ccfda088df7",
-                "bcftools_stats_variant_depths.txt:md5,262ea577586b6c2d7a05af8729f410e8",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,284385cde2792e1df08938a582e94760",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,fa7b16f6313920a19fbffd23d5c7c39e",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,8c05f731614d767ad43774c3bda62921",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,a3e6c121ddce0b494f791ec4a4219eec",
-                "multiqc_bcftools_stats.txt:md5,4ab7e8568d6350bb051c06b6d148e051",
+                "bcftools-stats-subtypes.txt:md5,d2263ffeb65e799245867a65f248269a",
+                "bcftools_stats_indel-lengths.txt:md5,415b1fad82ab24ffce67ce5ba9a247cb",
+                "bcftools_stats_variant_depths.txt:md5,f8eb4716d85ec0a29c3367d87f8a412d",
+                "bcftools_stats_vqc_Count_Indels.txt:md5,ab3ac3dcd900cae96cfa0f5ca4545716",
+                "bcftools_stats_vqc_Count_SNP.txt:md5,6d69c335863a249a5901ad957e94cd0d",
+                "bcftools_stats_vqc_Count_Transitions.txt:md5,cf97f88959fb049836ca324758ff9dbd",
+                "bcftools_stats_vqc_Count_Transversions.txt:md5,fa2bed2f89b4433bedf3dda2db73eeb4",
+                "multiqc_bcftools_stats.txt:md5,ac3e225844f65ba4c8e3e91a29442739",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "null.lofreq.bcftools_stats.txt:md5,e8fa41e4094f1c278e913c9f320eb138",
+                "sample2.lofreq.bcftools_stats.txt:md5,9c9de2e4ed2f324adf1912a45d73601f",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample2.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
@@ -118,11 +118,11 @@
                 "sample2.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
                 "sample2.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
                 "sample2.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
-                "null.lofreq.FILTER.summary:md5,8dd8a0c91d5c4a260b462e04f615e502"
+                "sample2.lofreq.FILTER.summary:md5,8dd8a0c91d5c4a260b462e04f615e502"
             ],
             [
                 [
-                    "null.lofreq.vcf.gz",
+                    "sample2.lofreq.vcf.gz",
                     "2ce064ca2c41aa28eea9fab83228f10d"
                 ]
             ]
@@ -131,7 +131,82 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-24T11:16:27.561109173"
+        "timestamp": "2025-04-24T11:26:00.869006568"
+    },
+    "-profile test --tools lofreq --no_intervals somatic_input": {
+        "content": [
+            8,
+            {
+                "LOFREQ": {
+                    "lofreq": "2.1.5"
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.6.0dev"
+                }
+            },
+            [
+                "csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_report.html",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/dict",
+                "reports",
+                "reports/mosdepth",
+                "reports/mosdepth/sample3",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample4",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample3",
+                "reports/samtools/sample3/sample3.recal.cram.stats",
+                "reports/samtools/sample4",
+                "reports/samtools/sample4/sample4.recal.cram.stats",
+                "variant_calling",
+                "variant_calling/lofreq",
+                "variant_calling/lofreq/sample4",
+                "variant_calling/lofreq/sample4/sample4.lofreq.vcf.gz",
+                "variant_calling/lofreq/sample4/sample4.lofreq.vcf.gz.tbi"
+            ],
+            [
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
+                "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
+                "sample3.recal.mosdepth.summary.txt:md5,d2775eb102acc5950f7f53883dcb503d",
+                "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
+                "sample3.recal.per-base.bed.gz.csi:md5,519cc5bf84da0d71b87a88c76f83194e",
+                "sample4.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
+                "sample4.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
+                "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
+                "sample4.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9"
+            ],
+            [
+                [
+                    "sample4.lofreq.vcf.gz",
+                    "a8dd79484623135b4d0cf8e346965c6e"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.5"
+        },
+        "timestamp": "2025-04-24T11:19:12.163707678"
     },
     "-profile test --tools lofreq --no_intervals tumoronly": {
         "content": [
@@ -213,7 +288,7 @@
                 "reports/bcftools",
                 "reports/bcftools/lofreq",
                 "reports/bcftools/lofreq/sample2",
-                "reports/bcftools/lofreq/sample2/null.lofreq.bcftools_stats.txt",
+                "reports/bcftools/lofreq/sample2/sample2.lofreq.bcftools_stats.txt",
                 "reports/mosdepth",
                 "reports/mosdepth/sample2",
                 "reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt",
@@ -226,34 +301,34 @@
                 "reports/vcftools",
                 "reports/vcftools/lofreq",
                 "reports/vcftools/lofreq/sample2",
-                "reports/vcftools/lofreq/sample2/null.lofreq.FILTER.summary",
-                "reports/vcftools/lofreq/sample2/null.lofreq.TsTv.qual",
+                "reports/vcftools/lofreq/sample2/sample2.lofreq.FILTER.summary",
+                "reports/vcftools/lofreq/sample2/sample2.lofreq.TsTv.qual",
                 "variant_calling",
                 "variant_calling/lofreq",
-                "variant_calling/lofreq/null",
-                "variant_calling/lofreq/null/null.lofreq.vcf.gz",
-                "variant_calling/lofreq/null/null.lofreq.vcf.gz.tbi"
+                "variant_calling/lofreq/sample2",
+                "variant_calling/lofreq/sample2/sample2.lofreq.vcf.gz",
+                "variant_calling/lofreq/sample2/sample2.lofreq.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,355dfa868f6c10149805a69266af73bb",
-                "bcftools_stats_indel-lengths.txt:md5,ab5ea880d1386d23f0900ccfda088df7",
-                "bcftools_stats_variant_depths.txt:md5,bd7552804debccdc724fd41900b1294d",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,7dd5f9463ed166580f69acc3a148daf9",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,4981816ad324411f232a99163e88c83a",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,c585a3f0bac2e24a6d8a6b2256071b44",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,b2d39ef084aa9cebc9c1f3c35094daa7",
-                "multiqc_bcftools_stats.txt:md5,5e31215a268cb04ab43464d364b494f0",
+                "bcftools-stats-subtypes.txt:md5,24b64b573666e023fd9a5c45e2e190a7",
+                "bcftools_stats_indel-lengths.txt:md5,415b1fad82ab24ffce67ce5ba9a247cb",
+                "bcftools_stats_variant_depths.txt:md5,511e16a18f16c7581fa6b23c5fe915b5",
+                "bcftools_stats_vqc_Count_Indels.txt:md5,4737c438d39da6aea56dcdc4e677247e",
+                "bcftools_stats_vqc_Count_SNP.txt:md5,c8a5a0719f4ec4aba2afae130ecd8070",
+                "bcftools_stats_vqc_Count_Transitions.txt:md5,fd820749b3d3dec9a91d2aec73416091",
+                "bcftools_stats_vqc_Count_Transversions.txt:md5,96852fe7317649905948b6da55c68bcf",
+                "multiqc_bcftools_stats.txt:md5,0fd6fe6e4ca8fbf409bd2e84a76e9cf0",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "null.lofreq.bcftools_stats.txt:md5,3800c1549fbe1c7a5bfb309734c331ae",
+                "sample2.lofreq.bcftools_stats.txt:md5,e838ce412fc091918059e79727b35785",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
                 "sample2.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
-                "null.lofreq.FILTER.summary:md5,72beda1b57da053eb352204828605a40"
+                "sample2.lofreq.FILTER.summary:md5,72beda1b57da053eb352204828605a40"
             ],
             [
                 [
-                    "null.lofreq.vcf.gz",
+                    "sample2.lofreq.vcf.gz",
                     "a8dd79484623135b4d0cf8e346965c6e"
                 ]
             ]
@@ -262,81 +337,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-24T11:17:52.512994111"
-    },
-    "-profile test --tools lofreq --no_intervals somatic_input": {
-        "content": [
-            8,
-            {
-                "LOFREQ": {
-                    "lofreq": "2.1.5"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
-                }
-            },
-            [
-                "csv",
-                "multiqc",
-                "multiqc/multiqc_data",
-                "multiqc/multiqc_data/multiqc.log",
-                "multiqc/multiqc_data/multiqc_citations.txt",
-                "multiqc/multiqc_data/multiqc_data.json",
-                "multiqc/multiqc_data/multiqc_software_versions.txt",
-                "multiqc/multiqc_data/multiqc_sources.txt",
-                "multiqc/multiqc_report.html",
-                "no_intervals.bed",
-                "no_intervals.bed.gz",
-                "no_intervals.bed.gz.tbi",
-                "pipeline_info",
-                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "reference",
-                "reference/dict",
-                "reports",
-                "reports/mosdepth",
-                "reports/mosdepth/sample3",
-                "reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt",
-                "reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt",
-                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz",
-                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz.csi",
-                "reports/mosdepth/sample4",
-                "reports/mosdepth/sample4/sample4.recal.mosdepth.global.dist.txt",
-                "reports/mosdepth/sample4/sample4.recal.mosdepth.summary.txt",
-                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz",
-                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz.csi",
-                "reports/samtools",
-                "reports/samtools/sample3",
-                "reports/samtools/sample3/sample3.recal.cram.stats",
-                "reports/samtools/sample4",
-                "reports/samtools/sample4/sample4.recal.cram.stats",
-                "variant_calling",
-                "variant_calling/lofreq",
-                "variant_calling/lofreq/sample4",
-                "variant_calling/lofreq/sample4/sample4.lofreq.vcf.gz",
-                "variant_calling/lofreq/sample4/sample4.lofreq.vcf.gz.tbi"
-            ],
-            [
-                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
-                "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
-                "sample3.recal.mosdepth.summary.txt:md5,d2775eb102acc5950f7f53883dcb503d",
-                "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
-                "sample3.recal.per-base.bed.gz.csi:md5,519cc5bf84da0d71b87a88c76f83194e",
-                "sample4.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
-                "sample4.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
-                "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample4.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9"
-            ],
-            [
-                [
-                    "sample4.lofreq.vcf.gz",
-                    "a8dd79484623135b4d0cf8e346965c6e"
-                ]
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
-        },
-        "timestamp": "2025-04-24T11:19:12.163707678"
+        "timestamp": "2025-04-24T11:27:27.937391216"
     }
 }

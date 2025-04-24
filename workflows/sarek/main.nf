@@ -248,8 +248,9 @@ workflow SAREK {
         // and remove patient ID field & null value for further processing [ meta1, [ cram1, crai1 ] ] [ meta2, [ cram2, crai2 ] ]
         cram_variant_calling_tumor_only = cram_variant_calling_tumor_filtered.transpose().map{ it -> [it[1], it[2], it[3]] }
 
-        // TODO: cram_variant_calling_tumor_only is empty when each tumor sample has a matched normal, 
-        // but we still want lofreq to be executed when each tumor sample has a paired normal
+        // TODO: cram_variant_calling_tumor_only is empty when each tumor sample has a matched normal,
+        // but we still want lofreq to be executed when each tumor sample has a paired normal.
+        // At the moment this is solved by adding the tool to both the SOMATIC_ALL and the TUMOR_ONLY_ALL subworkflows
 
         if (params.only_paired_variant_calling) {
             // Normal only samples
