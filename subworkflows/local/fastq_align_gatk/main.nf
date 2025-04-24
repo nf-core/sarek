@@ -137,7 +137,6 @@ workflow FASTQ_ALIGN_GATK {
         //
         if (!params.skip_bbsplit) {
             // prepare genome for bbsplit ...
-            ch_versions = Channel.empty()
             BBMAP_BBSPLIT (
                 reads_for_alignment,
                 bbsplit_index,
