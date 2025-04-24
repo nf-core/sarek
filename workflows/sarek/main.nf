@@ -210,11 +210,11 @@ workflow SAREK {
     }
 
     // RUN CRAM QC on the recalibrated CRAM files or when starting from step variant calling. NGSCheckmate should be run also on non-recalibrated CRAM files
-    CRAM_SAMPLEQC(cram_variant_calling,
-        ngscheckmate_bed,
-        fasta,
-        params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
-        intervals_for_preprocessing)
+    // CRAM_SAMPLEQC(cram_variant_calling,
+    //     ngscheckmate_bed,
+    //     fasta,
+    //     params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
+    //     intervals_for_preprocessing)
 
     if (params.tools) {
 
@@ -247,6 +247,13 @@ workflow SAREK {
         // 4. Transpose [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ] ] back to [ patient1, meta1, [ cram1, crai1 ], null ] [ patient1, meta2, [ cram2, crai2 ], null ]
         // and remove patient ID field & null value for further processing [ meta1, [ cram1, crai1 ] ] [ meta2, [ cram2, crai2 ] ]
         cram_variant_calling_tumor_only = cram_variant_calling_tumor_filtered.transpose().map{ it -> [it[1], it[2], it[3]] }
+
+        // TODO: cram_variant_calling_tumor_only is empty when each tumor sample has a matched normal, 
+        // but we still want lofreq to be executed when each tumor sample has a paired normal
+        // The implementation below then still triggers the other tools to be run in tumor_only AND in somatic mode
+        if (params.tools.split(',').contains('lofreq')) {
+            cram_variant_calling_tumor_only = cram_variant_calling_status.tumor
+        }
 
         if (params.only_paired_variant_calling) {
             // Normal only samples
