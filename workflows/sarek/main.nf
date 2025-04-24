@@ -227,7 +227,7 @@ workflow SAREK {
     }
 
     if (params.step == 'annotate') {
-        // TODO: how does this actually work?
+
         cram_variant_calling = Channel.empty()
 
     }
