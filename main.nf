@@ -314,9 +314,10 @@ workflow NFCORE_SAREK {
         vep_fasta,
         vep_genome,
         vep_species,
-        skip_bbsplit,
         bbsplit_fasta_list,
-        bbsplit_index
+        bbsplit_index,
+        skip_bbsplit
+
     )
     emit:
     multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html

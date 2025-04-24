@@ -103,9 +103,9 @@ workflow SAREK {
         vep_fasta
         vep_genome
         vep_species
-        skip_bbsplit
         bbsplit_fasta_list
         bbsplit_index
+        skip_bbsplit
 
     main:
 
