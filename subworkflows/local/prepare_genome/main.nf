@@ -25,8 +25,8 @@ include { UNZIP as UNZIP_ALLELES                    } from '../../../modules/nf-
 include { UNZIP as UNZIP_GC                         } from '../../../modules/nf-core/unzip/main'
 include { UNZIP as UNZIP_LOCI                       } from '../../../modules/nf-core/unzip/main'
 include { UNZIP as UNZIP_RT                         } from '../../../modules/nf-core/unzip/main'
-include { UNTAR as UNTAR_BBSPLIT_INDEX      } from '../../../modules/nf-core/untar'
-include { BBMAP_BBSPLIT                     } from '../../../modules/nf-core/bbmap/bbsplit'
+include { UNTAR as UNTAR_BBSPLIT_INDEX              } from '../../../modules/nf-core/untar'
+include { BBMAP_BBSPLIT                             } from '../../../modules/nf-core/bbmap/bbsplit'
 
 workflow PREPARE_GENOME {
     take:
