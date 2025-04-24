@@ -902,6 +902,7 @@ Germline VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, 
 ### Normalization
 
 _Experimental Feature_ All VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, `Manta`, `bcftools mpileup`, `Strelka`, or `Tiddit` are normalized with `bcftools norm`. The field `SOURCE` is added to the VCF header to report the variant caller.
+The concatenized VCFs are not normalized at the moment.
 
 <details markdown="1">
 <summary>Normalized VCF-files for normal and tumor samples</summary>
