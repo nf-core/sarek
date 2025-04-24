@@ -42,8 +42,8 @@ workflow PREPARE_GENOME {
     known_indels         // channel: [optional]  known_indels
     known_snps           // channel: [optional]  known_snps
     pon                  // channel: [optional]  pon
-    bbsplit_fasta_list
-    bbsplit_index
+    bbsplit_fasta_list   // params.bbsplit_fasta_list
+    bbsplit_index        // params.bbsplit_index
 
 
     main:
