@@ -104,15 +104,7 @@
                 "variant_calling/deepvariant/test/test.deepvariant.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,649c3e9f4523fc1a440bc87b2a03088d",
-                "bcftools_stats_indel-lengths.txt:md5,72aa7dc3d5e2539b8ed641740a1581d2",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,f3b6e6a2dc9b239442f72bfefb214b17",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,089c893882eecf82dbb5fbd4693f32cf",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,86c3b46b6f3760a65c857f31c015babe",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,481489cb4832592d1b29520cfe649fb0",
-                "multiqc_bcftools_stats.txt:md5,26db745e7579cb57c44925ef3adf2ce1",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,16bbeff0f916fd2a22c24929b106a310",
                 "test.deepvariant.bcftools_stats.txt:md5,4602909f8d2553ba7e74042f26494798",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
@@ -131,7 +123,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-11T14:38:27.982559729"
+        "timestamp": "2025-04-16T09:39:53.625857329"
     },
     "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv -with-stub": {
         "content": [
@@ -261,15 +253,7 @@
                 "variant_calling/deepvariant/test/test.deepvariant.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,649c3e9f4523fc1a440bc87b2a03088d",
-                "bcftools_stats_indel-lengths.txt:md5,72aa7dc3d5e2539b8ed641740a1581d2",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,f3b6e6a2dc9b239442f72bfefb214b17",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,089c893882eecf82dbb5fbd4693f32cf",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,86c3b46b6f3760a65c857f31c015babe",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,481489cb4832592d1b29520cfe649fb0",
-                "multiqc_bcftools_stats.txt:md5,26db745e7579cb57c44925ef3adf2ce1",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,16bbeff0f916fd2a22c24929b106a310",
                 "test.deepvariant.bcftools_stats.txt:md5,4602909f8d2553ba7e74042f26494798",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
@@ -288,6 +272,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-11T14:39:55.846816678"
+        "timestamp": "2025-04-16T09:41:08.469515192"
     }
 }

@@ -108,16 +108,7 @@
                 "variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,263e11ae538c79dc1097b8ad661e962c",
-                "bcftools_stats_indel-lengths.txt:md5,260ceea988df1f55d8e21c63c744b805",
-                "bcftools_stats_variant_depths.txt:md5,c3c1968b97863ddd95d4e2138d55004c",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,02902d93862d570d359fa8743215ba5e",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,497dea690a34a2fb439091ff225b2b15",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,91e513e216b3ea122446613926a347a3",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,b360c52c7b93a230e1ac85d0c22301ce",
-                "multiqc_bcftools_stats.txt:md5,27ffb57be51011f98f501dfa72969d83",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,3cf43b8b6bec4b4d947ebbf784aefabd",
                 "test.haplotypecaller.bcftools_stats.txt:md5,a20ca016416f2b455fa7b0c548687aac",
                 "test.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "test.recal.mosdepth.summary.txt:md5,4f0d231060cbde4efdd673863bd2fb59",
@@ -135,9 +126,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-03-11T18:37:31.662110722"
+        "timestamp": "2025-04-08T18:37:40.731073561"
     },
     "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20 --skip_tools haplotypecaller_filter": {
         "content": [
@@ -251,16 +242,7 @@
                 "variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,263e11ae538c79dc1097b8ad661e962c",
-                "bcftools_stats_indel-lengths.txt:md5,260ceea988df1f55d8e21c63c744b805",
-                "bcftools_stats_variant_depths.txt:md5,c3c1968b97863ddd95d4e2138d55004c",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,02902d93862d570d359fa8743215ba5e",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,497dea690a34a2fb439091ff225b2b15",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,91e513e216b3ea122446613926a347a3",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,b360c52c7b93a230e1ac85d0c22301ce",
-                "multiqc_bcftools_stats.txt:md5,27ffb57be51011f98f501dfa72969d83",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,3cf43b8b6bec4b4d947ebbf784aefabd",
                 "test.haplotypecaller.bcftools_stats.txt:md5,a20ca016416f2b455fa7b0c548687aac",
                 "test.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "test.recal.mosdepth.region.dist.txt:md5,3a2030e5e8af7bc12720c3a5592bf921",
@@ -281,9 +263,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-03-11T18:36:35.97166866"
+        "timestamp": "2025-04-08T18:36:29.810674869"
     },
     "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20 --no_intervals": {
         "content": [
@@ -402,16 +384,7 @@
                 "variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,10b4e17740e6dc504d9124da9f5b2938",
-                "bcftools_stats_indel-lengths.txt:md5,bfbbf6282fd049ee2a73892ec61da031",
-                "bcftools_stats_variant_depths.txt:md5,511f7a2e7e2faacc357fc3c218244f5d",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,9e878b1922de6e7a40634f19fa4d6122",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,5a7d41466f1c0c36a70b7d9b47f8a9d0",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,b0c09e5a3d202f98132593ab375c5773",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,dfbc90c8aec266de1a7c3d8ad105579d",
-                "multiqc_bcftools_stats.txt:md5,b84a5c17c2092da955600bc8caf0086d",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,375bb5db4cac4c9c0dfdee0816a88b2e",
                 "test.haplotypecaller.filtered.bcftools_stats.txt:md5,83e1b9b77606129d621f3c571dd67adb",
                 "test.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "test.recal.mosdepth.summary.txt:md5,4f0d231060cbde4efdd673863bd2fb59",
@@ -433,9 +406,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-03-11T18:35:34.491106672"
+        "timestamp": "2025-04-08T18:35:09.995367174"
     },
     "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20": {
         "content": [
@@ -557,16 +530,7 @@
                 "variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,10b4e17740e6dc504d9124da9f5b2938",
-                "bcftools_stats_indel-lengths.txt:md5,bfbbf6282fd049ee2a73892ec61da031",
-                "bcftools_stats_variant_depths.txt:md5,511f7a2e7e2faacc357fc3c218244f5d",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,9e878b1922de6e7a40634f19fa4d6122",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,5a7d41466f1c0c36a70b7d9b47f8a9d0",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,b0c09e5a3d202f98132593ab375c5773",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,dfbc90c8aec266de1a7c3d8ad105579d",
-                "multiqc_bcftools_stats.txt:md5,b84a5c17c2092da955600bc8caf0086d",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,375bb5db4cac4c9c0dfdee0816a88b2e",
                 "test.haplotypecaller.filtered.bcftools_stats.txt:md5,83e1b9b77606129d621f3c571dd67adb",
                 "test.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "test.recal.mosdepth.region.dist.txt:md5,3a2030e5e8af7bc12720c3a5592bf921",
@@ -591,8 +555,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-03-11T18:34:28.317069028"
+        "timestamp": "2025-04-08T18:15:00.291203647"
     }
 }

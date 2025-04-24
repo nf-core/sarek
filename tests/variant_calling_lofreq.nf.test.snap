@@ -101,14 +101,6 @@
                 "variant_calling/lofreq/sample2/sample2.lofreq.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,d2263ffeb65e799245867a65f248269a",
-                "bcftools_stats_indel-lengths.txt:md5,415b1fad82ab24ffce67ce5ba9a247cb",
-                "bcftools_stats_variant_depths.txt:md5,f8eb4716d85ec0a29c3367d87f8a412d",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,ab3ac3dcd900cae96cfa0f5ca4545716",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,6d69c335863a249a5901ad957e94cd0d",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,cf97f88959fb049836ca324758ff9dbd",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,fa2bed2f89b4433bedf3dda2db73eeb4",
-                "multiqc_bcftools_stats.txt:md5,ac3e225844f65ba4c8e3e91a29442739",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "sample2.lofreq.bcftools_stats.txt:md5,9c9de2e4ed2f324adf1912a45d73601f",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
@@ -129,9 +121,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-03-13T14:09:11.017074706"
+        "timestamp": "2025-04-08T18:40:01.560207224"
     },
     "-profile test --tools lofreq --no_intervals tumoronly": {
         "content": [
@@ -235,14 +227,6 @@
                 "variant_calling/lofreq/sample2/sample2.lofreq.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,24b64b573666e023fd9a5c45e2e190a7",
-                "bcftools_stats_indel-lengths.txt:md5,415b1fad82ab24ffce67ce5ba9a247cb",
-                "bcftools_stats_variant_depths.txt:md5,511e16a18f16c7581fa6b23c5fe915b5",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,4737c438d39da6aea56dcdc4e677247e",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,c8a5a0719f4ec4aba2afae130ecd8070",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,fd820749b3d3dec9a91d2aec73416091",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,96852fe7317649905948b6da55c68bcf",
-                "multiqc_bcftools_stats.txt:md5,0fd6fe6e4ca8fbf409bd2e84a76e9cf0",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "sample2.lofreq.bcftools_stats.txt:md5,e838ce412fc091918059e79727b35785",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
@@ -260,8 +244,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-03-13T14:10:14.630087982"
+        "timestamp": "2025-04-08T18:41:53.969824357"
     }
 }
