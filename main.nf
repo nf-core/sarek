@@ -60,10 +60,10 @@ params.vep_cache_version       = getGenomeAttribute('vep_cache_version')
 params.vep_genome              = getGenomeAttribute('vep_genome')
 params.vep_species             = getGenomeAttribute('vep_species')
 
-aligner = params.aligner
-skip_bbsplit = params.skip_bbsplit
+aligner            = params.aligner
+skip_bbsplit       = params.skip_bbsplit
 bbsplit_fasta_list = params.bbsplit_fasta_list
-bbsplit_index = params.bbsplit_index
+bbsplit_index      = params.bbsplit_index
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
