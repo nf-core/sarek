@@ -6,14 +6,14 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ {
     input     // channel: [mandatory] [ meta, tumor_cram, tumor_crai ]
     fasta     // channel: [mandatory] [ fasta ]
     fai       // channel: [mandatory] [ fasta_fai ]
-    intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ]
+    ch_intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ]
     dict      // channel: /path/to/reference/fasta/dictionary
 
     main:
     versions = Channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
-    input_intervals = input.combine(intervals)
+    input_intervals = input.combine(ch_intervals)
         // Move num_intervals to meta map
         .map {meta, tumor_cram, tumor_crai, intervals, num_intervals -> [meta + [ num_intervals:num_intervals ], tumor_cram, tumor_crai, intervals]}
 
