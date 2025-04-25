@@ -54,7 +54,6 @@
                 "sample2.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
                 "sample2.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
-                "sample2.mutect2.artifactprior.tar.gz:md5,86a2cc7c6614cfa8c48eb9c0cde010c2",
                 "sample2.mutect2.vcf.gz.stats:md5,76f749c53212d72e98801f6030fbf8a6"
             ]
         ],
@@ -139,7 +138,6 @@
                 "sample4.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
                 "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
                 "sample4.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
-                "sample4_vs_sample3.mutect2.artifactprior.tar.gz:md5,4457ce3a838985370c6ada7a8b080362",
                 "sample4_vs_sample3.mutect2.vcf.gz.stats:md5,bd657dd9abf6e2354224bb0d20ba181e"
             ]
         ],
@@ -215,7 +213,6 @@
                 "sample4.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
                 "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
                 "sample4.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
-                "sample4_vs_sample3.mutect2.artifactprior.tar.gz:md5,a55d2a419b71f0ec67e13ad5a945a122",
                 "sample4_vs_sample3.mutect2.vcf.gz.stats:md5,4300e84631ee258660f95e846511d021"
             ]
         ],
@@ -286,7 +283,6 @@
                 "sample2.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
                 "sample2.recal.regions.bed.gz:md5,fb0efeba20ea272b7b709cf65246689e",
                 "sample2.recal.regions.bed.gz.csi:md5,19b91a252986eb863c8be568809a40f8",
-                "sample2.mutect2.artifactprior.tar.gz:md5,973d3232ef80adc3b6fadfafeaceaac9",
                 "sample2.mutect2.vcf.gz.stats:md5,76f749c53212d72e98801f6030fbf8a6"
             ]
         ],
