@@ -94,10 +94,7 @@
                 "sample1.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
             [
-                [
-                    "sample1.tiddit.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "sample1.tiddit.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
@@ -201,10 +198,7 @@
                 "sample2.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
             [
-                [
-                    "sample2.tiddit.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "sample2.tiddit.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
@@ -341,22 +335,10 @@
                 "sample4_vs_sample3.tiddit_sv_merge.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
             ],
             [
-                [
-                    "sample3.tiddit.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample4_vs_sample3.tiddit.normal.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample4_vs_sample3.tiddit.tumor.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample4_vs_sample3.tiddit_sv_merge.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "sample3.tiddit.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.tiddit.normal.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.tiddit.tumor.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.tiddit_sv_merge.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
