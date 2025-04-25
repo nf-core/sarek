@@ -353,40 +353,16 @@
             ],
             "No BAM files",
             [
-                [
-                    "test.md.cram",
-                    "59ecc5c82c7af1283eea7507c590c831"
-                ],
-                [
-                    "test2.md.cram",
-                    "bac87cf9290577fd9a4def63e046031f"
-                ],
-                [
-                    "test.recal.cram",
-                    "654909615a48db30bdc14ec4d9d7d17c"
-                ],
-                [
-                    "test2.recal.cram",
-                    "f4205ab086600ba2927e1468dc732976"
-                ]
+                "test.md.cram:md5,59ecc5c82c7af1283eea7507c590c831",
+                "test2.md.cram:md5,bac87cf9290577fd9a4def63e046031f",
+                "test.recal.cram:md5,654909615a48db30bdc14ec4d9d7d17c",
+                "test2.recal.cram:md5,f4205ab086600ba2927e1468dc732976"
             ],
             [
-                [
-                    "test.strelka.genome.vcf.gz",
-                    "16437a040679d88b7d84a9276f793d6c"
-                ],
-                [
-                    "test.strelka.variants.vcf.gz",
-                    "666f835fdaf4952a179cdedd40c9d565"
-                ],
-                [
-                    "test2_vs_test.strelka.somatic_indels.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "test2_vs_test.strelka.somatic_snvs.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "test.strelka.genome.vcf.gz:md5,16437a040679d88b7d84a9276f793d6c",
+                "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565",
+                "test2_vs_test.strelka.somatic_indels.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "test2_vs_test.strelka.somatic_snvs.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
