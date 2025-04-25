@@ -55,13 +55,18 @@
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
                 "sample2.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
                 "sample2.mutect2.vcf.gz.stats:md5,76f749c53212d72e98801f6030fbf8a6"
+            ],
+            [
+                [
+                    "sample2.mutect2.vcf.gz:md5,7ccd1d6d414e65a0ce25a8f0ddd2cc8f"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-25T10:54:02.964009545"
+        "timestamp": "2025-04-25T12:39:41.027336438"
     },
     "-profile test --tools mutect2 somatic": {
         "content": [
@@ -139,13 +144,18 @@
                 "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
                 "sample4.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
                 "sample4_vs_sample3.mutect2.vcf.gz.stats:md5,bd657dd9abf6e2354224bb0d20ba181e"
+            ],
+            [
+                [
+                    "sample4_vs_sample3.mutect2.vcf.gz:md5,5a75d8a1c59a59ba6e7ffd04b02b204c"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-25T10:41:44.070715329"
+        "timestamp": "2025-04-25T11:21:29.484633889"
     },
     "-profile test --tools mutect2 somatic --no_intervals": {
         "content": [
@@ -214,13 +224,18 @@
                 "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
                 "sample4.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
                 "sample4_vs_sample3.mutect2.vcf.gz.stats:md5,4300e84631ee258660f95e846511d021"
+            ],
+            [
+                [
+                    "sample4_vs_sample3.mutect2.vcf.gz:md5,5a75d8a1c59a59ba6e7ffd04b02b204c"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-25T10:46:15.702671027"
+        "timestamp": "2025-04-25T12:30:33.456103562"
     },
     "-profile test --tools mutect2 tumoronly": {
         "content": [
@@ -284,12 +299,17 @@
                 "sample2.recal.regions.bed.gz:md5,fb0efeba20ea272b7b709cf65246689e",
                 "sample2.recal.regions.bed.gz.csi:md5,19b91a252986eb863c8be568809a40f8",
                 "sample2.mutect2.vcf.gz.stats:md5,76f749c53212d72e98801f6030fbf8a6"
+            ],
+            [
+                [
+                    "sample2.mutect2.vcf.gz:md5,7ccd1d6d414e65a0ce25a8f0ddd2cc8f"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-25T10:50:10.857004309"
+        "timestamp": "2025-04-25T12:35:05.947340208"
     }
 }
