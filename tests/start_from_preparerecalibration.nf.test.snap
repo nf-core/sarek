@@ -164,14 +164,8 @@
             "No BAM files",
             "No CRAM files",
             [
-                [
-                    "test.strelka.genome.vcf.gz",
-                    "325ea84ccf1ec1cf7a6c5c4aae1c0d1"
-                ],
-                [
-                    "test.strelka.variants.vcf.gz",
-                    "3a3b3e67614ec91f4f0b88999dff454b"
-                ]
+                "test.strelka.genome.vcf.gz:md5,325ea84ccf1ec1cf7a6c5c4aae1c0d1",
+                "test.strelka.variants.vcf.gz:md5,3a3b3e67614ec91f4f0b88999dff454b"
             ]
         ],
         "meta": {
@@ -283,14 +277,8 @@
             "No BAM files",
             "No CRAM files",
             [
-                [
-                    "test.strelka.genome.vcf.gz",
-                    "325ea84ccf1ec1cf7a6c5c4aae1c0d1"
-                ],
-                [
-                    "test.strelka.variants.vcf.gz",
-                    "3a3b3e67614ec91f4f0b88999dff454b"
-                ]
+                "test.strelka.genome.vcf.gz:md5,325ea84ccf1ec1cf7a6c5c4aae1c0d1",
+                "test.strelka.variants.vcf.gz:md5,3a3b3e67614ec91f4f0b88999dff454b"
             ]
         ],
         "meta": {
@@ -378,10 +366,7 @@
             ],
             "No BAM files",
             [
-                [
-                    "test.recal.cram",
-                    "463ac3b905fbf4ddf113a94dbfa8d69f"
-                ]
+                "test.recal.cram:md5,463ac3b905fbf4ddf113a94dbfa8d69f"
             ]
         ],
         "meta": {

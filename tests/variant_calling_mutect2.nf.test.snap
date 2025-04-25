@@ -57,9 +57,7 @@
                 "sample2.mutect2.vcf.gz.stats:md5,76f749c53212d72e98801f6030fbf8a6"
             ],
             [
-                [
-                    "sample2.mutect2.vcf.gz:md5,7ccd1d6d414e65a0ce25a8f0ddd2cc8f"
-                ]
+                "sample2.mutect2.vcf.gz:md5,7ccd1d6d414e65a0ce25a8f0ddd2cc8f"
             ]
         ],
         "meta": {
@@ -146,9 +144,7 @@
                 "sample4_vs_sample3.mutect2.vcf.gz.stats:md5,bd657dd9abf6e2354224bb0d20ba181e"
             ],
             [
-                [
-                    "sample4_vs_sample3.mutect2.vcf.gz:md5,5a75d8a1c59a59ba6e7ffd04b02b204c"
-                ]
+                "sample4_vs_sample3.mutect2.vcf.gz:md5,5a75d8a1c59a59ba6e7ffd04b02b204c"
             ]
         ],
         "meta": {
@@ -226,9 +222,7 @@
                 "sample4_vs_sample3.mutect2.vcf.gz.stats:md5,4300e84631ee258660f95e846511d021"
             ],
             [
-                [
-                    "sample4_vs_sample3.mutect2.vcf.gz:md5,5a75d8a1c59a59ba6e7ffd04b02b204c"
-                ]
+                "sample4_vs_sample3.mutect2.vcf.gz:md5,5a75d8a1c59a59ba6e7ffd04b02b204c"
             ]
         ],
         "meta": {
@@ -301,9 +295,7 @@
                 "sample2.mutect2.vcf.gz.stats:md5,76f749c53212d72e98801f6030fbf8a6"
             ],
             [
-                [
-                    "sample2.mutect2.vcf.gz:md5,7ccd1d6d414e65a0ce25a8f0ddd2cc8f"
-                ]
+                "sample2.mutect2.vcf.gz:md5,7ccd1d6d414e65a0ce25a8f0ddd2cc8f"
             ]
         ],
         "meta": {

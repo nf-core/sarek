@@ -269,18 +269,9 @@
             ],
             "No CRAM files",
             [
-                [
-                    "test.sorted.bam",
-                    "6934a96fff1eaa2f70b31ab7e11d3598"
-                ],
-                [
-                    "test.md.bam",
-                    "6934a96fff1eaa2f70b31ab7e11d3598"
-                ],
-                [
-                    "test.recal.bam",
-                    "95a95d43e1db35c58b311dee4338c05b"
-                ]
+                    "test.sorted.bam:md5,6934a96fff1eaa2f70b31ab7e11d3598",
+                    "test.md.bam:md5,6934a96fff1eaa2f70b31ab7e11d3598",
+                    "test.recal.bam:md5,95a95d43e1db35c58b311dee4338c05b"
             ]
         ],
         "meta": {

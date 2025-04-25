@@ -334,14 +334,8 @@
             ],
             "No BAM files",
             [
-                [
-                    "test.md.cram",
-                    "9a65845bff32f674fd01e736743dd4b5"
-                ],
-                [
-                    "test.recal.cram",
-                    "6730f24d62a7bc9aa1e9fb0f89ae9cde"
-                ]
+                    "test.md.cram:md5,9a65845bff32f674fd01e736743dd4b5",
+                    "test.recal.cram:md5,6730f24d62a7bc9aa1e9fb0f89ae9cde"
             ]
         ],
         "meta": {
@@ -709,14 +703,8 @@
             ],
             "No BAM files",
             [
-                [
-                    "test.md.cram",
-                    "f41be8bf8086fb481d5bdbabd88d31ad"
-                ],
-                [
-                    "test.recal.cram",
-                    "c17dac685fd968605e941c937887c646"
-                ]
+                "test.md.cram:md5,f41be8bf8086fb481d5bdbabd88d31ad",
+                "test.recal.cram:md5,c17dac685fd968605e941c937887c646"
             ]
         ],
         "meta": {

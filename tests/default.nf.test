@@ -28,8 +28,8 @@ nextflow_pipeline {
             def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
             // vcf_files: All vcf files
             def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
+            assert workflow.success
             assertAll(
-                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
@@ -42,9 +42,9 @@ nextflow_pipeline {
                     // All bam files
                     bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> [file.getName(), bam(file.toString()).readsMD5] },
                     // All cram files
-                    cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] },
+                    cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
                 ).match() }
             )
         }

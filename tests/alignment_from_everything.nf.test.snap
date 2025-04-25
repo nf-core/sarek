@@ -400,54 +400,18 @@
             ],
             "No CRAM files",
             [
-                [
-                    "test.sorted.bam",
-                    "59ecc5c82c7af1283eea7507c590c831"
-                ],
-                [
-                    "test2.sorted.bam",
-                    "59ecc5c82c7af1283eea7507c590c831"
-                ],
-                [
-                    "test3.sorted.bam",
-                    "59ecc5c82c7af1283eea7507c590c831"
-                ],
-                [
-                    "test_bam.sorted.bam",
-                    "6934a96fff1eaa2f70b31ab7e11d3598"
-                ],
-                [
-                    "test.md.bam",
-                    "59ecc5c82c7af1283eea7507c590c831"
-                ],
-                [
-                    "test2.md.bam",
-                    "59ecc5c82c7af1283eea7507c590c831"
-                ],
-                [
-                    "test3.md.bam",
-                    "59ecc5c82c7af1283eea7507c590c831"
-                ],
-                [
-                    "test_bam.md.bam",
-                    "6934a96fff1eaa2f70b31ab7e11d3598"
-                ],
-                [
-                    "test.recal.bam",
-                    "654909615a48db30bdc14ec4d9d7d17c"
-                ],
-                [
-                    "test2.recal.bam",
-                    "654909615a48db30bdc14ec4d9d7d17c"
-                ],
-                [
-                    "test3.recal.bam",
-                    "654909615a48db30bdc14ec4d9d7d17c"
-                ],
-                [
-                    "test_bam.recal.bam",
-                    "95a95d43e1db35c58b311dee4338c05b"
-                ]
+                "test.sorted.bam:md5,59ecc5c82c7af1283eea7507c590c831",
+                "test2.sorted.bam:md5,59ecc5c82c7af1283eea7507c590c831",
+                "test3.sorted.bam:md5,59ecc5c82c7af1283eea7507c590c831",
+                "test_bam.sorted.bam:md5,6934a96fff1eaa2f70b31ab7e11d3598",
+                "test.md.bam:md5,59ecc5c82c7af1283eea7507c590c831",
+                "test2.md.bam:md5,59ecc5c82c7af1283eea7507c590c831",
+                "test3.md.bam:md5,59ecc5c82c7af1283eea7507c590c831",
+                "test_bam.md.bam:md5,6934a96fff1eaa2f70b31ab7e11d3598",
+                "test.recal.bam:md5,654909615a48db30bdc14ec4d9d7d17c",
+                "test2.recal.bam:md5,654909615a48db30bdc14ec4d9d7d17c",
+                "test3.recal.bam:md5,654909615a48db30bdc14ec4d9d7d17c",
+                "test_bam.recal.bam:md5,95a95d43e1db35c58b311dee4338c05b"
             ]
         ],
         "meta": {

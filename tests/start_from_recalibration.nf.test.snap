@@ -29,15 +29,13 @@
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ],
             "No BAM files",
-            [
-                
-            ]
+            "No CRAM files"
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T17:24:11.111444273"
+        "timestamp": "2025-04-25T14:47:08.480545225"
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
@@ -142,21 +140,15 @@
             "No BAM files",
             "No CRAM files",
             [
-                [
-                    "test.strelka.genome.vcf.gz",
-                    "325ea84ccf1ec1cf7a6c5c4aae1c0d1"
-                ],
-                [
-                    "test.strelka.variants.vcf.gz",
-                    "3a3b3e67614ec91f4f0b88999dff454b"
-                ]
+                "test.strelka.genome.vcf.gz:md5,325ea84ccf1ec1cf7a6c5c4aae1c0d1",
+                "test.strelka.variants.vcf.gz:md5,3a3b3e67614ec91f4f0b88999dff454b"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-03-11T13:37:30.336211705"
+        "timestamp": "2025-04-25T14:46:10.828807912"
     },
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
@@ -261,21 +253,15 @@
             "No BAM files",
             "No CRAM files",
             [
-                [
-                    "test.strelka.genome.vcf.gz",
-                    "325ea84ccf1ec1cf7a6c5c4aae1c0d1"
-                ],
-                [
-                    "test.strelka.variants.vcf.gz",
-                    "3a3b3e67614ec91f4f0b88999dff454b"
-                ]
+                "test.strelka.genome.vcf.gz:md5,325ea84ccf1ec1cf7a6c5c4aae1c0d1",
+                "test.strelka.variants.vcf.gz:md5,3a3b3e67614ec91f4f0b88999dff454b"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T17:22:22.935239947"
+        "timestamp": "2025-04-25T14:45:07.515187647"
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null": {
         "content": [
@@ -332,16 +318,13 @@
             ],
             "No BAM files",
             [
-                [
-                    "test.recal.cram",
-                    "463ac3b905fbf4ddf113a94dbfa8d69f"
-                ]
+                "test.recal.cram:md5,463ac3b905fbf4ddf113a94dbfa8d69f"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T17:21:24.589512163"
+        "timestamp": "2025-04-25T14:43:35.172716124"
     }
 }

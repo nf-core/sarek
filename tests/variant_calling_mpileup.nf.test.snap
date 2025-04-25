@@ -117,10 +117,7 @@
                 "sample2.bcftools.TsTv.count:md5,01df95fcb4df593f7e1b214d90ebdb59"
             ],
             [
-                [
-                    "sample2.bcftools.vcf.gz",
-                    "d6320fc5d154ebd33f1980a1de9a04d3"
-                ]
+                "sample2.bcftools.vcf.gz:md5,d6320fc5d154ebd33f1980a1de9a04d3"
             ]
         ],
         "meta": {
@@ -250,10 +247,7 @@
                 "sample1.bcftools.TsTv.count:md5,bfa998e75cbcb3da66f823cf39ef1e48"
             ],
             [
-                [
-                    "sample1.bcftools.vcf.gz",
-                    "921356ebe67c2be9f574d9743f5b62"
-                ]
+                "sample1.bcftools.vcf.gz:md5,921356ebe67c2be9f574d9743f5b62"
             ]
         ],
         "meta": {
@@ -383,10 +377,7 @@
                 "sample2.bcftools.TsTv.count:md5,e5d20f81fc97f7ee97fb6cb6bd851047"
             ],
             [
-                [
-                    "sample2.bcftools.vcf.gz",
-                    "ea3ceb582bdbe09ebed4d35d2970bc23"
-                ]
+                "sample2.bcftools.vcf.gz:md5,ea3ceb582bdbe09ebed4d35d2970bc23"
             ]
         ],
         "meta": {
@@ -513,10 +504,7 @@
                 "sample1.bcftools.TsTv.count:md5,6c937125d7bac4c491bea50f18cba43a"
             ],
             [
-                [
-                    "sample1.bcftools.vcf.gz",
-                    "84cbd4e6b04ed1be7cac7ca6d45b5b5f"
-                ]
+                "sample1.bcftools.vcf.gz:md5,84cbd4e6b04ed1be7cac7ca6d45b5b5f"
             ]
         ],
         "meta": {

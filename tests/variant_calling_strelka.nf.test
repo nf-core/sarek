@@ -29,8 +29,8 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             // vcf_files: All vcf files
             def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
+            assert workflow.success
             assertAll(
-                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
@@ -41,7 +41,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
                 ).match() }
             )
         }
@@ -69,8 +69,8 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             // vcf_files: All vcf files
             def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
+            assert workflow.success
             assertAll(
-                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
@@ -81,7 +81,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
                 ).match() }
             )
         }
@@ -110,8 +110,8 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             // vcf_files: All vcf files
             def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
+            assert workflow.success
             assertAll(
-                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
@@ -122,7 +122,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
                 ).match() }
             )
         }
@@ -150,8 +150,8 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             // vcf_files: All vcf files
             def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
+            assert workflow.success
             assertAll(
-                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
@@ -162,7 +162,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
                 ).match() }
             )
         }
@@ -191,8 +191,8 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             // vcf_files: All vcf files
             def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
+            assert workflow.success
             assertAll(
-                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
@@ -203,7 +203,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
                 ).match() }
             )
         }

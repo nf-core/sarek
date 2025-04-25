@@ -178,18 +178,9 @@
                 "test2.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,62c2d1f8765618c454bf4455c2298344"
             ],
             [
-                [
-                    "sample1.cnvcall.vcf",
-                    "6f8c517f62715c47674c79ffd1e9babb"
-                ],
-                [
-                    "sample2.cnvcall.vcf",
-                    "35662b51f071469c6227be15114eb824"
-                ],
-                [
-                    "sample4_vs_sample3.cnvcall.vcf",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "sample1.cnvcall.vcf:md5,6f8c517f62715c47674c79ffd1e9babb",
+                "sample2.cnvcall.vcf:md5,35662b51f071469c6227be15114eb824",
+                "sample4_vs_sample3.cnvcall.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
@@ -282,10 +273,7 @@
                 "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,4153756b30abc934f10717c023bd262f"
             ],
             [
-                [
-                    "sample1.cnvcall.vcf",
-                    "6f8c517f62715c47674c79ffd1e9babb"
-                ]
+                "sample1.cnvcall.vcf:md5,6f8c517f62715c47674c79ffd1e9babb"
             ]
         ],
         "meta": {
@@ -422,14 +410,8 @@
                 "test2.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,62c2d1f8765618c454bf4455c2298344"
             ],
             [
-                [
-                    "sample3.cnvcall.vcf",
-                    "6f8c517f62715c47674c79ffd1e9babb"
-                ],
-                [
-                    "sample4_vs_sample3.cnvcall.vcf",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "sample3.cnvcall.vcf:md5,6f8c517f62715c47674c79ffd1e9babb",
+                "sample4_vs_sample3.cnvcall.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
@@ -520,10 +502,7 @@
                 "test2.paired_end.recalibrated.sorted.tumor_only.call.cns:md5,70a308c6db7acf1a5fd623936cac6412"
             ],
             [
-                [
-                    "sample2.cnvcall.vcf",
-                    "35662b51f071469c6227be15114eb824"
-                ]
+                "sample2.cnvcall.vcf:md5,35662b51f071469c6227be15114eb824"
             ]
         ],
         "meta": {

@@ -94,9 +94,7 @@
                 "test.mutect2.vcf.gz.stats:md5,6340205d9cc91fc3c2d243fc151c210b"
             ],
             [
-                [
-                    "test.mutect2.vcf.gz:md5,24b427e374c06bb68b3441af886fd7a1"
-                ]
+                "test.mutect2.vcf.gz:md5,24b427e374c06bb68b3441af886fd7a1"
             ]
         ],
         "meta": {
@@ -186,9 +184,7 @@
                 "test.mutect2.vcf.gz.stats:md5,bd9ff0f343dd60fdd2860fdeff617a51"
             ],
             [
-                [
-                    "test.mutect2.vcf.gz:md5,f8c8f1e1964e60690dd09b0bec2cb3f"
-                ]
+                "test.mutect2.vcf.gz:md5,f8c8f1e1964e60690dd09b0bec2cb3f"
             ]
         ],
         "meta": {

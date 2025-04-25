@@ -45,8 +45,8 @@ nextflow_pipeline {
             def vcf_files   = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
             // txt_files: MuSE txt files
             def txt_files   = getAllFilesFromDir(params.outdir, include: ['**/*.MuSE.txt'])
+            assert workflow.success
             assertAll(
-                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
@@ -59,9 +59,9 @@ nextflow_pipeline {
                     // MuSE txt files will differ in their first line (holds Build Date & Time) between conda and docker/singularity
                     txt_files.collect{ file -> [ file.getName(), file.readLines()[2..-1].join('\n').md5() ] },
                     // All bam files
-                    bam_files.collect{ file -> [ file.getName(), bam(file.toString(), fasta).getReadsMD5() ] },
+                    bam_files.collect{ file -> file.getName() + ":md5," + bam(file.toString(), fasta).getReadsMD5() },
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
                 ).match() }
             )
         }
@@ -106,8 +106,8 @@ nextflow_pipeline {
             def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
             // vcf_files: All vcf files
             def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
+            assert workflow.success
             assertAll(
-                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
@@ -118,9 +118,9 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All bam files
-                    bam_files.collect{ file -> [ file.getName(), bam(file.toString(), fasta).getReadsMD5() ] },
+                    bam_files,
                     // All vcf files
-                    vcf_files.collect { file -> file }
+                    vcf_files
                 ).match() }
             )
         }

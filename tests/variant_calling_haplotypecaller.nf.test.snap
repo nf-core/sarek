@@ -118,10 +118,7 @@
                 "test.haplotypecaller.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
             [
-                [
-                    "test.haplotypecaller.vcf.gz",
-                    "9d9d103327d59d17e778b663b56136fb"
-                ]
+                "test.haplotypecaller.vcf.gz:md5,9d9d103327d59d17e778b663b56136fb"
             ]
         ],
         "meta": {
@@ -255,10 +252,7 @@
                 "test.haplotypecaller.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
             [
-                [
-                    "test.haplotypecaller.vcf.gz",
-                    "9d9d103327d59d17e778b663b56136fb"
-                ]
+                "test.haplotypecaller.vcf.gz:md5,9d9d103327d59d17e778b663b56136fb"
             ]
         ],
         "meta": {
@@ -394,14 +388,8 @@
                 "test.haplotypecaller.filtered.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
             [
-                [
-                    "test.haplotypecaller.filtered.vcf.gz",
-                    "df2040bf1bee0252581824d11d5d87d1"
-                ],
-                [
-                    "test.haplotypecaller.vcf.gz",
-                    "9d9d103327d59d17e778b663b56136fb"
-                ]
+                "test.haplotypecaller.filtered.vcf.gz:md5,df2040bf1bee0252581824d11d5d87d1",
+                "test.haplotypecaller.vcf.gz:md5,9d9d103327d59d17e778b663b56136fb"
             ]
         ],
         "meta": {
@@ -543,14 +531,8 @@
                 "test.haplotypecaller.filtered.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
             [
-                [
-                    "test.haplotypecaller.filtered.vcf.gz",
-                    "df2040bf1bee0252581824d11d5d87d1"
-                ],
-                [
-                    "test.haplotypecaller.vcf.gz",
-                    "9d9d103327d59d17e778b663b56136fb"
-                ]
+                "test.haplotypecaller.filtered.vcf.gz:md5,df2040bf1bee0252581824d11d5d87d1",
+                "test.haplotypecaller.vcf.gz:md5,9d9d103327d59d17e778b663b56136fb"
             ]
         ],
         "meta": {

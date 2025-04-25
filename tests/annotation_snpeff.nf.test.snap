@@ -99,10 +99,7 @@
                 "test_snpEff.genes.txt:md5,130536bf0237d7f3f746d32aaa32840a"
             ],
             [
-                [
-                    "test_snpEff.ann.vcf.gz",
-                    "fd266e623365c7d1837bc9eb088fe70c"
-                ]
+                "test_snpEff.ann.vcf.gz:md5,fd266e623365c7d1837bc9eb088fe70c"
             ]
         ],
         "meta": {

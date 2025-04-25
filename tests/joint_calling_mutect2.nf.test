@@ -47,7 +47,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
                 ).match() }
             )
         }
@@ -92,7 +92,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
                 ).match() }
             )
         }

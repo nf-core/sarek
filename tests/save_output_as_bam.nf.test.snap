@@ -34,10 +34,7 @@
             ],
             "No stable content",
             [
-                [
-                    "test.sorted.bam",
-                    "5534c350547fd253f0f2b9450362bed"
-                ]
+                "test.sorted.bam:md5,5534c350547fd253f0f2b9450362bed"
             ]
         ],
         "meta": {

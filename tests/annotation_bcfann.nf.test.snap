@@ -31,10 +31,7 @@
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ],
             [
-                [
-                    "test_BCF.ann.vcf.gz",
-                    "bc7bf3ee9e8430e064c539eb81e59bf9"
-                ]
+                "test_BCF.ann.vcf.gz:md5,bc7bf3ee9e8430e064c539eb81e59bf9"
             ]
         ],
         "meta": {

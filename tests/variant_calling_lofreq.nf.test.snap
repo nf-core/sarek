@@ -113,10 +113,7 @@
                 "sample2.lofreq.FILTER.summary:md5,8dd8a0c91d5c4a260b462e04f615e502"
             ],
             [
-                [
-                    "sample2.lofreq.vcf.gz",
-                    "2ce064ca2c41aa28eea9fab83228f10d"
-                ]
+                "sample2.lofreq.vcf.gz:md5,2ce064ca2c41aa28eea9fab83228f10d"
             ]
         ],
         "meta": {
@@ -236,10 +233,7 @@
                 "sample2.lofreq.FILTER.summary:md5,72beda1b57da053eb352204828605a40"
             ],
             [
-                [
-                    "sample2.lofreq.vcf.gz",
-                    "a8dd79484623135b4d0cf8e346965c6e"
-                ]
+                "sample2.lofreq.vcf.gz:md5,a8dd79484623135b4d0cf8e346965c6e"
             ]
         ],
         "meta": {

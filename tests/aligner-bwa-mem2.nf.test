@@ -28,8 +28,8 @@ nextflow_pipeline {
             // Fasta file for cram verification with nft-bam
             def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
             def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
+            assert workflow.success
             assertAll(
-                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
@@ -40,7 +40,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] }
+                    cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 }
                 ).match() }
             )
         }
@@ -65,8 +65,8 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assert workflow.success
             assertAll(
-                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),

@@ -24,8 +24,8 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             // bam_files: All bam files
             def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
+            assert workflow.success
             assertAll(
-                { assert workflow.success},
                 { assert snapshot(
                     // Number of successful tasks
                     workflow.trace.succeeded().size(),
@@ -36,7 +36,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path.isEmpty() ? 'No stable content' : stable_path,
                     // All bam files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> [file.getName(), bam(file.toString()).readsMD5] }
+                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," + bam(file.toString()).readsMD5 }
                 ).match() }
             )
         }

@@ -6,15 +6,22 @@ nextflow_pipeline {
     tag "pipeline_sarek"
     tag "cpu"
 
-    test("-profile test --aligner dragmap --save_reference skip QC/recal/md") {
+    test("-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 20") {
 
         when {
             params {
-                aligner = 'dragmap'
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+                intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed'
+                input = "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv"
                 outdir = "$outputDir"
-                save_reference = true
-                skip_tools = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
-                tools = ''
+                step = "variant_calling"
+                tools = 'haplotypecaller'
+                joint_germline = true
+                dbsnp_vqsr = false
+                known_snps_vqsr = false
+                known_indels_vqsr = false
+                wes = true
+                nucleotides_per_second = 20
             }
         }
 
@@ -23,11 +30,8 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
+            // vcf_files: All vcf files
+            def vcf_files   = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
             assert workflow.success
             assertAll(
                 { assert snapshot(
@@ -39,24 +43,29 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path,
-                    // All cram files
-                    cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 }
+                    // All vcf files
+                    vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
                 ).match() }
             )
         }
     }
 
-    test("-profile test --aligner dragmap --save_reference --build_only_index") {
+    test("-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 100") {
 
         when {
             params {
-                aligner = 'dragmap'
-                build_only_index = true
-                input = false
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+                intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed'
+                input = "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv"
                 outdir = "$outputDir"
-                save_reference = true
-                skip_tools = 'multiqc'
-                tools = ''
+                step = "variant_calling"
+                tools = 'haplotypecaller'
+                joint_germline = true
+                dbsnp_vqsr = false
+                known_snps_vqsr = false
+                known_indels_vqsr = false
+                wes = true
+                nucleotides_per_second = 100
             }
         }
 
@@ -65,6 +74,8 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // vcf_files: All vcf files
+            def vcf_files   = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
             assert workflow.success
             assertAll(
                 { assert snapshot(
@@ -75,7 +86,9 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path
+                    stable_path,
+                    // All vcf files
+                    vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
                 ).match() }
             )
         }

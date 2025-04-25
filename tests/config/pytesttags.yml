@@ -97,27 +97,6 @@ sentieon/haplotyper_skip_filter:
   - tests/test_sentieon_haplotyper_skip_filter.yml
 
 ## joint_germline
-joint_germline:
-  - conf/modules/haplotypecaller.config
-  - modules/nf-core/bcftools/sort/**
-  - modules/nf-core/gatk4/applyvqsr/**
-  - modules/nf-core/gatk4/cnnscorevariants/**
-  - modules/nf-core/gatk4/filtervarianttranches/**
-  - modules/nf-core/gatk4/genomicsdbimport/**
-  - modules/nf-core/gatk4/genotypegvcfs/**
-  - modules/nf-core/gatk4/haplotypecaller/**
-  - modules/nf-core/gatk4/mergevcfs/**
-  - modules/nf-core/gatk4/variantrecalibrator/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/samtools/index/**
-  - modules/nf-core/samtools/merge/**
-  - subworkflows/local/bam_joint_calling_germline_gatk/**
-  - subworkflows/local/bam_merge_index_samtools/**
-  - subworkflows/local/bam_variant_calling_germline_all/**
-  - subworkflows/local/bam_variant_calling_haplotypecaller/**
-  - subworkflows/local/vcf_variant_filtering_gatk/**
-  - tests/csv/3.0/mapped_joint_bam.csv
-  - tests/test_joint_germline.yml
 
 ## sentieon_dnascope_joint_germline
 sentieon/dnascope_joint_germline:

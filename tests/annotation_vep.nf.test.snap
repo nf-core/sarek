@@ -275,10 +275,7 @@
                 "vep.txt:md5,60a5d57c60308aba2aa6206f903d27e9"
             ],
             [
-                [
-                    "test_VEP.ann.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "test_VEP.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {

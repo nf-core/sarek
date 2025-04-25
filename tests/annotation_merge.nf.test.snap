@@ -100,18 +100,9 @@
                 "test_snpEff.genes.txt:md5,130536bf0237d7f3f746d32aaa32840a"
             ],
             [
-                [
-                    "test_VEP.ann.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "test_snpEff.ann.vcf.gz",
-                    "fd266e623365c7d1837bc9eb088fe70c"
-                ],
-                [
-                    "test_snpEff_VEP.ann.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "test_VEP.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "test_snpEff.ann.vcf.gz:md5,fd266e623365c7d1837bc9eb088fe70c",
+                "test_snpEff_VEP.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
@@ -212,10 +203,7 @@
                 "vep.txt:md5,bf54f689bb0ccab5e1566e48373f768c"
             ],
             [
-                [
-                    "test_snpEff_VEP.ann.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "test_snpEff_VEP.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {

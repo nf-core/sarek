@@ -158,14 +158,8 @@
                 "test.recal.regions.bed.gz.csi:md5,080731cdedcd389e72135f048d6e2e00"
             ],
             [
-                [
-                    "test.md.cram",
-                    "2f11e4fe3390b8ad0a1852616fd1da04"
-                ],
-                [
-                    "test.recal.cram",
-                    "463ac3b905fbf4ddf113a94dbfa8d69f"
-                ]
+                "test.md.cram:md5,2f11e4fe3390b8ad0a1852616fd1da04",
+                "test.recal.cram:md5,463ac3b905fbf4ddf113a94dbfa8d69f"
             ],
             "No BAM files"
         ],
@@ -334,14 +328,8 @@
                 "test.recal.regions.bed.gz.csi:md5,080731cdedcd389e72135f048d6e2e00"
             ],
             [
-                [
-                    "test.md.cram",
-                    "2f11e4fe3390b8ad0a1852616fd1da04"
-                ],
-                [
-                    "test.recal.cram",
-                    "463ac3b905fbf4ddf113a94dbfa8d69f"
-                ]
+                "test.md.cram:md5,2f11e4fe3390b8ad0a1852616fd1da04",
+                "test.recal.cram:md5,463ac3b905fbf4ddf113a94dbfa8d69f"
             ],
             "No BAM files"
         ],
@@ -483,10 +471,7 @@
                 "test.sorted.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d"
             ],
             [
-                [
-                    "test.recal.cram",
-                    "463ac3b905fbf4ddf113a94dbfa8d69f"
-                ]
+                "test.recal.cram:md5,463ac3b905fbf4ddf113a94dbfa8d69f"
             ],
             "No BAM files"
         ],
