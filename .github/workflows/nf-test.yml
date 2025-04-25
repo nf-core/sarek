@@ -64,7 +64,7 @@ jobs:
         env:
           NFT_VER: ${{ env.NFT_VER }}
         with:
-          max_shards: 7
+          max_shards: 15
           tags: "cpu"
 
       - name: debug
