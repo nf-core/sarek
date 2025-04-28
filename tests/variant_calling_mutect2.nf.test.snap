@@ -56,6 +56,8 @@
                 "sample2.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
                 "sample2.mutect2.vcf.gz.stats:md5,76f749c53212d72e98801f6030fbf8a6"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample2.mutect2.vcf.gz:md5,7ccd1d6d414e65a0ce25a8f0ddd2cc8f"
             ]
@@ -64,7 +66,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-25T12:39:41.027336438"
+        "timestamp": "2025-04-28T18:56:37.013336498"
     },
     "-profile test --tools mutect2 somatic": {
         "content": [
@@ -143,6 +145,8 @@
                 "sample4.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
                 "sample4_vs_sample3.mutect2.vcf.gz.stats:md5,bd657dd9abf6e2354224bb0d20ba181e"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample4_vs_sample3.mutect2.vcf.gz:md5,5a75d8a1c59a59ba6e7ffd04b02b204c"
             ]
@@ -151,7 +155,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-25T11:21:29.484633889"
+        "timestamp": "2025-04-28T18:45:31.780604858"
     },
     "-profile test --tools mutect2 somatic --no_intervals": {
         "content": [
@@ -221,6 +225,8 @@
                 "sample4.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
                 "sample4_vs_sample3.mutect2.vcf.gz.stats:md5,4300e84631ee258660f95e846511d021"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample4_vs_sample3.mutect2.vcf.gz:md5,5a75d8a1c59a59ba6e7ffd04b02b204c"
             ]
@@ -229,7 +235,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-25T12:30:33.456103562"
+        "timestamp": "2025-04-28T18:49:42.950290454"
     },
     "-profile test --tools mutect2 tumoronly": {
         "content": [
@@ -294,6 +300,8 @@
                 "sample2.recal.regions.bed.gz.csi:md5,19b91a252986eb863c8be568809a40f8",
                 "sample2.mutect2.vcf.gz.stats:md5,76f749c53212d72e98801f6030fbf8a6"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample2.mutect2.vcf.gz:md5,7ccd1d6d414e65a0ce25a8f0ddd2cc8f"
             ]
@@ -302,6 +310,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-25T12:35:05.947340208"
+        "timestamp": "2025-04-28T18:53:10.711560282"
     }
 }
