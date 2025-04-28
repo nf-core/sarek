@@ -298,11 +298,6 @@
                 "variant_calling/strelka/test2_vs_test/test2_vs_test.strelka.somatic_snvs.vcf.gz.tbi"
             ],
             [
-                "bcftools_stats_indel-lengths.txt:md5,a180ee1e52441923154a87e86949fe5f",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,90d196606a7945f77edd6bea2b4625ed",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,9682508dd65bb9889fe073b1bec59666",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,9682508dd65bb9889fe073b1bec59666",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,9682508dd65bb9889fe073b1bec59666",
                 "fastqc-status-check-heatmap.txt:md5,eeb4e7e7a45f4223c86bfe3aea81f90b",
                 "fastqc_adapter_content_plot.txt:md5,cc7a809f9f001c10646ee4199ccdb40f",
                 "fastqc_per_base_n_content_plot.txt:md5,1eba855ae0fa5b5ed4a1f90d1c97f759",
@@ -318,7 +313,6 @@
                 "mosdepth_cov_dist.txt:md5,cb92686a4d6b7dcdeeee0ac13a63f369",
                 "mosdepth_cumcov_dist.txt:md5,cb92686a4d6b7dcdeeee0ac13a63f369",
                 "mosdepth_perchrom.txt:md5,e2bac78b61847b15c755dc7069670939",
-                "multiqc_bcftools_stats.txt:md5,7b8f1b48aa1c33067679168a3f0d9fd1",
                 "multiqc_citations.txt:md5,ace4ca89138a5f1e2be289c157c00bd9",
                 "multiqc_fastqc.txt:md5,2fd25e8c81f962594b801d5a9df3cd87",
                 "multiqc_samtools_stats.txt:md5,60aa328e68503436f51e9a9b13dc6665",
@@ -327,7 +321,6 @@
                 "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,d81e84864ecb732951a137e88d87a263",
                 "samtools_alignment_plot.txt:md5,e757696d1f7107df2bd4ad92f607272e",
-                "vcftools_tstv_by_count.txt:md5,9d3f23467779f62d81573894f71ba0d4",
                 "test.strelka.variants.bcftools_stats.txt:md5,550430d0b8336ac650b7e50bdfdc914c",
                 "test2_vs_test.strelka.somatic_indels.bcftools_stats.txt:md5,2ce8bffbfbb88c4da6a5239b11dc2f44",
                 "test2_vs_test.strelka.somatic_snvs.bcftools_stats.txt:md5,869e2d3a46760e2bea9b2e027002848d",

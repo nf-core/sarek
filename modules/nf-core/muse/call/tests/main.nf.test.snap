@@ -11,7 +11,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,67bc768725ca9e5b73241808eda48eff"
+                    "versions.yml:md5,182c20f31394d1d406428dab96ec3b3e"
                 ],
                 "txt": [
                     [
@@ -22,12 +22,12 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,67bc768725ca9e5b73241808eda48eff"
+                    "versions.yml:md5,182c20f31394d1d406428dab96ec3b3e"
                 ]
             },
             {
                 "MUSE_CALL": {
-                    "MuSE": "v2.1.2"
+                    "MuSE": "2.1.2"
                 }
             }
         ],
@@ -35,12 +35,12 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-18T10:38:10.225172"
+        "timestamp": "2025-04-04T11:48:22.223976"
     },
     "human - bam": {
         "content": [
             [
-                "versions.yml:md5,67bc768725ca9e5b73241808eda48eff"
+                "versions.yml:md5,182c20f31394d1d406428dab96ec3b3e"
             ],
             [
                 "##MuSE_call=\"MuSE -f genome.fasta -O test -n 2 call test2.paired_end.recalibrated.sorted.bam test.paired_end.recalibrated.sorted.bam\"",
@@ -78,6 +78,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-18T11:35:05.915076"
+        "timestamp": "2025-04-04T11:48:09.865014"
     }
 }
