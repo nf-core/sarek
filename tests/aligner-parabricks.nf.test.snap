@@ -151,10 +151,7 @@
                 "test-test_L1.recal.regions.bed.gz.csi:md5,a3ac5a5d620082a4a1061656742d8e30"
             ],
             [
-                [
-                    "test-test_L1.cram",
-                    "56ead4e3efd69b35a8e539b1b697213d"
-                ]
+                "test-test_L1.cram:md5,56ead4e3efd69b35a8e539b1b697213d"
             ],
             "No BAM files"
         ],
