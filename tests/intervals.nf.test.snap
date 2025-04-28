@@ -268,9 +268,7 @@
                 "preprocessing/mapped/test/test.sorted.cram.crai",
                 "reference"
             ],
-            [
-                
-            ],
+            "No stable content",
             "No BAM files",
             [
                 "test.sorted.cram:md5,5534c350547fd253f0f2b9450362bed"
@@ -281,7 +279,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T12:37:55.210285925"
+        "timestamp": "2025-04-28T17:41:55.437559015"
     },
     "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
         "content": [
@@ -319,9 +317,7 @@
                 "preprocessing/mapped/test/test.sorted.cram.crai",
                 "reference"
             ],
-            [
-                
-            ],
+            "No stable content",
             "No BAM files",
             [
                 "test.sorted.cram:md5,5534c350547fd253f0f2b9450362bed"
@@ -332,6 +328,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T12:39:09.655453562"
+        "timestamp": "2025-04-28T17:43:12.251284585"
     }
 }
