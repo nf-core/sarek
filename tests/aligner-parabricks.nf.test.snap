@@ -153,7 +153,8 @@
             [
                 "test-test_L1.cram:md5,56ead4e3efd69b35a8e539b1b697213d"
             ],
-            "No BAM files"
+            "No BAM files",
+            "No VCF files"
         ],
         "meta": {
             "nf-test": "0.9.2",
