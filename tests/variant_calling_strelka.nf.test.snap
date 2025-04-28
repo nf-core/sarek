@@ -155,6 +155,8 @@
                 "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,4fc17fa5625b4d1dcc5d791b1eb22d85",
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample3.strelka.genome.vcf.gz:md5,aac21bf1449d3c7361c14054b08f8ed1",
                 "sample3.strelka.variants.vcf.gz:md5,dbea8798de92494c7a1fbf686c363696",
@@ -164,9 +166,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T19:07:32.569636643"
+        "timestamp": "2025-04-28T17:15:06.745770667"
     },
     "-profile test --tools strelka germline": {
         "content": [
@@ -283,6 +285,8 @@
                 "sample1.strelka.variants.FILTER.summary:md5,fef8aeadd3b0f3b8c040c0da03bf1cbd",
                 "sample1.strelka.variants.TsTv.count:md5,c5b7a8eda2526d899098439ae4c06a49"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample1.strelka.genome.vcf.gz:md5,aac21bf1449d3c7361c14054b08f8ed1",
                 "sample1.strelka.variants.vcf.gz:md5,dbea8798de92494c7a1fbf686c363696"
@@ -290,9 +294,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T19:03:45.13680224"
+        "timestamp": "2025-04-28T17:11:35.623933346"
     },
     "-profile test --tools strelka --only_paired_variant_calling": {
         "content": [
@@ -476,6 +480,8 @@
                 "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,4fc17fa5625b4d1dcc5d791b1eb22d85",
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample1.strelka.genome.vcf.gz:md5,aac21bf1449d3c7361c14054b08f8ed1",
                 "sample1.strelka.variants.vcf.gz:md5,dbea8798de92494c7a1fbf686c363696",
@@ -485,9 +491,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-03-04T09:56:53.864219322"
+        "timestamp": "2025-04-28T17:09:46.255572597"
     },
     "-profile test --tools strelka --no_intervals germline": {
         "content": [
@@ -607,6 +613,8 @@
                 "sample1.strelka.variants.FILTER.summary:md5,8697a0a983314e98b99b5f6038af65f6",
                 "sample1.strelka.variants.TsTv.count:md5,1481854d2a765f5641856ecf95ca4097"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample1.strelka.genome.vcf.gz:md5,37d003dfa8685cac4791cbde1af9b92d",
                 "sample1.strelka.variants.vcf.gz:md5,6e7f36df8e96c983ef075d376431d72a"
@@ -614,9 +622,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T19:05:33.400863666"
+        "timestamp": "2025-04-28T17:13:11.18647863"
     },
     "-profile test --tools strelka --no_intervals somatic": {
         "content": [
@@ -777,6 +785,8 @@
                 "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,7a81b11aa29fec73d5bc872b7b58f8aa",
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,a922c51ca3b2ea7cdcfa09e9c8c55d52"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample3.strelka.genome.vcf.gz:md5,37d003dfa8685cac4791cbde1af9b92d",
                 "sample3.strelka.variants.vcf.gz:md5,6e7f36df8e96c983ef075d376431d72a",
@@ -786,8 +796,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-02-25T10:48:09.841891367"
+        "timestamp": "2025-04-28T17:17:27.522397279"
     }
 }

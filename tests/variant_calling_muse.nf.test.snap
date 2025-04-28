@@ -391,14 +391,15 @@
                 "sample4_vs_sample3.muse.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
             ],
             [
+                "sample3.bam:md5,891da60dc1cc5c6455bfc1442aea0982",
+                "sample4.bam:md5,36856b3e6dd1bc0f10688b9d8c02faa8"
+            ],
+            "No CRAM files",
+            [
                 [
                     "sample4_vs_sample3.MuSE.txt",
                     "32961f7d718b4a1114f168253e50ef9e"
                 ]
-            ],
-            [
-                "sample3.bam:md5,891da60dc1cc5c6455bfc1442aea0982",
-                "sample4.bam:md5,36856b3e6dd1bc0f10688b9d8c02faa8"
             ],
             [
                 "sample4_vs_sample3.muse.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
@@ -408,6 +409,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-25T15:19:03.494989534"
+        "timestamp": "2025-04-28T16:39:38.797249403"
     }
 }

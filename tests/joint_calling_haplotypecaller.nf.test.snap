@@ -152,6 +152,8 @@
                 "joint_germline.FILTER.summary:md5,2a4eb7abfb2e64e45d53fdda17530b7f",
                 "joint_germline.TsTv.count:md5,949fa16c755189c23a37f0ea8ecd1b26"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "joint_germline.vcf.gz:md5,ff85bb32174d961ebe75c0383d2dabe",
                 "testN.haplotypecaller.g.vcf.gz:md5,44590f25a9ed621929879cefc601f95a",
@@ -162,7 +164,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-25T14:17:45.04686922"
+        "timestamp": "2025-04-28T12:48:43.452937651"
     },
     "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 100": {
         "content": [
@@ -314,6 +316,8 @@
                 "joint_germline.FILTER.summary:md5,2a4eb7abfb2e64e45d53fdda17530b7f",
                 "joint_germline.TsTv.count:md5,949fa16c755189c23a37f0ea8ecd1b26"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "joint_germline.vcf.gz:md5,ff85bb32174d961ebe75c0383d2dabe",
                 "testN.haplotypecaller.g.vcf.gz:md5,44590f25a9ed621929879cefc601f95a",
@@ -324,6 +328,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-25T14:19:21.396933538"
+        "timestamp": "2025-04-28T12:50:12.209282297"
     }
 }

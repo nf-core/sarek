@@ -28,8 +28,15 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // bam_files: All bam files
+            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
+            // cram_files: All cram files
+            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
+            // Fasta file for cram verification with nft-bam
+            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
             // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
             assert workflow.success
             assertAll(
                 { assert snapshot(
@@ -40,9 +47,13 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable files' : stable_path,
+                    stable_path.isEmpty() ? 'No stable content' : stable_path,
+                    // All cram files
+                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
+                    // All cram files
+                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
+                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
@@ -65,8 +76,15 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // bam_files: All bam files
+            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
+            // cram_files: All cram files
+            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
+            // Fasta file for cram verification with nft-bam
+            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
             // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
             assert workflow.success
             assertAll(
                 { assert snapshot(
@@ -77,9 +95,13 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable files' : stable_path,
+                    stable_path.isEmpty() ? 'No stable content' : stable_path,
+                    // All cram files
+                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
+                    // All cram files
+                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[8..16], path(file.toString()).vcf.summary] }
+                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[8..16], path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
@@ -110,8 +132,15 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // bam_files: All bam files
+            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
+            // cram_files: All cram files
+            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
+            // Fasta file for cram verification with nft-bam
+            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
             // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
             assert workflow.success
             assertAll(
                 { assert snapshot(
@@ -122,9 +151,13 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path,
+                    stable_path.isEmpty() ? 'No stable content' : stable_path,
+                    // All cram files
+                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
+                    // All cram files
+                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
+                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
@@ -151,8 +184,15 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // bam_files: All bam files
+            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
+            // cram_files: All cram files
+            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
+            // Fasta file for cram verification with nft-bam
+            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
             // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
             assert workflow.success
             assertAll(
                 { assert snapshot(
@@ -163,9 +203,13 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path,
+                    stable_path.isEmpty() ? 'No stable content' : stable_path,
+                    // All cram files
+                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
+                    // All cram files
+                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[8..16], path(file.toString()).vcf.summary] }
+                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[8..16], path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
@@ -197,8 +241,15 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // bam_files: All bam files
+            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
+            // cram_files: All cram files
+            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
+            // Fasta file for cram verification with nft-bam
+            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
             // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
             assert workflow.success
             assertAll(
                 { assert snapshot(
@@ -209,9 +260,13 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path,
+                    stable_path.isEmpty() ? 'No stable content' : stable_path,
+                    // All cram files
+                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
+                    // All cram files
+                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
+                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }
@@ -243,8 +298,15 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // bam_files: All bam files
+            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
+            // cram_files: All cram files
+            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
+            // Fasta file for cram verification with nft-bam
+            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
             // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf', '**/*.vcf.gz'])
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
             assert workflow.success
             assertAll(
                 { assert snapshot(
@@ -255,9 +317,13 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path,
+                    stable_path.isEmpty() ? 'No stable content' : stable_path,
+                    // All cram files
+                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
+                    // All cram files
+                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
                     // All vcf files
-                    vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[8..16], path(file.toString()).vcf.summary] }
+                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[8..16], path(file.toString()).vcf.summary] }
                 ).match() }
             )
         }

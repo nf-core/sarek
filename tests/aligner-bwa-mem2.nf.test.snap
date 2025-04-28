@@ -34,13 +34,16 @@
                 "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
                 "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
-            ]
+            ],
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files"
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.09.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2024-10-08T11:26:09.886689"
+        "timestamp": "2025-04-28T12:08:59.280392296"
     },
     "-profile test --aligner bwa-mem2 --save_reference skip QC/recal/md": {
         "content": [
@@ -97,14 +100,16 @@
                 "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
                 "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
             ],
+            "No BAM files",
             [
                 "test.sorted.cram:md5,5534c350547fd253f0f2b9450362bed"
-            ]
+            ],
+            "No VCF files"
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-03-10T09:22:17.999701651"
+        "timestamp": "2025-04-28T12:08:06.242648273"
     }
 }

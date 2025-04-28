@@ -33,15 +33,16 @@
                 "reference"
             ],
             "No stable content",
+            "No BAM files",
             [
                 "test.sorted.cram:md5,5534c350547fd253f0f2b9450362bed"
             ],
-            "No BAM files"
+            "No VCF files"
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-03-10T11:13:00.011014027"
+        "timestamp": "2025-04-28T14:22:21.021247713"
     }
 }

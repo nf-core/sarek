@@ -93,6 +93,8 @@
                 "sample3.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
                 "test.mutect2.vcf.gz.stats:md5,6340205d9cc91fc3c2d243fc151c210b"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "test.mutect2.vcf.gz:md5,24b427e374c06bb68b3441af886fd7a1"
             ]
@@ -101,7 +103,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-25T13:10:44.600127062"
+        "timestamp": "2025-04-28T13:12:41.954291312"
     },
     "-profile test --input tests/csv/3.0/recalibrated_tumoronly_joint.csv --tools mutect2 --joint_mutect2": {
         "content": [
@@ -183,6 +185,8 @@
                 "sample3.recal.regions.bed.gz.csi:md5,19b91a252986eb863c8be568809a40f8",
                 "test.mutect2.vcf.gz.stats:md5,bd9ff0f343dd60fdd2860fdeff617a51"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "test.mutect2.vcf.gz:md5,f8c8f1e1964e60690dd09b0bec2cb3f"
             ]
@@ -191,6 +195,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-25T13:42:30.595563142"
+        "timestamp": "2025-04-28T13:43:47.178040106"
     }
 }

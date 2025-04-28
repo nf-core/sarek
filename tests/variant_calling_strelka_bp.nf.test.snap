@@ -200,6 +200,8 @@
                 "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,7a81b11aa29fec73d5bc872b7b58f8aa",
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,a922c51ca3b2ea7cdcfa09e9c8c55d52"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -212,9 +214,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-03-04T10:08:15.898618532"
+        "timestamp": "2025-04-28T17:21:44.356378218"
     },
     "-profile test --tools manta,strelka somatic": {
         "content": [
@@ -414,6 +416,8 @@
                 "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,4fc17fa5625b4d1dcc5d791b1eb22d85",
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -426,8 +430,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-03-04T10:06:09.203619973"
+        "timestamp": "2025-04-28T17:19:41.248210165"
     }
 }

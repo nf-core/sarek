@@ -80,6 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1874](https://github.com/nf-core/sarek/pull/1874) - Migrate pipeline pytest joint_calling haplotypecaller tests to nf-test
 - [1874](https://github.com/nf-core/sarek/pull/1874) - Migrate pipeline pytest joint_calling mutect2 tests to nf-test
 - [1874](https://github.com/nf-core/sarek/pull/1874) - Migrate pipeline pytest mutect2 tests to nf-test
+- [1874](https://github.com/nf-core/sarek/pull/1874) - More global cohesion in the all nf-test tests
 
 #### Fixed
 

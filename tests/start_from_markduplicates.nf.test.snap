@@ -157,17 +157,18 @@
                 "test.recal.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
                 "test.recal.regions.bed.gz.csi:md5,080731cdedcd389e72135f048d6e2e00"
             ],
+            "No BAM files",
             [
                 "test.md.cram:md5,2f11e4fe3390b8ad0a1852616fd1da04",
                 "test.recal.cram:md5,463ac3b905fbf4ddf113a94dbfa8d69f"
             ],
-            "No BAM files"
+            "No VCF files"
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-03-11T13:37:46.358094577"
+        "timestamp": "2025-04-28T14:40:35.447895129"
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --tools null": {
         "content": [
@@ -327,17 +328,18 @@
                 "test.recal.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
                 "test.recal.regions.bed.gz.csi:md5,080731cdedcd389e72135f048d6e2e00"
             ],
+            "No BAM files",
             [
                 "test.md.cram:md5,2f11e4fe3390b8ad0a1852616fd1da04",
                 "test.recal.cram:md5,463ac3b905fbf4ddf113a94dbfa8d69f"
             ],
-            "No BAM files"
+            "No VCF files"
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-03-11T13:39:20.497650346"
+        "timestamp": "2025-04-28T14:44:11.088999881"
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --skip_tools markduplicates --tools null": {
         "content": [
@@ -470,16 +472,17 @@
                 "test.sorted.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
                 "test.sorted.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d"
             ],
+            "No BAM files",
             [
                 "test.recal.cram:md5,463ac3b905fbf4ddf113a94dbfa8d69f"
             ],
-            "No BAM files"
+            "No VCF files"
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-03-11T13:38:32.150920872"
+        "timestamp": "2025-04-28T14:42:22.816181109"
     },
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --skip_tools markduplicates --tools null": {
         "content": [
@@ -593,13 +596,14 @@
                 "test.sorted.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
                 "test.sorted.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d"
             ],
+            "No BAM files",
             "No CRAM files",
-            "No BAM files"
+            "No VCF files"
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-03-11T13:36:57.025681096"
+        "timestamp": "2025-04-28T14:38:47.894866307"
     }
 }

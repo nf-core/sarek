@@ -177,6 +177,8 @@
                 "test2.paired_end.recalibrated.sorted.somatic.call.cns:md5,1cb4febd5c88d306277f3c4c3117d68c",
                 "test2.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,62c2d1f8765618c454bf4455c2298344"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample1.cnvcall.vcf:md5,6f8c517f62715c47674c79ffd1e9babb",
                 "sample2.cnvcall.vcf:md5,35662b51f071469c6227be15114eb824",
@@ -185,9 +187,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-03-11T16:51:08.251908028"
+        "timestamp": "2025-04-28T15:18:39.754718799"
     },
     "-profile test --tools cnvkit --input recalibrated_germline.csv": {
         "content": [
@@ -272,15 +274,17 @@
                 "test.paired_end.recalibrated.sorted.germline.call.cns:md5,5bba48aecc2282971b9d4c562bec4591",
                 "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,4153756b30abc934f10717c023bd262f"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample1.cnvcall.vcf:md5,6f8c517f62715c47674c79ffd1e9babb"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-03-11T16:46:40.673616812"
+        "timestamp": "2025-04-28T15:11:54.350089616"
     },
     "-profile test --tools cnvkit somatic --input recalibrated_somatic.csv": {
         "content": [
@@ -409,6 +413,8 @@
                 "test2.paired_end.recalibrated.sorted.somatic.call.cns:md5,1cb4febd5c88d306277f3c4c3117d68c",
                 "test2.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,62c2d1f8765618c454bf4455c2298344"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample3.cnvcall.vcf:md5,6f8c517f62715c47674c79ffd1e9babb",
                 "sample4_vs_sample3.cnvcall.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
@@ -416,9 +422,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-03-11T16:48:08.35830014"
+        "timestamp": "2025-04-28T15:14:13.684623703"
     },
     "-profile test --tools cnvkit --input recalibrated_tumoronly.csv": {
         "content": [
@@ -501,14 +507,16 @@
                 "test2.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,e6d0190c1c37ce6e41f76ca5b24ccca3",
                 "test2.paired_end.recalibrated.sorted.tumor_only.call.cns:md5,70a308c6db7acf1a5fd623936cac6412"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample2.cnvcall.vcf:md5,35662b51f071469c6227be15114eb824"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-03-11T16:49:22.231267173"
+        "timestamp": "2025-04-28T15:16:07.519986848"
     }
 }

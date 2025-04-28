@@ -219,6 +219,8 @@
                 "versions.yml:md5,7b0164f473a98fe0f8f097ae49c0e597",
                 "versions.yml:md5,7b0164f473a98fe0f8f097ae49c0e597"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "testN.freebayes.vcf.gz:md5,1d98e39fe458af9020283de18c764055",
                 "testT.freebayes.vcf.gz:md5,387b7d48d04ad3b294f07173e6550fc7",
@@ -236,8 +238,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T17:06:52.808697375"
+        "timestamp": "2025-04-28T13:54:43.851615695"
     }
 }

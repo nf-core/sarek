@@ -89,15 +89,17 @@
                 "sample1.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample1.manta.diploid_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample1.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T18:44:48.12175281"
+        "timestamp": "2025-04-28T16:20:57.270937462"
     },
     "-profile test --tools manta --no_intervals tumoronly": {
         "content": [
@@ -192,15 +194,17 @@
                 "sample2.manta.tumor_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample2.manta.tumor_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample2.manta.tumor_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T18:50:51.960575846"
+        "timestamp": "2025-04-28T16:29:42.195437933"
     },
     "-profile test --tools manta --no_intervals somatic": {
         "content": [
@@ -332,6 +336,8 @@
                 "sample4_vs_sample3.manta.somatic_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample4_vs_sample3.manta.somatic_sv.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -340,9 +346,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T18:48:35.011155846"
+        "timestamp": "2025-04-28T16:26:31.398077875"
     },
     "-profile test --tools manta tumoronly": {
         "content": [
@@ -434,15 +440,17 @@
                 "sample2.manta.tumor_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample2.manta.tumor_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample2.manta.tumor_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T18:49:42.150564938"
+        "timestamp": "2025-04-28T16:27:58.506339727"
     },
     "-profile test --tools manta --only_paired_variant_calling": {
         "content": [
@@ -612,6 +620,8 @@
                 "sample4_vs_sample3.manta.somatic_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample4_vs_sample3.manta.somatic_sv.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample1.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample2.manta.tumor_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -621,9 +631,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T18:43:42.352914764"
+        "timestamp": "2025-04-28T16:19:25.988979988"
     },
     "-profile test --tools manta somatic": {
         "content": [
@@ -752,6 +762,8 @@
                 "sample4_vs_sample3.manta.somatic_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample4_vs_sample3.manta.somatic_sv.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -760,9 +772,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T18:47:17.032268336"
+        "timestamp": "2025-04-28T16:24:36.505592567"
     },
     "-profile test --tools manta --no_intervals germline": {
         "content": [
@@ -857,14 +869,16 @@
                 "sample1.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample1.manta.diploid_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "sample1.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T18:45:58.751675624"
+        "timestamp": "2025-04-28T16:22:35.946897081"
     }
 }

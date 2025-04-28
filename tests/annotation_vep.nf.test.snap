@@ -274,14 +274,16 @@
                 "vep-general-stats.txt:md5,2fca07ac5623e758cac3ce49d9f6e3b0",
                 "vep.txt:md5,60a5d57c60308aba2aa6206f903d27e9"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
                 "test_VEP.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-03-12T18:17:39.714154803"
+        "timestamp": "2025-04-28T12:27:59.681632554"
     }
 }

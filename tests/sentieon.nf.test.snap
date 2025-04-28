@@ -130,12 +130,18 @@
                 "test.recal.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test.recal.thresholds.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
                 "test.recal.thresholds.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No BAM files",
+            [
+                "test.cram:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "test.recal.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            "No VCF files"
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.02.1"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-01T13:16:05.8552569"
+        "timestamp": "2025-04-28T14:28:28.391037334"
     }
 }
