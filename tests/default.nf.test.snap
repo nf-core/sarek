@@ -295,24 +295,12 @@
             ],
             "No BAM files",
             [
-                [
-                    "test.md.cram",
-                    "724c601c9daf019d356a53a7d5e1c8b1"
-                ],
-                [
-                    "test.recal.cram",
-                    "dbd6f40b1e6d72501dc034e62e9d54eb"
-                ]
+                "test.md.cram:md5,724c601c9daf019d356a53a7d5e1c8b1",
+                "test.recal.cram:md5,dbd6f40b1e6d72501dc034e62e9d54eb"
             ],
             [
-                [
-                    "test.strelka.genome.vcf.gz",
-                    "d23db2df1603e0949f7788a3c3640833"
-                ],
-                [
-                    "test.strelka.variants.vcf.gz",
-                    "48ca98a5c4b715b71241fea2ae740179"
-                ]
+                "test.strelka.genome.vcf.gz:md5,d23db2df1603e0949f7788a3c3640833",
+                "test.strelka.variants.vcf.gz:md5,48ca98a5c4b715b71241fea2ae740179"
             ]
         ],
         "meta": {

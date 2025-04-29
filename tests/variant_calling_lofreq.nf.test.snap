@@ -112,18 +112,17 @@
                 "sample2.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
                 "sample2.lofreq.FILTER.summary:md5,8dd8a0c91d5c4a260b462e04f615e502"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-                [
-                    "sample2.lofreq.vcf.gz",
-                    "2ce064ca2c41aa28eea9fab83228f10d"
-                ]
+                "sample2.lofreq.vcf.gz:md5,2ce064ca2c41aa28eea9fab83228f10d"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T18:40:01.560207224"
+        "timestamp": "2025-04-28T16:14:58.339195663"
     },
     "-profile test --tools lofreq --no_intervals tumoronly": {
         "content": [
@@ -235,17 +234,16 @@
                 "sample2.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
                 "sample2.lofreq.FILTER.summary:md5,72beda1b57da053eb352204828605a40"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-                [
-                    "sample2.lofreq.vcf.gz",
-                    "a8dd79484623135b4d0cf8e346965c6e"
-                ]
+                "sample2.lofreq.vcf.gz:md5,a8dd79484623135b4d0cf8e346965c6e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T18:41:53.969824357"
+        "timestamp": "2025-04-28T16:17:10.896507141"
     }
 }

@@ -98,17 +98,16 @@
                 "snpeff_variant_effects_region.txt:md5,05efd324edadced17ba3cd2b7714af57",
                 "test_snpEff.genes.txt:md5,130536bf0237d7f3f746d32aaa32840a"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-                [
-                    "test_snpEff.ann.vcf.gz",
-                    "fd266e623365c7d1837bc9eb088fe70c"
-                ]
+                "test_snpEff.ann.vcf.gz:md5,fd266e623365c7d1837bc9eb088fe70c"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-02-24T17:17:34.571501001"
+        "timestamp": "2025-04-28T12:25:56.027772736"
     }
 }

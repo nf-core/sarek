@@ -30,17 +30,16 @@
             [
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-                [
-                    "test_BCF.ann.vcf.gz",
-                    "bc7bf3ee9e8430e064c539eb81e59bf9"
-                ]
+                "test_BCF.ann.vcf.gz:md5,bc7bf3ee9e8430e064c539eb81e59bf9"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-02-24T17:11:13.075740065"
+        "timestamp": "2025-04-28T12:19:01.812858155"
     }
 }
