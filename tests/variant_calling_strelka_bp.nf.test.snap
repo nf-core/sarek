@@ -170,16 +170,7 @@
                 "variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,3268a22605b0fddf637de19c9202ade0",
-                "bcftools_stats_indel-lengths.txt:md5,5e76de7e494eb573dbce64f91c79d641",
-                "bcftools_stats_variant_depths.txt:md5,201388db8c5b940aaf05735106f63980",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,90076001a4996b4f015ee7cfdfdc0f2d",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,5bd2de6cab28b6ac4bda66a97e73ec4c",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,b46f5fae18ee0526c636e89979c10c5e",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,4a127df36efe1b68b7ae93b8c71dd7b1",
-                "multiqc_bcftools_stats.txt:md5,5c9c75a7ba51eec6d7ed539a5d0a2397",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,d5919b93082809cb0663b16ce1f0f60e",
                 "sample3.manta.diploid_sv.bcftools_stats.txt:md5,8adad91e1c8dc8db63cf9b3607bee3a0",
                 "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,17dc847445b98885bc18622f862f44d9",
                 "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,a8660b352950f0b32768fcbbd6b48896",
@@ -209,42 +200,23 @@
                 "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,7a81b11aa29fec73d5bc872b7b58f8aa",
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,a922c51ca3b2ea7cdcfa09e9c8c55d52"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-                [
-                    "sample3.manta.diploid_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample4_vs_sample3.manta.diploid_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample4_vs_sample3.manta.somatic_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample3.strelka.genome.vcf.gz",
-                    "37d003dfa8685cac4791cbde1af9b92d"
-                ],
-                [
-                    "sample3.strelka.variants.vcf.gz",
-                    "6e7f36df8e96c983ef075d376431d72a"
-                ],
-                [
-                    "sample4_vs_sample3.strelka.somatic_indels.vcf.gz",
-                    "6b8a01b52186fcaf3ec74e5bf1b5426"
-                ],
-                [
-                    "sample4_vs_sample3.strelka.somatic_snvs.vcf.gz",
-                    "262dcc485506abb0b67c8235354fd6e3"
-                ]
+                "sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.manta.somatic_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample3.strelka.genome.vcf.gz:md5,37d003dfa8685cac4791cbde1af9b92d",
+                "sample3.strelka.variants.vcf.gz:md5,6e7f36df8e96c983ef075d376431d72a",
+                "sample4_vs_sample3.strelka.somatic_indels.vcf.gz:md5,6b8a01b52186fcaf3ec74e5bf1b5426",
+                "sample4_vs_sample3.strelka.somatic_snvs.vcf.gz:md5,262dcc485506abb0b67c8235354fd6e3"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-02-25T10:53:23.052647902"
+        "timestamp": "2025-04-28T17:21:44.356378218"
     },
     "-profile test --tools manta,strelka somatic": {
         "content": [
@@ -414,16 +386,7 @@
                 "variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,3bd8ab52708f28306c9cf9d2779c1715",
-                "bcftools_stats_indel-lengths.txt:md5,a836b904ccf4fa2a733a26b0184a5f9e",
-                "bcftools_stats_variant_depths.txt:md5,b4360600be4ee46148d30c428ec9e330",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,def7f6a03fac61287483a7c86d44fe49",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,a014a7c6d4fb7bea63e89da4cfeef2a9",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,ec192419e14a2aeb0c18742879bef563",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,b7ca7c37370d2db7052efe21c41d81e9",
-                "multiqc_bcftools_stats.txt:md5,97bac5dbfe6cb21a78ca7f7327655b65",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,27388870c36896df470e2f5aa982332e",
                 "sample3.manta.diploid_sv.bcftools_stats.txt:md5,8adad91e1c8dc8db63cf9b3607bee3a0",
                 "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,17dc847445b98885bc18622f862f44d9",
                 "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,a8660b352950f0b32768fcbbd6b48896",
@@ -453,41 +416,22 @@
                 "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,4fc17fa5625b4d1dcc5d791b1eb22d85",
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-                [
-                    "sample3.manta.diploid_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample4_vs_sample3.manta.diploid_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample4_vs_sample3.manta.somatic_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample3.strelka.genome.vcf.gz",
-                    "aac21bf1449d3c7361c14054b08f8ed1"
-                ],
-                [
-                    "sample3.strelka.variants.vcf.gz",
-                    "dbea8798de92494c7a1fbf686c363696"
-                ],
-                [
-                    "sample4_vs_sample3.strelka.somatic_indels.vcf.gz",
-                    "6b8a01b52186fcaf3ec74e5bf1b5426"
-                ],
-                [
-                    "sample4_vs_sample3.strelka.somatic_snvs.vcf.gz",
-                    "866236c526138e4e08fdc2fa87b08417"
-                ]
+                "sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.manta.somatic_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample3.strelka.genome.vcf.gz:md5,aac21bf1449d3c7361c14054b08f8ed1",
+                "sample3.strelka.variants.vcf.gz:md5,dbea8798de92494c7a1fbf686c363696",
+                "sample4_vs_sample3.strelka.somatic_indels.vcf.gz:md5,6b8a01b52186fcaf3ec74e5bf1b5426",
+                "sample4_vs_sample3.strelka.somatic_snvs.vcf.gz:md5,866236c526138e4e08fdc2fa87b08417"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-02-25T10:50:54.874162175"
+        "timestamp": "2025-04-28T17:19:41.248210165"
     }
 }

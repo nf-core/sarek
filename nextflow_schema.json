@@ -432,7 +432,13 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-tape",
                     "description": "Option for concatenating germline vcf-files.",
-                    "help_text": "Concatenating the germline vcf-files from each applied variant-caller into one vcf-file using bcftools concat."
+                    "help_text": "Concatenating the germline vcf-files from each applied variant-caller into one vcf-file using bfctools concat."
+                },
+                "normalize_vcfs": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-tape",
+                    "description": "Option for normalization of vcf-files.",
+                    "help_text": "Normalization of all vcf-files from each applied variant-caller using bfctools norm."
                 }
             }
         },
@@ -773,7 +779,6 @@
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
                     "pattern": "\\S+\\.vcf\\.gz$",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to GATK Mutect2 Germline Resource File.",
                     "help_text": "The germline resource VCF file (bgzipped and tabixed) needed by GATK4 Mutect2 is a collection of calls that are likely present in the sample, with allele frequencies.\nThe AF info field must be present.\nYou can find a smaller, stripped gnomAD VCF file (most of the annotation is removed and only calls signed by PASS are stored) in the AWS iGenomes Annotation/GermlineResource folder.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -783,7 +788,6 @@
                     "fa_icon": "fas fa-file",
                     "pattern": "\\S+\\.vcf\\.gz\\.tbi$",
                     "format": "file-path",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to GATK Mutect2 Germline Resource Index.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the Germline Resource file, if provided. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -841,7 +845,6 @@
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
                     "pattern": "^\\S+\\.gem$",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to Control-FREEC mappability file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
@@ -851,7 +854,6 @@
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
                     "pattern": "^\\S+\\.bed$",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to SNP bed file for sample checking with NGSCheckMate",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
@@ -861,7 +863,6 @@
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
                     "pattern": "^\\S+\\.model$",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Machine learning model for Sentieon Dnascope.",
                     "help_text": " It is recommended to use DNAscope with a machine learning model to perform variant calling with higher accuracy by improving the candidate detection and filtering. Sentieon can provide you with a model trained using a subset of the data from the GiAB truth-set found in https://github.com/genome-in-a-bottle. In addition, Sentieon can assist you in the creation of models using your own data, which will calibrate the specifics of your sequencing and bio-informatics processing.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
