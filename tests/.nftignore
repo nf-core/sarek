@@ -1,5 +1,5 @@
 .DS_Store
-annotation/**/*.vcf.{gz,gz.tbi}
+**/*.vcf{,.gz,gz.tbi}
 csv/*.csv
 multiqc/multiqc_data/bcftools*.txt
 multiqc/multiqc_data/fastqc_top_overrepresented_sequences_table.txt
