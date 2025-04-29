@@ -1,22 +1,5 @@
 # preprocessing
 
-## umi
-umi:
-  - conf/modules/umi.config
-  - modules/nf-core/bwa/mem/**
-  - modules/nf-core/bwamem2/mem/**
-  - modules/nf-core/dragmap/align/**
-  - modules/nf-core/fgbio/callmolecularconsensusreads/**
-  - modules/nf-core/fgbio/fastqtobam/**
-  - modules/nf-core/fgbio/groupreadsbyumi/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/samblaster/**
-  - modules/nf-core/samtools/bam2fq/**
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/**
-  - subworkflows/local/fastq_create_umi_consensus_fgbio/**
-  - tests/csv/3.0/fastq_umi.csv
-  - tests/test_umi.yml
-
 ## aligner
 
 ### sentieon/bwamem
