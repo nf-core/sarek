@@ -65,7 +65,7 @@ nextflow_pipeline {
                     // All cram files
                     cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
                     // MuSE txt files will differ in their first line (holds Build Date & Time) between conda and docker/singularity
-                    txt_files.isEmpty() ? 'No TXT files' : txt_files.collect{ file -> [ file.getName(), file.readLines()[2..-1].join('\n').md5() ] },
+                    txt_files.isEmpty() ? 'No TXT files' : txt_files.collect{ file -> file.getName() + ":md5," + file.readLines()[2..-1].join('\n').md5() },
                     // All vcf files
                     vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
                 ).match() }
@@ -134,9 +134,11 @@ nextflow_pipeline {
                     // All cram files
                     cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
                     // MuSE txt files will differ in their first line (holds Build Date & Time) between conda and docker/singularity
-                    txt_files.isEmpty() ? 'No TXT files' : txt_files.collect{ file -> [ file.getName(), file.readLines()[2..-1].join('\n').md5() ] },
+                    // CANNOT SNAPSHOT CONTENT FROM EMPTY FILES
+                    txt_files.isEmpty() ? 'No TXT files' : txt_files,
                     // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
+                    // CANNOT SNAPSHOT CONTENT FROM EMPTY FILES
+                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files
                 ).match() }
             )
         }
