@@ -139,7 +139,6 @@
                 "sample4.recal.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4.recal.thresholds.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
                 "sample4.recal.thresholds.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "ngscheckmate.pdf:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "ngscheckmate_all.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "ngscheckmate_matched.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "ngscheckmate_output_corr_matrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
@@ -157,7 +156,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-29T11:09:58.100733271"
+        "timestamp": "2025-04-29T11:26:05.486351559"
     },
     "-profile test --tools ngscheckmate": {
         "content": [
@@ -248,7 +247,6 @@
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
                 "sample4.recal.regions.bed.gz.csi:md5,4003c8833ed5e9b9f45282a6915c935e",
-                "ngscheckmate.pdf:md5,a5a061e6f0d86948e44235e7dd9a19ca",
                 "ngscheckmate_all.txt:md5,f858e3eb892b8245cbf74cc979e4f33a",
                 "ngscheckmate_matched.txt:md5,ab2c5b46e9a4dfb3bb54292db931b58b",
                 "ngscheckmate_output_corr_matrix.txt:md5,ee56010330f63577faeb598205b55f16"
@@ -266,6 +264,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-29T11:09:02.070888502"
+        "timestamp": "2025-04-29T11:25:12.332895104"
     }
 }

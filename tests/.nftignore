@@ -1,5 +1,5 @@
-.DS_Store
 **/*.vcf{,.gz,gz.tbi}
+.DS_Store
 csv/*.csv
 multiqc/multiqc_data/bcftools*.txt
 multiqc/multiqc_data/fastqc_top_overrepresented_sequences_table.txt
@@ -27,12 +27,11 @@ reports/EnsemblVEP/*/*.ann.summary.html
 reports/fastp/**/*.fastp.{log,html}
 reports/fastqc/**/*_fastqc.{html,zip}
 reports/markduplicates/**/*.md.cram.metrics
+reports/ngscheckmate/ngscheckmate.pdf
 reports/samtools/**/**.cram.stats
 reports/snpeff/*/*_snpEff.csv
 reports/snpeff/*/snpEff_summary.html
 reports/vcftools/**/*.TsTv.qual
-variant_calling/**/*.vcf
-variant_calling/**/*.vcf.{gz,gz.tbi}
 variant_calling/cnvkit/*/*.pdf
 variant_calling/controlfreec/*/config.txt
 variant_calling/muse/*/*.MuSE.txt
