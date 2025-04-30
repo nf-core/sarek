@@ -1,0 +1,205 @@
+{
+    "sarscov2 - crai": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test-indexcov.ped:md5,8737714b6ea160e06d5282391f89f791"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test-indexcov.bed.gz:md5,04aa3637cffca5d99316df7741c06589"
+                ]
+            ],
+            "test-indexcov.bed.gz.tbi",
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test-indexcov.roc:md5,548b76fdf16e97768b0c9b8ecbfd5bef"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    [
+                        "index.html:md5,41840ede180b20cdf6074c431269929e",
+                        "test-indexcov-depth-chr21.html:md5,4c839b03f2f41e3fdca5642903c35008",
+                        "test-indexcov-roc-chr21.html:md5,f84b547328a23196f16f71d093eb7450"
+                    ]
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    [
+                        "test-indexcov-depth-chr21.png:md5,1999b0bf1cd0680f6d107d438e7257cf",
+                        "test-indexcov-roc-chr21.png:md5,41f1460535b255fff053da59fcccf698"
+                    ]
+                ]
+            ],
+            [
+                "versions.yml:md5,f9c06c1c05a2a31854b4e04e449a24c5"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-22T06:40:17.142801459"
+    },
+    "sarscov2 - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test-indexcov.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test-indexcov.bed.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-indexcov.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-indexcov.bed.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "7": [
+                    "versions.yml:md5,f9c06c1c05a2a31854b4e04e449a24c5"
+                ],
+                "bed": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-indexcov.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "bed_index": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test-indexcov.bed.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "html": [
+                    
+                ],
+                "output": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test-indexcov.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test-indexcov.bed.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "ped": [
+                    
+                ],
+                "png": [
+                    
+                ],
+                "roc": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,f9c06c1c05a2a31854b4e04e449a24c5"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-22T06:44:59.203730744"
+    },
+    "sarscov2 - bam": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test-indexcov.ped:md5,da2bd9882474d2f00f8ad2ab20b140c9"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test-indexcov.bed.gz:md5,eab7a78287e261d600c06def12a33029"
+                ]
+            ],
+            "test-indexcov.bed.gz.tbi",
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test-indexcov.roc:md5,3f460308bb86203d1ada71b7c84d995d"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "index.html:md5,d1cc28023cd827446e0f9c905c94fe3e"
+                ]
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,f9c06c1c05a2a31854b4e04e449a24c5"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-22T06:39:48.470187823"
+    }
+}

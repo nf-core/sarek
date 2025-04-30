@@ -1,0 +1,72 @@
+{
+    "test-cnvkit-genemetrics-without-cns": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.tsv:md5,622e154a107301da6f456b4b3196b79d"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,d3f23da560774564afa9c69e2d171e5f"
+                ],
+                "tsv": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.tsv:md5,622e154a107301da6f456b4b3196b79d"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,d3f23da560774564afa9c69e2d171e5f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-28T11:17:13.604558"
+    },
+    "test-cnvkit-genemetrics-with-cns": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.tsv:md5,2a18eca552ea33faab1d39795d9e051c"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,d3f23da560774564afa9c69e2d171e5f"
+                ],
+                "tsv": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.tsv:md5,2a18eca552ea33faab1d39795d9e051c"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,d3f23da560774564afa9c69e2d171e5f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-28T11:17:04.195978"
+    }
+}

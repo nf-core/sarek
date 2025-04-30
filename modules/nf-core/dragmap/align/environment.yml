@@ -1,0 +1,8 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - dragmap=1.2.1
+  - pigz=2.3.4
+   # renovate: datasource=conda depName=bioconda/samtools
+  - samtools=1.19.2

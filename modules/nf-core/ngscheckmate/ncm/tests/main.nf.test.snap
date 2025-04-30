@@ -1,0 +1,228 @@
+{
+    "sarscov2 - bam - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "combined_bams"
+                        },
+                        "combined_bams_output_corr_matrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "combined_bams"
+                        },
+                        "combined_bams_matched.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "combined_bams"
+                        },
+                        "combined_bams_all.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "combined_bams"
+                        },
+                        "combined_bams.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    "versions.yml:md5,7ac92d9cbf4fc44b3253832f3a8b2a80"
+                ],
+                "all": [
+                    [
+                        {
+                            "id": "combined_bams"
+                        },
+                        "combined_bams_all.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "corr_matrix": [
+                    [
+                        {
+                            "id": "combined_bams"
+                        },
+                        "combined_bams_output_corr_matrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "matched": [
+                    [
+                        {
+                            "id": "combined_bams"
+                        },
+                        "combined_bams_matched.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "pdf": [
+                    [
+                        {
+                            "id": "combined_bams"
+                        },
+                        "combined_bams.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "vcf": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,7ac92d9cbf4fc44b3253832f3a8b2a80"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.1"
+        },
+        "timestamp": "2024-05-22T15:02:55.532427413"
+    },
+    "sarscov2 - vcf": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test1"
+                    },
+                    "test1_output_corr_matrix.txt:md5,0c86bdad2721c470fe6be119f291c8e5"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test1"
+                    },
+                    "test1_matched.txt:md5,fd74956dcac279b6f58e82ea73e344f8"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test1"
+                    },
+                    "test1_all.txt:md5,fd74956dcac279b6f58e82ea73e344f8"
+                ]
+            ],
+            "test1.pdf",
+            [
+                "versions.yml:md5,7ac92d9cbf4fc44b3253832f3a8b2a80"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.1"
+        },
+        "timestamp": "2024-05-22T19:53:29.123160766"
+    },
+    "sarscov2 - bam": {
+        "content": [
+            "combined_bams_output_corr_matrix.txt",
+            "combined_bams_matched.txt",
+            "combined_bams_all.txt",
+            [
+                "versions.yml:md5,7ac92d9cbf4fc44b3253832f3a8b2a80"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-08-06T11:05:56.136156"
+    },
+    "sarscov2 - vcf - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test1"
+                        },
+                        "test1_output_corr_matrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test1"
+                        },
+                        "test1_matched.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test1"
+                        },
+                        "test1_all.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test1"
+                        },
+                        "test1.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    "versions.yml:md5,7ac92d9cbf4fc44b3253832f3a8b2a80"
+                ],
+                "all": [
+                    [
+                        {
+                            "id": "test1"
+                        },
+                        "test1_all.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "corr_matrix": [
+                    [
+                        {
+                            "id": "test1"
+                        },
+                        "test1_output_corr_matrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "matched": [
+                    [
+                        {
+                            "id": "test1"
+                        },
+                        "test1_matched.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "pdf": [
+                    [
+                        {
+                            "id": "test1"
+                        },
+                        "test1.pdf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "vcf": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,7ac92d9cbf4fc44b3253832f3a8b2a80"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.1"
+        },
+        "timestamp": "2024-05-22T15:20:40.816531052"
+    }
+}

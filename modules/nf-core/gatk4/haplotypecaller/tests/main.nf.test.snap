@@ -1,0 +1,58 @@
+{
+    "homo_sapiens - [cram, crai] - fasta - fai - dict": {
+        "content": [
+            "test_cram.vcf.gz",
+            "test_cram.vcf.gz.tbi",
+            [
+                "versions.yml:md5,05431a0ab28c85412c8b3582e863a7ab"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-14T09:36:54.158605"
+    },
+    "homo_sapiens - [cram, crai] - fasta - fai - dict - sites - sites_tbi": {
+        "content": [
+            "test_cram_sites.vcf.gz",
+            "test_cram_sites.vcf.gz.tbi",
+            [
+                "versions.yml:md5,05431a0ab28c85412c8b3582e863a7ab"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-14T09:37:13.77024"
+    },
+    "homo_sapiens - [bam, bai] - fasta - fai - dict": {
+        "content": [
+            "test_bam.vcf.gz",
+            "test_bam.vcf.gz.tbi",
+            [
+                "versions.yml:md5,05431a0ab28c85412c8b3582e863a7ab"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-14T09:36:34.77631"
+    },
+    "homo_sapiens - [cram, crai, dragstr_model] - fasta - fai - dict - sites - sites_tbi": {
+        "content": [
+            "test_cram_sites_dragstr.vcf.gz",
+            "test_cram_sites_dragstr.vcf.gz.tbi",
+            [
+                "versions.yml:md5,05431a0ab28c85412c8b3582e863a7ab"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-14T09:37:32.967085"
+    }
+}

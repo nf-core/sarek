@@ -1,0 +1,2 @@
+samtools/mpileup:
+  - "modules/nf-core/samtools/mpileup/**"

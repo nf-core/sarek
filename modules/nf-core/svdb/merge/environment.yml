@@ -1,0 +1,7 @@
+channels:
+  - conda-forge
+  - bioconda
+
+dependencies:
+  - bcftools=1.21
+  - svdb=2.8.2

@@ -1,0 +1,87 @@
+nextflow_process {
+
+    name "Test Process SNPEFF_SNPEFF"
+    script "../main.nf"
+    process "SNPEFF_SNPEFF"
+    config "./nextflow.config"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "modules_snpeff"
+    tag "snpeff"
+    tag "snpeff/download"
+    tag "snpeff/snpeff"
+
+    test("test_SNPEFF_SNPEFF") {
+
+        setup {
+            run("SNPEFF_DOWNLOAD") {
+                script "../../download/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([[id:params.snpeff_db], params.snpeff_db])
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                ])
+                input[1] = params.snpeff_db
+                input[2] = SNPEFF_DOWNLOAD.out.cache
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.report[0][1]).exists() },
+                { assert path(process.out.summary_html[0][1]).exists() },
+                { assert path(process.out.vcf[0][1]).exists() },
+                { assert snapshot(process.out.genes_txt).match("genes_txt") },
+                { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+    }
+
+    test("test_SNPEFF_SNPEFF - stub") {
+
+        options "-stub"
+
+        setup {
+            run("SNPEFF_DOWNLOAD") {
+                script "../../download/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([[id:params.snpeff_db], params.snpeff_db])
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                ])
+                input[1] = params.snpeff_db
+                input[2] = SNPEFF_DOWNLOAD.out.cache
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+            )
+        }
+    }
+}

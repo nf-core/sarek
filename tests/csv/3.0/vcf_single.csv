@@ -1,0 +1,2 @@
+patient,sample,vcf
+test,test,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/vcf/test.vcf.gz

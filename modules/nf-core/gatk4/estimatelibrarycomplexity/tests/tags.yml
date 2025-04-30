@@ -1,0 +1,2 @@
+gatk4/estimatelibrarycomplexity:
+  - "modules/nf-core/gatk4/estimatelibrarycomplexity/**"

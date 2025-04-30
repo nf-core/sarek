@@ -1,0 +1,35 @@
+{
+    "test_gatk4_mergevcfs_no_dict_stub": {
+        "content": [
+            "test.vcf.gz",
+            "test.vcf.gz.tbi"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-14T14:57:40.784590995"
+    },
+    "test_gatk4_mergevcfs": {
+        "content": [
+            "test.vcf.gz",
+            "test.vcf.gz.tbi"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-14T14:56:42.178255913"
+    },
+    "test_gatk4_mergevcfs_no_dict": {
+        "content": [
+            "test.vcf.gz",
+            "test.vcf.gz.tbi"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-14T14:57:11.404322124"
+    }
+}
