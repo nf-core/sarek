@@ -1,0 +1,58 @@
+name: "rtgtools_format"
+description: Converts the contents of sequence data files (FASTA/FASTQ/SAM/BAM) into
+  the RTG Sequence Data File (SDF) format.
+keywords:
+  - rtg
+  - fasta
+  - fastq
+  - bam
+  - sam
+tools:
+  - "rtgtools":
+      description: "RealTimeGenomics Tools -- Utilities for accurate VCF comparison
+        and manipulation"
+      homepage: "https://www.realtimegenomics.com/products/rtg-tools"
+      documentation: "https://github.com/RealTimeGenomics/rtg-tools"
+      tool_dev_url: "https://github.com/RealTimeGenomics/rtg-tools"
+      licence: ["BSD"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input1:
+        type: file
+        description: FASTA, FASTQ, BAM or SAM file. This should be the left input file
+          when using paired end FASTQ/FASTA data
+        pattern: "*.{fasta,fa,fna,fastq,fastq.gz,fq,fq.gz,bam,sam}"
+    - input2:
+        type: file
+        description: The right input file when using paired end FASTQ/FASTA data
+        pattern: "*.{fasta,fa,fna,fastq,fastq.gz,fq,fq.gz}"
+    - sam_rg:
+        type: file
+        description: A file containing a single readgroup header as a SAM header. This
+          can also be supplied as a string in `task.ext.args` as `--sam-rg <rg_line>`.
+        pattern: "*.{txt,sam}"
+output:
+  - sdf:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.sdf":
+          type: directory
+          description: The sequence dictionary format folder created from the input file(s)
+          pattern: "*.sdf"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@nvnieuwk"
+maintainers:
+  - "@nvnieuwk"

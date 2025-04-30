@@ -147,6 +147,10 @@ workflow NFCORE_SAREK {
         known_snps,
         pon)
 
+    // Gather Benchmark data from params
+    truth_vcf = params.truth_vcf ? Channel.fromPath(params.truth_vcf).map{ it -> [ [id:'truth_vcf'], it ] }.collect() : Channel.empty()
+    truth_bed = params.truth_bed ? Channel.fromPath(params.truth_bed).map{ it -> [ [id:'truth_bed'], it ] }.collect() : Channel.empty()
+
     // Gather built indices or get them from the params
     // Built from the fasta file:
     dict        = params.dict       ? Channel.fromPath(params.dict).map{ it -> [ [id:'dict'], it ] }.collect()
@@ -305,7 +309,9 @@ workflow NFCORE_SAREK {
         vep_extra_files,
         vep_fasta,
         vep_genome,
-        vep_species
+        vep_species,
+        truth_vcf,
+        truth_bed
     )
     emit:
     multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html

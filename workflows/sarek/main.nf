@@ -38,6 +38,9 @@ include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL                } from '../../subwor
 // Variant calling on tumor/normal pair
 include { BAM_VARIANT_CALLING_SOMATIC_ALL                   } from '../../subworkflows/local/bam_variant_calling_somatic_all/main'
 
+// Benchmarking on germline small variants
+include { VCF_BENCHMARK                                     } from '../../subworkflows/local/vcf_benchmark/main'
+
 // POST VARIANTCALLING: e.g. merging
 include { POST_VARIANTCALLING                               } from '../../subworkflows/local/post_variantcalling/main'
 
@@ -103,6 +106,8 @@ workflow SAREK {
         vep_fasta
         vep_genome
         vep_species
+        truth_vcf
+        truth_bed
 
     main:
 
@@ -440,6 +445,31 @@ workflow SAREK {
             versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)
             reports = reports.mix(VCF_ANNOTATE_ALL.out.reports)
         }
+    }
+
+    if (params.benchmark) {
+
+        vcf_to_benchmark = Channel.empty()
+        vcf_to_benchmark = vcf_to_benchmark.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_deepvariant)
+        vcf_to_benchmark = vcf_to_benchmark.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_freebayes)
+        vcf_to_benchmark = vcf_to_benchmark.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_haplotypecaller)
+        vcf_to_benchmark = vcf_to_benchmark.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_manta)
+        vcf_to_benchmark = vcf_to_benchmark.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_dnascope)
+        vcf_to_benchmark = vcf_to_benchmark.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_haplotyper)
+        vcf_to_benchmark = vcf_to_benchmark.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_strelka)
+        vcf_to_benchmark = vcf_to_benchmark.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_tiddit)
+        vcf_to_benchmark = vcf_to_benchmark.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_mpileup)
+
+        VCF_BENCHMARK(
+            vcf_to_benchmark.map{meta, vcf -> [ meta + [ file_name: vcf.baseName ], vcf ] },
+            truth_vcf,
+            truth_bed,
+            fasta,
+            fasta_fai
+        )
+
+        versions = versions.mix(VCF_BENCHMARK.out.versions)
+
     }
 
     //
