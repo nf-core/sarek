@@ -78,7 +78,7 @@ jobs:
             workdir: TOWER_BUCKET_AWS
     name: Run AWS full tests
     # run only if the PR is approved by at least 2 reviewers and against the master branch or manually triggered
-    if: github.repository == 'nf-core/sarek' && github.event.review.state == 'approved' && github.event.pull_request.base.ref == 'master' || github.event_name == 'workflow_dispatch'
+    if: github.repository == 'nf-core/sarek' && github.event.review.state == 'approved' && (github.event.pull_request.base.ref == 'master' || github.event.pull_request.base.ref == 'main') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Set revision variable
@@ -88,19 +88,16 @@ jobs:
 
       - name: Launch workflow via Seqera Platform
         uses: seqeralabs/action-tower-launch@v2
-        # TODO nf-core: You can customise AWS full pipeline tests as required
-        # Add full size test data (but still relatively small datasets for few samples)
-        # on the `test_full.config` test runs with only one set of parameters
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute_env: ${{ secrets.TOWER_COMPUTE_ENV }}
+          compute_env: ${{ secrets[matrix.compute_env] }}
           revision: ${{ steps.revision.outputs.revision }}
-          workdir: s3://${{ secrets.AWS_S3_BUCKET }}/work/sarek/work-${{ steps.revision.outputs.revision }}
+          workdir: ${{ secrets[matrix.workdir] }}/work/sarek/work-${{ steps.revision.outputs.revision }}/${{ matrix.profile }}
           parameters: |
             {
               "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
-              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-${{ steps.revision.outputs.revision }}"
+              "outdir": "${{ secrets[matrix.workdir] }}/sarek/results-${{ steps.revision.outputs.revision }}/${{ matrix.profile }}/"
             }
           profiles: ${{ matrix.profile }}
 
