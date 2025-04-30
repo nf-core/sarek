@@ -89,6 +89,7 @@ jobs:
       - name: Launch workflow via Seqera Platform
         uses: seqeralabs/action-tower-launch@v2
         with:
+          run_name: sarek_${{ matrix.profile }}
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets[matrix.compute_env] }}
