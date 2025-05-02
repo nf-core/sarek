@@ -206,7 +206,7 @@
                 "mosdepth_perchrom.txt:md5,feb2a28ae6cde307d943a84612af14fc",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
                 "multiqc_fastqc.txt:md5,d54614f8b2de16511949dbbde8f38a5d",
-                "multiqc_samtools_stats.txt:md5,d9ac1512894feb24398d6b11caaa1dcb",
+                "multiqc_samtools_stats.txt:md5,fe2d1d13047085385c3bb3c1af6b8c7b",
                 "samtools-stats-dp.txt:md5,3ee7e2fa4d457f4a4c07245ad761334e",
                 "samtools_alignment_plot.txt:md5,5f58ef1a35094606d961644816e0c2ff",
                 "test2.md.mosdepth.global.dist.txt:md5,85d38a74ce189b9110c57cd94bc26757",
@@ -231,7 +231,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T14:34:14.235613993"
+        "timestamp": "2025-05-02T09:37:53.685618757"
     },
     "-profile test,spark --input tests/csv/3.0/fastq_tumor_only.csv --use_gatk_spark baserecalibrator,markduplicates --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools": {
         "content": [
