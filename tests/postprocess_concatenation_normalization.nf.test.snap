@@ -266,7 +266,7 @@
             "No BAM files",
             "No CRAM files",
             [
-                "testN.germline.vcf.gz:md5,184743db45c933febc5557d08b19f23c",
+                "testN.germline.vcf.gz:md5,141a2cc53b0a9d4a0ab4d779cb1e487",
                 "testT.germline.vcf.gz:md5,9119ee2c970c37729dcb35d4b88f9d10",
                 "testN.freebayes.vcf.gz:md5,1d98e39fe458af9020283de18c764055",
                 "testT.freebayes.vcf.gz:md5,387b7d48d04ad3b294f07173e6550fc7",
