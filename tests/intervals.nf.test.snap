@@ -8,7 +8,7 @@
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.2
+                    "samtools": 1.21
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
@@ -59,7 +59,7 @@
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.2
+                    "samtools": 1.21
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
@@ -128,7 +128,7 @@
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.2
+                    "samtools": 1.21
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
@@ -176,7 +176,7 @@
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.2
+                    "samtools": 1.21
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
@@ -244,7 +244,7 @@
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.2
+                    "samtools": 1.21
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
@@ -290,7 +290,7 @@
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.2
+                    "samtools": 1.21
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21

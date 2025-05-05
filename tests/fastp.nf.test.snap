@@ -5,7 +5,7 @@
             {
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.2
+                    "samtools": 1.21
                 },
                 "FASTP": {
                     "fastp": "0.23.4"
@@ -347,7 +347,7 @@
             {
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.2
+                    "samtools": 1.21
                 },
                 "FASTP": {
                     "fastp": "0.23.4"

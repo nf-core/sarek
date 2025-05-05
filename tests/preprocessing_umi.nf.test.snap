@@ -8,10 +8,10 @@
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.2
+                    "samtools": 1.21
                 },
                 "CALLUMICONSENSUS": {
-                    "fgbio": "2.2.1"
+                    "fgbio": "2.4.0"
                 },
                 "CAT_FASTQ": {
                     "cat": 9.5
@@ -26,7 +26,7 @@
                     "fastqc": "0.12.1"
                 },
                 "FASTQTOBAM": {
-                    "fgbio": "2.2.1"
+                    "fgbio": "2.4.0"
                 },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.6.1.0"
@@ -39,7 +39,7 @@
                     "samtools": "1.19.2"
                 },
                 "GROUPREADSBYUMI": {
-                    "fgbio": "2.2.1"
+                    "fgbio": "2.4.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21

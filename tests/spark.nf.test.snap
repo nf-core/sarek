@@ -5,7 +5,7 @@
             {
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.2
+                    "samtools": 1.21
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -235,7 +235,7 @@
             {
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.2
+                    "samtools": 1.21
                 },
                 "GATK4SPARK_APPLYBQSR": {
                     "gatk4": "4.6.1.0"
