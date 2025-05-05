@@ -104,10 +104,10 @@
                 "multiqc/multiqc_data/multiqc_samtools_stats.txt",
                 "multiqc/multiqc_data/multiqc_software_versions.txt",
                 "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/picard_MarkIlluminaAdapters_histogram.txt",
+                "multiqc/multiqc_data/picard_MeanQualityByCycle_histogram.txt",
+                "multiqc/multiqc_data/picard_QualityScoreDistribution_histogram.txt",
                 "multiqc/multiqc_data/picard_deduplication.txt",
-                "multiqc/multiqc_data/picard_histogram.txt",
-                "multiqc/multiqc_data/picard_histogram_1.txt",
-                "multiqc/multiqc_data/picard_histogram_2.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
                 "multiqc/multiqc_plots",
@@ -351,10 +351,10 @@
                 "mosdepth_perchrom.txt:md5,7c01ea3a011867911ed0b612acb42007",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
                 "multiqc_fastqc.txt:md5,ae908328010c1f8a5eb15ca080b92993",
-                "multiqc_samtools_stats.txt:md5,137755a62d41b88763718fa5f6266132",
-                "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "multiqc_samtools_stats.txt:md5,4c51d1c6c0bccf5fd95896d59d7b2a05",
+                "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,1dc593231b888b9f832e61dd71e0161b",
                 "samtools_alignment_plot.txt:md5,35a1db2ce8dbe1b59576cc8edb57095e",
                 "test.md.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
@@ -419,6 +419,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T12:16:38.102207568"
+        "timestamp": "2025-05-02T09:12:19.059760493"
     }
 }

@@ -1,4 +1,3 @@
-bump_version: null
 lint:
   actions_ci: false
   files_exist:
@@ -13,8 +12,7 @@ lint:
     - docs/images/nf-core-sarek_logo_light.png
   modules_config: false
   template_strings: false
-nf_core_version: 3.0.2
-org_path: null
+nf_core_version: 3.2.1
 repository_type: pipeline
 template:
   author: Maxime Garcia, Szilveszter Juhos, Friederike Hanssen
@@ -24,6 +22,4 @@ template:
   name: sarek
   org: nf-core
   outdir: .
-  skip_features: null
   version: 3.5.0dev
-update: null

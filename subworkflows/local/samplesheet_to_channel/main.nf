@@ -196,8 +196,8 @@ workflow  SAMPLESHEET_TO_CHANNEL{
         log.warn("DragMap was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using DragMap\nhttps://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode")
     }
 
-    if (step == 'mapping' && aligner.contains("sentieon-bwamem") && umi_read_structure) {
-        error("Sentieon BWA is currently not compatible with FGBio UMI handeling. Please choose a different aligner.")
+    if (step == 'mapping' && ( aligner.contains("parabricks") || aligner.contains("sentieon-bwamem")) && umi_read_structure) {
+        error("$aligner is currently not compatible with FGBio UMI handeling. Please choose a different aligner.")
     }
 
     if (tools && tools.split(',').contains("sentieon_haplotyper") && joint_germline && (!sentieon_haplotyper_emit_mode || !(sentieon_haplotyper_emit_mode.contains('gvcf')))) {

@@ -1,0 +1,323 @@
+{
+    "SRR389222 - fastq - se - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "7": [
+                    "versions.yml:md5,55d1e67ef8fa9d0ea3065363a653ffef"
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bqsr_table": [
+                    
+                ],
+                "crai": [
+                    
+                ],
+                "cram": [
+                    
+                ],
+                "duplicate_metrics": [
+                    
+                ],
+                "qc_metrics": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,55d1e67ef8fa9d0ea3065363a653ffef"
+                ]
+            },
+            {
+                "PARABRICKS_FQ2BAM": {
+                    "pbrun": "4.4.0-1"
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-27T11:46:55.631178258"
+    },
+    "sarscov2 - fastq - pe - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "7": [
+                    "versions.yml:md5,55d1e67ef8fa9d0ea3065363a653ffef"
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bqsr_table": [
+                    
+                ],
+                "crai": [
+                    
+                ],
+                "cram": [
+                    
+                ],
+                "duplicate_metrics": [
+                    
+                ],
+                "qc_metrics": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,55d1e67ef8fa9d0ea3065363a653ffef"
+                ]
+            },
+            {
+                "PARABRICKS_FQ2BAM": {
+                    "pbrun": "4.4.0-1"
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-27T11:48:09.468174786"
+    },
+    "sarscov2 - fastq - pe": {
+        "content": [
+            "2d64e4363d9f3c0e2167fce49d5087cf",
+            "test.bam.bai",
+            [
+                "versions.yml:md5,55d1e67ef8fa9d0ea3065363a653ffef"
+            ],
+            {
+                "PARABRICKS_FQ2BAM": {
+                    "pbrun": "4.4.0-1"
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-16T12:25:23.63061876"
+    },
+    "sarscov2 - fastq - se - cram": {
+        "content": [
+            "30c325e1e032eb1782a280d34c0fb1c7",
+            "test.cram.crai",
+            [
+                "versions.yml:md5,55d1e67ef8fa9d0ea3065363a653ffef"
+            ],
+            {
+                "PARABRICKS_FQ2BAM": {
+                    "pbrun": "4.4.0-1"
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-20T15:28:05.839124732"
+    },
+    "sarscov2 - fastq - pe - cram - stub": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.cram.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "7": [
+                    "versions.yml:md5,55d1e67ef8fa9d0ea3065363a653ffef"
+                ],
+                "bai": [
+                    
+                ],
+                "bam": [
+                    
+                ],
+                "bqsr_table": [
+                    
+                ],
+                "crai": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.cram.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "cram": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "duplicate_metrics": [
+                    
+                ],
+                "qc_metrics": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,55d1e67ef8fa9d0ea3065363a653ffef"
+                ]
+            },
+            {
+                "PARABRICKS_FQ2BAM": {
+                    "pbrun": "4.4.0-1"
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-27T11:49:34.618772489"
+    },
+    "SRR389222 - fastq - se": {
+        "content": [
+            "3d5b94990c7fdf90a682edb5ee0f59de",
+            "test.bam.bai",
+            [
+                "versions.yml:md5,55d1e67ef8fa9d0ea3065363a653ffef"
+            ],
+            {
+                "PARABRICKS_FQ2BAM": {
+                    "pbrun": "4.4.0-1"
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-16T12:24:32.45197929"
+    }
+}

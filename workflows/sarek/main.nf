@@ -27,7 +27,8 @@ include { FASTQC                                            } from '../../module
 include { CRAM_SAMPLEQC                                     } from '../../subworkflows/local/cram_sampleqc/main'
 
 // Preprocessing
-include { FASTQ_ALIGN_GATK                                  } from '../../subworkflows/local/fastq_align_gatk/main'
+include { FASTQ_PREPROCESS_GATK                             } from '../../subworkflows/local/fastq_preprocess_gatk/main'
+include { FASTQ_PREPROCESS_PARABRICKS                       } from '../../subworkflows/local/fastq_preprocess_parabricks/main'
 
 // Variant calling on a single normal sample
 include { BAM_VARIANT_CALLING_GERMLINE_ALL                  } from '../../subworkflows/local/bam_variant_calling_germline_all/main'
@@ -60,6 +61,7 @@ workflow SAREK {
     take:
         input_sample
         allele_files
+        aligner
         bcftools_annotations
         bcftools_annotations_tbi
         bcftools_header_lines
@@ -175,26 +177,47 @@ workflow SAREK {
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
-        // PREPROCESSING
-        FASTQ_ALIGN_GATK(
-            input_fastq,
-            input_sample,
-            dict,
-            fasta,
-            fasta_fai,
-            index_alignment,
-            intervals_and_num_intervals,
-            intervals_for_preprocessing,
-            known_sites_indels,
-            known_sites_indels_tbi)
 
-        // Gather preprocessing output
-        cram_variant_calling = Channel.empty()
-        cram_variant_calling = cram_variant_calling.mix(FASTQ_ALIGN_GATK.out.cram_variant_calling)
+        if (aligner == 'parabricks') {
+            // PREPROCESSING WITH PARABRICKS
+            FASTQ_PREPROCESS_PARABRICKS(
+                input_fastq,
+                fasta,
+                index_alignment,
+                intervals_and_num_intervals,
+                known_sites_indels,
+                "cram")
 
-        // Gather used softwares versions
-        reports = reports.mix(FASTQ_ALIGN_GATK.out.reports)
-        versions = versions.mix(FASTQ_ALIGN_GATK.out.versions)
+            // Gather preprocessing output
+            cram_variant_calling = Channel.empty()
+            cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_PARABRICKS.out.cram)
+
+            // Gather used softwares versions
+            reports = reports.mix(FASTQ_PREPROCESS_PARABRICKS.out.reports)
+            versions = versions.mix(FASTQ_PREPROCESS_PARABRICKS.out.versions)
+        } else {
+            // PREPROCESSING
+            FASTQ_PREPROCESS_GATK(
+                input_fastq,
+                input_sample,
+                dict,
+                fasta,
+                fasta_fai,
+                index_alignment,
+                intervals_and_num_intervals,
+                intervals_for_preprocessing,
+                known_sites_indels,
+                known_sites_indels_tbi)
+
+            // Gather preprocessing output
+            cram_variant_calling = Channel.empty()
+            cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_GATK.out.cram_variant_calling)
+
+            // Gather used softwares versions
+            reports = reports.mix(FASTQ_PREPROCESS_GATK.out.reports)
+            versions = versions.mix(FASTQ_PREPROCESS_GATK.out.versions)
+        }
+
     }
 
     if (params.step == 'variant_calling') {
@@ -204,7 +227,7 @@ workflow SAREK {
     }
 
     if (params.step == 'annotate') {
-        // TODO: how does this actually work?
+
         cram_variant_calling = Channel.empty()
 
     }
@@ -448,7 +471,7 @@ workflow SAREK {
     version_yaml = Channel.empty()
     if (!(params.skip_tools && params.skip_tools.split(',').contains('versions'))) {
         version_yaml = softwareVersionsToYAML(versions)
-            .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_sarek_software_mqc_versions.yml', sort: true, newLine: true)
+        .collectFile( storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_'  +  'sarek_software_'  + 'mqc_'  + 'versions.yml', sort: true, newLine: true)
     }
 
     //

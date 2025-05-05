@@ -45,6 +45,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
 - Sequencing quality control and trimming (enabled by `--trim_fastq`) (`FastQC`, `fastp`)
 - Map Reads to Reference (`BWA-mem`, `BWA-mem2`, `dragmap` or `Sentieon BWA-mem`)
 - Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator` and `GATK ApplyBQSR` or `Sentieon LocusCollector` and `Sentieon Dedup`)
+- _Experimental Feature_: Use GPU-accelerated parabricks implementation as alternative to "Map Reads to Reference" + "Process BAM file" (`--aligner parabricks`)
 - Summarise alignment statistics (`samtools stats`, `mosdepth`)
 - Variant calling (enabled by `--tools`, see [compatibility](https://nf-co.re/sarek/latest/docs/usage#which-variant-calling-tool-is-implemented-for-which-data-type)):
   - `ASCAT`
