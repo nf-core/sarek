@@ -22,19 +22,24 @@ process SENTIEON_APPLYVARCAL {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def args   = task.ext.args   ?: ''
+    def args2  = task.ext.args2  ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}_applyvarcal"
     def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64 ?
         "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; " :
         ""
     """
     $sentieonLicense
 
-    sentieon driver -r ${fasta}  --algo ApplyVarCal \\
+    sentieon driver \\
+        -r ${fasta}  \\
+        -t $task.cpus \\
+        $args \\
+        --algo ApplyVarCal \\
         -v $vcf \\
         --recal $recal \\
         --tranches_file $tranches \\
-        $args \\
+        $args2 \\
         ${prefix}.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
@@ -44,9 +49,9 @@ process SENTIEON_APPLYVARCAL {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}_applyvarcal"
     """
-    touch ${prefix}.vcf.gz
+    echo | gzip > ${prefix}.vcf.gz
     touch ${prefix}.vcf.gz.tbi
 
     cat <<-END_VERSIONS > versions.yml

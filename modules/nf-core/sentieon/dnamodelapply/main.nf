@@ -16,7 +16,7 @@ process SENTIEON_DNAMODELAPPLY {
 
     output:
     tuple val(meta), path("*.vcf.gz")    , emit: vcf
-    tuple val(meta), path("*.vcf.gz.tbi"), emit: index
+    tuple val(meta), path("*.vcf.gz.tbi"), emit: tbi
     path "versions.yml"                  , emit: versions
 
     when:
@@ -24,7 +24,7 @@ process SENTIEON_DNAMODELAPPLY {
 
     script:
     def args      = task.ext.args   ?: ''
-    def prefix    = task.ext.prefix ?: "${meta.id}"
+    def prefix    = task.ext.prefix ?: "${meta.id}_applied"
     def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64 ?
         "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; " :
         ""
@@ -47,9 +47,9 @@ process SENTIEON_DNAMODELAPPLY {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}_applied"
     """
-    touch ${prefix}.vcf.gz
+    echo | gzip > ${prefix}.vcf.gz
     touch ${prefix}.vcf.gz.tbi
 
     cat <<-END_VERSIONS > versions.yml

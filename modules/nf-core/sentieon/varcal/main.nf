@@ -20,16 +20,15 @@ process SENTIEON_VARCAL {
     tuple val(meta), path("*.recal")   , emit: recal
     tuple val(meta), path("*.idx")     , emit: idx
     tuple val(meta), path("*.tranches"), emit: tranches
-    tuple val(meta), path("*plots.R")  , emit: plots, optional:true
+    tuple val(meta), path("*plots.R")  , emit: plots   , optional:true
     path "versions.yml"                , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def reference_command = fasta ? "--reference $fasta " : ''
+    def args = task.ext.args      ?: ''
+    def prefix = task.ext.prefix  ?: "${meta.id}"
     def labels_command = ''
 
     // labels is a list. Here is an example of what labels might look like:
