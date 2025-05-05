@@ -1,0 +1,89 @@
+
+nextflow_process {
+
+    name "Test Process PURECN_NORMALDB"
+    script "../main.nf"
+    process "PURECN_NORMALDB"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "purecn"
+    tag "purecn/normaldb"
+
+    test("test-purecn-normaldb") {
+
+        when {
+            process {
+                """
+                input[0] = [
+				    [ id:'test' ],
+				    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/purecn/purecn_ex1_normal.txt.gz', checkIfExists: true),
+				        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/purecn/purecn_ex2_normal.txt.gz', checkIfExists: true)
+                    ],
+				    [],
+                    []
+				]
+				input[1] = 'hg38'
+				input[2] = 'illumina'
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+					file(process.out.rds[0][1]).name,
+					file(process.out.png[0][1]).name,
+					process.out.low_cov_bed,
+					process.out.versions
+					).match()
+				}
+            )
+        }
+    }
+
+    test("test-purecn-normaldb-normalvcf") {
+
+        when {
+            process {
+                """
+                input[0] = [
+				    [ id:'test' ],
+				    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/purecn/purecn_ex1_normal.txt.gz', checkIfExists: true),
+				        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/purecn/purecn_ex2_normal.txt.gz', checkIfExists: true)
+                    ],
+				    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/purecn/purecn_normalpanel.vcf.gz', checkIfExists: true)
+                    ],
+				    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/purecn/purecn_normalpanel.vcf.gz.tbi', checkIfExists: true)
+                    ]
+				]
+				input[1] = 'hg38'
+				input[2] = 'illumina'
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+					file(process.out.rds[0][1]).name,
+					file(process.out.png[0][1]).name,
+					file(process.out.bias_rds[0][1]).name,
+					process.out.bias_bed,
+					process.out.low_cov_bed,
+					process.out.versions
+					).match()
+				}
+            )
+        }
+    }
+
+}
