@@ -20,7 +20,7 @@
                     "gatk4": "4.6.1.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.5.0.0",
+                    "gatk4": "4.6.1.0",
                     "samtools": "1.19.2"
                 },
                 "INDEX_CRAM": {

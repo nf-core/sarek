@@ -4,20 +4,20 @@
             13,
             {
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.5.0.0",
+                    "gatk4": "4.6.1.0",
                     "samtools": "1.19.2"
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.8"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
@@ -175,20 +175,20 @@
             13,
             {
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.5.0.0",
+                    "gatk4": "4.6.1.0",
                     "samtools": "1.19.2"
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.8"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
@@ -346,16 +346,16 @@
             12,
             {
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.8"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
@@ -465,12 +465,12 @@
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d",
+                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
                 "test.sorted.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.sorted.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.sorted.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.sorted.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.sorted.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d"
+                "test.sorted.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259"
             ],
             "No BAM files",
             [
@@ -489,13 +489,13 @@
             9,
             {
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.8"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
@@ -594,7 +594,7 @@
                 "test.sorted.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.sorted.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.sorted.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.sorted.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d"
+                "test.sorted.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259"
             ],
             "No BAM files",
             "No CRAM files",

@@ -13,16 +13,16 @@
                     "bcftools": 1.2
                 },
                 "CNNSCOREVARIANTS": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "FILTERVARIANTTRANCHES": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "FREEBAYES": {
                     "freebayes": "1.3.6"
                 },
                 "GATK4_HAPLOTYPECALLER": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "TABIX_EXT_VCF": {
                     "tabix": 1.2
@@ -202,12 +202,12 @@
                 "testN.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "testN.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "testN.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "testN.recal.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d",
+                "testN.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
                 "testT.recal.mosdepth.global.dist.txt:md5,3106c114529adc4231badeb3bb38b6d1",
                 "testT.recal.mosdepth.region.dist.txt:md5,ccf646922b05cb4759c4f89072be2b69",
                 "testT.recal.mosdepth.summary.txt:md5,024649a659caff330dfbef4ac3560542",
                 "testT.recal.regions.bed.gz:md5,14b36a2cf428840aab471f95cfbe399f",
-                "testT.recal.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d",
+                "testT.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
                 "testN.freebayes.norm.FILTER.summary:md5,d621a188425df0da8babce002e2f34dc",
                 "testN.freebayes.norm.TsTv.count:md5,232bb44db986854d3992bda0df08f54b",
                 "testT.freebayes.norm.FILTER.summary:md5,50f90bd0cdd1e95c10d7e5d88d0346f8",

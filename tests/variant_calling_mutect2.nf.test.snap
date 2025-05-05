@@ -4,10 +4,10 @@
             7,
             {
                 "LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "MUTECT2": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "Workflow": {
                     "nf-core/sarek": "v3.6.0dev"
@@ -73,10 +73,10 @@
             11,
             {
                 "LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "MUTECT2_PAIRED": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "Workflow": {
                     "nf-core/sarek": "v3.6.0dev"
@@ -162,10 +162,10 @@
             9,
             {
                 "LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "MUTECT2_PAIRED": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "Workflow": {
                     "nf-core/sarek": "v3.6.0dev"
@@ -242,10 +242,10 @@
             10,
             {
                 "LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "MUTECT2": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "Workflow": {
                     "nf-core/sarek": "v3.6.0dev"
