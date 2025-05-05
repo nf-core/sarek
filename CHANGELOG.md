@@ -34,10 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
-| `MultiQC`  | 1.25.1      | 1.27        |
-| `MuSE`     |             | 2.1.2       |
+| Dependency                    | Old version | New version |
+| ----------------------------- | ----------- | ----------- |
+| `bcftools`                    | 1.2         | 1.21        |
+| `gatk4`                       | 4.5         | 4.6         |
+| `mosdepth`                    | 0.3.8       | 0.3.10      |
+| `MuSE`                        |             | 2.1.2       |
+| `MultiQC`                     | 1.25.1      | 1.28        |
+| `samtools` (in `BWAMEM1_MEM`) | 1.2         | 1.21        |
 
 ### Parameters
 
