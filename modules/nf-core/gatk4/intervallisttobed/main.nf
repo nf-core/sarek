@@ -19,7 +19,7 @@ process GATK4_INTERVALLISTTOBED {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     def avail_mem = 3072
     if (!task.memory) {
@@ -42,7 +42,7 @@ process GATK4_INTERVALLISTTOBED {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     touch ${prefix}.bed
