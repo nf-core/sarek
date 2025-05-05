@@ -268,7 +268,6 @@
                 "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,5240b9f1c9a1dc242510babbcd77260e",
                 "samtools_alignment_plot.txt:md5,ba0a498ef058208d655abfedcfcad496",
-                "test-test_L1_umi-consensus.bam:md5,0559f5dcf83e9d580e2478deb7c73b56",
                 "test.md.mosdepth.global.dist.txt:md5,09d22913aa50a0207f97a3f85b182c6e",
                 "test.md.mosdepth.region.dist.txt:md5,61676a4a3668c0e84eb0f56dc6bda1ae",
                 "test.md.mosdepth.summary.txt:md5,9bbea5e4d213a51f501c2aadff8d4526",

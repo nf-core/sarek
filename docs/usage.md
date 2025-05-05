@@ -168,6 +168,18 @@ patient1,XX,1,tumor_sample,lane_2,test2_L002.bam
 patient1,XX,1,relapse_sample,lane_1,test3_L001.bam
 ```
 
+#### Using GPU accelerated alignment (parabricks)
+
+:::info
+This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
+:::
+
+To use the GPU based `parabricks/fq2bam` as an alternative to the CPU bsed GATK implementation add `--aligner parabricks --profile <docker/singularity>,gpu` to your run command. The parabricks implementation does not support the use of this pipeline with `--profile conda`.
+
+At the moment the implementation supports running the complete fq2bam module which does bwa-mem based alignment, coordinate sorting, duplicate marking and base quality score recalibration. We are working on making these individual components skippable (comparable to the GATK implementation) see [Issue #1853](https://github.com/nf-core/sarek/issues/1853) for more details on the ongoing work.
+
+The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if `--save_mapped` is set.
+
 ### Start with duplicate marking (`--step markduplicates`)
 
 #### Duplicate Marking
@@ -395,6 +407,8 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow ` 24.03.0-edge` or later).
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
+- `gpu`
+  - A generic configuration profile which adds necessary flags to `docker` and `singularity` profiles.
 
 ## `-resume`
 

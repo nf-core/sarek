@@ -14,7 +14,7 @@ include { FASTP                                             } from '../../../mod
 include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO                  } from '../../../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
 
 // Map input reads to reference genome
-include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON          } from '../../../subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main'
+include { FASTQ_ALIGN                                       } from '../../../subworkflows/local/fastq_align/main'
 
 // Merge and index BAM files (optional)
 include { BAM_MERGE_INDEX_SAMTOOLS                          } from '../../../subworkflows/local/bam_merge_index_samtools/main'
@@ -42,7 +42,7 @@ include { BAM_BASERECALIBRATOR_SPARK                        } from '../../../sub
 include { BAM_APPLYBQSR                                     } from '../../../subworkflows/local/bam_applybqsr/main'
 include { BAM_APPLYBQSR_SPARK                               } from '../../../subworkflows/local/bam_applybqsr_spark/main'
 
-workflow FASTQ_ALIGN_GATK {
+workflow FASTQ_PREPROCESS_GATK {
     take:
         input_fastq
         input_sample
@@ -149,12 +149,12 @@ workflow FASTQ_ALIGN_GATK {
 
         // reads will be sorted
         sort_bam = true
-        FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON(reads_for_alignment, index_alignment, sort_bam, fasta, fasta_fai)
+        FASTQ_ALIGN(reads_for_alignment, index_alignment, sort_bam, fasta, fasta_fai)
 
         // Grouping the bams from the same samples not to stall the workflow
         // Use groupKey to make sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all reads from all channels are mapped
-        bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bam
+        bam_mapped = FASTQ_ALIGN.out.bam
             .combine(reads_grouping_key) // Creates a tuple of [ meta, bam, reads_grouping_key ]
             .filter { meta1, _bam, meta2 -> meta1.sample == meta2.sample }
             // Add n_fastq and other variables to meta
@@ -172,7 +172,7 @@ workflow FASTQ_ALIGN_GATK {
             // Group
             .groupTuple()
 
-        bai_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bai
+        bai_mapped = FASTQ_ALIGN.out.bai
             .combine(reads_grouping_key) // Creates a tuple of [ meta, bai, reads_grouping_key ]
             .filter { meta1, _bai, meta2 -> meta1.sample == meta2.sample }
             // Add n_fastq and other variables to meta
@@ -214,7 +214,7 @@ workflow FASTQ_ALIGN_GATK {
         }
 
         // Gather used softwares versions
-        versions = versions.mix(FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.versions)
+        versions = versions.mix(FASTQ_ALIGN.out.versions)
     }
 
     if (params.step in ['mapping', 'markduplicates']) {
@@ -226,7 +226,7 @@ workflow FASTQ_ALIGN_GATK {
 
         // STEP 2: markduplicates (+QC) + convert to CRAM
 
-        // ch_bam_for_markduplicates will contain bam mapped with FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON when step is mapping
+        // ch_bam_for_markduplicates will contain bam mapped with FASTQ_ALIGN when step is mapping
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
         cram_for_markduplicates = params.step == 'mapping' ? bam_mapped : input_sample.map{ meta, input, _index -> [ meta, input ] }
         // if no MD is done, then run QC on mapped & converted CRAM files
