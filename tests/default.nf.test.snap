@@ -85,10 +85,10 @@
                 "multiqc/multiqc_data/multiqc_samtools_stats.txt",
                 "multiqc/multiqc_data/multiqc_software_versions.txt",
                 "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/picard_MarkIlluminaAdapters_histogram.txt",
+                "multiqc/multiqc_data/picard_MeanQualityByCycle_histogram.txt",
+                "multiqc/multiqc_data/picard_QualityScoreDistribution_histogram.txt",
                 "multiqc/multiqc_data/picard_deduplication.txt",
-                "multiqc/multiqc_data/picard_histogram.txt",
-                "multiqc/multiqc_data/picard_histogram_1.txt",
-                "multiqc/multiqc_data/picard_histogram_2.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
@@ -273,10 +273,10 @@
                 "mosdepth_perchrom.txt:md5,264db67a99d2c90ea7b075e33c201b77",
                 "multiqc_citations.txt:md5,ace4ca89138a5f1e2be289c157c00bd9",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
-                "multiqc_samtools_stats.txt:md5,0f1e4c6c497d9a952765f9f3068ea4b9",
-                "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "multiqc_samtools_stats.txt:md5,de27f9aaca881d11534cf0c6d5f9eadc",
+                "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,c94f4d3ffa3f510552f90e173fdd9f9d",
                 "samtools_alignment_plot.txt:md5,717f499a3543e7ee4c7a8454bf80aeca",
                 "test.strelka.variants.bcftools_stats.txt:md5,86bd4938eed920d36f3f5937102a2967",
@@ -305,8 +305,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.02.1"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-02T15:44:44.567674265"
+        "timestamp": "2025-05-02T08:50:18.962269506"
     }
 }

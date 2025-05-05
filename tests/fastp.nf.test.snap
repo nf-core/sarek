@@ -87,10 +87,10 @@
                 "multiqc/multiqc_data/multiqc_samtools_stats.txt",
                 "multiqc/multiqc_data/multiqc_software_versions.txt",
                 "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/picard_MarkIlluminaAdapters_histogram.txt",
+                "multiqc/multiqc_data/picard_MeanQualityByCycle_histogram.txt",
+                "multiqc/multiqc_data/picard_QualityScoreDistribution_histogram.txt",
                 "multiqc/multiqc_data/picard_deduplication.txt",
-                "multiqc/multiqc_data/picard_histogram.txt",
-                "multiqc/multiqc_data/picard_histogram_1.txt",
-                "multiqc/multiqc_data/picard_histogram_2.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
                 "multiqc/multiqc_plots",
@@ -290,7 +290,7 @@
                 "fastp-seq-quality-plot_Read_1_Before_filtering.txt:md5,6d3f0f8dfcf9d06b5170f25560f41381",
                 "fastp-seq-quality-plot_Read_2_After_filtering.txt:md5,922e2838b8db8cb7237202a91a116b0d",
                 "fastp-seq-quality-plot_Read_2_Before_filtering.txt:md5,6df6151fdceb012dbbd3d8ed241e052d",
-                "fastp_filtered_reads_plot.txt:md5,151a12fe2ca927de29cb697d781ed372",
+                "fastp_filtered_reads_plot.txt:md5,af65be8a3a3f3fd0364f97e7b880b36b",
                 "fastqc-status-check-heatmap.txt:md5,a020b9689ddeb4abec16b4854fe452f1",
                 "fastqc_adapter_content_plot.txt:md5,2e1b72be741319e7fadbbb39d7e5b37d",
                 "fastqc_per_base_n_content_plot.txt:md5,ad3b971a6bb4e8ba6c844c8a03584eb8",
@@ -309,10 +309,10 @@
                 "multiqc_citations.txt:md5,0e2971e7a873c92592112775fa99fb02",
                 "multiqc_fastp.txt:md5,ad68ff660e3c39604e8dcd07e38ca98f",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
-                "multiqc_samtools_stats.txt:md5,f5b8f97c795b9e20524f4b112c63a1de",
-                "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "multiqc_samtools_stats.txt:md5,5c0414c4f4b5b8fe0853f668a6076534",
+                "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,2c6130084accd16f188e68e595307362",
                 "samtools_alignment_plot.txt:md5,5aefdd8aaa9bfdeb0792b8d89c6ad878",
                 "test-test_L1_1.fastp.fastq.gz:md5,f1a5c524cae7be9b5ca9a4138f847cfa",
@@ -343,7 +343,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T12:34:00.883611792"
+        "timestamp": "2025-05-02T09:05:45.907001399"
     },
     "split fastq | -profile test,split_fastq": {
         "content": [
@@ -433,10 +433,10 @@
                 "multiqc/multiqc_data/multiqc_samtools_stats.txt",
                 "multiqc/multiqc_data/multiqc_software_versions.txt",
                 "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/picard_MarkIlluminaAdapters_histogram.txt",
+                "multiqc/multiqc_data/picard_MeanQualityByCycle_histogram.txt",
+                "multiqc/multiqc_data/picard_QualityScoreDistribution_histogram.txt",
                 "multiqc/multiqc_data/picard_deduplication.txt",
-                "multiqc/multiqc_data/picard_histogram.txt",
-                "multiqc/multiqc_data/picard_histogram_1.txt",
-                "multiqc/multiqc_data/picard_histogram_2.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
                 "multiqc/multiqc_plots",
@@ -648,7 +648,7 @@
                 "fastp-seq-quality-plot_Read_1_Before_filtering.txt:md5,6d3f0f8dfcf9d06b5170f25560f41381",
                 "fastp-seq-quality-plot_Read_2_After_filtering.txt:md5,6df6151fdceb012dbbd3d8ed241e052d",
                 "fastp-seq-quality-plot_Read_2_Before_filtering.txt:md5,6df6151fdceb012dbbd3d8ed241e052d",
-                "fastp_filtered_reads_plot.txt:md5,9181183c225b363cb86d6cbf5494b84f",
+                "fastp_filtered_reads_plot.txt:md5,0e3e0f4f626a6599d5674f640e4ed5e2",
                 "fastqc-status-check-heatmap.txt:md5,a020b9689ddeb4abec16b4854fe452f1",
                 "fastqc_adapter_content_plot.txt:md5,2e1b72be741319e7fadbbb39d7e5b37d",
                 "fastqc_per_base_n_content_plot.txt:md5,ad3b971a6bb4e8ba6c844c8a03584eb8",
@@ -667,10 +667,10 @@
                 "multiqc_citations.txt:md5,0e2971e7a873c92592112775fa99fb02",
                 "multiqc_fastp.txt:md5,8de3ae0031cdbc45d6d28116c4141ee5",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
-                "multiqc_samtools_stats.txt:md5,162c31a7854b4a26a4884a8744ac038d",
-                "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "multiqc_samtools_stats.txt:md5,0109974e74f32942f607957f61e5fcb9",
+                "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,99fbfb76afd6106fa9a18dc5bfdcad26",
                 "samtools_alignment_plot.txt:md5,6322d00c2442fdb6815dd90d58548af8",
                 "0001.test-test_L1_1.fastp.fastq.gz:md5,8c9691556887b9f283f072a44626334c",
@@ -713,6 +713,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T12:36:35.676605357"
+        "timestamp": "2025-05-02T09:07:49.668978131"
     }
 }
