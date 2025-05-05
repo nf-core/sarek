@@ -72,4 +72,24 @@ nextflow_pipeline {
             )
         }
     }
+
+    test("-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null --aligner parabricks") {
+
+        when {
+            params {
+                input = "${projectDir}/tests/csv/3.0/fastq_umi.csv"
+                outdir = "$outputDir"
+                tools = null
+                umi_read_structure = '+T 7M1S+T'
+                aligner = 'parabricks'
+            }
+        }
+
+        then {
+            assert workflow.failed
+            assertAll(
+                { assert workflow.stdout.toString().contains("Parabricks fq2bam is currently not compatible with FGBio UMI handeling. Please choose a different aligner.") }
+            )
+        }
+    }
 }
