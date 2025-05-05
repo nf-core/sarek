@@ -16,7 +16,7 @@ process GATK4_GENOMICSDBIMPORT {
     output:
     tuple val(meta), path("$prefix")        , optional:true, emit: genomicsdb
     tuple val(meta), path("$updated_db")    , optional:true, emit: updatedb
-    tuple val(meta), path("$interval_list"), optional:true, emit: intervallist
+    tuple val(meta), path("*.interval_list"), optional:true, emit: intervallist
     path "versions.yml"                                    , emit: versions
 
     when:
@@ -45,7 +45,6 @@ process GATK4_GENOMICSDBIMPORT {
         interval_command = ''
         updated_db = "${wspace}"
     }
-	interval_list = interval_file ? interval_file : "${prefix}.interval_list"
 
     def avail_mem = 3072
     if (!task.memory) {
