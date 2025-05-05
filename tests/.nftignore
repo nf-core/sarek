@@ -27,6 +27,8 @@ reports/EnsemblVEP/*/*.ann.summary.html
 reports/fastp/**/*.fastp.{log,html}
 reports/fastqc/**/*_fastqc.{html,zip}
 reports/markduplicates/**/*.md.cram.metrics
+reports/ngscheckmate/ngscheckmate.pdf
+reports/ngscheckmate/vcfs/*.ngscheckmate.vcf.gz
 reports/samtools/**/**.cram.stats
 reports/snpeff/*/*_snpEff.csv
 reports/snpeff/*/snpEff_summary.html
@@ -36,4 +38,5 @@ variant_calling/**/*.vcf.{gz,gz.tbi}
 variant_calling/cnvkit/*/*.pdf
 variant_calling/controlfreec/*/config.txt
 variant_calling/muse/*/*.MuSE.txt
+variant_calling/mutect2/*/*.mutect2.artifactprior.tar.gz
 variant_calling/tiddit/*/*.tiddit.ploidies.tab

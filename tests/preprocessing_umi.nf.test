@@ -6,15 +6,14 @@ nextflow_pipeline {
     tag "pipeline_sarek"
     tag "cpu"
 
-    test("-profile test --input bam_and_fastq_and_spring.csv --save_mapped --save_output_as_bam") {
+    test("-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null") {
 
         when {
             params {
-                input = "${projectDir}/tests/csv/3.0/bam_and_fastq_and_spring.csv"
-                tools = ''
+                input = "${projectDir}/tests/csv/3.0/fastq_umi.csv"
                 outdir = "$outputDir"
-                save_mapped = true
-                save_output_as_bam = true
+                tools = null
+                umi_read_structure = '+T 7M1S+T'
             }
         }
 
@@ -50,6 +49,26 @@ nextflow_pipeline {
                     // All vcf files
                     vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
                 ).match() }
+            )
+        }
+    }
+
+    test("-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null --aligner sentieon-bwamem") {
+
+        when {
+            params {
+                input = "${projectDir}/tests/csv/3.0/fastq_umi.csv"
+                outdir = "$outputDir"
+                tools = null
+                umi_read_structure = '+T 7M1S+T'
+                aligner = 'sentieon-bwamem'
+            }
+        }
+
+        then {
+            assert workflow.failed
+            assertAll(
+                { assert workflow.stdout.toString().contains("Sentieon BWA is currently not compatible with FGBio UMI handeling. Please choose a different aligner.") }
             )
         }
     }

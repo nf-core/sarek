@@ -6,15 +6,18 @@ nextflow_pipeline {
     tag "pipeline_sarek"
     tag "cpu"
 
-    test("-profile test --aligner dragmap --save_reference skip QC/recal/md") {
+    test("-profile test --tools ngscheckmate") {
 
         when {
             params {
-                aligner = 'dragmap'
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+                fasta = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta'
+                fasta_fai = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai'
+                intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed'
+                input = "${projectDir}/tests/csv/3.0/recalibrated.csv"
                 outdir = "$outputDir"
-                save_reference = true
-                skip_tools = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
-                tools = ''
+                step = "variant_calling"
+                tools = 'ngscheckmate'
             }
         }
 
@@ -54,17 +57,20 @@ nextflow_pipeline {
         }
     }
 
-    test("-profile test --aligner dragmap --save_reference --build_only_index") {
+    test("-profile test --tools ngscheckmate -stub") {
+
+        options "-stub"
 
         when {
             params {
-                aligner = 'dragmap'
-                build_only_index = true
-                input = false
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+                fasta = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta'
+                fasta_fai = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai'
+                intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed'
+                input = "${projectDir}/tests/csv/3.0/recalibrated.csv"
                 outdir = "$outputDir"
-                save_reference = true
-                skip_tools = 'multiqc'
-                tools = ''
+                step = "variant_calling"
+                tools = 'ngscheckmate'
             }
         }
 
@@ -98,7 +104,8 @@ nextflow_pipeline {
                     // All cram files
                     cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
                     // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
+                    // CANNOT SNAPSHOT CONTENT FROM EMPTY FILES
+                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files
                 ).match() }
             )
         }

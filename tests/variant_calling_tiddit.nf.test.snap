@@ -93,18 +93,17 @@
                 "sample1.tiddit.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample1.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-                [
-                    "sample1.tiddit.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "sample1.tiddit.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T19:15:44.389711484"
+        "timestamp": "2025-04-28T17:23:16.417462067"
     },
     "-profile test --tools tiddit tumoronly": {
         "content": [
@@ -200,18 +199,17 @@
                 "sample2.tiddit.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample2.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-                [
-                    "sample2.tiddit.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "sample2.tiddit.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T19:18:58.513173281"
+        "timestamp": "2025-04-28T17:26:44.820878609"
     },
     "-profile test --tools tiddit somatic": {
         "content": [
@@ -340,29 +338,19 @@
                 "sample4_vs_sample3.tiddit_sv_merge.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample4_vs_sample3.tiddit_sv_merge.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-                [
-                    "sample3.tiddit.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample4_vs_sample3.tiddit.normal.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample4_vs_sample3.tiddit.tumor.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample4_vs_sample3.tiddit_sv_merge.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "sample3.tiddit.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.tiddit.normal.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.tiddit.tumor.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.tiddit_sv_merge.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-08T19:17:40.338531074"
+        "timestamp": "2025-04-28T17:25:36.493663121"
     }
 }

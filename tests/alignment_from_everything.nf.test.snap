@@ -398,62 +398,27 @@
                 "test_bam.recal.regions.bed.gz:md5,0e5ed846b9b11717e42e93eec60f4ffc",
                 "test_bam.recal.regions.bed.gz.csi:md5,633cc0252eb2246a0943aec7e7512e3e"
             ],
-            "No CRAM files",
             [
-                [
-                    "test.sorted.bam",
-                    "59ecc5c82c7af1283eea7507c590c831"
-                ],
-                [
-                    "test2.sorted.bam",
-                    "59ecc5c82c7af1283eea7507c590c831"
-                ],
-                [
-                    "test3.sorted.bam",
-                    "59ecc5c82c7af1283eea7507c590c831"
-                ],
-                [
-                    "test_bam.sorted.bam",
-                    "6934a96fff1eaa2f70b31ab7e11d3598"
-                ],
-                [
-                    "test.md.bam",
-                    "59ecc5c82c7af1283eea7507c590c831"
-                ],
-                [
-                    "test2.md.bam",
-                    "59ecc5c82c7af1283eea7507c590c831"
-                ],
-                [
-                    "test3.md.bam",
-                    "59ecc5c82c7af1283eea7507c590c831"
-                ],
-                [
-                    "test_bam.md.bam",
-                    "6934a96fff1eaa2f70b31ab7e11d3598"
-                ],
-                [
-                    "test.recal.bam",
-                    "654909615a48db30bdc14ec4d9d7d17c"
-                ],
-                [
-                    "test2.recal.bam",
-                    "654909615a48db30bdc14ec4d9d7d17c"
-                ],
-                [
-                    "test3.recal.bam",
-                    "654909615a48db30bdc14ec4d9d7d17c"
-                ],
-                [
-                    "test_bam.recal.bam",
-                    "95a95d43e1db35c58b311dee4338c05b"
-                ]
-            ]
+                "test.sorted.bam:md5,59ecc5c82c7af1283eea7507c590c831",
+                "test2.sorted.bam:md5,59ecc5c82c7af1283eea7507c590c831",
+                "test3.sorted.bam:md5,59ecc5c82c7af1283eea7507c590c831",
+                "test_bam.sorted.bam:md5,6934a96fff1eaa2f70b31ab7e11d3598",
+                "test.md.bam:md5,59ecc5c82c7af1283eea7507c590c831",
+                "test2.md.bam:md5,59ecc5c82c7af1283eea7507c590c831",
+                "test3.md.bam:md5,59ecc5c82c7af1283eea7507c590c831",
+                "test_bam.md.bam:md5,6934a96fff1eaa2f70b31ab7e11d3598",
+                "test.recal.bam:md5,654909615a48db30bdc14ec4d9d7d17c",
+                "test2.recal.bam:md5,654909615a48db30bdc14ec4d9d7d17c",
+                "test3.recal.bam:md5,654909615a48db30bdc14ec4d9d7d17c",
+                "test_bam.recal.bam:md5,95a95d43e1db35c58b311dee4338c05b"
+            ],
+            "No CRAM files",
+            "No VCF files"
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.6"
         },
-        "timestamp": "2025-03-10T11:13:03.085460403"
+        "timestamp": "2025-04-28T12:16:38.102207568"
     }
 }
