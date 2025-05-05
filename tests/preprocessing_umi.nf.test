@@ -68,7 +68,7 @@ nextflow_pipeline {
         then {
             assert workflow.failed
             assertAll(
-                { assert workflow.stdout.toString().contains("Sentieon BWA is currently not compatible with FGBio UMI handeling. Please choose a different aligner.") }
+                { assert workflow.stdout.toString().contains("sentieon-bwamem is currently not compatible with FGBio UMI handeling. Please choose a different aligner.") }
             )
         }
     }
@@ -88,7 +88,7 @@ nextflow_pipeline {
         then {
             assert workflow.failed
             assertAll(
-                { assert workflow.stdout.toString().contains("Parabricks fq2bam is currently not compatible with FGBio UMI handeling. Please choose a different aligner.") }
+                { assert workflow.stdout.toString().contains("parabricks is currently not compatible with FGBio UMI handeling. Please choose a different aligner.") }
             )
         }
     }
