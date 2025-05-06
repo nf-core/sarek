@@ -221,3 +221,33 @@ You can cite the `nf-core` publication as follows:
 ## CHANGELOG
 
 - [CHANGELOG](CHANGELOG.md)
+
+---
+
+## Run locally
+```
+source /data/jess_tmp/fresh_env/bin/activate
+
+export JAVA_HOME=/data/jess_tmp/myeloid_dir/jdk-21.0.1/
+
+export PATH="$JAVA_HOME/bin:$PATH:/home/jess" # java v21 and nf-test
+
+nextflow run nf-core/sarek  \
+  --input samplesheet.csv  \
+  --outdir /data/jess_tmp/sarek_results/ \
+  --tools haplotypecaller, mutect2, vep
+```
+
+## Run in DNAnexus
+```
+dx login
+
+dx build --nextflow \
+  --repository https://github.com/jess789550/sarek/ \
+  --destination project-Gzzg5v04B4q15JF0kGj8ZBxj:sarek
+
+dx run project-Gzzg5v04B4q15JF0kGj8ZBxj:sarek/sarek \
+  -i debug=false \
+  --destination project-Gzzg5v04B4q15JF0kGj8ZBxj:sarek/ \
+  --brief -y
+```
