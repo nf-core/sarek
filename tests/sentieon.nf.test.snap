@@ -14,7 +14,8 @@
                 },
                 "GATK4_MARKDUPLICATES": {
                     "gatk4": "4.6.1.0",
-                    "samtools": "1.19.2"
+                    "samtools": 1.21
+
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
