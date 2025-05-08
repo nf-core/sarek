@@ -1,7 +1,7 @@
 {
     "-profile test --step variant_calling --input tests/csv/3.0/recalibrated_somatic_two_normal_one_sample.csv": {
         "content": [
-            "[Patient [test] has more than one sample [2] with normal status [0] and one sample with tumor status [1].]"            
+            "[Patient [test] has more than one sample [2] with normal status [0] and one sample with tumor status [1].]"
         ],
         "meta": {
             "nf-test": "0.9.2",
