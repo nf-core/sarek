@@ -31,13 +31,11 @@
                 "preprocessing",
                 "preprocessing/mapped",
                 "preprocessing/mapped/test",
-                "preprocessing/mapped/test/test.sorted.crai",
                 "preprocessing/mapped/test/test.sorted.cram",
+                "preprocessing/mapped/test/test.sorted.cram.crai",
                 "reference"
             ],
-            [
-                "test.sorted.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ],
+            "No stable content",
             "No BAM files",
             [
                 "test.sorted.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
@@ -48,7 +46,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T12:43:09.875888523"
+        "timestamp": "2025-05-07T14:17:58.394906246"
     },
     "-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub": {
         "content": [
@@ -81,8 +79,8 @@
                 "preprocessing",
                 "preprocessing/mapped",
                 "preprocessing/mapped/test",
-                "preprocessing/mapped/test/test.sorted.crai",
                 "preprocessing/mapped/test/test.sorted.cram",
+                "preprocessing/mapped/test/test.sorted.cram.crai",
                 "reference",
                 "reference/bwa",
                 "reference/bwa/genome.amb",
@@ -97,7 +95,6 @@
             ],
             [
                 "fai.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "test.sorted.crai:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "genome.amb:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "genome.ann:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "genome.bwt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -117,7 +114,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T12:44:13.254814263"
+        "timestamp": "2025-05-08T10:32:16.526738968"
     },
     "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub": {
         "content": [
@@ -148,13 +145,11 @@
                 "preprocessing",
                 "preprocessing/mapped",
                 "preprocessing/mapped/test",
-                "preprocessing/mapped/test/test.sorted.crai",
                 "preprocessing/mapped/test/test.sorted.cram",
+                "preprocessing/mapped/test/test.sorted.cram.crai",
                 "reference"
             ],
-            [
-                "test.sorted.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ],
+            "No stable content",
             "No BAM files",
             [
                 "test.sorted.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
@@ -165,7 +160,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T12:41:52.783999657"
+        "timestamp": "2025-05-07T14:17:18.664227191"
     },
     "-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
         "content": [

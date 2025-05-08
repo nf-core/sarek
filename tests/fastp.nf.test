@@ -6,7 +6,7 @@ nextflow_pipeline {
     tag "pipeline_sarek"
     tag "cpu"
 
-    test("trimming | -profile test,trimming --save_trimmed") {
+    test("-profile test,trimming --save_trimmed") {
 
         when {
             params {
@@ -63,7 +63,7 @@ nextflow_pipeline {
         }
     }
 
-    test("split fastq | -profile test,split_fastq") {
+    test("-profile test,split_fastq") {
 
         when {
             params {
