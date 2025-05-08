@@ -4,10 +4,10 @@
             17,
             {
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "FREEBAYES": {
                     "freebayes": "1.3.6"
@@ -116,14 +116,14 @@
             ],
             [
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "sample2.freebayes.bcftools_stats.txt:md5,47adcedfdc355d4a35d2a9695962be13",
+                "sample2.freebayes.bcftools_stats.txt:md5,716b2277c7498ce8d59f8357d500bf6c",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample2.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample2.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
+                "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
                 "sample2.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample2.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
+                "sample2.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
                 "sample2.freebayes.FILTER.summary:md5,0df3ddeec5779344b5d463347c9c6ea8",
                 "sample2.freebayes.TsTv.count:md5,b1d308ed5087361a584cb61e7b835e1e"
             ],
@@ -151,17 +151,17 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T15:56:52.82766352"
+        "timestamp": "2025-05-08T18:56:09.099010463"
     },
     "-profile test --tools freebayes --no_intervals --wes --input fastq_pair.csv": {
         "content": [
             37,
             {
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
@@ -182,7 +182,6 @@
                 "GATK4_MARKDUPLICATES": {
                     "gatk4": "4.6.1.0",
                     "samtools": 1.21
-
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
@@ -194,7 +193,7 @@
                     "samtools": 1.21
                 },
                 "TABIX_VC_FREEBAYES": {
-                    "tabix": 1.2
+                    "tabix": 1.21
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -477,28 +476,28 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,d81e84864ecb732951a137e88d87a263",
                 "samtools_alignment_plot.txt:md5,e757696d1f7107df2bd4ad92f607272e",
-                "test.freebayes.bcftools_stats.txt:md5,110684ce9105d6e9f4f1b2eb04b88bdc",
-                "test2_vs_test.freebayes.bcftools_stats.txt:md5,1e4b9bb2973f705991068d9ee4951267",
+                "test.freebayes.bcftools_stats.txt:md5,cff6037c4982d00a133b9a32b2aeb435",
+                "test2_vs_test.freebayes.bcftools_stats.txt:md5,b16283c84db55e5fef4353b8234710d4",
                 "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.md.mosdepth.summary.txt:md5,0010c2396a3173c7cf4983abe2eb6a4c",
                 "test.md.per-base.bed.gz:md5,34dfe443c0a0767562dd65272e3310ef",
-                "test.md.per-base.bed.gz.csi:md5,828c6dcb1df46953672b782093832dc3",
+                "test.md.per-base.bed.gz.csi:md5,b0ab630c3241fbd7581b7a38d944ff8b",
                 "test.recal.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.recal.mosdepth.summary.txt:md5,0010c2396a3173c7cf4983abe2eb6a4c",
                 "test.recal.per-base.bed.gz:md5,34dfe443c0a0767562dd65272e3310ef",
-                "test.recal.per-base.bed.gz.csi:md5,828c6dcb1df46953672b782093832dc3",
+                "test.recal.per-base.bed.gz.csi:md5,b0ab630c3241fbd7581b7a38d944ff8b",
                 "test2.md.mosdepth.global.dist.txt:md5,f25166c3a0051bb4d8c11a210278de6c",
                 "test2.md.mosdepth.summary.txt:md5,d5e4084de2ea2a0a7b60b2d71c804d4b",
                 "test2.md.per-base.bed.gz:md5,e1c6d60621d8f64aaf28fa1c1ddda921",
-                "test2.md.per-base.bed.gz.csi:md5,69f4da029c05e9bcccae8895b6247a1e",
+                "test2.md.per-base.bed.gz.csi:md5,4205a09ede17cdbdaad45e3553f73105",
                 "test2.recal.mosdepth.global.dist.txt:md5,f25166c3a0051bb4d8c11a210278de6c",
                 "test2.recal.mosdepth.summary.txt:md5,d5e4084de2ea2a0a7b60b2d71c804d4b",
                 "test2.recal.per-base.bed.gz:md5,e1c6d60621d8f64aaf28fa1c1ddda921",
-                "test2.recal.per-base.bed.gz.csi:md5,69f4da029c05e9bcccae8895b6247a1e",
+                "test2.recal.per-base.bed.gz.csi:md5,4205a09ede17cdbdaad45e3553f73105",
                 "test.freebayes.FILTER.summary:md5,76c5919541536c12b5c8a6094d6d78d5",
-                "test.freebayes.TsTv.count:md5,0a0464beef110bc0f3c5a35d022b528e",
+                "test.freebayes.TsTv.count:md5,91c93bad844367dc6a1adedea802b9d9",
                 "test2_vs_test.freebayes.FILTER.summary:md5,d2d717fef7c18ef9b40bbbc5c5bbf101",
-                "test2_vs_test.freebayes.TsTv.count:md5,e09dacc71bf72254e3aace1cc7c1e16d"
+                "test2_vs_test.freebayes.TsTv.count:md5,fe2ee32e2f0b0a7923064e71ebae4502"
             ],
             "No BAM files",
             [
@@ -544,17 +543,17 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-05-02T09:25:01.191800567"
+        "timestamp": "2025-05-08T18:53:33.220951234"
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20": {
         "content": [
             31,
             {
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
@@ -578,7 +577,6 @@
                 "GATK4_MARKDUPLICATES": {
                     "gatk4": "4.6.1.0",
                     "samtools": 1.21
-
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
@@ -835,36 +833,36 @@
                 "fastqc_sequence_counts_plot.txt:md5,7f0f19a58e8e54e792a751fd04a9ae13",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,92b02e250ff78725deb9a10d510fcecc",
                 "fastqc_sequence_length_distribution_plot.txt:md5,fb04dce68ec566314125bc9438211b28",
-                "mosdepth-coverage-per-contig-single.txt:md5,3914c1896454cc5b176a66737524690d",
-                "mosdepth-cumcoverage-dist-id.txt:md5,d20db85d15395e60fe7c667292fb8cd2",
-                "mosdepth_cov_dist.txt:md5,66f531e1c6f8efabddb86421022e8753",
-                "mosdepth_cumcov_dist.txt:md5,66f531e1c6f8efabddb86421022e8753",
-                "mosdepth_perchrom.txt:md5,3914c1896454cc5b176a66737524690d",
+                "mosdepth-coverage-per-contig-single.txt:md5,c9c35a540ea3b9915085e3a6a36d77a5",
+                "mosdepth-cumcoverage-dist-id.txt:md5,7d1bd7a21efd90ba3c6cf26a84d06911",
+                "mosdepth_cov_dist.txt:md5,d2b4b912053a46f772a9bbefd70c6e70",
+                "mosdepth_cumcov_dist.txt:md5,d2b4b912053a46f772a9bbefd70c6e70",
+                "mosdepth_perchrom.txt:md5,c9c35a540ea3b9915085e3a6a36d77a5",
                 "multiqc_citations.txt:md5,ace4ca89138a5f1e2be289c157c00bd9",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
-                "multiqc_samtools_stats.txt:md5,de27f9aaca881d11534cf0c6d5f9eadc",
+                "multiqc_samtools_stats.txt:md5,dedb8d6b6d5a7ddc597975afdf5610dc",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,c94f4d3ffa3f510552f90e173fdd9f9d",
+                "samtools-stats-dp.txt:md5,545466eeeb8c9bfde6c119cb17392f81",
                 "samtools_alignment_plot.txt:md5,717f499a3543e7ee4c7a8454bf80aeca",
-                "test.freebayes.bcftools_stats.txt:md5,9cf08a94d093de3ff335f3ef42e82f6d",
-                "test.md.mosdepth.global.dist.txt:md5,e4ce28ba1c331dc08bc53a0189908f77",
-                "test.md.mosdepth.region.dist.txt:md5,04d9f20dc5306990eec982a3c5a7d107",
-                "test.md.mosdepth.summary.txt:md5,70b4bbe29bd5e7c4ea39b6caf3316096",
-                "test.md.per-base.bed.gz:md5,9ace6ac0d2e4cd5011ef45ae528da2c7",
-                "test.md.per-base.bed.gz.csi:md5,594e690685bfd305836161c88daace09",
-                "test.md.regions.bed.gz:md5,e39c27885a30c0321f3cb7c7fb6c5edc",
-                "test.md.regions.bed.gz.csi:md5,e1a52ced0e9ded1eecbca4eff2014c8e",
-                "test.recal.mosdepth.global.dist.txt:md5,9c1d90e0fed14b710098b7724b602aea",
-                "test.recal.mosdepth.region.dist.txt:md5,04d9f20dc5306990eec982a3c5a7d107",
-                "test.recal.mosdepth.summary.txt:md5,17dfb78b147488eb8fd450294de4a35e",
-                "test.recal.per-base.bed.gz:md5,e112e852ae92f43f1fd6e446f449031a",
-                "test.recal.per-base.bed.gz.csi:md5,bb424ead65ffe782f6eaa3663ea65721",
-                "test.recal.regions.bed.gz:md5,e39c27885a30c0321f3cb7c7fb6c5edc",
-                "test.recal.regions.bed.gz.csi:md5,e1a52ced0e9ded1eecbca4eff2014c8e",
-                "test.freebayes.FILTER.summary:md5,75824ce08910acce7e9f6adb4d635850",
-                "test.freebayes.TsTv.count:md5,3c198f7ec7fe2f5d365218ba0ff64197"
+                "test.freebayes.bcftools_stats.txt:md5,6cc46818b9aed1d38a1f1032090ef528",
+                "test.md.mosdepth.global.dist.txt:md5,531a83245143e7975f18e1988c876138",
+                "test.md.mosdepth.region.dist.txt:md5,d25723bdd3fec6b17d2462abfa097b9e",
+                "test.md.mosdepth.summary.txt:md5,87be70cd1237d7af9aa40d8cd8b3a817",
+                "test.md.per-base.bed.gz:md5,c53d26b767b6e75b3e502438a77f89b2",
+                "test.md.per-base.bed.gz.csi:md5,c3066b00781e14a9db5fc0bf0d47d777",
+                "test.md.regions.bed.gz:md5,f96fa1cdae548eb7e54ce6a481d928b9",
+                "test.md.regions.bed.gz.csi:md5,c6d1ac97ef4dfe43731c8368d8391cab",
+                "test.recal.mosdepth.global.dist.txt:md5,a3e6c8f6d4b5e909d0527be83a93fbae",
+                "test.recal.mosdepth.region.dist.txt:md5,d25723bdd3fec6b17d2462abfa097b9e",
+                "test.recal.mosdepth.summary.txt:md5,ca5424a709268a61200a2dc2865f1a14",
+                "test.recal.per-base.bed.gz:md5,8aaf9cb3dd5c9643e77aba91293fc39d",
+                "test.recal.per-base.bed.gz.csi:md5,d8038c7d544abd5d6335f2541de4e769",
+                "test.recal.regions.bed.gz:md5,f96fa1cdae548eb7e54ce6a481d928b9",
+                "test.recal.regions.bed.gz.csi:md5,c6d1ac97ef4dfe43731c8368d8391cab",
+                "test.freebayes.FILTER.summary:md5,25c222bca4740f969a44ae9705e98068",
+                "test.freebayes.TsTv.count:md5,8f48b74a55f5726568f7d088ae578de9"
             ],
             "No BAM files",
             [
@@ -885,7 +883,7 @@
                         "##FORMAT=<ID=PL,Number=G,Type=Integer,Description=\"Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification\">",
                         "##FORMAT=<ID=QA,Number=A,Type=Integer,Description=\"Sum of quality of the alternate observations\">"
                     ],
-                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=502, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=475, phased=false, phasedAutodetect=false]"
                 ]
             ]
         ],
@@ -893,17 +891,17 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-05-02T09:16:55.424008803"
+        "timestamp": "2025-05-08T18:38:38.394184756"
     },
     "-profile test --tools freebayes --no_intervals": {
         "content": [
             22,
             {
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
@@ -924,7 +922,6 @@
                 "GATK4_MARKDUPLICATES": {
                     "gatk4": "4.6.1.0",
                     "samtools": 1.21
-
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
@@ -936,7 +933,7 @@
                     "samtools": 1.21
                 },
                 "TABIX_VC_FREEBAYES": {
-                    "tabix": 1.2
+                    "tabix": 1.21
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -1177,32 +1174,32 @@
                 "fastqc_sequence_counts_plot.txt:md5,7f0f19a58e8e54e792a751fd04a9ae13",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,92b02e250ff78725deb9a10d510fcecc",
                 "fastqc_sequence_length_distribution_plot.txt:md5,fb04dce68ec566314125bc9438211b28",
-                "mosdepth-coverage-per-contig-single.txt:md5,264db67a99d2c90ea7b075e33c201b77",
-                "mosdepth-cumcoverage-dist-id.txt:md5,5235e965da7ebe3bfebb24ffa88defff",
-                "mosdepth_cov_dist.txt:md5,8d0d7cb485a7bffb07da17b28f827120",
-                "mosdepth_cumcov_dist.txt:md5,8d0d7cb485a7bffb07da17b28f827120",
-                "mosdepth_perchrom.txt:md5,264db67a99d2c90ea7b075e33c201b77",
+                "mosdepth-coverage-per-contig-single.txt:md5,759c540e5c35e84f2066d7a92fecf8e6",
+                "mosdepth-cumcoverage-dist-id.txt:md5,f747672151fc2d3700a09133181ed208",
+                "mosdepth_cov_dist.txt:md5,6769d443cfc128a729092e368ea4abed",
+                "mosdepth_cumcov_dist.txt:md5,6769d443cfc128a729092e368ea4abed",
+                "mosdepth_perchrom.txt:md5,759c540e5c35e84f2066d7a92fecf8e6",
                 "multiqc_citations.txt:md5,ace4ca89138a5f1e2be289c157c00bd9",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
-                "multiqc_samtools_stats.txt:md5,de27f9aaca881d11534cf0c6d5f9eadc",
+                "multiqc_samtools_stats.txt:md5,dedb8d6b6d5a7ddc597975afdf5610dc",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,c94f4d3ffa3f510552f90e173fdd9f9d",
+                "samtools-stats-dp.txt:md5,545466eeeb8c9bfde6c119cb17392f81",
                 "samtools_alignment_plot.txt:md5,717f499a3543e7ee4c7a8454bf80aeca",
-                "test.freebayes.bcftools_stats.txt:md5,4d453aa4634ba2211e3bc6cb0d7e1357",
-                "test.md.mosdepth.global.dist.txt:md5,b61e1acee11a6ddf7ce3232a5948a6a0",
-                "test.md.mosdepth.region.dist.txt:md5,1a382f98d488d2ae3df83a0d87caafc1",
-                "test.md.mosdepth.summary.txt:md5,839108358878ada89e1eaddf6e0541ba",
-                "test.md.regions.bed.gz:md5,6fdaec99e739dc0f47fe55dd64dfe93e",
-                "test.md.regions.bed.gz.csi:md5,5f9c60279af78e3aeafc96a8c11fb35f",
-                "test.recal.mosdepth.global.dist.txt:md5,b61e1acee11a6ddf7ce3232a5948a6a0",
-                "test.recal.mosdepth.region.dist.txt:md5,1a382f98d488d2ae3df83a0d87caafc1",
-                "test.recal.mosdepth.summary.txt:md5,839108358878ada89e1eaddf6e0541ba",
-                "test.recal.regions.bed.gz:md5,6fdaec99e739dc0f47fe55dd64dfe93e",
-                "test.recal.regions.bed.gz.csi:md5,5f9c60279af78e3aeafc96a8c11fb35f",
-                "test.freebayes.FILTER.summary:md5,562eaa4512cd4b57e6cfca7b44957d1c",
-                "test.freebayes.TsTv.count:md5,4e6935b1e1906e57be1b54c0dffe7169"
+                "test.freebayes.bcftools_stats.txt:md5,8f7a988dfa09a2484fcff83e96c5eda9",
+                "test.md.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
+                "test.md.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
+                "test.md.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
+                "test.md.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
+                "test.md.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
+                "test.recal.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
+                "test.recal.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
+                "test.recal.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
+                "test.recal.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
+                "test.recal.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
+                "test.freebayes.FILTER.summary:md5,d3606e0ad12a8b8947fd56ce22430ca1",
+                "test.freebayes.TsTv.count:md5,ba81c7be158efe78190bee509ee52255"
             ],
             "No BAM files",
             [
@@ -1223,7 +1220,7 @@
                         "##INFO=<ID=AO,Number=A,Type=Integer,Description=\"Count of full observations of this alternate haplotype.\">",
                         "##INFO=<ID=PRO,Number=1,Type=Float,Description=\"Reference allele observation count, with partial observations recorded fractionally\">"
                     ],
-                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=756, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=738, phased=false, phasedAutodetect=false]"
                 ]
             ]
         ],
@@ -1231,23 +1228,23 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-05-02T09:19:17.165931947"
+        "timestamp": "2025-05-08T18:43:20.770109901"
     },
     "-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv": {
         "content": [
             12,
             {
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "FREEBAYES": {
                     "freebayes": "1.3.6"
                 },
                 "TABIX_VC_FREEBAYES": {
-                    "tabix": 1.2
+                    "tabix": 1.21
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -1350,11 +1347,11 @@
             ],
             [
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "sample2.freebayes.bcftools_stats.txt:md5,8ff00f5f0b238ea63c9199b9742d0692",
+                "sample2.freebayes.bcftools_stats.txt:md5,dcf6642bb2bbe09910685ac17b7bc4c8",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample2.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
+                "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
                 "sample2.freebayes.FILTER.summary:md5,ee513ecf779b6e201b8ef98f95f25aab",
                 "sample2.freebayes.TsTv.count:md5,2dc153ad5af26c9f8aa82442bf65b4bf"
             ],
@@ -1382,17 +1379,17 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T15:59:00.273525948"
+        "timestamp": "2025-05-08T18:58:48.269196361"
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv": {
         "content": [
             52,
             {
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
@@ -1416,7 +1413,6 @@
                 "GATK4_MARKDUPLICATES": {
                     "gatk4": "4.6.1.0",
                     "samtools": 1.21
-
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
@@ -1723,38 +1719,38 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,d81e84864ecb732951a137e88d87a263",
                 "samtools_alignment_plot.txt:md5,e757696d1f7107df2bd4ad92f607272e",
-                "test.freebayes.bcftools_stats.txt:md5,b34d3aa4db414fc6776ce62c212c53d1",
-                "test2_vs_test.freebayes.bcftools_stats.txt:md5,300b53a10f1647e43719c9547a327e8a",
+                "test.freebayes.bcftools_stats.txt:md5,f362a7d25112f3e50b30f04c7791d900",
+                "test2_vs_test.freebayes.bcftools_stats.txt:md5,8984334341cf01f91835324e83148233",
                 "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.md.mosdepth.region.dist.txt:md5,835fdc6fa52cc33e6fb76c0c20a8a6c3",
                 "test.md.mosdepth.summary.txt:md5,dcc9ab2bf3248903e02d8da87e678977",
                 "test.md.per-base.bed.gz:md5,34dfe443c0a0767562dd65272e3310ef",
-                "test.md.per-base.bed.gz.csi:md5,828c6dcb1df46953672b782093832dc3",
+                "test.md.per-base.bed.gz.csi:md5,b0ab630c3241fbd7581b7a38d944ff8b",
                 "test.md.regions.bed.gz:md5,99cc80b920ba574e7d9ef8f59f54f7c6",
-                "test.md.regions.bed.gz.csi:md5,77c398bf19982ddf4272900832e3fe9b",
+                "test.md.regions.bed.gz.csi:md5,c6d1ac97ef4dfe43731c8368d8391cab",
                 "test.recal.mosdepth.global.dist.txt:md5,0b3162def977123809598639f7698121",
                 "test.recal.mosdepth.region.dist.txt:md5,835fdc6fa52cc33e6fb76c0c20a8a6c3",
                 "test.recal.mosdepth.summary.txt:md5,a8455eb2947de529abfa62b303986e0f",
                 "test.recal.per-base.bed.gz:md5,c075ccd2b847c7c04061a39717faeb30",
-                "test.recal.per-base.bed.gz.csi:md5,c44f956765d549fd55635a359f09ffd6",
+                "test.recal.per-base.bed.gz.csi:md5,4816eeb9af254ca40177b08cf11b98d2",
                 "test.recal.regions.bed.gz:md5,99cc80b920ba574e7d9ef8f59f54f7c6",
-                "test.recal.regions.bed.gz.csi:md5,77c398bf19982ddf4272900832e3fe9b",
+                "test.recal.regions.bed.gz.csi:md5,c6d1ac97ef4dfe43731c8368d8391cab",
                 "test2.md.mosdepth.global.dist.txt:md5,f25166c3a0051bb4d8c11a210278de6c",
                 "test2.md.mosdepth.region.dist.txt:md5,3211135329e4077bd9bf0ba488e14371",
                 "test2.md.mosdepth.summary.txt:md5,ce0eb6d33c6d0dc720fbc6d1811abef8",
                 "test2.md.per-base.bed.gz:md5,e1c6d60621d8f64aaf28fa1c1ddda921",
-                "test2.md.per-base.bed.gz.csi:md5,69f4da029c05e9bcccae8895b6247a1e",
+                "test2.md.per-base.bed.gz.csi:md5,4205a09ede17cdbdaad45e3553f73105",
                 "test2.md.regions.bed.gz:md5,0bb2549180165a99680ba3e453ea312f",
-                "test2.md.regions.bed.gz.csi:md5,e1a52ced0e9ded1eecbca4eff2014c8e",
+                "test2.md.regions.bed.gz.csi:md5,c6d1ac97ef4dfe43731c8368d8391cab",
                 "test2.recal.mosdepth.global.dist.txt:md5,a1ef7e662ce993da4668e804952014ce",
                 "test2.recal.mosdepth.region.dist.txt:md5,3211135329e4077bd9bf0ba488e14371",
                 "test2.recal.mosdepth.summary.txt:md5,70ad653c0c98baeeaf5085f1209a7bdb",
                 "test2.recal.per-base.bed.gz:md5,e992ef845ec91a3612297952a23ba579",
-                "test2.recal.per-base.bed.gz.csi:md5,49dec4905343693cb7812da9ee60037c",
+                "test2.recal.per-base.bed.gz.csi:md5,8072f447199c60f24b01eede8b557333",
                 "test2.recal.regions.bed.gz:md5,0bb2549180165a99680ba3e453ea312f",
-                "test2.recal.regions.bed.gz.csi:md5,e1a52ced0e9ded1eecbca4eff2014c8e",
-                "test.freebayes.FILTER.summary:md5,43d53e36cbb1091f915b2499e545b41e",
-                "test.freebayes.TsTv.count:md5,650f3dc78c5aaaecfe8ffa3d499e812f",
+                "test2.recal.regions.bed.gz.csi:md5,c6d1ac97ef4dfe43731c8368d8391cab",
+                "test.freebayes.FILTER.summary:md5,ac6a709b3f1a7c5e9f1b3d1eb42bc940",
+                "test.freebayes.TsTv.count:md5,698b790749e5cb643243572e2e7c1055",
                 "test2_vs_test.freebayes.FILTER.summary:md5,84039d55edf0981d6b9b81252aff6741",
                 "test2_vs_test.freebayes.TsTv.count:md5,6c6038d43eb7fa766909b495979d120e"
             ],
@@ -1802,6 +1798,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-05-02T09:22:24.20963219"
+        "timestamp": "2025-05-08T18:48:32.007891403"
     }
 }
