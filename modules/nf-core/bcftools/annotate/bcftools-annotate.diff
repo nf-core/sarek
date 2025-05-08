@@ -1,29 +1,26 @@
-Changes in module 'nf-core/bcftools/annotate'
+Changes in component 'nf-core/bcftools/annotate'
 Changes in 'bcftools/annotate/main.nf':
 --- modules/nf-core/bcftools/annotate/main.nf
 +++ modules/nf-core/bcftools/annotate/main.nf
-@@ -8,8 +8,10 @@
-         'biocontainers/bcftools:1.20--h8b25389_0' }"
+@@ -8,7 +8,9 @@
+         'community.wave.seqera.io/library/bcftools:1.21--4335bec1d7b44d11' }"
  
      input:
 -    tuple val(meta), path(input), path(index), path(annotations), path(annotations_index)
--    path(header_lines)
 +    tuple val(meta), path(input), path(index)
-+    path annotations
-+    path annotations_index
-+    path header_lines
++    path(annotations)
++    path(annotations_index)
+     path(header_lines)
+     path(rename_chrs)
  
-     output:
-     tuple val(meta), path("*.{vcf,vcf.gz,bcf,bcf.gz}"), emit: vcf
 
 'modules/nf-core/bcftools/annotate/meta.yml' is unchanged
 'modules/nf-core/bcftools/annotate/environment.yml' is unchanged
-'modules/nf-core/bcftools/annotate/tests/main.nf.test.snap' is unchanged
-'modules/nf-core/bcftools/annotate/tests/vcf_gz_index.config' is unchanged
-'modules/nf-core/bcftools/annotate/tests/vcf_gz_index_csi.config' is unchanged
-'modules/nf-core/bcftools/annotate/tests/bcf.config' is unchanged
-'modules/nf-core/bcftools/annotate/tests/vcf.config' is unchanged
-'modules/nf-core/bcftools/annotate/tests/main.nf.test' is unchanged
-'modules/nf-core/bcftools/annotate/tests/tags.yml' is unchanged
-'modules/nf-core/bcftools/annotate/tests/vcf_gz_index_tbi.config' is unchanged
+'modules/nf-core/bcftools/annotate/tests/main.nf.test.snap' was removed
+'modules/nf-core/bcftools/annotate/tests/vcf_gz_index.config' was removed
+'modules/nf-core/bcftools/annotate/tests/vcf_gz_index_csi.config' was removed
+'modules/nf-core/bcftools/annotate/tests/bcf.config' was removed
+'modules/nf-core/bcftools/annotate/tests/vcf.config' was removed
+'modules/nf-core/bcftools/annotate/tests/main.nf.test' was removed
+'modules/nf-core/bcftools/annotate/tests/vcf_gz_index_tbi.config' was removed
 ************************************************************

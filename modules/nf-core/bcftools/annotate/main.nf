@@ -8,7 +8,9 @@ process BCFTOOLS_ANNOTATE {
         'community.wave.seqera.io/library/bcftools:1.21--4335bec1d7b44d11' }"
 
     input:
-    tuple val(meta), path(input), path(index), path(annotations), path(annotations_index)
+    tuple val(meta), path(input), path(index)
+    path(annotations)
+    path(annotations_index)
     path(header_lines)
     path(rename_chrs)
 
