@@ -4,7 +4,7 @@
             40,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
@@ -22,7 +22,6 @@
                 "GATK4_MARKDUPLICATES": {
                     "gatk4": "4.6.1.0",
                     "samtools": 1.21
-
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
@@ -318,29 +317,29 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,d81e84864ecb732951a137e88d87a263",
                 "samtools_alignment_plot.txt:md5,e757696d1f7107df2bd4ad92f607272e",
-                "test.strelka.variants.bcftools_stats.txt:md5,550430d0b8336ac650b7e50bdfdc914c",
-                "test2_vs_test.strelka.somatic_indels.bcftools_stats.txt:md5,2ce8bffbfbb88c4da6a5239b11dc2f44",
-                "test2_vs_test.strelka.somatic_snvs.bcftools_stats.txt:md5,869e2d3a46760e2bea9b2e027002848d",
+                "test.strelka.variants.bcftools_stats.txt:md5,3e171488118dbc521668c1cb79414410",
+                "test2_vs_test.strelka.somatic_indels.bcftools_stats.txt:md5,5e8f9a8fdbc765ced736d0c8c7dd3a52",
+                "test2_vs_test.strelka.somatic_snvs.bcftools_stats.txt:md5,edb7763fad7b6f825e47e01ffa70adbc",
                 "test.md.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test.md.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test.md.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
                 "test.md.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
-                "test.md.regions.bed.gz.csi:md5,05d571f8d51ca6b1bde804d7a6d999af",
+                "test.md.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
                 "test.recal.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test.recal.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test.recal.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
                 "test.recal.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
-                "test.recal.regions.bed.gz.csi:md5,05d571f8d51ca6b1bde804d7a6d999af",
+                "test.recal.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
                 "test2.md.mosdepth.global.dist.txt:md5,2020cf6dfc7ddca020c921dd9f0549b7",
                 "test2.md.mosdepth.region.dist.txt:md5,38ff8b38c33b9231f047fea8ea830aae",
                 "test2.md.mosdepth.summary.txt:md5,8b991358768cade225470a07cd34f573",
                 "test2.md.regions.bed.gz:md5,08e767f91a0a8d82733f0040e804a85f",
-                "test2.md.regions.bed.gz.csi:md5,eba5aca0b8f72759192bbdd29330278e",
+                "test2.md.regions.bed.gz.csi:md5,d5f1c9389ecf52ba839e834780a94549",
                 "test2.recal.mosdepth.global.dist.txt:md5,2020cf6dfc7ddca020c921dd9f0549b7",
                 "test2.recal.mosdepth.region.dist.txt:md5,38ff8b38c33b9231f047fea8ea830aae",
                 "test2.recal.mosdepth.summary.txt:md5,8b991358768cade225470a07cd34f573",
                 "test2.recal.regions.bed.gz:md5,08e767f91a0a8d82733f0040e804a85f",
-                "test2.recal.regions.bed.gz.csi:md5,eba5aca0b8f72759192bbdd29330278e",
+                "test2.recal.regions.bed.gz.csi:md5,d5f1c9389ecf52ba839e834780a94549",
                 "test.strelka.variants.FILTER.summary:md5,dd87f507da7de20d5318841af312493b",
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
                 "test2_vs_test.strelka.somatic_indels.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
@@ -356,8 +355,8 @@
                 "test2.recal.cram:md5,f4205ab086600ba2927e1468dc732976"
             ],
             [
-                "test.strelka.genome.vcf.gz:md5,16437a040679d88b7d84a9276f793d6c",
-                "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565",
+                "test.strelka.genome.vcf.gz:md5,1e55bf36b678e91f8ac7ee73f37815c0",
+                "test.strelka.variants.vcf.gz:md5,e81855d97d9077edb8d99052ed595fd5",
                 "test2_vs_test.strelka.somatic_indels.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2_vs_test.strelka.somatic_snvs.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
@@ -366,6 +365,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-05-02T09:33:30.033068515"
+        "timestamp": "2025-05-08T13:01:50.459596949"
     }
 }
