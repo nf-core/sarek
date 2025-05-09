@@ -7,13 +7,13 @@
                     "gawk": "5.1.0"
                 },
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "CNNSCOREVARIANTS": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.5.0.0"
                 },
                 "FILTERVARIANTTRANCHES": {
                     "gatk4": "4.6.1.0"
@@ -25,19 +25,19 @@
                     "gatk4": "4.6.1.0"
                 },
                 "TABIX_EXT_VCF": {
-                    "tabix": 1.2
+                    "tabix": 1.21
                 },
                 "TABIX_VCFS_NORM_SORT": {
-                    "tabix": 1.2
+                    "tabix": 1.21
                 },
                 "TABIX_VC_FREEBAYES": {
-                    "tabix": 1.2
+                    "tabix": 1.21
                 },
                 "VCFS_NORM": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "VCFS_NORM_SORT": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -194,10 +194,10 @@
             ],
             [
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "testN.freebayes.norm.bcftools_stats.txt:md5,1cadbd27bb650441dadfd6984e44190f",
-                "testT.freebayes.norm.bcftools_stats.txt:md5,2ea5c1d5a877254d4807cc6a82c23f43",
-                "testN.haplotypecaller.norm.bcftools_stats.txt:md5,2d71e5e97bac8219bb6284d50d6b1e96",
-                "testT.haplotypecaller.norm.bcftools_stats.txt:md5,dc1c032230e6b9c67358475f50e0eb37",
+                "testN.freebayes.norm.bcftools_stats.txt:md5,8ee17648261a9f0d2965cad198b315ca",
+                "testT.freebayes.norm.bcftools_stats.txt:md5,86ab34c27ff2a8733e90a03437553edf",
+                "testN.haplotypecaller.norm.bcftools_stats.txt:md5,9913791329ce2582910657d0453d62fa",
+                "testT.haplotypecaller.norm.bcftools_stats.txt:md5,400d5ea02dde9351af0b7864fa5eb10b",
                 "testN.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "testN.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "testN.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
@@ -207,7 +207,7 @@
                 "testT.recal.mosdepth.region.dist.txt:md5,ccf646922b05cb4759c4f89072be2b69",
                 "testT.recal.mosdepth.summary.txt:md5,024649a659caff330dfbef4ac3560542",
                 "testT.recal.regions.bed.gz:md5,14b36a2cf428840aab471f95cfbe399f",
-                "testT.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "testT.recal.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917",
                 "testN.freebayes.norm.FILTER.summary:md5,d621a188425df0da8babce002e2f34dc",
                 "testN.freebayes.norm.TsTv.count:md5,232bb44db986854d3992bda0df08f54b",
                 "testT.freebayes.norm.FILTER.summary:md5,50f90bd0cdd1e95c10d7e5d88d0346f8",
@@ -216,8 +216,8 @@
                 "testN.haplotypecaller.norm.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663",
                 "testT.haplotypecaller.norm.FILTER.summary:md5,bedf7a690b985e8ff74eef9f4c1a8c34",
                 "testT.haplotypecaller.norm.TsTv.count:md5,803d74e40f7716202bae2a3a81c1ddfc",
-                "versions.yml:md5,7b0164f473a98fe0f8f097ae49c0e597",
-                "versions.yml:md5,7b0164f473a98fe0f8f097ae49c0e597"
+                "versions.yml:md5,98a0b3d9237221abf06d1cf567bdd741",
+                "versions.yml:md5,98a0b3d9237221abf06d1cf567bdd741"
             ],
             "No BAM files",
             "No CRAM files",
@@ -238,8 +238,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.0"
         },
-        "timestamp": "2025-04-28T13:54:43.851615695"
+        "timestamp": "2025-05-09T10:38:52.788266868"
     }
 }

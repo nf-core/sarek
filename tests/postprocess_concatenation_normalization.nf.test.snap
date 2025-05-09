@@ -7,13 +7,13 @@
                     "gawk": "5.1.0"
                 },
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "CNNSCOREVARIANTS": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.5.0.0"
                 },
                 "FILTERVARIANTTRANCHES": {
                     "gatk4": "4.6.1.0"
@@ -25,28 +25,28 @@
                     "gatk4": "4.6.1.0"
                 },
                 "GERMLINE_VCFS_CONCAT": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "GERMLINE_VCFS_CONCAT_SORT": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "TABIX_EXT_VCF": {
-                    "tabix": 1.2
+                    "tabix": 1.21
                 },
                 "TABIX_GERMLINE_VCFS_CONCAT_SORT": {
-                    "tabix": 1.2
+                    "tabix": 1.21
                 },
                 "TABIX_VCFS_NORM_SORT": {
-                    "tabix": 1.2
+                    "tabix": 1.21
                 },
                 "TABIX_VC_FREEBAYES": {
-                    "tabix": 1.2
+                    "tabix": 1.21
                 },
                 "VCFS_NORM": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "VCFS_NORM_SORT": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -226,14 +226,14 @@
             ],
             [
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "testN.freebayes.norm.bcftools_stats.txt:md5,1cadbd27bb650441dadfd6984e44190f",
-                "testN.germline.bcftools_stats.txt:md5,b8a3832c78fad6f4a182ea2a51fc82c3",
-                "testT.freebayes.norm.bcftools_stats.txt:md5,2ea5c1d5a877254d4807cc6a82c23f43",
-                "testT.germline.bcftools_stats.txt:md5,38218ede728ead2196270fdaf71e3d6b",
-                "testN.germline.bcftools_stats.txt:md5,4a8cdfb69f76ccd4f90603ff7e189cd2",
-                "testN.haplotypecaller.norm.bcftools_stats.txt:md5,2d71e5e97bac8219bb6284d50d6b1e96",
-                "testT.germline.bcftools_stats.txt:md5,5d8a645e1edf0d37d869578c8f3e3535",
-                "testT.haplotypecaller.norm.bcftools_stats.txt:md5,dc1c032230e6b9c67358475f50e0eb37",
+                "testN.freebayes.norm.bcftools_stats.txt:md5,8ee17648261a9f0d2965cad198b315ca",
+                "testN.germline.bcftools_stats.txt:md5,d5b648e305bc08e25b6d1309b74f9ba2",
+                "testT.freebayes.norm.bcftools_stats.txt:md5,86ab34c27ff2a8733e90a03437553edf",
+                "testT.germline.bcftools_stats.txt:md5,e4cf2c468bc50f44d55e8820c6e72a42",
+                "testN.germline.bcftools_stats.txt:md5,26e80f52f0070ada22b4c9333543d2cf",
+                "testN.haplotypecaller.norm.bcftools_stats.txt:md5,9913791329ce2582910657d0453d62fa",
+                "testT.germline.bcftools_stats.txt:md5,23451376749eae192f2127a2a97bb49d",
+                "testT.haplotypecaller.norm.bcftools_stats.txt:md5,400d5ea02dde9351af0b7864fa5eb10b",
                 "testN.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "testN.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "testN.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
@@ -243,7 +243,7 @@
                 "testT.recal.mosdepth.region.dist.txt:md5,ccf646922b05cb4759c4f89072be2b69",
                 "testT.recal.mosdepth.summary.txt:md5,024649a659caff330dfbef4ac3560542",
                 "testT.recal.regions.bed.gz:md5,14b36a2cf428840aab471f95cfbe399f",
-                "testT.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "testT.recal.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917",
                 "testN.freebayes.norm.FILTER.summary:md5,d621a188425df0da8babce002e2f34dc",
                 "testN.freebayes.norm.TsTv.count:md5,232bb44db986854d3992bda0df08f54b",
                 "testN.germline.FILTER.summary:md5,2ec507a210cf7de0425b6c8028a6edf8",
@@ -260,14 +260,14 @@
                 "testT.germline.TsTv.count:md5,803d74e40f7716202bae2a3a81c1ddfc",
                 "testT.haplotypecaller.norm.FILTER.summary:md5,bedf7a690b985e8ff74eef9f4c1a8c34",
                 "testT.haplotypecaller.norm.TsTv.count:md5,803d74e40f7716202bae2a3a81c1ddfc",
-                "versions.yml:md5,7b0164f473a98fe0f8f097ae49c0e597",
-                "versions.yml:md5,7b0164f473a98fe0f8f097ae49c0e597"
+                "versions.yml:md5,98a0b3d9237221abf06d1cf567bdd741",
+                "versions.yml:md5,98a0b3d9237221abf06d1cf567bdd741"
             ],
             "No BAM files",
             "No CRAM files",
             [
-                "testN.germline.vcf.gz:md5,141a2cc53b0a9d4a0ab4d779cb1e487",
-                "testT.germline.vcf.gz:md5,9119ee2c970c37729dcb35d4b88f9d10",
+                "testN.germline.vcf.gz:md5,184743db45c933febc5557d08b19f23c",
+                "testT.germline.vcf.gz:md5,7bac441a7c84790f43d26a73e10be9b5",
                 "testN.freebayes.vcf.gz:md5,1d98e39fe458af9020283de18c764055",
                 "testT.freebayes.vcf.gz:md5,387b7d48d04ad3b294f07173e6550fc7",
                 "testN.haplotypecaller.filtered.vcf.gz:md5,df2040bf1bee0252581824d11d5d87d1",
@@ -284,8 +284,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.0"
         },
-        "timestamp": "2025-05-02T09:52:39.069554463"
+        "timestamp": "2025-05-09T10:37:11.370312794"
     }
 }
