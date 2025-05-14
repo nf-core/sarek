@@ -29,6 +29,7 @@ process BCFTOOLS_CONCAT {
                 args.contains("--output-type z") || args.contains("-Oz") ? "vcf.gz" :
                 args.contains("--output-type v") || args.contains("-Ov") ? "vcf" :
                 "vcf"
+    def input = vcfs.sort{it.toString()}.join(" ")
     """
     ${create_input_index}
 
@@ -36,7 +37,7 @@ process BCFTOOLS_CONCAT {
         --output ${prefix}.${extension} \\
         $args \\
         --threads $task.cpus \\
-        ${vcfs}
+        ${input}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

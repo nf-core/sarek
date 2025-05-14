@@ -18,7 +18,7 @@
                     },
                     "bcftools/concat": {
                         "branch": "master",
-                        "git_sha": "c9c3ef86c1892413b3c86fb38c4e39fd7288512f",
+                        "git_sha": "1503efe8f6450e71218097f93cf43e4b625018d4",
                         "installed_by": ["modules"]
                     },
                     "bcftools/mpileup": {
@@ -28,7 +28,7 @@
                     },
                     "bcftools/norm": {
                         "branch": "master",
-                        "git_sha": "c9c3ef86c1892413b3c86fb38c4e39fd7288512f",
+                        "git_sha": "39fed2e840a805454a64dda9c2ef64c00e2c6781",
                         "installed_by": ["modules"]
                     },
                     "bcftools/sort": {
@@ -414,7 +414,7 @@
                     },
                     "samtools/mpileup": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "7e20d971c70d78dbd9f610698267f37b7fb3d38a",
                         "installed_by": ["modules"]
                     },
                     "samtools/stats": {
