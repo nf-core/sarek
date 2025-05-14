@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency                             | Old version | New version |
 | -------------------------------------- | ----------- | ----------- |
 | `bcftools`                             | 1.20        | 1.21        |
+| `ensemblvep`                           | 113.0       | 113.4       |
 | `fastp`                                | 0.23.4      | 0.24.0      |
 | `fgbio`                                | 2.2.1       | 2.4.0       |
 | `gatk4`                                | 4.5.0.0     | 4.6.1.0     |
