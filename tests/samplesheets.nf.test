@@ -18,7 +18,7 @@ nextflow_pipeline {
             assert workflow.failed
             assertAll(
                 { assert snapshot(
-                    workflow.stderr.toString().split(",")[0..1,3..5]
+                    workflow.stderr.toString().split(",").findAll { !it.contains("is available - Please consider updating your version to") && !it.contains("Validation of file failed") && !it.contains("Check script") }
                 ).match() }
             )
         }
@@ -39,7 +39,7 @@ nextflow_pipeline {
             assert workflow.failed
             assertAll(
                 { assert snapshot(
-                    workflow.stderr.toString().split(",")[0]
+                    workflow.stderr.toString().split(",").findAll { !it.contains("is available - Please consider updating your version to") }
                 ).match() }
             )
         }
