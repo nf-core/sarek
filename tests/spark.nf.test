@@ -101,5 +101,4 @@ nextflow_pipeline {
             )
         }
     }
-
 }
