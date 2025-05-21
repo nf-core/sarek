@@ -52,4 +52,25 @@ nextflow_pipeline {
             )
         }
     }
+
+    test("-profile test,spark --input tests/csv/3.0/fastq_single.csv --use_gatk_spark baserecalibrator,markduplicates --save_mapped --save_output_as_bam") {
+        when {
+            params {
+                input = "${projectDir}/tests/csv/3.0/fastq_single.csv"
+                outdir = "$outputDir"
+                use_gatk_spark = 'baserecalibrator,markduplicates'
+                save_mapped = true
+                save_output_as_bam = true
+            }
+        }
+
+        then {
+            assert workflow.failed
+            assertAll(
+                { assert snapshot(
+                    workflow.stdout.toString()
+                ).match() }
+            )
+        }
+    }
 }
