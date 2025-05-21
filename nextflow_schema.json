@@ -238,7 +238,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-forward",
                     "description": "Enable usage of GATK Spark implementation for duplicate marking and/or base quality score recalibration",
-                    "help_text": "Multiple separated with commas.\n\n> The GATK4 Base Quality Score recalibration tools `Baserecalibrator` and `ApplyBQSR` are currently available as Beta release. Use with caution!",
+                    "help_text": "Multiple separated with commas.\n\n> The GATK4 Base Quality Score recalibration tools `Baserecalibrator` and `ApplyBQSR` are currently available as Beta release. Please be aware that `--use_gatk_spark` is not compatible with `--save_output_as_bam --save_mapped`. Use with caution!",
                     "pattern": "^((baserecalibrator|markduplicates)?,?)*(?<!,)$"
                 },
                 "markduplicates_pixel_distance": {
