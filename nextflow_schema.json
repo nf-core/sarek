@@ -1127,16 +1127,5 @@
         {
             "$ref": "#/$defs/generic_options"
         }
-    ],
-    "anyOf": [
-        {
-            "not": {
-                    "dependentRequired": {
-                        "use_gatk_spark": ["save_output_as_bam", "save_mapped"],
-                        "save_output_as_bam": ["use_gatk_spark"],
-                        "save_mapped": ["use_gatk_spark"]
-                    }
-                }
-        }
     ]
 }

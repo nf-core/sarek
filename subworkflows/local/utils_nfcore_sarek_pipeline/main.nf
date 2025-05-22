@@ -205,12 +205,21 @@ workflow PIPELINE_COMPLETION {
 // Check and validate pipeline parameters
 def validateInputParameters() {
     genomeExistsError()
+    sparkAndBam()
 }
 
 // Exit pipeline if incorrect --genome key provided
 def genomeExistsError() {
     if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
         def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" + "  Currently, the available genome keys are:\n" + "  ${params.genomes.keySet().join(", ")}\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        error(error_string)
+    }
+}
+
+//  Exit if trying to use "use_gatk_spark", "save_mapped": true and "save_output_as_bam"
+def sparkAndBam() {
+    if (params.use_gatk_spark && params.save_mapped && params.save_output_as_bam) {
+        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  The --use_gatk_spark option is not compatible with --save_mapped and --save_output_as_bam.\n" + "  If you want to save your bam files please swap to the normal gatk implementation.\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         error(error_string)
     }
 }
