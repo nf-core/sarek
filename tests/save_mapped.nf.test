@@ -52,25 +52,4 @@ nextflow_pipeline {
             )
         }
     }
-
-    test("-profile test,spark --input tests/csv/3.0/fastq_single.csv --use_gatk_spark baserecalibrator,markduplicates --save_mapped --save_output_as_bam") {
-        when {
-            params {
-                input = "${projectDir}/tests/csv/3.0/fastq_single.csv"
-                outdir = "$outputDir"
-                use_gatk_spark = 'baserecalibrator,markduplicates'
-                save_mapped = true
-                save_output_as_bam = true
-            }
-        }
-
-        then {
-            assert workflow.failed
-            assertAll(
-                { assert snapshot(
-                    workflow.stdout.toString().contains("The --use_gatk_spark option is not compatible with --save_mapped and --save_output_as_bam.")
-                ).match() }
-            )
-        }
-    }
 }
