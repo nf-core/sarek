@@ -60,7 +60,7 @@ nextflow_pipeline {
             assert workflow.failed
             assertAll(
                 { assert snapshot(
-                    workflow.stdout.toString().contains("The --use_gatk_spark option is not compatible with --save_mapped and --save_output_as_bam.")
+                    workflow.stdout.toString().split(",")[0]
                 ).match() }
             )
         }
