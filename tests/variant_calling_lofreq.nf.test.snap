@@ -4,7 +4,7 @@
             11,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "LOFREQ": {
                     "lofreq": "2.1.5"
@@ -102,14 +102,14 @@
             ],
             [
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "sample2.lofreq.bcftools_stats.txt:md5,9c9de2e4ed2f324adf1912a45d73601f",
+                "sample2.lofreq.bcftools_stats.txt:md5,a8a850fdd11644fa4b770971dfe37194",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample2.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample2.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
+                "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
                 "sample2.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample2.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
+                "sample2.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
                 "sample2.lofreq.FILTER.summary:md5,8dd8a0c91d5c4a260b462e04f615e502"
             ],
             "No BAM files",
@@ -122,14 +122,14 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T16:14:58.339195663"
+        "timestamp": "2025-05-08T15:24:24.279180064"
     },
     "-profile test --tools lofreq --no_intervals tumoronly": {
         "content": [
             9,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "LOFREQ": {
                     "lofreq": "2.1.5"
@@ -227,11 +227,11 @@
             ],
             [
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "sample2.lofreq.bcftools_stats.txt:md5,e838ce412fc091918059e79727b35785",
+                "sample2.lofreq.bcftools_stats.txt:md5,dd602205b6d368eb0e21d2a94c36e0de",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample2.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
+                "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
                 "sample2.lofreq.FILTER.summary:md5,72beda1b57da053eb352204828605a40"
             ],
             "No BAM files",
@@ -244,6 +244,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T16:17:10.896507141"
+        "timestamp": "2025-05-08T15:26:34.298298945"
     }
 }

@@ -35,10 +35,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
-| `MultiQC`  | 1.25.1      | 1.27        |
-| `MuSE`     |             | 2.1.2       |
+| Dependency                             | Old version | New version |
+| -------------------------------------- | ----------- | ----------- |
+| `bcftools`                             | 1.20        | 1.21        |
+| `ensemblvep`                           | 113.0       | 113.4       |
+| `fastp`                                | 0.23.4      | 0.24.0      |
+| `fgbio`                                | 2.2.1       | 2.4.0       |
+| `gatk4`                                | 4.5.0.0     | 4.6.1.0     |
+| `mosdepth`                             | 0.3.8       | 0.3.10      |
+| `MuSE`                                 |             | 2.1.2       |
+| `MultiQC`                              | 1.25.1      | 1.28        |
+| `samtools` (in `BWAMEM1_MEM`)          | 1.2         | 1.21        |
+| `samtools` (in `BWAMEM2_MEM`)          | 1.19.2      | 1.21        |
+| `samtools` (in `GATK4_MARKDUPLICATES`) | 1.19.2      | 1.21        |
+| `sentieon`                             | 202308.03   | 202503      |
+| `tabix`                                | 1.2         | 1.21        |
 
 ### Parameters
 
@@ -80,6 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1866](https://github.com/nf-core/sarek/pull/1866) - Migrate pipeline pytest deepvariant tests to nf-test
 - [1867](https://github.com/nf-core/sarek/pull/1867) - Migrate pipeline pytest gatk4spark tests to nf-test
 - [1868](https://github.com/nf-core/sarek/pull/1868) - Migrate pipeline pytest intervals tests to nf-test
+- [1871](https://github.com/nf-core/sarek/pull/1871) - Update all modules
 - [1874](https://github.com/nf-core/sarek/pull/1874) - Migrate pipeline pytest joint_calling haplotypecaller tests to nf-test
 - [1874](https://github.com/nf-core/sarek/pull/1874) - Migrate pipeline pytest joint_calling mutect2 tests to nf-test
 - [1874](https://github.com/nf-core/sarek/pull/1874) - Migrate pipeline pytest mutect2 tests to nf-test
@@ -100,6 +112,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1852](https://github.com/nf-core/sarek/pull/1852) - Fix path to `license_message.py` script
 - [1855](https://github.com/nf-core/sarek/pull/1855) - Fix json schema cf_chrom_len input broken by [1842](https://github.com/nf-core/sarek/pull/1842)
 - [1859](https://github.com/nf-core/sarek/pull/1859) - Fix: change dbsnp channel from queue to value in muse subworkflow, wrong implemented in [1744](https://github.com/nf-core/sarek/pull/1744)
+- [1899](https://github.com/nf-core/sarek/pull/1899) - Ensure nf-test runs for all profiles on release
 
 #### Removed
 

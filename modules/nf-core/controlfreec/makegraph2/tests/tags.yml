@@ -1,2 +1,0 @@
-controlfreec/makegraph2:
-  - "modules/nf-core/controlfreec/makegraph2/**"
