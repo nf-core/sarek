@@ -16,7 +16,7 @@ nextflow_pipeline {
                 modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 chr_dir                    = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz'
                 dbsnp                      = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz'
-                dbsnp_tbi                  = false
+                dbsnp_tbi                  = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi'
                 fasta                      = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta'
                 fasta_fai                  = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai'
                 germline_resource          = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz'
