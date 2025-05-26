@@ -48,7 +48,7 @@ nextflow_pipeline {
                     // All cram files
                     cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
                     // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
+                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() }
                 ).match() }
             )
         }
