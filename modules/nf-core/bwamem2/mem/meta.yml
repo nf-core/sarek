@@ -17,7 +17,7 @@ tools:
       documentation: http://www.htslib.org/doc/samtools.html
       arxiv: arXiv:1303.3997
       licence: ["MIT"]
-      identifier: ""
+      identifier: "biotools:bwa-mem2"
 input:
   - - meta:
         type: map
@@ -29,6 +29,9 @@ input:
         description: |
           List of input FastQ files of size 1 and 2 for single-end and paired-end data,
           respectively.
+        ontologies:
+          - edam: "http://edamontology.org/data_2044" # Sequence
+          - edam: "http://edamontology.org/format_1930" # FASTQ
   - - meta2:
         type: map
         description: |
@@ -38,6 +41,8 @@ input:
         type: file
         description: BWA genome index files
         pattern: "Directory containing BWA index *.{0132,amb,ann,bwt.2bit.64,pac}"
+        ontologies:
+          - edam: "http://edamontology.org/data_3210" # Genome index
   - - meta3:
         type: map
         description: |
@@ -47,6 +52,9 @@ input:
         type: file
         description: Reference genome in FASTA format
         pattern: "*.{fa,fasta,fna}"
+        ontologies:
+          - edam: "http://edamontology.org/data_2044" # Sequence
+          - edam: "http://edamontology.org/format_1929" # FASTA
   - - sort_bam:
         type: boolean
         description: use samtools sort (true) or samtools view (false)
@@ -62,6 +70,8 @@ output:
           type: file
           description: Output SAM file containing read alignments
           pattern: "*.{sam}"
+          ontologies:
+            - edam: "http://edamontology.org/format_2573" # SAM
   - bam:
       - meta:
           type: map
@@ -72,6 +82,8 @@ output:
           type: file
           description: Output BAM file containing read alignments
           pattern: "*.{bam}"
+          ontologies:
+            - edam: "http://edamontology.org/format_2572" # BAM
   - cram:
       - meta:
           type: map
@@ -82,6 +94,8 @@ output:
           type: file
           description: Output CRAM file containing read alignments
           pattern: "*.{cram}"
+          ontologies:
+            - edam: "http://edamontology.org/format_3462" # CRAM
   - crai:
       - meta:
           type: map

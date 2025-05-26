@@ -1,2 +1,0 @@
-bcftools/norm:
-  - "modules/nf-core/bcftools/norm/**"

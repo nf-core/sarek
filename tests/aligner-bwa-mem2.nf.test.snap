@@ -54,7 +54,7 @@
                 },
                 "BWAMEM2_MEM": {
                     "bwamem2": "2.2.1",
-                    "samtools": "1.19.2"
+                    "samtools": 1.21
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
@@ -110,6 +110,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T12:08:06.242648273"
+        "timestamp": "2025-05-05T19:45:59.614482967"
     }
 }

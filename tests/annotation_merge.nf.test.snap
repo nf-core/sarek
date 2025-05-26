@@ -11,10 +11,10 @@
                     "snpeff": "5.1d"
                 },
                 "TABIX_BGZIPTABIX": {
-                    "tabix": 1.2
+                    "tabix": 1.21
                 },
                 "TABIX_TABIX": {
-                    "tabix": 1.2
+                    "tabix": 1.21
                 },
                 "Workflow": {
                     "nf-core/sarek": "v3.6.0dev"
@@ -111,7 +111,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T12:24:21.475139525"
+        "timestamp": "2025-05-07T13:27:19.144912925"
     },
     "-profile test --tools merge": {
         "content": [
@@ -125,10 +125,10 @@
                     "snpeff": "5.1d"
                 },
                 "TABIX_BGZIPTABIX": {
-                    "tabix": 1.2
+                    "tabix": 1.21
                 },
                 "TABIX_TABIX": {
-                    "tabix": 1.2
+                    "tabix": 1.21
                 },
                 "Workflow": {
                     "nf-core/sarek": "v3.6.0dev"
@@ -214,6 +214,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T12:22:45.028265151"
+        "timestamp": "2025-05-07T13:24:52.306809862"
     }
 }

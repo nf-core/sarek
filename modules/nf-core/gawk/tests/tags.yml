@@ -1,2 +1,0 @@
-gawk:
-  - "modules/nf-core/gawk/**"

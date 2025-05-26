@@ -10,7 +10,7 @@ process VCFTOOLS {
     input:
     // Owing to the nature of vcftools we here provide solutions to working with optional bed files and optional
     // alternative variant files, for use with the 'diff' suite of tools.
-    // Other optional input files can be utilised in a similar way to below but we do not exhaustively itterate through all
+    // Other optional input files can be utilised in a similar way to below but we do not exhaustively iterate through all
     // possible options. Instead we leave that to the user.
     tuple val(meta), path(variant_file)
     path  bed

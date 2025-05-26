@@ -5,8 +5,8 @@ process SENTIEON_APPLYVARCAL {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/a6/a64461f38d76bebea8e21441079e76e663e1168b0c59dafee6ee58440ad8c8ac/data' :
-        'community.wave.seqera.io/library/sentieon:202308.03--59589f002351c221' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/80/80ccb05eb4f1a193a3bd99c4da90f55f74ea6556c25f154e53e1ff5a6caa372d/data' :
+        'community.wave.seqera.io/library/sentieon:202503--5e378058d837c58c' }"
 
     input:
     tuple val(meta), path(vcf), path(vcf_tbi), path(recal), path(recal_index), path(tranches)
@@ -22,19 +22,24 @@ process SENTIEON_APPLYVARCAL {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def args   = task.ext.args   ?: ''
+    def args2  = task.ext.args2  ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}_applyvarcal"
     def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64 ?
         "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; " :
         ""
     """
     $sentieonLicense
 
-    sentieon driver -r ${fasta}  --algo ApplyVarCal \\
+    sentieon driver \\
+        -r ${fasta}  \\
+        -t $task.cpus \\
+        $args \\
+        --algo ApplyVarCal \\
         -v $vcf \\
         --recal $recal \\
         --tranches_file $tranches \\
-        $args \\
+        $args2 \\
         ${prefix}.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
@@ -44,9 +49,9 @@ process SENTIEON_APPLYVARCAL {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}_applyvarcal"
     """
-    touch ${prefix}.vcf.gz
+    echo | gzip > ${prefix}.vcf.gz
     touch ${prefix}.vcf.gz.tbi
 
     cat <<-END_VERSIONS > versions.yml

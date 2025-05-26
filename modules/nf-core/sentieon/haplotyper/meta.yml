@@ -32,7 +32,7 @@ input:
     - recal_table:
         type: file
         description: Recalibration table from sentieon/qualcal (optional)
-  - - meta1:
+  - - meta2:
         type: map
         description: |
           Groovy Map containing sample information
@@ -41,7 +41,7 @@ input:
         type: file
         description: Genome fasta file
         pattern: "*.{fa,fasta}"
-  - - meta2:
+  - - meta3:
         type: map
         description: |
           Groovy Map containing sample information
@@ -50,7 +50,7 @@ input:
         type: file
         description: The index of the FASTA reference.
         pattern: "*.fai"
-  - - meta3:
+  - - meta4:
         type: map
         description: |
           Groovy Map containing sample information
@@ -58,7 +58,7 @@ input:
     - dbsnp:
         type: file
         description: VCF file containing known sites (optional)
-  - - meta4:
+  - - meta5:
         type: map
         description: |
           Groovy Map containing sample information

@@ -104,16 +104,16 @@
                 "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
                 "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
                 "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
-                "sample3.recal.per-base.bed.gz.csi:md5,519cc5bf84da0d71b87a88c76f83194e",
+                "sample3.recal.per-base.bed.gz.csi:md5,c67dcd711b096eb42f43784d5eadbc0d",
                 "sample3.recal.regions.bed.gz:md5,314ce8d7273eff353072108aa77c327c",
-                "sample3.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
+                "sample3.recal.regions.bed.gz.csi:md5,9cb0ad7039a3b703d16ca7d5b835c0ee",
                 "sample4.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample4.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample4.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
                 "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample4.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
+                "sample4.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
                 "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample4.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
+                "sample4.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
                 "sample4_vs_sample3:md5,db7f2cc99ea79f79b0ba011c4bcbb43d",
                 "sample4_vs_sample3_dis:md5,e2fd47a3359bb562f604a6f0a126e107",
                 "sample4_vs_sample3_germline:md5,ba585b355c08877b8bca4901f49d9311",
@@ -127,7 +127,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-29T14:17:23.746727114"
+        "timestamp": "2025-05-08T14:34:18.537743086"
     },
     "-profile test --tools msisensorpro somatic --build_only_index --input false": {
         "content": [
