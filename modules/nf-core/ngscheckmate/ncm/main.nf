@@ -3,8 +3,8 @@ process NGSCHECKMATE_NCM {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ngscheckmate:1.0.1--py27pl5321r40hdfd78af_1':
-        'biocontainers/ngscheckmate:1.0.1--py27pl5321r40hdfd78af_1' }"
+        'https://depot.galaxyproject.org/singularity/ngscheckmate:1.0.1--py312pl5321h577a1d6_4':
+        'biocontainers/ngscheckmate:1.0.1--py312pl5321h577a1d6_4' }"
 
     input:
     tuple val(meta) , path(files)

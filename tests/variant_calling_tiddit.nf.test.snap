@@ -4,10 +4,10 @@
             12,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "TABIX_BGZIP_TIDDIT_SV": {
-                    "tabix": 1.2
+                    "tabix": 1.21
                 },
                 "TIDDIT_SV": {
                     "tiddit": "3.6.1"
@@ -84,12 +84,12 @@
             ],
             [
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "sample1.tiddit.bcftools_stats.txt:md5,dd0c50c4f3d5b05accfb0985def2c459",
+                "sample1.tiddit.bcftools_stats.txt:md5,ee25406b8d3ed73eaa8a66972c805c1f",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample1.recal.regions.bed.gz.csi:md5,f17cc9d960aa4a1e96548d570585cc8a",
+                "sample1.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
                 "sample1.tiddit.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample1.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
@@ -103,17 +103,17 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T17:23:16.417462067"
+        "timestamp": "2025-05-08T15:28:33.593515141"
     },
     "-profile test --tools tiddit tumoronly": {
         "content": [
             12,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "TABIX_BGZIP_TIDDIT_SV": {
-                    "tabix": 1.2
+                    "tabix": 1.21
                 },
                 "TIDDIT_SV": {
                     "tiddit": "3.6.1"
@@ -190,12 +190,12 @@
             ],
             [
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "sample2.tiddit.bcftools_stats.txt:md5,a08085171756bfa2692781a469eb595d",
+                "sample2.tiddit.bcftools_stats.txt:md5,82343c0b28dace889f164bbb256a8461",
                 "sample2.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample2.recal.regions.bed.gz.csi:md5,4003c8833ed5e9b9f45282a6915c935e",
+                "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
                 "sample2.tiddit.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample2.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
@@ -209,21 +209,21 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T17:26:44.820878609"
+        "timestamp": "2025-05-08T15:32:24.912145963"
     },
     "-profile test --tools tiddit somatic": {
         "content": [
             23,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "SVDB_MERGE": {
                     "svdb": "2.8.2",
                     "bcftools": 1.21
                 },
                 "TABIX_BGZIP_TIDDIT_SV": {
-                    "tabix": 1.2
+                    "tabix": 1.21
                 },
                 "TIDDIT_SV": {
                     "tiddit": "3.6.1"
@@ -321,18 +321,18 @@
             ],
             [
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "sample3.tiddit.bcftools_stats.txt:md5,a1e2cc3cee75edf3cdb8ae312b7e5d23",
-                "sample4_vs_sample3.tiddit_sv_merge.bcftools_stats.txt:md5,1a1281463c1dfacf96cec6b67c3ab410",
+                "sample3.tiddit.bcftools_stats.txt:md5,b8a60370884c8f2c94baa7d3e859492f",
+                "sample4_vs_sample3.tiddit_sv_merge.bcftools_stats.txt:md5,82f123b157211ac9b8d3b145bbea2147",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample3.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample3.recal.regions.bed.gz.csi:md5,f17cc9d960aa4a1e96548d570585cc8a",
+                "sample3.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
                 "sample4.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample4.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample4.recal.regions.bed.gz.csi:md5,4003c8833ed5e9b9f45282a6915c935e",
+                "sample4.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
                 "sample3.tiddit.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample3.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
                 "sample4_vs_sample3.tiddit_sv_merge.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
@@ -351,6 +351,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T17:25:36.493663121"
+        "timestamp": "2025-05-08T15:30:53.423070589"
     }
 }

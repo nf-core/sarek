@@ -7,26 +7,26 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.5.0.0",
-                    "samtools": "1.19.2"
+                    "gatk4": "4.6.1.0",
+                    "samtools": 1.21
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.8"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
                 "SENTIEON_BWAMEM": {
-                    "sentieon": 202308.03,
+                    "sentieon": 202503,
                     "bwa": "0.7.17-r1188"
                 },
                 "Workflow": {
@@ -138,8 +138,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.0"
         },
-        "timestamp": "2025-04-28T14:28:28.391037334"
+        "timestamp": "2025-05-09T14:37:44.933144632"
     }
 }

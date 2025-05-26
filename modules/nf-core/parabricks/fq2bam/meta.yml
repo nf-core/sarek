@@ -11,7 +11,7 @@ tools:
   - "parabricks":
       description: "NVIDIA Clara Parabricks GPU-accelerated genomics tools"
       homepage: "https://www.nvidia.com/en-us/clara/genomics/"
-      documentation: "https://docs.nvidia.com/clara/parabricks/4.0.1/Documentation/"
+      documentation: "https://docs.nvidia.com/clara/parabricks/latest/index.html"
       licence: ["custom"]
       identifier: ""
 input:

@@ -8,7 +8,6 @@ on:
       - "**/*.png"
       - "**/*.svg"
   pull_request:
-    branches: [dev]
     paths-ignore:
       - "docs/**"
       - "**/meta.yml"
