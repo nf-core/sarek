@@ -55,6 +55,29 @@ workflow  SAMPLESHEET_TO_CHANNEL{
             }
         }
 
+    ch_from_samplesheet
+        .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _vcf, _variantcaller ->
+            // Get only the patient, sample and status fields from the meta map
+            [meta.patient, meta.subMap('sample', 'status')]
+        }
+        .unique()
+        .groupTuple()
+        .map { patient, samples ->
+            // Return the patient and the list of sample ids
+            [patient, samples.collect { it.sample }]
+        }
+        // Flatten to [sample_id, patient] pairs
+        .flatMap { patient, sample_ids -> sample_ids.collect { sample_id -> [sample_id, patient] } }
+        // Group by sample_id to collect all patient ids per sample
+        .groupTuple()
+        .map { sample_id, patient_ids ->
+            def unique_patients = patient_ids.unique()
+            if (unique_patients.size() > 1) {
+                System.err.println("Sample ID '${sample_id}' is associated with multiple patient IDs: ${unique_patients.join(', ')}. Please ensure each sample ID is unique to a single patient.")
+                error("Execution halted due to sample status inconsistency.")
+            }
+        }
+
     input_sample = ch_from_samplesheet.map{ meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller ->
         // generate patient_sample key to group lanes together
         [ meta.patient + meta.sample, [meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller] ]

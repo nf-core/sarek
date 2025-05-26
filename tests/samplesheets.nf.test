@@ -18,7 +18,27 @@ nextflow_pipeline {
             assert workflow.failed
             assertAll(
                 { assert snapshot(
-                    workflow.stderr.toString().split(",")[0..1,3..5]
+                    workflow.stderr.toString().contains("Entry 2: Error for field 'sample' (test 2): \"test 2\" does not match regular expression ")
+                ).match() }
+            )
+        }
+    }
+
+    test("-profile test --input tests/csv/3.0/multiple_sample_ids.csv") {
+
+        when {
+            params {
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+                input = "${projectDir}/tests/csv/3.0/multiple_sample_ids.csv"
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.failed
+            assertAll(
+                { assert snapshot(
+                    workflow.stderr.toString().contains("Sample ID 'test' is associated with multiple patient IDs: test, test2. Please ensure each sample ID is unique to a single patient.")
                 ).match() }
             )
         }
@@ -39,7 +59,7 @@ nextflow_pipeline {
             assert workflow.failed
             assertAll(
                 { assert snapshot(
-                    workflow.stderr.toString().split(",")[0]
+                    workflow.stderr.toString().contains("Patient [test] has more than one sample [2] with normal status [0] and one sample with tumor status [1].")
                 ).match() }
             )
         }
