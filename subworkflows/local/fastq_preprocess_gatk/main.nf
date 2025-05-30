@@ -406,7 +406,7 @@ workflow FASTQ_PREPROCESS_GATK {
             cram_applybqsr = Channel.empty().mix(input_sample)
 
         }
-
+        cram_applybqsr.view()
         if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
             cram_variant_calling_no_spark = Channel.empty()
             cram_variant_calling_spark    = Channel.empty()

@@ -178,6 +178,8 @@ workflow SAREK {
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
 
+        input_fastq.view()
+        input_sample.view()
         if (aligner == 'parabricks') {
             // PREPROCESSING WITH PARABRICKS
             FASTQ_PREPROCESS_PARABRICKS(

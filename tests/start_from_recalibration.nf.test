@@ -6,7 +6,7 @@ nextflow_pipeline {
     tag "pipeline_sarek"
     tag "cpu"
 
-    test("-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null") {
+    test("-profile test --input tests/csv/3.0/prepare_recalibration_single_cram.csv --step recalibrate --tools null") {
 
         when {
             params {
@@ -53,7 +53,7 @@ nextflow_pipeline {
         }
     }
 
-    test("-profile test --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka") {
+    test("-profile test --input tests/csv/3.0/prepare_recalibration_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka") {
 
         when {
             params {
@@ -102,7 +102,7 @@ nextflow_pipeline {
         }
     }
 
-    test("-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka") {
+    test("-profile test --input tests/csv/3.0/prepare_recalibration_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka") {
 
         when {
             params {
@@ -151,7 +151,7 @@ nextflow_pipeline {
         }
     }
 
-    test("-profile test --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null") {
+    test("-profile test --input tests/csv/3.0/prepare_recalibration_single_bam.csv --step recalibrate --tools null") {
 
         when {
             params {
