@@ -11,16 +11,16 @@ workflow CHANNEL_ALIGN_CREATE_CSV {
     main:
         // Creating csv files to restart from this step
         bam_indexed.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: "${outdir}/csv") { meta, bam, bai ->
-            patient = meta.patient
-            sample  = meta.sample
-            sex     = meta.sex
-            status  = meta.status
-            bam   = "${outdir}/preprocessing/mapped/${sample}/${bam.name}"
-            bai   = "${outdir}/preprocessing/mapped/${sample}/${bai.name}"
+            def patient  = meta.patient
+            def sample   = meta.sample
+            def sex      = meta.sex
+            def status   = meta.status
+            def bam_path = "${outdir}/preprocessing/mapped/${sample}/${bam.name}"
+            def bai_path = "${outdir}/preprocessing/mapped/${sample}/${bai.name}"
 
-            type = save_output_as_bam ? "bam" : "cram"
-            type_index = save_output_as_bam ? "bai" : "crai"
+            def type = save_output_as_bam ? "bam" : "cram"
+            def type_index = save_output_as_bam ? "bai" : "crai"
 
-            ["mapped.csv", "patient,sex,status,sample,${type},${type_index}\n${patient},${sex},${status},${sample},${bam},${bai}\n"]
+            ["mapped.csv", "patient,sex,status,sample,${type},${type_index}\n${patient},${sex},${status},${sample},${bam_path},${bai_path}\n"]
         }
 }

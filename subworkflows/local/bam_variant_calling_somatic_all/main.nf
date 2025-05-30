@@ -64,7 +64,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             allele_files,
             loci_files,
             (wes ? intervals_bed_combined : []), // No intervals needed if not WES
-            fasta.map{ meta, fasta -> [ fasta ] },
+            fasta.map{ meta, fasta_ -> [ fasta_ ] },
             gc_file,
             rt_file
         )
@@ -97,13 +97,13 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             // Remap channel to match module/subworkflow
         mpileup_pair = mpileup_normal.cross(mpileup_tumor).map{ normal, tumor -> [ normal[0], normal[1], tumor[1], [], [], [], [] ] }
 
-        length_file  = cf_chrom_len ?: fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] }
+        length_file  = cf_chrom_len ?: fasta_fai.map{ meta, fasta_fai_ -> [ fasta_fai_ ] }
 
         intervals_controlfreec = wes ? intervals_bed_combined : []
 
         BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC(
             mpileup_pair,
-            fasta.map{ meta, fasta -> [ fasta ] },
+            fasta.map{ meta, fasta_ -> [ fasta_ ] },
             length_file,
             dbsnp,
             dbsnp_tbi,
@@ -183,8 +183,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             cram_strelka,
             // Remap channel to match module/subworkflow
             dict,
-            fasta.map{ meta, fasta -> [ fasta ] },
-            fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] },
+            fasta.map{ meta, fasta_ -> [ fasta_ ] },
+            fasta_fai.map{ meta, fasta_fai_ -> [ fasta_fai_ ] },
             intervals_bed_gz_tbi
         )
 
@@ -194,7 +194,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // MSISENSOR
     if (tools.split(',').contains('msisensorpro')) {
-        MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta.map{ meta, fasta -> [ fasta ] }, msisensorpro_scan)
+        MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta.map{ meta, fasta_ -> [ fasta_ ] }, msisensorpro_scan)
 
         versions = versions.mix(MSISENSORPRO_MSISOMATIC.out.versions)
         out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSISOMATIC.out.output_report)

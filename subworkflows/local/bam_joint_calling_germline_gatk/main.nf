@@ -71,18 +71,18 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         resource_indels_vcf,
         resource_indels_tbi,
         indels_resource_label,
-        fasta.map{ meta, fasta -> [ fasta ] },
-        fai.map{ meta, fai -> [ fai ] },
-        dict.map{ meta, dict -> [ dict ] })
+        fasta.map{ meta, fasta_ -> [ fasta_ ] },
+        fai.map{ meta, fai_ -> [ fai_ ] },
+        dict.map{ meta, dict_ -> [ dict_ ] })
 
     VARIANTRECALIBRATOR_SNP(
         vqsr_input,
         resource_snps_vcf,
         resource_snps_tbi,
         snps_resource_label,
-        fasta.map{ meta, fasta -> [ fasta ] },
-        fai.map{ meta, fai -> [ fai ] },
-        dict.map{ meta, dict -> [ dict ] })
+        fasta.map{ meta, fasta_file -> [ fasta_file ] },
+        fai.map{ meta, fai_file -> [ fai_file ] },
+        dict.map{ meta, dict_file -> [ dict_file ] })
 
     //Prepare SNPs and INDELs for ApplyVQSR
     // Step 1. : ApplyVQSR to SNPs
@@ -97,9 +97,9 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
 
     GATK4_APPLYVQSR_SNP(
         vqsr_input_snp,
-        fasta.map{ meta, fasta -> [ fasta ] },
-        fai.map{ meta, fai -> [ fai ] },
-        dict.map{ meta, dict -> [ dict ] })
+        fasta.map{ meta, fasta_ -> [ fasta_ ] },
+        fai.map{ meta, fai_ -> [ fai_ ] },
+        dict.map{ meta, dict_ -> [ dict_ ] })
 
     // Join results of ApplyVQSR_SNP and use as input for Indels to avoid duplicate entries in the result
     // Rework meta for variantscalled.csv and annotation tools
@@ -111,9 +111,9 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
 
     GATK4_APPLYVQSR_INDEL(
         vqsr_input_indel,
-        fasta.map{ meta, fasta -> [ fasta ] },
-        fai.map{ meta, fai -> [ fai ] },
-        dict.map{ meta, dict -> [ dict ] })
+        fasta.map{ meta, fasta_ -> [ fasta_ ] },
+        fai.map{ meta, fai_ -> [ fai_ ] },
+        dict.map{ meta, dict_ -> [ dict_ ] })
 
 
     // The following is an ugly monster to achieve the following:
@@ -134,7 +134,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     genotype_vcf = merge_vcf_for_join.join(vqsr_vcf_for_join, remainder: true).map{
         meta, joint_vcf, recal_vcf ->
 
-        vcf_out = recal_vcf ?: joint_vcf
+        def vcf_out = recal_vcf ?: joint_vcf
 
         [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"haplotypecaller"], vcf_out]
     }
@@ -142,7 +142,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     genotype_index = merge_tbi_for_join.join(vqsr_tbi_for_join, remainder: true).map{
         meta, joint_tbi, recal_tbi ->
 
-        tbi_out = recal_tbi ?: joint_tbi
+        def tbi_out = recal_tbi ?: joint_tbi
 
         [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"haplotypecaller"], tbi_out]
     }

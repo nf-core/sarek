@@ -62,13 +62,13 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
     // CONTROLFREEC (depends on MPILEUP)
     if (tools.split(',').contains('controlfreec')) {
-        length_file            = cf_chrom_len ?: fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] }
+        length_file            = cf_chrom_len ?: fasta_fai.map{ meta, fasta_fai_ -> [ fasta_fai_ ] }
         intervals_controlfreec = wes ? intervals_bed_combined : []
 
         BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC(
             // Remap channel to match module/subworkflow
             BAM_VARIANT_CALLING_MPILEUP.out.mpileup.map{ meta, pileup_tumor -> [ meta, [], pileup_tumor, [], [], [], [] ] },
-            fasta.map{ meta, fasta -> [ fasta ] },
+            fasta.map{ meta, fasta_ -> [ fasta_ ] },
             length_file,
             dbsnp,
             dbsnp_tbi,
@@ -84,7 +84,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools.split(',').contains('cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT (
             // Remap channel to match module/subworkflow
-            cram.map{ meta, cram, crai -> [ meta, cram, [] ] },
+            cram.map{ meta, cram_, crai -> [ meta, cram_, [] ] },
             fasta,
             fasta_fai,
             [[id:"null"], []],
@@ -98,7 +98,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools.split(',').contains('freebayes')) {
         BAM_VARIANT_CALLING_FREEBAYES(
             // Remap channel to match module/subworkflow
-            cram.map{ meta, cram, crai -> [ meta, cram, crai, [], [] ] },
+            cram.map{ meta, cram_, crai -> [ meta, cram_, crai, [], [] ] },
             dict,
             fasta,
             fasta_fai,
@@ -113,11 +113,11 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
             // Adjust meta.map to simplify joining channels
-            cram.map{ meta, cram, crai ->
+            cram.map{ meta, cram_, crai ->
                 joint_mutect2 ?
                 //we need to keep all fields and then remove on a per-tool-basis to ensure proper joining at the filtering step
-                [ meta - meta.subMap('data_type', 'status') + [ id:meta.patient ], cram, crai ] :
-                [ meta - meta.subMap('data_type', 'status'), cram, crai ]
+                [ meta - meta.subMap('data_type', 'status') + [ id:meta.patient ], cram_, crai ] :
+                [ meta - meta.subMap('data_type', 'status'), cram_, crai ]
             },
             fasta,
             fasta_fai,

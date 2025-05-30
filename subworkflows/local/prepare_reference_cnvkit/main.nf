@@ -19,7 +19,7 @@ workflow PREPARE_REFERENCE_CNVKIT {
 
     // prepare a antitarget reference files for tumor_only mode of cnvkit
     CNVKIT_ANTITARGET(intervals_bed_combined.flatten().map{ it -> [ [ id:'intervals' ], it ] })
-    CNVKIT_REFERENCE(fasta.map{ meta, fasta -> [ fasta ] }, intervals_bed_combined, CNVKIT_ANTITARGET.out.bed.map{ meta, bed -> [ bed ] } )
+    CNVKIT_REFERENCE(fasta.map{ meta, fasta_ -> [ fasta_ ] }, intervals_bed_combined, CNVKIT_ANTITARGET.out.bed.map{ meta, bed -> [ bed ] } )
 
     versions = versions.mix(CNVKIT_ANTITARGET.out.versions)
     versions = versions.mix(CNVKIT_REFERENCE.out.versions)

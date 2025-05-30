@@ -64,8 +64,8 @@ workflow  SAMPLESHEET_TO_CHANNEL{
         // get number of lanes per sample
         [ patient_sample, ch_items.size() ]
     }.combine(ch_with_patient_sample, by: 0) // for each entry add numLanes
-    .map { patient_sample, num_lanes, ch_items ->
-        (meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller) = ch_items
+    .map { _patient_sample, num_lanes, ch_items ->
+        def (meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller) = ch_items
         if (meta.lane && fastq_2) {
             meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "fastq_gz", num_lanes: num_lanes.toInteger(), size: 1]
 

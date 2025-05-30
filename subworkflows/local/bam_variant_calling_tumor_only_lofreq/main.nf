@@ -15,7 +15,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ {
     // Combine cram and intervals for spread and gather strategy
     input_intervals = input.combine(intervals)
         // Move num_intervals to meta map
-        .map {meta, tumor_cram, tumor_crai, intervals, num_intervals -> [meta + [ num_intervals:num_intervals ], tumor_cram, tumor_crai, intervals]}
+        .map {meta, tumor_cram, tumor_crai, intervals_, num_intervals -> [meta + [ num_intervals:num_intervals ], tumor_cram, tumor_crai, intervals_]}
 
     LOFREQ(input_intervals, fasta, fai) // Call variants with LoFreq
 

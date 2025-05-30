@@ -19,7 +19,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-nextflow.enable.dsl = 2
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     GENOME PARAMETER VALUES
@@ -60,8 +59,6 @@ params.vep_cache_version       = getGenomeAttribute('vep_cache_version')
 params.vep_genome              = getGenomeAttribute('vep_genome')
 params.vep_species             = getGenomeAttribute('vep_species')
 
-aligner = params.aligner
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
@@ -77,47 +74,6 @@ include { PREPARE_GENOME                   } from './subworkflows/local/prepare_
 include { PREPARE_INTERVALS                } from './subworkflows/local/prepare_intervals'
 include { PREPARE_REFERENCE_CNVKIT         } from './subworkflows/local/prepare_reference_cnvkit'
 
-// Initialize fasta file with meta map:
-fasta = params.fasta ? Channel.fromPath(params.fasta).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
-
-// Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-bcftools_annotations    = params.bcftools_annotations    ? Channel.fromPath(params.bcftools_annotations).collect()      : Channel.empty()
-bcftools_header_lines   = params.bcftools_header_lines   ? Channel.fromPath(params.bcftools_header_lines).collect()     : Channel.empty()
-cf_chrom_len            = params.cf_chrom_len            ? Channel.fromPath(params.cf_chrom_len).collect()              : []
-dbsnp                   = params.dbsnp                   ? Channel.fromPath(params.dbsnp).collect()                     : Channel.value([])
-fasta_fai               = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()                 : Channel.empty()
-germline_resource       = params.germline_resource       ? Channel.fromPath(params.germline_resource).collect()         : Channel.value([]) // Mutect2 does not require a germline resource, so set to optional input
-known_indels            = params.known_indels            ? Channel.fromPath(params.known_indels).collect()              : Channel.value([])
-known_snps              = params.known_snps              ? Channel.fromPath(params.known_snps).collect()                : Channel.value([])
-mappability             = params.mappability             ? Channel.fromPath(params.mappability).collect()               : Channel.value([])
-pon                     = params.pon                     ? Channel.fromPath(params.pon).collect()                       : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
-sentieon_dnascope_model = params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect()   : Channel.value([])
-
-// Initialize value channels based on params, defined in the params.genomes[params.genome] scope
-ascat_genome                = params.ascat_genome       ?:  Channel.empty()
-dbsnp_vqsr                  = params.dbsnp_vqsr         ?   Channel.value(params.dbsnp_vqsr)        : Channel.empty()
-known_indels_vqsr           = params.known_indels_vqsr  ?   Channel.value(params.known_indels_vqsr) : Channel.empty()
-known_snps_vqsr             = params.known_snps_vqsr    ?   Channel.value(params.known_snps_vqsr)   : Channel.empty()
-ngscheckmate_bed            = params.ngscheckmate_bed   ?   Channel.value(params.ngscheckmate_bed)  : Channel.empty()
-snpeff_db                   = params.snpeff_db          ?:  Channel.empty()
-vep_cache_version           = params.vep_cache_version  ?:  Channel.empty()
-vep_genome                  = params.vep_genome         ?:  Channel.empty()
-vep_species                 = params.vep_species        ?:  Channel.empty()
-
-vep_extra_files = []
-
-if (params.dbnsfp && params.dbnsfp_tbi) {
-    vep_extra_files.add(file(params.dbnsfp, checkIfExists: true))
-    vep_extra_files.add(file(params.dbnsfp_tbi, checkIfExists: true))
-}
-
-if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && params.spliceai_indel_tbi) {
-    vep_extra_files.add(file(params.spliceai_indel, checkIfExists: true))
-    vep_extra_files.add(file(params.spliceai_indel_tbi, checkIfExists: true))
-    vep_extra_files.add(file(params.spliceai_snv, checkIfExists: true))
-    vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
-}
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     NAMED WORKFLOW FOR PIPELINE
@@ -131,6 +87,47 @@ workflow NFCORE_SAREK {
 
     main:
     versions = Channel.empty()
+
+    // Initialize fasta file with meta map:
+    fasta = params.fasta ? Channel.fromPath(params.fasta).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
+
+    // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
+    bcftools_annotations    = params.bcftools_annotations    ? Channel.fromPath(params.bcftools_annotations).collect()      : Channel.empty()
+    bcftools_header_lines   = params.bcftools_header_lines   ? Channel.fromPath(params.bcftools_header_lines).collect()     : Channel.empty()
+    cf_chrom_len            = params.cf_chrom_len            ? Channel.fromPath(params.cf_chrom_len).collect()              : []
+    dbsnp                   = params.dbsnp                   ? Channel.fromPath(params.dbsnp).collect()                     : Channel.value([])
+    fasta_fai               = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()                 : Channel.empty()
+    germline_resource       = params.germline_resource       ? Channel.fromPath(params.germline_resource).collect()         : Channel.value([]) // Mutect2 does not require a germline resource, so set to optional input
+    known_indels            = params.known_indels            ? Channel.fromPath(params.known_indels).collect()              : Channel.value([])
+    known_snps              = params.known_snps              ? Channel.fromPath(params.known_snps).collect()                : Channel.value([])
+    mappability             = params.mappability             ? Channel.fromPath(params.mappability).collect()               : Channel.value([])
+    pon                     = params.pon                     ? Channel.fromPath(params.pon).collect()                       : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
+    sentieon_dnascope_model = params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect()   : Channel.value([])
+
+    // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
+    ascat_genome                = params.ascat_genome       ?:  Channel.empty() //TODO why is this not used
+    dbsnp_vqsr                  = params.dbsnp_vqsr         ?   Channel.value(params.dbsnp_vqsr)        : Channel.empty()
+    known_indels_vqsr           = params.known_indels_vqsr  ?   Channel.value(params.known_indels_vqsr) : Channel.empty()
+    known_snps_vqsr             = params.known_snps_vqsr    ?   Channel.value(params.known_snps_vqsr)   : Channel.empty()
+    ngscheckmate_bed            = params.ngscheckmate_bed   ?   Channel.value(params.ngscheckmate_bed)  : Channel.empty()
+    snpeff_db                   = params.snpeff_db          ?:  Channel.empty() //TODO why is this not used
+    vep_cache_version           = params.vep_cache_version  ?:  Channel.empty()
+    vep_genome                  = params.vep_genome         ?:  Channel.empty()
+    vep_species                 = params.vep_species        ?:  Channel.empty()
+
+    vep_extra_files = []
+
+    if (params.dbnsfp && params.dbnsfp_tbi) {
+        vep_extra_files.add(file(params.dbnsfp, checkIfExists: true))
+        vep_extra_files.add(file(params.dbnsfp_tbi, checkIfExists: true))
+    }
+
+    if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && params.spliceai_indel_tbi) {
+        vep_extra_files.add(file(params.spliceai_indel, checkIfExists: true))
+        vep_extra_files.add(file(params.spliceai_indel_tbi, checkIfExists: true))
+        vep_extra_files.add(file(params.spliceai_snv, checkIfExists: true))
+        vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
+    }
 
     // build indexes if needed
     PREPARE_GENOME(
@@ -161,8 +158,8 @@ workflow NFCORE_SAREK {
                                     : PREPARE_GENOME.out.hashtable
 
     // Gather index for mapping given the chosen aligner
-    index_alignment = (aligner == "bwa-mem" || aligner == "sentieon-bwamem") ? bwa :
-        aligner == "bwa-mem2" ? bwamem2 :
+    index_alignment = ( params.aligner == "bwa-mem" ||  params.aligner == "sentieon-bwamem") ? bwa :
+        params.aligner == "bwa-mem2" ? bwamem2 :
         dragmap
 
     // TODO: add a params for msisensorpro_scan
@@ -228,7 +225,7 @@ workflow NFCORE_SAREK {
     versions = versions.mix(PREPARE_GENOME.out.versions)
     versions = versions.mix(PREPARE_INTERVALS.out.versions)
 
-    vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] } : [[id: 'null'], []]
+    vep_fasta = (params.vep_include_fasta) ? fasta.map{ fa -> [ [ id:fa.baseName ], fa ] } : [[id: 'null'], []]
 
     // Download cache
     if (params.download_cache) {

@@ -29,7 +29,7 @@ workflow CRAM_SAMPLEQC {
         versions = versions.mix(CRAM_QC_RECAL.out.versions)
     }
 
-    BAM_NGSCHECKMATE(cram.map{meta, cram, crai -> [meta, cram]}, ngscheckmate_bed.map{bed -> [[id: "ngscheckmate"], bed]}, fasta)
+    BAM_NGSCHECKMATE(cram.map{meta, cram_, crai -> [meta, cram_]}, ngscheckmate_bed.map{bed -> [[id: "ngscheckmate"], bed]}, fasta)
     versions = versions.mix(BAM_NGSCHECKMATE.out.versions.first())
 
     emit:

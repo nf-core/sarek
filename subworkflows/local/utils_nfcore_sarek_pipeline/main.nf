@@ -14,13 +14,11 @@ include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFSCHEMA_PLUGIN     } from '../../nf-core/utils_nfschema_plugin'
 include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
 include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
-include { dashedLine                } from '../../nf-core/utils_nfcore_pipeline'
 include { getWorkflowVersion        } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { logColours                } from '../../nf-core/utils_nfcore_pipeline'
 include { paramsSummaryMap          } from 'plugin/nf-schema'
 include { samplesheetToList         } from 'plugin/nf-schema'
-include { workflowCitation          } from '../../nf-core/utils_nfcore_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -116,8 +114,6 @@ workflow PIPELINE_INITIALISATION {
 // only check if we are using the tools
 if (params.tools && (params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('merge'))) checkPathParamList.add(params.snpeff_cache)
 if (params.tools && (params.tools.split(',').contains('vep')    || params.tools.split(',').contains('merge'))) checkPathParamList.add(params.vep_cache)
-
-    // def retrieveInput(need_input, step, outdir) {
 
     params.input_restart = retrieveInput((!params.build_only_index && !params.input), params.step, params.outdir)
 
@@ -319,58 +315,48 @@ def methodsDescriptionText(mqc_methods_yaml) {
 }
 
 //
-// nf-core/sarek logo
-//
-def nfCoreLogo(monochrome_logs=true) {
-    Map colors = logColours(monochrome_logs)
-    String.format(
-        """\n
-        ${dashedLine(monochrome_logs)}
-                                                ${colors.green},--.${colors.black}/${colors.green},-.${colors.reset}
-        ${colors.blue}        ___     __   __   __   ___     ${colors.green}/,-._.--~\'${colors.reset}
-        ${colors.blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${colors.yellow}}  {${colors.reset}
-        ${colors.blue}  | \\| |       \\__, \\__/ |  \\ |___     ${colors.green}\\`-._,-`-,${colors.reset}
-                                                ${colors.green}`._,._,\'${colors.reset}
-        ${colors.white}      ____${colors.reset}
-        ${colors.white}    .´ _  `.${colors.reset}
-        ${colors.white}   /  ${colors.green}|\\${colors.reset}`-_ \\${colors.reset}     ${colors.blue} __        __   ___     ${colors.reset}
-        ${colors.white}  |   ${colors.green}| \\${colors.reset}  `-|${colors.reset}    ${colors.blue}|__`  /\\  |__) |__  |__/${colors.reset}
-        ${colors.white}   \\ ${colors.green}|   \\${colors.reset}  /${colors.reset}     ${colors.blue}.__| /¯¯\\ |  \\ |___ |  \\${colors.reset}
-        ${colors.white}    `${colors.green}|${colors.reset}____${colors.green}\\${colors.reset}´${colors.reset}
-
-        ${colors.purple}  ${workflow.manifest.name} ${getWorkflowVersion()}${colors.reset}
-        ${dashedLine(monochrome_logs)}
-        """.stripIndent()
-    )
-}
-
-//
 // retrieveInput
 //
+//TODO why do we have `need_input` here. It is not used anywhere in the code
 def retrieveInput(need_input, step, outdir) {
+
     def input = null
+
     if (!params.input && !params.build_only_index) {
-        switch (step) {
-            case 'mapping':                 error("Can't start $step step without samplesheet")
-                                            break
-            case 'markduplicates':          log.warn("Using file ${outdir}/csv/mapped.csv");
-                                            input = outdir + "/csv/mapped.csv"
-                                            break
-            case 'prepare_recalibration':   log.warn("Using file ${outdir}/csv/markduplicates_no_table.csv");
-                                            input = outdir + "/csv/markduplicates_no_table.csv"
-                                            break
-            case 'recalibrate':             log.warn("Using file ${outdir}/csv/markduplicates.csv");
-                                            input = outdir + "/csv/markduplicates.csv"
-                                            break
-            case 'variant_calling':         log.warn("Using file ${outdir}/csv/recalibrated.csv");
-                                            input = outdir + "/csv/recalibrated.csv"
-                                            break
-            // case 'controlfreec':         csv_file = file("${outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
-            case 'annotate':                log.warn("Using file ${outdir}/csv/variantcalled.csv");
-                                            input = outdir + "/csv/variantcalled.csv"
-                                            break
-            default:                        log.warn("Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'")
-                                            error("Unknown step $step")
+        if (step == 'mapping') {
+
+            error("Can't start $step step without samplesheet")
+
+        } else if (step == 'markduplicates') {
+
+            log.warn("Using file ${outdir}/csv/mapped.csv");
+            input = outdir + "/csv/mapped.csv"
+
+        } else if (step == 'prepare_recalibration') {
+
+            log.warn("Using file ${outdir}/csv/markduplicates_no_table.csv");
+            input = outdir + "/csv/markduplicates_no_table.csv"
+
+        } else if (step == 'recalibrate') {
+
+            log.warn("Using file ${outdir}/csv/markduplicates.csv");
+            input = outdir + "/csv/markduplicates.csv"
+
+        } else if (step == 'variant_calling') {
+
+            log.warn("Using file ${outdir}/csv/recalibrated.csv");
+            input = outdir + "/csv/recalibrated.csv"
+
+        } else if (step == 'annotate') {
+
+            log.warn("Using file ${outdir}/csv/variantcalled.csv");
+            input = outdir + "/csv/variantcalled.csv"
+
+        } else {
+
+            log.warn("Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'")
+            error("Unknown step $step")
+
         }
     }
     return input

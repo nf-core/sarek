@@ -21,20 +21,20 @@ workflow BAM_APPLYBQSR {
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
-        .map{ meta, cram, crai, recal, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, recal, intervals ] }
+        .map{ meta, cram_, crai, recal, intervals_, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram_, crai, recal, intervals_ ] }
 
     // RUN APPLYBQSR
-    GATK4_APPLYBQSR(cram_intervals, fasta.map{ meta, it -> [ it ] }, fasta_fai.map{ meta, it -> [ it ] }, dict.map{ meta, it -> [ it ] })
+    GATK4_APPLYBQSR(cram_intervals, fasta.map{ meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ meta, fasta_fai_ -> [ fasta_fai_ ] }, dict.map{ meta, dict_ -> [ dict_ ] })
 
     // Gather the recalibrated cram files
-    cram_to_merge = GATK4_APPLYBQSR.out.cram.map{ meta, cram -> [ groupKey(meta, meta.num_intervals), cram ] }.groupTuple()
+    cram_to_merge = GATK4_APPLYBQSR.out.cram.map{ meta, cram_ -> [ groupKey(meta, meta.num_intervals), cram_ ] }.groupTuple()
 
     // Merge and index the recalibrated cram files
-    CRAM_MERGE_INDEX_SAMTOOLS(cram_to_merge, fasta.map{ meta, it -> [ it ] }, fasta_fai.map{ meta, it -> [ it ] })
+    CRAM_MERGE_INDEX_SAMTOOLS(cram_to_merge, fasta.map{ meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ meta, fasta_fai_ -> [ fasta_fai_ ] })
 
     cram_recal = CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai
         // Remove no longer necessary field: num_intervals
-        .map{ meta, cram, crai -> [ meta - meta.subMap('num_intervals'), cram, crai ] }
+        .map{ meta, cram_, crai -> [ meta - meta.subMap('num_intervals'), cram_, crai ] }
 
     // Gather versions of all tools used
     versions = versions.mix(GATK4_APPLYBQSR.out.versions)

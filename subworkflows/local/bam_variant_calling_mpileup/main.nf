@@ -22,14 +22,14 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map and reorganize channel for BCFTOOLS_MPILEUP/SAMTOOLS_MPILEUP modules
-        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, intervals ] }
+        .map{ meta, cram_, crai, intervals_, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram_, intervals_ ] }
 
     // Run, if --tools mpileup
     keep_bcftools_mpileup = false
     BCFTOOLS_MPILEUP(cram_intervals, fasta, keep_bcftools_mpileup)
 
     //Only run, if --tools ControlFreec
-    SAMTOOLS_MPILEUP(cram_intervals, fasta.map{ meta, fasta -> [ fasta ] })
+    SAMTOOLS_MPILEUP(cram_intervals, fasta.map{ meta, fasta_ -> [ fasta_ ] })
 
     // Figuring out if there is one or more vcf(s) from the same sample
     vcf_mpileup = BCFTOOLS_MPILEUP.out.vcf.branch{

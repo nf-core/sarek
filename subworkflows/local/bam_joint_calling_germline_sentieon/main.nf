@@ -68,16 +68,16 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
             resource_indels_vcf,
             resource_indels_tbi,
             indels_resource_label,
-            fasta.map{meta, it -> [ it ]},
-            fai.map{meta, it -> [ it ]})
+            fasta.map{meta, fasta_ -> [ fasta_ ]},
+            fai.map{meta, fai_ -> [ fai_ ]})
 
         SENTIEON_VARCAL_SNP(
             vqsr_input,
             resource_snps_vcf,
             resource_snps_tbi,
             snps_resource_label,
-            fasta.map{meta, it -> [ it ]},
-            fai.map{meta, it -> [ it ]})
+            fasta.map{meta, fasta_ -> [ fasta_ ]},
+            fai.map{meta, fai_ -> [ fai_ ]})
 
         //Prepare SNPs and INDELs for Sentieon's applyvarcal
         // Step 1. : applyvarcal to SNPs
@@ -117,7 +117,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
         genotype_vcf = merged_vcf.join(vqsr_vcf_for_join, remainder: true).map{
             meta, joint_vcf, recal_vcf ->
 
-            vcf_out = recal_vcf ?: joint_vcf
+            def vcf_out = recal_vcf ?: joint_vcf
 
             [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"sentieon_haplotyper"], vcf_out]
         }
@@ -125,7 +125,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
         genotype_index = merged_tbi.join(vqsr_tbi_for_join, remainder: true).map{
             meta, joint_tbi, recal_tbi ->
 
-            tbi_out = recal_tbi ?: joint_tbi
+            def tbi_out = recal_tbi ?: joint_tbi
             [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"sentieon_haplotyper"], tbi_out]
         }
 

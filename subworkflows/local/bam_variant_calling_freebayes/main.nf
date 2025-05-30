@@ -23,7 +23,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map and reorganize channel for FREEBAYES module
-        .map{ meta, cram1, crai1, cram2, crai2, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram1, crai1, cram2, crai2, intervals ]}
+        .map{ meta, cram1, crai1, cram2, crai2, intervals_, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram1, crai1, cram2, crai2, intervals_ ]}
 
     FREEBAYES(cram_intervals, fasta, fasta_fai, [[id:'null'], []], [[id:'null'], []], [[id:'null'], []])
 

@@ -36,19 +36,19 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     // Combine input and intervals for spread and gather strategy
     input_intervals = input.combine(intervals)
         // Move num_intervals to meta map and reorganize channel for MUTECT2 module
-        .map{ meta, input, index, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], input, index, intervals ] }
+        .map{ meta, input_, index, intervals_, num_intervals -> [ meta + [ num_intervals:num_intervals ], input_, index, intervals_ ] }
 
     if (joint_mutect2) {
         // Perform variant calling using mutect2 module in tumor single mode
         // Group cram files by patient
         input_joint = input
-            .map{ meta, input, index -> [ meta - meta.subMap('sample') + [ id:meta.patient ], input, index ] }
+            .map{ meta, input_, index -> [ meta - meta.subMap('sample') + [ id:meta.patient ], input_, index ] }
             .groupTuple()
 
         // Add intervals for scatter-gather scaling
         input_joint_intervals = input_joint.combine(intervals)
         // Move num_intervals to meta map and reorganize channel for MUTECT2 module
-            .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ] }
+            .map{ meta, cram, crai, intervals_, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals_ ] }
         MUTECT2(input_joint_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
     }
     else {
@@ -102,7 +102,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     // Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2
     LEARNREADORIENTATIONMODEL(f1r2)
 
-    pileup_input = input_intervals.map{ meta, cram, crai, intervals -> [ meta + [ id:meta.sample ], cram, crai, intervals] }.unique()
+    pileup_input = input_intervals.map{ meta, cram, crai, intervals_ -> [ meta + [ id:meta.sample ], cram, crai, intervals_] }.unique()
 
     // Generate pileup summary table using getepileupsummaries
     GETPILEUPSUMMARIES(pileup_input, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
@@ -117,7 +117,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     // Only when using intervals
     pileup_table_to_merge = pileup_table_branch.intervals.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple()
 
-    GATHERPILEUPSUMMARIES(pileup_table_to_merge, dict.map{ meta, dict -> [ dict ] })
+    GATHERPILEUPSUMMARIES(pileup_table_to_merge, dict.map{ meta, dict_ -> [ dict_ ] })
 
     // Mix intervals and no_intervals channels together
     pileup_table = Channel.empty().mix(GATHERPILEUPSUMMARIES.out.table, pileup_table_branch.no_intervals).map{meta, table -> [ meta - meta.subMap('num_intervals') + [id:meta.sample], table ] }
@@ -145,13 +145,13 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
         .join(LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
         .join(calculatecontamination_out_seg)
         .join(calculatecontamination_out_cont)
-        .map{ meta, vcf, tbi, stats, artifactprior, seg, cont -> [ meta, vcf, tbi, stats, artifactprior, seg, cont, [] ] }
+        .map{ meta, vcf_, tbi_, stats_, artifactprior, seg, cont -> [ meta, vcf_, tbi_, stats_, artifactprior, seg, cont, [] ] }
 
     FILTERMUTECTCALLS(vcf_to_filter, fasta, fai, dict)
 
     vcf_filtered = FILTERMUTECTCALLS.out.vcf
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
-        .map{ meta, vcf -> [ meta + [ variantcaller:'mutect2' ], vcf ] }
+        .map{ meta, vcf_ -> [ meta + [ variantcaller:'mutect2' ], vcf_ ] }
 
     versions = versions.mix(MERGE_MUTECT2.out.versions)
     versions = versions.mix(CALCULATECONTAMINATION.out.versions)

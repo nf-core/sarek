@@ -37,7 +37,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     // Combine input and intervals for spread and gather strategy
     input_intervals = input.combine(intervals)
         // Move num_intervals to meta map and reorganize channel for MUTECT2_PAIRED module
-        .map{ meta, input_list, input_index_list, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], input_list, input_index_list, intervals ] }
+        .map{ meta, input_list, input_index_list, intervals_, num_intervals -> [ meta + [ num_intervals:num_intervals ], input_list, input_index_list, intervals_ ] }
 
     if (joint_mutect2) {
 
@@ -54,7 +54,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         ch_tn_intervals = ch_tn_cram.combine(intervals)
             // Move num_intervals to meta map and reorganize channel for MUTECT2_PAIRED module
             // meta: [id:patient_id, num_intervals, patient, sex]
-            .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ] }
+            .map{ meta, cram, crai, intervals_, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals_ ] }
 
         MUTECT2_PAIRED( ch_tn_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
     }
@@ -118,17 +118,17 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     // Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2
     LEARNREADORIENTATIONMODEL(f1r2)
 
-    pileup = input_intervals.multiMap{  meta, input_list, input_index_list, intervals ->
-        tumor: [ meta, input_list[1], input_index_list[1], intervals ]
-        normal: [ meta, input_list[0], input_index_list[0], intervals ]
+    pileup = input_intervals.multiMap{  meta, input_list, input_index_list, intervals_ ->
+        tumor: [ meta, input_list[1], input_index_list[1], intervals_ ]
+        normal: [ meta, input_list[0], input_index_list[0], intervals_ ]
     }
 
     // Prepare input channel for normal pileup summaries.
     // Remember, the input channel contains tumor-normal pairs, so there will be multiple copies of the normal sample for each tumor for a given patient.
     // Therefore, we use unique function to generate normal pileup summaries once for each patient for better efficiency.
-    pileup_normal = pileup.normal.map{ meta, cram, crai, intervals -> [ meta - meta.subMap('tumor_id') + [ id:meta.normal_id ], cram, crai, intervals] }.unique()
+    pileup_normal = pileup.normal.map{ meta, cram, crai, intervals_ -> [ meta - meta.subMap('tumor_id') + [ id:meta.normal_id ], cram, crai, intervals_] }.unique()
     // Prepare input channel for tumor pileup summaries.
-    pileup_tumor = pileup.tumor.map{ meta, cram, crai, intervals -> [ meta - meta.subMap('normal_id') + [ id:meta.tumor_id ], cram, crai, intervals ] }
+    pileup_tumor = pileup.tumor.map{ meta, cram, crai, intervals_ -> [ meta - meta.subMap('normal_id') + [ id:meta.tumor_id ], cram, crai, intervals_ ] }
 
     // Generate pileup summary tables using getepileupsummaries. tumor sample should always be passed in as the first input and input list entries of vcf_to_filter,
     GETPILEUPSUMMARIES_NORMAL(pileup_normal, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
@@ -153,8 +153,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     pileup_table_tumor_to_merge = pileup_table_tumor_branch.intervals.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple()
 
     // Merge Pileup Summaries
-    GATHERPILEUPSUMMARIES_NORMAL(pileup_table_normal_to_merge, dict.map{ meta, dict -> [ dict ] })
-    GATHERPILEUPSUMMARIES_TUMOR(pileup_table_tumor_to_merge, dict.map{ meta, dict -> [ dict ] })
+    GATHERPILEUPSUMMARIES_NORMAL(pileup_table_normal_to_merge, dict.map{ meta, dict_ -> [ dict_ ] })
+    GATHERPILEUPSUMMARIES_TUMOR(pileup_table_tumor_to_merge, dict.map{ meta, dict_ -> [ dict_ ] })
 
     // Do some channel magic to generate tumor-normal pairs again.
     // This is necessary because we generated one normal pileup summary for each patient but we need run calculate contamination for each tumor-normal pair.
@@ -197,13 +197,13 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         .join(LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
         .join(calculatecontamination_out_seg)
         .join(calculatecontamination_out_cont)
-        .map{ meta, vcf, tbi, stats, orientation, seg, cont -> [ meta, vcf, tbi, stats, orientation, seg, cont, [] ] }
+        .map{ meta, vcf_, tbi_, stats_, orientation, seg, cont -> [ meta, vcf_, tbi_, stats_, orientation, seg, cont, [] ] }
 
     FILTERMUTECTCALLS(vcf_to_filter, fasta, fai, dict)
 
     vcf_filtered = FILTERMUTECTCALLS.out.vcf
         // add variantcaller to meta map
-        .map{ meta, vcf -> [ meta + [ variantcaller:'mutect2' ], vcf ] }
+        .map{ meta, vcf_ -> [ meta + [ variantcaller:'mutect2' ], vcf_ ] }
 
     versions = versions.mix(MERGE_MUTECT2.out.versions)
     versions = versions.mix(CALCULATECONTAMINATION.out.versions)

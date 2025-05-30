@@ -22,7 +22,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
-        .map{ meta, cram, crai, intervals, intervals_index, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals, intervals_index ] }
+        .map{ meta, cram_, crai, intervals_, intervals_index, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram_, crai, intervals_, intervals_index ] }
 
     STRELKA_SINGLE(cram_intervals, fasta, fasta_fai)
 
@@ -41,8 +41,8 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     }
 
     // Only when using intervals
-    genome_vcf_to_merge = genome_vcf.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}.groupTuple()
-    vcf_to_merge        = vcf.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}.groupTuple()
+    genome_vcf_to_merge = genome_vcf.intervals.map{ meta, vcf_ -> [ groupKey(meta, meta.num_intervals), vcf_ ]}.groupTuple()
+    vcf_to_merge        = vcf.intervals.map{ meta, vcf_ -> [ groupKey(meta, meta.num_intervals), vcf_ ]}.groupTuple()
 
     MERGE_STRELKA(vcf_to_merge, dict)
     MERGE_STRELKA_GENOME(genome_vcf_to_merge, dict)
@@ -51,7 +51,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     // Only strelka variant vcf should get annotated
     vcf = Channel.empty().mix(MERGE_STRELKA.out.vcf, vcf.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
-        .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], vcf ] }
+        .map{ meta, vcf_ -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], vcf_ ] }
 
     versions = versions.mix(MERGE_STRELKA.out.versions)
     versions = versions.mix(MERGE_STRELKA_GENOME.out.versions)

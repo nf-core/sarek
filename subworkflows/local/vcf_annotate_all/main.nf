@@ -41,13 +41,13 @@ workflow VCF_ANNOTATE_ALL {
     if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff')) {
         VCF_ANNOTATE_SNPEFF(vcf, snpeff_db, snpeff_cache)
 
-        reports = reports.mix(VCF_ANNOTATE_SNPEFF.out.reports.map{ meta, reports -> [ reports ] })
+        reports = reports.mix(VCF_ANNOTATE_SNPEFF.out.reports.map{ meta, reports_ -> [ reports_ ] })
         vcf_ann = vcf_ann.mix(VCF_ANNOTATE_SNPEFF.out.vcf_tbi)
         versions = versions.mix(VCF_ANNOTATE_SNPEFF.out.versions)
     }
 
     if (tools.split(',').contains('merge')) {
-        vcf_ann_for_merge = VCF_ANNOTATE_SNPEFF.out.vcf_tbi.map{ meta, vcf, tbi -> [ meta, vcf, [] ] }
+        vcf_ann_for_merge = VCF_ANNOTATE_SNPEFF.out.vcf_tbi.map{ meta, vcf_, tbi -> [ meta, vcf_, [] ] }
         VCF_ANNOTATE_MERGE(vcf_ann_for_merge, fasta, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
 
         reports = reports.mix(VCF_ANNOTATE_MERGE.out.reports)
@@ -56,7 +56,7 @@ workflow VCF_ANNOTATE_ALL {
     }
 
     if (tools.split(',').contains('vep')) {
-        vcf_for_vep = vcf.map{ meta, vcf -> [ meta, vcf, [] ] }
+        vcf_for_vep = vcf.map{ meta, vcf_ -> [ meta, vcf_, [] ] }
         VCF_ANNOTATE_ENSEMBLVEP(vcf_for_vep, fasta, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
 
         reports  = reports.mix(VCF_ANNOTATE_ENSEMBLVEP.out.reports)
