@@ -63,13 +63,12 @@
             "default": "",
             "properties": {
                 "split_fastq": {
+                    "type": "integer",
                     "oneOf": [
                         {
-                            "type": "integer",
                             "minimum": 250
                         },
                         {
-                            "type": "integer",
                             "const": 0
                         }
                     ],
