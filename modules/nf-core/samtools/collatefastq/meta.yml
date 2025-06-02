@@ -1,0 +1,105 @@
+name: samtools_collatefastq
+description: |
+  The module uses collate and then fastq methods from samtools to
+  convert a SAM, BAM or CRAM file to FASTQ format
+keywords:
+  - bam2fq
+  - samtools
+  - fastq
+tools:
+  - samtools:
+      description: Tools for dealing with SAM, BAM and CRAM files
+      documentation: http://www.htslib.org/doc/1.1/samtools.html
+      licence: ["MIT"]
+      identifier: biotools:samtools
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input:
+        type: file
+        description: BAM/CRAM/SAM file
+        pattern: "*.{bam,cram,sam}"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test' ]
+    - fasta:
+        type: file
+        description: Reference genome fasta file
+        pattern: "*.{fasta,fa}"
+  - - interleave:
+        type: boolean
+        description: |
+          If true, the output is a single interleaved paired-end FASTQ
+          If false, the output split paired-end FASTQ
+        default: false
+output:
+  - fastq:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_{1,2}.fq.gz"
+      - "*_{1,2}.fq.gz":
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_{1,2}.fq.gz"
+  - fastq_interleaved:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_interleaved.fq.gz"
+      - "*_interleaved.fq":
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_interleaved.fq.gz"
+  - fastq_other:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_other.fq.gz"
+      - "*_other.fq.gz":
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_other.fq.gz"
+  - fastq_singleton:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_singleton.fq.gz"
+      - "*_singleton.fq.gz":
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_singleton.fq.gz"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@lescai"
+  - "@maxulysse"
+  - "@matthdsm"
+maintainers:
+  - "@lescai"
+  - "@maxulysse"
+  - "@matthdsm"

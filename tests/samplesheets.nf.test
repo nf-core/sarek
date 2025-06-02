@@ -1,0 +1,47 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    tag "cpu"
+
+    test("-profile test --input tests/csv/3.0/sample_with_space.csv") {
+        when {
+            params {
+                input = "${projectDir}/tests/csv/3.0/sample_with_space.csv"
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.failed
+            assertAll(
+                { assert snapshot(
+                    workflow.stderr.toString().replace("[", "").replace("]", "").split(",")[0..1,3..5]
+                ).match() }
+            )
+        }
+    }
+
+    test("-profile test --step variant_calling --input tests/csv/3.0/recalibrated_somatic_two_normal_one_sample.csv") {
+
+        when {
+            params {
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+                input = "${projectDir}/tests/csv/3.0/recalibrated_somatic_two_normal_one_sample.csv"
+                outdir = "$outputDir"
+                step = "variant_calling"
+            }
+        }
+
+        then {
+            assert workflow.failed
+            assertAll(
+                { assert snapshot(
+                    workflow.stderr.toString().replace("[", "").replace("]", "").split(",")[0]
+                ).match() }
+            )
+        }
+    }
+}

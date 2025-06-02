@@ -1,0 +1,56 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    tag "gpu"
+    profile "test,gpu"
+
+    test("-profile test --aligner parabricks") {
+
+        when {
+            params {
+                aligner = 'parabricks'
+                outdir = "$outputDir"
+                save_reference = true
+                tools = ''
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // bam_files: All bam files
+            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
+            // cram_files: All cram files
+            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
+            // Fasta file for cram verification with nft-bam
+            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
+            assert workflow.success
+            assertAll(
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    stable_name,
+                    // All files with stable contents
+                    stable_path,
+                    // All cram files
+                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
+                    // All cram files
+                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
+                    // All vcf files
+                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
+                ).match() }
+            )
+        }
+    }
+}
