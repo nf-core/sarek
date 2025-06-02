@@ -1,2 +1,0 @@
-ensemblvep/download:
-  - "modules/nf-core/ensemblvep/download/**"

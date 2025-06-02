@@ -34,6 +34,11 @@ input:
         description: Optional file containing logic for awk to execute. If you don't
           wish to use a file, you can use `ext.args2` to specify the logic.
         pattern: "*"
+  - - disable_redirect_output:
+        type: boolean
+        description: Disable the redirection of awk output to a given file. This is
+          useful if you want to use awk's built-in redirect to write files instead
+          of the shell's redirect.
 output:
   - output:
       - meta:
@@ -41,10 +46,11 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - ${prefix}.${suffix}:
+      - "*.${suffix}":
           type: file
-          description: The output file - specify the name of this file using `ext.prefix`
-            and the extension using `ext.suffix`
+          description: The output file - if using shell redirection, specify the name of this
+            file using `ext.prefix` and the extension using `ext.suffix`. Otherwise, ensure
+            the awk program produces files with the extension in `ext.suffix`.
           pattern: "*"
   - versions:
       - versions.yml:

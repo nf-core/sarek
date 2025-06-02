@@ -28,10 +28,10 @@ process GATK4_CNNSCOREVARIANTS {
     }
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def aligned_input = aligned_input ? "--input $aligned_input" : ""
+    def aligned_input_cmd = aligned_input ? "--input $aligned_input" : ""
     def interval_command = intervals ? "--intervals $intervals" : ""
-    def architecture = architecture ? "--architecture $architecture" : ""
-    def weights = weights ? "--weights $weights" : ""
+    def architecture_cmd = architecture ? "--architecture $architecture" : ""
+    def weights_cmd = weights ? "--weights $weights" : ""
 
     def avail_mem = 3072
     if (!task.memory) {
@@ -48,11 +48,24 @@ process GATK4_CNNSCOREVARIANTS {
         --output ${prefix}.cnn.vcf.gz \\
         --reference $fasta \\
         $interval_command \\
-        $aligned_input \\
-        $architecture \\
-        $weights \\
+        $aligned_input_cmd \\
+        $architecture_cmd \\
+        $weights_cmd \\
         --tmp-dir . \\
         $args
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+
+    """
+    echo "" | gzip -c > ${prefix}.cnn.vcf.gz
+    touch ${prefix}.cnn.vcf.gz.tbi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

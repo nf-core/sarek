@@ -8,23 +8,23 @@
 // Condition is based on params.step and params.tools
 // If and extra condition exists, it's specified in comments
 
-include { BWA_INDEX as BWAMEM1_INDEX                } from '../../../modules/nf-core/bwa/index/main'
-include { BWAMEM2_INDEX                             } from '../../../modules/nf-core/bwamem2/index/main'
-include { DRAGMAP_HASHTABLE                         } from '../../../modules/nf-core/dragmap/hashtable/main'
-include { GATK4_CREATESEQUENCEDICTIONARY            } from '../../../modules/nf-core/gatk4/createsequencedictionary/main'
-include { MSISENSORPRO_SCAN                         } from '../../../modules/nf-core/msisensorpro/scan/main'
-include { SAMTOOLS_FAIDX                            } from '../../../modules/nf-core/samtools/faidx/main'
-include { TABIX_TABIX as TABIX_BCFTOOLS_ANNOTATIONS } from '../../../modules/nf-core/tabix/tabix/main'
-include { TABIX_TABIX as TABIX_DBSNP                } from '../../../modules/nf-core/tabix/tabix/main'
-include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE    } from '../../../modules/nf-core/tabix/tabix/main'
-include { TABIX_TABIX as TABIX_KNOWN_INDELS         } from '../../../modules/nf-core/tabix/tabix/main'
-include { TABIX_TABIX as TABIX_KNOWN_SNPS           } from '../../../modules/nf-core/tabix/tabix/main'
-include { TABIX_TABIX as TABIX_PON                  } from '../../../modules/nf-core/tabix/tabix/main'
-include { UNTAR as UNTAR_CHR_DIR                    } from '../../../modules/nf-core/untar/main'
-include { UNZIP as UNZIP_ALLELES                    } from '../../../modules/nf-core/unzip/main'
-include { UNZIP as UNZIP_GC                         } from '../../../modules/nf-core/unzip/main'
-include { UNZIP as UNZIP_LOCI                       } from '../../../modules/nf-core/unzip/main'
-include { UNZIP as UNZIP_RT                         } from '../../../modules/nf-core/unzip/main'
+include { BWA_INDEX as BWAMEM1_INDEX                } from '../../../modules/nf-core/bwa/index'
+include { BWAMEM2_INDEX                             } from '../../../modules/nf-core/bwamem2/index'
+include { DRAGMAP_HASHTABLE                         } from '../../../modules/nf-core/dragmap/hashtable'
+include { GATK4_CREATESEQUENCEDICTIONARY            } from '../../../modules/nf-core/gatk4/createsequencedictionary'
+include { MSISENSORPRO_SCAN                         } from '../../../modules/nf-core/msisensorpro/scan'
+include { SAMTOOLS_FAIDX                            } from '../../../modules/nf-core/samtools/faidx'
+include { TABIX_TABIX as TABIX_BCFTOOLS_ANNOTATIONS } from '../../../modules/nf-core/tabix/tabix'
+include { TABIX_TABIX as TABIX_DBSNP                } from '../../../modules/nf-core/tabix/tabix'
+include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE    } from '../../../modules/nf-core/tabix/tabix'
+include { TABIX_TABIX as TABIX_KNOWN_INDELS         } from '../../../modules/nf-core/tabix/tabix'
+include { TABIX_TABIX as TABIX_KNOWN_SNPS           } from '../../../modules/nf-core/tabix/tabix'
+include { TABIX_TABIX as TABIX_PON                  } from '../../../modules/nf-core/tabix/tabix'
+include { UNTAR as UNTAR_CHR_DIR                    } from '../../../modules/nf-core/untar'
+include { UNZIP as UNZIP_ALLELES                    } from '../../../modules/nf-core/unzip'
+include { UNZIP as UNZIP_GC                         } from '../../../modules/nf-core/unzip'
+include { UNZIP as UNZIP_LOCI                       } from '../../../modules/nf-core/unzip'
+include { UNZIP as UNZIP_RT                         } from '../../../modules/nf-core/unzip'
 
 workflow PREPARE_GENOME {
     take:
@@ -51,7 +51,7 @@ workflow PREPARE_GENOME {
 
     GATK4_CREATESEQUENCEDICTIONARY(fasta)
     MSISENSORPRO_SCAN(fasta)
-    SAMTOOLS_FAIDX(fasta, [ [ id:'no_fai' ], [] ] )
+    SAMTOOLS_FAIDX(fasta, [ [ id:'no_fai' ], [] ], false )
 
     // the following are flattened and mapped in case the user supplies more than one value for the param
     // written for KNOWN_INDELS, but preemptively applied to the rest
