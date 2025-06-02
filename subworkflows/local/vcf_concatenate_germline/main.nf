@@ -39,4 +39,3 @@ workflow CONCATENATE_GERMLINE_VCFS {
 
     versions // channel: [ versions.yml ]
 }
-
