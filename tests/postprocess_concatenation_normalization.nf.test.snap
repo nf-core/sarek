@@ -266,8 +266,6 @@
             "No BAM files",
             "No CRAM files",
             [
-                "testN.germline.vcf.gz:md5,141a2cc53b0a9d4a0ab4d779cb1e487",
-                "testT.germline.vcf.gz:md5,7bac441a7c84790f43d26a73e10be9b5",
                 "testN.freebayes.vcf.gz:md5,1d98e39fe458af9020283de18c764055",
                 "testT.freebayes.vcf.gz:md5,387b7d48d04ad3b294f07173e6550fc7",
                 "testN.haplotypecaller.filtered.vcf.gz:md5,df2040bf1bee0252581824d11d5d87d1",
