@@ -86,7 +86,7 @@ jobs:
           - isMain: false
             profile: "singularity"
         NXF_VER:
-          - "24.10.2"
+          - "24.04.2"
           - "latest-everything"
     env:
       NXF_ANSI_LOG: false
@@ -111,6 +111,7 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
+          tags: "cpu"
   confirm-pass:
     needs: [nf-test]
     if: always()
