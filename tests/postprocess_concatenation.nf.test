@@ -31,7 +31,7 @@ nextflow_pipeline {
             def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
             def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
             // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}', '**/test{N,T}.germline.vcf{,.gz}'])
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'], ignore: ['**/test{N,T}.germline.vcf{,.gz}'])
             assert workflow.success
             assertAll(
                 { assert snapshot(
