@@ -56,7 +56,7 @@
             ],
             "No BAM files",
             [
-                "test.sorted.cram:md5,xxxxxxxxxx"
+                "test.sorted.cram:md5,5534c350547fd253f0f2b9450362bed"
             ],
             "No VCF files"
         ],
