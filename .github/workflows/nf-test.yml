@@ -100,8 +100,6 @@ jobs:
       - name: Run nf-test
         uses: ./.github/actions/nf-test
         env:
-          NFT_DIFF: ${{ env.NFT_DIFF }}
-          NFT_DIFF_ARGS: ${{ env.NFT_DIFF_ARGS }}
           NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
           SENTIEON_AUTH_MECH: "GitHub Actions - token"
           SENTIEON_ENCRYPTION_KEY: ${{ secrets.SENTIEON_ENCRYPTION_KEY }}
