@@ -8,9 +8,6 @@
                 },
                 "LOFREQ": {
                     "lofreq": "2.1.5"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -133,9 +130,6 @@
                 },
                 "LOFREQ": {
                     "lofreq": "2.1.5"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [

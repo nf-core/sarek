@@ -8,9 +8,6 @@
                 },
                 "MUTECT2": {
                     "gatk4": "4.6.1.0"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -77,9 +74,6 @@
                 },
                 "MUTECT2_PAIRED": {
                     "gatk4": "4.6.1.0"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -166,9 +160,6 @@
                 },
                 "MUTECT2_PAIRED": {
                     "gatk4": "4.6.1.0"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -246,9 +237,6 @@
                 },
                 "MUTECT2": {
                     "gatk4": "4.6.1.0"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [

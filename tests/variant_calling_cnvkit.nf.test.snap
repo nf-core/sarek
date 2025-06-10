@@ -15,9 +15,6 @@
                 },
                 "CNVKIT_GENEMETRICS": {
                     "cnvkit": "0.9.10"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -207,9 +204,6 @@
                 },
                 "CNVKIT_GENEMETRICS": {
                     "cnvkit": "0.9.10"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -302,9 +296,6 @@
                 },
                 "CNVKIT_GENEMETRICS": {
                     "cnvkit": "0.9.10"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -442,9 +433,6 @@
                 },
                 "CNVKIT_GENEMETRICS": {
                     "cnvkit": "0.9.10"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
