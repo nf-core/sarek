@@ -4,8 +4,8 @@
             26,
             {
                 "CNVKIT_BATCH": {
-                    "samtools": 1.17,
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.10",
+                    "samtools": 1.17
                 },
                 "CNVKIT_CALL": {
                     "cnvkit": "0.9.10"
@@ -193,8 +193,8 @@
             12,
             {
                 "CNVKIT_BATCH": {
-                    "samtools": 1.17,
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.10",
+                    "samtools": 1.17
                 },
                 "CNVKIT_CALL": {
                     "cnvkit": "0.9.10"
@@ -285,8 +285,8 @@
             18,
             {
                 "CNVKIT_BATCH": {
-                    "samtools": 1.17,
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.10",
+                    "samtools": 1.17
                 },
                 "CNVKIT_CALL": {
                     "cnvkit": "0.9.10"
@@ -422,8 +422,8 @@
             12,
             {
                 "CNVKIT_BATCH": {
-                    "samtools": 1.17,
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.10",
+                    "samtools": 1.17
                 },
                 "CNVKIT_CALL": {
                     "cnvkit": "0.9.10"

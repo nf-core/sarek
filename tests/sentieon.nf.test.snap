@@ -26,8 +26,8 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_BWAMEM": {
-                    "sentieon": 202503,
-                    "bwa": "0.7.17-r1188"
+                    "bwa": "0.7.17-r1188",
+                    "sentieon": 202503
                 }
             },
             [

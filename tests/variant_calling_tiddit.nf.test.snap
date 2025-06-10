@@ -213,8 +213,8 @@
                     "bcftools": 1.21
                 },
                 "SVDB_MERGE": {
-                    "svdb": "2.8.2",
-                    "bcftools": 1.21
+                    "bcftools": 1.21,
+                    "svdb": "2.8.2"
                 },
                 "TABIX_BGZIP_TIDDIT_SV": {
                     "tabix": 1.21
