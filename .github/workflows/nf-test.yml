@@ -72,6 +72,7 @@ jobs:
     runs-on: # use self-hosted runners
       - runs-on=$-nf-test
       - runner=4cpu-linux-x64
+      - disk=large
     strategy:
       fail-fast: false
       matrix:
