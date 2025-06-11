@@ -4,8 +4,8 @@
             26,
             {
                 "CNVKIT_BATCH": {
-                    "samtools": 1.17,
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.10",
+                    "samtools": 1.17
                 },
                 "CNVKIT_CALL": {
                     "cnvkit": "0.9.10"
@@ -15,9 +15,6 @@
                 },
                 "CNVKIT_GENEMETRICS": {
                     "cnvkit": "0.9.10"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -196,8 +193,8 @@
             12,
             {
                 "CNVKIT_BATCH": {
-                    "samtools": 1.17,
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.10",
+                    "samtools": 1.17
                 },
                 "CNVKIT_CALL": {
                     "cnvkit": "0.9.10"
@@ -207,9 +204,6 @@
                 },
                 "CNVKIT_GENEMETRICS": {
                     "cnvkit": "0.9.10"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -291,8 +285,8 @@
             18,
             {
                 "CNVKIT_BATCH": {
-                    "samtools": 1.17,
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.10",
+                    "samtools": 1.17
                 },
                 "CNVKIT_CALL": {
                     "cnvkit": "0.9.10"
@@ -302,9 +296,6 @@
                 },
                 "CNVKIT_GENEMETRICS": {
                     "cnvkit": "0.9.10"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -431,8 +422,8 @@
             12,
             {
                 "CNVKIT_BATCH": {
-                    "samtools": 1.17,
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.10",
+                    "samtools": 1.17
                 },
                 "CNVKIT_CALL": {
                     "cnvkit": "0.9.10"
@@ -442,9 +433,6 @@
                 },
                 "CNVKIT_GENEMETRICS": {
                     "cnvkit": "0.9.10"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [

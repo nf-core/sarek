@@ -26,11 +26,8 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_BWAMEM": {
-                    "sentieon": 202503,
-                    "bwa": "0.7.17-r1188"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
+                    "bwa": "0.7.17-r1188",
+                    "sentieon": 202503
                 }
             },
             [
