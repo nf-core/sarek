@@ -11,9 +11,6 @@
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -140,9 +137,6 @@
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -272,9 +266,6 @@
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -404,9 +395,6 @@
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [

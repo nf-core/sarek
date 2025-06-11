@@ -8,9 +8,6 @@
                 },
                 "PARABRICKS_FQ2BAM": {
                     "pbrun": "4.4.0-1"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [

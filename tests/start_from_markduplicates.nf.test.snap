@@ -21,9 +21,6 @@
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -192,9 +189,6 @@
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -359,9 +353,6 @@
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -499,9 +490,6 @@
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
