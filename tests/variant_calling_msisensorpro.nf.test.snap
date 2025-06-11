@@ -3,9 +3,7 @@
         "content": [
             4,
             {
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
-                }
+                
             },
             [
                 "csv",
@@ -47,9 +45,6 @@
             {
                 "MSISENSORPRO_MSISOMATIC": {
                     "msisensor-pro": "1.2.0"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -133,9 +128,7 @@
         "content": [
             4,
             {
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
-                }
+                
             },
             [
                 "csv",

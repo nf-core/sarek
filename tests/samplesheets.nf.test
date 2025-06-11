@@ -39,6 +39,7 @@ nextflow_pipeline {
             assertAll(
                 { assert snapshot(
                     workflow.stderr.toString().contains("Sample ID 'test' is associated with multiple patient IDs: test, test2. Please ensure each sample ID is unique to a single patient.")
+                    workflow.stderr.toString().replaceAll(/\x1B\[[0-9;]*m/, '').replaceAll(/^\[/, '').replaceAll(/\]$/, '').replaceAll(/, /, ',').split(",").findAll { !it.matches(/.*Nextflow [0-9]+\.[0-9]+\.[0-9]+ is available.*/) }[0..1,3..5]
                 ).match() }
             )
         }
@@ -60,6 +61,7 @@ nextflow_pipeline {
             assertAll(
                 { assert snapshot(
                     workflow.stderr.toString().contains("Patient [test] has more than one sample [2] with normal status [0] and one sample with tumor status [1].")
+                    workflow.stderr.toString().replaceAll(/\x1B\[[0-9;]*m/, '').replaceAll(/^\[/, '').replaceAll(/\]$/, '').replaceAll(/, /, ',').split(",").findAll { !it.matches(/.*Nextflow [0-9]+\.[0-9]+\.[0-9]+ is available.*/) }[0]
                 ).match() }
             )
         }

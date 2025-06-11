@@ -3,9 +3,7 @@
         "content": [
             5,
             {
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
-                }
+                
             },
             [
                 "csv",
@@ -57,17 +55,14 @@
                 },
                 "DRAGMAP_ALIGN": {
                     "dragmap": "1.2.1",
-                    "samtools": "1.19.2",
-                    "pigz": "2.3.4"
+                    "pigz": "2.3.4",
+                    "samtools": "1.19.2"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
                 },
                 "MERGE_BAM": {
                     "samtools": 1.21
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [

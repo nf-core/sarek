@@ -3,9 +3,7 @@
         "content": [
             17,
             {
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
-                }
+                
             },
             [
                 "csv",
@@ -162,9 +160,7 @@
         "content": [
             17,
             {
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
-                }
+                
             },
             [
                 "csv",

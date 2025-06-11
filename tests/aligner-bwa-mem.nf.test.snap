@@ -15,9 +15,6 @@
                 },
                 "MERGE_BAM": {
                     "samtools": 1.21
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -62,17 +59,15 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-04-28T11:27:46.134259356"
+        "timestamp": "2025-06-10T11:33:43.467763529"
     },
     "-profile test --aligner bwa-mem --save_reference --build_only_index": {
         "content": [
             5,
             {
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
-                }
+                
             },
             [
                 "csv",
@@ -108,8 +103,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-04-28T11:28:31.148875256"
+        "timestamp": "2025-06-10T11:34:35.18965489"
     }
 }

@@ -14,9 +14,6 @@
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -120,9 +117,6 @@
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -219,8 +213,8 @@
                     "bcftools": 1.21
                 },
                 "SVDB_MERGE": {
-                    "svdb": "2.8.2",
-                    "bcftools": 1.21
+                    "bcftools": 1.21,
+                    "svdb": "2.8.2"
                 },
                 "TABIX_BGZIP_TIDDIT_SV": {
                     "tabix": 1.21
@@ -230,9 +224,6 @@
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
