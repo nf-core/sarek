@@ -3,9 +3,7 @@
         "content": [
             17,
             {
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
-                }
+                
             },
             [
                 "csv",
@@ -162,9 +160,7 @@
         "content": [
             17,
             {
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
-                }
+                
             },
             [
                 "csv",
@@ -231,39 +227,39 @@
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample1.recal.regions.bed.gz.csi:md5,f17cc9d960aa4a1e96548d570585cc8a",
+                "sample1.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
                 "sample2.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample2.recal.regions.bed.gz.csi:md5,4003c8833ed5e9b9f45282a6915c935e",
+                "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample3.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample3.recal.regions.bed.gz.csi:md5,f17cc9d960aa4a1e96548d570585cc8a",
+                "sample3.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
                 "sample4.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample4.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample4.recal.regions.bed.gz.csi:md5,4003c8833ed5e9b9f45282a6915c935e",
+                "sample4.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
                 "ngscheckmate_all.txt:md5,f858e3eb892b8245cbf74cc979e4f33a",
                 "ngscheckmate_matched.txt:md5,ab2c5b46e9a4dfb3bb54292db931b58b",
-                "ngscheckmate_output_corr_matrix.txt:md5,ee56010330f63577faeb598205b55f16"
+                "ngscheckmate_output_corr_matrix.txt:md5,a86afff85677c875503d495cbbb4f495"
             ],
             "No BAM files",
             "No CRAM files",
             [
-                "sample1.ngscheckmate.vcf.gz:md5,aacee7a423693f0a44478c6061a6c77f",
-                "sample2.ngscheckmate.vcf.gz:md5,f6a388bef079a86dba62ec5818ce2288",
-                "sample3.ngscheckmate.vcf.gz:md5,aacee7a423693f0a44478c6061a6c77f",
-                "sample4.ngscheckmate.vcf.gz:md5,f6a388bef079a86dba62ec5818ce2288"
+                "sample1.ngscheckmate.vcf.gz:md5,5cffc2b460469247b346b2399dc016fd",
+                "sample2.ngscheckmate.vcf.gz:md5,17c1253ed56084291e919586ecf9dca",
+                "sample3.ngscheckmate.vcf.gz:md5,5cffc2b460469247b346b2399dc016fd",
+                "sample4.ngscheckmate.vcf.gz:md5,17c1253ed56084291e919586ecf9dca"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-29T11:25:12.332895104"
+        "timestamp": "2025-05-08T12:14:15.942392268"
     }
 }

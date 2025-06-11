@@ -4,8 +4,8 @@ process GATK4_FILTERVARIANTTRANCHES {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gatk4:4.5.0.0--py36hdfd78af_0':
-        'biocontainers/gatk4:4.5.0.0--py36hdfd78af_0' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b2/b28daf5d9bb2f0d129dcad1b7410e0dd8a9b087aaf3ec7ced929b1f57624ad98/data':
+        'community.wave.seqera.io/library/gatk4_gcnvkernel:e48d414933d188cd' }"
 
     input:
     tuple val(meta), path(vcf), path(tbi), path(intervals)
@@ -27,7 +27,7 @@ process GATK4_FILTERVARIANTTRANCHES {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def resources = resources.collect{"--resource $it"}.join(' ')
+    def resource_list = resources.collect{"--resource $it"}.join(' ')
 
     def avail_mem = 3072
     if (!task.memory) {
@@ -39,10 +39,23 @@ process GATK4_FILTERVARIANTTRANCHES {
     gatk --java-options "-Xmx${avail_mem}M -XX:-UsePerfData" \\
         FilterVariantTranches \\
         --variant $vcf \\
-        $resources \\
+        $resource_list \\
         --output ${prefix}.filtered.vcf.gz \\
         --tmp-dir . \\
         $args
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+
+    """
+    echo "" | gzip -c > ${prefix}.vcf.gz
+    touch ${prefix}.vcf.gz.tbi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

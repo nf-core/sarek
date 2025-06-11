@@ -4,7 +4,7 @@
             17,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "CRAM_TO_BAM_NORMAL": {
                     "samtools": 1.21
@@ -21,17 +21,14 @@
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
                 "cram",
-                "cram/sample3.bai",
                 "cram/sample3.bam",
-                "cram/sample4.bai",
+                "cram/sample3.bam.bai",
                 "cram/sample4.bam",
+                "cram/sample4.bam.bai",
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
@@ -152,10 +149,10 @@
                 "variant_calling/muse/sample4_vs_sample3/sample4_vs_sample3.muse.vcf.gz.tbi"
             ],
             [
-                "sample3.bai:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample3.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample4.bai:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample3.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4.bam:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.muse.bcftools_stats.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample3.recal.global.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample3.recal.per-base.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
@@ -260,14 +257,14 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-29T09:56:08.034706398"
+        "timestamp": "2025-05-08T16:22:57.908427076"
     },
     "-profile test --tools muse --input recalibrated_somatic.csv": {
         "content": [
             18,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "CRAM_TO_BAM_NORMAL": {
                     "samtools": 1.21
@@ -284,9 +281,6 @@
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -376,21 +370,21 @@
                 "sample4.bam:md5,fe8ceee2ede1f9b0b4f2aaa3f1a97241",
                 "sample4.bam.bai:md5,c6d0e6be2e5d8a6bd312517d9ba0f4af",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "sample4_vs_sample3.muse.bcftools_stats.txt:md5,0a4c6d5841a55b492a50917b0610a0b3",
+                "sample4_vs_sample3.muse.bcftools_stats.txt:md5,09a0d72425a3638cbe8f1cbd254e66f3",
                 "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
                 "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
                 "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
                 "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
-                "sample3.recal.per-base.bed.gz.csi:md5,519cc5bf84da0d71b87a88c76f83194e",
+                "sample3.recal.per-base.bed.gz.csi:md5,c67dcd711b096eb42f43784d5eadbc0d",
                 "sample3.recal.regions.bed.gz:md5,314ce8d7273eff353072108aa77c327c",
-                "sample3.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
+                "sample3.recal.regions.bed.gz.csi:md5,9cb0ad7039a3b703d16ca7d5b835c0ee",
                 "sample4.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample4.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample4.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
                 "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample4.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
+                "sample4.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
                 "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample4.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
+                "sample4.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
                 "sample4_vs_sample3.muse.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample4_vs_sample3.muse.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
             ],
@@ -410,6 +404,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-29T10:01:09.744970444"
+        "timestamp": "2025-05-08T16:21:39.484419416"
     }
 }

@@ -4,16 +4,13 @@
             12,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "DEEPVARIANT_RUNDEEPVARIANT": {
-                    "deepvariant": "1.6.1"
+                    "deepvariant": "1.8.0"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -105,43 +102,40 @@
             ],
             [
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "test.deepvariant.bcftools_stats.txt:md5,4602909f8d2553ba7e74042f26494798",
+                "test.deepvariant.bcftools_stats.txt:md5,942c7931ed08d691a32859dff091c22f",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d",
+                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
                 "test.deepvariant.FILTER.summary:md5,d0fe196a8062d7d67d9018cb40f5490c",
                 "test.deepvariant.TsTv.count:md5,2851ce55f9813280515c2fdcacb86844"
             ],
             "No BAM files",
             "No CRAM files",
             [
-                "test.deepvariant.g.vcf.gz:md5,35b7f653833947fdcfae2b93961ee374",
-                "test.deepvariant.vcf.gz:md5,b6ba3ee8485299571ff23e0328367790"
+                "test.deepvariant.g.vcf.gz:md5,a51327a75372557eece796de33dc3318",
+                "test.deepvariant.vcf.gz:md5,e4a7b726e2f3db8ac15d08dd7e564519"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T15:38:32.802309766"
+        "timestamp": "2025-05-08T16:15:10.16958337"
     },
     "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv -with-stub": {
         "content": [
             12,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "DEEPVARIANT_RUNDEEPVARIANT": {
-                    "deepvariant": "1.6.1"
+                    "deepvariant": "1.8.0"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -337,23 +331,20 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T19:17:55.411970058"
+        "timestamp": "2025-05-08T16:18:15.847523817"
     },
     "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals -with-stub": {
         "content": [
             9,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "DEEPVARIANT_RUNDEEPVARIANT": {
-                    "deepvariant": "1.6.1"
+                    "deepvariant": "1.8.0"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -552,23 +543,20 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T19:18:35.510258408"
+        "timestamp": "2025-05-08T16:19:21.666525055"
     },
     "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals": {
         "content": [
             9,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "DEEPVARIANT_RUNDEEPVARIANT": {
-                    "deepvariant": "1.6.1"
+                    "deepvariant": "1.8.0"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -663,26 +651,26 @@
             ],
             [
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "test.deepvariant.bcftools_stats.txt:md5,4602909f8d2553ba7e74042f26494798",
+                "test.deepvariant.bcftools_stats.txt:md5,942c7931ed08d691a32859dff091c22f",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d",
+                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
                 "test.deepvariant.FILTER.summary:md5,d0fe196a8062d7d67d9018cb40f5490c",
                 "test.deepvariant.TsTv.count:md5,2851ce55f9813280515c2fdcacb86844"
             ],
             "No BAM files",
             "No CRAM files",
             [
-                "test.deepvariant.g.vcf.gz:md5,35b7f653833947fdcfae2b93961ee374",
-                "test.deepvariant.vcf.gz:md5,b6ba3ee8485299571ff23e0328367790"
+                "test.deepvariant.g.vcf.gz:md5,a51327a75372557eece796de33dc3318",
+                "test.deepvariant.vcf.gz:md5,e4a7b726e2f3db8ac15d08dd7e564519"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-04-28T15:40:01.04644895"
+        "timestamp": "2025-05-08T16:17:06.851031948"
     }
 }

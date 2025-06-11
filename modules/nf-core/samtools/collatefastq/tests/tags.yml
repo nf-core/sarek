@@ -1,2 +1,0 @@
-samtools/collatefastq:
-  - "modules/nf-core/samtools/collatefastq/**"

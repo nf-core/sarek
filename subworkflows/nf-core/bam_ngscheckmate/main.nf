@@ -11,10 +11,9 @@ workflow BAM_NGSCHECKMATE {
     main:
 
     ch_versions = Channel.empty()
-
-    ch_input_bed = ch_input.combine(ch_snp_bed.collect())
+    ch_input_bed = ch_input.combine(ch_snp_bed)
                         // do something to combine the metas?
-                        .map{ input_meta, input_file, bed_meta, bed_file ->
+                        .map{ input_meta, input_file, _bed_meta, bed_file ->
                             [input_meta, input_file, bed_file]
                         }
 
@@ -24,13 +23,13 @@ workflow BAM_NGSCHECKMATE {
     BCFTOOLS_MPILEUP
     .out
     .vcf
-    .map{meta, vcf -> vcf}    // discard individual metas
+    .map{_meta, vcf -> vcf}    // discard individual metas
     .collect()                // group into one channel
     .map{files -> [files]}    // make the channel into [vcf1, vcf2, ...]
     .set {ch_collected_vcfs}
 
     ch_snp_bed
-    .map{meta, bed -> meta} // use the snp_bed file meta as the meta for the merged channel
+    .map{meta, _bed -> meta} // use the snp_bed file meta as the meta for the merged channel
     .combine(ch_collected_vcfs) // add the vcf files after the meta, now looks like [meta, [vcf1, vcf2, ... ] ]
     .set {ch_vcfs}
 

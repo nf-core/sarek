@@ -8,10 +8,10 @@
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.2
+                    "samtools": 1.21
                 },
                 "CALLUMICONSENSUS": {
-                    "fgbio": "2.2.1"
+                    "fgbio": "2.4.0"
                 },
                 "CAT_FASTQ": {
                     "cat": 9.5
@@ -26,26 +26,26 @@
                     "fastqc": "0.12.1"
                 },
                 "FASTQTOBAM": {
-                    "fgbio": "2.2.1"
+                    "fgbio": "2.4.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.5.0.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.5.0.0",
-                    "samtools": "1.19.2"
+                    "gatk4": "4.6.1.0",
+                    "samtools": 1.21
                 },
                 "GROUPREADSBYUMI": {
-                    "fgbio": "2.2.1"
+                    "fgbio": "2.4.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.8"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMBLASTER": {
                     "samblaster": "0.1.26",
@@ -68,9 +68,6 @@
                 },
                 "SAMTOOLS_VIEW_UNMAP_UNMAP": {
                     "samtools": 1.21
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -272,12 +269,12 @@
                 "test.md.mosdepth.region.dist.txt:md5,61676a4a3668c0e84eb0f56dc6bda1ae",
                 "test.md.mosdepth.summary.txt:md5,9bbea5e4d213a51f501c2aadff8d4526",
                 "test.md.regions.bed.gz:md5,e24c18ad56e54376c41fdaacec372f9e",
-                "test.md.regions.bed.gz.csi:md5,080731cdedcd389e72135f048d6e2e00",
+                "test.md.regions.bed.gz.csi:md5,d0713716f63ac573f4a3385733e9a537",
                 "test.recal.mosdepth.global.dist.txt:md5,09d22913aa50a0207f97a3f85b182c6e",
                 "test.recal.mosdepth.region.dist.txt:md5,61676a4a3668c0e84eb0f56dc6bda1ae",
                 "test.recal.mosdepth.summary.txt:md5,9bbea5e4d213a51f501c2aadff8d4526",
                 "test.recal.regions.bed.gz:md5,e24c18ad56e54376c41fdaacec372f9e",
-                "test.recal.regions.bed.gz.csi:md5,080731cdedcd389e72135f048d6e2e00",
+                "test.recal.regions.bed.gz.csi:md5,d0713716f63ac573f4a3385733e9a537",
                 "test-test_L1_umi-grouped_histogram.txt:md5,85292e9acb83edf17110dce17be27f44"
             ],
             [
@@ -293,6 +290,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.6"
         },
-        "timestamp": "2025-05-02T09:01:27.619093159"
+        "timestamp": "2025-05-07T12:27:08.85654258"
     }
 }
