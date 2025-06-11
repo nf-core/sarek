@@ -3,9 +3,7 @@
         "content": [
             5,
             {
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
-                }
+                
             },
             [
                 "csv",
@@ -61,9 +59,6 @@
                 },
                 "MERGE_BAM": {
                     "samtools": 1.21
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [

@@ -18,7 +18,7 @@ nextflow_pipeline {
             assert workflow.failed
             assertAll(
                 { assert snapshot(
-                    workflow.stderr.toString().replace("[", "").replace("]", "").split(",")[0..1,3..5]
+                    workflow.stderr.toString().replaceAll(/\x1B\[[0-9;]*m/, '').replaceAll(/^\[/, '').replaceAll(/\]$/, '').replaceAll(/, /, ',').split(",").findAll { !it.matches(/.*Nextflow [0-9]+\.[0-9]+\.[0-9]+ is available.*/) }[0..1,3..5]
                 ).match() }
             )
         }
@@ -39,7 +39,28 @@ nextflow_pipeline {
             assert workflow.failed
             assertAll(
                 { assert snapshot(
-                    workflow.stderr.toString().replace("[", "").replace("]", "").split(",")[0]
+                    workflow.stderr.toString().replaceAll(/\x1B\[[0-9;]*m/, '').replaceAll(/^\[/, '').replaceAll(/\]$/, '').replaceAll(/, /, ',').split(",").findAll { !it.matches(/.*Nextflow [0-9]+\.[0-9]+\.[0-9]+ is available.*/) }[0]
+                ).match() }
+            )
+        }
+    }
+
+    test("-profile test,spark --input tests/csv/3.0/fastq_single.csv --use_gatk_spark baserecalibrator,markduplicates --save_mapped --save_output_as_bam") {
+        when {
+            params {
+                input = "${projectDir}/tests/csv/3.0/fastq_single.csv"
+                outdir = "$outputDir"
+                use_gatk_spark = 'baserecalibrator,markduplicates'
+                save_mapped = true
+                save_output_as_bam = true
+            }
+        }
+
+        then {
+            assert workflow.failed
+            assertAll(
+                { assert snapshot(
+                    workflow.stderr.toString().replaceAll(/\x1B\[[0-9;]*m/, '').replaceAll(/^\[/, '').replaceAll(/\]$/, '').replaceAll(/, /, ',').split(",").findAll { !it.matches(/.*Nextflow [0-9]+\.[0-9]+\.[0-9]+ is available.*/) }[1..2]
                 ).match() }
             )
         }

@@ -879,6 +879,16 @@ Re-start your session.
 
 Note that the way to increase the open file limit in your system may be slightly different or require additional steps.
 
+If you run into errors similar to the one shown below:
+
+```bash
+Command error:
+  [E::hts_idx_push] Unsorted positions on sequence #16: 58528620 followed by 58528490
+  [E::sam_index] Read 'LH00271:69:2237HHLT4:7:1101:1000:11758' with ref_name='chr16', ref_length=90338345, flags=163, pos=58528490 cannot be indexed  samtools index: failed to create index for "sample_19.sorted.bam"
+```
+
+Please be aware that `--use_gatk_spark` is not compatible with `--save_output_as_bam --save_mapped` because merging the reads to export them to bam files only works when they are coordinate sorted - spark works with name-sorting the reads.
+
 ## How to handle UMIs
 
 Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools.
