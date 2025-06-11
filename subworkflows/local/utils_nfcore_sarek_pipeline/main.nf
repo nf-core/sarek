@@ -220,6 +220,7 @@ def genomeExistsError() {
 def sparkAndBam() {
     if (params.use_gatk_spark && params.save_mapped && params.save_output_as_bam) {
         def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  The --use_gatk_spark option is not compatible with --save_mapped and --save_output_as_bam.\n" + "  If you want to save your bam files please swap to the normal gatk implementation.\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        System.err.println(error_string)
         error(error_string)
     }
 }
