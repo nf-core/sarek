@@ -1,28 +1,28 @@
 {
     "-profile test --step variant_calling --input tests/csv/3.0/recalibrated_somatic_two_normal_one_sample.csv": {
         "content": [
-            " Patient [test] has more than one sample [2] with normal status [0] and one sample with tumor status [1]."
+            "Patient [test] has more than one sample [2] with normal status [0] and one sample with tumor status [1]."
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.3"
         },
-        "timestamp": "2025-06-05T17:09:46.089888043"
+        "timestamp": "2025-06-11T11:07:19.090801434"
     },
     "-profile test --input tests/csv/3.0/sample_with_space.csv": {
         "content": [
             [
-                " The following invalid input values have been detected:",
-                " ",
-                " \t-> Entry 2: Error for field 'sample' (test 2): \"test 2\" does not match regular expression [^\\S+$] (Sample ID must be provided",
-                " cannot contain spaces and must be a string value)",
-                " "
+                "The following invalid input values have been detected:",
+                "",
+                "\t-> Entry 2: Error for field 'sample' (test 2): \"test 2\" does not match regular expression [^\\S+$] (Sample ID must be provided",
+                "cannot contain spaces and must be a string value)",
+                ""
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.3"
         },
-        "timestamp": "2025-06-05T17:09:05.076381485"
+        "timestamp": "2025-06-11T11:13:22.427475648"
     }
 }
