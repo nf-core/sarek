@@ -6,6 +6,9 @@
                 "BAM2FASTQ": {
                     "samtools": 1.21
                 },
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
                     "samtools": 1.21
@@ -22,6 +25,9 @@
                 "COLLATE_FASTQ_UNMAP": {
                     "samtools": 1.21
                 },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
+                },
                 "FASTQC": {
                     "fastqc": "0.12.1"
                 },
@@ -32,6 +38,9 @@
                     "gatk4": "4.6.1.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
+                    "gatk4": "4.6.1.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
                 },
                 "GATK4_MARKDUPLICATES": {
@@ -68,6 +77,12 @@
                 },
                 "SAMTOOLS_VIEW_UNMAP_UNMAP": {
                     "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 }
             },
             [
@@ -288,8 +303,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-05-07T12:27:08.85654258"
+        "timestamp": "2025-06-12T15:57:53.587748994"
     }
 }
