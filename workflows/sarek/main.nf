@@ -105,6 +105,7 @@ workflow SAREK {
         vep_fasta
         vep_genome
         vep_species
+        versions
 
     main:
 
@@ -112,7 +113,6 @@ workflow SAREK {
     ch_multiqc_files = Channel.empty()
     multiqc_report   = Channel.empty()
     reports          = Channel.empty()
-    versions         = Channel.empty()
 
     if (params.step == 'mapping') {
         // Figure out if input is bam, fastq, or spring
