@@ -3,8 +3,20 @@
         "content": [
             6,
             {
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
+                },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.6.1.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 }
             },
             [
@@ -31,9 +43,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-04-28T14:56:17.384429575"
+        "timestamp": "2025-06-12T16:53:05.463394899"
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
@@ -42,8 +54,20 @@
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
                 },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -141,9 +165,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-05-08T12:55:31.433270271"
+        "timestamp": "2025-06-12T16:51:55.376877282"
     },
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
@@ -152,8 +176,20 @@
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
                 },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -251,19 +287,31 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-05-08T12:54:37.674975509"
+        "timestamp": "2025-06-12T16:50:42.249024001"
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null": {
         "content": [
             9,
             {
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
+                },
                 "GATK4_APPLYBQSR": {
+                    "gatk4": "4.6.1.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 }
             },
             [
@@ -313,8 +361,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-04-28T14:51:52.5491393"
+        "timestamp": "2025-06-12T16:49:30.05832201"
     }
 }
