@@ -3,9 +3,15 @@
         "content": [
             18,
             {
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
                     "samtools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -22,6 +28,9 @@
                 "GATK4_ESTIMATELIBRARYCOMPLEXITY": {
                     "gatk4": "4.6.1.0"
                 },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
                 "INDEX_CRAM": {
                     "samtools": 1.21
                 },
@@ -33,6 +42,12 @@
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 }
             },
             [
@@ -222,17 +237,23 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.0"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-05-09T10:25:14.54470682"
+        "timestamp": "2025-06-13T13:12:10.173274041"
     },
     "-profile test,spark --input tests/csv/3.0/fastq_tumor_only.csv --use_gatk_spark baserecalibrator,markduplicates --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools": {
         "content": [
             11,
             {
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
                     "samtools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
                 },
                 "GATK4SPARK_APPLYBQSR": {
                     "gatk4": "4.6.1.0"
@@ -243,11 +264,20 @@
                 "GATK4SPARK_MARKDUPLICATES": {
                     "gatk4": "4.6.1.0"
                 },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
                 "INDEX_CRAM": {
                     "samtools": 1.21
                 },
                 "INDEX_MARKDUPLICATES": {
                     "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 }
             },
             [
@@ -281,8 +311,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-04-28T14:37:02.314184198"
+        "timestamp": "2025-06-13T13:13:39.041023425"
     }
 }
