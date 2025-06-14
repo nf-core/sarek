@@ -678,6 +678,10 @@ workflow SAREK {
             params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
             intervals_for_preprocessing)
 
+        versions = versions.mix(CRAM_SAMPLEQC.out.versions)
+        reports = reports.mix(CRAM_SAMPLEQC.out.reports)
+
+
     if (params.tools) {
 
         //
