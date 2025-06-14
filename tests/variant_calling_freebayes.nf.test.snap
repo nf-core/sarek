@@ -9,11 +9,29 @@
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
                 },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
+                },
                 "FREEBAYES": {
                     "freebayes": "1.3.6"
                 },
+                "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.6.1.0"
+                },
                 "MERGE_FREEBAYES": {
                     "gatk4": "4.6.1.0"
+                },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -146,9 +164,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-05-08T18:56:09.099010463"
+        "timestamp": "2025-06-14T15:12:55.963665775"
     },
     "-profile test --tools freebayes --no_intervals --wes --input fastq_pair.csv": {
         "content": [
@@ -159,6 +177,9 @@
                 },
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
+                },
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
@@ -188,6 +209,9 @@
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
                 },
                 "TABIX_VC_FREEBAYES": {
                     "tabix": 1.21
@@ -535,9 +559,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-05-08T18:53:33.220951234"
+        "timestamp": "2025-06-14T15:11:29.634042376"
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20": {
         "content": [
@@ -549,9 +573,15 @@
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
                 },
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
                     "samtools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -586,6 +616,12 @@
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -880,9 +916,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-05-08T18:38:38.394184756"
+        "timestamp": "2025-06-14T15:02:58.202086482"
     },
     "-profile test --tools freebayes --no_intervals": {
         "content": [
@@ -893,6 +929,9 @@
                 },
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
+                },
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
@@ -922,6 +961,9 @@
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
                 },
                 "TABIX_VC_FREEBAYES": {
                     "tabix": 1.21
@@ -1214,9 +1256,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-05-08T18:43:20.770109901"
+        "timestamp": "2025-06-14T15:05:32.159833736"
     },
     "-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv": {
         "content": [
@@ -1230,6 +1272,18 @@
                 },
                 "FREEBAYES": {
                     "freebayes": "1.3.6"
+                },
+                "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.6.1.0"
+                },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
                 },
                 "TABIX_VC_FREEBAYES": {
                     "tabix": 1.21
@@ -1362,9 +1416,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-05-08T18:58:48.269196361"
+        "timestamp": "2025-06-14T15:14:18.944166173"
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv": {
         "content": [
@@ -1376,9 +1430,15 @@
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
                 },
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
                     "samtools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -1413,6 +1473,12 @@
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -1778,8 +1844,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-05-08T18:48:32.007891403"
+        "timestamp": "2025-06-14T15:08:25.042313656"
     }
 }
