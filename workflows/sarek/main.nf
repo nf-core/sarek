@@ -247,10 +247,8 @@ workflow SAREK {
         intervals_for_preprocessing,
     )
 
-    versions = versions.mix(CRAM_SAMPLEQC.out.versions)
-
-    versions = versions.mix(CRAM_SAMPLEQC.out.versions)
     reports = reports.mix(CRAM_SAMPLEQC.out.reports)
+    versions = versions.mix(CRAM_SAMPLEQC.out.versions)
 
     if (params.tools) {
 
