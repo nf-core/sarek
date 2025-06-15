@@ -249,6 +249,9 @@ workflow SAREK {
 
     versions = versions.mix(CRAM_SAMPLEQC.out.versions)
 
+    versions = versions.mix(CRAM_SAMPLEQC.out.versions)
+    reports = reports.mix(CRAM_SAMPLEQC.out.reports)
+
     if (params.tools) {
 
         //
