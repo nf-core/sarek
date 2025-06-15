@@ -299,11 +299,26 @@
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
                 },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
+                },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
                 },
                 "STRELKA_SOMATIC": {
                     "strelka": "2.9.10"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -482,9 +497,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-05-08T14:48:42.776313855"
+        "timestamp": "2025-06-15T18:41:18.840326798"
     },
     "-profile test --tools strelka --no_intervals germline": {
         "content": [
