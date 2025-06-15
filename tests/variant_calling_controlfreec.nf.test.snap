@@ -141,7 +141,13 @@
                 "MAKEGRAPH2": {
                     "controlfreec": "11.6b"
                 },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
                 "SAMTOOLS_MPILEUP": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
@@ -221,7 +227,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.3"
         },
-        "timestamp": "2025-06-14T13:58:36.490543084"
+        "timestamp": "2025-06-14T16:29:41.046244988"
     },
     "-profile test --tools controlfreec somatic": {
         "content": [
@@ -245,7 +251,13 @@
                 "MAKEGRAPH2": {
                     "controlfreec": "11.6b"
                 },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
                 "SAMTOOLS_MPILEUP": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
@@ -350,7 +362,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.3"
         },
-        "timestamp": "2025-06-14T13:57:11.149364666"
+        "timestamp": "2025-06-14T16:27:32.255182199"
     },
     "-profile test --tools controlfreec --no_intervals somatic stub": {
         "content": [
@@ -371,7 +383,13 @@
                 "MAKEGRAPH2": {
                     "controlfreec": "11.6b"
                 },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
                 "SAMTOOLS_MPILEUP": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
@@ -491,6 +509,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.3"
         },
-        "timestamp": "2025-06-14T13:59:50.008034603"
+        "timestamp": "2025-06-14T16:31:51.343000383"
     }
 }

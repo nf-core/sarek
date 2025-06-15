@@ -15,8 +15,14 @@
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
                 },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
                 "PARABRICKS_FQ2BAM": {
                     "pbrun": "4.4.0-1"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
