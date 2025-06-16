@@ -145,6 +145,10 @@ workflow SAREK {
             true,
         )
 
+        versions = versions.mix(SPRING_DECOMPRESS_TO_R1_FQ.out.versions)
+        versions = versions.mix(SPRING_DECOMPRESS_TO_R2_FQ.out.versions)
+        versions = versions.mix(SPRING_DECOMPRESS_TO_FQ_PAIR.out.versions)
+
         two_fastq_gz_from_spring = r1_fastq_gz_from_spring.fastq.join(r2_fastq_gz_from_spring.fastq).map { meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]] }
 
         two_fastq_gz_from_spring = two_fastq_gz_from_spring.map { meta, files -> addReadgroupToMeta(meta, files) }
