@@ -59,6 +59,7 @@ nextflow_pipeline {
 
     test("-profile test --tools ngscheckmate -stub") {
 
+        tag "stub"
         options "-stub"
 
         when {

@@ -152,6 +152,7 @@ nextflow_pipeline {
     }
 
     test("-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub") {
+        tag "stub"
         options "-stub"
 
         when {
@@ -203,6 +204,7 @@ nextflow_pipeline {
     }
 
     test("-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub") {
+        tag "stub"
         options "-stub"
 
         when {
@@ -251,6 +253,7 @@ nextflow_pipeline {
     }
 
     test("-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub") {
+        tag "stub"
         options "-stub"
 
         when {

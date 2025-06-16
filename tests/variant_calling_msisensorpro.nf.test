@@ -122,6 +122,7 @@ nextflow_pipeline {
 
     test("-profile test --tools msisensorpro somatic --build_only_index --input false -stub") {
 
+        tag "stub"
         options "-stub"
 
         when {
