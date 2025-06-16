@@ -17,15 +17,15 @@ process ASCAT {
     path(rt_file)   // optional
 
     output:
-    tuple val(meta), path("*alleleFrequencies_chr*.txt"),      emit: allelefreqs
-    tuple val(meta), path("*BAF.txt"),                         emit: bafs
-    tuple val(meta), path("*cnvs.txt"),                        emit: cnvs
-    tuple val(meta), path("*LogR.txt"),                        emit: logrs
-    tuple val(meta), path("*metrics.txt"),                     emit: metrics
-    tuple val(meta), path("*png"),                             emit: png
-    tuple val(meta), path("*purityploidy.txt"),                emit: purityploidy
-    tuple val(meta), path("*segments.txt"),                    emit: segments
-    path "versions.yml",                                       emit: versions
+    tuple val(meta), path("*alleleFrequencies_chr*.txt"), emit: allelefreqs
+    tuple val(meta), path("*BAF.txt")                   , emit: bafs
+    tuple val(meta), path("*cnvs.txt")                  , emit: cnvs
+    tuple val(meta), path("*LogR.txt")                  , emit: logrs
+    tuple val(meta), path("*metrics.txt")               , emit: metrics
+    tuple val(meta), path("*png")                       , emit: png
+    tuple val(meta), path("*purityploidy.txt")          , emit: purityploidy
+    tuple val(meta), path("*segments.txt")              , emit: segments
+    path "versions.yml"                                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -33,21 +33,22 @@ process ASCAT {
     script:
     def args           = task.ext.args        ?: ''
     def prefix         = task.ext.prefix      ?: "${meta.id}"
-    def gender         = args.gender          ?  "$args.gender" :        "NULL"
-    def genomeVersion  = args.genomeVersion   ?  "$args.genomeVersion" : "NULL"
-    def purity         = args.purity          ?  "$args.purity" :        "NULL"
-    def ploidy         = args.ploidy          ?  "$args.ploidy" :        "NULL"
-    def gc_input       = gc_file              ?  "$gc_file" :            "NULL"
-    def rt_input       = rt_file              ?  "$rt_file" :            "NULL"
+    def gender         = args.gender          ?  "${args.gender}"        : "NULL"
+    def genomeVersion  = args.genomeVersion   ?  "${args.genomeVersion}" : "NULL"
+    def purity         = args.purity          ?  "${args.purity}"        : "NULL"
+    def ploidy         = args.ploidy          ?  "${args.ploidy}"        : "NULL"
+    def gc_input       = gc_file              ?  "${gc_file}"            : "NULL"
+    def rt_input       = rt_file              ?  "${rt_file}"            : "NULL"
 
-    def minCounts_arg                    = args.minCounts                     ?  ", minCounts = $args.minCounts" : ""
-    def bed_file_arg                     = bed_file                           ?  ", BED_file = '$bed_file'": ""
-    def chrom_names_arg                  = args.chrom_names                   ?  ", chrom_names = $args.chrom_names" : ""
-    def min_base_qual_arg                = args.min_base_qual                 ?  ", min_base_qual = $args.min_base_qual" : ""
-    def min_map_qual_arg                 = args.min_map_qual                  ?  ", min_map_qual = $args.min_map_qual" : ""
-    def fasta_arg                        = fasta                              ?  ", ref.fasta = '$fasta'" : ""
-    def skip_allele_counting_tumour_arg  = args.skip_allele_counting_tumour   ?  ", skip_allele_counting_tumour = $args.skip_allele_counting_tumour" : ""
-    def skip_allele_counting_normal_arg  = args.skip_allele_counting_normal   ?  ", skip_allele_counting_normal = $args.skip_allele_counting_normal" : ""
+    def minCounts_arg                    = args.minCounts                      ?  ", minCounts = ${args.minCounts}"         : ""
+    def bed_file_arg                     = bed_file                            ?  ", BED_file = '${bed_file}'"              : ""
+    def chrom_names_arg                  = args.chrom_names                    ?  ", chrom_names = ${args.chrom_names}"     : ""
+    def min_base_qual_arg                = args.min_base_qual                  ?  ", min_base_qual = ${args.min_base_qual}" : ""
+    def min_map_qual_arg                 = args.min_map_qual                   ?  ", min_map_qual = ${args.min_map_qual}"   : ""
+    def fasta_arg                        = fasta                               ?  ", ref.fasta = '${fasta}'"                : ""
+    def skip_allele_counting_tumour_arg  = args.skip_allele_counting_tumour    ?  ", skip_allele_counting_tumour = ${args.skip_allele_counting_tumour}"       : ""
+    def skip_allele_counting_normal_arg  = args.skip_allele_counting_normal    ?  ", skip_allele_counting_normal = ${args.skip_allele_counting_normal}"       : ""
+    def additional_allelecounter_arg     = args.additional_allelecounter_flags ?  ", additional_allelecounter_flags = ${args.additional_allelecounter_flags}" : ""
 
     """
     #!/usr/bin/env Rscript
@@ -56,63 +57,63 @@ process ASCAT {
     options(bitmapType='cairo')
 
     # Build prefixes: <abspath_to_files/prefix_chr>
-    allele_path = basename(normalizePath("$allele_files"))
+    allele_path = basename(normalizePath("${allele_files}"))
     allele_prefix = sub('_chr[0-9]+\\\\.txt\$', "_chr", allele_path)
 
-    loci_path =  basename(normalizePath("$loci_files"))
+    loci_path =  basename(normalizePath("${loci_files}"))
     loci_prefix = sub('_chr[0-9]+\\\\.txt\$', "_chr", loci_path)
 
     # Prepare from BAM files
     ascat.prepareHTS(
-        tumourseqfile = "$input_tumor",
-        normalseqfile = "$input_normal",
-        tumourname = paste0("$prefix", ".tumour"),
-        normalname = paste0("$prefix", ".normal"),
+        tumourseqfile = "${input_tumor}",
+        normalseqfile = "${input_normal}",
+        tumourname = paste0("${prefix}", ".tumour"),
+        normalname = paste0("${prefix}", ".normal"),
         allelecounter_exe = "alleleCounter",
         alleles.prefix = allele_prefix,
         loci.prefix = loci_prefix,
-        gender = "$gender",
-        genomeVersion = "$genomeVersion",
-        nthreads = $task.cpus
-        $minCounts_arg
-        $bed_file_arg
-        $chrom_names_arg
-        $min_base_qual_arg
-        $min_map_qual_arg
-        $fasta_arg
-        $skip_allele_counting_tumour_arg
-        $skip_allele_counting_normal_arg
+        gender = "${gender}",
+        genomeVersion = "${genomeVersion}",
+        nthreads = ${task.cpus}
+        ${minCounts_arg}
+        ${bed_file_arg}
+        ${chrom_names_arg}
+        ${min_base_qual_arg}
+        ${min_map_qual_arg}
+        ${fasta_arg}
+        ${skip_allele_counting_tumour_arg}
+        ${skip_allele_counting_normal_arg}
+        ${additional_allelecounter_arg}
         , seed = 42
     )
 
-
     # Load the data
     ascat.bc = ascat.loadData(
-        Tumor_LogR_file = paste0("$prefix", ".tumour_tumourLogR.txt"),
-        Tumor_BAF_file = paste0("$prefix", ".tumour_tumourBAF.txt"),
-        Germline_LogR_file = paste0("$prefix", ".tumour_normalLogR.txt"),
-        Germline_BAF_file = paste0("$prefix", ".tumour_normalBAF.txt"),
-        genomeVersion = "$genomeVersion",
-        gender = "$gender"
+        Tumor_LogR_file = paste0("${prefix}", ".tumour_tumourLogR.txt"),
+        Tumor_BAF_file = paste0("${prefix}", ".tumour_tumourBAF.txt"),
+        Germline_LogR_file = paste0("${prefix}", ".tumour_normalLogR.txt"),
+        Germline_BAF_file = paste0("${prefix}", ".tumour_normalBAF.txt"),
+        genomeVersion = "${genomeVersion}",
+        gender = "${gender}"
     )
 
     # Plot the raw data
-    ascat.plotRawData(ascat.bc, img.prefix = paste0("$prefix", ".before_correction."))
+    ascat.plotRawData(ascat.bc, img.prefix = paste0("${prefix}", ".before_correction."))
 
     # Optional LogRCorrection
-    if("$gc_input" != "NULL") {
-        gc_input = normalizePath("$gc_input")
+    if("${gc_input}" != "NULL") {
+        gc_input = normalizePath("${gc_input}")
 
-        if("$rt_input" != "NULL"){
-            rt_input = normalizePath("$rt_input")
+        if("${rt_input}" != "NULL"){
+            rt_input = normalizePath("${rt_input}")
             ascat.bc = ascat.correctLogR(ascat.bc, GCcontentfile = gc_input, replictimingfile = rt_input)
             # Plot raw data after correction
-            ascat.plotRawData(ascat.bc, img.prefix = paste0("$prefix", ".after_correction_gc_rt."))
+            ascat.plotRawData(ascat.bc, img.prefix = paste0("${prefix}", ".after_correction_gc_rt."))
         }
         else {
-            ascat.bc = ascat.correctLogR(ascat.bc, GCcontentfile = gc_input, replictimingfile = $rt_input)
+            ascat.bc = ascat.correctLogR(ascat.bc, GCcontentfile = gc_input, replictimingfile = ${rt_input})
             # Plot raw data after correction
-            ascat.plotRawData(ascat.bc, img.prefix = paste0("$prefix", ".after_correction_gc."))
+            ascat.plotRawData(ascat.bc, img.prefix = paste0("${prefix}", ".after_correction_gc."))
         }
     }
 
@@ -125,12 +126,12 @@ process ASCAT {
     # Run ASCAT to fit every tumor to a model, inferring ploidy, normal cell contamination,
     # and discrete copy numbers
     # If psi and rho are manually set:
-    if (!is.null($purity) && !is.null($ploidy)){
-        ascat.output <- ascat.runAscat(ascat.bc, gamma=1, rho_manual=$purity, psi_manual=$ploidy)
-    } else if(!is.null($purity) && is.null($ploidy)){
-        ascat.output <- ascat.runAscat(ascat.bc, gamma=1, rho_manual=$purity)
-    } else if(!is.null($ploidy) && is.null($purity)){
-        ascat.output <- ascat.runAscat(ascat.bc, gamma=1, psi_manual=$ploidy)
+    if (!is.null(${purity}) && !is.null(${ploidy})){
+        ascat.output <- ascat.runAscat(ascat.bc, gamma=1, rho_manual=${purity}, psi_manual=${ploidy})
+    } else if(!is.null(${purity}) && is.null(${ploidy})){
+        ascat.output <- ascat.runAscat(ascat.bc, gamma=1, rho_manual=${purity})
+    } else if(!is.null(${ploidy}) && is.null(${purity})){
+        ascat.output <- ascat.runAscat(ascat.bc, gamma=1, psi_manual=${ploidy})
     } else {
         ascat.output <- ascat.runAscat(ascat.bc, gamma=1)
     }
@@ -139,11 +140,11 @@ process ASCAT {
     QC = ascat.metrics(ascat.bc,ascat.output)
 
     # Write out segmented regions (including regions with one copy of each allele)
-    write.table(ascat.output[["segments"]], file=paste0("$prefix", ".segments.txt"), sep="\t", quote=F, row.names=F)
+    write.table(ascat.output[["segments"]], file=paste0("${prefix}", ".segments.txt"), sep="\t", quote=F, row.names=F)
 
     # Write out CNVs in bed format
     cnvs=ascat.output[["segments"]][2:6]
-    write.table(cnvs, file=paste0("$prefix",".cnvs.txt"), sep="\t", quote=F, row.names=F, col.names=T)
+    write.table(cnvs, file=paste0("${prefix}",".cnvs.txt"), sep="\t", quote=F, row.names=F, col.names=T)
 
     # Write out purity and ploidy info
     summary <- tryCatch({
@@ -154,15 +155,15 @@ process ASCAT {
         }
     )
     colnames(summary) <- c("AberrantCellFraction","Ploidy")
-    write.table(summary, file=paste0("$prefix",".purityploidy.txt"), sep="\t", quote=F, row.names=F, col.names=T)
+    write.table(summary, file=paste0("${prefix}",".purityploidy.txt"), sep="\t", quote=F, row.names=F, col.names=T)
 
-    write.table(QC, file=paste0("$prefix", ".metrics.txt"), sep="\t", quote=F, row.names=F)
+    write.table(QC, file=paste0("${prefix}", ".metrics.txt"), sep="\t", quote=F, row.names=F)
 
     # Version export
     f <- file("versions.yml","w")
     alleleCounter_version = system(paste("alleleCounter --version"), intern = T)
     ascat_version = as.character(packageVersion('ASCAT'))
-    writeLines(paste0('"', "$task.process", '"', ":"), f)
+    writeLines(paste0('"', "${task.process}", '"', ":"), f)
     writeLines(paste("    ascat:", ascat_version), f)
     writeLines(paste("    alleleCounter:", alleleCounter_version), f)
     close(f)
