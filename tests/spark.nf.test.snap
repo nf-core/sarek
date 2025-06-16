@@ -207,16 +207,15 @@
                 "fastqc_sequence_counts_plot.txt:md5,e96ed3d75a347dfe3c36a4055ea5a7f6",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,90fc887e4afd33c3a72200bd854de2a5",
                 "fastqc_sequence_length_distribution_plot.txt:md5,6373d807db4406a7c077df2262ec6e26",
-                "mosdepth-coverage-per-contig-single.txt:md5,feb2a28ae6cde307d943a84612af14fc",
-                "mosdepth-cumcoverage-dist-id.txt:md5,01681df26bb53095d7168c1e2e1f936e",
-                "mosdepth_cov_dist.txt:md5,b027d0f7b624b7bcbecf2840ae9dc7a0",
-                "mosdepth_cumcov_dist.txt:md5,b027d0f7b624b7bcbecf2840ae9dc7a0",
-                "mosdepth_perchrom.txt:md5,feb2a28ae6cde307d943a84612af14fc",
+                "mosdepth-coverage-per-contig-single.txt:md5,3a7533e81978d33159d27b18cd337565",
+                "mosdepth-cumcoverage-dist-id.txt:md5,2f16aae68ba6e7c486f6fd9ae8c46c80",
+                "mosdepth_cov_dist.txt:md5,c09d6fa1efe1bba0154e3db207d8bf9b",
+                "mosdepth_cumcov_dist.txt:md5,c09d6fa1efe1bba0154e3db207d8bf9b",
+                "mosdepth_perchrom.txt:md5,3a7533e81978d33159d27b18cd337565",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
                 "multiqc_fastqc.txt:md5,d54614f8b2de16511949dbbde8f38a5d",
-                "multiqc_samtools_stats.txt:md5,fe2d1d13047085385c3bb3c1af6b8c7b",
-                "samtools-stats-dp.txt:md5,3ee7e2fa4d457f4a4c07245ad761334e",
-                "samtools_alignment_plot.txt:md5,5f58ef1a35094606d961644816e0c2ff",
+                "samtools-stats-dp.txt:md5,440993b962f6c557cccfa2974648e1ec",
+                "samtools_alignment_plot.txt:md5,46e8824724863d243a01cc239a5eff15",
                 "test2.md.mosdepth.global.dist.txt:md5,85d38a74ce189b9110c57cd94bc26757",
                 "test2.md.mosdepth.region.dist.txt:md5,286d57b7d9b3a95ef18ab2eb7f913d81",
                 "test2.md.mosdepth.summary.txt:md5,04b69ef7f00199dcea7822a79d2c7bd7",
@@ -239,7 +238,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.3"
         },
-        "timestamp": "2025-06-13T13:12:10.173274041"
+        "timestamp": "2025-06-16T19:38:21.717376627"
     },
     "-profile test,spark --input tests/csv/3.0/fastq_tumor_only.csv --use_gatk_spark baserecalibrator,markduplicates --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools": {
         "content": [

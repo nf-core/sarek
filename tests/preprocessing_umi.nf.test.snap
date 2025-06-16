@@ -274,7 +274,6 @@
                 "mosdepth_perchrom.txt:md5,800ad271050c46d24bf53c0f8bdf7b6e",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
                 "multiqc_fastqc.txt:md5,0ca2cba4204d9076a1eb17596379d10c",
-                "multiqc_samtools_stats.txt:md5,de110e9f03b947b33f2c575b625103a4",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",

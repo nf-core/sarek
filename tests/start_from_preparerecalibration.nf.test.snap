@@ -436,7 +436,6 @@
                 "mosdepth_cumcov_dist.txt:md5,d4c0df5e7fa1a03283896691d5fd9a2e",
                 "mosdepth_perchrom.txt:md5,115b9a93bcf511419e6622919172f321",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
-                "multiqc_samtools_stats.txt:md5,c27e45922525a41375f7243ff22090a5",
                 "samtools-stats-dp.txt:md5,c8deaa643c44fd800cbf14ac35fb7719",
                 "samtools_alignment_plot.txt:md5,8908b56b3040f2c53b15591adf93a266",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",

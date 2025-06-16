@@ -180,7 +180,6 @@
                 "mosdepth_perchrom.txt:md5,395024549ef124065e621761bc6a4d2d",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
-                "multiqc_samtools_stats.txt:md5,1807b1665aba0c541e724cb560b1bfc7",
                 "samtools-stats-dp.txt:md5,d05e3804ce35bbe81d7425f936701f69",
                 "samtools_alignment_plot.txt:md5,51f9070cd73a4198f2abeeea5ec0b3e3",
                 "genome.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
