@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1682](https://github.com/nf-core/sarek/pull/1682) - Edit vcf_concatenate_germline subworkflow
 - [1810](https://github.com/nf-core/sarek/pull/1810) - Move non-informative information in the CHANGELOG for the end user to its own Developer section
 - [1903](https://github.com/nf-core/sarek/pull/1903) - Double the default `time` for all processes
+- [1922](https://github.com/nf-core/sarek/pull/1922) - Update ASCAT module to v3.2.0
 
 ### Fixed
 
@@ -39,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency                             | Old version | New version |
 | -------------------------------------- | ----------- | ----------- |
+| `ASCAT`                                | 3.1.1       | 3.2.0       |
 | `bcftools`                             | 1.20        | 1.21        |
 | `ensemblvep`                           | 113.0       | 113.4       |
 | `fastp`                                | 0.23.4      | 0.24.0      |
@@ -104,7 +106,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1878](https://github.com/nf-core/sarek/pull/1878) - Migrate pipeline pytest umi tests to nf-test
 - [1879](https://github.com/nf-core/sarek/pull/1879) - Template update for nf-core/tools v3.21
 - [1892](https://github.com/nf-core/sarek/pull/1892) - Make jobs automatically resubmit for exit code 175
-- [1922](https://github.com/nf-core/sarek/pull/1922) - Update ASCAT module from upstream nf-core/modules repository
 
 #### Fixed
 

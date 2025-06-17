@@ -4,8 +4,8 @@ process ASCAT {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-c278c7398beb73294d78639a864352abef2931ce:ba3e6d2157eac2d38d22e62ec87675e12adb1010-0':
-        'biocontainers/mulled-v2-c278c7398beb73294d78639a864352abef2931ce:ba3e6d2157eac2d38d22e62ec87675e12adb1010-0' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/4c/4cf02c7911ee5e974ce7db978810770efbd8d872ff5ab3462d2a11bcf022fab5/data':
+        'community.wave.seqera.io/library/ascat_cancerit-allelecount:c3e8749fa4af0e99' }"
 
     input:
     tuple val(meta), path(input_normal), path(index_normal), path(input_tumor), path(index_tumor)
@@ -45,10 +45,18 @@ process ASCAT {
     def chrom_names_arg                  = args.chrom_names                    ?  ", chrom_names = ${args.chrom_names}"     : ""
     def min_base_qual_arg                = args.min_base_qual                  ?  ", min_base_qual = ${args.min_base_qual}" : ""
     def min_map_qual_arg                 = args.min_map_qual                   ?  ", min_map_qual = ${args.min_map_qual}"   : ""
-    def fasta_arg                        = fasta                               ?  ", ref.fasta = '${fasta}'"                : ""
     def skip_allele_counting_tumour_arg  = args.skip_allele_counting_tumour    ?  ", skip_allele_counting_tumour = ${args.skip_allele_counting_tumour}"       : ""
     def skip_allele_counting_normal_arg  = args.skip_allele_counting_normal    ?  ", skip_allele_counting_normal = ${args.skip_allele_counting_normal}"       : ""
-    def additional_allelecounter_arg     = args.additional_allelecounter_flags ?  ", additional_allelecounter_flags = ${args.additional_allelecounter_flags}" : ""
+
+    if(args.additional_allelecounter_flags && fasta) {
+        additional_allelecounter_arg = ", additional_allelecounter_flags = ${args.additional_allelecounter_flags} -r \"${fasta}\" "
+    } else if (args.additional_allelecounter_flags ) {
+        additional_allelecounter_arg = ", additional_allelecounter_flags = ${args.additional_allelecounter_flags}"
+    } else if (fasta) {
+        additional_allelecounter_arg = ", additional_allelecounter_flags = '-r \"${fasta}\"'"
+    } else {
+        additional_allelecounter_arg = ""
+    }
 
     """
     #!/usr/bin/env Rscript
@@ -80,7 +88,6 @@ process ASCAT {
         ${chrom_names_arg}
         ${min_base_qual_arg}
         ${min_map_qual_arg}
-        ${fasta_arg}
         ${skip_allele_counting_tumour_arg}
         ${skip_allele_counting_normal_arg}
         ${additional_allelecounter_arg}
