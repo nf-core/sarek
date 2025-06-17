@@ -120,8 +120,6 @@
             [
                 "mosdepth-coverage-per-contig-single.txt:md5,05b840db853703d42c6c0be360cb573e",
                 "mosdepth-cumcoverage-dist-id.txt:md5,f08ab9b4898020d43b2e0ff77212f5b2",
-                "mosdepth_cov_dist.txt:md5,d3994dffb13724132dc9282fd59c1ebe",
-                "mosdepth_cumcov_dist.txt:md5,d3994dffb13724132dc9282fd59c1ebe",
                 "mosdepth_perchrom.txt:md5,05b840db853703d42c6c0be360cb573e",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,fe7c4ec200c94df7ff97a0e8cbec2f70",
@@ -278,8 +276,6 @@
                 "fai.bed:md5,472d213cfcde96565699779d5bfc0e32",
                 "mosdepth-coverage-per-contig-single.txt:md5,a14350b5c82288d538ea43992a65be99",
                 "mosdepth-cumcoverage-dist-id.txt:md5,0bd6d5120cacef0c90192267731031a5",
-                "mosdepth_cov_dist.txt:md5,d491c650992e424e0ec2dff6265b688e",
-                "mosdepth_cumcov_dist.txt:md5,d491c650992e424e0ec2dff6265b688e",
                 "mosdepth_perchrom.txt:md5,a14350b5c82288d538ea43992a65be99",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,e6019a625137ced6d426a503cd652559",

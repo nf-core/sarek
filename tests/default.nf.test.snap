@@ -276,8 +276,6 @@
                 "fastqc_sequence_length_distribution_plot.txt:md5,fb04dce68ec566314125bc9438211b28",
                 "mosdepth-coverage-per-contig-single.txt:md5,a0990e98cdd2cd5540d07f504f516ccf",
                 "mosdepth-cumcoverage-dist-id.txt:md5,caee7b9e5d1a451970f87d791c3e450b",
-                "mosdepth_cov_dist.txt:md5,b0421840dd54db7f0778ccfbe66bd2c6",
-                "mosdepth_cumcov_dist.txt:md5,b0421840dd54db7f0778ccfbe66bd2c6",
                 "mosdepth_perchrom.txt:md5,a0990e98cdd2cd5540d07f504f516ccf",
                 "multiqc_citations.txt:md5,ace4ca89138a5f1e2be289c157c00bd9",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",

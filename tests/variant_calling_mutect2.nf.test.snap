@@ -94,8 +94,6 @@
             [
                 "mosdepth-coverage-per-contig-single.txt:md5,a0266cd06dd6f7f5463f09e3cb8af71d",
                 "mosdepth-cumcoverage-dist-id.txt:md5,88b94dd2dcc423983da65125ece7651e",
-                "mosdepth_cov_dist.txt:md5,2048a2eccad5bf3d19a2811385ac6e68",
-                "mosdepth_cumcov_dist.txt:md5,2048a2eccad5bf3d19a2811385ac6e68",
                 "mosdepth_perchrom.txt:md5,a0266cd06dd6f7f5463f09e3cb8af71d",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
@@ -229,8 +227,6 @@
             [
                 "mosdepth-coverage-per-contig-single.txt:md5,4ee05f71086179b42a01cd2fb450346f",
                 "mosdepth-cumcoverage-dist-id.txt:md5,cb7468f51b8be1230fb3ac5b130be31f",
-                "mosdepth_cov_dist.txt:md5,a3ac4294176850f4b0efb17c1bfc45ad",
-                "mosdepth_cumcov_dist.txt:md5,a3ac4294176850f4b0efb17c1bfc45ad",
                 "mosdepth_perchrom.txt:md5,4ee05f71086179b42a01cd2fb450346f",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
@@ -365,8 +361,6 @@
             [
                 "mosdepth-coverage-per-contig-single.txt:md5,14473da27940bc99c7b9ed36d82f7429",
                 "mosdepth-cumcoverage-dist-id.txt:md5,35fe7c32ea54f1a69c647202873bb7d7",
-                "mosdepth_cov_dist.txt:md5,e31a699c90beed2469c61a09478a4aef",
-                "mosdepth_cumcov_dist.txt:md5,e31a699c90beed2469c61a09478a4aef",
                 "mosdepth_perchrom.txt:md5,14473da27940bc99c7b9ed36d82f7429",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
@@ -500,8 +494,6 @@
                 "fai.bed:md5,472d213cfcde96565699779d5bfc0e32",
                 "mosdepth-coverage-per-contig-single.txt:md5,a0266cd06dd6f7f5463f09e3cb8af71d",
                 "mosdepth-cumcoverage-dist-id.txt:md5,88b94dd2dcc423983da65125ece7651e",
-                "mosdepth_cov_dist.txt:md5,2048a2eccad5bf3d19a2811385ac6e68",
-                "mosdepth_cumcov_dist.txt:md5,2048a2eccad5bf3d19a2811385ac6e68",
                 "mosdepth_perchrom.txt:md5,a0266cd06dd6f7f5463f09e3cb8af71d",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
