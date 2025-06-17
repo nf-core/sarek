@@ -102,6 +102,7 @@ nextflow_pipeline {
     }
 
     test("-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv -with-stub") {
+        tag "stub"
         options "-stub"
 
         when {
@@ -151,6 +152,7 @@ nextflow_pipeline {
     }
 
     test("-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals -with-stub") {
+        tag "stub"
         options "-stub"
 
         when {
