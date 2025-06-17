@@ -85,7 +85,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                     error("Samplesheet contains fastq files but step is `${step}`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
                 }
             }
-            else if (meta.lane && spring_1 && spring_2) {
+            else if ((meta.lane || meta.lane == 0) && spring_1 && spring_2) {
                 // mapping from TWO spring-files - one with R1 and one with R2
                 meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "two_fastq_gz_spring", num_lanes: num_lanes.toInteger(), size: 1]
 
@@ -96,7 +96,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                     error("Samplesheet contains spring files (in columns `spring_1` and `spring_2`) but step is `${step}`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
                 }
             }
-            else if (meta.lane && spring_1 && !spring_2) {
+            else if ((meta.lane || meta.lane == 0) && spring_1 && !spring_2) {
                 // mapping from ONE spring-file containing both R1 and R2
                 meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "one_fastq_gz_spring", num_lanes: num_lanes.toInteger(), size: 1]
 
@@ -107,7 +107,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                     error("Samplesheet contains a spring file (in columns `spring_1`) but step is `${step}`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
                 }
             }
-            else if (meta.lane && bam) {
+            else if ((meta.lane || meta.lane == 0) && bam) {
                 // Any step from BAM
                 if (step != 'mapping' && !bai) {
                     error("BAM index (bai) should be provided.")

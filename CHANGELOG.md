@@ -118,6 +118,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1859](https://github.com/nf-core/sarek/pull/1859) - Fix: change dbsnp channel from queue to value in muse subworkflow, wrong implemented in [1744](https://github.com/nf-core/sarek/pull/1744)
 - [1899](https://github.com/nf-core/sarek/pull/1899) - Ensure nf-test runs for all profiles on release
 - [1917](https://github.com/nf-core/sarek/pull/1917) - Ensure all versions and reports are reported to MultiQC
+- [1924](https://github.com/nf-core/sarek/pull/1924) - Fix bug in samplesheet_to_channel workflow due to bad integer handling with lane
 
 #### Removed
 
