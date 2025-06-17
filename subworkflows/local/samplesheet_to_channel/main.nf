@@ -73,7 +73,9 @@ workflow SAMPLESHEET_TO_CHANNEL {
         .map { _patient_sample, num_lanes, ch_items ->
             def (meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller) = ch_items
 
+
             if ((meta.lane || meta.lane == 0) && fastq_2) {
+                // mapping from fastq files
                 meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "fastq_gz", num_lanes: num_lanes.toInteger(), size: 1]
 
                 if (step == 'mapping') {
@@ -84,6 +86,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 }
             }
             else if (meta.lane && spring_1 && spring_2) {
+                // mapping from TWO spring-files - one with R1 and one with R2
                 meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "two_fastq_gz_spring", num_lanes: num_lanes.toInteger(), size: 1]
 
                 if (step == 'mapping') {
@@ -94,6 +97,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 }
             }
             else if (meta.lane && spring_1 && !spring_2) {
+                // mapping from ONE spring-file containing both R1 and R2
                 meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "one_fastq_gz_spring", num_lanes: num_lanes.toInteger(), size: 1]
 
                 if (step == 'mapping') {
@@ -104,6 +108,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 }
             }
             else if (meta.lane && bam) {
+                // Any step from BAM
                 if (step != 'mapping' && !bai) {
                     error("BAM index (bai) should be provided.")
                 }
@@ -121,6 +126,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 }
             }
             else if (table && cram) {
+                // recalibration from CRAM
                 meta = meta + [id: meta.sample, data_type: 'cram']
 
                 if (!(step == 'mapping' || step == 'annotate')) {
@@ -131,6 +137,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 }
             }
             else if (table && bam) {
+                // recalibration when skipping MarkDuplicates
                 meta = meta + [id: meta.sample, data_type: 'bam']
 
                 if (!(step == 'mapping' || step == 'annotate')) {
@@ -141,6 +148,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 }
             }
             else if (cram) {
+                // prepare_recalibration or variantcalling from CRAM
                 meta = meta + [id: meta.sample, data_type: 'cram']
 
                 if (!(step == 'mapping' || step == 'annotate')) {
@@ -151,6 +159,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 }
             }
             else if (bam) {
+                // prepare_recalibration when skipping MarkDuplicates or markduplicates
                 meta = meta + [id: meta.sample, data_type: 'bam']
 
                 if (!(step == 'mapping' || step == 'annotate')) {
@@ -161,6 +170,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 }
             }
             else if (vcf) {
+                // annotation
                 meta = meta + [id: meta.sample, data_type: 'vcf', variantcaller: variantcaller ?: '']
 
                 if (step == 'annotate') {
