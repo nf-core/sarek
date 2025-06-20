@@ -49,9 +49,9 @@ process ASCAT {
     def skip_allele_counting_normal_arg  = args.skip_allele_counting_normal    ?  ", skip_allele_counting_normal = ${args.skip_allele_counting_normal}"       : ""
 
     if(args.additional_allelecounter_flags && fasta) {
-        additional_allelecounter_arg = ", additional_allelecounter_flags = ${args.additional_allelecounter_flags} -r \"${fasta}\" "
+        additional_allelecounter_arg = ", additional_allelecounter_flags = \"${args.additional_allelecounter_flags} -r ${fasta}\" "
     } else if (args.additional_allelecounter_flags ) {
-        additional_allelecounter_arg = ", additional_allelecounter_flags = ${args.additional_allelecounter_flags}"
+        additional_allelecounter_arg = ", additional_allelecounter_flags = \"${args.additional_allelecounter_flags}\" "
     } else if (fasta) {
         additional_allelecounter_arg = ", additional_allelecounter_flags = '-r \"${fasta}\"'"
     } else {
