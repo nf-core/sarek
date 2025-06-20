@@ -36,9 +36,11 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
 
     ch_versions = ch_versions.mix(PARABRICKS_FQ2BAM.out.versions)
 
-    cram_variant_calling =
-        PARABRICKS_FQ2BAM.out.cram
+    cram_variant_calling = PARABRICKS_FQ2BAM.out.cram
         .join(PARABRICKS_FQ2BAM.out.crai, failOnDuplicate: true, failOnMismatch: true)
+        .map { meta, cram, crai ->
+                    [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size', 'sample_lane_id') + [ data_type: 'cram', id: meta.sample ], cram, crai ]
+                }
 
     CHANNEL_ALIGN_CREATE_CSV(
         cram_variant_calling,
