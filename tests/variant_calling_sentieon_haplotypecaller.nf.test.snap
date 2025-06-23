@@ -135,7 +135,7 @@
                 "reports/bcftools",
                 "reports/bcftools/sentieon_haplotyper",
                 "reports/bcftools/sentieon_haplotyper/joint_variant_calling",
-                "reports/bcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.bcftools_stats.txt",
+                "reports/bcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated_indel.bcftools_stats.txt",
                 "reports/mosdepth",
                 "reports/mosdepth/test",
                 "reports/mosdepth/test/test.recal.mosdepth.global.dist.txt",
@@ -149,19 +149,16 @@
                 "reports/vcftools",
                 "reports/vcftools/sentieon_haplotyper",
                 "reports/vcftools/sentieon_haplotyper/joint_variant_calling",
-                "reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.FILTER.summary",
-                "reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.TsTv.count",
-                "reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.TsTv.qual",
-                "sentieon",
-                "sentieon/recalibrated_joint_variant_calling_SNP.vcf.gz",
-                "sentieon/recalibrated_joint_variant_calling_SNP.vcf.gz.tbi",
+                "reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated_indel.FILTER.summary",
+                "reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated_indel.TsTv.count",
+                "reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated_indel.TsTv.qual",
                 "variant_calling",
                 "variant_calling/sentieon_haplotyper",
                 "variant_calling/sentieon_haplotyper/joint_variant_calling",
                 "variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline.vcf.gz",
                 "variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline.vcf.gz.tbi",
-                "variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.vcf.gz",
-                "variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.vcf.gz.tbi",
+                "variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated_indel.vcf.gz",
+                "variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated_indel.vcf.gz.tbi",
                 "variant_calling/sentieon_haplotyper/test",
                 "variant_calling/sentieon_haplotyper/test/test.haplotyper.g.vcf.gz",
                 "variant_calling/sentieon_haplotyper/test/test.haplotyper.g.vcf.gz.tbi"
@@ -173,23 +170,20 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
-                "joint_germline_recalibrated.bcftools_stats.txt:md5,1cb722da8504f64762215c503df7d3bd",
+                "joint_germline_recalibrated_indel.bcftools_stats.txt:md5,f223948705dd87d2edcc6a44ca72df64",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
                 "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
-                "joint_germline_recalibrated.FILTER.summary:md5,7e04c3bed9ecbb73aa3c02c2b6b46089",
-                "joint_germline_recalibrated.TsTv.count:md5,89562fef808b5c3db629682d36fd86fc",
-                "recalibrated_joint_variant_calling_SNP.vcf.gz:md5,14c16256cb2d2b0cd1291dde19fa4cbc",
-                "recalibrated_joint_variant_calling_SNP.vcf.gz.tbi:md5,227ad128e3b329d646180f630122ebf5"
+                "joint_germline_recalibrated_indel.FILTER.summary:md5,7e04c3bed9ecbb73aa3c02c2b6b46089",
+                "joint_germline_recalibrated_indel.TsTv.count:md5,89562fef808b5c3db629682d36fd86fc"
             ],
             "No BAM files",
             "No CRAM files",
             [
-                "recalibrated_joint_variant_calling_SNP.vcf.gz:md5,8133d94724e35be846623fbdb186acc2",
                 "joint_germline.vcf.gz:md5,118f8b58defd673dc9c053da6fcd9129",
-                "joint_germline_recalibrated.vcf.gz:md5,8133d94724e35be846623fbdb186acc2",
+                "joint_germline_recalibrated_indel.vcf.gz:md5,8133d94724e35be846623fbdb186acc2",
                 "test.haplotyper.g.vcf.gz:md5,5a556dc23ecea0e9f15c7eeeff563a5f"
             ]
         ],
@@ -197,7 +191,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-06-21T17:36:22.971610531"
+        "timestamp": "2025-06-23T20:44:13.797239672"
     },
     "-profile test --tools sentieon_haplotyper --no_intervals": {
         "content": [
