@@ -105,7 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1879](https://github.com/nf-core/sarek/pull/1879) - Template update for nf-core/tools v3.21
 - [1892](https://github.com/nf-core/sarek/pull/1892) - Make jobs automatically resubmit for exit code 175
 - [1917](https://github.com/nf-core/sarek/pull/1917) - stub tests have stub tag
-- [1927](https://github.com/nf-core/sarek/pull/1927) - Migrate pipeline pytest sentieon tests to nf-test 
+- [1927](https://github.com/nf-core/sarek/pull/1927) - Migrate pipeline pytest sentieon tests to nf-test
 
 #### Fixed
 

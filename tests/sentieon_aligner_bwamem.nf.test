@@ -8,7 +8,7 @@ nextflow_pipeline {
     tag "sentieon"
 
     test("-profile test --aligner sentieon-bwamem --save_reference skip QC/recal/md") {
-        
+
         when {
             params {
                 aligner = 'sentieon-bwamem'

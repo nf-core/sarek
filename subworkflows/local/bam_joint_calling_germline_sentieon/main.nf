@@ -37,9 +37,9 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
         .groupTuple(by:[0, 3])
 
     SENTIEON_GVCFTYPER(
-        sentieon_input, 
-        fasta, 
-        fai, 
+        sentieon_input,
+        fasta,
+        fai,
         dbsnp.map{ file -> [[id:'dbsnp'], file] },
         dbsnp_tbi.map{ file -> [[id:'dbsnp'], file] })
 
