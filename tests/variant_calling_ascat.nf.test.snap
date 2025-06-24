@@ -172,7 +172,7 @@
         },
         "timestamp": "2025-06-17T14:27:44.6196333"
     },
-    "-profile test --tools ascat somatic --input recalibrated_somatic.csv -with-stub": {
+    "-profile test --tools ascat --input recalibrated_somatic.csv -with-stub": {
         "content": [
             13,
             {

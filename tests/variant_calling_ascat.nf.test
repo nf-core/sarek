@@ -6,7 +6,7 @@ nextflow_pipeline {
     tag "pipeline_sarek"
     tag "cpu"
 
-    test("-profile test --tools ascat somatic --input recalibrated_somatic.csv -with-stub") {
+    test("-profile test --tools ascat --input recalibrated_somatic.csv -with-stub") {
         options '-stub'
         when {
             params {

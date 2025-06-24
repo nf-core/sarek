@@ -64,12 +64,37 @@ process ASCAT {
     library(ASCAT)
     options(bitmapType='cairo')
 
-    # Build prefixes: <abspath_to_files/prefix_chr>
-    allele_path = basename(normalizePath("${allele_files}"))
-    allele_prefix = sub('_chr[0-9]+\\\\.txt\$', "_chr", allele_path)
+    if(dir.exists("${allele_files}")) {
+        # expected production use of a directory
+        allele_path   = normalizePath("${allele_files}")
+        allele_prefix = paste0(allele_path, "/", "${allele_files}", "_chr")
+    } else if(file.exists("${allele_files}")) {
+        # expected testing use of a single file
+        allele_path   = basename(normalizePath("${allele_files}"))
+        allele_prefix = sub('_chr[0-9]+\\\\.txt\$', "_chr", allele_path)
+    } else {
+        stop("The specified allele files do not exist.")
+    }
 
-    loci_path =  basename(normalizePath("${loci_files}"))
-    loci_prefix = sub('_chr[0-9]+\\\\.txt\$', "_chr", loci_path)
+    if(length(Sys.glob(paste0(allele_prefix,"*")) ) == 0) {
+        stop(paste("No allele files found matching", allele_prefix))
+    }
+
+    if(dir.exists("${loci_files}")) {
+        # expected production use of a directory
+        loci_path   = normalizePath("${loci_files}")
+        loci_prefix = paste0(loci_path, "/", "${loci_files}", "_chr")
+    } else if(file.exists("${loci_files}")) {
+        # expected testing use of a single file
+        loci_path   = basename(normalizePath("${loci_files}"))
+        loci_prefix = sub('_chr[0-9]+\\\\.txt\$', "_chr", loci_path)
+    } else {
+        stop("The specified loci files do not exist.")
+    }
+
+    if(length(Sys.glob(paste0(loci_prefix,"*")) ) == 0) {
+        stop(paste("No loci files found matching", loci_prefix))
+    }
 
     # Prepare from BAM files
     ascat.prepareHTS(
