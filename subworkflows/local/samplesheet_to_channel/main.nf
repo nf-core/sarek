@@ -73,7 +73,6 @@ workflow SAMPLESHEET_TO_CHANNEL {
         .map { _patient_sample, num_lanes, ch_items ->
             def (meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller) = ch_items
 
-
             if ((meta.lane || meta.lane == 0) && fastq_2) {
                 // mapping from fastq files
                 meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "fastq_gz", num_lanes: num_lanes.toInteger(), size: 1]
