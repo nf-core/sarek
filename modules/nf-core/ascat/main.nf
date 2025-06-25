@@ -134,10 +134,33 @@ process ASCAT {
 
     # Optional LogRCorrection
     if("${gc_input}" != "NULL") {
-        gc_input = normalizePath("${gc_input}")
+
+        if(dir.exists("${gc_input}")) {
+            # sarek production use of an unzipped folder containing one file
+            gc_input = list.files("${gc_input}", recursive = TRUE, full.names = TRUE)
+            if(length(gc_input) != 1 | !file.exists(gc_input)) {
+                stop("A single gc_input should be provided!")
+            }
+        } else if(file.exists("${gc_input}")) {
+            gc_input = normalizePath("${gc_input}")
+        } else {
+            stop("gc_input must be a file or folder containing one file")
+        }
 
         if("${rt_input}" != "NULL"){
-            rt_input = normalizePath("${rt_input}")
+
+            if(dir.exists("${rt_input}")) {
+                # sarek production use of an unzipped folder containing one file
+                rt_input = list.files("${rt_input}", recursive = TRUE, full.names = TRUE)
+                if(length(rt_input) != 1 | !file.exists(rt_input)) {
+                    stop("A single rt_input should be provided!")
+                }
+            } else if(file.exists("${rt_input}")) {
+                rt_input = normalizePath("${rt_input}")
+            } else {
+                stop("rt_input must be a file or folder containing one file")
+            }
+
             ascat.bc = ascat.correctLogR(ascat.bc, GCcontentfile = gc_input, replictimingfile = rt_input)
             # Plot raw data after correction
             ascat.plotRawData(ascat.bc, img.prefix = paste0("${prefix}", ".after_correction_gc_rt."))
