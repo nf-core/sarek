@@ -1,5 +1,5 @@
 {
-    "-profile test --aligner bwa-mem --save_reference skip QC/recal/md": {
+    "-profile test --aligner sentieon-bwamem --save_reference skip QC/recal/md": {
         "content": [
             10,
             {
@@ -8,10 +8,6 @@
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.18-r1243-dirty"
-                },
-                "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.1.0"
@@ -24,6 +20,10 @@
                 },
                 "MERGE_BAM": {
                     "samtools": 1.21
+                },
+                "SENTIEON_BWAMEM": {
+                    "bwa": "0.7.17-r1188",
+                    "sentieon": 202503
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -68,17 +68,17 @@
             ],
             "No BAM files",
             [
-                "test.sorted.cram:md5,5534c350547fd253f0f2b9450362bed"
+                "test.sorted.cram:md5,a9a4d2edba1b98ff734869b65fb437a7"
             ],
             "No VCF files"
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2025-06-12T10:30:15.83247766"
+        "timestamp": "2025-06-21T10:32:56.848655102"
     },
-    "-profile test --aligner bwa-mem --save_reference --build_only_index": {
+    "-profile test --aligner sentieon-bwamem --save_reference --build_only_index": {
         "content": [
             5,
             {
@@ -132,8 +132,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nextflow": "25.04.2"
         },
-        "timestamp": "2025-06-12T10:31:18.476995966"
+        "timestamp": "2025-06-21T10:38:04.521781501"
     }
 }

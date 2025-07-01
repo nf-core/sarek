@@ -9,6 +9,7 @@ nextflow_pipeline {
 
     test("-profile test --aligner sentieon-bwamem --tools null -stub") {
 
+        tag "stub"
         options "-stub"
 
         when {

@@ -6,6 +6,9 @@
                 "BAM_TO_CRAM_MAPPING": {
                     "samtools": 1.21
                 },
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
                     "samtools": 1.21
@@ -15,6 +18,9 @@
                 },
                 "MERGE_BAM": {
                     "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
                 }
             },
             [
@@ -41,9 +47,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-05-07T14:17:58.394906246"
+        "timestamp": "2025-06-12T14:07:11.060470579"
     },
     "-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub": {
         "content": [
@@ -52,15 +58,30 @@
                 "BAM_TO_CRAM_MAPPING": {
                     "samtools": 1.21
                 },
+                "BUILD_INTERVALS": {
+                    "gawk": "5.3.0"
+                },
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
                     "samtools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
                 },
                 "MERGE_BAM": {
                     "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 }
             },
             [
@@ -106,9 +127,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-05-08T10:32:16.526738968"
+        "timestamp": "2025-06-12T14:08:08.481401992"
     },
     "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub": {
         "content": [
@@ -117,15 +138,27 @@
                 "BAM_TO_CRAM_MAPPING": {
                     "samtools": 1.21
                 },
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
                     "samtools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
                 },
                 "MERGE_BAM": {
                     "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 }
             },
             [
@@ -149,9 +182,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-05-07T14:17:18.664227191"
+        "timestamp": "2025-06-12T14:05:58.928427702"
     },
     "-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
         "content": [
@@ -160,15 +193,30 @@
                 "BAM_TO_CRAM_MAPPING": {
                     "samtools": 1.21
                 },
+                "BUILD_INTERVALS": {
+                    "gawk": "5.3.0"
+                },
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
                     "samtools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
                 },
                 "MERGE_BAM": {
                     "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 }
             },
             [
@@ -214,9 +262,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-04-28T12:41:05.374072427"
+        "timestamp": "2025-06-12T14:05:08.486696871"
     },
     "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
         "content": [
@@ -225,15 +273,27 @@
                 "BAM_TO_CRAM_MAPPING": {
                     "samtools": 1.21
                 },
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
                     "samtools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
                 },
                 "MERGE_BAM": {
                     "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 }
             },
             [
@@ -257,9 +317,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-04-28T17:41:55.437559015"
+        "timestamp": "2025-06-12T14:02:08.414807739"
     },
     "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
         "content": [
@@ -267,6 +327,9 @@
             {
                 "BAM_TO_CRAM_MAPPING": {
                     "samtools": 1.21
+                },
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
@@ -277,6 +340,9 @@
                 },
                 "MERGE_BAM": {
                     "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
                 }
             },
             [
@@ -303,8 +369,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-04-28T17:43:12.251284585"
+        "timestamp": "2025-06-12T14:03:37.066714747"
     }
 }

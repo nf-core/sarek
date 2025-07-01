@@ -6,6 +6,9 @@
                 "BAM2FASTQ": {
                     "samtools": 1.21
                 },
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
                     "samtools": 1.21
@@ -22,6 +25,9 @@
                 "COLLATE_FASTQ_UNMAP": {
                     "samtools": 1.21
                 },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
+                },
                 "FASTQC": {
                     "fastqc": "0.12.1"
                 },
@@ -32,6 +38,9 @@
                     "gatk4": "4.6.1.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
+                    "gatk4": "4.6.1.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
                 },
                 "GATK4_MARKDUPLICATES": {
@@ -68,6 +77,12 @@
                 },
                 "SAMTOOLS_VIEW_UNMAP_UNMAP": {
                     "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 }
             },
             [
@@ -252,19 +267,16 @@
                 "fastqc_sequence_counts_plot.txt:md5,1a4aab87f1bd4fd9f69cabef40f5e5ed",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,72e6366160d000a2990b2bbd321300a7",
                 "fastqc_sequence_length_distribution_plot.txt:md5,7c07faf0c0b90613cdc82a9f09bc1f19",
-                "mosdepth-coverage-per-contig-single.txt:md5,8a205235d39b3e537fd24d0ad448e5e4",
-                "mosdepth-cumcoverage-dist-id.txt:md5,e7ac1c404e3087734ac12237743260a0",
-                "mosdepth_cov_dist.txt:md5,1a15089c33dd8bb447c77347e8c9c0ea",
-                "mosdepth_cumcov_dist.txt:md5,1a15089c33dd8bb447c77347e8c9c0ea",
-                "mosdepth_perchrom.txt:md5,8a205235d39b3e537fd24d0ad448e5e4",
+                "mosdepth-coverage-per-contig-single.txt:md5,800ad271050c46d24bf53c0f8bdf7b6e",
+                "mosdepth-cumcoverage-dist-id.txt:md5,3c526ec6da433233b419bdbdd19a1b56",
+                "mosdepth_perchrom.txt:md5,800ad271050c46d24bf53c0f8bdf7b6e",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
                 "multiqc_fastqc.txt:md5,0ca2cba4204d9076a1eb17596379d10c",
-                "multiqc_samtools_stats.txt:md5,890d9f1fbdcb365cd2c9a0ce3cb10725",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,5240b9f1c9a1dc242510babbcd77260e",
-                "samtools_alignment_plot.txt:md5,ba0a498ef058208d655abfedcfcad496",
+                "samtools-stats-dp.txt:md5,4d27768d75a69a61daf23bf5efe17687",
+                "samtools_alignment_plot.txt:md5,3c2a882852a7ffe06610c9027f0a312a",
                 "test.md.mosdepth.global.dist.txt:md5,09d22913aa50a0207f97a3f85b182c6e",
                 "test.md.mosdepth.region.dist.txt:md5,61676a4a3668c0e84eb0f56dc6bda1ae",
                 "test.md.mosdepth.summary.txt:md5,9bbea5e4d213a51f501c2aadff8d4526",
@@ -288,8 +300,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-05-07T12:27:08.85654258"
+        "timestamp": "2025-06-16T10:56:22.096321902"
     }
 }

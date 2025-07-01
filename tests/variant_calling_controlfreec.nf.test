@@ -117,6 +117,7 @@ nextflow_pipeline {
     }
 
     test("-profile test --tools controlfreec --no_intervals somatic stub") {
+        tag "stub"
         options "-stub"
         when {
             params {
@@ -172,6 +173,7 @@ nextflow_pipeline {
     }
 
     test("-profile test --tools controlfreec tumoronly stub") {
+        tag "stub"
         options "-stub"
         when {
             params {

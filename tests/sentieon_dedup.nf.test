@@ -5,26 +5,16 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
     tag "cpu"
+    tag "sentieon"
 
-    test("-profile test --input tests/csv/3.0/recalibrated_somatic_joint.csv --tools mutect2 --joint_mutect2") {
+    test("-profile test --tools sentieon_dedup --step markduplicates - bam") {
 
         when {
             params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-                genome = null
-                igenomes_ignore = true
-                dbsnp = params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz'
-                dbsnp_tbi = params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi'
-                fasta = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta'
-                fasta_fai = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai'
-                input = "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv"
-                intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed'
+                input = "${projectDir}/tests/csv/3.0/mapped_single_bam.csv"
                 outdir = "$outputDir"
-                input = "${projectDir}/tests/csv/3.0/recalibrated_somatic_joint.csv"
-                joint_mutect2 = true
-                step = "variant_calling"
-                tools = 'mutect2'
-                wes = true
+                step  = 'markduplicates'
+                tools = 'sentieon_dedup'
             }
         }
 
@@ -64,23 +54,14 @@ nextflow_pipeline {
         }
     }
 
-    test("-profile test --input tests/csv/3.0/recalibrated_tumoronly_joint.csv --tools mutect2 --joint_mutect2") {
+    test("-profile test --tools sentieon_dedup --step markduplicates - cram") {
 
         when {
             params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-                genome = null
-                igenomes_ignore = true
-                dbsnp = params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz'
-                dbsnp_tbi = params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi'
-                fasta = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta'
-                fasta_fai = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai'
-                input = "${projectDir}/tests/csv/3.0/recalibrated_tumoronly_joint.csv"
-                joint_mutect2 = true
+                input = "${projectDir}/tests/csv/3.0/mapped_single_cram.csv"
                 outdir = "$outputDir"
-                step = "variant_calling"
-                tools = 'mutect2'
-                wes = true
+                step  = 'markduplicates'
+                tools = 'sentieon_dedup'
             }
         }
 
@@ -119,4 +100,5 @@ nextflow_pipeline {
             )
         }
     }
+
 }

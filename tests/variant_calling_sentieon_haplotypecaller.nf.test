@@ -6,14 +6,14 @@ nextflow_pipeline {
     tag "pipeline_sarek"
     tag "cpu"
 
-    test("-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv") {
+    test("-profile test --tools sentieon_haplotyper") {
 
         when {
             params {
-                input = "${projectDir}/tests/csv/3.0/mapped_single_cram.csv"
+                input = "${projectDir}/tests/csv/3.0/mapped_single_bam.csv"
                 outdir = "$outputDir"
+                tools = "sentieon_haplotyper"
                 step = "variant_calling"
-                tools = 'deepvariant'
             }
         }
 
@@ -53,14 +53,14 @@ nextflow_pipeline {
         }
     }
 
-    test("-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals") {
+    test("-profile test --tools sentieon_haplotyper --no_intervals") {
 
         when {
             params {
-                input = "${projectDir}/tests/csv/3.0/mapped_single_cram.csv"
+                input = "${projectDir}/tests/csv/3.0/mapped_single_bam.csv"
                 outdir = "$outputDir"
+                tools = "sentieon_haplotyper"
                 step = "variant_calling"
-                tools = 'deepvariant'
                 no_intervals = true
             }
         }
@@ -101,16 +101,15 @@ nextflow_pipeline {
         }
     }
 
-    test("-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv -with-stub") {
-        tag "stub"
-        options "-stub"
+    test("-profile test --tools sentieon_haplotyper --skip_tools haplotyper_filter") {
 
         when {
             params {
-                input = "${projectDir}/tests/csv/3.0/mapped_single_cram.csv"
+                input = "${projectDir}/tests/csv/3.0/mapped_single_bam.csv"
                 outdir = "$outputDir"
+                tools = "sentieon_haplotyper"
                 step = "variant_calling"
-                tools = 'deepvariant'
+                skip_tools = "haplotyper_filter"
             }
         }
 
@@ -144,24 +143,23 @@ nextflow_pipeline {
                     // All cram files
                     cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
                     // All vcf files
-                    // CANNOT SNAPSHOT THESE EMPTY VCF FILES FOR NOW
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() }
+                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
                 ).match() }
             )
         }
     }
 
-    test("-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals -with-stub") {
-        tag "stub"
-        options "-stub"
+    test("-profile test --tools sentieon_haplotyper --joint_germline --sentieon_haplotyper_emit_mode gvcf") {
 
         when {
             params {
-                input = "${projectDir}/tests/csv/3.0/mapped_single_cram.csv"
+                input = "${projectDir}/tests/csv/3.0/mapped_single_bam.csv"
                 outdir = "$outputDir"
+                tools = "sentieon_haplotyper"
                 step = "variant_calling"
-                tools = 'deepvariant'
-                no_intervals = true
+                skip_tools = "haplotyper_filter"
+                joint_germline = true
+                sentieon_haplotyper_emit_mode = "gvcf"
             }
         }
 
@@ -195,10 +193,11 @@ nextflow_pipeline {
                     // All cram files
                     cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
                     // All vcf files
-                    // CANNOT SNAPSHOT THESE EMPTY VCF FILES FOR NOW
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() }
+                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
                 ).match() }
             )
         }
     }
+
+
 }
