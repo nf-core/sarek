@@ -6,7 +6,6 @@ nextflow_pipeline {
     tag "pipeline_sarek"
     tag "cpu"
 
-
     test("-profile test --tools cnvkit --input recalibrated_germline.csv") {
 
         when {
@@ -314,5 +313,4 @@ nextflow_pipeline {
             )
         }
     }
-
 }
