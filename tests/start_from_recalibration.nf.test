@@ -12,7 +12,7 @@ nextflow_pipeline {
         [
             name: "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null",
             params: [
-                outdir: "$outputDir",
+
                 input: "${projectDir}/tests/csv/3.0/prepare_recalibration_single_cram.csv",
                 step: 'recalibrate',
                 tools: null
@@ -21,7 +21,7 @@ nextflow_pipeline {
         [
             name: "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka",
             params: [
-                outdir: "$outputDir",
+
                 input: "${projectDir}/tests/csv/3.0/prepare_recalibration_single_bam.csv",
                 step: 'recalibrate',
                 skip_tools: "baserecalibrator",
@@ -31,7 +31,7 @@ nextflow_pipeline {
         [
             name: "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka",
             params: [
-                outdir: "$outputDir",
+
                 input: "${projectDir}/tests/csv/3.0/prepare_recalibration_single_cram.csv",
                 step: 'recalibrate',
                 skip_tools: "baserecalibrator",
@@ -41,7 +41,7 @@ nextflow_pipeline {
         [
             name: "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null",
             params: [
-                outdir: "$outputDir",
+
                 input: "${projectDir}/tests/csv/3.0/prepare_recalibration_single_bam.csv",
                 step: 'recalibrate',
                 tools: null

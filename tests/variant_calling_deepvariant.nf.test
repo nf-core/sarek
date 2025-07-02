@@ -13,7 +13,7 @@ nextflow_pipeline {
             name: "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv",
             params: [
                 input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
-                outdir: "$outputDir",
+
                 step: "variant_calling",
                 tools: 'deepvariant'
             ]
@@ -22,7 +22,7 @@ nextflow_pipeline {
             name: "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv -stub",
             params: [
                 input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
-                outdir: "$outputDir",
+
                 step: "variant_calling",
                 tools: 'deepvariant'
             ],
@@ -32,7 +32,7 @@ nextflow_pipeline {
             name: "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals",
             params: [
                 input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
-                outdir: "$outputDir",
+
                 step: "variant_calling",
                 tools: 'deepvariant',
                 no_intervals: true
@@ -42,7 +42,7 @@ nextflow_pipeline {
             name: "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals -stub",
             params: [
                 input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
-                outdir: "$outputDir",
+
                 step: "variant_calling",
                 tools: 'deepvariant',
                 no_intervals: true

@@ -14,7 +14,7 @@ nextflow_pipeline {
             name: "-profile test --tools freebayes --wes --nucleotides_per_second 20",
             params: [
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
-                outdir: "$outputDir",
+
                 tools: 'freebayes',
                 wes: true,
                 nucleotides_per_second: 20
@@ -23,7 +23,7 @@ nextflow_pipeline {
         [
             name: "-profile test --tools freebayes --no_intervals",
             params: [
-                outdir: "$outputDir",
+
                 no_intervals: true,
                 tools: 'freebayes'
             ]
@@ -33,7 +33,7 @@ nextflow_pipeline {
             params: [
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
-                outdir: "$outputDir",
+
                 tools: 'freebayes',
                 wes: true,
                 nucleotides_per_second: 20
@@ -43,7 +43,7 @@ nextflow_pipeline {
             name: "-profile test --tools freebayes --no_intervals --wes --input fastq_pair.csv",
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
-                outdir: "$outputDir",
+
                 no_intervals: true,
                 tools: 'freebayes',
                 wes: true
@@ -56,7 +56,7 @@ nextflow_pipeline {
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
-                outdir: "$outputDir",
+
                 step: "variant_calling",
                 tools: 'freebayes',
                 wes: true,
@@ -71,7 +71,7 @@ nextflow_pipeline {
                 fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
-                outdir: "$outputDir",
+
                 step: "variant_calling",
                 tools: 'freebayes',
                 wes: true,

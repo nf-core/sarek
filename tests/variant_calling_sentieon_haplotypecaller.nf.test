@@ -13,7 +13,7 @@ nextflow_pipeline {
             name: "-profile test --tools sentieon_haplotyper",
             params: [
                 input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
-                outdir: "$outputDir",
+
                 tools: "sentieon_haplotyper",
                 step: "variant_calling"
             ]
@@ -22,7 +22,7 @@ nextflow_pipeline {
             name: "-profile test --tools sentieon_haplotyper --no_intervals",
             params: [
                 input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
-                outdir: "$outputDir",
+
                 tools: "sentieon_haplotyper",
                 step: "variant_calling",
                 no_intervals: true
@@ -32,7 +32,7 @@ nextflow_pipeline {
             name: "-profile test --tools sentieon_haplotyper --skip_tools haplotyper_filter",
             params: [
                 input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
-                outdir: "$outputDir",
+
                 tools: "sentieon_haplotyper",
                 step: "variant_calling",
                 skip_tools: "haplotyper_filter"
@@ -42,7 +42,7 @@ nextflow_pipeline {
             name: "-profile test --tools sentieon_haplotyper --joint_germline --sentieon_haplotyper_emit_mode gvcf",
             params: [
                 input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
-                outdir: "$outputDir",
+
                 tools: "sentieon_haplotyper",
                 step: "variant_calling",
                 skip_tools: "haplotyper_filter",

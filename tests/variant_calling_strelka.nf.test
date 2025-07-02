@@ -17,7 +17,7 @@ nextflow_pipeline {
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated.csv",
-                outdir: "$outputDir",
+
                 step: "variant_calling",
                 tools: 'strelka',
                 only_paired_variant_calling: true
@@ -30,7 +30,7 @@ nextflow_pipeline {
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_germline.csv",
-                outdir: "$outputDir",
+
                 step: "variant_calling",
                 tools: 'strelka'
             ]
@@ -42,7 +42,7 @@ nextflow_pipeline {
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_germline.csv",
-                outdir: "$outputDir",
+
                 no_intervals: true,
                 step: "variant_calling",
                 tools: 'strelka'
@@ -55,7 +55,7 @@ nextflow_pipeline {
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-                outdir: "$outputDir",
+
                 step: "variant_calling",
                 tools: 'strelka'
             ]
@@ -67,7 +67,7 @@ nextflow_pipeline {
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-                outdir: "$outputDir",
+
                 no_intervals: true,
                 step: "variant_calling",
                 tools: 'strelka'

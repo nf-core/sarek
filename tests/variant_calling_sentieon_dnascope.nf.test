@@ -13,7 +13,7 @@ nextflow_pipeline {
             name: "-profile test --tools sentieon_dnascope",
             params: [
                 input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
-                outdir: "$outputDir",
+
                 tools: "sentieon_dnascope",
                 step: "variant_calling"
             ]
@@ -22,7 +22,7 @@ nextflow_pipeline {
             name: "-profile test --tools sentieon_dnascope --skip_tools dnascope_filter",
             params: [
                 input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
-                outdir: "$outputDir",
+
                 tools: "sentieon_dnascope",
                 step: "variant_calling",
                 skip_tools: "dnascope_filter"
@@ -32,7 +32,7 @@ nextflow_pipeline {
             name: "-profile test --tools sentieon_dnascope --joint_germline --sentieon_dnascope_emit_mode gvcf",
             params: [
                 input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
-                outdir: "$outputDir",
+
                 tools: "sentieon_dnascope",
                 step: "variant_calling",
                 joint_germline: true,

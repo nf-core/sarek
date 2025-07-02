@@ -20,7 +20,7 @@ nextflow_pipeline {
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
-                outdir: "$outputDir",
+
                 step: "variant_calling",
                 tools: 'controlfreec',
                 wes: true
@@ -36,7 +36,7 @@ nextflow_pipeline {
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
                 no_intervals: true,
-                outdir: "$outputDir",
+
                 step: "variant_calling",
                 tools: 'controlfreec',
                 wes: true
