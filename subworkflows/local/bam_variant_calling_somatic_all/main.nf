@@ -125,7 +125,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, normal_cram ] },
             fasta,
             fasta_fai,
-            intervals_bed_combined.map{ it -> [[id:it[0].baseName], it] },
+            intervals_bed_combined.map{it -> it ? [[id:it[0].baseName], it]: [[id:'no_intervals'], []]},
             [[id:"null"], []]
         )
 

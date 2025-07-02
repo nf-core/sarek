@@ -20,31 +20,42 @@ process SENTIEON_VARCAL {
     tuple val(meta), path("*.recal")   , emit: recal
     tuple val(meta), path("*.idx")     , emit: idx
     tuple val(meta), path("*.tranches"), emit: tranches
-    tuple val(meta), path("*plots.R")  , emit: plots, optional:true
+    tuple val(meta), path("*plots.R")  , emit: plots   , optional:true
     path "versions.yml"                , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def reference_command = fasta ? "--reference $fasta " : ''
-    def labels_command = ''
-
+    def args = task.ext.args      ?: ''
+    def prefix = task.ext.prefix  ?: "${meta.id}"
     // labels is a list. Here is an example of what labels might look like:
     // ['--resource:dbsnp,known=false,training=true,truth=false,prior=2.0 dbsnp_146.hg38.vcf.gz', '--resource:gatk,known=false,training=true,truth=true,prior=10.0 Homo_sapiens_assembly38.known_indels.vcf.gz --resource:mills,known=false,training=true,truth=true,prior=10.0 Mills_and_1000G_gold_standard.indels.hg38.vcf.gz']
-    for(label in labels){
-        for(gatk_resource_string in label.split('--resource:').findAll()){  // The findAll cmd is there to remove any empty string elements in the list
-            def items = gatk_resource_string.split(' ')
-            // Here is an example of what the list items might look like:
-            // ['dbsnp,known=false,training=true,truth=false,prior=2.0', 'dbsnp_146.hg38.vcf.gz']
-            if (items.size() != 2) {
-                error("Expected the list '${items}' to contain two elements.")
-            }
-            labels_command +=  "--resource ${items[1]} --resource_param ${items[0]} "
+    def processResourceString = { resource_string ->
+        def items = resource_string.split(' ', 2)
+        if (items.size() != 2) {
+            error("Expected the resource string '${resource_string}' to contain two elements separated by a space.")
+        }
+        "--resource ${items[1]} --resource_param ${items[0].replaceFirst('^--resource:', '')}"
+    }
+
+    def processLabels = { input ->
+        if (input instanceof String) {
+            return input.split('--resource:')
+                .findAll()
+                .collect { processResourceString(it) }
+                .join(' ')
+        } else if (input instanceof List) {
+            return input.collect { label ->
+                processResourceString(label.replaceFirst('^--resource:', ''))
+            }.join(' ')
+        } else {
+            error("Expected 'labels' to be either a String or a List, but got ${input.getClass()}")
         }
     }
+
+    def labels_command = labels instanceof String && labels.trim().isEmpty() ? '' : processLabels(labels)
+
     def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64 ?
         "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; " :
         ""

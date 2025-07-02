@@ -1,3 +1,0 @@
-spring/decompress:
-  - modules/nf-core/spring/compress/**
-  - modules/nf-core/spring/decompress/**

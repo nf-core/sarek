@@ -51,11 +51,20 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'sample1' ]`
-          pattern: "*.vcf"
       - "*.vcf.gz":
           type: map
           description: bgzipped vcf file with called variants
-          pattern: "*.vcf"
+          pattern: "*.vcf.gz"
+  - tbi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "*.vcf.gz.tbi":
+          type: map
+          description: tabix index of bgzipped vcf file with called variants
+          pattern: "*.vcf.gz.tbi"
   - versions:
       - versions.yml:
           type: file

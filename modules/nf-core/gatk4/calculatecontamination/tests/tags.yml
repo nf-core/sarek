@@ -1,2 +1,0 @@
-gatk4/calculatecontamination:
-  - "modules/nf-core/gatk4/calculatecontamination/**"

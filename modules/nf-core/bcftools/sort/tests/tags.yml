@@ -1,2 +1,0 @@
-bcftools/sort:
-  - "modules/nf-core/bcftools/sort/**"

@@ -3,7 +3,7 @@
 // SENTIEON TNSCOPE: tumor-normal mode variantcalling
 //
 
-include { SENTIEON_TNSCOPE } from '../../../modules/nf-core/sentieon/tnscope/main' 
+include { SENTIEON_TNSCOPE } from '../../../modules/nf-core/sentieon/tnscope/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_TNSCOPE {
     take:
@@ -19,8 +19,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_TNSCOPE {
     versions = Channel.empty()
 
     //If no germline resource is provided, then create an empty channel to avoid GetPileupsummaries from being run
-    germline_resource_pileup     = (germline_resource && germline_resource_tbi) ? germline_resource : Channel.empty()
-    germline_resource_pileup_tbi = germline_resource_tbi ?: Channel.empty()
+    //germline_resource_pileup     = (germline_resource && germline_resource_tbi) ? germline_resource : Channel.empty()
+    //germline_resource_pileup_tbi = germline_resource_tbi ?: Channel.empty()
 
     // Separate normal cram files
     // Extract tumor cram files
@@ -32,14 +32,16 @@ workflow BAM_VARIANT_CALLING_SOMATIC_TNSCOPE {
     // Remove duplicates from normal channel and merge normal and tumor crams by patient
     ch_tn_cram =  ch_cram.normal.unique().mix(ch_cram.tumor).groupTuple()
 
-    SENTIEON_TNSCOPE( 
+    SENTIEON_TNSCOPE(
         ch_tn_cram,
-        fasta.map{fasta_ -> [[id: "fasta"], fasta_]}, 
-        fai.map{fai_ -> [[id: "fasta"], fai_]}, 
-        [[], []], // cosmic
-        panel_of_normals.combine(panel_of_normals_tbi).map{pon, pon_tbi -> [[id: "pon"], pon, pon_tbi]},
-        germline_resource_pileup.combine(germline_resource_pileup_tbi).map{germline, germline_tbi -> [[id: "germline"], germline, germline_tbi]},
-        [[], []] // intervals
+        fasta.map{fasta_ -> [[id: "fasta"], fasta_]},
+        fai.map{fai_ -> [[id: "fasta"], fai_]},
+        germline_resource,
+        germline_resource_tbi,
+        panel_of_normals,
+        panel_of_normals_tbi,
+        [[],[]], // cosmic
+        [[],[]] // cosmic_tbi
     )
 
     versions = versions.mix(SENTIEON_TNSCOPE.out.versions)

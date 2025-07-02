@@ -7,6 +7,7 @@ process SENTIEON_DNASCOPE {
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/80/80ccb05eb4f1a193a3bd99c4da90f55f74ea6556c25f154e53e1ff5a6caa372d/data' :
         'community.wave.seqera.io/library/sentieon:202503--5e378058d837c58c' }"
+
     input:
     tuple val(meta), path(bam), path(bai), path(intervals)
     tuple val(meta2), path(fasta)
@@ -29,17 +30,17 @@ process SENTIEON_DNASCOPE {
     task.ext.when == null || task.ext.when
 
     script:
-    def args                      = task.ext.args                      ?: ''  // options for the driver
-    def args2                     = task.ext.args2                     ?: ''  // options for the vcf generation
-    def args3                     = task.ext.args3                     ?: ''  // options for the gvcf generation
-    def interval                  = intervals                          ? "--interval ${intervals}"               : ''
-    def dbsnp_cmd                 = dbsnp                              ? "-d ${dbsnp}"                           : ''
-    def model_cmd                 = ml_model                           ? " --model ${ml_model}"                  : ''
-    def pcr_indel_model_cmd       = pcr_indel_model                    ? " --pcr_indel_model ${pcr_indel_model}" : ''
-    def prefix                    = task.ext.prefix                    ?: "${meta.id}"
-    def vcf_cmd                   = ""
-    def gvcf_cmd                  = ""
-    def base_cmd                  = '--algo DNAscope ' + dbsnp_cmd + ' '
+    def args                = task.ext.args   ?: ''  // options for the driver
+    def args2               = task.ext.args2  ?: ''  // options for the vcf generation
+    def args3               = task.ext.args3  ?: ''  // options for the gvcf generation
+    def interval            = intervals       ? "--interval ${intervals}"               : ''
+    def dbsnp_cmd           = dbsnp           ? "-d ${dbsnp}"                           : ''
+    def model_cmd           = ml_model        ? " --model ${ml_model}"                  : ''
+    def pcr_indel_model_cmd = pcr_indel_model ? " --pcr_indel_model ${pcr_indel_model}" : ''
+    def prefix              = task.ext.prefix ?: "${meta.id}"
+    def vcf_cmd             = ""
+    def gvcf_cmd            = ""
+    def base_cmd            = '--algo DNAscope ' + dbsnp_cmd + ' '
 
     if (emit_vcf) {  // emit_vcf can be the empty string, 'variant', 'confident' or 'all' but NOT 'gvcf'
         vcf_cmd = base_cmd + args2 + ' ' + model_cmd + pcr_indel_model_cmd + ' --emit_mode ' + emit_vcf + ' ' + prefix + '.unfiltered.vcf.gz'
@@ -64,12 +65,13 @@ process SENTIEON_DNASCOPE {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix   = task.ext.prefix ?: "${meta.id}"
+    def gvcf_cmd = emit_gvcf ? "echo | gzip > ${prefix}.g.vcf.gz; touch ${prefix}.g.vcf.gz.tbi": ""
+
     """
-    touch ${prefix}.unfiltered.vcf.gz
+    echo | gzip > ${prefix}.unfiltered.vcf.gz
     touch ${prefix}.unfiltered.vcf.gz.tbi
-    touch ${prefix}.g.vcf.gz
-    touch ${prefix}.g.vcf.gz.tbi
+    $gvcf_cmd
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
