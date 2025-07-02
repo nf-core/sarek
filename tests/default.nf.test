@@ -9,13 +9,11 @@ nextflow_pipeline {
     def test_scenario = [
         [
             name: "-profile test -stub",
-            description: "-profile test -stub",
             params: [],
             stub: true
         ],
         [
             name: "-profile test",
-            description: "-profile test",
             params: []
         ]
     ]
@@ -37,14 +35,14 @@ nextflow_pipeline {
 
         if (stub) {
             return [
-                removeNextflowVersion("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
+                removeFromYamlMap("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"),
                 stable_name
             ]
         } else {
             return [
-                removeNextflowVersion("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
+                removeFromYamlMap("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"),
                 stable_name,
-                isEmpty() ? 'No stable content' : stable_content,
+                stable_content.isEmpty() ? 'No stable content' : stable_content,
                 bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
                 cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
                 vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
