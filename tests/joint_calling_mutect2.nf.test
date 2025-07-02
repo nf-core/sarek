@@ -1,3 +1,6 @@
+def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
 nextflow_pipeline {
 
     name "Test pipeline"
@@ -10,15 +13,14 @@ nextflow_pipeline {
         [
             name: "-profile test --input tests/csv/3.0/recalibrated_somatic_joint.csv --tools mutect2 --joint_mutect2",
             params: [
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
                 genome: null,
                 igenomes_ignore: true,
-                dbsnp: params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
-                dbsnp_tbi: params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
-                fasta: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-                fasta_fai: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                dbsnp: modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+                dbsnp_tbi: modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic_joint.csv",
-                intervals: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 joint_mutect2: true,
                 step: "variant_calling",
                 tools: 'mutect2',
@@ -28,13 +30,12 @@ nextflow_pipeline {
         [
             name: "-profile test --input tests/csv/3.0/recalibrated_tumoronly_joint.csv --tools mutect2 --joint_mutect2",
             params: [
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
                 genome: null,
                 igenomes_ignore: true,
-                dbsnp: params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
-                dbsnp_tbi: params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
-                fasta: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-                fasta_fai: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                dbsnp: modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+                dbsnp_tbi: modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly_joint.csv",
                 joint_mutect2: true,
                 step: "variant_calling",

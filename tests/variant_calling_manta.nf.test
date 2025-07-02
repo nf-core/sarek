@@ -1,3 +1,6 @@
+def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
 nextflow_pipeline {
 
     name "Test pipeline"
@@ -10,10 +13,9 @@ nextflow_pipeline {
         [
             name: "-profile test --tools manta --only_paired_variant_calling",
             params: [
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
-                fasta: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-                fasta_fai: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
-                intervals: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated.csv",
                 outdir: "$outputDir",
                 step: "variant_calling",
@@ -24,10 +26,9 @@ nextflow_pipeline {
         [
             name: "-profile test --tools manta germline",
             params: [
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
-                fasta: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-                fasta_fai: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
-                intervals: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_germline.csv",
                 outdir: "$outputDir",
                 step: "variant_calling",
@@ -37,10 +38,9 @@ nextflow_pipeline {
         [
             name: "-profile test --tools manta --no_intervals germline",
             params: [
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
-                fasta: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-                fasta_fai: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
-                intervals: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_germline.csv",
                 outdir: "$outputDir",
                 no_intervals: true,
@@ -51,10 +51,9 @@ nextflow_pipeline {
         [
             name: "-profile test --tools manta somatic",
             params: [
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
-                fasta: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-                fasta_fai: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
-                intervals: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
                 outdir: "$outputDir",
                 step: "variant_calling",
@@ -64,10 +63,9 @@ nextflow_pipeline {
         [
             name: "-profile test --tools manta --no_intervals somatic",
             params: [
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
-                fasta: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-                fasta_fai: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
-                intervals: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
                 outdir: "$outputDir",
                 no_intervals: true,
@@ -78,10 +76,9 @@ nextflow_pipeline {
         [
             name: "-profile test --tools manta tumoronly",
             params: [
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
-                fasta: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-                fasta_fai: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
-                intervals: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
                 outdir: "$outputDir",
                 step: "variant_calling",
@@ -91,10 +88,9 @@ nextflow_pipeline {
         [
             name: "-profile test --tools manta --no_intervals tumoronly",
             params: [
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
-                fasta: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-                fasta_fai: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
-                intervals: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
                 outdir: "$outputDir",
                 no_intervals: true,

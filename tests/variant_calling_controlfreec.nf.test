@@ -1,3 +1,6 @@
+def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
 nextflow_pipeline {
 
     name "Test pipeline"
@@ -10,14 +13,13 @@ nextflow_pipeline {
         [
             name: "-profile test --tools controlfreec somatic",
             params: [
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
-                chr_dir: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz',
-                dbsnp: params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
-                dbsnp_tbi: params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
-                fasta: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-                fasta_fai: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                chr_dir: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz',
+                dbsnp: modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+                dbsnp_tbi: modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-                intervals: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 outdir: "$outputDir",
                 step: "variant_calling",
                 tools: 'controlfreec',
@@ -27,12 +29,11 @@ nextflow_pipeline {
         [
             name: "-profile test --tools controlfreec --no_intervals tumoronly",
             params: [
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
-                chr_dir: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz',
-                dbsnp: params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
-                dbsnp_tbi: params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
-                fasta: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-                fasta_fai: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                chr_dir: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz',
+                dbsnp: modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+                dbsnp_tbi: modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
                 no_intervals: true,
                 outdir: "$outputDir",

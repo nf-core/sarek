@@ -1,3 +1,5 @@
+def projectDir = new File('.').absolutePath
+
 nextflow_pipeline {
 
     name "Test pipeline"
@@ -10,7 +12,6 @@ nextflow_pipeline {
         [
             name: "-profile test --step variant_calling --input tests/csv/3.0/recalibrated_somatic_two_normal_one_sample.csv",
             params: [
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic_two_normal_one_sample.csv",
                 step: "variant_calling"
             ]

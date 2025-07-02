@@ -1,3 +1,6 @@
+def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
 nextflow_pipeline {
 
     name "Test pipeline"
@@ -10,8 +13,7 @@ nextflow_pipeline {
         [
             name: "-profile test --tools freebayes --wes --nucleotides_per_second 20",
             params: [
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
-                intervals: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
                 outdir: "$outputDir",
                 tools: 'freebayes',
                 wes: true,
@@ -29,8 +31,7 @@ nextflow_pipeline {
         [
             name: "-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv",
             params: [
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
-                intervals: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 outdir: "$outputDir",
                 tools: 'freebayes',
@@ -51,10 +52,9 @@ nextflow_pipeline {
         [
             name: "-profile test,tools_tumoronly --tools freebayes --input recalibrated_tumoronly.csv",
             params: [
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
-                fasta: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-                fasta_fai: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
-                intervals: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
                 outdir: "$outputDir",
                 step: "variant_calling",
@@ -68,9 +68,8 @@ nextflow_pipeline {
         [
             name: "-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv",
             params: [
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
-                fasta: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-                fasta_fai: params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
                 outdir: "$outputDir",
                 step: "variant_calling",

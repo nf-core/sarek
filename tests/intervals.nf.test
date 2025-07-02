@@ -1,3 +1,6 @@
+def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
 nextflow_pipeline {
 
     name "Test pipeline"
@@ -10,7 +13,7 @@ nextflow_pipeline {
         [
             name: "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
             params: [
-                intervals: "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.multi_intervals.bed",
+                intervals: modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.multi_intervals.bed",
                 nucleotides_per_second: 20,
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: null,
@@ -37,7 +40,7 @@ nextflow_pipeline {
         [
             name: "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
             params: [
-                intervals: "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.multi_intervals.bed",
+                intervals: modules_testdata_base_path + "/genomics/homo_sapiens/genome/genome.multi_intervals.bed",
                 nucleotides_per_second: 20,
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: null,

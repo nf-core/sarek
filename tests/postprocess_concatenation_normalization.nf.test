@@ -1,3 +1,5 @@
+def projectDir = new File('.').absolutePath
+
 nextflow_pipeline {
 
     name "Test pipeline"
@@ -13,8 +15,7 @@ nextflow_pipeline {
                 step: 'variant_calling',
                 normalize_vcfs: true,
                 concatenate_vcfs: true,
-                tools: 'freebayes,haplotypecaller',
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+                tools: 'freebayes,haplotypecaller'
             ]
         ]
     ]

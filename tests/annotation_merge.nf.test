@@ -1,3 +1,5 @@
+def projectDir = new File('.').absolutePath
+
 nextflow_pipeline {
 
     name "Test pipeline"
