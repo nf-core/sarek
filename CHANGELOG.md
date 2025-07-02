@@ -71,6 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1829](https://github.com/nf-core/sarek/pull/1829) - Add muse as variant caller to images
 - [1835](https://github.com/nf-core/sarek/pull/1835) - Add GPU testing possibilities
 - [1855](https://github.com/nf-core/sarek/pull/1855) - Add contributors info to the contributors field in the manifest
+- [1922](https://github.com/nf-core/sarek/pull/1922) - Added tests for ASCAT
 
 #### Changed
 
