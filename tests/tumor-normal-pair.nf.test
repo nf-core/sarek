@@ -12,8 +12,7 @@ nextflow_pipeline {
         [
             name: "-profile test --input tests/csv/3.0/fastq_pair.csv",
             params: [
-                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
-                outdir: "$outputDir"
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv"
             ]
         ]
     ]
