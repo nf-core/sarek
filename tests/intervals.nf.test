@@ -1,4 +1,3 @@
-def projectDir = new File('.').absolutePath
 def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
 
 nextflow_pipeline {
