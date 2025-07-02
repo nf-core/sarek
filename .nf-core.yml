@@ -16,9 +16,52 @@ lint:
     - tests/aligner-bwa-mem2.nf.test
     - tests/aligner-dragmap.nf.test
     - tests/aligner-parabricks.nf.test
+    - tests/alignment_from_everything.nf.test
+    - tests/alignment_to_fastq.nf.test
+    - tests/annotation_bcfann.nf.test
+    - tests/annotation_merge.nf.test
+    - tests/annotation_snpeff.nf.test
+    - tests/annotation_vep.nf.test
     - tests/default.nf.test
-    - tests/samplesheets.nf.test
+    - tests/default.nf.test
+    - tests/fastp.nf.test
+    - tests/intervals.nf.test
+    - tests/joint_calling_haplotypecaller.nf.test
+    - tests/joint_calling_mutect2.nf.test
     - tests/nextflow.config
+    - tests/postprocess_concatenation.nf.test
+    - tests/postprocess_concatenation_normalization.nf.test
+    - tests/postprocess_normalization.nf.test
+    - tests/preprocessing_umi.nf.test
+    - tests/qc_ngscheckmate.nf.test
+    - tests/samplesheets.nf.test
+    - tests/samplesheets.nf.test
+    - tests/save_mapped.nf.test
+    - tests/save_output_as_bam.nf.test
+    - tests/sentieon.nf.test
+    - tests/sentieon_aligner_bwamem.nf.test
+    - tests/sentieon_dedup.nf.test
+    - tests/spark.nf.test
+    - tests/start_from_markduplicates.nf.test
+    - tests/start_from_preparerecalibration.nf.test
+    - tests/start_from_recalibration.nf.test
+    - tests/tumor-normal-pair.nf.test
+    - tests/variant_calling_cnvkit.nf.test
+    - tests/variant_calling_controlfreec.nf.test
+    - tests/variant_calling_deepvariant.nf.test
+    - tests/variant_calling_freebayes.nf.test
+    - tests/variant_calling_haplotypecaller.nf.test
+    - tests/variant_calling_lofreq.nf.test
+    - tests/variant_calling_manta.nf.test
+    - tests/variant_calling_mpileup.nf.test
+    - tests/variant_calling_msisensorpro.nf.test
+    - tests/variant_calling_muse.nf.test
+    - tests/variant_calling_mutect2.nf.test
+    - tests/variant_calling_sentieon_dnascope.nf.test
+    - tests/variant_calling_sentieon_haplotypecaller.nf.test
+    - tests/variant_calling_strelka.nf.test
+    - tests/variant_calling_strelka_bp.nf.test
+    - tests/variant_calling_tiddit.nf.test
 nf_core_version: 3.3.1
 repository_type: pipeline
 template:

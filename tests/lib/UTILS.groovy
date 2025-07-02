@@ -55,8 +55,8 @@ class UTILS {
             }
 
             then {
+                assert workflow.success
                 assertAll(
-                    { assert workflow.success },
                     { assert snapshot(
                         workflow.trace.succeeded().size(),
                         *UTILS.get_assertion(params.outdir, scenario.stub)

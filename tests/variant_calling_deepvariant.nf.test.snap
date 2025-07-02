@@ -173,7 +173,7 @@
         },
         "timestamp": "2025-06-16T15:24:45.667113417"
     },
-    "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv -with-stub": {
+    "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv -stub": {
         "content": [
             12,
             {
@@ -400,7 +400,7 @@
         },
         "timestamp": "2025-06-14T14:15:43.889546521"
     },
-    "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals -with-stub": {
+    "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals -stub": {
         "content": [
             9,
             {
