@@ -28,6 +28,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Base Quality Score Recalibration](#base-quality-score-recalibration)
     - [GATK BaseRecalibrator (Spark)](#gatk-baserecalibrator-spark)
     - [GATK ApplyBQSR (Spark)](#gatk-applybqsr-spark)
+  - [Parabricks FQ2BAM](#parabricks-fq2bam)
   - [CSV files](#csv-files)
 - [Variant Calling](#variant-calling)
   - [SNVs and small indels](#snvs-and-small-indels)
@@ -38,15 +39,15 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
       - [GATK Germline Single Sample Variant Calling](#gatk-germline-single-sample-variant-calling)
       - [GATK Joint Germline Variant Calling](#gatk-joint-germline-variant-calling)
     - [GATK Mutect2](#gatk-mutect2)
+    - [Lofreq](#lofreq)
+    - [MuSE](#muse)
     - [Sentieon DNAscope](#sentieon-dnascope)
       - [Sentieon DNAscope joint germline variant calling](#sentieon-dnascope-joint-germline-variant-calling)
     - [Sentieon Haplotyper](#sentieon-haplotyper)
       - [Sentieon Haplotyper joint germline variant calling](#sentieon-haplotyper-joint-germline-variant-calling)
     - [Strelka](#strelka)
-    - [Lofreq](#lofreq)
-    - [MuSE](#muse)
   - [Structural Variants](#structural-variants)
-    - [Indexcov](#indexcov)
+    - [indexcov](#indexcov)
     - [Manta](#manta)
     - [TIDDIT](#tiddit)
   - [Sample heterogeneity, ploidy and CNVs](#sample-heterogeneity-ploidy-and-cnvs)
@@ -56,6 +57,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Microsatellite instability (MSI)](#microsatellite-instability-msi)
     - [MSIsensorPro](#msisensorpro)
   - [Concatenation](#concatenation)
+  - [Normalization](#normalization)
 - [Variant annotation](#variant-annotation)
   - [snpEff](#snpeff)
   - [VEP](#vep)
@@ -82,7 +84,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 The default directory structure is as follows
 
-```
+```text
 {outdir}
 ├── csv
 ├── multiqc
@@ -288,6 +290,25 @@ The resulting recalibrated CRAM files are delivered to the user. Recalibrated CR
   - CRAM file and index
 - if `--save_output_as_bam`:
   - `<sample>.recal.bam` and `<sample>.recal.bam.bai` - BAM file and index
+  </details>
+
+### Parabricks FQ2BAM
+
+:::info
+This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
+:::
+
+[Parabricks FQ2BAM](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html) runs as alternative to GATK preprocessing, enables by `--aligner parabricks --profile <docker/singularity>,gpu`.
+
+The resulting recalibrated CRAM files are delivered to the user.
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+**Output directory: `{outdir}/preprocessing/parabricks/<sample>/`**
+
+- `<sample>.cram` and `<sample>.cram.crai`
+  - CRAM file and index
   </details>
 
 ### CSV files
@@ -894,6 +915,21 @@ Germline VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, 
 **Output directory: `{outdir}/variantcalling/concat/<sample>/`**
 
 - `<sample>.germline.vcf.gz` and `<sample>.germline.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
+### Normalization
+
+_Experimental Feature_ All VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, `Manta`, `bcftools mpileup`, `Strelka`, or `Tiddit` are normalized with `bcftools norm`. The field `SOURCE` is added to the VCF header to report the variant caller.
+The concatenized VCFs are not normalized at the moment.
+
+<details markdown="1">
+<summary>Normalized VCF-files for normal and tumor samples</summary>
+
+**Output directory: `{outdir}/variantcalling/normalized/<sample>/`**
+
+- `<sample>.<variantcaller>.norm.vcf.gz` and `<sample>.<variantcaller>.norm.vcf.gz.tbi`
   - VCF with tabix index
 
 </details>

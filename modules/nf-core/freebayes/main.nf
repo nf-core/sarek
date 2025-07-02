@@ -9,11 +9,11 @@ process FREEBAYES {
 
     input:
     tuple val(meta), path(input_1), path(input_1_index), path(input_2), path(input_2_index), path(target_bed)
-    tuple val(ref_meta), path(fasta)
-    tuple val(ref_idx_meta), path(fasta_fai)
-    tuple val(samples_meta), path(samples)
-    tuple val(populations_meta), path(populations)
-    tuple val(cnv_meta), path(cnv)
+    tuple val(meta2), path(fasta)
+    tuple val(meta3), path(fasta_fai)
+    tuple val(meta4), path(samples)
+    tuple val(meta5), path(populations)
+    tuple val(meta6), path(cnv)
 
     output:
     tuple val(meta), path("*.vcf.gz"), emit: vcf

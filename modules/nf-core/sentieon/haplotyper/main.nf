@@ -10,10 +10,10 @@ process SENTIEON_HAPLOTYPER {
 
     input:
     tuple val(meta), path(input), path(input_index), path(intervals), path(recal_table)
-    tuple val(meta1), path(fasta)
-    tuple val(meta2), path(fai)
-    tuple val(meta3), path(dbsnp)
-    tuple val(meta4), path(dbsnp_tbi)
+    tuple val(meta2), path(fasta)
+    tuple val(meta3), path(fai)
+    tuple val(meta4), path(dbsnp)
+    tuple val(meta5), path(dbsnp_tbi)
     val(emit_vcf)
     val(emit_gvcf)
 
@@ -50,7 +50,7 @@ process SENTIEON_HAPLOTYPER {
 
     // Create a gVCF command to export a gVCF
     def gvcf_cmd = emit_gvcf ?
-        gvcf_cmd = base_cmd + args3 + ' --emit_mode gvcf ' + prefix + '.g.vcf.gz' :
+        base_cmd + args3 + ' --emit_mode gvcf ' + prefix + '.g.vcf.gz' :
         ""
 
     def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64 ?

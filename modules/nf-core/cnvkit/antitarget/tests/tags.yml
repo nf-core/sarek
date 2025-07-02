@@ -1,2 +1,0 @@
-cnvkit/antitarget:
-  - "modules/nf-core/cnvkit/antitarget/**"

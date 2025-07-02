@@ -1,2 +1,0 @@
-gatk4/markduplicates:
-  - "modules/nf-core/gatk4/markduplicates/**"

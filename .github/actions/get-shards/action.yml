@@ -9,7 +9,7 @@ inputs:
     required: false
   tags:
     description: "Tags to pass as argument for nf-test --tag parameter"
-    required: true
+    required: false
 outputs:
   shard:
     description: "Array of shard numbers"
@@ -31,7 +31,7 @@ runs:
         # Run nf-test with dynamic parameter
         nftest_output=$(nf-test test \
           --profile +docker \
-          --tag ${{ inputs.tags }} \
+          $(if [ -n "${{ inputs.tags }}" ]; then echo "--tag ${{ inputs.tags }}"; fi) \
           --dry-run \
           --ci \
           --changed-since HEAD^) || {

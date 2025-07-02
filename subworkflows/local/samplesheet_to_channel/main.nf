@@ -1,40 +1,60 @@
 workflow  SAMPLESHEET_TO_CHANNEL{
 
     take:
-    ch_from_samplesheet             //
-    aligner                         //
-    ascat_alleles                   //
-    ascat_loci                      //
-    ascat_loci_gc                   //
-    ascat_loci_rt                   //
-    bcftools_annotations            //
-    bcftools_annotations_tbi        //
-    bcftools_header_lines           //
-    build_only_index                //
-    dbsnp                           //
-    fasta                           //
-    germline_resource               //
-    intervals                       //
-    joint_germline                  //
-    joint_mutect2                   //
-    known_indels                    //
-    known_snps                      //
-    no_intervals                    //
-    pon                             //
-    sentieon_dnascope_emit_mode     //
-    sentieon_haplotyper_emit_mode   //
-    seq_center                      //
-    seq_platform                    //
-    skip_tools                      //
-    snpeff_cache                    //
-    snpeff_db                       //
-    step                            //
-    tools                           //
-    umi_read_structure              //
-    wes                             //
+    ch_from_samplesheet           // samplesheet
+    aligner                       // String: aligner
+    ascat_alleles                 // Path: ascat alleles
+    ascat_loci                    // Path: ascat loci
+    ascat_loci_gc                 // Path: ascat loci gc
+    ascat_loci_rt                 // Path: ascat loci rt
+    bcftools_annotations          // Path: bcftools annotations
+    bcftools_annotations_tbi      // Path: bcftools annotations tbi
+    bcftools_header_lines         // Path: bcftools header lines
+    build_only_index              // Boolean: build only index
+    dbsnp                         // Path: dbsnp
+    fasta                         // Path: fasta
+    germline_resource             // Path: germline resource
+    intervals                     // Path: intervals
+    joint_germline                // Boolean: joint_germline
+    joint_mutect2                 // Boolean: joint_mutect2
+    known_indels                  // Path: known indels
+    known_snps                    // Path: known snps
+    no_intervals                  // Boolean: no intervals
+    pon                           // Path: pon
+    sentieon_dnascope_emit_mode   // String: sentieon dnascope emit mode
+    sentieon_haplotyper_emit_mode // String: sentieon haplotyper emit mode
+    seq_center                    // String: seq center
+    seq_platform                  // String: seq platform
+    skip_tools                    // Array: skip tools
+    snpeff_cache                  // Path: snpeff cache
+    snpeff_db                     // String: snpeff db
+    step                          // String: step
+    tools                         // Array: tools
+    umi_read_structure            // String: umi read structure
+    wes                           // wes
 
     main:
     ch_from_samplesheet.dump(tag:"ch_from_samplesheet")
+
+    ch_from_samplesheet
+        .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _vcf, _variantcaller ->
+            // Get only the patient, sample and status fields from the meta map
+            [meta.patient, meta.subMap('sample', 'status')]
+        }
+        .unique()
+        .groupTuple()
+        .map { patient, samples ->
+            // Count samples with status 0 and status 1
+            def status0_count = samples.count { it.status == 0 }
+            def status1_count = samples.count { it.status == 1 }
+
+            // Check the condition and exit with an error if met
+            if (status1_count == 1 && status0_count > 1) {
+                System.err.println("Patient [${patient}] has more than one sample [${status0_count}] with normal status [0] and one sample with tumor status [1].")
+                error("Execution halted due to sample status inconsistency.")
+            }
+        }
+
     input_sample = ch_from_samplesheet.map{ meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller ->
         // generate patient_sample key to group lanes together
         [ meta.patient + meta.sample, [meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller] ]
@@ -176,8 +196,8 @@ workflow  SAMPLESHEET_TO_CHANNEL{
         log.warn("DragMap was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using DragMap\nhttps://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode")
     }
 
-    if (step == 'mapping' && aligner.contains("sentieon-bwamem") && umi_read_structure) {
-        error("Sentieon BWA is currently not compatible with FGBio UMI handeling. Please choose a different aligner.")
+    if (step == 'mapping' && ( aligner.contains("parabricks") || aligner.contains("sentieon-bwamem")) && umi_read_structure) {
+        error("$aligner is currently not compatible with FGBio UMI handeling. Please choose a different aligner.")
     }
 
     if (tools && tools.split(',').contains("sentieon_haplotyper") && joint_germline && (!sentieon_haplotyper_emit_mode || !(sentieon_haplotyper_emit_mode.contains('gvcf')))) {

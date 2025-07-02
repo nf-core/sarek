@@ -10,45 +10,46 @@ include { softwareVersionsToYAML                            } from '../../subwor
 include { methodsDescriptionText                            } from '../../subworkflows/local/utils_nfcore_sarek_pipeline'
 
 // Create samplesheets to restart from different steps
-include { CHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../../subworkflows/local/channel_variant_calling_create_csv/main'
+include { CHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../../subworkflows/local/channel_variant_calling_create_csv'
 
 // Convert BAM files to FASTQ files
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT       } from '../../subworkflows/local/bam_convert_samtools/main'
+include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT       } from '../../subworkflows/local/bam_convert_samtools'
 
 // Convert fastq.gz.spring files to fastq.gz files
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R1_FQ   } from '../../modules/nf-core/spring/decompress/main'
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R2_FQ   } from '../../modules/nf-core/spring/decompress/main'
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_FQ_PAIR } from '../../modules/nf-core/spring/decompress/main'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R1_FQ   } from '../../modules/nf-core/spring/decompress'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R2_FQ   } from '../../modules/nf-core/spring/decompress'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_FQ_PAIR } from '../../modules/nf-core/spring/decompress'
 
 // Run FASTQC
-include { FASTQC                                            } from '../../modules/nf-core/fastqc/main'
+include { FASTQC                                            } from '../../modules/nf-core/fastqc'
 
 // QC on CRAM
-include { CRAM_SAMPLEQC                                     } from '../../subworkflows/local/cram_sampleqc/main'
+include { CRAM_SAMPLEQC                                     } from '../../subworkflows/local/cram_sampleqc'
 
 // Preprocessing
-include { FASTQ_ALIGN_GATK                                  } from '../../subworkflows/local/fastq_align_gatk/main'
+include { FASTQ_PREPROCESS_GATK                             } from '../../subworkflows/local/fastq_preprocess_gatk'
+include { FASTQ_PREPROCESS_PARABRICKS                       } from '../../subworkflows/local/fastq_preprocess_parabricks'
 
 // Variant calling on a single normal sample
-include { BAM_VARIANT_CALLING_GERMLINE_ALL                  } from '../../subworkflows/local/bam_variant_calling_germline_all/main'
+include { BAM_VARIANT_CALLING_GERMLINE_ALL                  } from '../../subworkflows/local/bam_variant_calling_germline_all'
 
 // Variant calling on a single tumor sample
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL                } from '../../subworkflows/local/bam_variant_calling_tumor_only_all/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL                } from '../../subworkflows/local/bam_variant_calling_tumor_only_all'
 
 // Variant calling on tumor/normal pair
-include { BAM_VARIANT_CALLING_SOMATIC_ALL                   } from '../../subworkflows/local/bam_variant_calling_somatic_all/main'
+include { BAM_VARIANT_CALLING_SOMATIC_ALL                   } from '../../subworkflows/local/bam_variant_calling_somatic_all'
 
 // POST VARIANTCALLING: e.g. merging
-include { POST_VARIANTCALLING                               } from '../../subworkflows/local/post_variantcalling/main'
+include { POST_VARIANTCALLING                               } from '../../subworkflows/local/post_variantcalling'
 
 // QC on VCF files
-include { VCF_QC_BCFTOOLS_VCFTOOLS                          } from '../../subworkflows/local/vcf_qc_bcftools_vcftools/main'
+include { VCF_QC_BCFTOOLS_VCFTOOLS                          } from '../../subworkflows/local/vcf_qc_bcftools_vcftools'
 
 // Annotation
-include { VCF_ANNOTATE_ALL                                  } from '../../subworkflows/local/vcf_annotate_all/main'
+include { VCF_ANNOTATE_ALL                                  } from '../../subworkflows/local/vcf_annotate_all'
 
 // MULTIQC
-include { MULTIQC                                           } from '../../modules/nf-core/multiqc/main'
+include { MULTIQC                                           } from '../../modules/nf-core/multiqc'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -60,6 +61,7 @@ workflow SAREK {
     take:
         input_sample
         allele_files
+        aligner
         bcftools_annotations
         bcftools_annotations_tbi
         bcftools_header_lines
@@ -103,6 +105,7 @@ workflow SAREK {
         vep_fasta
         vep_genome
         vep_species
+        versions
 
     main:
 
@@ -110,7 +113,6 @@ workflow SAREK {
     ch_multiqc_files = Channel.empty()
     multiqc_report   = Channel.empty()
     reports          = Channel.empty()
-    versions         = Channel.empty()
 
     if (params.step == 'mapping') {
         // Figure out if input is bam, fastq, or spring
@@ -138,6 +140,10 @@ workflow SAREK {
             [meta, files[1] ]},
             true // write_one_fastq_gz
         )
+
+        versions = versions.mix(SPRING_DECOMPRESS_TO_R1_FQ.out.versions)
+        versions = versions.mix(SPRING_DECOMPRESS_TO_R2_FQ.out.versions)
+        versions = versions.mix(SPRING_DECOMPRESS_TO_FQ_PAIR.out.versions)
 
         two_fastq_gz_from_spring = r1_fastq_gz_from_spring.fastq.join(r2_fastq_gz_from_spring.fastq).map{ meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]]}
 
@@ -175,26 +181,47 @@ workflow SAREK {
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
-        // PREPROCESSING
-        FASTQ_ALIGN_GATK(
-            input_fastq,
-            input_sample,
-            dict,
-            fasta,
-            fasta_fai,
-            index_alignment,
-            intervals_and_num_intervals,
-            intervals_for_preprocessing,
-            known_sites_indels,
-            known_sites_indels_tbi)
 
-        // Gather preprocessing output
-        cram_variant_calling = Channel.empty()
-        cram_variant_calling = cram_variant_calling.mix(FASTQ_ALIGN_GATK.out.cram_variant_calling)
+        if (aligner == 'parabricks') {
+            // PREPROCESSING WITH PARABRICKS
+            FASTQ_PREPROCESS_PARABRICKS(
+                input_fastq,
+                fasta,
+                index_alignment,
+                intervals_and_num_intervals,
+                known_sites_indels,
+                "cram")
 
-        // Gather used softwares versions
-        reports = reports.mix(FASTQ_ALIGN_GATK.out.reports)
-        versions = versions.mix(FASTQ_ALIGN_GATK.out.versions)
+            // Gather preprocessing output
+            cram_variant_calling = Channel.empty()
+            cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_PARABRICKS.out.cram)
+
+            // Gather used softwares versions
+            reports = reports.mix(FASTQ_PREPROCESS_PARABRICKS.out.reports)
+            versions = versions.mix(FASTQ_PREPROCESS_PARABRICKS.out.versions)
+        } else {
+            // PREPROCESSING
+            FASTQ_PREPROCESS_GATK(
+                input_fastq,
+                input_sample,
+                dict,
+                fasta,
+                fasta_fai,
+                index_alignment,
+                intervals_and_num_intervals,
+                intervals_for_preprocessing,
+                known_sites_indels,
+                known_sites_indels_tbi)
+
+            // Gather preprocessing output
+            cram_variant_calling = Channel.empty()
+            cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_GATK.out.cram_variant_calling)
+
+            // Gather used softwares versions
+            reports = reports.mix(FASTQ_PREPROCESS_GATK.out.reports)
+            versions = versions.mix(FASTQ_PREPROCESS_GATK.out.versions)
+        }
+
     }
 
     if (params.step == 'variant_calling') {
@@ -204,7 +231,7 @@ workflow SAREK {
     }
 
     if (params.step == 'annotate') {
-        // TODO: how does this actually work?
+
         cram_variant_calling = Channel.empty()
 
     }
@@ -215,6 +242,9 @@ workflow SAREK {
         fasta,
         params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
         intervals_for_preprocessing)
+
+    reports  = reports.mix(CRAM_SAMPLEQC.out.reports)
+    versions = versions.mix(CRAM_SAMPLEQC.out.versions)
 
     if (params.tools) {
 
@@ -368,21 +398,32 @@ workflow SAREK {
 
         // POST VARIANTCALLING
         POST_VARIANTCALLING(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
-                            params.concatenate_vcfs)
+                BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all,
+                BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all,
+                fasta,
+                params.concatenate_vcfs,
+                params.normalize_vcfs)
 
         // Gather vcf files for annotation and QC
         vcf_to_annotate = Channel.empty()
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_deepvariant)
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_freebayes)
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_haplotypecaller)
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_manta)
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_dnascope)
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_haplotyper)
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_strelka)
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_tiddit)
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_mpileup)
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all)
+
+        // Check if normalization is requested
+        if (params.normalize_vcfs) {
+            vcf_to_annotate = vcf_to_annotate.mix(POST_VARIANTCALLING.out.vcfs)
+        } else {
+            // If not normalized, gather existing VCFs
+            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_deepvariant)
+            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_freebayes)
+            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_haplotypecaller)
+            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_manta)
+            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_dnascope)
+            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_haplotyper)
+            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_strelka)
+            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_tiddit)
+            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_mpileup)
+            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
+            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all)
+        }
 
         // QC
         VCF_QC_BCFTOOLS_VCFTOOLS(vcf_to_annotate, intervals_bed_combined)
@@ -437,7 +478,7 @@ workflow SAREK {
     version_yaml = Channel.empty()
     if (!(params.skip_tools && params.skip_tools.split(',').contains('versions'))) {
         version_yaml = softwareVersionsToYAML(versions)
-            .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_sarek_software_mqc_versions.yml', sort: true, newLine: true)
+        .collectFile( storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_'  +  'sarek_software_'  + 'mqc_'  + 'versions.yml', sort: true, newLine: true)
     }
 
     //
@@ -491,7 +532,7 @@ def addReadgroupToMeta(meta, files) {
     }
 
     // If we cannot read the flowcell ID from the fastq file, then we don't use it
-    def sample_lane_id = flowcell ? "${meta.flowcell}.${meta.sample}.${meta.lane}" : "${meta.sample}.${meta.lane}"
+    def sample_lane_id = flowcell ? "${flowcell}.${meta.sample}.${meta.lane}" : "${meta.sample}.${meta.lane}"
 
     // Don't use a random element for ID, it breaks resuming
     def read_group = "\"@RG\\tID:${sample_lane_id}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""

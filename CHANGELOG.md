@@ -9,17 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [1682](https://github.com/nf-core/sarek/pull/1682), [1770](https://github.com/nf-core/sarek/pull/1770) - Add `bcftools_norm` in `POST_VARIANTCALLING` for normalization of all vcf files
 - [1744](https://github.com/nf-core/sarek/pull/1744) - Add MuSE as new somatic variant caller
 - [1817](https://github.com/nf-core/sarek/pull/1817) - Added new contributor
+- [1804](https://github.com/nf-core/sarek/pull/1840) - Add parabricks/fq2bam as alternative to fastq_preprocess_gatk
 - [1841](https://github.com/nf-core/sarek/pull/1841) - Add pcr-indel-model parameter for GATK HaplotypeCaller
+- [1848](https://github.com/nf-core/sarek/pull/1848) - Add parameter for setting pixel distance for GATK MarkDuplicates
+- [1856](https://github.com/nf-core/sarek/pull/1856) - Added early failure when more than 1 normal sample per patient is provided for somatic variant calling
+- [1904](https://github.com/nf-core/sarek/pull/1904) - Icon support
 
 ### Changed
 
+- [1682](https://github.com/nf-core/sarek/pull/1682) - Edit vcf_concatenate_germline subworkflow
 - [1810](https://github.com/nf-core/sarek/pull/1810) - Move non-informative information in the CHANGELOG for the end user to its own Developer section
+- [1903](https://github.com/nf-core/sarek/pull/1903) - Double the default `time` for all processes
 
 ### Fixed
 
 - [1842](https://github.com/nf-core/sarek/pull/1842) - Updated the input validation of the pipeline to be more strict, thus preventing more issues when running the pipeline
+- [1849](https://github.com/nf-core/sarek/pull/1849) - Fix bug in sample_lane_id definition in addReadgroupToMeta function
+- [1858](https://github.com/nf-core/sarek/pull/1858) - Fix bug in parameter validation
+- [1896](https://github.com/nf-core/sarek/pull/1896) - Add information on gatk_spark and save_output_as_bam
+- [1928](https://github.com/nf-core/sarek/pull/1928) - Fix cnvkit when using --no_intervals, and correct cpu allocation
 
 ### Removed
 
@@ -27,9 +38,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
-| `MuSE`     |             | 2.1.2       |
+| Dependency                             | Old version | New version |
+| -------------------------------------- | ----------- | ----------- |
+| `bcftools`                             | 1.20        | 1.21        |
+| `ensemblvep`                           | 113.0       | 113.4       |
+| `fastp`                                | 0.23.4      | 0.24.0      |
+| `fgbio`                                | 2.2.1       | 2.4.0       |
+| `gatk4`                                | 4.5.0.0     | 4.6.1.0     |
+| `mosdepth`                             | 0.3.8       | 0.3.10      |
+| `MuSE`                                 |             | 2.1.2       |
+| `MultiQC`                              | 1.25.1      | 1.28        |
+| `samtools` (in `BWAMEM1_MEM`)          | 1.2         | 1.21        |
+| `samtools` (in `BWAMEM2_MEM`)          | 1.19.2      | 1.21        |
+| `samtools` (in `GATK4_MARKDUPLICATES`) | 1.19.2      | 1.21        |
+| `sentieon`                             | 202308.03   | 202503      |
+| `tabix`                                | 1.2         | 1.21        |
 
 ### Parameters
 
@@ -43,8 +66,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1803](https://github.com/nf-core/sarek/pull/1803) - Back to dev
 - [1806](https://github.com/nf-core/sarek/pull/1806) - Use `nft-vcf` for nf-test vcf assertions
 - [1814](https://github.com/nf-core/sarek/pull/1814) - Added link to Bluesky
+- [1815](https://github.com/nf-core/sarek/pull/1815) - Create nf-test pipeline vcf concatenation + normalize tests
 - [1829](https://github.com/nf-core/sarek/pull/1829) - Add muse as variant caller to images
 - [1835](https://github.com/nf-core/sarek/pull/1835) - Add GPU testing possibilities
+- [1855](https://github.com/nf-core/sarek/pull/1855) - Add contributors info to the contributors field in the manifest
 
 #### Changed
 
@@ -53,6 +78,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1809](https://github.com/nf-core/sarek/pull/1809) - Replace `getReadsMD5()` by `readsMD5` from `nft-bam` plugin for more global cohesion with usage of `nft-vcf` plugin
 - [1810](https://github.com/nf-core/sarek/pull/1810) - Implement automatic sharding for nf-test tests
 - [1810](https://github.com/nf-core/sarek/pull/1810) - Skip all CI but linting on docs changes
+- [1815](https://github.com/nf-core/sarek/pull/1815) - Migrate pipeline pytest vcf normalize tests to nf-test
 - [1812](https://github.com/nf-core/sarek/pull/1812) - Move gatk based preprocessing to local subworkflow
 - [1819](https://github.com/nf-core/sarek/pull/1819) - Migrate pipeline pytest tiddit tests to nf-test
 - [1820](https://github.com/nf-core/sarek/pull/1820) - Migrate pipeline pytest manta tests to nf-test
@@ -66,6 +92,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1847](https://github.com/nf-core/sarek/pull/1847) - Runs on custom runners :rocket: thanks to [RunsOn](https://runs-on.com/)
 - [1852](https://github.com/nf-core/sarek/pull/1852) - Ignore tests from modules
 - [1852](https://github.com/nf-core/sarek/pull/1852) - Improve some nf-test tests
+- [1866](https://github.com/nf-core/sarek/pull/1866) - Migrate pipeline pytest deepvariant tests to nf-test
+- [1867](https://github.com/nf-core/sarek/pull/1867) - Migrate pipeline pytest gatk4spark tests to nf-test
+- [1868](https://github.com/nf-core/sarek/pull/1868) - Migrate pipeline pytest intervals tests to nf-test
+- [1871](https://github.com/nf-core/sarek/pull/1871) - Update all modules
+- [1874](https://github.com/nf-core/sarek/pull/1874) - Migrate pipeline pytest joint_calling haplotypecaller tests to nf-test
+- [1874](https://github.com/nf-core/sarek/pull/1874) - Migrate pipeline pytest joint_calling mutect2 tests to nf-test
+- [1874](https://github.com/nf-core/sarek/pull/1874) - Migrate pipeline pytest mutect2 tests to nf-test
+- [1874](https://github.com/nf-core/sarek/pull/1874) - More global cohesion in the all nf-test tests
+- [1876](https://github.com/nf-core/sarek/pull/1876) - Migrate pipeline pytest ngscheckmate tests to nf-test
+- [1877](https://github.com/nf-core/sarek/pull/1877) - Migrate pipeline pytest msisensorpro tests to nf-test
+- [1878](https://github.com/nf-core/sarek/pull/1878) - Migrate pipeline pytest umi tests to nf-test
+- [1879](https://github.com/nf-core/sarek/pull/1879) - Template update for nf-core/tools v3.21
+- [1892](https://github.com/nf-core/sarek/pull/1892) - Make jobs automatically resubmit for exit code 175
+- [1917](https://github.com/nf-core/sarek/pull/1917) - stub tests have stub tag
+- [1927](https://github.com/nf-core/sarek/pull/1927) - Migrate pipeline pytest sentieon tests to nf-test
 
 #### Fixed
 
@@ -76,10 +117,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1852](https://github.com/nf-core/sarek/pull/1852) - Modifying `assets/schema_input.json` and `nextflow_schema.json` should retrigger nf-test (cf https://github.com/nf-core/sarek/pull/1842)
 - [1852](https://github.com/nf-core/sarek/pull/1852) - Fix path to `license_message.py` script
 - [1855](https://github.com/nf-core/sarek/pull/1855) - Fix json schema cf_chrom_len input broken by [1842](https://github.com/nf-core/sarek/pull/1842)
+- [1859](https://github.com/nf-core/sarek/pull/1859) - Fix: change dbsnp channel from queue to value in muse subworkflow, wrong implemented in [1744](https://github.com/nf-core/sarek/pull/1744)
+- [1899](https://github.com/nf-core/sarek/pull/1899) - Ensure nf-test runs for all profiles on release
+- [1917](https://github.com/nf-core/sarek/pull/1917) - Ensure all versions and reports are reported to MultiQC
+- [1927](https://github.com/nf-core/sarek/pull/1927) - Fixed Sentieon variant calling broken by [1871](https://github.com/nf-core/sarek/pull/1871)
+- [1930](https://github.com/nf-core/sarek/pull/1930) - Fixed tests when no sentieon license/ENV are provided
 
 #### Removed
 
 - [1814](https://github.com/nf-core/sarek/pull/1814) - Removed link to Twitter/X
+- [1884](https://github.com/nf-core/sarek/pull/1884) - Remove pytest-workflow from CI (copied from [1729](https://github.com/nf-core/sarek/pull/1729))
 
 ## [3.5.1](https://github.com/nf-core/sarek/releases/tag/3.5.1) - Akkatjåkkå
 

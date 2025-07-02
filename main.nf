@@ -60,8 +60,6 @@ params.vep_cache_version       = getGenomeAttribute('vep_cache_version')
 params.vep_genome              = getGenomeAttribute('vep_genome')
 params.vep_species             = getGenomeAttribute('vep_species')
 
-aligner = params.aligner
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
@@ -161,7 +159,8 @@ workflow NFCORE_SAREK {
                                     : PREPARE_GENOME.out.hashtable
 
     // Gather index for mapping given the chosen aligner
-    index_alignment = (aligner == "bwa-mem" || aligner == "sentieon-bwamem") ? bwa :
+    aligner         = params.aligner
+    index_alignment = (aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks") ? bwa :
         aligner == "bwa-mem2" ? bwamem2 :
         dragmap
 
@@ -263,6 +262,7 @@ workflow NFCORE_SAREK {
     //
     SAREK(samplesheet,
         allele_files,
+        aligner,
         bcftools_annotations,
         bcftools_annotations_tbi,
         bcftools_header_lines,
@@ -305,8 +305,10 @@ workflow NFCORE_SAREK {
         vep_extra_files,
         vep_fasta,
         vep_genome,
-        vep_species
+        vep_species,
+        versions
     )
+
     emit:
     multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
 }
@@ -325,7 +327,6 @@ workflow {
     PIPELINE_INITIALISATION(
         params.version,
         params.validate_params,
-        params.monochrome_logs,
         args,
         params.outdir,
         params.input

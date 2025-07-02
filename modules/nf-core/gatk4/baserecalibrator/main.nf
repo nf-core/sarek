@@ -4,16 +4,16 @@ process GATK4_BASERECALIBRATOR {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gatk4:4.5.0.0--py36hdfd78af_0':
-        'biocontainers/gatk4:4.5.0.0--py36hdfd78af_0' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b2/b28daf5d9bb2f0d129dcad1b7410e0dd8a9b087aaf3ec7ced929b1f57624ad98/data':
+        'community.wave.seqera.io/library/gatk4_gcnvkernel:e48d414933d188cd' }"
 
     input:
     tuple val(meta), path(input), path(input_index), path(intervals)
-    path  fasta
-    path  fai
-    path  dict
-    path  known_sites
-    path  known_sites_tbi
+    tuple val(meta2), path(fasta)
+    tuple val(meta3), path(fai)
+    tuple val(meta4), path(dict)
+    tuple val(meta5), path(known_sites)
+    tuple val(meta6), path(known_sites_tbi)
 
     output:
     tuple val(meta), path("*.table"), emit: table

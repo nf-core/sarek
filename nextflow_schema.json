@@ -63,17 +63,15 @@
             "default": "",
             "properties": {
                 "split_fastq": {
+                    "type": "integer",
                     "oneOf": [
                         {
-                            "type": "integer",
                             "minimum": 250
                         },
                         {
-                            "type": "integer",
                             "const": 0
                         }
                     ],
-                    "type": "integer",
                     "default": 50000000,
                     "fa_icon": "fas fa-clock",
                     "description": "Specify how many reads each split of a FastQ file contains. Set 0 to turn off splitting at all.",
@@ -219,7 +217,7 @@
                     "type": "string",
                     "default": "bwa-mem",
                     "fa_icon": "fas fa-puzzle-piece",
-                    "enum": ["bwa-mem", "bwa-mem2", "dragmap", "sentieon-bwamem"],
+                    "enum": ["bwa-mem", "bwa-mem2", "dragmap", "sentieon-bwamem", "parabricks"],
                     "description": "Specify aligner to be used to map reads to reference genome.",
                     "help_text": "Sarek will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf DragMap is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. For more info see [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode)."
                 },
@@ -238,8 +236,12 @@
                     "type": "string",
                     "fa_icon": "fas fa-forward",
                     "description": "Enable usage of GATK Spark implementation for duplicate marking and/or base quality score recalibration",
-                    "help_text": "Multiple separated with commas.\n\n> The GATK4 Base Quality Score recalibration tools `Baserecalibrator` and `ApplyBQSR` are currently available as Beta release. Use with caution!",
+                    "help_text": "Multiple separated with commas.\n\n> The GATK4 Base Quality Score recalibration tools `Baserecalibrator` and `ApplyBQSR` are currently available as Beta release. Please be aware that `--use_gatk_spark` is not compatible with `--save_output_as_bam --save_mapped`. Use with caution!",
                     "pattern": "^((baserecalibrator|markduplicates)?,?)*(?<!,)$"
+                },
+                "markduplicates_pixel_distance": {
+                    "type": "integer",
+                    "help_text": "Pixel distance for GATK MarkDuplicates."
                 }
             }
         },
@@ -428,7 +430,13 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-tape",
                     "description": "Option for concatenating germline vcf-files.",
-                    "help_text": "Concatenating the germline vcf-files from each applied variant-caller into one vcf-file using bcftools concat."
+                    "help_text": "Concatenating the germline vcf-files from each applied variant-caller into one vcf-file using bfctools concat."
+                },
+                "normalize_vcfs": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-tape",
+                    "description": "Option for normalization of vcf-files.",
+                    "help_text": "Normalization of all vcf-files from each applied variant-caller using bfctools norm."
                 }
             }
         },
@@ -769,7 +777,6 @@
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
                     "pattern": "\\S+\\.vcf\\.gz$",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to GATK Mutect2 Germline Resource File.",
                     "help_text": "The germline resource VCF file (bgzipped and tabixed) needed by GATK4 Mutect2 is a collection of calls that are likely present in the sample, with allele frequencies.\nThe AF info field must be present.\nYou can find a smaller, stripped gnomAD VCF file (most of the annotation is removed and only calls signed by PASS are stored) in the AWS iGenomes Annotation/GermlineResource folder.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -779,7 +786,6 @@
                     "fa_icon": "fas fa-file",
                     "pattern": "\\S+\\.vcf\\.gz\\.tbi$",
                     "format": "file-path",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to GATK Mutect2 Germline Resource Index.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the Germline Resource file, if provided. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -837,7 +843,6 @@
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
                     "pattern": "^\\S+\\.gem$",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to Control-FREEC mappability file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
@@ -847,7 +852,6 @@
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
                     "pattern": "^\\S+\\.bed$",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to SNP bed file for sample checking with NGSCheckMate",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
@@ -857,7 +861,6 @@
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
                     "pattern": "^\\S+\\.model$",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Machine learning model for Sentieon Dnascope.",
                     "help_text": " It is recommended to use DNAscope with a machine learning model to perform variant calling with higher accuracy by improving the candidate detection and filtering. Sentieon can provide you with a model trained using a subset of the data from the GiAB truth-set found in https://github.com/genome-in-a-bottle. In addition, Sentieon can assist you in the creation of models using your own data, which will calibrate the specifics of your sequencing and bio-informatics processing.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -1080,6 +1083,12 @@
                     "fa_icon": "far fa-check-circle",
                     "description": "Base URL or local path to location of pipeline test dataset files",
                     "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
+                    "hidden": true
+                },
+                "trace_report_suffix": {
+                    "type": "string",
+                    "fa_icon": "far calendar",
+                    "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
                     "hidden": true
                 }
             }

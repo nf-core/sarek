@@ -1,6 +1,6 @@
 process MUSE_CALL {
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_high'
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -33,7 +33,7 @@ process MUSE_CALL {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        MuSE: \$( MuSE --version | sed -e "s/MuSE, version //g" | sed -e "s/MuSE //g" )
+        MuSE: \$( MuSE --version | sed -e "s/MuSE, version //g" | sed -e "s/MuSE v//g")
     END_VERSIONS
     """
 
@@ -44,7 +44,7 @@ process MUSE_CALL {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        MuSE: \$( MuSE --version | sed -e "s/MuSE, version //g" | sed -e "s/MuSE //g" )
+        MuSE: \$( MuSE --version | sed -e "s/MuSE, version //g" | sed -e "s/MuSE v//g")
     END_VERSIONS
     """
 }

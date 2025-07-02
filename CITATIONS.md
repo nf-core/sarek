@@ -106,6 +106,10 @@
 
   > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
 
+- [NVIDIA Clara Parabricks](https://docs.nvidia.com/clara/parabricks/latest/index.html)
+
+  > NVIDIA (2025). Clara Parabricks (v.4.4.0-1 and above). <https://www.nvidia.com/en-us/clara/genomics/>
+
 - [PIGZ](https://zlib.net/pigz/)
 
 - [P7Zip](http://p7zip.sourceforge.net/)
