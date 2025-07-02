@@ -7,7 +7,7 @@
                 "nf-core": {
                     "ascat": {
                         "branch": "master",
-                        "git_sha": "81fd83c9f3eb7cbb55aa97b7f1fdf0a81ec98233",
+                        "git_sha": "edd5dd7ef8d99cc059dcdff2de08d936838b8ca4",
                         "installed_by": ["modules"]
                     },
                     "bcftools/annotate": {
