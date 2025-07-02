@@ -34,7 +34,7 @@ class UTILS {
         }
     }
 
-    public static def get_test_closure = { scenario ->
+    public static def get_test = { scenario ->
         return {
             if (scenario.stub) {
                 options "-stub"

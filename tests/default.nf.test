@@ -20,6 +20,6 @@ nextflow_pipeline {
 
     // Generate tests for each scenario
     test_scenario.each { scenario ->
-        test(scenario.name, UTILS.get_test_closure(scenario))
+        test(scenario.name, UTILS.get_test(scenario))
     }
 }

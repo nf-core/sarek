@@ -12,6 +12,11 @@ lint:
   modules_config: false
   template_strings: false
   nf_test_content:
+    - tests/aligner-bwa-mem.nf.test
+    - tests/aligner-bwa-mem2.nf.test
+    - tests/aligner-dragmap.nf.test
+    - tests/aligner-parabricks.nf.test
+    - tests/default.nf.test
     - tests/samplesheets.nf.test
     - tests/nextflow.config
 nf_core_version: 3.3.1
