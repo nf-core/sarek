@@ -28,8 +28,7 @@ nextflow_pipeline {
                 nucleotides_per_second: 20,
                 step: 'variant_calling',
                 tools: 'muse',
-                wes: true,
-                outdir: "$outputDir"
+                wes: true
             ]
         ]
     ]
