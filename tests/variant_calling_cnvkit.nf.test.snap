@@ -400,7 +400,7 @@
         },
         "timestamp": "2025-06-16T20:19:26.196282244"
     },
-    "-profile test --tools cnvkit somatic --input recalibrated_somatic.csv": {
+    "-profile test --tools cnvkit --input recalibrated_somatic.csv": {
         "content": [
             18,
             {
@@ -749,30 +749,8 @@
     },
     "-profile test --tools cnvkit --input recalibrated_tumoronly.csv --no_intervals": {
         "content": [
-            12,
+            4,
             {
-                "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.11"
-                },
-                "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10",
-                    "samtools": 1.17
-                },
-                "CNVKIT_CALL": {
-                    "cnvkit": "0.9.10"
-                },
-                "CNVKIT_EXPORT": {
-                    "cnvkit": "0.9.10"
-                },
-                "CNVKIT_GENEMETRICS": {
-                    "cnvkit": "0.9.10"
-                },
-                "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.11"
-                },
-                "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
-                },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
@@ -780,9 +758,6 @@
                     "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
-                },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "tabix": 1.21
                 }
             },
@@ -830,6 +805,9 @@
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
                 "multiqc/multiqc_report.html",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
@@ -843,23 +821,7 @@
                 "reports/mosdepth/sample2/sample2.recal.regions.bed.gz.csi",
                 "reports/samtools",
                 "reports/samtools/sample2",
-                "reports/samtools/sample2/sample2.recal.cram.stats",
-                "variant_calling",
-                "variant_calling/cnvkit",
-                "variant_calling/cnvkit/sample2",
-                "variant_calling/cnvkit/sample2/cnvkit.reference.antitarget-tmp.bed",
-                "variant_calling/cnvkit/sample2/cnvkit.reference.target-tmp.bed",
-                "variant_calling/cnvkit/sample2/sample2.cnvcall.vcf",
-                "variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted-diagram.pdf",
-                "variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted-scatter.png",
-                "variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn",
-                "variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.bintest.cns",
-                "variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.call.cns",
-                "variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.cnr",
-                "variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.cns",
-                "variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.genemetrics.tsv",
-                "variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.targetcoverage.cnn",
-                "variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.tumor_only.call.cns"
+                "reports/samtools/sample2/sample2.recal.cram.stats"
             ],
             [
                 "mosdepth-coverage-per-contig-single.txt:md5,ff38f1e35ce12244c751921db673b23c",
@@ -872,32 +834,19 @@
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
-                "cnvkit.reference.antitarget-tmp.bed:md5,3d4d20f9f23b39970865d29ef239d20b",
-                "cnvkit.reference.target-tmp.bed:md5,657b25dbda8516624efa8cb2cf3716ca",
-                "test2.paired_end.recalibrated.sorted-scatter.png:md5,d9a4a27a7a93eca23108b43dea09c140",
-                "test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,067115082c4af4b64d58c0dc3a3642e4",
-                "test2.paired_end.recalibrated.sorted.bintest.cns:md5,7a66b5f63acb05e6dfb0784c215851ec",
-                "test2.paired_end.recalibrated.sorted.call.cns:md5,f7caeca04aba28b125ce26b511f42afb",
-                "test2.paired_end.recalibrated.sorted.cnr:md5,d9bdb71ce807051369577ee7f807a40c",
-                "test2.paired_end.recalibrated.sorted.cns:md5,2b56aac606ba6183d018b30ca58afcec",
-                "test2.paired_end.recalibrated.sorted.genemetrics.tsv:md5,5ec3555520f502f00f551ae7900a3824",
-                "test2.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,e6d0190c1c37ce6e41f76ca5b24ccca3",
-                "test2.paired_end.recalibrated.sorted.tumor_only.call.cns:md5,70a308c6db7acf1a5fd623936cac6412"
+                "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd"
             ],
             "No BAM files",
             "No CRAM files",
-            [
-                "sample2.cnvcall.vcf:md5,35662b51f071469c6227be15114eb824"
-            ]
+            "No VCF files"
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.4"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-06-25T13:31:01.13780649"
+        "timestamp": "2025-07-03T16:53:01.965286675"
     },
-    "-profile test --tools cnvkit somatic --input recalibrated_somatic.csv --no_intervals": {
+    "-profile test --tools cnvkit --input recalibrated_somatic.csv --no_intervals": {
         "content": [
             14,
             {
@@ -1085,8 +1034,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.4"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-06-25T13:29:09.193893251"
+        "timestamp": "2025-07-03T16:52:02.29498932"
     }
 }
