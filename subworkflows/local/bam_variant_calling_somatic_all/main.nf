@@ -56,6 +56,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_muse            = Channel.empty()
     vcf_mutect2         = Channel.empty()
     vcf_strelka         = Channel.empty()
+    vcf_tnscope         = Channel.empty()
     vcf_tiddit          = Channel.empty()
     out_indexcov        = Channel.empty()
 
@@ -247,6 +248,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // TNSCOPE
     if (tools.split(',').contains('sentieon_tnscope')) {
+
         BAM_VARIANT_CALLING_SOMATIC_TNSCOPE(
             // Remap channel to match module/subworkflow
             // Adjust meta.map to simplify joining channels
@@ -255,6 +257,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             },
             fasta,
             fasta_fai,
+            dict,
             germline_resource,
             germline_resource_tbi,
             panel_of_normals,
@@ -264,6 +267,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         vcf_tnscope = BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.versions)
+
     }
 
     // TIDDIT

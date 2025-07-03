@@ -1,17 +1,17 @@
 //
 //
-// SENTIEON TNSCOPE: tumor-normal mode variantcalling
+// SENTIEON TNSCOPE: tumor-only mode variantcalling
 //
 
 include { SENTIEON_TNSCOPE                 } from '../../../modules/nf-core/sentieon/tnscope/main' 
 include { GATK4_MERGEVCFS as MERGE_TNSCOPE } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 
-workflow BAM_VARIANT_CALLING_SOMATIC_TNSCOPE {
+workflow BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE {
     take:
     input                     // channel: [ meta, [ input ], [ input_index ] ]
-    fasta                     // channel: [ meta, /path/to/reference/fasta ]
-    fai                       // channel: [ meta, /path/to/reference/fasta/index ] 
-    dict                      // channel: [ meta, /path/to/reference/dict ]
+    fasta                     // channel: /path/to/reference/fasta
+    fai                       // channel: /path/to/reference/fasta/index
+    dict                      // channel: /path/to/reference/fasta/dictionary
     germline_resource         // channel: /path/to/germline/resource
     germline_resource_tbi     // channel: /path/to/germline/index
     panel_of_normals          // channel: /path/to/panel/of/normals

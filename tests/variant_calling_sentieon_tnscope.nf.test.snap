@@ -1,0 +1,351 @@
+{
+    "-profile test --input fastq_tumor_only.csv --tools sentieon_tnscope": {
+        "content": [
+            11,
+            {
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
+                "SENTIEON_BWAMEM": {
+                    "bwa": "0.7.17-r1188",
+                    "sentieon": 202503
+                },
+                "SENTIEON_DEDUP": {
+                    "sentieon": 202503
+                },
+                "SENTIEON_TNSCOPE": {
+                    "sentieon": 202503
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
+                }
+            },
+            [
+                "csv",
+                "csv/markduplicates_no_table.csv",
+                "csv/variantcalled.csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/sentieon_dedup",
+                "preprocessing/sentieon_dedup/test2",
+                "preprocessing/sentieon_dedup/test2/test2.dedup.cram",
+                "preprocessing/sentieon_dedup/test2/test2.dedup.cram.crai",
+                "reference",
+                "reports",
+                "reports/sentieon_dedup",
+                "reports/sentieon_dedup/test2",
+                "reports/sentieon_dedup/test2/test2.dedup.cram.metrics",
+                "reports/sentieon_dedup/test2/test2.dedup.cram.metrics.multiqc.tsv",
+                "reports/vcftools",
+                "reports/vcftools/sentieon_tnscope",
+                "reports/vcftools/sentieon_tnscope/test2",
+                "reports/vcftools/sentieon_tnscope/test2/test2.tnscope.FILTER.summary",
+                "reports/vcftools/sentieon_tnscope/test2/test2.tnscope.TsTv.count",
+                "reports/vcftools/sentieon_tnscope/test2/test2.tnscope.TsTv.qual",
+                "variant_calling",
+                "variant_calling/sentieon_tnscope",
+                "variant_calling/sentieon_tnscope/test2",
+                "variant_calling/sentieon_tnscope/test2/test2.tnscope.vcf.gz",
+                "variant_calling/sentieon_tnscope/test2/test2.tnscope.vcf.gz.tbi"
+            ],
+            [
+                "test2.dedup.cram.metrics:md5,aa78f8e3028913b6cbaffa5134b4569a",
+                "test2.dedup.cram.metrics.multiqc.tsv:md5,399553430c97bedf8e105fe526085ced",
+                "test2.tnscope.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
+                "test2.tnscope.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
+            ],
+            "No BAM files",
+            [
+                "test2.dedup.cram:md5,bf76728a0d29b246f7fb240ec15a52fc"
+            ],
+            [
+                "test2.tnscope.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-07-03T13:19:32.295689002"
+    },
+    "-profile test --input fastq_triple_two_tumor.csv --tools sentieon_tnscope": {
+        "content": [
+            13,
+            {
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
+                "SENTIEON_BWAMEM": {
+                    "bwa": "0.7.17-r1188",
+                    "sentieon": 202503
+                },
+                "SENTIEON_DEDUP": {
+                    "sentieon": 202503
+                },
+                "SENTIEON_TNSCOPE": {
+                    "sentieon": 202503
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
+                }
+            },
+            [
+                "csv",
+                "csv/markduplicates_no_table.csv",
+                "csv/variantcalled.csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/sentieon_dedup",
+                "preprocessing/sentieon_dedup/test",
+                "preprocessing/sentieon_dedup/test/test.dedup.cram",
+                "preprocessing/sentieon_dedup/test/test.dedup.cram.crai",
+                "preprocessing/sentieon_dedup/test2",
+                "preprocessing/sentieon_dedup/test2/test2.dedup.cram",
+                "preprocessing/sentieon_dedup/test2/test2.dedup.cram.crai",
+                "reference",
+                "reports",
+                "reports/sentieon_dedup",
+                "reports/sentieon_dedup/test",
+                "reports/sentieon_dedup/test/test.dedup.cram.metrics",
+                "reports/sentieon_dedup/test/test.dedup.cram.metrics.multiqc.tsv",
+                "reports/sentieon_dedup/test2",
+                "reports/sentieon_dedup/test2/test2.dedup.cram.metrics",
+                "reports/sentieon_dedup/test2/test2.dedup.cram.metrics.multiqc.tsv",
+                "reports/vcftools",
+                "reports/vcftools/sentieon_tnscope",
+                "reports/vcftools/sentieon_tnscope/test2_vs_test",
+                "reports/vcftools/sentieon_tnscope/test2_vs_test/test2_vs_test.tnscope.FILTER.summary",
+                "reports/vcftools/sentieon_tnscope/test2_vs_test/test2_vs_test.tnscope.TsTv.count",
+                "reports/vcftools/sentieon_tnscope/test2_vs_test/test2_vs_test.tnscope.TsTv.qual",
+                "variant_calling",
+                "variant_calling/sentieon_tnscope",
+                "variant_calling/sentieon_tnscope/test2_vs_test",
+                "variant_calling/sentieon_tnscope/test2_vs_test/test2_vs_test.tnscope.vcf.gz",
+                "variant_calling/sentieon_tnscope/test2_vs_test/test2_vs_test.tnscope.vcf.gz.tbi"
+            ],
+            [
+                "test.dedup.cram.metrics:md5,cfa41d24ba78137c97942b8584dfccc9",
+                "test.dedup.cram.metrics.multiqc.tsv:md5,cfa41d24ba78137c97942b8584dfccc9",
+                "test2.dedup.cram.metrics:md5,aa78f8e3028913b6cbaffa5134b4569a",
+                "test2.dedup.cram.metrics.multiqc.tsv:md5,399553430c97bedf8e105fe526085ced",
+                "test2_vs_test.tnscope.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
+                "test2_vs_test.tnscope.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
+            ],
+            "No BAM files",
+            [
+                "test.dedup.cram:md5,5a5741428f717a28533ff2e1c7cdb38d",
+                "test2.dedup.cram:md5,bf76728a0d29b246f7fb240ec15a52fc"
+            ],
+            [
+                "test2_vs_test.tnscope.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-07-03T13:05:22.152246278"
+    },
+    "-profile test --input fastq_pair.csv --tools sentieon_tnscope --no_intervals": {
+        "content": [
+            10,
+            {
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
+                "SENTIEON_BWAMEM": {
+                    "bwa": "0.7.17-r1188",
+                    "sentieon": 202503
+                },
+                "SENTIEON_DEDUP": {
+                    "sentieon": 202503
+                },
+                "SENTIEON_TNSCOPE": {
+                    "sentieon": 202503
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
+                }
+            },
+            [
+                "csv",
+                "csv/markduplicates_no_table.csv",
+                "csv/variantcalled.csv",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/sentieon_dedup",
+                "preprocessing/sentieon_dedup/test",
+                "preprocessing/sentieon_dedup/test/test.dedup.cram",
+                "preprocessing/sentieon_dedup/test/test.dedup.cram.crai",
+                "preprocessing/sentieon_dedup/test2",
+                "preprocessing/sentieon_dedup/test2/test2.dedup.cram",
+                "preprocessing/sentieon_dedup/test2/test2.dedup.cram.crai",
+                "reference",
+                "reports",
+                "reports/sentieon_dedup",
+                "reports/sentieon_dedup/test",
+                "reports/sentieon_dedup/test/test.dedup.cram.metrics",
+                "reports/sentieon_dedup/test/test.dedup.cram.metrics.multiqc.tsv",
+                "reports/sentieon_dedup/test2",
+                "reports/sentieon_dedup/test2/test2.dedup.cram.metrics",
+                "reports/sentieon_dedup/test2/test2.dedup.cram.metrics.multiqc.tsv",
+                "reports/vcftools",
+                "reports/vcftools/sentieon_tnscope",
+                "reports/vcftools/sentieon_tnscope/test2_vs_test",
+                "reports/vcftools/sentieon_tnscope/test2_vs_test/test2_vs_test.tnscope.FILTER.summary",
+                "reports/vcftools/sentieon_tnscope/test2_vs_test/test2_vs_test.tnscope.TsTv.count",
+                "reports/vcftools/sentieon_tnscope/test2_vs_test/test2_vs_test.tnscope.TsTv.qual",
+                "variant_calling",
+                "variant_calling/sentieon_tnscope",
+                "variant_calling/sentieon_tnscope/test2_vs_test",
+                "variant_calling/sentieon_tnscope/test2_vs_test/test2_vs_test.tnscope.vcf.gz",
+                "variant_calling/sentieon_tnscope/test2_vs_test/test2_vs_test.tnscope.vcf.gz.tbi"
+            ],
+            [
+                "test.dedup.cram.metrics:md5,cfa41d24ba78137c97942b8584dfccc9",
+                "test.dedup.cram.metrics.multiqc.tsv:md5,cfa41d24ba78137c97942b8584dfccc9",
+                "test2.dedup.cram.metrics:md5,aa78f8e3028913b6cbaffa5134b4569a",
+                "test2.dedup.cram.metrics.multiqc.tsv:md5,399553430c97bedf8e105fe526085ced",
+                "test2_vs_test.tnscope.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
+                "test2_vs_test.tnscope.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
+            ],
+            "No BAM files",
+            [
+                "test.dedup.cram:md5,5a5741428f717a28533ff2e1c7cdb38d",
+                "test2.dedup.cram:md5,bf76728a0d29b246f7fb240ec15a52fc"
+            ],
+            [
+                "test2_vs_test.tnscope.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-07-03T13:12:22.769869621"
+    },
+    "-profile test --input fastq_pair.csv --tools sentieon_tnscope": {
+        "content": [
+            13,
+            {
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
+                "SENTIEON_BWAMEM": {
+                    "bwa": "0.7.17-r1188",
+                    "sentieon": 202503
+                },
+                "SENTIEON_DEDUP": {
+                    "sentieon": 202503
+                },
+                "SENTIEON_TNSCOPE": {
+                    "sentieon": 202503
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
+                }
+            },
+            [
+                "csv",
+                "csv/markduplicates_no_table.csv",
+                "csv/variantcalled.csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/sentieon_dedup",
+                "preprocessing/sentieon_dedup/test",
+                "preprocessing/sentieon_dedup/test/test.dedup.cram",
+                "preprocessing/sentieon_dedup/test/test.dedup.cram.crai",
+                "preprocessing/sentieon_dedup/test2",
+                "preprocessing/sentieon_dedup/test2/test2.dedup.cram",
+                "preprocessing/sentieon_dedup/test2/test2.dedup.cram.crai",
+                "reference",
+                "reports",
+                "reports/sentieon_dedup",
+                "reports/sentieon_dedup/test",
+                "reports/sentieon_dedup/test/test.dedup.cram.metrics",
+                "reports/sentieon_dedup/test/test.dedup.cram.metrics.multiqc.tsv",
+                "reports/sentieon_dedup/test2",
+                "reports/sentieon_dedup/test2/test2.dedup.cram.metrics",
+                "reports/sentieon_dedup/test2/test2.dedup.cram.metrics.multiqc.tsv",
+                "reports/vcftools",
+                "reports/vcftools/sentieon_tnscope",
+                "reports/vcftools/sentieon_tnscope/test2_vs_test",
+                "reports/vcftools/sentieon_tnscope/test2_vs_test/test2_vs_test.tnscope.FILTER.summary",
+                "reports/vcftools/sentieon_tnscope/test2_vs_test/test2_vs_test.tnscope.TsTv.count",
+                "reports/vcftools/sentieon_tnscope/test2_vs_test/test2_vs_test.tnscope.TsTv.qual",
+                "variant_calling",
+                "variant_calling/sentieon_tnscope",
+                "variant_calling/sentieon_tnscope/test2_vs_test",
+                "variant_calling/sentieon_tnscope/test2_vs_test/test2_vs_test.tnscope.vcf.gz",
+                "variant_calling/sentieon_tnscope/test2_vs_test/test2_vs_test.tnscope.vcf.gz.tbi"
+            ],
+            [
+                "test.dedup.cram.metrics:md5,cfa41d24ba78137c97942b8584dfccc9",
+                "test.dedup.cram.metrics.multiqc.tsv:md5,cfa41d24ba78137c97942b8584dfccc9",
+                "test2.dedup.cram.metrics:md5,aa78f8e3028913b6cbaffa5134b4569a",
+                "test2.dedup.cram.metrics.multiqc.tsv:md5,399553430c97bedf8e105fe526085ced",
+                "test2_vs_test.tnscope.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
+                "test2_vs_test.tnscope.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
+            ],
+            "No BAM files",
+            [
+                "test.dedup.cram:md5,5a5741428f717a28533ff2e1c7cdb38d",
+                "test2.dedup.cram:md5,bf76728a0d29b246f7fb240ec15a52fc"
+            ],
+            [
+                "test2_vs_test.tnscope.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-07-03T13:39:14.931074918"
+    }
+}

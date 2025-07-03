@@ -11,6 +11,7 @@ include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC } from '../bam_variant_cal
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA        } from '../bam_variant_calling_tumor_only_manta/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2      } from '../bam_variant_calling_tumor_only_mutect2/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ       } from '../bam_variant_calling_tumor_only_lofreq/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE      } from '../bam_variant_calling_tumor_only_tnscope/main'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
@@ -173,13 +174,32 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
     }
 
+    // TNSCOPE
+    if (tools.split(',').contains('sentieon_tnscope')) {
+        BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE(
+            cram.view(),
+            fasta,
+            fasta_fai,
+            dict,
+            germline_resource,
+            germline_resource_tbi,
+            panel_of_normals,
+            panel_of_normals_tbi,
+            intervals
+        )
+
+        vcf_tnscope = BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE.out.versions)
+    }
+
     vcf_all = Channel.empty().mix(
         vcf_freebayes,
         vcf_lofreq,
         vcf_manta,
         vcf_mutect2,
         vcf_mpileup,
-        vcf_tiddit
+        vcf_tiddit,
+        vcf_tnscope
     )
 
     emit:
