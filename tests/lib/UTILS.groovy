@@ -6,6 +6,7 @@ class UTILS {
         def outdir = args.outdir
         def stub = args.stub
         def include_txt = args.include_txt
+        def vcf_gzip_lines = args.vcf_gzip_lines
 
         // stable_name: All files + folders in ${outdir}/ with a stable name
         def stable_name = getAllFilesFromDir(outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
@@ -35,7 +36,11 @@ class UTILS {
             if (include_txt) {
                 assertion.add(txt_files.isEmpty() ? 'No TXT files' : txt_files.collect{ file -> file.getName() + ":md5," + file.readLines()[2..-1].join('\n').md5() })
             }
-            assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 })
+            if (vcf_gzip_lines) {
+                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[vcf_gzip_lines], path(file.toString()).vcf.summary] })
+            } else {
+                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 })
+            }
         }
 
         return assertion
@@ -74,7 +79,7 @@ class UTILS {
                 assertAll(
                     { assert snapshot(
                         workflow.trace.succeeded().size(),
-                        *UTILS.get_assertion(outdir: params.outdir, stub: scenario.stub, include_txt: scenario.include_txt)
+                        *UTILS.get_assertion(outdir: params.outdir, stub: scenario.stub, include_txt: scenario.include_txt, vcf_gzip_lines: scenario.vcf_gzip_lines)
                     ).match() }
                 )
             }
