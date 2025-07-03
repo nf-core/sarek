@@ -7,7 +7,6 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    tag "cpu"
 
     def test_scenario = [
         [
@@ -17,7 +16,6 @@ nextflow_pipeline {
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated.csv",
-
                 step: "variant_calling",
                 tools: 'manta',
                 only_paired_variant_calling: true
@@ -30,7 +28,6 @@ nextflow_pipeline {
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_germline.csv",
-
                 step: "variant_calling",
                 tools: 'manta'
             ]
@@ -42,7 +39,6 @@ nextflow_pipeline {
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_germline.csv",
-
                 no_intervals: true,
                 step: "variant_calling",
                 tools: 'manta'
@@ -55,7 +51,6 @@ nextflow_pipeline {
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-
                 step: "variant_calling",
                 tools: 'manta'
             ]
@@ -67,7 +62,6 @@ nextflow_pipeline {
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-
                 no_intervals: true,
                 step: "variant_calling",
                 tools: 'manta'
@@ -80,7 +74,6 @@ nextflow_pipeline {
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
-
                 step: "variant_calling",
                 tools: 'manta'
             ]
@@ -92,7 +85,6 @@ nextflow_pipeline {
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
-
                 no_intervals: true,
                 step: "variant_calling",
                 tools: 'manta'

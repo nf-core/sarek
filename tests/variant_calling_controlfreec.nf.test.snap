@@ -1,5 +1,5 @@
 {
-    "-profile test --tools controlfreec tumoronly stub": {
+    "-profile test --tools controlfreec tumoronly -stub": {
         "content": [
             13,
             {
@@ -442,7 +442,7 @@
         },
         "timestamp": "2025-06-16T11:56:38.313417532"
     },
-    "-profile test --tools controlfreec --no_intervals somatic stub": {
+    "-profile test --tools controlfreec --no_intervals somatic -stub": {
         "content": [
             14,
             {

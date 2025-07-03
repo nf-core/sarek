@@ -7,7 +7,6 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    tag "cpu"
 
     def test_scenario = [
         [
@@ -48,9 +47,11 @@ nextflow_pipeline {
         test(scenario.name, UTILS.get_test(scenario))
     }
 
-    test("-profile test --tools controlfreec --no_intervals somatic stub") {
+    test("-profile test --tools controlfreec --no_intervals somatic -stub") {
+        tag "cpu"
         tag "stub"
         options "-stub"
+
         when {
             params {
                 modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
@@ -104,9 +105,11 @@ nextflow_pipeline {
         }
     }
 
-    test("-profile test --tools controlfreec tumoronly stub") {
+    test("-profile test --tools controlfreec tumoronly -stub") {
+        tag "cpu"
         tag "stub"
         options "-stub"
+
         when {
             params {
                 modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'

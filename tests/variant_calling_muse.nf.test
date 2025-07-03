@@ -7,7 +7,6 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    tag "cpu"
 
     def test_scenario = [
         [
@@ -40,6 +39,7 @@ nextflow_pipeline {
     }
 
     test("-profile test --tools muse --input recalibrated_somatic.csv -stub") {
+        tag "cpu"
         tag "stub"
         options "-stub"
 

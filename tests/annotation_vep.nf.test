@@ -6,7 +6,6 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    tag "cpu"
 
     def test_scenario = [
         [
@@ -26,6 +25,9 @@ nextflow_pipeline {
     }
 
     test("Fails with profile test --tools vep --vep_cache_version 1 --build_only_index") {
+        tag "cpu"
+        tag "no_stub"
+
         when {
             params {
                 outdir = "$outputDir"

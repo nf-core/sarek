@@ -4,7 +4,6 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    tag "gpu"
     profile "test,gpu"
 
     def test_scenario = [
@@ -13,7 +12,8 @@ nextflow_pipeline {
             params: [
                 aligner: 'parabricks',
                 save_reference: true,
-                tools: ''
+                tools: '',
+                gpu: true
             ]
         ]
     ]

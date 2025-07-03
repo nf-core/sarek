@@ -7,7 +7,6 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    tag "cpu"
 
     def test_scenario = [
         [

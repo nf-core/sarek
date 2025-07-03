@@ -50,7 +50,7 @@ jobs:
         env:
           NFT_VER: ${{ env.NFT_VER }}
         with:
-          tags: "gpu"
+          tags: "gpu,no_stub"
           max_shards: 2
 
       - name: debug

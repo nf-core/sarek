@@ -43,6 +43,12 @@ class UTILS {
                 tag "no_stub"
             }
 
+            if (scenario.gpu) {
+                tag "gpu"
+            } else {
+                tag "cpu"
+            }
+
             if (scenario.tag) {
                 tag scenario.tag
             }
