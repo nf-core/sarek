@@ -12,9 +12,9 @@ nextflow_pipeline {
             params: [
                 aligner: 'parabricks',
                 save_reference: true,
-                tools: '',
-                gpu: true
-            ]
+                tools: ''
+            ],
+            gpu: true
         ]
     ]
 
