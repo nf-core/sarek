@@ -25,7 +25,6 @@ nextflow_pipeline {
 
     test("-profile test --input tests/csv/3.0/sample_with_space.csv") {
         tag "cpu"
-        tag "no_stub"
 
         when {
             params {
@@ -46,7 +45,6 @@ nextflow_pipeline {
 
     test("-profile test,spark --input tests/csv/3.0/fastq_single.csv --use_gatk_spark baserecalibrator,markduplicates --save_mapped --save_output_as_bam") {
         tag "cpu"
-        tag "no_stub"
 
         when {
             params {

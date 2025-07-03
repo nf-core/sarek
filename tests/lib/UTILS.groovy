@@ -36,16 +36,15 @@ class UTILS {
 
     public static def get_test = { scenario ->
         return {
-            if (scenario.stub) {
+            if (scenario.stub && scenario.gpu) {
                 options "-stub"
-                tag "stub"
-            } else {
-                tag "no_stub"
-            }
-
-            if (scenario.gpu) {
+                tag "gpu_stub"
+            } else if (scenario.stub && !scenario.gpu) {
+                options "-stub"
+                tag "cpu_stub"
+            } else if (!scenario.stub && scenario.gpu) {
                 tag "gpu"
-            } else {
+            } else if (!scenario.stub && !scenario.gpu) {
                 tag "cpu"
             }
 

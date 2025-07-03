@@ -50,7 +50,7 @@ jobs:
         env:
           NFT_VER: ${{ env.NFT_VER }}
         with:
-          tags: "cpu,no_stub"
+          tags: "cpu"
           max_shards: 15
 
       - name: debug
@@ -103,7 +103,7 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
-          tags: "cpu,no_stub"
+          tags: "cpu"
   confirm-pass:
     needs: [nf-test]
     if: always()

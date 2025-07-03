@@ -26,7 +26,6 @@ nextflow_pipeline {
 
     test("Fails with profile test --tools snpeff --snpeff_db na --build_only_index") {
         tag "cpu"
-        tag "no_stub"
 
         when {
             params {
