@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1848](https://github.com/nf-core/sarek/pull/1848) - Add parameter for setting pixel distance for GATK MarkDuplicates
 - [1856](https://github.com/nf-core/sarek/pull/1856) - Added early failure when more than 1 normal sample per patient is provided for somatic variant calling
 - [1904](https://github.com/nf-core/sarek/pull/1904) - Icon support
-- [XXXX](https://github.com/nf-core/sarek/pull/XXXX) - Add sentieon TNscope for tumour/normal variant calling
+- [1934](https://github.com/nf-core/sarek/pull/1934) - Add sentieon TNscope for tumour/normal variant calling
 
 ### Changed
 
