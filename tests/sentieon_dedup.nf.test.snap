@@ -1,5 +1,5 @@
 {
-    "-profile test --tools sentieon_dedup --step markduplicates - bam": {
+    "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/mapped_single_bam.csv": {
         "content": [
             13,
             {
@@ -183,7 +183,7 @@
         },
         "timestamp": "2025-06-21T10:54:13.719485962"
     },
-    "-profile test --tools sentieon_dedup --step markduplicates - cram": {
+    "-profile test --tools sentieon_dedup --step markduplicates --input input tests/csv/3.0/mapped_single_cram.csv": {
         "content": [
             13,
             {

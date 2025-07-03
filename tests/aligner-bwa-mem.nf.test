@@ -16,16 +16,6 @@ nextflow_pipeline {
             ]
         ],
         [
-            name: "-profile test --aligner bwa-mem --save_reference skip QC/recal/md -stub",
-            params: [
-                aligner: 'bwa-mem',
-                save_reference: true,
-                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
-                tools: ''
-            ],
-            stub: true
-        ],
-        [
             name: "-profile test --aligner bwa-mem --save_reference --build_only_index",
             params: [
                 aligner: 'bwa-mem',
@@ -35,6 +25,16 @@ nextflow_pipeline {
                 skip_tools: 'multiqc',
                 tools: ''
             ]
+        ],
+        [
+            name: "-profile test --aligner bwa-mem --save_reference skip QC/recal/md -stub",
+            params: [
+                aligner: 'bwa-mem',
+                save_reference: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: ''
+            ],
+            stub: true
         ],
         [
             name: "-profile test --aligner bwa-mem --save_reference --build_only_index -stub",

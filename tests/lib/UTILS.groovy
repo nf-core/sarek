@@ -3,9 +3,19 @@
 class UTILS {
 
     public static def get_assertion = { Map args ->
+        // Mandatory, as we always need an outdir
         def outdir = args.outdir
+
+        // Use this args to run the test with stub
+        // It will disable all assertions but versions and stable_name
         def stub = args.stub
-        def include_txt = args.include_txt
+
+        // Use this args to include muse txt files in the assertion
+        // It will skip the first line of the txt file
+        def include_muse_txt = args.include_muse_txt
+
+        // Use this args to run the test with vcf_gzip_lines
+        // It will use linesGzip to extract the provided range of lines from the vcf file
         def vcf_gzip_lines = args.vcf_gzip_lines
 
         // stable_name: All files + folders in ${outdir}/ with a stable name
@@ -33,7 +43,7 @@ class UTILS {
             assertion.add(stable_content.isEmpty() ? 'No stable content' : stable_content)
             assertion.add(bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," + bam(file.toString()).readsMD5 })
             assertion.add(cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," + cram(file.toString(), fasta).readsMD5 })
-            if (include_txt) {
+            if (include_muse_txt) {
                 assertion.add(txt_files.isEmpty() ? 'No TXT files' : txt_files.collect{ file -> file.getName() + ":md5," + file.readLines()[2..-1].join('\n').md5() })
             }
             if (vcf_gzip_lines) {
@@ -47,7 +57,15 @@ class UTILS {
     }
 
     public static def get_test = { scenario ->
+        // This function returns a closure that will be used to run the test and the assertion
+        // It will create tags or options based on the scenario
+
         return {
+            // If the test is for a gpu, we add the gpu tag
+            // Otherwise, we add the cpu tag
+            // If the test is for a stub, we add options -stub
+            // And we append "_stub" to the cpu/gpu tag
+
             if (scenario.stub && scenario.gpu) {
                 options "-stub"
                 tag "gpu_stub"
@@ -60,14 +78,16 @@ class UTILS {
                 tag "cpu"
             }
 
+            // If a tag is provided, add it to the test
             if (scenario.tag) {
                 tag scenario.tag
             }
 
             when {
                 params {
+                    // Mandatory, as we always need an outdir
                     outdir = "${outputDir}"
-                    // Apply scenario-specific parameters
+                    // Apply scenario-specific params
                     scenario.params.each { key, value ->
                         delegate."$key" = value
                     }
@@ -75,11 +95,14 @@ class UTILS {
             }
 
             then {
+                // Early failure, so we don't pollute console with massive diffs
                 assert workflow.success
                 assertAll(
                     { assert snapshot(
+                        // Number of successful tasks
                         workflow.trace.succeeded().size(),
-                        *UTILS.get_assertion(outdir: params.outdir, stub: scenario.stub, include_txt: scenario.include_txt, vcf_gzip_lines: scenario.vcf_gzip_lines)
+                        // All assertions based on the scenario
+                        *UTILS.get_assertion(include_muse_txt: scenario.include_muse_txt, outdir: params.outdir, stub: scenario.stub, vcf_gzip_lines: scenario.vcf_gzip_lines)
                     ).match() }
                 )
             }

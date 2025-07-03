@@ -10,7 +10,7 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --tools sentieon_dedup --step markduplicates - bam",
+            name: "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/mapped_single_bam.csv",
             params: [
                 input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
                 step: 'markduplicates',
@@ -18,7 +18,7 @@ nextflow_pipeline {
             ]
         ],
         [
-            name: "-profile test --tools sentieon_dedup --step markduplicates - cram",
+            name: "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/mapped_single_cram.csv",
             params: [
                 input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
                 step: 'markduplicates',
