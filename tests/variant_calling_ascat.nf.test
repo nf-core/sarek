@@ -15,6 +15,8 @@ nextflow_pipeline {
                 ascat_alleles = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_alleles_hg38_chr22.txt'
                 ascat_genome = "hg38"
                 ascat_loci = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_loci_hg38_chr22.txt'
+                ascat_loci_gc = null
+                ascat_loci_rt = null
                 input = "${projectDir}/tests/csv/3.0/ascat_somatic.csv"
                 outdir = "$outputDir"
                 step = "variant_calling"
@@ -126,6 +128,8 @@ nextflow_pipeline {
                 ascat_alleles = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_alleles_hg38_chr22.txt'
                 ascat_genome = "hg38"
                 ascat_loci = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_loci_hg38_chr22.txt'
+                ascat_loci_gc = null
+                ascat_loci_rt = null
                 input = "${projectDir}/tests/csv/3.0/ascat_somatic.csv"
                 outdir = "$outputDir"
                 step = "variant_calling"
@@ -180,6 +184,8 @@ nextflow_pipeline {
                 ascat_alleles = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_alleles_hg38_chr22.txt'
                 ascat_genome = "hg38"
                 ascat_loci = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_loci_hg38_chr22.txt'
+                ascat_loci_gc = null
+                ascat_loci_rt = null
                 input = "${projectDir}/tests/csv/3.0/ascat_somatic.csv"
                 outdir = "$outputDir"
                 step = "variant_calling"
