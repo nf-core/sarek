@@ -23,7 +23,6 @@ lint:
     - tests/annotation_snpeff.nf.test
     - tests/annotation_vep.nf.test
     - tests/default.nf.test
-    - tests/default.nf.test
     - tests/fastp.nf.test
     - tests/intervals.nf.test
     - tests/joint_calling_haplotypecaller.nf.test
@@ -35,7 +34,6 @@ lint:
     - tests/preprocessing_umi.nf.test
     - tests/qc_ngscheckmate.nf.test
     - tests/samplesheets.nf.test
-    - tests/samplesheets.nf.test
     - tests/save_mapped.nf.test
     - tests/save_output_as_bam.nf.test
     - tests/sentieon.nf.test
@@ -46,6 +44,7 @@ lint:
     - tests/start_from_preparerecalibration.nf.test
     - tests/start_from_recalibration.nf.test
     - tests/tumor-normal-pair.nf.test
+    - tests/variant_calling_ascat.nf.test
     - tests/variant_calling_cnvkit.nf.test
     - tests/variant_calling_controlfreec.nf.test
     - tests/variant_calling_deepvariant.nf.test
