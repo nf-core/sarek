@@ -43,11 +43,12 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     vcf_freebayes   = Channel.empty()
+    vcf_lofreq      = Channel.empty()
     vcf_manta       = Channel.empty()
     vcf_mpileup     = Channel.empty()
     vcf_mutect2     = Channel.empty()
     vcf_tiddit      = Channel.empty()
-    vcf_lofreq      = Channel.empty()
+    vcf_tnscope     = Channel.empty()
 
     // MPILEUP
     if (tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')) {
@@ -177,7 +178,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     // TNSCOPE
     if (tools.split(',').contains('sentieon_tnscope')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE(
-            cram.view(),
+            cram,
             fasta,
             fasta_fai,
             dict,
@@ -210,6 +211,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_mpileup
     vcf_mutect2
     vcf_tiddit
+    vcf_tnscope
 
     versions = versions
 }
