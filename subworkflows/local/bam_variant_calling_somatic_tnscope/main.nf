@@ -3,14 +3,14 @@
 // SENTIEON TNSCOPE: tumor-normal mode variantcalling
 //
 
-include { SENTIEON_TNSCOPE                 } from '../../../modules/nf-core/sentieon/tnscope/main' 
+include { SENTIEON_TNSCOPE                 } from '../../../modules/nf-core/sentieon/tnscope/main'
 include { GATK4_MERGEVCFS as MERGE_TNSCOPE } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_TNSCOPE {
     take:
     input                     // channel: [ meta, [ input ], [ input_index ] ]
     fasta                     // channel: [ meta, /path/to/reference/fasta ]
-    fai                       // channel: [ meta, /path/to/reference/fasta/index ] 
+    fai                       // channel: [ meta, /path/to/reference/fasta/index ]
     dict                      // channel: [ meta, /path/to/reference/dict ]
     germline_resource         // channel: /path/to/germline/resource
     germline_resource_tbi     // channel: /path/to/germline/index
@@ -57,7 +57,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_TNSCOPE {
     // Merge if required
     MERGE_TNSCOPE(vcf_to_merge, dict)
     versions = versions.mix(MERGE_TNSCOPE.out.versions)
-    
+
     // Mix intervals and no_intervals channels together
     // Remove unnecessary metadata and add variantcaller
     vcf   = Channel.empty()

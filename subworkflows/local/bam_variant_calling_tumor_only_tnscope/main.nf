@@ -3,7 +3,7 @@
 // SENTIEON TNSCOPE: tumor-only mode variantcalling
 //
 
-include { SENTIEON_TNSCOPE                 } from '../../../modules/nf-core/sentieon/tnscope/main' 
+include { SENTIEON_TNSCOPE                 } from '../../../modules/nf-core/sentieon/tnscope/main'
 include { GATK4_MERGEVCFS as MERGE_TNSCOPE } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE {
@@ -57,7 +57,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE {
     // Merge if required
     MERGE_TNSCOPE(vcf_to_merge, dict)
     versions = versions.mix(MERGE_TNSCOPE.out.versions)
-    
+
     // Mix intervals and no_intervals channels together
     // Remove unnecessary metadata and add variantcaller
     vcf   = Channel.empty()
