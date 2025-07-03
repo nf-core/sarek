@@ -2,7 +2,7 @@
 
 class UTILS {
 
-    public static def get_assertion = { outdir, stub ->
+    public static def get_assertion = { outdir, stub, include_txt = false ->
         // stable_name: All files + folders in ${outdir}/ with a stable name
         def stable_name = getAllFilesFromDir(outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
         // stable_content: All files in ${outdir}/ with stable content
@@ -14,13 +14,24 @@ class UTILS {
         // Fasta file for cram verification with nft-bam
         def fasta_base = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
         def fasta = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
+        // txt_files: MuSE txt files
+        def txt_files = getAllFilesFromDir(outdir, include: ['**/*.MuSE.txt'])
         // vcf_files: All vcf files
-        def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'])
-
+        def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: ['**/test{N,T}.germline.vcf{,.gz}'])
         if (stub) {
             return [
                 removeFromYamlMap("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"),
                 stable_name
+            ]
+        } else if (include_txt) {
+            return [
+                removeFromYamlMap("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"),
+                stable_name,
+                stable_content.isEmpty() ? 'No stable content' : stable_content,
+                bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," + bam(file.toString()).readsMD5 },
+                cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," + cram(file.toString(), fasta).readsMD5 },
+                txt_files.isEmpty() ? 'No TXT files' : txt_files.collect{ file -> file.getName() + ":md5," + file.readLines()[2..-1].join('\n').md5() },
+                vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
             ]
         } else {
             return [
