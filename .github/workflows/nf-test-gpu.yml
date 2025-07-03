@@ -100,7 +100,7 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
-          tags: "gpu"
+          tags: "gpu,no_stub"
   confirm-pass:
     needs: [nf-test-gpu]
     if: always()

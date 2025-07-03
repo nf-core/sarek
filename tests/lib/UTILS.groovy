@@ -39,7 +39,10 @@ class UTILS {
             if (scenario.stub) {
                 options "-stub"
                 tag "stub"
+            } else {
+                tag "no_stub"
             }
+
             if (scenario.tag) {
                 tag scenario.tag
             }
