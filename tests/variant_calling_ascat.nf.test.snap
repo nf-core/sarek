@@ -123,16 +123,9 @@
                 "NA12878_1X.recal.mosdepth.summary.txt:md5,8056360df7642e84fcc4355454cf617a",
                 "NA12878_1X.recal.regions.bed.gz:md5,0e6ff7afa2678e2dc667ec650bb18f75",
                 "NA12878_1X.recal.regions.bed.gz.csi:md5,5d07e60555f3087f5805dd20ed3bea8b",
-                "NA12878_1X_vs_NA12878.after_correction_gc_rt.NA12878_1X_vs_NA12878.tumour.germline.png:md5,3e2959aaed278f72526533cf3c1346d9",
-                "NA12878_1X_vs_NA12878.after_correction_gc_rt.NA12878_1X_vs_NA12878.tumour.tumour.png:md5,92cdf71e4c4ab053155efd5f03aa46a4",
-                "NA12878_1X_vs_NA12878.before_correction.NA12878_1X_vs_NA12878.tumour.germline.png:md5,3e2959aaed278f72526533cf3c1346d9",
-                "NA12878_1X_vs_NA12878.before_correction.NA12878_1X_vs_NA12878.tumour.tumour.png:md5,ec28637e9f24c373a45f7a40129adb66",
                 "NA12878_1X_vs_NA12878.cnvs.txt:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878_1X_vs_NA12878.metrics.txt:md5,b7bd99e33d88a760eeae067b2b7526f8",
                 "NA12878_1X_vs_NA12878.purityploidy.txt:md5,f1484c2b120834d3db8774ad02a038b9",
                 "NA12878_1X_vs_NA12878.segments.txt:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878_1X_vs_NA12878.tumour.ASPCF.png:md5,6e387472aab50e67cf255ee2cbdef776",
-                "NA12878_1X_vs_NA12878.tumour.sunrise.png:md5,bcb695da01b9b417e48fae1b0b947bf4",
                 "NA12878_1X_vs_NA12878.tumour_normalBAF.txt:md5,44e9d560446d4f3f998b5b0ba48a2358",
                 "NA12878_1X_vs_NA12878.tumour_normalBAF_rawBAF.txt:md5,09e38bc59d2eb9b63bc055b145ea329e",
                 "NA12878_1X_vs_NA12878.tumour_normalLogR.txt:md5,b5f37e77157d2ced768a52356a3bcb79",
@@ -148,7 +141,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-02T19:24:12.091874672"
+        "timestamp": "2025-07-03T05:43:07.207430068"
     },
     "-profile test --tools ascat --input ascat_somatic.csv --only_paired_variant_calling -with-stub": {
         "content": [
@@ -262,16 +255,9 @@
                 "NA12878_1X.recal.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "NA12878_1X.recal.thresholds.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
                 "NA12878_1X.recal.thresholds.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.after_correction.gc_rt.test.tumour.germline.png:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.after_correction.gc_rt.test.tumour.tumour.png:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.before_correction.test.tumour.germline.png:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.before_correction.test.tumour.tumour.png:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "NA12878_1X_vs_NA12878.cnvs.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "NA12878_1X_vs_NA12878.purityploidy.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "NA12878_1X_vs_NA12878.segments.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.tumour.ASPCF.png:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.tumour.sunrise.png:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "NA12878_1X_vs_NA12878.tumour_normalBAF.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "NA12878_1X_vs_NA12878.tumour_normalLogR.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "NA12878_1X_vs_NA12878.tumour_tumourBAF.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -285,7 +271,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-02T19:26:10.718292811"
+        "timestamp": "2025-07-03T05:45:27.30168563"
     },
     "-profile test --tools ascat --input ascat_somatic.csv": {
         "content": [
@@ -417,16 +403,9 @@
                 "NA12878_1X.recal.mosdepth.summary.txt:md5,8056360df7642e84fcc4355454cf617a",
                 "NA12878_1X.recal.regions.bed.gz:md5,0e6ff7afa2678e2dc667ec650bb18f75",
                 "NA12878_1X.recal.regions.bed.gz.csi:md5,5d07e60555f3087f5805dd20ed3bea8b",
-                "NA12878_1X_vs_NA12878.after_correction_gc_rt.NA12878_1X_vs_NA12878.tumour.germline.png:md5,3e2959aaed278f72526533cf3c1346d9",
-                "NA12878_1X_vs_NA12878.after_correction_gc_rt.NA12878_1X_vs_NA12878.tumour.tumour.png:md5,92cdf71e4c4ab053155efd5f03aa46a4",
-                "NA12878_1X_vs_NA12878.before_correction.NA12878_1X_vs_NA12878.tumour.germline.png:md5,3e2959aaed278f72526533cf3c1346d9",
-                "NA12878_1X_vs_NA12878.before_correction.NA12878_1X_vs_NA12878.tumour.tumour.png:md5,ec28637e9f24c373a45f7a40129adb66",
                 "NA12878_1X_vs_NA12878.cnvs.txt:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878_1X_vs_NA12878.metrics.txt:md5,b7bd99e33d88a760eeae067b2b7526f8",
                 "NA12878_1X_vs_NA12878.purityploidy.txt:md5,f1484c2b120834d3db8774ad02a038b9",
                 "NA12878_1X_vs_NA12878.segments.txt:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878_1X_vs_NA12878.tumour.ASPCF.png:md5,6e387472aab50e67cf255ee2cbdef776",
-                "NA12878_1X_vs_NA12878.tumour.sunrise.png:md5,bcb695da01b9b417e48fae1b0b947bf4",
                 "NA12878_1X_vs_NA12878.tumour_normalBAF.txt:md5,44e9d560446d4f3f998b5b0ba48a2358",
                 "NA12878_1X_vs_NA12878.tumour_normalBAF_rawBAF.txt:md5,09e38bc59d2eb9b63bc055b145ea329e",
                 "NA12878_1X_vs_NA12878.tumour_normalLogR.txt:md5,b5f37e77157d2ced768a52356a3bcb79",
@@ -442,7 +421,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-02T19:04:11.770773792"
+        "timestamp": "2025-07-03T05:41:52.984340692"
     },
     "-profile test --tools ascat --input ascat_somatic.csv -with-stub": {
         "content": [
@@ -556,16 +535,9 @@
                 "NA12878_1X.recal.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "NA12878_1X.recal.thresholds.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
                 "NA12878_1X.recal.thresholds.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.after_correction.gc_rt.test.tumour.germline.png:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.after_correction.gc_rt.test.tumour.tumour.png:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.before_correction.test.tumour.germline.png:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.before_correction.test.tumour.tumour.png:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "NA12878_1X_vs_NA12878.cnvs.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.metrics.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "NA12878_1X_vs_NA12878.purityploidy.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "NA12878_1X_vs_NA12878.segments.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.tumour.ASPCF.png:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.tumour.sunrise.png:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "NA12878_1X_vs_NA12878.tumour_normalBAF.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "NA12878_1X_vs_NA12878.tumour_normalLogR.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "NA12878_1X_vs_NA12878.tumour_tumourBAF.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -579,6 +551,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-02T19:25:14.28660593"
+        "timestamp": "2025-07-03T05:44:22.566871118"
     }
 }
