@@ -2,7 +2,11 @@
 
 class UTILS {
 
-    public static def get_assertion = { outdir, stub, include_txt = false ->
+    public static def get_assertion = { Map args ->
+        def outdir = args.outdir
+        def stub = args.stub
+        def include_txt = args.include_txt
+
         // stable_name: All files + folders in ${outdir}/ with a stable name
         def stable_name = getAllFilesFromDir(outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
         // stable_content: All files in ${outdir}/ with stable content
@@ -18,31 +22,23 @@ class UTILS {
         def txt_files = getAllFilesFromDir(outdir, include: ['**/*.MuSE.txt'])
         // vcf_files: All vcf files
         def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: ['**/test{N,T}.germline.vcf{,.gz}'])
-        if (stub) {
-            return [
-                removeFromYamlMap("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"),
-                stable_name
-            ]
-        } else if (include_txt) {
-            return [
-                removeFromYamlMap("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"),
-                stable_name,
-                stable_content.isEmpty() ? 'No stable content' : stable_content,
-                bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," + bam(file.toString()).readsMD5 },
-                cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," + cram(file.toString(), fasta).readsMD5 },
-                txt_files.isEmpty() ? 'No TXT files' : txt_files.collect{ file -> file.getName() + ":md5," + file.readLines()[2..-1].join('\n').md5() },
-                vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
-            ]
-        } else {
-            return [
-                removeFromYamlMap("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"),
-                stable_name,
-                stable_content.isEmpty() ? 'No stable content' : stable_content,
-                bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," + bam(file.toString()).readsMD5 },
-                cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," + cram(file.toString(), fasta).readsMD5 },
-                vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
-            ]
+
+        def assertion = [
+            removeFromYamlMap("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"),
+            stable_name
+        ]
+
+        if (!stub) {
+            assertion.add(stable_content.isEmpty() ? 'No stable content' : stable_content)
+            assertion.add(bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," + bam(file.toString()).readsMD5 })
+            assertion.add(cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," + cram(file.toString(), fasta).readsMD5 })
+            if (include_txt) {
+                assertion.add(txt_files.isEmpty() ? 'No TXT files' : txt_files.collect{ file -> file.getName() + ":md5," + file.readLines()[2..-1].join('\n').md5() })
+            }
+            assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 })
         }
+
+        return assertion
     }
 
     public static def get_test = { scenario ->
@@ -78,7 +74,7 @@ class UTILS {
                 assertAll(
                     { assert snapshot(
                         workflow.trace.succeeded().size(),
-                        *UTILS.get_assertion(params.outdir, scenario.stub)
+                        *UTILS.get_assertion(outdir: params.outdir, stub: scenario.stub, include_txt: scenario.include_txt)
                     ).match() }
                 )
             }
