@@ -31,7 +31,6 @@ nextflow_pipeline {
             name: "-profile test --input fastq_tumor_only.csv --tools sentieon_tnscope",
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_tumor_only.csv",
-                outdir: "$outputDir",
                 aligner: 'sentieon-bwamem',
                 tools: "sentieon_dedup,sentieon_tnscope",
                 skip_tools : 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools,bcftools'
