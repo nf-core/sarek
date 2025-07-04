@@ -25,7 +25,7 @@ nextflow_pipeline {
                 aligner: 'sentieon-bwamem'
             ],
             failure: true,
-            stdout: "sentieon-bwamem is currently not compatible with FGBio UMI handeling. Please choose a different aligner."
+            stdout: "sentieon-bwamem is currently not compatible with FGBio UMI handling. Please choose a different aligner."
         ],
         [
             name: "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null --aligner parabricks",
@@ -36,7 +36,7 @@ nextflow_pipeline {
                 aligner: 'parabricks'
             ],
             failure: true,
-            stdout: "parabricks is currently not compatible with FGBio UMI handeling. Please choose a different aligner."
+            stdout: "parabricks is currently not compatible with FGBio UMI handling. Please choose a different aligner."
         ]
     ]
 
