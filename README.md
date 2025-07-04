@@ -123,7 +123,7 @@ Friederike Hanssen and Gisela Gabernet at [QBiC](https://www.qbic.uni-tuebingen.
 
 The Nextflow DSL2 conversion of the pipeline was lead by Friederike Hanssen and Maxime U Garcia.
 
-Maintenance is now lead by Friederike Hanssen and Maxime U Garcia (now at [Seqera Labs](https://seqera/io))
+Maintenance is now lead by Friederike Hanssen and Maxime U Garcia (now at [Seqera](https://seqera.io))
 
 Main developers:
 

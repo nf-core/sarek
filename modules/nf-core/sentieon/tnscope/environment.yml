@@ -4,5 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::ascat=3.2.0
-  - bioconda::cancerit-allelecount=4.3.0
+  - bioconda::sentieon=202503

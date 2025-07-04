@@ -7,7 +7,7 @@
                 "nf-core": {
                     "ascat": {
                         "branch": "master",
-                        "git_sha": "dadef82ff62fc78d06c7b77439a284c697f4c650",
+                        "git_sha": "edd5dd7ef8d99cc059dcdff2de08d936838b8ca4",
                         "installed_by": ["modules"]
                     },
                     "bcftools/annotate": {
@@ -458,6 +458,11 @@
                         "installed_by": ["modules"]
                     },
                     "sentieon/haplotyper": {
+                        "branch": "master",
+                        "git_sha": "6b36f8e5427ec38911565398de57656ca3a2606a",
+                        "installed_by": ["modules"]
+                    },
+                    "sentieon/tnscope": {
                         "branch": "master",
                         "git_sha": "6b36f8e5427ec38911565398de57656ca3a2606a",
                         "installed_by": ["modules"]
