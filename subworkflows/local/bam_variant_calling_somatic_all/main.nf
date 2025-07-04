@@ -13,6 +13,7 @@ include { BAM_VARIANT_CALLING_SOMATIC_MUSE              } from '../bam_variant_c
 include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2           } from '../bam_variant_calling_somatic_mutect2/main'
 include { BAM_VARIANT_CALLING_SOMATIC_STRELKA           } from '../bam_variant_calling_somatic_strelka/main'
 include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_calling_somatic_tiddit/main'
+include { BAM_VARIANT_CALLING_SOMATIC_TNSCOPE           } from '../bam_variant_calling_somatic_tnscope/main'
 include { BAM_VARIANT_CALLING_INDEXCOV                  } from '../bam_variant_calling_indexcov/main'
 include { MSISENSORPRO_MSISOMATIC                       } from '../../../modules/nf-core/msisensorpro/msisomatic/main'
 
@@ -55,6 +56,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_muse            = Channel.empty()
     vcf_mutect2         = Channel.empty()
     vcf_strelka         = Channel.empty()
+    vcf_tnscope         = Channel.empty()
     vcf_tiddit          = Channel.empty()
     out_indexcov        = Channel.empty()
 
@@ -244,6 +246,30 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
     }
 
+    // TNSCOPE
+    if (tools.split(',').contains('sentieon_tnscope')) {
+
+        BAM_VARIANT_CALLING_SOMATIC_TNSCOPE(
+            // Remap channel to match module/subworkflow
+            // Adjust meta.map to simplify joining channels
+            cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
+                [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ]
+            },
+            fasta,
+            fasta_fai,
+            dict,
+            germline_resource,
+            germline_resource_tbi,
+            panel_of_normals,
+            panel_of_normals_tbi,
+            intervals
+        )
+
+        vcf_tnscope = BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.versions)
+
+    }
+
     // TIDDIT
     if (tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SOMATIC_TIDDIT(
@@ -264,7 +290,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         vcf_muse,
         vcf_mutect2,
         vcf_strelka,
-        vcf_tiddit
+        vcf_tiddit,
+        vcf_tnscope
     )
 
     emit:
@@ -277,6 +304,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_mutect2
     vcf_strelka
     vcf_tiddit
+    vcf_tnscope
 
     versions
 }
