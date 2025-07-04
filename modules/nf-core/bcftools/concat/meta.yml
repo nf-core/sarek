@@ -37,21 +37,19 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-          pattern: "*.{vcf.gz}"
-      - ${prefix}.vcf.gz:
+      - ${prefix}.${extension}:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-          pattern: "*.{vcf.gz}"
+          pattern: "*.{vcf,vcf.gz,bcf,bcf.gz}"
   - tbi:
       - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-          pattern: "*.tbi"
-      - ${prefix}.vcf.gz.tbi:
+      - ${prefix}.${extension}.tbi:
           type: map
           description: |
             Groovy Map containing sample information
@@ -63,8 +61,7 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-          pattern: "*.csi"
-      - ${prefix}.vcf.gz.csi:
+      - ${prefix}.${extension}.csi:
           type: map
           description: |
             Groovy Map containing sample information

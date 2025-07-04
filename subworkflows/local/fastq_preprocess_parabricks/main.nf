@@ -51,4 +51,3 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     versions  = ch_versions              // channel: [ versions.yml ]
     reports   = ch_reports
 }
-

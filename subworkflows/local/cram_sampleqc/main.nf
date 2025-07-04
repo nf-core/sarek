@@ -42,4 +42,3 @@ workflow CRAM_SAMPLEQC {
 
     versions // channel: [ versions.yml ]
 }
-

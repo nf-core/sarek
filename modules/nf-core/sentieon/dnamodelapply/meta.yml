@@ -65,7 +65,7 @@ output:
           type: file
           description: INPUT VCF file
           pattern: "*.{vcf,vcf.gz}"
-  - index:
+  - tbi:
       - meta:
           type: map
           description: |

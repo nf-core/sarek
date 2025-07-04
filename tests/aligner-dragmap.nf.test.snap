@@ -3,8 +3,20 @@
         "content": [
             5,
             {
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
+                },
+                "DRAGMAP_HASHTABLE": {
+                    "dragmap": "1.2.1"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 }
             },
             [
@@ -44,9 +56,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-04-28T12:12:30.859549054"
+        "timestamp": "2025-06-12T10:40:27.176377855"
     },
     "-profile test --aligner dragmap --save_reference skip QC/recal/md": {
         "content": [
@@ -55,10 +67,19 @@
                 "BAM_TO_CRAM_MAPPING": {
                     "samtools": 1.21
                 },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
+                },
                 "DRAGMAP_ALIGN": {
                     "dragmap": "1.2.1",
-                    "samtools": "1.19.2",
-                    "pigz": "2.3.4"
+                    "pigz": "2.3.4",
+                    "samtools": "1.19.2"
+                },
+                "DRAGMAP_HASHTABLE": {
+                    "dragmap": "1.2.1"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
@@ -66,8 +87,11 @@
                 "MERGE_BAM": {
                     "samtools": 1.21
                 },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 }
             },
             [
@@ -115,8 +139,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-04-28T12:11:27.931216391"
+        "timestamp": "2025-06-12T10:39:28.667154634"
     }
 }

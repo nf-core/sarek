@@ -10,46 +10,46 @@ include { softwareVersionsToYAML                            } from '../../subwor
 include { methodsDescriptionText                            } from '../../subworkflows/local/utils_nfcore_sarek_pipeline'
 
 // Create samplesheets to restart from different steps
-include { CHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../../subworkflows/local/channel_variant_calling_create_csv/main'
+include { CHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../../subworkflows/local/channel_variant_calling_create_csv'
 
 // Convert BAM files to FASTQ files
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT       } from '../../subworkflows/local/bam_convert_samtools/main'
+include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT       } from '../../subworkflows/local/bam_convert_samtools'
 
 // Convert fastq.gz.spring files to fastq.gz files
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R1_FQ   } from '../../modules/nf-core/spring/decompress/main'
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R2_FQ   } from '../../modules/nf-core/spring/decompress/main'
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_FQ_PAIR } from '../../modules/nf-core/spring/decompress/main'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R1_FQ   } from '../../modules/nf-core/spring/decompress'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R2_FQ   } from '../../modules/nf-core/spring/decompress'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_FQ_PAIR } from '../../modules/nf-core/spring/decompress'
 
 // Run FASTQC
-include { FASTQC                                            } from '../../modules/nf-core/fastqc/main'
+include { FASTQC                                            } from '../../modules/nf-core/fastqc'
 
 // QC on CRAM
-include { CRAM_SAMPLEQC                                     } from '../../subworkflows/local/cram_sampleqc/main'
+include { CRAM_SAMPLEQC                                     } from '../../subworkflows/local/cram_sampleqc'
 
 // Preprocessing
-include { FASTQ_PREPROCESS_GATK                             } from '../../subworkflows/local/fastq_preprocess_gatk/main'
-include { FASTQ_PREPROCESS_PARABRICKS                       } from '../../subworkflows/local/fastq_preprocess_parabricks/main'
+include { FASTQ_PREPROCESS_GATK                             } from '../../subworkflows/local/fastq_preprocess_gatk'
+include { FASTQ_PREPROCESS_PARABRICKS                       } from '../../subworkflows/local/fastq_preprocess_parabricks'
 
 // Variant calling on a single normal sample
-include { BAM_VARIANT_CALLING_GERMLINE_ALL                  } from '../../subworkflows/local/bam_variant_calling_germline_all/main'
+include { BAM_VARIANT_CALLING_GERMLINE_ALL                  } from '../../subworkflows/local/bam_variant_calling_germline_all'
 
 // Variant calling on a single tumor sample
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL                } from '../../subworkflows/local/bam_variant_calling_tumor_only_all/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL                } from '../../subworkflows/local/bam_variant_calling_tumor_only_all'
 
 // Variant calling on tumor/normal pair
-include { BAM_VARIANT_CALLING_SOMATIC_ALL                   } from '../../subworkflows/local/bam_variant_calling_somatic_all/main'
+include { BAM_VARIANT_CALLING_SOMATIC_ALL                   } from '../../subworkflows/local/bam_variant_calling_somatic_all'
 
 // POST VARIANTCALLING: e.g. merging
-include { POST_VARIANTCALLING                               } from '../../subworkflows/local/post_variantcalling/main'
+include { POST_VARIANTCALLING                               } from '../../subworkflows/local/post_variantcalling'
 
 // QC on VCF files
-include { VCF_QC_BCFTOOLS_VCFTOOLS                          } from '../../subworkflows/local/vcf_qc_bcftools_vcftools/main'
+include { VCF_QC_BCFTOOLS_VCFTOOLS                          } from '../../subworkflows/local/vcf_qc_bcftools_vcftools'
 
 // Annotation
-include { VCF_ANNOTATE_ALL                                  } from '../../subworkflows/local/vcf_annotate_all/main'
+include { VCF_ANNOTATE_ALL                                  } from '../../subworkflows/local/vcf_annotate_all'
 
 // MULTIQC
-include { MULTIQC                                           } from '../../modules/nf-core/multiqc/main'
+include { MULTIQC                                           } from '../../modules/nf-core/multiqc'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -105,6 +105,7 @@ workflow SAREK {
         vep_fasta
         vep_genome
         vep_species
+        versions
 
     main:
 
@@ -112,7 +113,6 @@ workflow SAREK {
     ch_multiqc_files = Channel.empty()
     multiqc_report   = Channel.empty()
     reports          = Channel.empty()
-    versions         = Channel.empty()
 
     if (params.step == 'mapping') {
         // Figure out if input is bam, fastq, or spring
@@ -140,6 +140,10 @@ workflow SAREK {
             [meta, files[1] ]},
             true // write_one_fastq_gz
         )
+
+        versions = versions.mix(SPRING_DECOMPRESS_TO_R1_FQ.out.versions)
+        versions = versions.mix(SPRING_DECOMPRESS_TO_R2_FQ.out.versions)
+        versions = versions.mix(SPRING_DECOMPRESS_TO_FQ_PAIR.out.versions)
 
         two_fastq_gz_from_spring = r1_fastq_gz_from_spring.fastq.join(r2_fastq_gz_from_spring.fastq).map{ meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]]}
 
@@ -238,6 +242,9 @@ workflow SAREK {
         fasta,
         params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
         intervals_for_preprocessing)
+
+    reports  = reports.mix(CRAM_SAMPLEQC.out.reports)
+    versions = versions.mix(CRAM_SAMPLEQC.out.versions)
 
     if (params.tools) {
 
