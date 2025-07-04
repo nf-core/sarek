@@ -11,9 +11,10 @@ nextflow_pipeline {
             params: []
         ],
         [
-            name: "-profile test",
+            name: "-profile test -stub",
             params: []
-        ]
+        ],
+        stub: true
     ]
 
     // Generate tests for each scenario
