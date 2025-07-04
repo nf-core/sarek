@@ -11,8 +11,8 @@ nextflow_pipeline {
         [
             name: "-profile test --input tests/csv/3.0/fastq_single_integer_lane.csv --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
             params: [
-                input: "${projectDir}/tests/csv/3.0/fastq_single_integer_lane.csv"
-                tools: null
+                input: "${projectDir}/tests/csv/3.0/fastq_single_integer_lane.csv",
+                tools: null,
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
             ]
         ]
