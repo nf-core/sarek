@@ -34,10 +34,10 @@ class UTILS {
         // vcf_files: All vcf files
         def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: ['**/test{N,T}.germline.vcf{,.gz}'])
 
-        def assertion = [
-            removeFromYamlMap("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"),
-            stable_name
-        ]
+        def assertion = []
+
+        assertion.add(removeFromYamlMap("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"))
+        assertion.add(stable_name)
 
         if (!stub) {
             assertion.add(stable_content.isEmpty() ? 'No stable content' : stable_content)
@@ -95,16 +95,39 @@ class UTILS {
             }
 
             then {
-                // Early failure, so we don't pollute console with massive diffs
-                assert workflow.success
-                assertAll(
-                    { assert snapshot(
-                        // Number of successful tasks
-                        workflow.trace.succeeded().size(),
-                        // All assertions based on the scenario
-                        *UTILS.get_assertion(include_muse_txt: scenario.include_muse_txt, outdir: params.outdir, stub: scenario.stub, vcf_gzip_lines: scenario.vcf_gzip_lines)
-                    ).match() }
-                )
+                // Assert failure
+                if (scenario.failure) {
+                    // Early failure, so we don't pollute console with massive diffs
+                    assert workflow.failed
+                    // Check stdout if specified
+                    if (scenario.stdout) {
+                        assertAll(
+                            { assert workflow.stdout.toString().contains(scenario.stdout) }
+                        )
+                    }
+                    // Check stderr if specified
+                    if (scenario.stderr) {
+                        { assert snapshot(
+                            workflow.stderr.toString().replaceAll(/\x1B\[[0-9;]*m/, '').replaceAll(/^\[/, '').replaceAll(/\]$/, '').replaceAll(/, /, ',').split(",").findAll { !it.matches(/.*Nextflow [0-9]+\.[0-9]+\.[0-9]+ is available.*/) }[scenario.stderr]
+                        ).match() }
+                    }
+                // Assert success
+                } else {
+                    // Early failure, so we don't pollute console with massive diffs
+                    assert workflow.success
+                    assertAll(
+                        { assert snapshot(
+                            // Number of successful tasks
+                            workflow.trace.succeeded().size(),
+                            // All assertions based on the scenario
+                            *UTILS.get_assertion(include_muse_txt: scenario.include_muse_txt, outdir: params.outdir, stub: scenario.stub, vcf_gzip_lines: scenario.vcf_gzip_lines)
+                        ).match() }
+                    )
+                    // Check stdout if specified
+                    if (scenario.stdout) {
+                        assert workflow.stdout.toString().contains(scenario.stdout)
+                    }
+                }
             }
         }
     }

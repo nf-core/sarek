@@ -16,35 +16,25 @@ nextflow_pipeline {
                 download_cache: true,
                 tools: 'snpeff'
             ]
+        ],
+        [
+            name: "Fails with profile test --tools snpeff --snpeff_db na --build_only_index",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
+                step: 'annotate',
+                snpeff_cache : 's3://annotation-cache/snpeff_cache/',
+                snpeff_db : "na",
+                input : false,
+                build_only_index : true,
+                tools : 'snpeff'
+            ],
+            failure: true,
+            stdout: "This path is not available within annotation-cache"
         ]
     ]
 
     // Generate tests for each scenario
     test_scenario.each { scenario ->
         test(scenario.name, UTILS.get_test(scenario))
-    }
-
-    test("Fails with profile test --tools snpeff --snpeff_db na --build_only_index") {
-        tag "cpu"
-
-        when {
-            params {
-                outdir = "$outputDir"
-                input = "${projectDir}/tests/csv/3.0/vcf_single.csv"
-                step = 'annotate'
-                snpeff_cache = 's3://annotation-cache/snpeff_cache/'
-                snpeff_db = "na"
-                input = false
-                build_only_index = true
-                tools = 'snpeff'
-            }
-        }
-
-        then {
-            assert workflow.failed
-            assertAll(
-                { assert workflow.stdout.toString().contains("This path is not available within annotation-cache") }
-            )
-        }
     }
 }
