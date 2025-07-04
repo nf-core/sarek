@@ -241,7 +241,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
     }
 
     if (step == 'mapping' && (aligner.contains("parabricks") || aligner.contains("sentieon-bwamem")) && umi_read_structure) {
-        error("${aligner} is currently not compatible with FGBio UMI handeling. Please choose a different aligner.")
+        error("${aligner} is currently not compatible with FGBio UMI handling. Please choose a different aligner.")
     }
 
     if (tools && tools.split(',').contains("sentieon_haplotyper") && joint_germline && (!sentieon_haplotyper_emit_mode || !sentieon_haplotyper_emit_mode.contains('gvcf'))) {

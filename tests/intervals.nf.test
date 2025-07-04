@@ -1,304 +1,74 @@
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
 nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    tag "cpu"
 
-    test("-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools") {
+    def test_scenario = [
+        [
+            name: "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
+            params: [
+                intervals: modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.multi_intervals.bed",
+                nucleotides_per_second: 20,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null,
+                wes: true
+            ]
+        ],
+        [
+            name: "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
+            params: [
+                no_intervals: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null
+            ]
+        ],
+        [
+            name: "-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
+            params: [
+                intervals: false,
+                save_reference: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null
+            ]
+        ],
+        [
+            name: "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
+            params: [
+                intervals: modules_testdata_base_path + "/genomics/homo_sapiens/genome/genome.multi_intervals.bed",
+                nucleotides_per_second: 20,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null,
+                wes: true
+            ],
+            stub: true
+        ],
+        [
+            name: "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
+            params: [
+                no_intervals: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null
+            ],
+            stub: true
+        ],
+        [
+            name: "-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
+            params: [
+                intervals: false,
+                save_reference: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null
+            ],
+            stub: true
+        ]
+    ]
 
-        when {
-            params {
-                modules_testdata_base_path = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data"
-                intervals                  = "${params.modules_testdata_base_path}/genomics/homo_sapiens/genome/genome.multi_intervals.bed"
-                nucleotides_per_second     = 20
-                outdir                     = "$outputDir"
-                skip_tools                 = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
-                tools                      = null
-                wes                        = true
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
-                    removeFromYamlMap("${outputDir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable content' : stable_path,
-                    // All cram files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
-                    // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
-                ).match() }
-            )
-        }
-    }
-
-    test("-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools") {
-
-        when {
-            params {
-                no_intervals = true
-                outdir       = "$outputDir"
-                skip_tools   = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
-                tools        = null
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
-                    removeFromYamlMap("${outputDir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable content' : stable_path,
-                    // All cram files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
-                    // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
-                ).match() }
-            )
-        }
-    }
-
-    test("-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools") {
-
-        when {
-            params {
-                intervals      = false
-                outdir         = "$outputDir"
-                save_reference = true
-                skip_tools     = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
-                tools          = null
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
-                    removeFromYamlMap("${outputDir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable content' : stable_path,
-                    // All cram files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
-                    // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
-                ).match() }
-            )
-        }
-    }
-
-    test("-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub") {
-        tag "stub"
-        options "-stub"
-
-        when {
-            params {
-                modules_testdata_base_path = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data"
-                intervals                  = "${params.modules_testdata_base_path}/genomics/homo_sapiens/genome/genome.multi_intervals.bed"
-                nucleotides_per_second     = 20
-                outdir                     = "$outputDir"
-                skip_tools                 = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
-                tools                      = null
-                wes                        = true
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
-                    removeFromYamlMap("${outputDir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable content' : stable_path,
-                    // All cram files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
-                    // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
-                ).match() }
-            )
-        }
-    }
-
-    test("-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub") {
-        tag "stub"
-        options "-stub"
-
-        when {
-            params {
-                no_intervals = true
-                outdir       = "$outputDir"
-                skip_tools   = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
-                tools        = null
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
-                    removeFromYamlMap("${outputDir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable content' : stable_path,
-                    // All cram files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
-                    // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
-                ).match() }
-            )
-        }
-    }
-
-    test("-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -with-stub") {
-        tag "stub"
-        options "-stub"
-
-        when {
-            params {
-                intervals      = false
-                outdir         = "$outputDir"
-                save_reference = true
-                skip_tools     = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
-                tools          = null
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow and pipeline versions are removed (all from the workflow key)
-                    removeFromYamlMap("${outputDir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable content' : stable_path,
-                    // All cram files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
-                    // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
-                ).match() }
-            )
-        }
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
     }
 }

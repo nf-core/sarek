@@ -1,5 +1,181 @@
 {
-    "-profile test --tools ascat --input ascat_somatic.csv  --only_paired_variant_calling including gc and rt": {
+    "-profile test --tools ascat --input ascat_somatic.csv --only_paired_variant_calling -stub": {
+        "content": [
+            7,
+            {
+                "ASCAT": {
+                    "alleleCounter": "4.3.0",
+                    "ascat": "3.2.0"
+                },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                }
+            },
+            [
+                "csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_report.html",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/mosdepth",
+                "reports/mosdepth/NA12878",
+                "reports/mosdepth/NA12878/NA12878.recal.global.dist.txt",
+                "reports/mosdepth/NA12878/NA12878.recal.per-base.bed.gz",
+                "reports/mosdepth/NA12878/NA12878.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/NA12878/NA12878.recal.per-base.d4",
+                "reports/mosdepth/NA12878/NA12878.recal.quantized.bed.gz",
+                "reports/mosdepth/NA12878/NA12878.recal.quantized.bed.gz.csi",
+                "reports/mosdepth/NA12878/NA12878.recal.region.dist.txt",
+                "reports/mosdepth/NA12878/NA12878.recal.regions.bed.gz",
+                "reports/mosdepth/NA12878/NA12878.recal.regions.bed.gz.csi",
+                "reports/mosdepth/NA12878/NA12878.recal.summary.txt",
+                "reports/mosdepth/NA12878/NA12878.recal.thresholds.bed.gz",
+                "reports/mosdepth/NA12878/NA12878.recal.thresholds.bed.gz.csi",
+                "reports/mosdepth/NA12878_1X",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.global.dist.txt",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.bed.gz",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.d4",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.quantized.bed.gz",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.quantized.bed.gz.csi",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.region.dist.txt",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.regions.bed.gz",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.regions.bed.gz.csi",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.summary.txt",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.thresholds.bed.gz",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.thresholds.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/NA12878",
+                "reports/samtools/NA12878/NA12878.recal.cram.stats",
+                "reports/samtools/NA12878_1X",
+                "reports/samtools/NA12878_1X/NA12878_1X.recal.cram.stats",
+                "variant_calling",
+                "variant_calling/ascat",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.after_correction.gc_rt.test.tumour.germline.png",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.after_correction.gc_rt.test.tumour.tumour.png",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.before_correction.test.tumour.germline.png",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.before_correction.test.tumour.tumour.png",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.cnvs.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.metrics.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.purityploidy.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.segments.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour.ASPCF.png",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour.sunrise.png",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_normalBAF.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_normalLogR.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourBAF.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourLogR.txt"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-07-03T17:12:47.054291762"
+    },
+    "-profile test --tools ascat --input ascat_somatic.csv -stub": {
+        "content": [
+            7,
+            {
+                "ASCAT": {
+                    "alleleCounter": "4.3.0",
+                    "ascat": "3.2.0"
+                },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                }
+            },
+            [
+                "csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_report.html",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/mosdepth",
+                "reports/mosdepth/NA12878",
+                "reports/mosdepth/NA12878/NA12878.recal.global.dist.txt",
+                "reports/mosdepth/NA12878/NA12878.recal.per-base.bed.gz",
+                "reports/mosdepth/NA12878/NA12878.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/NA12878/NA12878.recal.per-base.d4",
+                "reports/mosdepth/NA12878/NA12878.recal.quantized.bed.gz",
+                "reports/mosdepth/NA12878/NA12878.recal.quantized.bed.gz.csi",
+                "reports/mosdepth/NA12878/NA12878.recal.region.dist.txt",
+                "reports/mosdepth/NA12878/NA12878.recal.regions.bed.gz",
+                "reports/mosdepth/NA12878/NA12878.recal.regions.bed.gz.csi",
+                "reports/mosdepth/NA12878/NA12878.recal.summary.txt",
+                "reports/mosdepth/NA12878/NA12878.recal.thresholds.bed.gz",
+                "reports/mosdepth/NA12878/NA12878.recal.thresholds.bed.gz.csi",
+                "reports/mosdepth/NA12878_1X",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.global.dist.txt",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.bed.gz",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.d4",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.quantized.bed.gz",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.quantized.bed.gz.csi",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.region.dist.txt",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.regions.bed.gz",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.regions.bed.gz.csi",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.summary.txt",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.thresholds.bed.gz",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.thresholds.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/NA12878",
+                "reports/samtools/NA12878/NA12878.recal.cram.stats",
+                "reports/samtools/NA12878_1X",
+                "reports/samtools/NA12878_1X/NA12878_1X.recal.cram.stats",
+                "variant_calling",
+                "variant_calling/ascat",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.after_correction.gc_rt.test.tumour.germline.png",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.after_correction.gc_rt.test.tumour.tumour.png",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.before_correction.test.tumour.germline.png",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.before_correction.test.tumour.tumour.png",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.cnvs.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.metrics.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.purityploidy.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.segments.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour.ASPCF.png",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour.sunrise.png",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_normalBAF.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_normalLogR.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourBAF.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourLogR.txt"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-07-03T17:11:40.195850243"
+    },
+    "-profile test --tools ascat --input ascat_somatic.csv --only_paired_variant_calling including gc and rt": {
         "content": [
             7,
             {
@@ -143,130 +319,6 @@
         },
         "timestamp": "2025-07-03T07:56:35.822595523"
     },
-    "-profile test --tools ascat --input ascat_somatic.csv --only_paired_variant_calling -with-stub": {
-        "content": [
-            7,
-            {
-                "ASCAT": {
-                    "alleleCounter": "4.3.0",
-                    "bioconductor-ascat": "3.2.0"
-                },
-                "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
-                },
-                "SAMTOOLS_STATS": {
-                    "samtools": 1.21
-                },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
-                }
-            },
-            [
-                "csv",
-                "multiqc",
-                "multiqc/multiqc_data",
-                "multiqc/multiqc_plots",
-                "multiqc/multiqc_report.html",
-                "no_intervals.bed",
-                "no_intervals.bed.gz",
-                "no_intervals.bed.gz.tbi",
-                "pipeline_info",
-                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "reference",
-                "reports",
-                "reports/mosdepth",
-                "reports/mosdepth/NA12878",
-                "reports/mosdepth/NA12878/NA12878.recal.global.dist.txt",
-                "reports/mosdepth/NA12878/NA12878.recal.per-base.bed.gz",
-                "reports/mosdepth/NA12878/NA12878.recal.per-base.bed.gz.csi",
-                "reports/mosdepth/NA12878/NA12878.recal.per-base.d4",
-                "reports/mosdepth/NA12878/NA12878.recal.quantized.bed.gz",
-                "reports/mosdepth/NA12878/NA12878.recal.quantized.bed.gz.csi",
-                "reports/mosdepth/NA12878/NA12878.recal.region.dist.txt",
-                "reports/mosdepth/NA12878/NA12878.recal.regions.bed.gz",
-                "reports/mosdepth/NA12878/NA12878.recal.regions.bed.gz.csi",
-                "reports/mosdepth/NA12878/NA12878.recal.summary.txt",
-                "reports/mosdepth/NA12878/NA12878.recal.thresholds.bed.gz",
-                "reports/mosdepth/NA12878/NA12878.recal.thresholds.bed.gz.csi",
-                "reports/mosdepth/NA12878_1X",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.global.dist.txt",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.bed.gz",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.bed.gz.csi",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.d4",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.quantized.bed.gz",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.quantized.bed.gz.csi",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.region.dist.txt",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.regions.bed.gz",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.regions.bed.gz.csi",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.summary.txt",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.thresholds.bed.gz",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.thresholds.bed.gz.csi",
-                "reports/samtools",
-                "reports/samtools/NA12878",
-                "reports/samtools/NA12878/NA12878.recal.cram.stats",
-                "reports/samtools/NA12878_1X",
-                "reports/samtools/NA12878_1X/NA12878_1X.recal.cram.stats",
-                "variant_calling",
-                "variant_calling/ascat",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.after_correction.gc_rt.test.tumour.germline.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.after_correction.gc_rt.test.tumour.tumour.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.before_correction.test.tumour.germline.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.before_correction.test.tumour.tumour.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.cnvs.txt",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.metrics.txt",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.purityploidy.txt",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.segments.txt",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour.ASPCF.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour.sunrise.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_normalBAF.txt",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_normalLogR.txt",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourBAF.txt",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourLogR.txt"
-            ],
-            [
-                "NA12878.recal.global.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878.recal.per-base.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878.recal.per-base.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878.recal.per-base.d4:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878.recal.quantized.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878.recal.quantized.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878.recal.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878.recal.regions.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878.recal.regions.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878.recal.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878.recal.thresholds.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878.recal.thresholds.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X.recal.global.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X.recal.per-base.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878_1X.recal.per-base.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X.recal.per-base.d4:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X.recal.quantized.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878_1X.recal.quantized.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X.recal.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X.recal.regions.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878_1X.recal.regions.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X.recal.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X.recal.thresholds.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878_1X.recal.thresholds.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.cnvs.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.purityploidy.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.segments.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.tumour_normalBAF.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.tumour_normalLogR.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.tumour_tumourBAF.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.tumour_tumourLogR.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ],
-            "No BAM files",
-            "No CRAM files",
-            "No VCF files"
-        ],
-        "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
-        },
-        "timestamp": "2025-07-03T08:11:02.415606176"
-    },
     "-profile test --tools ascat --input ascat_somatic.csv": {
         "content": [
             7,
@@ -408,129 +460,5 @@
             "nextflow": "25.04.6"
         },
         "timestamp": "2025-07-03T08:02:34.73546408"
-    },
-    "-profile test --tools ascat --input ascat_somatic.csv -with-stub": {
-        "content": [
-            7,
-            {
-                "ASCAT": {
-                    "alleleCounter": "4.3.0",
-                    "bioconductor-ascat": "3.2.0"
-                },
-                "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
-                },
-                "SAMTOOLS_STATS": {
-                    "samtools": 1.21
-                },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
-                }
-            },
-            [
-                "csv",
-                "multiqc",
-                "multiqc/multiqc_data",
-                "multiqc/multiqc_plots",
-                "multiqc/multiqc_report.html",
-                "no_intervals.bed",
-                "no_intervals.bed.gz",
-                "no_intervals.bed.gz.tbi",
-                "pipeline_info",
-                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "reference",
-                "reports",
-                "reports/mosdepth",
-                "reports/mosdepth/NA12878",
-                "reports/mosdepth/NA12878/NA12878.recal.global.dist.txt",
-                "reports/mosdepth/NA12878/NA12878.recal.per-base.bed.gz",
-                "reports/mosdepth/NA12878/NA12878.recal.per-base.bed.gz.csi",
-                "reports/mosdepth/NA12878/NA12878.recal.per-base.d4",
-                "reports/mosdepth/NA12878/NA12878.recal.quantized.bed.gz",
-                "reports/mosdepth/NA12878/NA12878.recal.quantized.bed.gz.csi",
-                "reports/mosdepth/NA12878/NA12878.recal.region.dist.txt",
-                "reports/mosdepth/NA12878/NA12878.recal.regions.bed.gz",
-                "reports/mosdepth/NA12878/NA12878.recal.regions.bed.gz.csi",
-                "reports/mosdepth/NA12878/NA12878.recal.summary.txt",
-                "reports/mosdepth/NA12878/NA12878.recal.thresholds.bed.gz",
-                "reports/mosdepth/NA12878/NA12878.recal.thresholds.bed.gz.csi",
-                "reports/mosdepth/NA12878_1X",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.global.dist.txt",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.bed.gz",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.bed.gz.csi",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.d4",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.quantized.bed.gz",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.quantized.bed.gz.csi",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.region.dist.txt",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.regions.bed.gz",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.regions.bed.gz.csi",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.summary.txt",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.thresholds.bed.gz",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.thresholds.bed.gz.csi",
-                "reports/samtools",
-                "reports/samtools/NA12878",
-                "reports/samtools/NA12878/NA12878.recal.cram.stats",
-                "reports/samtools/NA12878_1X",
-                "reports/samtools/NA12878_1X/NA12878_1X.recal.cram.stats",
-                "variant_calling",
-                "variant_calling/ascat",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.after_correction.gc_rt.test.tumour.germline.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.after_correction.gc_rt.test.tumour.tumour.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.before_correction.test.tumour.germline.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.before_correction.test.tumour.tumour.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.cnvs.txt",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.metrics.txt",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.purityploidy.txt",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.segments.txt",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour.ASPCF.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour.sunrise.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_normalBAF.txt",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_normalLogR.txt",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourBAF.txt",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourLogR.txt"
-            ],
-            [
-                "NA12878.recal.global.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878.recal.per-base.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878.recal.per-base.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878.recal.per-base.d4:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878.recal.quantized.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878.recal.quantized.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878.recal.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878.recal.regions.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878.recal.regions.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878.recal.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878.recal.thresholds.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878.recal.thresholds.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X.recal.global.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X.recal.per-base.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878_1X.recal.per-base.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X.recal.per-base.d4:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X.recal.quantized.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878_1X.recal.quantized.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X.recal.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X.recal.regions.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878_1X.recal.regions.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X.recal.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X.recal.thresholds.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "NA12878_1X.recal.thresholds.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.cnvs.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.purityploidy.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.segments.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.tumour_normalBAF.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.tumour_normalLogR.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.tumour_tumourBAF.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "NA12878_1X_vs_NA12878.tumour_tumourLogR.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ],
-            "No BAM files",
-            "No CRAM files",
-            "No VCF files"
-        ],
-        "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
-        },
-        "timestamp": "2025-07-03T08:09:50.831015836"
     }
 }

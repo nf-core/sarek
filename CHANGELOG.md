@@ -112,6 +112,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1892](https://github.com/nf-core/sarek/pull/1892) - Make jobs automatically resubmit for exit code 175
 - [1917](https://github.com/nf-core/sarek/pull/1917) - stub tests have stub tag
 - [1927](https://github.com/nf-core/sarek/pull/1927) - Migrate pipeline pytest sentieon tests to nf-test
+- [1932](https://github.com/nf-core/sarek/pull/1932) - Refactor and simplify pipeline test suite
 
 #### Fixed
 
@@ -127,6 +128,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1917](https://github.com/nf-core/sarek/pull/1917) - Ensure all versions and reports are reported to MultiQC
 - [1927](https://github.com/nf-core/sarek/pull/1927) - Fixed Sentieon variant calling broken by [1871](https://github.com/nf-core/sarek/pull/1871)
 - [1930](https://github.com/nf-core/sarek/pull/1930) - Fixed tests when no sentieon license/ENV are provided
+- [1932](https://github.com/nf-core/sarek/pull/1932) - Fix typo for in UMI warning message
 - [1933](https://github.com/nf-core/sarek/pull/1933) - Correct link in README
 - [1935](https://github.com/nf-core/sarek/pull/1935) - Fix bug in samplesheet_to_channel workflow due to bad integer handling with lane
 
