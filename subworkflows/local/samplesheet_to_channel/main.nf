@@ -54,21 +54,27 @@ workflow SAMPLESHEET_TO_CHANNEL {
             }
         }
 
+    // Process the input channel to group lanes by patient and sample
+    // Generate patient_sample key to group lanes together
+    // Save the channel ch_with_patient_sample for later use
+    // Group by patient_sample to get all lanes
+    // Count number of lanes per sample
+    // Combine with channel ch_with_patient_sample to add numLanes information
     input_sample = ch_from_samplesheet
         .map { meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller ->
-            // generate patient_sample key to group lanes together
             [meta.patient + meta.sample, [meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller]]
         }
         .tap { ch_with_patient_sample }
         .groupTuple()
         .map { patient_sample, ch_items ->
-            // get number of lanes per sample
             [patient_sample, ch_items.size()]
         }
         .combine(ch_with_patient_sample, by: 0)
-        .map { patient_sample, num_lanes, ch_items ->
-            (meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller) = ch_items
-            if (meta.lane && fastq_2) {
+        .map { _patient_sample, num_lanes, ch_items ->
+            def (meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller) = ch_items
+
+            if ((meta.lane || meta.lane == 0) && fastq_2) {
+                // mapping from fastq files
                 meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "fastq_gz", num_lanes: num_lanes.toInteger(), size: 1]
 
                 if (step == 'mapping') {
@@ -78,7 +84,8 @@ workflow SAMPLESHEET_TO_CHANNEL {
                     error("Samplesheet contains fastq files but step is `${step}`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
                 }
             }
-            else if (meta.lane && spring_1 && spring_2) {
+            else if ((meta.lane || meta.lane == 0) && spring_1 && spring_2) {
+                // mapping from TWO spring-files - one with R1 and one with R2
                 meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "two_fastq_gz_spring", num_lanes: num_lanes.toInteger(), size: 1]
 
                 if (step == 'mapping') {
@@ -88,7 +95,8 @@ workflow SAMPLESHEET_TO_CHANNEL {
                     error("Samplesheet contains spring files (in columns `spring_1` and `spring_2`) but step is `${step}`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
                 }
             }
-            else if (meta.lane && spring_1 && !spring_2) {
+            else if ((meta.lane || meta.lane == 0) && spring_1 && !spring_2) {
+                // mapping from ONE spring-file containing both R1 and R2
                 meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "one_fastq_gz_spring", num_lanes: num_lanes.toInteger(), size: 1]
 
                 if (step == 'mapping') {
@@ -98,7 +106,8 @@ workflow SAMPLESHEET_TO_CHANNEL {
                     error("Samplesheet contains a spring file (in columns `spring_1`) but step is `${step}`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
                 }
             }
-            else if (meta.lane && bam) {
+            else if ((meta.lane || meta.lane == 0) && bam) {
+                // Any step from BAM
                 if (step != 'mapping' && !bai) {
                     error("BAM index (bai) should be provided.")
                 }
@@ -116,6 +125,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 }
             }
             else if (table && cram) {
+                // recalibration from CRAM
                 meta = meta + [id: meta.sample, data_type: 'cram']
 
                 if (!(step == 'mapping' || step == 'annotate')) {
@@ -126,6 +136,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 }
             }
             else if (table && bam) {
+                // recalibration when skipping MarkDuplicates
                 meta = meta + [id: meta.sample, data_type: 'bam']
 
                 if (!(step == 'mapping' || step == 'annotate')) {
@@ -136,6 +147,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 }
             }
             else if (cram) {
+                // prepare_recalibration or variantcalling from CRAM
                 meta = meta + [id: meta.sample, data_type: 'cram']
 
                 if (!(step == 'mapping' || step == 'annotate')) {
@@ -146,6 +158,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 }
             }
             else if (bam) {
+                // prepare_recalibration when skipping MarkDuplicates or markduplicates
                 meta = meta + [id: meta.sample, data_type: 'bam']
 
                 if (!(step == 'mapping' || step == 'annotate')) {
@@ -156,6 +169,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 }
             }
             else if (vcf) {
+                // annotation
                 meta = meta + [id: meta.sample, data_type: 'vcf', variantcaller: variantcaller ?: '']
 
                 if (step == 'annotate') {
@@ -209,7 +223,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
             }
     }
 
-    // Fails when wrongfull extension for intervals file
+    // Fails when wrong extension for intervals file
     if (wes && !step == 'annotate') {
         if (intervals && !intervals.endsWith("bed")) {
             error("Target file specified with `--intervals` must be in BED format for targeted data")
@@ -230,7 +244,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
         error("${aligner} is currently not compatible with FGBio UMI handling. Please choose a different aligner.")
     }
 
-    if (tools && tools.split(',').contains("sentieon_haplotyper") && joint_germline && (!sentieon_haplotyper_emit_mode || !(sentieon_haplotyper_emit_mode.contains('gvcf')))) {
+    if (tools && tools.split(',').contains("sentieon_haplotyper") && joint_germline && (!sentieon_haplotyper_emit_mode || !sentieon_haplotyper_emit_mode.contains('gvcf'))) {
         error("When setting the option `--joint_germline` and including `sentieon_haplotyper` among the requested tools, please set `--sentieon_haplotyper_emit_mode` to include `gvcf`.")
     }
 

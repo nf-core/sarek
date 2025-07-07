@@ -36,6 +36,8 @@
             "lane": {
                 "type": "string",
                 "pattern": "^\\S+$",
+                "description": "Lane identifier used to distinguish between different sequencing runs of the same sample.",
+                "errorMessage": "Lane identifier cannot contain spaces",
                 "meta": ["lane"]
             },
             "fastq_1": {
