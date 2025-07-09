@@ -19,6 +19,11 @@ workflow BAM_MERGE_INDEX_SAMTOOLS {
     if (params.umi_in_read_header ) {
         FGBIO_COPYUMIFROMREADNAME(bam)
         bam = FGBIO_COPYUMIFROMREADNAME.out.bam
+        versions = versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
+    } else {
+        // If UMIs are not in read header, we assume they are in the RX tag
+        // and do not need to be copied
+        bam = bam.branch{ meta, bam_ -> [ meta, bam_ ] }
     }
 
     // Figuring out if there is one or more bam(s) from the same sample
@@ -44,7 +49,6 @@ workflow BAM_MERGE_INDEX_SAMTOOLS {
     // Gather versions of all tools used
     versions = versions.mix(INDEX_MERGE_BAM.out.versions)
     versions = versions.mix(MERGE_BAM.out.versions)
-    versions = versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
 
     emit:
     bam_bai
