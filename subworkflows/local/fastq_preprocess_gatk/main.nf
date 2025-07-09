@@ -100,7 +100,7 @@ workflow FASTQ_PREPROCESS_GATK {
         }
 
         // Trimming and/or splitting
-        if (params.trim_fastq || params.split_fastq > 0) {
+        if (params.trim_fastq || params.split_fastq > 0 || params.umi_location) {
 
             save_trimmed_fail = false
             save_merged = false
