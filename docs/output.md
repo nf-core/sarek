@@ -152,7 +152,7 @@ These files are intermediate and by default not placed in the output-folder kept
 
 #### UMI consensus
 
-Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools.
+Sarek can create consensus reads when Unique Molecular Identifiers (UMIs) exist, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools. Please note that if your UMIs are part of additional index fastq files then you can use [nf-core/fastquorum](https://nf-co.re/fastquorum) to process them.
 
 These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_split` to enable publishing of these files to:
 
