@@ -1,0 +1,35 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+
+    def test_scenario = [
+        [
+            name: "-profile test --aligner dragmap --save_reference skip QC/recal/md",
+            params: [
+                aligner: 'dragmap',
+                save_reference: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: ''
+            ]
+        ],
+        [
+            name: "-profile test --aligner dragmap --save_reference --build_only_index",
+            params: [
+                aligner: 'dragmap',
+                build_only_index: true,
+                input: false,
+                save_reference: true,
+                skip_tools: 'multiqc',
+                tools: ''
+            ]
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}

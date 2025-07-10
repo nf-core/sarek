@@ -1,0 +1,71 @@
+- name: Run variant calling on somatic samples with ascat
+  command: nextflow run main.nf -profile test,tools_somatic_ascat --outdir results
+  tags:
+    - ascat_manual
+    - manual
+    - somatic
+    - variant_calling
+  files:
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour_normalBAF.txt
+      md5sum: b73a38fd183143b1e8aed9f261a9c5f0
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour_tumourLogR.txt
+      md5sum: 29f29092c19274aa3d5fd4f9e3828cbb
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.after_correction_gc_rt.sample4_vs_sample3.tumour.tumour.png
+      md5sum: df246ef9c2c4dc868901afe17366e116
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.before_correction.sample4_vs_sample3.tumour.tumour.png
+      md5sum: 7629826e2e02ab99bedbab75b0c022a5
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.cnvs.txt
+      md5sum: 68b329da9893e34099c7d8ad5cb9c940
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour_tumourBAF.txt
+      md5sum: 5235f69624ab91f395ebf30b90c02e9e
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour.ASPCF.png
+      md5sum: 883075c53513dea8bbcb85ad564cb641
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.after_correction_gc_rt.sample4_vs_sample3.tumour.germline.png
+      md5sum: 1a47cc241548fa89f914c2f5bfee6bee
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.metrics.txt
+      md5sum: f7e486e5eed6166dedf9306235f537ec
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.before_correction.sample4_vs_sample3.tumour.germline.png
+      md5sum: 1a47cc241548fa89f914c2f5bfee6bee
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.purityploidy.txt
+      md5sum: f1484c2b120834d3db8774ad02a038b9
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour.sunrise.png
+      md5sum: a2bf4b04176983a87b85843c789eaab8
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.segments.txt
+      md5sum: 68b329da9893e34099c7d8ad5cb9c940
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour_normalLogR.txt
+      md5sum: 05418a7d814db11808172a4f57d040a1
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz
+    - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/sample3/sample3.recal.cram.stats
+    # conda changes md5sums for test
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/sample4/sample4.recal.regions.bed.gz
+    - path: results/reports/mosdepth/sample4/sample4.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/sample4/sample4.recal.cram.stats
+    # conda changes md5sums for test
+- name: Run full pipeline on tumoronly with most tools
+  command: nextflow run . -profile test --input tests/csv/3.0/fastq_tumor_only.csv --tools cnvkit,freebayes,merge,mpileup,mutect2,snpeff,tiddit,vep --outdir results
+  tags:
+    - full_pipeline_manual
+    - manual
+    - tumor_only
+    - variant_calling
+- name: Run full pipeline on somatic with most tools
+  command: nextflow run . -profile test --input tests/csv/3.0/fastq_pair.csv --tools cnvkit,deepvariant,freebayes,merge,mpileup,msisensorpro,snpeff,strelka,tiddit,vep --outdir results
+  tags:
+    - full_pipeline_manual
+    - manual
+    - somatic
+    - variant_calling
+- name: Run full pipeline on germline with most tools
+  command: nextflow run . -profile test --input tests/csv/3.0/fastq_single.csv --tools cnvkit,deepvariant,freebayes,merge,mpileup,snpeff,strelka,tiddit,vep --outdir results
+  tags:
+    - full_pipeline_manual
+    - manual
+    - germline
+    - variant_calling

@@ -1,0 +1,49 @@
+Changes in component 'nf-core/controlfreec/assesssignificance'
+Changes in 'controlfreec/assesssignificance/main.nf':
+--- modules/nf-core/controlfreec/assesssignificance/main.nf
++++ modules/nf-core/controlfreec/assesssignificance/main.nf
+@@ -4,8 +4,8 @@
+ 
+     conda "${moduleDir}/environment.yml"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+-        'https://depot.galaxyproject.org/singularity/control-freec:11.6b--hdbdd923_0' :
+-        'biocontainers/control-freec:11.6b--hdbdd923_0' }"
++        'https://depot.galaxyproject.org/singularity/control-freec:11.6--h1b792b2_1' :
++        'biocontainers/control-freec:11.6--h1b792b2_1' }"
+ 
+     input:
+     tuple val(meta), path(cnvs), path(ratio)
+@@ -20,7 +20,7 @@
+     script:
+     def args = task.ext.args ?: ''
+     def prefix = task.ext.prefix ?: "${meta.id}"
+-    def VERSION = '11.6b' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
++    def VERSION = '11.6' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
+     """
+     cat \$(which assess_significance.R) | R --slave --args ${cnvs} ${ratio}
+ 
+@@ -34,7 +34,7 @@
+ 
+     stub:
+     def prefix = task.ext.prefix ?: "${meta.id}"
+-    def VERSION = '11.6b' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
++    def VERSION = '11.6' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
+     """
+     touch ${prefix}.p.value.txt
+ 
+
+'modules/nf-core/controlfreec/assesssignificance/meta.yml' is unchanged
+Changes in 'controlfreec/assesssignificance/environment.yml':
+--- modules/nf-core/controlfreec/assesssignificance/environment.yml
++++ modules/nf-core/controlfreec/assesssignificance/environment.yml
+@@ -4,4 +4,4 @@
+   - conda-forge
+   - bioconda
+ dependencies:
+-  - bioconda::control-freec=11.6b
++  - bioconda::control-freec=11.6
+
+'modules/nf-core/controlfreec/assesssignificance/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/controlfreec/assesssignificance/tests/nextflow.config' is unchanged
+'modules/nf-core/controlfreec/assesssignificance/tests/main.nf.test' is unchanged
+************************************************************

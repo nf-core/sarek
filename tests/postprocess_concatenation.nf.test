@@ -1,0 +1,26 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+
+    def test_scenario = [
+        [
+            name: "-profile test --concatenate_vcfs --tools freebayes,haplotypecaller",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
+                step: 'variant_calling',
+                concatenate_vcfs: true,
+                tools: 'freebayes,haplotypecaller'
+            ]
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}

@@ -1,0 +1,40 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+
+    def test_scenario = [
+        [
+            name: "-profile test --tools snpeff --download_cache",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
+                step: 'annotate',
+                download_cache: true,
+                tools: 'snpeff'
+            ]
+        ],
+        [
+            name: "Fails with profile test --tools snpeff --snpeff_db na --build_only_index",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
+                step: 'annotate',
+                snpeff_cache : 's3://annotation-cache/snpeff_cache/',
+                snpeff_db : "na",
+                input : false,
+                build_only_index : true,
+                tools : 'snpeff'
+            ],
+            failure: true,
+            stdout: "This path is not available within annotation-cache"
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}

@@ -1,0 +1,44 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+
+    def test_scenario = [
+        [
+            name: "-profile test,trimming --save_trimmed",
+            params: [
+                clip_r1: 1,
+                clip_r2: 1,
+                three_prime_clip_r1: 1,
+                three_prime_clip_r2: 1,
+                length_required: 50,
+                tools: null,
+                trim_fastq: true,
+                save_trimmed: true,
+                input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
+                genome: 'testdata.nf-core.sarek'
+            ]
+        ],
+        [
+            name: "-profile test,split_fastq",
+            params: [
+                save_split_fastqs: true,
+                split_fastq: 150000,
+                tools: null,
+                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
+                input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
+                igenomes_base: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
+                genome: 'testdata.nf-core.sarek'
+            ]
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}

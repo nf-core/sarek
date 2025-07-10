@@ -1,0 +1,52 @@
+def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+
+    def test_scenario = [
+        [
+            name: "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step prepare_recalibration --tools null",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
+                step: 'prepare_recalibration',
+                tools: null
+            ]
+        ],
+        [
+            name: "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step prepare_recalibration --skip_tools baserecalibrator --tools strelka",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
+                step: 'prepare_recalibration',
+                skip_tools: "baserecalibrator",
+                tools: 'strelka'
+            ]
+        ],
+        [
+            name: "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --skip_tools baserecalibrator --tools strelka",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
+                step: 'prepare_recalibration',
+                skip_tools: "baserecalibrator",
+                tools: 'strelka'
+            ]
+        ],
+        [
+            name: "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --tools null",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
+                step: 'prepare_recalibration',
+                tools: null
+            ]
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}

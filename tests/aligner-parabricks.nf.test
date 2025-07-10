@@ -1,0 +1,25 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    profile "test,gpu"
+
+    def test_scenario = [
+        [
+            name: "-profile test --aligner parabricks",
+            params: [
+                aligner: 'parabricks',
+                save_reference: true,
+                tools: ''
+            ],
+            gpu: true
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}
