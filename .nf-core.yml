@@ -16,10 +16,11 @@ nf_core_version: 3.3.2
 repository_type: pipeline
 template:
   author: Maxime Garcia, Szilveszter Juhos, Friederike Hanssen
-  description: An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing
+  description: An open-source analysis pipeline to detect germline or somatic variants
+    from whole genome or targeted sequencing
   force: false
   is_nfcore: true
   name: sarek
   org: nf-core
   outdir: .
-  version: 3.5.0dev
+  version: 3.6.0dev
