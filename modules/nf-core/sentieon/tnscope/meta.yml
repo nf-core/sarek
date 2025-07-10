@@ -30,7 +30,7 @@ input:
     - intervals:
         type: file
         description: bed or interval_list file containing interval in the reference
-          that will be used in the analysis. Only recommended for large WGS data, else 
+          that will be used in the analysis. Only recommended for large WGS data, else
           the overhead may not be worth the additional parallelisation.
         pattern: "*.{bed,interval_list}"
   - - meta2:
