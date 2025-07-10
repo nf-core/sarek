@@ -23,16 +23,19 @@ input:
         type: file
         description: One or more BAM or CRAM files.
         pattern: "*.{bam,cram}"
+        ontologies: []
     - input_index:
         type: file
         description: Indices for the input files
         pattern: "*.{bai,crai}"
+        ontologies: []
     - intervals:
         type: file
         description: bed or interval_list file containing interval in the reference
           that will be used in the analysis. Only recommended for large WGS data, else
           the overhead may not be worth the additional parallelisation.
         pattern: "*.{bed,interval_list}"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -42,6 +45,7 @@ input:
         type: file
         description: Genome fasta file
         pattern: "*.{fa,fasta}"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -51,6 +55,7 @@ input:
         type: file
         description: Index of the genome fasta file
         pattern: "*.fai"
+        ontologies: []
   - - meta4:
         type: map
         description: |
@@ -60,6 +65,8 @@ input:
         type: file
         description: Single Nucleotide Polymorphism database (dbSNP) file
         pattern: "*.vcf.gz"
+        ontologies:
+          - edam: http://edamontology.org/format_3989 # GZIP format
   - - meta5:
         type: map
         description: |
@@ -69,6 +76,7 @@ input:
         type: file
         description: Index of the Single Nucleotide Polymorphism database (dbSNP) file
         pattern: "*.vcf.gz.tbi"
+        ontologies: []
   - - meta6:
         type: map
         description: |
@@ -78,6 +86,8 @@ input:
         type: file
         description: Single Nucleotide Polymorphism database (dbSNP) file
         pattern: "*.vcf.gz"
+        ontologies:
+          - edam: http://edamontology.org/format_3989 # GZIP format
   - - meta7:
         type: map
         description: |
@@ -87,6 +97,7 @@ input:
         type: file
         description: Index of the Single Nucleotide Polymorphism database (dbSNP) file
         pattern: "*.vcf.gz.tbi"
+        ontologies: []
   - - meta8:
         type: map
         description: |
@@ -96,6 +107,8 @@ input:
         type: file
         description: Catalogue of Somatic Mutations in Cancer (COSMIC) VCF file.
         pattern: "*.vcf.gz"
+        ontologies:
+          - edam: http://edamontology.org/format_3989 # GZIP format
   - - meta9:
         type: map
         description: |
@@ -103,11 +116,13 @@ input:
           e.g. [ id:'test' ]
     - cosmic_tbi:
         type: file
-        description: Index of the Catalogue of Somatic Mutations in Cancer (COSMIC) VCF file.
+        description: Index of the Catalogue of Somatic Mutations in Cancer (COSMIC)
+          VCF file.
         pattern: "*.vcf.gz.tbi"
+        ontologies: []
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing reference information.
@@ -116,8 +131,9 @@ output:
           type: file
           description: VCF file
           pattern: "*.{vcf.gz}"
-  - index:
-      - meta:
+          ontologies: []
+  index:
+    - - meta:
           type: map
           description: |
             Groovy Map containing reference information.
@@ -126,11 +142,14 @@ output:
           type: file
           description: Index of the VCF file
           pattern: "*.vcf.gz.tbi"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@ramprasadn"
 maintainers:
