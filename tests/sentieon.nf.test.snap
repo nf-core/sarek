@@ -52,8 +52,6 @@
                 "csv/recalibrated.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
-                "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
@@ -118,6 +116,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-03T12:43:00.269671364"
+        "timestamp": "2025-07-11T10:32:28.825263192"
     }
 }

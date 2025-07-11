@@ -5,7 +5,7 @@
             {
                 "ASCAT": {
                     "alleleCounter": "4.3.0",
-                    "ascat": "3.2.0"
+                    "bioconductor-ascat": "3.2.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -21,7 +21,6 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
@@ -86,7 +85,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-03T17:12:47.054291762"
+        "timestamp": "2025-07-11T10:35:03.165533859"
     },
     "-profile test --tools ascat --input ascat_somatic.csv -stub": {
         "content": [
@@ -94,7 +93,7 @@
             {
                 "ASCAT": {
                     "alleleCounter": "4.3.0",
-                    "ascat": "3.2.0"
+                    "bioconductor-ascat": "3.2.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -110,7 +109,6 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
@@ -175,7 +173,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-03T17:11:40.195850243"
+        "timestamp": "2025-07-11T10:34:33.205150619"
     },
     "-profile test --tools ascat --input ascat_somatic.csv --only_paired_variant_calling including gc and rt": {
         "content": [
