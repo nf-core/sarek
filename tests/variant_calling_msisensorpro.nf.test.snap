@@ -17,7 +17,6 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
@@ -38,7 +37,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-03T13:38:16.99037586"
+        "timestamp": "2025-07-11T11:22:33.689046738"
     },
     "-profile test --tools msisensorpro somatic": {
         "content": [

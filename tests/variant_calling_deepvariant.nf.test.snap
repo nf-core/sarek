@@ -186,7 +186,6 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
@@ -292,7 +291,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-02T15:12:26.684409938"
+        "timestamp": "2025-07-11T11:20:35.878631326"
     },
     "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals -stub": {
         "content": [
@@ -322,7 +321,6 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
@@ -431,7 +429,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-02T15:13:11.659882275"
+        "timestamp": "2025-07-11T11:21:25.150659944"
     },
     "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals": {
         "content": [
