@@ -322,7 +322,7 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,4ee05f71086179b42a01cd2fb450346f",
                 "mosdepth-cumcoverage-dist-id.txt:md5,cb7468f51b8be1230fb3ac5b130be31f",
                 "mosdepth_perchrom.txt:md5,4ee05f71086179b42a01cd2fb450346f",
-                "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
+                "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
                 "sample4_vs_sample3.muse.bcftools_stats.txt:md5,09a0d72425a3638cbe8f1cbd254e66f3",
