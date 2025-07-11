@@ -125,6 +125,9 @@
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
+                "NGSCHECKMATE_NCM": {
+                    "ngscheckmate": "1.0.1"
+                },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
@@ -269,8 +272,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-06-16T14:01:01.755714458"
+        "timestamp": "2025-07-11T12:19:18.022351369"
     }
 }
