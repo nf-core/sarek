@@ -8,96 +8,6 @@ nextflow_pipeline {
     tag "pipeline_sarek"
     tag "cpu"
 
-    test("-profile test --input tests/csv/3.0/sample_with_space.csv") {
-        when {
-            params {
-                input = "${projectDir}/tests/csv/3.0/sample_with_space.csv"
-                outdir = "$outputDir"
-            }
-        }
-
-        then {
-            assert workflow.failed
-            assertAll(
-                { assert snapshot(
-                    workflow.stderr.toString().replaceAll(/\x1B\[[0-9;]*m/, '').replaceAll(/^\[/, '').replaceAll(/\]$/, '').replaceAll(/, /, ',').split(",").findAll { !it.matches(/.*Nextflow [0-9]+\.[0-9]+\.[0-9]+ is available.*/) }[0..1,3..5]
-                ).match() }
-            )
-        }
-    }
-
-    test("-profile test --input tests/csv/3.0/multiple_lane_ids.csv") {
-
-        when {
-            params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-                input = "${projectDir}/tests/csv/3.0/multiple_lane_ids.csv"
-                outdir = "$outputDir"
-            }
-        }
-
-        then {
-            assert workflow.failed
-            assertAll(
-                { assert snapshot(
-                    workflow.stderr.toString().replaceAll(/\x1B\[[0-9;]*m/, '').replaceAll(/^\[/, '').replaceAll(/\]$/, '').replaceAll(/, /, ',').split(",").findAll { !it.matches(/.*Nextflow [0-9]+\.[0-9]+\.[0-9]+ is available.*/) }
-                ).match() }
-            )
-        }
-    }
-
-    test("-profile test --input tests/csv/3.0/multiple_sample_ids.csv") {
-
-        when {
-            params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-                input = "${projectDir}/tests/csv/3.0/multiple_sample_ids.csv"
-                outdir = "$outputDir"
-            }
-        }
-
-        then {
-            assert workflow.failed
-            assertAll(
-                { assert snapshot(
-                    workflow.stderr.toString().replaceAll(/\x1B\[[0-9;]*m/, '').replaceAll(/^\[/, '').replaceAll(/\]$/, '').replaceAll(/, /, ',').split(",").findAll { !it.matches(/.*Nextflow [0-9]+\.[0-9]+\.[0-9]+ is available.*/) }
-                ).match() }
-            )
-        }
-    }
-
-    test("-profile test --step variant_calling --input tests/csv/3.0/recalibrated_somatic_two_normal_one_sample.csv") {
-
-        when {
-            params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-                input = "${projectDir}/tests/csv/3.0/recalibrated_somatic_two_normal_one_sample.csv"
-                outdir = "$outputDir"
-                step = "variant_calling"
-            }
-        }
-
-        then {
-            assert workflow.failed
-            assertAll(
-                { assert snapshot(
-                    workflow.stderr.toString().replaceAll(/\x1B\[[0-9;]*m/, '').replaceAll(/^\[/, '').replaceAll(/\]$/, '').replaceAll(/, /, ',').split(",").findAll { !it.matches(/.*Nextflow [0-9]+\.[0-9]+\.[0-9]+ is available.*/) }[0]
-                ).match() }
-            )
-        }
-    }
-
-    test("-profile test,spark --input tests/csv/3.0/fastq_single.csv --use_gatk_spark baserecalibrator,markduplicates --save_mapped --save_output_as_bam") {
-        when {
-            params {
-                input = "${projectDir}/tests/csv/3.0/fastq_single.csv"
-                outdir = "$outputDir"
-                use_gatk_spark = 'baserecalibrator,markduplicates'
-                save_mapped = true
-                save_output_as_bam = true
-            }
-        }
-
     def test_scenario = [
         [
             name: "-profile test --input tests/csv/3.0/sample_with_space.csv",
@@ -126,6 +36,22 @@ nextflow_pipeline {
             ],
             failure: true,
             stderr: [1..2]
+        ],
+        [
+            name: "-profile test --input tests/csv/3.0/multiple_lane_ids.csv",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/multiple_lane_ids.csv",
+            ],
+            failure: true,
+            stderr: [0..-1]
+        ],
+        [
+            name: "-profile test --input tests/csv/3.0/multiple_sample_ids.csv",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/multiple_sample_ids.csv",
+            ],
+            failure: true,
+            stderr: [0..-1]
         ]
     ]
 
