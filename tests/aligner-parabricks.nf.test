@@ -21,6 +21,7 @@ nextflow_pipeline {
         [
             name: "-profile test --aligner parabricks --tools mutect2",
             params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 aligner: 'parabricks',
                 save_reference: true,
                 tools: 'mutect2'
