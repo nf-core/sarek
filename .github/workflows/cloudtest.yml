@@ -1,7 +1,8 @@
-name: nf-core cloud full size tests
+name: nf-core cloud tests (both full size and smaller)
 # This workflow is triggered on PRs opened against the main/master branch.
 # It can be additionally triggered manually with GitHub actions workflow dispatch button.
 # It runs the -profile 'test_full' on cloud
+# or the -profile 'test' on cloud (smaller tests)
 
 on:
   pull_request_review:
@@ -77,8 +78,8 @@ jobs:
             compute_env: TOWER_COMPUTE_ENV
             workdir: TOWER_BUCKET_AWS
     name: Run AWS full tests
-    # run only if the PR is approved by at least 2 reviewers and against the master branch or manually triggered
-    if: github.repository == 'nf-core/sarek' && github.event.review.state == 'approved' && (github.event.pull_request.base.ref == 'master' || github.event.pull_request.base.ref == 'main') || github.event_name == 'workflow_dispatch'
+    # run only if the PR is approved by at least 2 reviewers and against the master/main branch or manually triggered
+    if: github.repository == 'nf-core/sarek' && github.event.review.state == 'approved' && (github.event.pull_request.base.ref == 'master' || github.event.pull_request.base.ref == 'main') || github.event_name == 'workflow_dispatch' || github.event_name == 'release'
     runs-on: ubuntu-latest
     steps:
       - name: Set revision variable

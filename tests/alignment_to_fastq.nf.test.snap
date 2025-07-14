@@ -3,6 +3,9 @@
         "content": [
             27,
             {
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.18-r1243-dirty",
                     "samtools": 1.21
@@ -22,6 +25,9 @@
                 "CRAM_TO_BAM_RECAL": {
                     "samtools": 1.21
                 },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
+                },
                 "FASTQC": {
                     "fastqc": "0.12.1"
                 },
@@ -29,6 +35,9 @@
                     "gatk4": "4.6.1.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
+                    "gatk4": "4.6.1.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
                 },
                 "GATK4_MARKDUPLICATES": {
@@ -61,6 +70,12 @@
                 },
                 "SAMTOOLS_VIEW_UNMAP_UNMAP": {
                     "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 }
             },
             [
@@ -71,6 +86,7 @@
                 "csv/recalibrated.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/fastqc-status-check-heatmap.txt",
                 "multiqc/multiqc_data/fastqc_overrepresented_sequences_plot.txt",
                 "multiqc/multiqc_data/fastqc_per_base_n_content_plot.txt",
@@ -86,6 +102,7 @@
                 "multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt",
                 "multiqc/multiqc_data/gatk-base-recalibrator-reported-empirical-plot.txt",
                 "multiqc/multiqc_data/gatk_base_recalibrator.txt",
+                "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
                 "multiqc/multiqc_data/mosdepth_cov_dist.txt",
@@ -123,7 +140,6 @@
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.pdf",
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.pdf",
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-reported-empirical-plot.pdf",
-                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
@@ -148,7 +164,6 @@
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.png",
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.png",
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-reported-empirical-plot.png",
-                "multiqc/multiqc_plots/png/general_stats_table.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
                 "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
@@ -173,7 +188,6 @@
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.svg",
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.svg",
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-reported-empirical-plot.svg",
-                "multiqc/multiqc_plots/svg/general_stats_table.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
@@ -240,19 +254,16 @@
                 "fastqc_sequence_counts_plot.txt:md5,bcd6fbad2fcbfcd6e78f7392945471cb",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,65c8986b4ea2983999508c5d8fce0df5",
                 "fastqc_sequence_length_distribution_plot.txt:md5,8f2a67d6bf43abce206aa77c2959b420",
-                "mosdepth-coverage-per-contig-single.txt:md5,76d816c3f71faf2009c8a6f88092a2f3",
-                "mosdepth-cumcoverage-dist-id.txt:md5,3af8f7d8ed7d1fdff6118e0098258192",
-                "mosdepth_cov_dist.txt:md5,4a2236db76d75e45012f6d7c180c90d6",
-                "mosdepth_cumcov_dist.txt:md5,4a2236db76d75e45012f6d7c180c90d6",
-                "mosdepth_perchrom.txt:md5,76d816c3f71faf2009c8a6f88092a2f3",
+                "mosdepth-coverage-per-contig-single.txt:md5,7f0ae813d12ab461548ef47423186e1d",
+                "mosdepth-cumcoverage-dist-id.txt:md5,e6e8b8da4af8aef64278024fc25361dd",
+                "mosdepth_perchrom.txt:md5,7f0ae813d12ab461548ef47423186e1d",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
                 "multiqc_fastqc.txt:md5,6fa90a9d9daa7d4839e4b7ebfcdc6201",
-                "multiqc_samtools_stats.txt:md5,45743b51ad96cd677185032fada752c9",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,ef82cfdd058c212c0bba38ceb32ec2f8",
-                "samtools_alignment_plot.txt:md5,22572fcd0791878ed37ae2f48213cee2",
+                "samtools-stats-dp.txt:md5,ea167e1f03920b6214de041740ca3cd5",
+                "samtools_alignment_plot.txt:md5,7a727168e9bbb3f4c39894933438df98",
                 "test.md.mosdepth.global.dist.txt:md5,9cb9b181119256ed17a77dcf44d58285",
                 "test.md.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.md.mosdepth.summary.txt:md5,dbe376360e437c89190139ef0ae6769a",
@@ -274,8 +285,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-05-07T13:07:39.972199258"
+        "timestamp": "2025-06-16T09:58:04.974228839"
     }
 }
