@@ -87,7 +87,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             cram.map{ meta, cram, crai -> [ meta, [], cram ] },
             fasta,
             fasta_fai,
-            intervals_bed_combined.map{ it -> [[id:it[0].baseName], it] },
+            intervals_bed_combined.map{it -> it ? [[id:it[0].baseName], it]: [[id:'no_intervals'], []]},
             params.cnvkit_reference ? cnvkit_reference.map{ it -> [[id:it[0].baseName], it] } : [[:],[]]
         )
         versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)

@@ -45,6 +45,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
       - [Sentieon DNAscope joint germline variant calling](#sentieon-dnascope-joint-germline-variant-calling)
     - [Sentieon Haplotyper](#sentieon-haplotyper)
       - [Sentieon Haplotyper joint germline variant calling](#sentieon-haplotyper-joint-germline-variant-calling)
+    - [Sentieon TNscope](#sentieon-tnscope)
     - [Strelka](#strelka)
   - [Structural Variants](#structural-variants)
     - [indexcov](#indexcov)
@@ -198,7 +199,6 @@ The alignment files (BAM or CRAM) produced by the chosen aligner are not publish
 **Output directory: `{outdir}/preprocessing/mapped/<sample>/`**
 
 - if `--save_mapped`: `<sample>.sorted.cram` and `<sample>.sorted.cram.crai`
-
   - CRAM file and index
 
 - if `--save_mapped --save_output_as_bam`: `<sample>.sorted.bam` and `<sample>.sorted.bam.bai`
@@ -485,7 +485,6 @@ Files created:
 **Output directory: `{outdir}/variant_calling/lofreq/<sample>/`**
 
 - `<tumorsample>.vcf.gz`
-
   - VCF which provides a detailed description of the detected genetic variants.
 
   </details>
@@ -599,6 +598,20 @@ In Sentieon's package DNAseq, joint germline variant calling is done by first ru
   - VCF with tabix index
 - `joint_germline_recalibrated.vcf.gz` and `joint_germline_recalibrated.vcf.gz.tbi`
   - variant recalibrated VCF with tabix index (if VarCal is applied)
+
+</details>
+
+#### Sentieon TNscope
+
+[Sentieon TNscope](https://support.sentieon.com/manual/usages/general/#tnscope-algorithm) is Sentieon's proprietary somatic variant and structural variant caller.
+
+<details markdown="1">
+<summary>VCF-files for tumor-only and tumor/normal samples</summary>
+
+**Output directory: `{outdir}/variantcalling/sentieon_tnscope/<sample>/`**
+
+- `<sample>.tnscope.vcf.gz` and `<sample>.tnscope.vcf.gz.tbi`
+  - VCF with tabix index
 
 </details>
 

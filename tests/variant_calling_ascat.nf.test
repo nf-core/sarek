@@ -1,0 +1,84 @@
+def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+
+    def test_scenario = [
+        [
+            name: "-profile test --tools ascat --input ascat_somatic.csv",
+            params: [
+                fasta : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr22/sequence/chr22_23800000-23980000.fa',
+                ascat_alleles : modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_alleles_hg38_chr22.txt',
+                ascat_genome : "hg38",
+                ascat_loci : modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_loci_hg38_chr22.txt',
+                ascat_loci_gc : null,
+                ascat_loci_rt : null,
+                input : "${projectDir}/tests/csv/3.0/ascat_somatic.csv",
+                step : "variant_calling",
+                tools : 'ascat',
+                no_intervals : true,
+                validate_params : false
+            ]
+        ],
+        [
+            name: "-profile test --tools ascat --input ascat_somatic.csv --only_paired_variant_calling including gc and rt",
+            params: [
+                fasta : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr22/sequence/chr22_23800000-23980000.fa',
+                ascat_alleles : modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_alleles_hg38_chr22.txt',
+                ascat_genome : "hg38",
+                ascat_loci : modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_loci_hg38_chr22.txt',
+                ascat_loci_gc : modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/GC_G1000_hg38_22.txt',
+                ascat_loci_rt : modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/RT_G1000_hg38_22.txt',
+                input : "${projectDir}/tests/csv/3.0/ascat_somatic.csv",
+                step : "variant_calling",
+                tools : 'ascat',
+                no_intervals : true,
+                validate_params : false
+            ]
+        ],
+        [
+            name: "-profile test --tools ascat --input ascat_somatic.csv -stub",
+            params: [
+                fasta : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr22/sequence/chr22_23800000-23980000.fa',
+                ascat_alleles : modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_alleles_hg38_chr22.txt',
+                ascat_genome : "hg38",
+                ascat_loci : modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_loci_hg38_chr22.txt',
+                ascat_loci_gc : null,
+                ascat_loci_rt : null,
+                input : "${projectDir}/tests/csv/3.0/ascat_somatic.csv",
+                step : "variant_calling",
+                tools : 'ascat',
+                no_intervals : true,
+                validate_params : false
+            ],
+            stub: true
+        ],
+        [
+            name: "-profile test --tools ascat --input ascat_somatic.csv --only_paired_variant_calling -stub",
+            params: [
+                fasta : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr22/sequence/chr22_23800000-23980000.fa',
+                ascat_alleles : modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_alleles_hg38_chr22.txt',
+                ascat_genome : "hg38",
+                ascat_loci : modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_loci_hg38_chr22.txt',
+                ascat_loci_gc : null,
+                ascat_loci_rt : null,
+                input : "${projectDir}/tests/csv/3.0/ascat_somatic.csv",
+                step : "variant_calling",
+                tools : 'ascat',
+                no_intervals : true,
+                only_paired_variant_calling : true,
+                validate_params : false
+            ],
+            stub: true
+        ]
+    ]
+
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}
