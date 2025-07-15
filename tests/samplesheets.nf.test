@@ -6,6 +6,7 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
+    tag "cpu"
 
     def test_scenario = [
         [
@@ -35,6 +36,22 @@ nextflow_pipeline {
             ],
             failure: true,
             stderr: [1..2]
+        ],
+        [
+            name: "-profile test --input tests/csv/3.0/multiple_lane_ids.csv",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/multiple_lane_ids.csv",
+            ],
+            failure: true,
+            stderr: [0..-1]
+        ],
+        [
+            name: "-profile test --input tests/csv/3.0/multiple_sample_ids.csv",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/multiple_sample_ids.csv",
+            ],
+            failure: true,
+            stderr: [0..-1]
         ]
     ]
 

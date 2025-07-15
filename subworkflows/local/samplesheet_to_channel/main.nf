@@ -53,6 +53,47 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 error("Execution halted due to sample status inconsistency.")
             }
         }
+    
+    ch_from_samplesheet
+        .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _vcf, _variantcaller ->
+            // Create a unique key for patient-sample-status-lane combination
+            def combination_key = "${meta.patient}-${meta.sample}-${meta.status}-${meta.lane}"
+            [combination_key, [meta.patient, meta.sample, meta.status, meta.lane]]
+        }
+        .groupTuple()
+        .map { combination_key, combination_list ->
+            if (combination_list.size() > 1) {
+                def patient = combination_list[0][0]
+                def sample = combination_list[0][1] 
+                def status = combination_list[0][2]
+                def lane = combination_list[0][3]
+                System.err.println("Duplicate patient-sample-status-lane combination found: Patient '${patient}', Sample '${sample}', Status '${status}', Lane '${lane}' appears ${combination_list.size()} times. Please ensure each combination is unique.")
+                error("Execution halted due to duplicate patient-sample-status-lane combination.")
+            }
+        }
+
+    ch_from_samplesheet
+        .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _vcf, _variantcaller ->
+            // Get only the patient, sample and status fields from the meta map
+            [meta.patient, meta.subMap('sample', 'status')]
+        }
+        .unique()
+        .groupTuple()
+        .map { patient, samples ->
+            // Return the patient and the list of sample ids
+            [patient, samples.collect { it.sample }]
+        }
+        // Flatten to [sample_id, patient] pairs
+        .flatMap { patient, sample_ids -> sample_ids.collect { sample_id -> [sample_id, patient] } }
+        // Group by sample_id to collect all patient ids per sample
+        .groupTuple()
+        .map { sample_id, patient_ids ->
+            def unique_patients = patient_ids.unique()
+            if (unique_patients.size() > 1) {
+                System.err.println("Sample ID '${sample_id}' is associated with multiple patient IDs: ${unique_patients.join(', ')}. Please ensure each sample ID is unique to a single patient.")
+                error("Execution halted due to sample status inconsistency.")
+            }
+        }
 
     // Process the input channel to group lanes by patient and sample
     // Generate patient_sample key to group lanes together
