@@ -317,11 +317,11 @@ Joint germline variant calling also requires intervals in order to genotype the 
         error("Please specify at least one tool when using `--step ${step}`.\nhttps://nf-co.re/sarek/parameters#tools")
     }
 
-    // Fails when missing sex information for CNV tools
-    if (tools && (tools.split(',').contains('ascat') || tools.split(',').contains('controlfreec'))) {
+    // Fails when missing sex information for CNV tools or varlociraptor
+    if (tools && (tools.split(',').contains('ascat') || tools.split(',').contains('controlfreec') || tools.split(',').contains('varlociraptor'))) {
         input_sample.map {
             if (it[0].sex == 'NA') {
-                error("Please specify sex information for each sample in your samplesheet when using '--tools' with 'ascat' or 'controlfreec'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+                error("Please specify sex information for each sample in your samplesheet when using '--tools' with 'ascat' or 'controlfreec' or 'varlociraptor'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
             }
         }
     }

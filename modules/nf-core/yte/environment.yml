@@ -1,0 +1,7 @@
+channels:
+- conda-forge
+- bioconda
+dependencies:
+- conda-forge::pip=25.1.1
+- pip:
+  - yte==1.9.0

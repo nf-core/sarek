@@ -527,9 +527,29 @@
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
+                    "varlociraptor/callvariants": {
+                        "branch": "master",
+                        "git_sha": "b0a35d996f6140f18e040099c94ffc0c0f005187",
+                        "installed_by": ["modules"]
+                    },
+                    "varlociraptor/estimatealignmentproperties": {
+                        "branch": "master",
+                        "git_sha": "b0a35d996f6140f18e040099c94ffc0c0f005187",
+                        "installed_by": ["modules"]
+                    },
+                    "varlociraptor/preprocess": {
+                        "branch": "master",
+                        "git_sha": "b0a35d996f6140f18e040099c94ffc0c0f005187",
+                        "installed_by": ["modules"]
+                    },
                     "vcftools": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "installed_by": ["modules"]
+                    },
+                    "yte": {
+                        "branch": "master",
+                        "git_sha": "87169022c82b7ad5357302ad5b438fc586c3d471",
                         "installed_by": ["modules"]
                     }
                 }
