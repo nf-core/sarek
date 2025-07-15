@@ -5,18 +5,15 @@ include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES as ALIGNMENTPROPERTIES_TUMOR
 include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES as ALIGNMENTPROPERTIES_NORMAL } from '../../../modules/nf-core/varlociraptor/estimatealignmentproperties/main' 
 include { YTE as FILL_SCENARIO_FILE                                               } from '../../../modules/nf-core/yte/main'
 
-workflow VCF_VARLOCIRAPTOR {
+workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     take:
-    tools                            // Mandatory, list of tools to apply
     ch_cram                          // channel: [mandatory] cram
     ch_fasta                         // channel: [mandatory] fasta
     ch_fasta_fai                     // channel: [mandatory] fasta_fai
     ch_vcf
 
     main:
-    // TODO: different routes for tumor_only, normal_only, tumor_and_normal
-
     ch_versions = Channel.empty()
 
     ch_scenario = Channel.fromPath("$projectDir/assets/varlociraptor_somatic_with_priors.yml", checkIfExists: true)

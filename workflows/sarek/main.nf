@@ -397,10 +397,15 @@ workflow SAREK {
         )
 
         // POST VARIANTCALLING
-        POST_VARIANTCALLING(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
+        POST_VARIANTCALLING(params.tools,
+                cram_variant_calling_status_normal,
+                BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
+                cram_variant_calling_tumor_only,
                 BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all,
+                cram_variant_calling_pair,
                 BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all,
                 fasta,
+                fasta_fai,
                 params.concatenate_vcfs,
                 params.normalize_vcfs)
 

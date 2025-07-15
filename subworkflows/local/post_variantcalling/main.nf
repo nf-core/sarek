@@ -4,14 +4,16 @@
 
 include { CONCATENATE_GERMLINE_VCFS } from '../vcf_concatenate_germline'
 include { NORMALIZE_VCFS            } from '../vcf_normalization'
-include { VCF_VARLOCIRAPTOR         } from '../vcf_varlociraptor'
+include { VCF_VARLOCIRAPTOR_SOMATIC } from '../vcf_varlociraptor_somatic'
 
 workflow POST_VARIANTCALLING {
     take:
     tools
-    ch_cram
+    cram_germline
     germline_vcfs
+    cram_tumor_only
     tumor_only_vcfs
+    cram_somatic
     somatic_vcfs
     fasta
     fai
@@ -37,11 +39,14 @@ workflow POST_VARIANTCALLING {
         versions = versions.mix(NORMALIZE_VCFS.out.versions)
     }
 
+    // implement for somatic case first
     if(tools.split(',').contains('varlociraptor')) {
-        VCF_VARLOCIRAPTOR(tools, ch_cram, fasta, fai, somatic_vcfs)
-        vcfs = VCF_VARLOCIRAPTOR.out.vcf
-        versions = versions.mix(VCF_VARLOCIRAPTOR.out.versions)
+        VCF_VARLOCIRAPTOR_SOMATIC(cram_somatic, fasta, fai, somatic_vcfs)
+        vcfs = VCF_VARLOCIRAPTOR_SOMATIC.out.vcf
+        versions = versions.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.versions)
     }
+
+    // TODO: varlocirator for germline and tumor_only
 
     emit:
     vcfs     // post processed vcfs
