@@ -53,7 +53,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 error("Execution halted due to sample status inconsistency.")
             }
         }
-    
+
     ch_from_samplesheet
         .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _vcf, _variantcaller ->
             // Create a unique key for patient-sample-status-lane combination
@@ -64,7 +64,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
         .map { combination_key, combination_list ->
             if (combination_list.size() > 1) {
                 def patient = combination_list[0][0]
-                def sample = combination_list[0][1] 
+                def sample = combination_list[0][1]
                 def status = combination_list[0][2]
                 def lane = combination_list[0][3]
                 System.err.println("Duplicate patient-sample-status-lane combination found: Patient '${patient}', Sample '${sample}', Status '${status}', Lane '${lane}' appears ${combination_list.size()} times. Please ensure each combination is unique.")
