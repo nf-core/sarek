@@ -1,3 +1,5 @@
+def projectDir = new File('.').absolutePath
+
 nextflow_pipeline {
 
     name "Test pipeline"
@@ -13,6 +15,16 @@ nextflow_pipeline {
                 aligner: 'parabricks',
                 save_reference: true,
                 tools: ''
+            ],
+            gpu: true
+        ],
+        [
+            name: "-profile test --aligner parabricks --tools mutect2",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                aligner: 'parabricks',
+                save_reference: true,
+                tools: 'mutect2'
             ],
             gpu: true
         ]
