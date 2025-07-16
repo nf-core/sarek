@@ -14,7 +14,7 @@ species:
 
 samples:
   tumor:
-    sex: ?sex
+    sex: ?sex_string
     somatic-effective-mutation-rate: 1e-6
     inheritance:
       clonal:
@@ -24,7 +24,7 @@ samples:
       by: normal
       fraction: 0.1
   normal:
-    sex: ?sex
+    sex: ?sex_string
     somatic-effective-mutation-rate: 1e-10
 
 events:

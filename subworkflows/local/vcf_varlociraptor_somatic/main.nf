@@ -16,11 +16,12 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     main:
     ch_versions = Channel.empty()
 
-    ch_scenario = Channel.fromPath("$projectDir/assets/varlociraptor_somatic_with_priors.yml", checkIfExists: true)
+    ch_scenario = Channel.fromPath("$projectDir/assets/varlociraptor_somatic_with_priors.yte.yaml", checkIfExists: true)
                     .map{ it -> [ [id:"tumor_normal_scenario"], it ] }
 
-    meta_map = ch_cram.map{ meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai -> [ meta ] }
+    meta_map = ch_cram.map{ meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai -> meta + [sex_string: (meta.sex == "XX" ? "female" : "male") ] }
 
+    // TODO: check if this file is created for each sample, not just once
     FILL_SCENARIO_FILE(
         ch_scenario,
         [],
@@ -31,6 +32,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     ch_versions = ch_versions.mix(FILL_SCENARIO_FILE.out.versions)
 
+    // TODO: the IDs need to be specific for tumor and normal
     cram_normal = ch_cram.map{ meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [ meta, normal_cram, normal_crai ] }
     cram_tumor  = ch_cram.map{ meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, tumor_crai ] }
 
@@ -50,29 +52,49 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_versions = ch_versions.mix(ALIGNMENTPROPERTIES_TUMOR.out.versions)
     ch_versions = ch_versions.mix(ALIGNMENTPROPERTIES_NORMAL.out.versions)
 
-    cram_normal_preprocess 
-        = ch_cram.join(ch_vcf).join(ALIGNMENTPROPERTIES_NORMAL.out.alignment_properties_json)
-            .map{ meta_cram, normal_cram, normal_crai, _tumor_cram, _tumor_crai, _meta_vcf, vcf, _meta_json, alignment_json ->
-                def combined_meta = meta_cram.copy()
-                [ combined_meta, normal_cram, normal_crai, vcf, alignment_json ] }
-    
-    cram_tumor_preprocess 
-        = ch_cram.join(ch_vcf).join(ALIGNMENTPROPERTIES_TUMOR.out.alignment_properties_json)
-            .map{ meta_cram, _normal_cram, _normal_crai, tumor_cram, tumor_crai, _meta_vcf, vcf, _meta_json, alignment_json ->
-                def combined_meta = meta_cram.copy()
-                [ combined_meta, tumor_cram, tumor_crai, vcf, alignment_json ] }
+    ch_input_normal_preprocess = cram_normal
+        .map{ meta, normal_cram, normal_crai -> [ [id: meta.id], meta, normal_cram, normal_crai ] }
+        .join(
+            ch_vcf
+                .map{ meta, vcf -> [ [id: meta.id], meta , vcf ] }
+        ).join(
+            ALIGNMENTPROPERTIES_NORMAL.out.alignment_properties_json
+                .map{ meta, alignment_json -> [ [id: meta.id], meta, alignment_json ] }
+        ).map{
+            _id, meta_cram, normal_cram, normal_crai, meta_vcf, vcf, _meta_json, alignment_json ->
+            def new_meta = meta_cram + [variantcaller: meta_vcf.variantcaller, postprocess: 'varlociraptor']
+            [ new_meta, normal_cram, normal_crai, vcf, alignment_json ]
+        }
+
+    ch_input_tumor_preprocess = cram_tumor
+        .map{ meta, tumor_cram, tumor_crai -> [ [id: meta.id], meta, tumor_cram, tumor_crai ] }
+        .join(
+            ch_vcf
+                .map{ meta, vcf -> [ [id: meta.id], meta , vcf ] }
+        ).join(
+            ALIGNMENTPROPERTIES_NORMAL.out.alignment_properties_json
+                .map{ meta, alignment_json -> [ [id: meta.id], meta, alignment_json ] }
+        ).map{
+            _id, meta_cram, tumor_cram, tumor_crai, meta_vcf, vcf, _meta_json, alignment_json ->
+            def new_meta = meta_cram + [variantcaller: meta_vcf.variantcaller, postprocess: 'varlociraptor']
+            [ new_meta, tumor_cram, tumor_crai, vcf, alignment_json ]
+        }
+
+    // TODO: add chunking here
 
     PREPROCESS_NORMAL(
-        cram_normal_preprocess,
+        ch_input_normal_preprocess,
         ch_fasta,
         ch_fasta_fai
     )
 
     PREPROCESS_TUMOR(
-        cram_tumor_preprocess,
+        ch_input_tumor_preprocess,
         ch_fasta,
         ch_fasta_fai
     )
+
+    // TODO: add sort & split here
 
     ch_versions = ch_versions.mix(PREPROCESS_NORMAL.out.versions)
     ch_versions = ch_versions.mix(PREPROCESS_TUMOR.out.versions)
