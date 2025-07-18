@@ -377,6 +377,11 @@
                         "git_sha": "083667c2f0d3b57aa373ffa8891d04b3c839b0b4",
                         "installed_by": ["modules"]
                     },
+                    "rbt/vcfsplit": {
+                        "branch": "master",
+                        "git_sha": "3e5034548e2398b006a9e01fb82673ffa5c83d9f",
+                        "installed_by": ["modules"]
+                    },
                     "samblaster": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
