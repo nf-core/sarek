@@ -10,7 +10,7 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --tools freebayes,varlociraptor --input recalibrated_somatic.csv",
+            name: "-profile test --tools mutect2,varlociraptor --input recalibrated_somatic.csv",
             params: [
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
                 genome: null,
@@ -28,7 +28,7 @@ nextflow_pipeline {
                 ngscheckmate_bed: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/SNP_GRCh38_hg38_wChr.bed',
                 nucleotides_per_second: 20,
                 step: 'variant_calling',
-                tools: 'freebayes,varlociraptor',
+                tools: 'mutect2,varlociraptor',
                 wes: true
             ],
         ]

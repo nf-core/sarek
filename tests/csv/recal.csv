@@ -1,3 +1,4 @@
 patient,sex,status,sample,lane,fastq_1,fastq_2
 HCC1395,XX,0,HCC1395N,1,s3://ngi-igenomes/test-data/sarek/SRR7890919_WES_HCC1395BL-EA_normal_1.fastq.gz,s3://ngi-igenomes/test-data/sarek/SRR7890919_WES_HCC1395BL-EA_normal_2.fastq.gz
 HCC1395,XX,1,HCC1395T,1,s3://ngi-igenomes/test-data/sarek/SRR7890918_WES_HCC1395-EA_tumor_1.fastq.gz,s3://ngi-igenomes/test-data/sarek/SRR7890918_WES_HCC1395-EA_tumor_2.fastq.gz
+ 
