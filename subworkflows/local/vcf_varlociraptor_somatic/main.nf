@@ -65,12 +65,11 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_versions = ch_versions.mix(VCFSPLIT_TUMOR.out.versions)
 
     ch_chunked_tumor_vcfs = VCFSPLIT_TUMOR.out.bcfchunks
-        .map{ meta, vcf_chunked_list -> 
-            vcf_chunked_list.collect{ vcf_chunked -> 
-                def new_meta = meta + [chunk: vcf_chunked.name.split(/\./)[-2]]
-                [ new_meta, vcf_chunked ]
-            }
-        }.flatMap()
+        .transpose(by:1)
+        .map { meta, vcf_chunked ->
+            def new_meta = meta + [chunk:vcf_chunked.name.split(/\./)[-2]]
+            [ new_meta, vcf_chunked ]
+        }
 
 
     // Create a base channel for CRAM data that will be replicated for each chunk
@@ -112,12 +111,12 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_versions = ch_versions.mix(VCFSPLIT_NORMAL.out.versions)
 
     ch_chunked_normal_vcfs = VCFSPLIT_NORMAL.out.bcfchunks
-        .map{ meta, vcf_chunked_list -> 
-            vcf_chunked_list.collect{ vcf_chunked -> 
-                def new_meta = meta + [chunk: vcf_chunked.name.split(/\./)[-2]]
-                [ new_meta, vcf_chunked ]
-            }
-        }.flatMap()
+        .transpose(by:1)
+        .map { meta, vcf_chunked ->
+            def new_meta = meta + [chunk:vcf_chunked.name.split(/\./)[-2]]
+            [ new_meta, vcf_chunked ]
+        }
+
 
 
     // Create a base channel for CRAM data that will be replicated for each chunk

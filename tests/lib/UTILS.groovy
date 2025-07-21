@@ -18,6 +18,10 @@ class UTILS {
         // It will use linesGzip to extract the provided range of lines from the vcf file
         def vcf_gzip_lines = args.vcf_gzip_lines
 
+        // Use this args to include varlociraptor vcf files in the assertion
+        // It will use the summary method to extract the vcf file content
+        def include_varlociraptor_vcf = args.include_varlociraptor_vcf
+
         // stable_name: All files + folders in ${outdir}/ with a stable name
         def stable_name = getAllFilesFromDir(outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
         // stable_content: All files in ${outdir}/ with stable content
@@ -32,7 +36,9 @@ class UTILS {
         // txt_files: MuSE txt files
         def txt_files = getAllFilesFromDir(outdir, include: ['**/*.MuSE.txt'])
         // vcf_files: All vcf files
-        def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: ['**/test{N,T}.germline.vcf{,.gz}'])
+        def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: ['**/test{N,T}.germline.vcf{,.gz}', 'variant_calling/varlociraptor/*/*.{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}.vcf.gz'])
+        // varlociraptor vcf
+        def varlociraptor_vcf = getAllFilesFromDir(outdir, include: ['**/*.varlociraptor.{vcf}{,.gz}'] )
 
         def assertion = []
 
@@ -48,7 +54,11 @@ class UTILS {
             }
             if (vcf_gzip_lines) {
                 assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[vcf_gzip_lines], path(file.toString()).vcf.summary] })
-            } else {
+            }
+            else {
+                if (include_varlociraptor_vcf) {
+                    assertion.add(varlociraptor_vcf.isEmpty() ? 'No Varlociraptor VCF files' : varlociraptor_vcf.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.summary })
+                } 
                 assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 })
             }
         }
@@ -120,7 +130,7 @@ class UTILS {
                             // Number of successful tasks
                             workflow.trace.succeeded().size(),
                             // All assertions based on the scenario
-                            *UTILS.get_assertion(include_muse_txt: scenario.include_muse_txt, outdir: params.outdir, stub: scenario.stub, vcf_gzip_lines: scenario.vcf_gzip_lines)
+                            *UTILS.get_assertion(include_muse_txt: scenario.include_muse_txt, outdir: params.outdir, stub: scenario.stub, vcf_gzip_lines: scenario.vcf_gzip_lines, include_varlociraptor_vcf: scenario.include_varlociraptor_vcf)
                         ).match() }
                     )
                     // Check stdout if specified
