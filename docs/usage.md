@@ -86,7 +86,7 @@ Output from Variant Calling and/or Annotation will be in a specific directory fo
 | `sex`      | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                                  |
 | `status`   | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> _Optional, Default: `0`_                                                                                                                                                                                                                             |
 | `sample`   | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the _same_ ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples <br /> _Required_ |
-| `lane`     | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Required for `--step mapping`_                                                                                 |
+| `lane`     | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Optional, only needed if you want to distinguish multiple lanes for a sample._ |
 | `fastq_1`  | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                        |
 | `fastq_2`  | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                        |
 | `spring_1` | Full path to spring-compressed, gzipped FastQ file for read 1 or for reads 1 and 2. The Fastq file has to be first gzipped, then spring-compressed, and it must have the extension `.fastq.gz.spring` or `.fq.gz.spring`.                                                                                                         |
@@ -102,43 +102,43 @@ An [example samplesheet](../assets/samplesheet.csv) has been provided with the p
 
 ### Start with mapping (`--step mapping` [default])
 
-This step can be started either from FastQ files (gzip-compressed or gzip+spring-compressed) or (u)BAMs. The CSV must contain at least the columns `patient`, `sample`, `lane`, and `fastq_1/fastq_2`, `spring_1`, `spring_1/spring_2` or `bam`.
+This step can be started either from FastQ files (gzip-compressed or gzip+spring-compressed) or (u)BAMs. The CSV must contain at least the columns `patient`, `sample`, and `fastq_1/fastq_2`, `spring_1`, `spring_1/spring_2` or `bam`. The `lane` column is optional and only needed if you want to distinguish multiple lanes for a sample.
 
 #### Examples
 
 Minimal config file:
 
 ```bash
-patient,sample,lane,fastq_1,fastq_2
-patient1,test_sample,lane_1,test_1.fastq.gz,test_2.fastq.gz
+patient,sample,fastq_1,fastq_2
+patient1,test_sample,test_1.fastq.gz,test_2.fastq.gz
 ```
 
 ```bash
-patient,sample,lane,spring_1
-patient1,test_sample,lane_1,test_R1_and_R2.fastq.gz.spring
+patient,sample,spring_1
+patient1,test_sample,test_R1_and_R2.fastq.gz.spring
 ```
 
 ```bash
-patient,sample,lane,spring_1,spring_2
-patient1,test_sample,lane_1,test_R1.fastq.gz.spring,test_R2.fastq.gz.spring
+patient,sample,spring_1,spring_2
+patient1,test_sample,test_R1.fastq.gz.spring,test_R2.fastq.gz.spring
 ```
 
 ```bash
-patient,sample,lane,bam
-patient1,test_sample,lane_1,test.bam
+patient,sample,bam
+patient1,test_sample,test.bam
 ```
 
 In this example, the sample is multiplexed over three lanes:
 
 ```bash
-patient,sample,lane,fastq_1,fastq_2
-patient1,test_sample,lane_1,test_L001_1.fastq.gz,test_L001_2.fastq.gz
-patient1,test_sample,lane_2,test_L002_1.fastq.gz,test_L002_2.fastq.gz
-patient1,test_sample,lane_3,test_L003_1.fastq.gz,test_L003_2.fastq.gz
+patient,sample,fastq_1,fastq_2
+patient1,test_sample,test_L001_1.fastq.gz,test_L001_2.fastq.gz
+patient1,test_sample,test_L002_1.fastq.gz,test_L002_2.fastq.gz
+patient1,test_sample,test_L003_1.fastq.gz,test_L003_2.fastq.gz
 ```
 
 ```bash
-patient,sample,lane,bam
+patient,sample,bam
 patient1,test_sample,1,test_L001.bam
 patient1,test_sample,2,test_L002.bam
 patient1,test_sample,3,test_L003.bam
@@ -575,7 +575,7 @@ Sarek can be started at different points in the analysis by setting the paramete
 
 This list is by no means exhaustive and it will depend on the specific analysis you would like to run. This is a suggestion based on the individual docs of the tools specifically for human genomes and a garden-variety sequencing run as well as what has been added to the pipeline.
 
-| Tool                                                                                                    | WGS | WES |  Panel |  Germline | Tumor-Only | Somatic (Tumor-Normal) |
+| Tool                                                                                                    | WGS | WES |  Panel |  Germline | Tumor-Only | Somatic (Tumor-Normal) |
 | :------------------------------------------------------------------------------------------------------ | :-: | :-: | :----: | :-------: | :--------: | :--------------------: |
 | [DeepVariant](https://github.com/google/deepvariant)                                                    |  x  |  x  |   x    |     x     |     -      |           -            |
 | [FreeBayes](https://github.com/ekg/freebayes)                                                           |  x  |  x  |   x    |     x     |     x      |           x            |

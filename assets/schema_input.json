@@ -113,28 +113,11 @@
                 "type": "string"
             }
         },
-        "anyOf": [
-            {
-                "dependentRequired": {
-                    "lane": ["fastq_1"]
-                }
-            },
-            {
-                "dependentRequired": {
-                    "lane": ["spring_1"]
-                }
-            },
-            {
-                "dependentRequired": {
-                    "lane": ["bam"]
-                }
-            }
-        ],
         "dependentRequired": {
             "fastq_2": ["fastq_1"],
             "spring_2": ["spring_1"]
         },
         "required": ["patient", "sample"],
-        "uniqueEntries": ["lane", "patient", "sample"]
+        "uniqueEntries": ["patient", "sample"]
     }
 }
