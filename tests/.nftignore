@@ -38,7 +38,7 @@ reports/samtools/**/**.cram.stats
 reports/snpeff/*/*_snpEff.csv
 reports/snpeff/*/snpEff_summary.html
 reports/vcftools/**/*.TsTv.qual
-variant_calling/**/*.{bcf,vcf.gz,vcf.gz.tbi}
+variant_calling/**/*.{bcf,vcf,vcf.gz,vcf.gz.tbi}
 variant_calling/ascat/*/*.metrics.txt
 variant_calling/ascat/*/*.png
 variant_calling/cnvkit/*/*.pdf
