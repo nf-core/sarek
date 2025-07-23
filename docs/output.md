@@ -57,6 +57,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [Control-FREEC](#control-freec)
   - [Microsatellite instability (MSI)](#microsatellite-instability-msi)
     - [MSIsensorPro](#msisensorpro)
+  - [Varlociraptor](#varlociraptor)
   - [Concatenation](#concatenation)
   - [Normalization](#normalization)
 - [Variant annotation](#variant-annotation)
@@ -916,6 +917,31 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
   - Somatic sites detected.
 - `<tumorsample_vs_normalsample>_somatic`
   - Germline sites detected.
+  </details>
+
+### Varlociraptor
+
+As varlociraptor requires to provide a set of candidate variants to consider it can be run in combination with any variant caller. At the moment it is implemented for somatic (tumor-normal) variant calling.
+
+<details markdown="1">
+<summary>Postprocessed VCF files for tumor-normal calling</summary>
+
+**Output directory: `{outdir}/variantcalling/varlociraptor/`**
+
+- `<sample>.<variantcaller>.varlociraptor.vcf.gz` and `<sample>.<variantcaller>.varlociraptor.vcf.gz.tbi`
+  - Final VCF with tabix index
+- `<sample>/*.filled.yaml`
+  - YAML file containing scenario for varlociraptor calling
+- `<normal_id>/<normal_id>.alignment-properties.json`
+  - JSON file containing alignment properties for normal sample cram
+- `<tumor_id>/<tumor_id>.alignment-properties.json`
+  - JSON file containing alignment properties for tumor sample cram
+- `<normal_id>/<normal_id>.<caller>.split.<0,1,2...>.bcf` and `<normal_id>/<normal_id>.<caller>.preprocess.<0,1,2...>.bcf`
+  - Candidate variants split into chunks and preprocessed for calling
+- `<tumor_id>/<tumor_id>.<caller>.split.<0,1,2...>.bcf` and `<tumor_id>/<tumor_id>.<caller>.preprocess.<0,1,2...>.bcf`
+  - Candidate variants split into chunks and preprocessed for calling
+- `<sample>/<sample>.<caller>.call.<0,1,2...>.bcf`, `<sample>/<sample>.<caller>.sort.<0,1,2...>.vcf.gz` and `<sample>/<sample>.<caller>.sort.<0,1,2...>.vcf.gz.tbi`
+  - Called variants (call) and sorted variants (sort), still in chunks
   </details>
 
 ### Concatenation
