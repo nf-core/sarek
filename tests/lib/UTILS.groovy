@@ -57,7 +57,7 @@ class UTILS {
             }
             else {
                 if (include_varlociraptor_vcf) {
-                    assertion.add(varlociraptor_vcf.isEmpty() ? 'No Varlociraptor VCF files' : varlociraptor_vcf.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.summary })
+                    assertion.add(varlociraptor_vcf.isEmpty() ? 'No Varlociraptor VCF files' : varlociraptor_vcf.collect { file -> path(file.toString()).vcf.getVariantsAsStrings(40)})
                 } 
                 assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 })
             }
