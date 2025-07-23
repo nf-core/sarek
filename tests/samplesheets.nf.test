@@ -38,17 +38,17 @@ nextflow_pipeline {
             stderr: [1..2]
         ],
         [
-            name: "-profile test --input tests/csv/3.0/multiple_lane_ids.csv",
+            name: "-profile test --input tests/csv/3.0/fastq_multiple_lane_ids.csv",
             params: [
-                input: "${projectDir}/tests/csv/3.0/multiple_lane_ids.csv",
+                input: "${projectDir}/tests/csv/3.0/fastq_multiple_lane_ids.csv",
             ],
             failure: true,
             stderr: [0..-1]
         ],
         [
-            name: "-profile test --input tests/csv/3.0/multiple_sample_ids.csv",
+            name: "-profile test --input tests/csv/3.0/fastq_multiple_sample_ids.csv",
             params: [
-                input: "${projectDir}/tests/csv/3.0/multiple_sample_ids.csv",
+                input: "${projectDir}/tests/csv/3.0/fastq_multiple_sample_ids.csv",
             ],
             failure: true,
             stderr: [0..-1]
