@@ -15,16 +15,12 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_cram
     ch_fasta
     ch_fasta_fai
+    ch_scenario
     ch_vcf
+    val_num_chunks
 
     main:
-    // Set number of chunks for splitting BCF files when preprocessing and calling variants
-    val_num_chunks = 15
     ch_versions = Channel.empty()
-
-    // Prepare the scenario file
-    ch_scenario = Channel.fromPath("$projectDir/assets/varlociraptor_somatic_with_priors.yte.yaml", checkIfExists: true)
-                    .map{ it -> [ [id:"tumor_normal_scenario"], it ] }
 
     meta_map = ch_cram.map{ meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai -> meta + [sex_string: (meta.sex == "XX" ? "female" : "male") ] }
 

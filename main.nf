@@ -174,6 +174,9 @@ workflow NFCORE_SAREK {
     loci_files             = PREPARE_GENOME.out.loci_files
     rt_file                = PREPARE_GENOME.out.rt_file
 
+    // For varlociraptor get the scenario file
+    varlociraptor_scenario_file = params.varlociraptor_scenario_file ? Channel.fromPath(params.varlociraptor_scenario_file).map{ it -> [ [id:it.baseName - '.yte'], it ] }.collect() : Channel.empty()
+
     // Tabix indexed vcf files
     bcftools_annotations_tbi  = params.bcftools_annotations    ? params.bcftools_annotations_tbi ? Channel.fromPath(params.bcftools_annotations_tbi).collect() : PREPARE_GENOME.out.bcftools_annotations_tbi : Channel.value([])
     dbsnp_tbi                 = params.dbsnp                   ? params.dbsnp_tbi                ? Channel.fromPath(params.dbsnp_tbi).collect()                : PREPARE_GENOME.out.dbsnp_tbi                : Channel.value([])
@@ -300,6 +303,7 @@ workflow NFCORE_SAREK {
         rt_file,
         sentieon_dnascope_model,
         snpeff_cache,
+        varlociraptor_scenario_file,
         vep_cache,
         vep_cache_version,
         vep_extra_files,

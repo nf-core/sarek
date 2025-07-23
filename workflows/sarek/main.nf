@@ -99,6 +99,7 @@ workflow SAREK {
         rt_file
         sentieon_dnascope_model
         snpeff_cache
+        varlociraptor_scenario_file
         vep_cache
         vep_cache_version
         vep_extra_files
@@ -407,7 +408,10 @@ workflow SAREK {
                 fasta,
                 fasta_fai,
                 params.concatenate_vcfs,
-                params.normalize_vcfs)
+                params.normalize_vcfs,
+                params.varlociraptor_chunk_size,
+                varlociraptor_scenario_file
+            )
 
         // Gather vcf files for annotation and QC
         vcf_to_annotate = Channel.empty()

@@ -19,6 +19,8 @@ workflow POST_VARIANTCALLING {
     fai
     concatenate_vcfs
     normalize_vcfs
+    varlociraptor_chunk_size      // integer: [mandatory] [default: 15] number of chunks to split BCF files when preprocessing and calling variants
+    varlociraptor_scenario_file   // string: [mandatory] [default: "$projectDir/assets/varlociraptor_somatic_with_priors.yte.yaml"] path to the varlociraptor scenario file
 
     main:
     versions = Channel.empty()
@@ -41,7 +43,7 @@ workflow POST_VARIANTCALLING {
 
     // implement for somatic case first
     if(tools.split(',').contains('varlociraptor')) {
-        VCF_VARLOCIRAPTOR_SOMATIC(cram_somatic, fasta, fai, somatic_vcfs)
+        VCF_VARLOCIRAPTOR_SOMATIC(cram_somatic, fasta, fai, varlociraptor_scenario_file, somatic_vcfs, varlociraptor_chunk_size)
         vcfs = VCF_VARLOCIRAPTOR_SOMATIC.out.vcf
         versions = versions.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.versions)
     }

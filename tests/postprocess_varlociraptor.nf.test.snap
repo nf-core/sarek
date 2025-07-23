@@ -341,9 +341,9 @@
                 "variant_calling/varlociraptor/sample4_vs_sample3/sample4_vs_sample3.mutect2.sort.9.vcf.gz",
                 "variant_calling/varlociraptor/sample4_vs_sample3/sample4_vs_sample3.mutect2.sort.9.vcf.gz.tbi",
                 "variant_calling/varlociraptor/sample4_vs_sample3/versions.yml",
-                "variant_calling/varlociraptor/tumor_normal_scenario",
-                "variant_calling/varlociraptor/tumor_normal_scenario/tumor_normal_scenario.yaml",
-                "variant_calling/varlociraptor/tumor_normal_scenario/versions.yml",
+                "variant_calling/varlociraptor/varlociraptor_somatic_with_priors",
+                "variant_calling/varlociraptor/varlociraptor_somatic_with_priors/varlociraptor_somatic_with_priors.filled.yaml",
+                "variant_calling/varlociraptor/varlociraptor_somatic_with_priors/versions.yml",
                 "variant_calling/varlociraptor/versions.yml"
             ],
             [
@@ -379,7 +379,7 @@
                 "versions.yml:md5,cfadb763478505b738e236a0eb3fb584",
                 "versions.yml:md5,804aee4870bf376179cfaf10cdc4f827",
                 "versions.yml:md5,be36486a80466a8b21425e920f0485e2",
-                "tumor_normal_scenario.yaml:md5,d85fd82470de636a7d97b869d6c32fbc",
+                "varlociraptor_somatic_with_priors.filled.yaml:md5,d85fd82470de636a7d97b869d6c32fbc",
                 "versions.yml:md5,1faa01049e0b1c8cf69a2a5a7628d24c",
                 "versions.yml:md5,2f207639ad85b335bd648a600b1d1fb7"
             ],
@@ -397,6 +397,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-23T13:18:16.131043198"
+        "timestamp": "2025-07-23T13:37:59.135562281"
     }
 }
