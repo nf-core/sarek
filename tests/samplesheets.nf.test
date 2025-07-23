@@ -10,9 +10,9 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --input tests/csv/3.0/sample_with_space.csv",
+            name: "-profile test --input tests/csv/3.0/fastq_sample_with_space.csv",
             params: [
-                input: "${projectDir}/tests/csv/3.0/sample_with_space.csv",
+                input: "${projectDir}/tests/csv/3.0/fastq_sample_with_space.csv",
             ],
             failure: true,
             stderr: [0..1,3..5]
