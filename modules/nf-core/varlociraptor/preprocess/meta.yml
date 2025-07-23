@@ -27,13 +27,13 @@ input:
         description: Sorted BAM/CRAM/SAM file
         pattern: "*.{bam,cram,sam}"
         ontologies:
-          - edam: http://edamontology.org/format_2572  # BAM
+          - edam: http://edamontology.org/format_2572 # BAM
     - bai:
         type: file
         description: Index of the BAM/CRAM/SAM file
         pattern: "*.{bai,crai,sai}"
         ontologies:
-          - edam: http://edamontology.org/format_3327  # BAI
+          - edam: http://edamontology.org/format_3327 # BAI
     - candidates:
         type: file
         description: Sorted BCF/VCF file
@@ -56,7 +56,7 @@ input:
         description: Reference fasta file
         pattern: "*.{fasta}"
         ontologies:
-          - edam: http://edamontology.org/format_1929  # FASTA
+          - edam: http://edamontology.org/format_1929 # FASTA
   - - meta3:
         type: map
         description: |

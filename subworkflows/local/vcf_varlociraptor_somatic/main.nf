@@ -3,10 +3,10 @@ include { BCFTOOLS_SORT as SORT_CALLED_CHUNKS                                   
 include { RBT_VCFSPLIT as VCFSPLIT_NORMAL                                         } from '../../../modules/nf-core/rbt/vcfsplit'
 include { RBT_VCFSPLIT as VCFSPLIT_TUMOR                                          } from '../../../modules/nf-core/rbt/vcfsplit'
 include { VARLOCIRAPTOR_CALLVARIANTS                                              } from '../../../modules/nf-core/varlociraptor/callvariants'
-include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES as ALIGNMENTPROPERTIES_NORMAL } from '../../../modules/nf-core/varlociraptor/estimatealignmentproperties' 
-include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES as ALIGNMENTPROPERTIES_TUMOR  } from '../../../modules/nf-core/varlociraptor/estimatealignmentproperties' 
-include { VARLOCIRAPTOR_PREPROCESS as PREPROCESS_NORMAL                           } from '../../../modules/nf-core/varlociraptor/preprocess'  
-include { VARLOCIRAPTOR_PREPROCESS as PREPROCESS_TUMOR                            } from '../../../modules/nf-core/varlociraptor/preprocess' 
+include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES as ALIGNMENTPROPERTIES_NORMAL } from '../../../modules/nf-core/varlociraptor/estimatealignmentproperties'
+include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES as ALIGNMENTPROPERTIES_TUMOR  } from '../../../modules/nf-core/varlociraptor/estimatealignmentproperties'
+include { VARLOCIRAPTOR_PREPROCESS as PREPROCESS_NORMAL                           } from '../../../modules/nf-core/varlociraptor/preprocess'
+include { VARLOCIRAPTOR_PREPROCESS as PREPROCESS_TUMOR                            } from '../../../modules/nf-core/varlociraptor/preprocess'
 include { YTE as FILL_SCENARIO_FILE                                               } from '../../../modules/nf-core/yte'
 
 workflow VCF_VARLOCIRAPTOR_SOMATIC {
@@ -90,7 +90,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         .combine(ch_alignment_tumor_base, by: 0)  // Combine by sample ID
         .map{ _id, meta_vcf, vcf, meta_cram, tumor_cram, tumor_crai, _meta_alignment, alignment_json ->
             def new_meta = meta_cram + [
-                variantcaller: meta_vcf.variantcaller, 
+                variantcaller: meta_vcf.variantcaller,
                 postprocess: 'varlociraptor',
                 chunk: meta_vcf.chunk
             ]
@@ -137,7 +137,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         .combine(ch_alignment_base, by: 0)  // Combine by sample ID
         .map{ _id, meta_vcf, vcf, meta_cram, normal_cram, normal_crai, _meta_alignment, alignment_json ->
             def new_meta = meta_cram + [
-                variantcaller: meta_vcf.variantcaller, 
+                variantcaller: meta_vcf.variantcaller,
                 postprocess: 'varlociraptor',
                 chunk: meta_vcf.chunk
             ]
@@ -162,7 +162,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         ).map{ _id, meta_normal, normal_bcf, _meta_tumor, tumor_bcf ->
             [ meta_normal, [ normal_bcf, tumor_bcf ] ]
         }
-        
+
     VARLOCIRAPTOR_CALLVARIANTS(
         ch_vcf_for_callvariants,
         ch_scenario_file.map{ it -> it[1] }.first(), // scenario file
@@ -209,13 +209,13 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         }
 
     MERGE_CALLED_CHUNKS( ch_vcf_tbi_chunks )
-    
+
     ch_final_vcf = MERGE_CALLED_CHUNKS.out.vcf.map{ meta, vcf -> [meta.id + meta.variantcaller, meta, vcf] }
         .join(
             MERGE_CALLED_CHUNKS.out.tbi.map{ meta, tbi -> [meta.id + meta.variantcaller, meta, tbi] }
         )
         .map{ _id, meta_vcf, vcf, _meta_tbi, tbi -> [meta_vcf, vcf, tbi] }
-    
+
     ch_versions = ch_versions.mix(MERGE_CALLED_CHUNKS.out.versions)
 
     emit:
