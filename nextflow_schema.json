@@ -284,7 +284,7 @@
                 },
                 "ascat_ploidy": {
                     "type": "number",
-                    "minimum": 0.0,
+                    "minimum": 0,
                     "fa_icon": "fas fa-bacon",
                     "help_text": "ASCAT: optional argument to override ASCAT optimization and supply psi parameter (expert parameter, do not adapt unless you know what you are doing). See [here](https://raw.githubusercontent.com/VanLoo-lab/ascat/master/man/ASCAT-manual.pdf)",
                     "description": "Overwrite ASCAT ploidy."
@@ -425,6 +425,19 @@
                     "type": "string",
                     "default": "CONSERVATIVE",
                     "help_text": "Option for selecting the PCR indel model used by GATK HaplotypeCaller."
+                },
+                "varlociraptor_chunk_size": {
+                    "type": "integer",
+                    "default": 15,
+                    "description": "Number of chunks to split the vcf-files for varlociraptor",
+                    "hidden": true
+                },
+                "varlociraptor_scenario_file": {
+                    "type": "string",
+                    "default": "assets/varlociraptor_somatic_with_priors.yte.yaml",
+                    "hidden": true,
+                    "description": "Scenario file to be used for varlociraptor",
+                    "help_text": "More info can be found here: https://varlociraptor.github.io/varlociraptor-scenarios/landing/"
                 },
                 "concatenate_vcfs": {
                     "type": "boolean",
