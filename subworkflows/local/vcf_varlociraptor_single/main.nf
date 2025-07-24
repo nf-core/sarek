@@ -39,7 +39,7 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
         ch_fasta,
         ch_fasta_fai
     )
-   
+
     ch_versions = ch_versions.mix(VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES.out.versions)
 
     //
