@@ -244,7 +244,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-tape",
                     "description": "Tag detailing where UMIs are present inside the bam/cram file (e.g. RX).",
-                    "help_text": "If UMIs are already present in the cram/bam file, this details the tag which will. Used in GATK MarkDuplicates and Sentieon dedup. This should be set to RX if restarting from bam files where the UMIs have been extracted by the umi_in_read_header or umi_length options."
+                    "help_text": "If UMIs are already present in the cram/bam file, this details the tag which will be used in GATK MarkDuplicates and Sentieon dedup. This should be set to RX if restarting from bam files where the UMIs have been extracted by the umi_in_read_header or umi_length options. Note this is not compatible with MarkDuplicates Spark."
                 }
             }
         },

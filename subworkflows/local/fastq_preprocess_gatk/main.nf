@@ -26,6 +26,9 @@ include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING           } from '../../../mod
 include { SAMTOOLS_CONVERT as CRAM_TO_BAM                   } from '../../../modules/nf-core/samtools/convert/main'
 include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL             } from '../../../modules/nf-core/samtools/convert/main'
 
+// Copy UMIs from read name to RX tag
+include { FGBIO_COPYUMIFROMREADNAME                         } from '../../../modules/nf-core/fgbio/copyumifromreadname/main'
+
 // Mark Duplicates (+QC)
 include { BAM_MARKDUPLICATES                                } from '../../../subworkflows/local/bam_markduplicates/main'
 include { BAM_MARKDUPLICATES_SPARK                          } from '../../../subworkflows/local/bam_markduplicates_spark/main'
@@ -229,6 +232,14 @@ workflow FASTQ_PREPROCESS_GATK {
         // ch_bam_for_markduplicates will contain bam mapped with FASTQ_ALIGN when step is mapping
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
         cram_for_markduplicates = params.step == 'mapping' ? bam_mapped : input_sample.map{ meta, input, _index -> [ meta, input ] }
+
+        // If UMIs started in read header or were put there by fastp, copy to RX tag
+        if (params.umi_in_read_header || params.umi_location) {
+            FGBIO_COPYUMIFROMREADNAME(cram_for_markduplicates)
+            cram_for_markduplicates = FGBIO_COPYUMIFROMREADNAME.out.bam
+            versions = versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
+        }
+
         // if no MD is done, then run QC on mapped & converted CRAM files
         // or the input BAM (+converted) or CRAM files
         cram_skip_markduplicates = Channel.empty()
@@ -285,6 +296,7 @@ workflow FASTQ_PREPROCESS_GATK {
             // Gather used softwares versions
             versions = versions.mix(BAM_SENTIEON_DEDUP.out.versions)
         } else {
+
             BAM_MARKDUPLICATES(
                 cram_for_markduplicates,
                 fasta,

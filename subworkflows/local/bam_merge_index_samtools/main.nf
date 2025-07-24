@@ -6,7 +6,6 @@
 
 include { SAMTOOLS_INDEX as INDEX_MERGE_BAM } from '../../../modules/nf-core/samtools/index/main'
 include { SAMTOOLS_MERGE as MERGE_BAM       } from '../../../modules/nf-core/samtools/merge/main'
-include { FGBIO_COPYUMIFROMREADNAME         } from '../../../modules/nf-core/fgbio/copyumifromreadname/main'
 
 workflow BAM_MERGE_INDEX_SAMTOOLS {
     take:
@@ -14,13 +13,6 @@ workflow BAM_MERGE_INDEX_SAMTOOLS {
 
     main:
     versions = Channel.empty()
-
-    // If UMIs started in read header or were put there by fastp, copy to RX tag
-    if (params.umi_in_read_header || params.umi_location) {
-        FGBIO_COPYUMIFROMREADNAME(bam)
-        bam = FGBIO_COPYUMIFROMREADNAME.out.bam
-        versions = versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
-    }
 
     // Figuring out if there is one or more bam(s) from the same sample
     bam_to_merge = bam.branch{ meta, bam_ ->
