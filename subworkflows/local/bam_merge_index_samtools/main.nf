@@ -15,8 +15,8 @@ workflow BAM_MERGE_INDEX_SAMTOOLS {
     main:
     versions = Channel.empty()
 
-    // If UMIs started in read header, copy to RX tag
-    if (params.umi_in_read_header ) {
+    // If UMIs started in read header or were put there by fastp, copy to RX tag
+    if (params.umi_in_read_header || params.umi_location) {
         FGBIO_COPYUMIFROMREADNAME(bam)
         bam = FGBIO_COPYUMIFROMREADNAME.out.bam
         versions = versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
