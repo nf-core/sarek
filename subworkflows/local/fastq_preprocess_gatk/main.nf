@@ -157,7 +157,7 @@ workflow FASTQ_PREPROCESS_GATK {
         aligned_bams = Channel.empty()
         // If UMIs started in read header or were put there by fastp, copy to RX tag
         if (params.umi_in_read_header || params.umi_location) {
-            FGBIO_COPYUMIFROMREADNAME(FASTQ_ALIGN.out.bam)
+            FGBIO_COPYUMIFROMREADNAME(FASTQ_ALIGN.out.bam.map{ meta, bam -> [ meta, bam, [] ] })
             aligned_bams = FGBIO_COPYUMIFROMREADNAME.out.bam
             versions = versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
         } else {
@@ -244,7 +244,7 @@ workflow FASTQ_PREPROCESS_GATK {
         cram_for_markduplicates = params.step == 'mapping' ? bam_mapped : input_sample.map{ meta, input, _index -> [ meta, input ] }
 
         if(params.step == 'markduplicates' && params.umi_in_read_header) {
-            FGBIO_COPYUMIFROMREADNAME(cram_for_markduplicates)
+            FGBIO_COPYUMIFROMREADNAME(cram_for_markduplicates.map{ meta, bam -> [ meta, bam, [] ] })
             cram_for_markduplicates = FGBIO_COPYUMIFROMREADNAME.out.bam
             versions = versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
         }
