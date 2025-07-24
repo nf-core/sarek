@@ -21,6 +21,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     main:
     ch_versions = Channel.empty()
+    Channel.value(val_num_chunks).dump(tag: "val_num_chunks")
 
     meta_map = ch_cram.map{ meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai -> meta + [sex_string: (meta.sex == "XX" ? "female" : "male") ] } 
 
@@ -53,6 +54,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_versions = ch_versions.mix(ALIGNMENTPROPERTIES_TUMOR.out.versions)
     ch_versions = ch_versions.mix(ALIGNMENTPROPERTIES_NORMAL.out.versions)
 
+    ch_vcf.view { "ch_vcf emits: $it" }
     //
     // CHUNK AND PREPROCESS TUMOR VCF
     //
@@ -68,7 +70,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         .map { meta, vcf_chunked ->
             def new_meta = meta + [chunk:vcf_chunked.name.split(/\./)[-2]]
             [ new_meta, vcf_chunked ]
-        }
+        }.dump(tag: "ch_chunked_tumor_vcfs")
 
 
     // Create a base channel for CRAM data that will be replicated for each chunk
@@ -104,6 +106,8 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     //
     // CHUNK AND PREPROCESS NORMAL VCF
     //
+
+    // TODO: do i need to use the germline VCF here?
     VCFSPLIT_NORMAL(
         ch_vcf,
         val_num_chunks

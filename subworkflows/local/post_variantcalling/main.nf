@@ -46,19 +46,19 @@ workflow POST_VARIANTCALLING {
     //
     // VARLOCIRAPTOR
     //
-    if(tools.split(',').contains('varlociraptor') && cram_germline) {
+    if(tools.split(',').contains('varlociraptor')) {
         VCF_VARLOCIRAPTOR_GERMLINE(cram_germline, fasta, fai, varlociraptor_scenario_file, germline_vcfs, varlociraptor_chunk_size, 'normal')
-        vcfs = VCF_VARLOCIRAPTOR_GERMLINE.out.vcf
+        vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.vcf)
         versions = versions.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.versions)
     }
-    if(tools.split(',').contains('varlociraptor') && cram_somatic) {
+    if(tools.split(',').contains('varlociraptor')) {
         VCF_VARLOCIRAPTOR_SOMATIC(cram_somatic, fasta, fai, varlociraptor_scenario_file, somatic_vcfs, varlociraptor_chunk_size)
-        vcfs = VCF_VARLOCIRAPTOR_SOMATIC.out.vcf
+        vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.vcf)
         versions = versions.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.versions)
     }
-    if(tools.split(',').contains('varlociraptor') && cram_tumor_only) {
+    if(tools.split(',').contains('varlociraptor')) {
         VCF_VARLOCIRAPTOR_TUMOR_ONLY(cram_tumor_only, fasta, fai, varlociraptor_scenario_file, tumor_only_vcfs, varlociraptor_chunk_size, 'tumor')
-        vcfs = VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.vcf
+        vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.vcf)
         versions = versions.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.versions)
     }
 
