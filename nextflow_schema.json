@@ -434,7 +434,6 @@
                 },
                 "varlociraptor_scenario_file": {
                     "type": "string",
-                    "default": "assets/varlociraptor_somatic_with_priors.yte.yaml",
                     "hidden": true,
                     "description": "Scenario file to be used for varlociraptor",
                     "help_text": "More info can be found here: https://varlociraptor.github.io/varlociraptor-scenarios/landing/"
