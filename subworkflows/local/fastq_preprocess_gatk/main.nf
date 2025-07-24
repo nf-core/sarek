@@ -154,20 +154,23 @@ workflow FASTQ_PREPROCESS_GATK {
         sort_bam = true
         FASTQ_ALIGN(reads_for_alignment, index_alignment, sort_bam, fasta, fasta_fai)
 
-        aligned_bams = Channel.empty()
+        aligned_bam = Channel.empty()
+        aligned_bai = Channel.empty()
         // If UMIs started in read header or were put there by fastp, copy to RX tag
         if (params.umi_in_read_header || params.umi_location) {
-            FGBIO_COPYUMIFROMREADNAME(FASTQ_ALIGN.out.bam.map{ meta, bam -> [ meta, bam, [] ] })
-            aligned_bams = FGBIO_COPYUMIFROMREADNAME.out.bam
+            FGBIO_COPYUMIFROMREADNAME(FASTQ_ALIGN.out.bam.join(FASTQ_ALIGN.out.bai, by: [0]))
+            aligned_bam = FGBIO_COPYUMIFROMREADNAME.out.bam
+            aligned_bai = FGBIO_COPYUMIFROMREADNAME.out.bai
             versions = versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
         } else {
-            aligned_bams = FASTQ_ALIGN.out.bam
+            aligned_bam = FASTQ_ALIGN.out.bam
+            aligned_bai = FASTQ_ALIGN.out.bai
         }
 
         // Grouping the bams from the same samples not to stall the workflow
         // Use groupKey to make sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all reads from all channels are mapped
-        bam_mapped = aligned_bams
+        bam_mapped = aligned_bam
             .combine(reads_grouping_key) // Creates a tuple of [ meta, bam, reads_grouping_key ]
             .filter { meta1, _bam, meta2 -> meta1.sample == meta2.sample }
             // Add n_fastq and other variables to meta
@@ -185,7 +188,7 @@ workflow FASTQ_PREPROCESS_GATK {
             // Group
             .groupTuple()
 
-        bai_mapped = FASTQ_ALIGN.out.bai
+        bai_mapped = aligned_bai
             .combine(reads_grouping_key) // Creates a tuple of [ meta, bai, reads_grouping_key ]
             .filter { meta1, _bai, meta2 -> meta1.sample == meta2.sample }
             // Add n_fastq and other variables to meta
