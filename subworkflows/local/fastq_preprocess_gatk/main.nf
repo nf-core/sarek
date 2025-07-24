@@ -154,10 +154,20 @@ workflow FASTQ_PREPROCESS_GATK {
         sort_bam = true
         FASTQ_ALIGN(reads_for_alignment, index_alignment, sort_bam, fasta, fasta_fai)
 
+        aligned_bams = Channel.empty()
+        // If UMIs started in read header or were put there by fastp, copy to RX tag
+        if (params.umi_in_read_header || params.umi_location) {
+            FGBIO_COPYUMIFROMREADNAME(FASTQ_ALIGN.out.bam)
+            aligned_bams = FGBIO_COPYUMIFROMREADNAME.out.bam
+            versions = versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
+        } else {
+            aligned_bams = FASTQ_ALIGN.out.bam
+        }
+
         // Grouping the bams from the same samples not to stall the workflow
         // Use groupKey to make sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all reads from all channels are mapped
-        bam_mapped = FASTQ_ALIGN.out.bam
+        bam_mapped = aligned_bams
             .combine(reads_grouping_key) // Creates a tuple of [ meta, bam, reads_grouping_key ]
             .filter { meta1, _bam, meta2 -> meta1.sample == meta2.sample }
             // Add n_fastq and other variables to meta
@@ -233,8 +243,7 @@ workflow FASTQ_PREPROCESS_GATK {
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
         cram_for_markduplicates = params.step == 'mapping' ? bam_mapped : input_sample.map{ meta, input, _index -> [ meta, input ] }
 
-        // If UMIs started in read header or were put there by fastp, copy to RX tag
-        if (params.umi_in_read_header || params.umi_location) {
+        if(params.step == 'markduplicates' && params.umi_in_read_header) {
             FGBIO_COPYUMIFROMREADNAME(cram_for_markduplicates)
             cram_for_markduplicates = FGBIO_COPYUMIFROMREADNAME.out.bam
             versions = versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
