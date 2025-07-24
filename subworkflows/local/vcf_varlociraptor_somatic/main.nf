@@ -177,32 +177,14 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_versions = ch_versions.mix(SORT_CALLED_CHUNKS.out.versions)
 
     ch_vcf_tbi_chunks = SORT_CALLED_CHUNKS.out.vcf
-        .map{ meta, vcf -> [[meta.id, meta.variantcaller], meta, vcf] }
-        .collate(val_num_chunks)
-        .filter{ chunk_list -> chunk_list.size() == val_num_chunks }
-        .map{ chunk_list ->
-            def key = chunk_list[0][0]
-            def meta_list = chunk_list.collect{ it[1] }
-            def vcf_list = chunk_list.collect{ it[2] }
-            [key, meta_list, vcf_list]
+        .join(SORT_CALLED_CHUNKS.out.tbi, failOnMismatch:true, failOnDuplicate:true)
+        .map{ meta, vcf, tbi ->
+            def new_meta = meta - meta.subMap("chunk")
+            [new_meta, vcf, tbi]
         }
-        .join(
-            SORT_CALLED_CHUNKS.out.tbi
-                .map{ meta, tbi -> [[meta.id, meta.variantcaller], meta, tbi] }
-                .collate(val_num_chunks)
-                .filter{ chunk_list -> chunk_list.size() == val_num_chunks }
-                .map{ chunk_list ->
-                    def key = chunk_list[0][0]
-                    def meta_list = chunk_list.collect{ it[1] }
-                    def tbi_list = chunk_list.collect{ it[2] }
-                    [key, meta_list, tbi_list]
-                }
-        )
-        .map{ _key, meta_list_vcf, vcf_list, _meta_list_tbi, tbi_list ->
-            def sample_meta = meta_list_vcf[0].clone()
-            sample_meta.remove('chunk')
-            [sample_meta, vcf_list, tbi_list]
-        }
+        .groupTuple(size:val_num_chunks)
+
+    ch_vcf_tbi_chunks.dump(tag: "ch_vcf_tbi_chunks")
 
     MERGE_CALLED_CHUNKS( ch_vcf_tbi_chunks )
 
