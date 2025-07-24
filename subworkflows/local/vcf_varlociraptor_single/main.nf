@@ -23,14 +23,12 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     meta_map = ch_cram.map{ meta, _cram, _crai -> meta + [sex_string: (meta.sex == "XX" ? "female" : "male") ] }
 
     FILL_SCENARIO_FILE(
-        ch_scenario,
+        meta_map.combine(ch_scenario),
         [],
         meta_map
     )
 
     ch_scenario_file = FILL_SCENARIO_FILE.out.rendered
-
-    ch_scenario_file.dump(tag: 'scenario_file')
 
     ch_versions = ch_versions.mix(FILL_SCENARIO_FILE.out.versions)
 
@@ -132,6 +130,6 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     ch_versions = ch_versions.mix(MERGE_CALLED_CHUNKS.out.versions)
 
     emit:
-    vcf      = ch_vcf
+    vcf      = ch_final_vcf
     versions = ch_versions
 }

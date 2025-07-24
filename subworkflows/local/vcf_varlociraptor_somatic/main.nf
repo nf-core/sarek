@@ -22,10 +22,10 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     main:
     ch_versions = Channel.empty()
 
-    meta_map = ch_cram.map{ meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai -> meta + [sex_string: (meta.sex == "XX" ? "female" : "male") ] }
+    meta_map = ch_cram.map{ meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai -> meta + [sex_string: (meta.sex == "XX" ? "female" : "male") ] } 
 
     FILL_SCENARIO_FILE(
-        ch_scenario,
+        meta_map.combine(ch_scenario),
         [],
         meta_map
     )

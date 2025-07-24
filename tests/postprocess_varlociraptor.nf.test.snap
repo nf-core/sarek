@@ -261,6 +261,7 @@
                 "variant_calling/varlociraptor/sample3/sample3.mutect2.split.7.bcf",
                 "variant_calling/varlociraptor/sample3/sample3.mutect2.split.8.bcf",
                 "variant_calling/varlociraptor/sample3/sample3.mutect2.split.9.bcf",
+                "variant_calling/varlociraptor/sample3/sample3.scenario.varlociraptor.yaml",
                 "variant_calling/varlociraptor/sample3/versions.yml",
                 "variant_calling/varlociraptor/sample4",
                 "variant_calling/varlociraptor/sample4/sample4.alignment-properties.json",
@@ -295,6 +296,7 @@
                 "variant_calling/varlociraptor/sample4/sample4.mutect2.split.8.bcf",
                 "variant_calling/varlociraptor/sample4/sample4.mutect2.split.9.bcf",
                 "variant_calling/varlociraptor/sample4/versions.yml",
+                "variant_calling/varlociraptor/sample4_vs_sample3",
                 "variant_calling/varlociraptor/sample4_vs_sample3.mutect2.varlociraptor.somatic.vcf.gz",
                 "variant_calling/varlociraptor/sample4_vs_sample3.mutect2.varlociraptor.somatic.vcf.gz.tbi",
                 "variant_calling/varlociraptor/sample4_vs_sample3.somatic",
@@ -344,9 +346,8 @@
                 "variant_calling/varlociraptor/sample4_vs_sample3.somatic/sample4_vs_sample3.mutect2.sort.9.vcf.gz",
                 "variant_calling/varlociraptor/sample4_vs_sample3.somatic/sample4_vs_sample3.mutect2.sort.9.vcf.gz.tbi",
                 "variant_calling/varlociraptor/sample4_vs_sample3.somatic/versions.yml",
-                "variant_calling/varlociraptor/varlociraptor_somatic_with_priors",
-                "variant_calling/varlociraptor/varlociraptor_somatic_with_priors/varlociraptor_somatic_with_priors.filled.yaml",
-                "variant_calling/varlociraptor/varlociraptor_somatic_with_priors/versions.yml",
+                "variant_calling/varlociraptor/sample4_vs_sample3/sample4_vs_sample3.scenario.varlociraptor.yaml",
+                "variant_calling/varlociraptor/sample4_vs_sample3/versions.yml",
                 "variant_calling/varlociraptor/versions.yml"
             ],
             [
@@ -379,11 +380,12 @@
                 "sample4_vs_sample3.mutect2.filtered.vcf.gz.filteringStats.tsv:md5,9ae27fbd04af1a2ea574e2ff1c3a683b",
                 "sample4_vs_sample3.mutect2.segmentation.table:md5,f4643d9319bde4efbfbe516d6fb13052",
                 "sample4_vs_sample3.mutect2.vcf.gz.stats:md5,c09dff3f145d77d4848992e244811c08",
+                "sample3.scenario.varlociraptor.yaml:md5,d85fd82470de636a7d97b869d6c32fbc",
                 "versions.yml:md5,cfadb763478505b738e236a0eb3fb584",
                 "versions.yml:md5,804aee4870bf376179cfaf10cdc4f827",
                 "versions.yml:md5,be36486a80466a8b21425e920f0485e2",
-                "varlociraptor_somatic_with_priors.filled.yaml:md5,d85fd82470de636a7d97b869d6c32fbc",
-                "versions.yml:md5,49763f34d013ac7ccdea78176fcf5c18",
+                "sample4_vs_sample3.scenario.varlociraptor.yaml:md5,d85fd82470de636a7d97b869d6c32fbc",
+                "versions.yml:md5,1faa01049e0b1c8cf69a2a5a7628d24c",
                 "versions.yml:md5,2f207639ad85b335bd648a600b1d1fb7"
             ],
             "No BAM files",
@@ -391,7 +393,7 @@
             [
                 "sample4_vs_sample3.mutect2.filtered.vcf.gz:md5,39a1cec1e8040924e280606b1c2e98bf",
                 "sample4_vs_sample3.mutect2.vcf.gz:md5,7418ed45a029394253817a5eb7149334",
-                "sample4_vs_sample3.mutect2.varlociraptor.somatic.vcf.gz:md5,313efdc86a2779b3e5a5541ea63f19a5"
+                "sample4_vs_sample3.mutect2.varlociraptor.somatic.vcf.gz:md5,b72c4d0e9304c5c382077f0e0a933aae"
             ],
             "No Varlociraptor VCF files"
         ],
@@ -399,11 +401,335 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-24T14:32:23.100082166"
+        "timestamp": "2025-07-24T15:16:58.181510828"
+    },
+    "-profile test --tools mutect2,varlociraptor --input recalibrated_tumoronly.csv": {
+        "content": [
+            71,
+            {
+                "BCFTOOLS_STATS": {
+                    "bcftools": 1.21
+                },
+                "CALCULATECONTAMINATION": {
+                    "gatk4": "4.6.1.0"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
+                },
+                "FILL_SCENARIO_FILE": {
+                    "yte": "1.9.0"
+                },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.6.1.0"
+                },
+                "GATHERPILEUPSUMMARIES": {
+                    "gatk4": "4.6.1.0"
+                },
+                "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.6.1.0"
+                },
+                "GETPILEUPSUMMARIES": {
+                    "gatk4": "4.6.1.0"
+                },
+                "LEARNREADORIENTATIONMODEL": {
+                    "gatk4": "4.6.1.0"
+                },
+                "MERGEMUTECTSTATS": {
+                    "gatk4": "4.6.1.0"
+                },
+                "MERGE_CALLED_CHUNKS": {
+                    "bcftools": 1.21
+                },
+                "MERGE_MUTECT2": {
+                    "gatk4": "4.6.1.0"
+                },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "MUTECT2": {
+                    "gatk4": "4.6.1.0"
+                },
+                "RBT_VCFSPLIT": {
+                    "Rust-Bio-Tools": "0.42.2"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "SORT_CALLED_CHUNKS": {
+                    "bcftools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                },
+                "VARLOCIRAPTOR_CALLVARIANTS": {
+                    "varlociraptor": "8.7.3"
+                },
+                "VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES": {
+                    "varlociraptor": "8.7.3"
+                },
+                "VARLOCIRAPTOR_PREPROCESS": {
+                    "varlociraptor": "8.7.3"
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
+                }
+            },
+            [
+                "csv",
+                "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
+                "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
+                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/bcftools_stats_variant_depths.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_SNP.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transitions.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transversions.txt",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-pct.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_variant_depths.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-pct.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_variant_depths.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-pct.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_variant_depths.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/dict",
+                "reports",
+                "reports/bcftools",
+                "reports/bcftools/mutect2",
+                "reports/bcftools/mutect2/sample2",
+                "reports/bcftools/mutect2/sample2/sample2.mutect2.filtered.bcftools_stats.txt",
+                "reports/mosdepth",
+                "reports/mosdepth/sample2",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample2/sample2.recal.regions.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.regions.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample2",
+                "reports/samtools/sample2/sample2.recal.cram.stats",
+                "reports/vcftools",
+                "reports/vcftools/mutect2",
+                "reports/vcftools/mutect2/sample2",
+                "reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.FILTER.summary",
+                "reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.TsTv.count",
+                "reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.TsTv.qual",
+                "variant_calling",
+                "variant_calling/mutect2",
+                "variant_calling/mutect2/sample2",
+                "variant_calling/mutect2/sample2/sample2.mutect2.artifactprior.tar.gz",
+                "variant_calling/mutect2/sample2/sample2.mutect2.contamination.table",
+                "variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz",
+                "variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.filteringStats.tsv",
+                "variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.tbi",
+                "variant_calling/mutect2/sample2/sample2.mutect2.pileups.table",
+                "variant_calling/mutect2/sample2/sample2.mutect2.segmentation.table",
+                "variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz",
+                "variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.stats",
+                "variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.tbi",
+                "variant_calling/varlociraptor",
+                "variant_calling/varlociraptor/sample2",
+                "variant_calling/varlociraptor/sample2.mutect2.varlociraptor.vcf.gz",
+                "variant_calling/varlociraptor/sample2.mutect2.varlociraptor.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample2/sample2.alignment-properties.json",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.0.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.1.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.10.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.11.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.12.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.13.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.14.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.2.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.3.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.4.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.5.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.6.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.7.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.8.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.9.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.0.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.1.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.10.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.11.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.12.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.13.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.14.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.2.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.3.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.4.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.5.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.6.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.7.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.8.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.9.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.0.vcf.gz",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.0.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.1.vcf.gz",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.1.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.10.vcf.gz",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.10.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.11.vcf.gz",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.11.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.12.vcf.gz",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.12.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.13.vcf.gz",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.13.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.14.vcf.gz",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.14.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.2.vcf.gz",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.2.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.3.vcf.gz",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.3.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.4.vcf.gz",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.4.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.5.vcf.gz",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.5.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.6.vcf.gz",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.6.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.7.vcf.gz",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.7.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.8.vcf.gz",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.8.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.9.vcf.gz",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.9.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.0.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.1.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.10.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.11.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.12.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.13.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.14.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.2.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.3.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.4.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.5.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.6.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.7.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.8.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.9.bcf",
+                "variant_calling/varlociraptor/sample2/sample2.scenario.varlociraptor.yaml",
+                "variant_calling/varlociraptor/sample2/versions.yml",
+                "variant_calling/varlociraptor/versions.yml"
+            ],
+            [
+                "mosdepth-coverage-per-contig-single.txt:md5,1f24f2f40467234c410a8bda544a8aae",
+                "mosdepth-cumcoverage-dist-id.txt:md5,1036ea76acae803f591fd99838a8eded",
+                "mosdepth_perchrom.txt:md5,1f24f2f40467234c410a8bda544a8aae",
+                "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
+                "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
+                "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
+                "sample2.mutect2.filtered.bcftools_stats.txt:md5,5327cede1f3ad2139945607f66264928",
+                "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
+                "sample2.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
+                "sample2.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
+                "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
+                "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample2.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
+                "sample2.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
+                "sample2.mutect2.filtered.FILTER.summary:md5,276c858391322083833a42e04fe3554d",
+                "sample2.mutect2.filtered.TsTv.count:md5,fe3ff1f0c2ead72f037552727438e00a",
+                "sample2.mutect2.contamination.table:md5,46c708c943b453da89a3da08acfdb2a7",
+                "sample2.mutect2.filtered.vcf.gz.filteringStats.tsv:md5,d4bfaf449c12bbf4dbda370bbb26074c",
+                "sample2.mutect2.pileups.table:md5,df85ceff89be6f9a13707d9cda29dd6e",
+                "sample2.mutect2.segmentation.table:md5,f4643d9319bde4efbfbe516d6fb13052",
+                "sample2.mutect2.vcf.gz.stats:md5,3cc40a35727af6c5223fb45678f3f172",
+                "sample2.scenario.varlociraptor.yaml:md5,d85fd82470de636a7d97b869d6c32fbc",
+                "versions.yml:md5,5801f6b93715e00746dfcc63d089237e",
+                "versions.yml:md5,89014799369389411a683a1d4a7a06c7"
+            ],
+            "No BAM files",
+            "No CRAM files",
+            [
+                "sample2.mutect2.filtered.vcf.gz:md5,245acd4882f96f2b60e63b7fce4cbc5",
+                "sample2.mutect2.vcf.gz:md5,a53450657afc33f2a7b87fd75bf24267"
+            ],
+            [
+                "sample2.mutect2.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=1258, phased=true, phasedAutodetect=false]"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-07-24T15:20:03.509919221"
     },
     "-profile test --tools strelka,varlociraptor --input recalibrated_germline.csv": {
         "content": [
-            16,
+            65,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
@@ -411,8 +737,14 @@
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.1.0"
                 },
+                "FILL_SCENARIO_FILE": {
+                    "yte": "1.9.0"
+                },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
+                },
+                "MERGE_CALLED_CHUNKS": {
+                    "bcftools": 1.21
                 },
                 "MERGE_STRELKA": {
                     "gatk4": "4.6.1.0"
@@ -423,8 +755,14 @@
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
+                "RBT_VCFSPLIT": {
+                    "Rust-Bio-Tools": "0.42.2"
+                },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
+                },
+                "SORT_CALLED_CHUNKS": {
+                    "bcftools": 1.21
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -434,6 +772,15 @@
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "tabix": 1.21
+                },
+                "VARLOCIRAPTOR_CALLVARIANTS": {
+                    "varlociraptor": "8.7.3"
+                },
+                "VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES": {
+                    "varlociraptor": "8.7.3"
+                },
+                "VARLOCIRAPTOR_PREPROCESS": {
+                    "varlociraptor": "8.7.3"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -555,7 +902,90 @@
                 "variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz",
                 "variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz.tbi",
                 "variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz",
-                "variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz.tbi"
+                "variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz.tbi",
+                "variant_calling/varlociraptor",
+                "variant_calling/varlociraptor/sample1",
+                "variant_calling/varlociraptor/sample1.strelka.varlociraptor.vcf.gz",
+                "variant_calling/varlociraptor/sample1.strelka.varlociraptor.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample1/sample1.alignment-properties.json",
+                "variant_calling/varlociraptor/sample1/sample1.scenario.varlociraptor.yaml",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.call.0.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.call.1.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.call.10.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.call.11.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.call.12.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.call.13.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.call.14.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.call.2.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.call.3.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.call.4.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.call.5.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.call.6.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.call.7.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.call.8.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.call.9.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.0.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.1.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.10.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.11.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.12.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.13.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.14.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.2.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.3.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.4.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.5.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.6.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.7.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.8.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.9.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.0.vcf.gz",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.0.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.1.vcf.gz",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.1.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.10.vcf.gz",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.10.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.11.vcf.gz",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.11.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.12.vcf.gz",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.12.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.13.vcf.gz",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.13.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.14.vcf.gz",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.14.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.2.vcf.gz",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.2.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.3.vcf.gz",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.3.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.4.vcf.gz",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.4.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.5.vcf.gz",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.5.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.6.vcf.gz",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.6.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.7.vcf.gz",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.7.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.8.vcf.gz",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.8.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.9.vcf.gz",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.9.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.split.0.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.split.1.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.split.10.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.split.11.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.split.12.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.split.13.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.split.14.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.split.2.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.split.3.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.split.4.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.split.5.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.split.6.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.split.7.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.split.8.bcf",
+                "variant_calling/varlociraptor/sample1/sample1.strelka.split.9.bcf",
+                "variant_calling/varlociraptor/sample1/versions.yml",
+                "variant_calling/varlociraptor/versions.yml"
             ],
             [
                 "mosdepth-coverage-per-contig-single.txt:md5,04d9eccc248633a38fb253bc70fb8d62",
@@ -573,7 +1003,10 @@
                 "sample1.recal.regions.bed.gz:md5,314ce8d7273eff353072108aa77c327c",
                 "sample1.recal.regions.bed.gz.csi:md5,9cb0ad7039a3b703d16ca7d5b835c0ee",
                 "sample1.strelka.variants.FILTER.summary:md5,2048a5de0201a6052c988a0189979a5f",
-                "sample1.strelka.variants.TsTv.count:md5,c5b7a8eda2526d899098439ae4c06a49"
+                "sample1.strelka.variants.TsTv.count:md5,c5b7a8eda2526d899098439ae4c06a49",
+                "sample1.scenario.varlociraptor.yaml:md5,d85fd82470de636a7d97b869d6c32fbc",
+                "versions.yml:md5,a63bc0b16651b27b86c46544841882b2",
+                "versions.yml:md5,727660c1a65c2574d554bd2d299d0ecd"
             ],
             "No BAM files",
             "No CRAM files",
@@ -581,12 +1014,14 @@
                 "sample1.strelka.genome.vcf.gz:md5,9f77528d7bb6c4b2c09eacf71a716439",
                 "sample1.strelka.variants.vcf.gz:md5,5af34e7b632f604dc7a224f977fc2898"
             ],
-            "No Varlociraptor VCF files"
+            [
+                "sample1.strelka.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=53245, phased=true, phasedAutodetect=false]"
+            ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-24T14:53:34.709699738"
+        "timestamp": "2025-07-24T15:13:34.919176149"
     }
 }
