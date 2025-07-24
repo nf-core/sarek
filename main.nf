@@ -175,7 +175,7 @@ workflow NFCORE_SAREK {
     rt_file                = PREPARE_GENOME.out.rt_file
 
     // For varlociraptor get the scenario file
-    varlociraptor_scenario_file = params.varlociraptor_scenario_file ? Channel.fromPath(params.varlociraptor_scenario_file).map{ it -> [ [id:it.baseName - '.yte'], it ] }.collect() 
+    varlociraptor_scenario_file = params.varlociraptor_scenario_file ? Channel.fromPath(params.varlociraptor_scenario_file).map{ it -> [ [id:it.baseName - '.yte'], it ] }.collect()
                                         : Channel.fromPath("${projectDir}/assets/varlociraptor_somatic_with_priors.yte.yaml").map{ it -> [ [id:it.baseName - '.yte'], it ] }.collect()
 
     // Tabix indexed vcf files
