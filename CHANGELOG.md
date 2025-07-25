@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1856](https://github.com/nf-core/sarek/pull/1856) - Added early failure when more than 1 normal sample per patient is provided for somatic variant calling
 - [1904](https://github.com/nf-core/sarek/pull/1904) - Icon support
 - [1934](https://github.com/nf-core/sarek/pull/1934) - Add sentieon TNscope for tumour/normal variant calling
+- [1940](https://github.com/nf-core/sarek/pull/1940) - Add varlociraptor for variant calling
 
 ### Changed
 
