@@ -622,10 +622,10 @@ This list is by no means exhaustive and it will depend on the specific analysis 
 | [indexcov](https://github.com/brentp/goleft/tree/master/indexcov)                                       |  x  |  -  |   -    |     x     |     -      |           x            |
 | [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                          |  x  |  x  |   x    |     x     |     x      |           x            |
 | [ASCAT](https://github.com/VanLoo-lab/ascat)                                                            |  x  |  x  |   -    |     -     |     -      |           x            |
-| [Varlociraptor](https://varlociraptor.github.io/landing/)                                               |  x  |  x  |   x    |     -     |     -      |           x            |
 | [CNVKit](https://cnvkit.readthedocs.io/en/stable/)                                                      |  x  |  x  |   -    |     x     |     x      |           x            |
 | [Control-FREEC](https://github.com/BoevaLab/FREEC)                                                      |  x  |  x  |   x    |     -     |     x      |           x            |
 | [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro)                                             |  x  |  x  |   x    |     -     |     -      |           x            |
+| [Varlociraptor](https://varlociraptor.github.io/landing/)                                               |  x  |  x  |   x    |     x     |     x      |           x            |
 
 ## How to run ASCAT with whole-exome sequencing data?
 
@@ -866,6 +866,12 @@ In particular, in cloud computing setting it is often advisable to reduce the nu
 ## How to create a panel-of-normals for Mutect2
 
 For a detailed tutorial on how to create a panel-of-normals, see [here](https://gatk.broadinstitute.org/hc/en-us/articles/360035531132).
+
+## How to customize the varlociraptor calling
+
+Varlociraptor allows the usage of different scenario files, a few examples can be found in the [scenario catalog](https://varlociraptor.github.io/varlociraptor-scenarios/landing/). Currently only scenarios that have information on "normal" (germline case), "normal" and "tumor" (somatic and tumor-only case) are supported. You can use your own scenario file by adding it to the run command with `--varlociraptor_scenario_file <path/to/scenario/file`.
+
+You can also control the number of chunks that the candidate VCF file is split into by `--varlociraptor_chunk_size <integer>`, it is set to reasonable default (15) but more chunks might aid in accelerating your workflow run if you can run more processes in parallel.
 
 ## Spark related issues
 
