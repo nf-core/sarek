@@ -53,11 +53,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `mosdepth`                             | 0.3.8       | 0.3.10      |
 | `MuSE`                                 |             | 2.1.2       |
 | `MultiQC`                              | 1.25.1      | 1.30        |
+| `rbt`                                  |             | 0.42.2      |
 | `samtools` (in `BWAMEM1_MEM`)          | 1.2         | 1.21        |
 | `samtools` (in `BWAMEM2_MEM`)          | 1.19.2      | 1.21        |
 | `samtools` (in `GATK4_MARKDUPLICATES`) | 1.19.2      | 1.21        |
 | `sentieon`                             | 202308.03   | 202503      |
 | `tabix`                                | 1.2         | 1.21        |
+| `varlociraptor`                        |             | 8.7.3       |
+| `yte`                                  |             | 1.9.0       |
 
 ### Parameters
 
