@@ -170,8 +170,10 @@ Akkatjåkkå is another glacier.
 
 ### Parameters
 
-| Params | Status |
-| ------ | ------ |
+| Params                         | Status |
+| ------------------------------ | ------ |
+| `--varlocriator_scenario_file` | New    |
+| `--varlocriator_chunk_size`    | New    |
 
 ## [3.5.0](https://github.com/nf-core/sarek/releases/tag/3.5.0) - Áhkájiegna
 
