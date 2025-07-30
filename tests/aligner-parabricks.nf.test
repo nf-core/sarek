@@ -10,21 +10,23 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --aligner parabricks",
+            name: "-profile test --aligner parabricks --wes",
             params: [
                 aligner: 'parabricks',
                 save_reference: true,
-                tools: ''
+                tools: '',
+                wes : true,
             ],
             gpu: true
         ],
         [
-            name: "-profile test --aligner parabricks --tools strelka",
+            name: "-profile test --aligner parabricks --tools mutect2 --wes --input fastq_pair.csv",
             params: [
-                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                input : "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 aligner: 'parabricks',
                 save_reference: true,
-                tools: 'strelka'
+                tools: 'mutect2',
+                wes : true,
             ],
             gpu: true
         ]

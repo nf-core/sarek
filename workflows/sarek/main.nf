@@ -190,7 +190,8 @@ workflow SAREK {
                 index_alignment,
                 intervals_and_num_intervals,
                 known_sites_indels,
-                "cram")
+                Channel.value("cram")
+            )
 
             // Gather preprocessing output
             cram_variant_calling = Channel.empty()

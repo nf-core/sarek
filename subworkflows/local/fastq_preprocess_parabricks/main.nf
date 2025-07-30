@@ -16,7 +16,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     ch_reports  = Channel.empty()
 
     // Adjust ch_interval_file
-    ch_interval_file = ch_interval_file.map { file, num ->
+    ch_interval_file = ch_interval_file.collect().map { file, num ->
         [['id': 'interval_file', 'num':num], file]
     }
 
