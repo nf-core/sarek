@@ -15,6 +15,21 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     ch_versions = Channel.empty()
     ch_reports  = Channel.empty()
 
+    ch_reads.map { meta, reads ->
+            [ meta.subMap('patient', 'sample', 'sex', 'status'), reads ]
+        }
+        .groupTuple()
+        .map { meta, reads ->
+            meta + [ n_fastq: reads.size() ] // We can drop the FASTQ files now that we know how many there are
+        }
+        .set { reads_grouping_key }
+
+    ch_reads = ch_reads.map{ meta, reads ->
+        // Update meta.id to meta.sample no multiple lanes or splitted fastqs
+        if (meta.size * meta.num_lanes == 1) [ meta + [ id:meta.sample ], reads ]
+        else [ meta, reads ]
+    }
+
     // Adjust ch_interval_file
     ch_interval_file = ch_interval_file.collect().map { file, num ->
         [['id': 'interval_file', 'num':num], file]
