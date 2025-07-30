@@ -206,10 +206,13 @@
         },
         "timestamp": "2025-07-15T10:37:09.445673362"
     },
-    "-profile test --aligner parabricks --tools mutect2": {
+    "-profile test --aligner parabricks --tools strelka": {
         "content": [
-            11,
+            16,
             {
+                "BCFTOOLS_STATS": {
+                    "bcftools": 1.21
+                },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.18-r1243-dirty"
                 },
@@ -231,19 +234,32 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
+                "STRELKA_SINGLE": {
+                    "strelka": "2.9.10"
+                },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "tabix": 1.21
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
                 }
             },
             [
                 "csv",
                 "csv/mapped.csv",
+                "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/BETA-multiqc.parquet",
+                "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
+                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_SNP.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transitions.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transversions.txt",
                 "multiqc/multiqc_data/fastqc-status-check-heatmap.txt",
                 "multiqc/multiqc_data/fastqc_adapter_content_plot.txt",
                 "multiqc/multiqc_data/fastqc_per_base_n_content_plot.txt",
@@ -261,6 +277,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_fastqc.txt",
@@ -270,8 +287,18 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-pct.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-status-check-heatmap.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_adapter_content_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_per_base_n_content_plot.pdf",
@@ -289,7 +316,17 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-pct.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
                 "multiqc/multiqc_plots/png/fastqc-status-check-heatmap.png",
                 "multiqc/multiqc_plots/png/fastqc_adapter_content_plot.png",
                 "multiqc/multiqc_plots/png/fastqc_per_base_n_content_plot.png",
@@ -307,7 +344,17 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-pct.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
                 "multiqc/multiqc_plots/svg/fastqc-status-check-heatmap.svg",
                 "multiqc/multiqc_plots/svg/fastqc_adapter_content_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc_per_base_n_content_plot.svg",
@@ -325,6 +372,8 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
@@ -346,6 +395,10 @@
                 "reference/intervals/genome.bed",
                 "reference/intervals/genome.bed.gz",
                 "reports",
+                "reports/bcftools",
+                "reports/bcftools/strelka",
+                "reports/bcftools/strelka/test",
+                "reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt",
                 "reports/fastqc",
                 "reports/fastqc/test-test_L1",
                 "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.html",
@@ -366,7 +419,20 @@
                 "reports/mosdepth/test/test.recal.regions.bed.gz.csi",
                 "reports/samtools",
                 "reports/samtools/test",
-                "reports/samtools/test/test.recal.cram.stats"
+                "reports/samtools/test/test.recal.cram.stats",
+                "reports/vcftools",
+                "reports/vcftools/strelka",
+                "reports/vcftools/strelka/test",
+                "reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary",
+                "reports/vcftools/strelka/test/test.strelka.variants.TsTv.count",
+                "reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual",
+                "variant_calling",
+                "variant_calling/strelka",
+                "variant_calling/strelka/test",
+                "variant_calling/strelka/test/test.strelka.genome.vcf.gz",
+                "variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi",
+                "variant_calling/strelka/test/test.strelka.variants.vcf.gz",
+                "variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi"
             ],
             [
                 "fastqc-status-check-heatmap.txt:md5,eeb4e7e7a45f4223c86bfe3aea81f90b",
@@ -382,7 +448,7 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,bb8bba9db5872e87164490df2109fd25",
                 "mosdepth-cumcoverage-dist-id.txt:md5,797f6e5f1fe9edcb38dc9ac66ae5ba42",
                 "mosdepth_perchrom.txt:md5,bb8bba9db5872e87164490df2109fd25",
-                "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
+                "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "multiqc_fastqc.txt:md5,2fd25e8c81f962594b801d5a9df3cd87",
                 "samtools-stats-dp.txt:md5,f9537d88129465c4ea65ba8929826778",
                 "samtools_alignment_plot.txt:md5,cfd7ad770341639774ad373a443db348",
@@ -395,22 +461,28 @@
                 "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
                 "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
+                "test.strelka.variants.bcftools_stats.txt:md5,4e25aee71b8c40e5de28b700d7b09a3c",
                 "test.recal.mosdepth.global.dist.txt:md5,7efd6401982256cf805d32489666cc77",
                 "test.recal.mosdepth.region.dist.txt:md5,51ea5f44541cba3a0c4084e66b3010b2",
                 "test.recal.mosdepth.summary.txt:md5,6199a81261f1d3b9d69b66ea4e1cb972",
                 "test.recal.regions.bed.gz:md5,6cc7cad2758603997e82d3b1272478d2",
-                "test.recal.regions.bed.gz.csi:md5,a5ad8f917979f62eacfff1461529dbaa"
+                "test.recal.regions.bed.gz.csi:md5,a5ad8f917979f62eacfff1461529dbaa",
+                "test.strelka.variants.FILTER.summary:md5,feec8fc54ad1fd7134fdc400e430dca2",
+                "test.strelka.variants.TsTv.count:md5,4d408dfd5c91f5529aca55b3aa2ec870"
             ],
             "No BAM files",
             [
                 "test-test_L1.cram:md5,56ead4e3efd69b35a8e539b1b697213d"
             ],
-            "No VCF files"
+            [
+                "test.strelka.genome.vcf.gz:md5,71553a18115791a437b1d08afce64ec",
+                "test.strelka.variants.vcf.gz:md5,1edf49e88bc08a70b2ec6bda389582d5"
+            ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-15T10:38:47.873017198"
+        "timestamp": "2025-07-30T14:28:26.601760172"
     }
 }
