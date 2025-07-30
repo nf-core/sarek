@@ -19,12 +19,12 @@ nextflow_pipeline {
             gpu: true
         ],
         [
-            name: "-profile test --aligner parabricks --tools mutect2",
+            name: "-profile test --aligner parabricks --tools strelka",
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 aligner: 'parabricks',
                 save_reference: true,
-                tools: 'mutect2'
+                tools: 'strelka'
             ],
             gpu: true
         ]
