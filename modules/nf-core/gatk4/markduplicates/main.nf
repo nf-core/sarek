@@ -61,9 +61,12 @@ process GATK4_MARKDUPLICATES {
 
     # If cram files are wished as output, the run samtools for conversion
     if [[ ${prefix} == *.cram ]]; then
+        echo "$(date -Iseconds) - converting output to cram"
         samtools view -@ ${avail_cpu} -Ch -T ${fasta} -o ${prefix} ${prefix_bam}
         rm ${prefix_bam}
+        echo "$(date -Iseconds) - indexing cram file"
         samtools index -@ ${avail_cpu} ${prefix}
+        echo "$(date -Iseconds) - cram conversion complete"
     fi
 
     cat <<-END_VERSIONS > versions.yml
