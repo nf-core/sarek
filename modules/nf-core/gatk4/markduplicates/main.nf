@@ -40,6 +40,12 @@ process GATK4_MARKDUPLICATES {
     else {
         avail_mem = (task.memory.mega * 0.8).intValue()
     }
+    def avail_cpu = 1
+    if (!task.cpus) {
+        log.info '[GATK MarkDuplicates] Available CPUs not known, defaulting to a single core'
+    } else {
+        avail_cpu = task.cpus
+    }
 
     // Using samtools and not Markduplicates to compress to CRAM speeds up computation:
     // https://medium.com/@acarroll.dna/looking-at-trade-offs-in-compression-levels-for-genomics-tools-eec2834e8b94
@@ -55,9 +61,9 @@ process GATK4_MARKDUPLICATES {
 
     # If cram files are wished as output, the run samtools for conversion
     if [[ ${prefix} == *.cram ]]; then
-        samtools view -Ch -T ${fasta} -o ${prefix} ${prefix_bam}
+        samtools view -@ ${avail_cpu} -Ch -T ${fasta} -o ${prefix} ${prefix_bam}
         rm ${prefix_bam}
-        samtools index ${prefix}
+        samtools index -@ ${avail_cpu} ${prefix}
     fi
 
     cat <<-END_VERSIONS > versions.yml
