@@ -1,0 +1,27 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+
+    def test_scenario = [
+        [
+            name: "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_umi.csv",
+                tools: null,
+                umi_length: 7,
+                umi_base_skip: 1,
+                umi_location: 'read2'
+            ]
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}
