@@ -292,7 +292,9 @@ workflow FASTQ_PREPROCESS_GATK {
             // Gather used softwares versions
             versions = versions.mix(BAM_MARKDUPLICATES_SPARK.out.versions)
         } else if (params.tools && params.tools.split(',').contains('sentieon_dedup')) {
-            crai_for_markduplicates = params.step == 'mapping' ? bai_mapped : input_sample.map{ meta, _input, index -> [ meta, index ] }
+            crai_for_markduplicates = params.step == 'mapping' 
+                ? bai_mapped 
+                : ( params.umi_in_read_header ? FGBIO_COPYUMIFROMREADNAME.out.bai : input_sample.map{ meta, _input, index -> [ meta, index ] } )
             BAM_SENTIEON_DEDUP(
                 cram_for_markduplicates,
                 crai_for_markduplicates,

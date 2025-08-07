@@ -35,7 +35,7 @@ nextflow_pipeline {
                 build_only_index: true,
                 input: false,
                 save_reference: true,
-                skip_tools: 'multiqc',
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: 'sentieon_dedup',
                 umi_length: 7,
                 umi_base_skip: 1,
