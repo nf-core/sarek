@@ -220,10 +220,8 @@
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "b1966f36ec9de31927b2603d8f499960b2a4c294",
-                        "installed_by": [
-                            "modules"
-                        ]
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
                     },
                     "fgbio/callmolecularconsensusreads": {
                         "branch": "master",
@@ -416,10 +414,8 @@
                     },
                     "gatk4spark/applybqsr": {
                         "branch": "master",
-                        "git_sha": "fa55ebb81654fe1736975fa28d1af5a079bf6a08",
-                        "installed_by": [
-                            "modules"
-                        ]
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
                     },
                     "gatk4spark/baserecalibrator": {
                         "branch": "master",
@@ -500,10 +496,8 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "7b50cb7be890e4b28cffb82e438cc6a8d7805d3f",
-                        "installed_by": [
-                            "modules"
-                        ]
+                        "git_sha": "c9a31c472ef2d86802eb44f27322955849859361",
+                        "installed_by": ["modules"]
                     },
                     "muse/call": {
                         "branch": "master",
@@ -647,10 +641,8 @@
                     },
                     "sentieon/tnscope": {
                         "branch": "master",
-                        "git_sha": "6b36f8e5427ec38911565398de57656ca3a2606a",
-                        "installed_by": [
-                            "modules"
-                        ]
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
                     },
                     "sentieon/varcal": {
                         "branch": "master",
@@ -759,17 +751,13 @@
                     },
                     "utils_nextflow_pipeline": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": [
-                            "subworkflows"
-                        ]
+                        "git_sha": "c2b22d85f30a706a3073387f30380704fcae013b",
+                        "installed_by": ["subworkflows"]
                     },
                     "utils_nfcore_pipeline": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": [
-                            "subworkflows"
-                        ]
+                        "git_sha": "51ae5406a030d4da1e49e4dab49756844fdd6c7a",
+                        "installed_by": ["subworkflows"]
                     },
                     "utils_nfschema_plugin": {
                         "branch": "master",

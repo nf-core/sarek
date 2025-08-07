@@ -173,7 +173,7 @@ workflow SAREK {
             FASTQC(input_fastq)
 
             reports = reports.mix(FASTQC.out.zip.collect{ _meta, logs -> logs })
-            versions = versions.mix(FASTQC.out.versions.first())
+            versions = versions.mix(FASTQC.out.versions)
         }
     }
     else {
@@ -478,25 +478,26 @@ workflow SAREK {
     version_yaml = Channel.empty()
     if (!(params.skip_tools && params.skip_tools.split(',').contains('versions'))) {
         version_yaml = softwareVersionsToYAML(versions)
-        .collectFile( storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_'  +  'sarek_software_'  + 'mqc_'  + 'versions.yml', sort: true, newLine: true)
+        .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_'  +  'sarek_software_'  + 'mqc_'  + 'versions.yml', sort: true, newLine: true)
     }
 
     //
     // MODULE: MultiQC
     //
     if (!(params.skip_tools && params.skip_tools.split(',').contains('multiqc'))) {
+        ch_multiqc_config = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+        ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
+        ch_multiqc_logo = params.multiqc_logo ? Channel.fromPath(params.multiqc_logo, checkIfExists: true) : Channel.empty()
 
-        ch_multiqc_config                     = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-        ch_multiqc_custom_config              = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
-        ch_multiqc_logo                       = params.multiqc_logo ? Channel.fromPath(params.multiqc_logo, checkIfExists: true) : Channel.empty()
-        summary_params                        = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
-        ch_workflow_summary                   = Channel.value(paramsSummaryMultiqc(summary_params))
+        summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+        ch_workflow_summary = Channel.value(paramsSummaryMultiqc(summary_params))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-        ch_methods_description                = Channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
-        ch_multiqc_files                      = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-        ch_multiqc_files                      = ch_multiqc_files.mix(version_yaml)
-        ch_multiqc_files                      = ch_multiqc_files.mix(reports)
-        ch_multiqc_files                      = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true))
+        ch_methods_description = Channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
+
+        ch_multiqc_files = ch_multiqc_files.mix(version_yaml)
+        ch_multiqc_files = ch_multiqc_files.mix(reports)
+        ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true))
 
         MULTIQC (
             ch_multiqc_files.collect(),
@@ -507,7 +508,6 @@ workflow SAREK {
             []
         )
         multiqc_report = MULTIQC.out.report.toList()
-
     }
 
     emit:

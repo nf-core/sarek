@@ -41,18 +41,18 @@
                 "meta": ["lane"]
             },
             "fastq_1": {
-                "errorMessage": "FastQ file for reads 1 cannot contain spaces, has to be a string, has to exist and must have extension '.fq.gz' or '.fastq.gz'",
                 "type": "string",
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
                 "format": "file-path",
-                "exists": true
+                "exists": true,
+                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
+                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             },
             "fastq_2": {
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces, has to be a string, has to exist and must have extension '.fq.gz' or '.fastq.gz'",
                 "type": "string",
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
                 "format": "file-path",
-                "exists": true
+                "exists": true,
+                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
+                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             },
             "spring_1": {
                 "errorMessage": "Gzipped and spring-compressed FastQ file for reads 1 cannot contain spaces, has to be a string, has to exist and must have extension '.fq.gz.spring' or '.fastq.gz.spring'",
@@ -116,19 +116,13 @@
         },
         "anyOf": [
             {
-                "dependentRequired": {
-                    "lane": ["fastq_1"]
-                }
+                "dependentRequired": { "lane": ["fastq_1"] }
             },
             {
-                "dependentRequired": {
-                    "lane": ["spring_1"]
-                }
+                "dependentRequired": { "lane": ["spring_1"] }
             },
             {
-                "dependentRequired": {
-                    "lane": ["bam"]
-                }
+                "dependentRequired": { "lane": ["bam"] }
             }
         ],
         "dependentRequired": {
