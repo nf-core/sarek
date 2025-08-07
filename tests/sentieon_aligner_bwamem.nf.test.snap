@@ -78,6 +78,85 @@
         },
         "timestamp": "2025-06-21T10:32:56.848655102"
     },
+    "-profile test --input fastq_umi.csv --aligner sentieon-bwamem --umi_location read2 --umi_length 7 --umi_base_skip 1 --tools sentieon_dedup": {
+        "content": [
+            9,
+            {
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
+                },
+                "FASTP": {
+                    "fastp": "0.24.0"
+                },
+                "FGBIO_COPYUMIFROMREADNAME": {
+                    "fgbio": "2.4.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
+                "SENTIEON_BWAMEM": {
+                    "bwa": "0.7.17-r1188",
+                    "sentieon": 202503
+                },
+                "SENTIEON_DEDUP": {
+                    "sentieon": 202503
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                }
+            },
+            [
+                "csv",
+                "csv/markduplicates_no_table.csv",
+                "fgbio",
+                "fgbio/test_umi_extracted.bai",
+                "fgbio/test_umi_extracted.bam",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/sentieon_dedup",
+                "preprocessing/sentieon_dedup/test",
+                "preprocessing/sentieon_dedup/test/test.dedup.cram",
+                "preprocessing/sentieon_dedup/test/test.dedup.cram.crai",
+                "reference",
+                "reports",
+                "reports/fastp",
+                "reports/fastp/test",
+                "reports/fastp/test/test-test_L1.fastp.html",
+                "reports/fastp/test/test-test_L1.fastp.json",
+                "reports/fastp/test/test-test_L1.fastp.log",
+                "reports/sentieon_dedup",
+                "reports/sentieon_dedup/test",
+                "reports/sentieon_dedup/test/test.dedup.cram.metrics",
+                "reports/sentieon_dedup/test/test.dedup.cram.metrics.multiqc.tsv"
+            ],
+            [
+                "test_umi_extracted.bai:md5,206cf935511856488a54e0cf0834b2c2",
+                "test_umi_extracted.bam:md5,b46cc8dde69232cedeeb0b746bc9a13e",
+                "test-test_L1.fastp.json:md5,d9107ec414e44408d0698b167cc445f9",
+                "test.dedup.cram.metrics:md5,9a211cdc83c96fd02b0f33d67a777f21",
+                "test.dedup.cram.metrics.multiqc.tsv:md5,b0918043a0610e070495488491bbbabc"
+            ],
+            [
+                "test_umi_extracted.bam:md5,4b2f03b0b0b2ae2d2f208b3dd39c05dd"
+            ],
+            [
+                "test.dedup.cram:md5,4b2f03b0b0b2ae2d2f208b3dd39c05dd"
+            ],
+            "No VCF files"
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-08-07T10:45:34.758335482"
+    },
     "-profile test --aligner sentieon-bwamem --save_reference --build_only_index": {
         "content": [
             5,
