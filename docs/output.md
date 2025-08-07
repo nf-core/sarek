@@ -199,6 +199,7 @@ The alignment files (BAM or CRAM) produced by the chosen aligner are not publish
 **Output directory: `{outdir}/preprocessing/mapped/<sample>/`**
 
 - if `--save_mapped`: `<sample>.sorted.cram` and `<sample>.sorted.cram.crai`
+
   - CRAM file and index
 
 - if `--save_mapped --save_output_as_bam`: `<sample>.sorted.bam` and `<sample>.sorted.bam.bai`
@@ -485,6 +486,7 @@ Files created:
 **Output directory: `{outdir}/variant_calling/lofreq/<sample>/`**
 
 - `<tumorsample>.vcf.gz`
+
   - VCF which provides a detailed description of the detected genetic variants.
 
   </details>

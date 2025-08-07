@@ -913,6 +913,7 @@ Command error:
 Please be aware that `--use_gatk_spark` is not compatible with `--save_output_as_bam --save_mapped` because merging the reads to export them to bam files only works when they are coordinate sorted - spark works with name-sorting the reads.
 
 ## How to handle Unique Molecular Identifiers (UMIs)
+
 Unique Molecular Identifiers (UMIs) are used to identify which reads came from the same original DNA molecule prior to any amplification steps. This is important when sequencing to a high depth on targetted loci, as the likelihood of having the same positions (start/end in the case of paired-end reads) for reads coming from distinct molecules increases with depth.
 They may be used to generate consensus reads, where if two or more reads are considered to be part of the same group a novel read is created based on averaging over the individual reads, or solely to help distinguish while marking or removing duplicates.
 
@@ -925,14 +926,17 @@ Alternatively, the tool `fastp` may be used to extract UMIs from the template re
 We therefore have two parallel workflows:
 
 ### UMI-aware Deduplication
-GATK MarkDuplicates will *automatically* use UMI aware deduplication provided the UMIs are present on the `RX` tag inside the bam/cram file; this is the case when either `--umi_in_read_header` or `--umi_loc` is specified. The appropriate flag for Sentieon dedup will be set provided one of these two parameters is set. Please note that GATK MarkDuplicates Spark [does not support UMIs](https://gatk.broadinstitute.org/hc/en-us/articles/360037224932-MarkDuplicatesSpark).
 
-### Consensus read generation 
+GATK MarkDuplicates will _automatically_ use UMI aware deduplication provided the UMIs are present on the `RX` tag inside the bam/cram file; this is the case when either `--umi_in_read_header` or `--umi_loc` is specified. The appropriate flag for Sentieon dedup will be set provided one of these two parameters is set. Please note that GATK MarkDuplicates Spark [does not support UMIs](https://gatk.broadinstitute.org/hc/en-us/articles/360037224932-MarkDuplicatesSpark).
+
+### Consensus read generation
+
 Sarek will generate consensus reads using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools if `--umi_read_structure` is specified. For post-UMI processing depending on the experimental setup, duplicate marking and base quality recalibration can be skipped with [`--skip_tools`].
 
 Separately, the commercial Sentieon tool can perform consensus building within the `sentieon_dedup` step; this can be enabled by setting `--sentieon_consensus true`. This may be done with or without UMIs (specified via `--umi_loc` and `--umi_len` or via `--umi_in_read_header`).
 
 ### Limitations and future updates
+
 Recent updates to Samtools have been introduced, which can speed-up performance of fgbio tools used in this workflow.
 The current workflow does not handle duplex UMIs (i.e. where opposite strands of a duplex molecule have been tagged with a complementary UMI), please use [nf-core/fastquorum](https://nf-co.re/fastquorum) for this case, as well as the case where the UMIs are present in additional FASTQ files.
 
