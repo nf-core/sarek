@@ -10,7 +10,7 @@ include { FGBIO_CALLMOLECULARCONSENSUSREADS as CALLUMICONSENSUS } from '../../..
 include { FGBIO_FASTQTOBAM                  as FASTQTOBAM       } from '../../../modules/nf-core/fgbio/fastqtobam/main'
 include { FGBIO_GROUPREADSBYUMI             as GROUPREADSBYUMI  } from '../../../modules/nf-core/fgbio/groupreadsbyumi/main'
 include { FASTQ_ALIGN as ALIGN_UMI                              } from '../fastq_align/main'
-include { SAMTOOLS_MERGE                                        } from '../../../modules/nf-core/samtools/merge/main'
+include { SAMTOOLS_MERGE                    as MERGE_CONSENSUS  } from '../../../modules/nf-core/samtools/merge/main'
 include { SAMTOOLS_BAM2FQ                   as BAM2FASTQ        } from '../../../modules/nf-core/samtools/bam2fq/main.nf'
 
 workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
@@ -55,9 +55,9 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
         }
 
     // Merge across runs/lanes for the same sample
-    SAMTOOLS_MERGE(bams_to_merge.multiple, [[], []], [[], []])
+    MERGE_CONSENSUS(bams_to_merge.multiple, [[], []], [[], []])
 
-    bams_all = SAMTOOLS_MERGE.out.bam.mix(bams_to_merge.single)
+    bams_all = MERGE_CONSENSUS.out.bam.mix(bams_to_merge.single)
 
     // appropriately tagged reads are now grouped by UMI information
     GROUPREADSBYUMI(bams_all, groupreadsbyumi_strategy)

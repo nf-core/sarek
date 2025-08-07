@@ -32,9 +32,6 @@ nextflow_pipeline {
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_umi.csv",
                 aligner: 'sentieon-bwamem',
-                build_only_index: true,
-                input: false,
-                save_reference: true,
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: 'sentieon_dedup',
                 umi_length: 7,
