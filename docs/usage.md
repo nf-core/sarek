@@ -895,14 +895,14 @@ They may be used to generate consensus reads, where if two or more reads are con
 
 Depending on the precise library preparation method the UMIs may exist in several difference places. They may be within the read structure (R1 and/or R2 for paired ends), or they may have been in the index reads for Illumina sequencing. If the UMIs were in the index reads, then sarek can only process these UMIs if they have been already transferred to the read header, for instance using the OverrideCycles option inside `bclconvert`; this may be specified by using the option `--umi_in_read_header true`.
 
-As an example: if your reads contain a UMI only on the forward read, the string can only represent one structure (i.e. "2M11S+T"); should your reads contain a UMI on both reads, the string will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T"); should your reads contain a UMI only on the reverse read, your structure must represent the template only for the forward read and template plus UMI for the reverse read (i.e. +T 12M11S+T). Please refer to FGBIO documentation for more details, as providing the correct structure is essential and specific to the UMI kit used. This structure can be passed to `--umi_read_structure`, and will enable the fgbio consensus read generation as detailed below.
+As an example: if your reads contain a UMI only on the forward read, the string can only represent one structure (i.e. "2M11S+T"); should your reads contain a UMI on both reads, the string will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T"); should your reads contain a UMI only on the reverse read, your structure must represent the template only for the forward read and template plus UMI for the reverse read (i.e. +T 12M11S+T). Please refer to [fgbio documentation](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures) for more details, as providing the correct structure is essential and specific to the UMI kit used. This structure can be passed to `--umi_read_structure`, and will enable the fgbio consensus read generation as detailed below.
 
-Alternatively, the tool `fastp` may be used to extract UMIs from the template read by setting the parameters `--umi_loc` and `--umi_len` (and optionally `--umi_skip`) as [detailed in its documentation](https://github.com/OpenGene/fastp?tab=readme-ov-file#unique-molecular-identifier-umi-processing).
+Alternatively, the tool `fastp` may be used to extract UMIs from the template read by setting the parameters `--umi_loc` and `--umi_len` (and optionally `--umi_base_skip`) as [detailed in its documentation](https://github.com/OpenGene/fastp?tab=readme-ov-file#unique-molecular-identifier-umi-processing).
 
 We therefore have two parallel workflows:
 
 ### UMI-aware Deduplication
-GATK MarkDuplicates will automatially use UMI aware deduplication provided the UMIs are present on the `RX` tag inside the bam/cram file; this is the case when either `--umi_in_read_header` or `--umi_loc` is specified. The appropriate flag for Sentieon dedup will be set provided one of these two parameters is set.
+GATK MarkDuplicates will *automatically* use UMI aware deduplication provided the UMIs are present on the `RX` tag inside the bam/cram file; this is the case when either `--umi_in_read_header` or `--umi_loc` is specified. The appropriate flag for Sentieon dedup will be set provided one of these two parameters is set. Please note that GATK MarkDuplicates Spark [does not support UMIs](https://gatk.broadinstitute.org/hc/en-us/articles/360037224932-MarkDuplicatesSpark).
 
 ### Consensus read generation 
 Sarek will generate consensus reads using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools if `--umi_read_structure` is specified. For post-UMI processing depending on the experimental setup, duplicate marking and base quality recalibration can be skipped with [`--skip_tools`].
@@ -911,7 +911,7 @@ Separately, the commercial Sentieon tool can perform consensus building within t
 
 ### Limitations and future updates
 Recent updates to Samtools have been introduced, which can speed-up performance of fgbio tools used in this workflow.
-The current workflow does not handle duplex UMIs (i.e. where opposite strands of a duplex molecule have been tagged with a different UMI), please use [nf-core/fastquorum](https://nf-co.re/fastquorum) for this case, as well as the case where the UMIs are present in additional FASTQ files.
+The current workflow does not handle duplex UMIs (i.e. where opposite strands of a duplex molecule have been tagged with a complementary UMI), please use [nf-core/fastquorum](https://nf-co.re/fastquorum) for this case, as well as the case where the UMIs are present in additional FASTQ files.
 
 ## How to run sarek when no(t all) reference files are in igenomes
 

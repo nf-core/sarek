@@ -1,3 +1,5 @@
+include { readStructure } from 'plugin/nf-fgbio'
+
 workflow SAMPLESHEET_TO_CHANNEL {
     take:
     ch_from_samplesheet           // samplesheet
@@ -29,7 +31,10 @@ workflow SAMPLESHEET_TO_CHANNEL {
     snpeff_db                     // String: snpeff db
     step                          // String: step
     tools                         // Array: tools
-    umi_read_structure            // String: umi read structure
+    umi_length                    // Integer: umi length for fastp extraction
+    umi_location                  // String: umi location for fastp extraction
+    umi_in_read_header            // Boolean: umi in read header
+    umi_read_structure            // String: umi read structure for fgbio consensus
     wes                           // wes
 
     main:
@@ -244,8 +249,61 @@ workflow SAMPLESHEET_TO_CHANNEL {
         error("${aligner} is currently not compatible with FGBio UMI handling. Please choose a different aligner.")
     }
 
+    if (step == 'mapping' && aligner.contains("parabricks" ) && umi_in_read_header) {
+        error("${aligner} is currently not compatible with extracting UMIs from read headers. Please choose a different aligner.")
+    }
+
+    if (step == 'mapping' && aligner.contains("parabricks")  && umi_location) {
+        error("${aligner} is currently not compatible with UMI extraction from reads through fastp. Please choose a different aligner.")
+    }
+
+    if (step == 'mapping' && umi_read_structure && umi_location) {
+        error("UMI extraction from reads through fastp (umi_location) and fgbio consensus read generation (umi_read_structure) cannot be used together. Please choose one of the two options.")
+    }
+
+    if (step == 'mapping' && umi_read_structure && umi_in_read_header) {
+        // If UMIs are in read header, then we cannot use umi_read_structure separately, and instead the UMIs will be taken directly from the header
+        // This requires us to set umi_read_structure to "+T +T " to indicate that UMIs are in the read header
+        if( umi_in_read_header != "+T +T ") {
+            error("UMI extraction from read headers (`umi_in_read_header`) will override  `umi_read_structure` when using fgbio consensus generation. Please set `umi_read_structure` to '+T +T'.")
+        }
+    }
+
+    if (step == 'mapping' && umi_in_read_header && umi_location) {
+        error("UMI extraction from read headers (umi_in_read_header) and UMI extraction (umi_location) from reads through fastp cannot be used together. Please choose one of the two options.")
+    }
+
+    if (step == 'mapping' && umi_location && !umi_length) {
+        error("UMI extraction (umi_location) from reads through fastp requires a UMI length to be specified.")
+    }
+
     if (tools && tools.split(',').contains("sentieon_haplotyper") && joint_germline && (!sentieon_haplotyper_emit_mode || !sentieon_haplotyper_emit_mode.contains('gvcf'))) {
         error("When setting the option `--joint_germline` and including `sentieon_haplotyper` among the requested tools, please set `--sentieon_haplotyper_emit_mode` to include `gvcf`.")
+    }
+
+    // MarkDuplicatesSpark can't do UMI based deduplication
+    if (tools && tools.split(',').contains('markduplicates_spark') && (umi_in_read_header || umi_location )) {
+        error("UMI based deduplication is not supported by MarkDuplicatesSpark. Please choose a different tool for deduplication.")
+    }
+
+    // Check the UMI read structure is correct using fgbio plugin
+    // Copied from fastquorum
+    if( umi_read_structure) {
+        try {
+            readStructure(umi_read_structure)
+        } catch (java.lang.reflect.InvocationTargetException ex) {
+            def message = """
+                |Please check input samplesheet -> Read structure`${umi_read_structure}` invalid
+                |
+                |   ${ex.getCause().getMessage()}
+                |
+                |   For more information on read structures, visit: https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
+                |
+                |   Validate your read structures here: https://fulcrumgenomics.github.io/fgbio/validate-read-structure.html
+                |""".stripMargin()
+            error(message)
+            throw ex
+        }
     }
 
     // Fails or warns when missing files or params for ascat

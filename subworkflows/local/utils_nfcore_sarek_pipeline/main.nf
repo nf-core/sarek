@@ -143,6 +143,9 @@ workflow PIPELINE_INITIALISATION {
         params.snpeff_db,
         params.step,
         params.tools,
+        params.umi_length,
+        params.umi_location,
+        params.umi_in_read_header,
         params.umi_read_structure,
         params.wes,
     )
