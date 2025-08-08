@@ -59,6 +59,14 @@ input:
       type: file
       description: Index for the panel of normals.
       pattern: "*.vcf.gz.tbi"
+  - mutect2_force_alleles:
+      type: file
+      description: vcf file to be used to force-call alleles.
+      pattern: "*.vcf.gz"
+  - mutect2_force_alleles_tbi:
+      type: file
+      description: Index for the force-call alleles.
+      pattern: "*.vcf.gz.tbi"
   - interval_file:
       type: file
       description: File containing intervals.

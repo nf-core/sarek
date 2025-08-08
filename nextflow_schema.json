@@ -451,6 +451,22 @@
                     "description": "Index of PON panel-of-normals VCF.",
                     "help_text": "If none provided, will be generated automatically from the PON bgzipped VCF file."
                 },
+                "mutect2_force_alleles": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.vcf\\.gz$",
+                    "description": "Path to Mutect2 VCF (bgzipped) for force-calling alleles.",
+                    "help_text": "Force-calls all alleles in a given VCF, in addition to any other variants Mutect2 discovers."
+                },
+                "mutect2_force_alleles_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.vcf\\.gz\\.tbi$",
+                    "description": "Path to Index of Mutect2 VCF for force-calling alleles",
+                    "help_text": "If none provided, will be generated automatically from the Mutect2 bgzipped VCF force-calling alleles file."
+                },
                 "sentieon_haplotyper_emit_mode": {
                     "type": "string",
                     "default": "variant",

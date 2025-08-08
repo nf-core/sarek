@@ -24,6 +24,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     germline_resource_tbi     // channel: /path/to/germline/index
     panel_of_normals          // channel: /path/to/panel/of/normals
     panel_of_normals_tbi      // channel: /path/to/panel/of/normals/index
+    mutect2_force_alleles     // channel: /path/to/mutect2/force/alleles
+    mutect2_force_alleles_tbi // channel: /path/to/mutect2/force/alleles/index
     intervals                 // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     joint_mutect2             // boolean: [mandatory] [default: false] run mutect2 in joint mode
 
@@ -56,13 +58,13 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
             // meta: [id:patient_id, num_intervals, patient, sex]
             .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ] }
 
-        MUTECT2_PAIRED( ch_tn_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
+        MUTECT2_PAIRED( ch_tn_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi, mutect2_force_alleles, mutect2_force_alleles_tbi)
     }
     else {
 
         // Perform variant calling using mutect2 module pair mode
         // meta: [id:tumor_id_vs_normal_id, normal_id, num_intervals, patient, sex, tumor_id]
-        MUTECT2_PAIRED( input_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
+        MUTECT2_PAIRED( input_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi, mutect2_force_alleles, mutect2_force_alleles_tbi)
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample

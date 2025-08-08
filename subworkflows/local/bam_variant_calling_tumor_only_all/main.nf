@@ -35,6 +35,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     mappability
     panel_of_normals              // channel: [optional]  panel_of_normals
     panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
+    mutect2_force_alleles         // channel: [optional]  mutect2_force_alleles
+    mutect2_force_alleles_tbi     // channel: [optional]  mutect2_force_alleles_tbi
     joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
     wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
 
@@ -128,6 +130,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             germline_resource_tbi,
             panel_of_normals,
             panel_of_normals_tbi,
+            mutect2_force_alleles,
+            mutect2_force_alleles_tbi,
             intervals,
             joint_mutect2
         )

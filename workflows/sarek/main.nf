@@ -93,6 +93,8 @@ workflow SAREK {
         loci_files
         mappability
         msisensorpro_scan
+        mutect2_force_alleles
+        mutect2_force_alleles_tbi
         ngscheckmate_bed
         pon
         pon_tbi
@@ -361,6 +363,8 @@ workflow SAREK {
             intervals_bed_combined,
             intervals_bed_gz_tbi_combined, // [] if no_intervals, else interval_bed_combined_gz, interval_bed_combined_gz_tbi
             mappability,
+            mutect2_force_alleles,
+            mutect2_force_alleles_tbi,
             pon,
             pon_tbi,
             params.joint_mutect2,
@@ -387,6 +391,8 @@ workflow SAREK {
             intervals_bed_gz_tbi_combined, // [] if no_intervals, else interval_bed_combined_gz, interval_bed_combined_gz_tbi
             mappability,
             msisensorpro_scan,
+            mutect2_force_alleles,
+            mutect2_force_alleles_tbi,
             pon,
             pon_tbi,
             allele_files,
