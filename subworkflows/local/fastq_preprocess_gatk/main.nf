@@ -163,7 +163,7 @@ workflow FASTQ_PREPROCESS_GATK {
             }
             // Manipulate meta map to remove old fields and add new ones
             .map { meta, bam ->
-                [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size') + [ data_type: 'bam', id: meta.sample ], bam ]
+                [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size', 'sample_lane_id') + [ data_type: 'bam', id: meta.sample ], bam ]
             }
             // Create groupKey from meta map
             .map { meta, bam ->
@@ -181,7 +181,7 @@ workflow FASTQ_PREPROCESS_GATK {
             }
             // Manipulate meta map to remove old fields and add new ones
             .map { meta, bai ->
-                [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size') + [ data_type: 'bai', id: meta.sample ], bai ]
+                [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size', 'sample_lane_id') + [ data_type: 'bai', id: meta.sample ], bai ]
             }
             // Create groupKey from meta map
             .map { meta, bai ->
