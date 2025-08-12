@@ -178,28 +178,14 @@
             "No BAM files",
             "No CRAM files",
             [
-                [
-                    "sample2.freebayes.vcf.gz",
-                    [
-                        "##FORMAT=<ID=AD,Number=R,Type=Integer,Description=\"Number of observation for each allele\">",
-                        "##FORMAT=<ID=AO,Number=A,Type=Integer,Description=\"Alternate allele observation count\">",
-                        "##FORMAT=<ID=DP,Number=1,Type=Integer,Description=\"Read Depth\">",
-                        "##FORMAT=<ID=GL,Number=G,Type=Float,Description=\"Genotype Likelihood, log10-scaled likelihoods of the data given the called genotype for each possible genotype generated from the reference and alternate alleles given the sample ploidy\">",
-                        "##FORMAT=<ID=GQ,Number=1,Type=Integer,Description=\"Genotype Quality\">",
-                        "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">",
-                        "##FORMAT=<ID=MIN_DP,Number=1,Type=Integer,Description=\"Minimum depth in gVCF output block.\">",
-                        "##FORMAT=<ID=PL,Number=G,Type=Integer,Description=\"Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification\">",
-                        "##FORMAT=<ID=QA,Number=A,Type=Integer,Description=\"Sum of quality of the alternate observations\">"
-                    ],
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=15342, phased=false, phasedAutodetect=false]"
-                ]
+                "sample2.freebayes.vcf.gz:md5,66906eaf70c0d59f46958e4a0062af6b"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-11T15:27:30.46535837"
+        "timestamp": "2025-08-12T11:35:41.529235901"
     },
     "-profile test --tools freebayes --no_intervals --wes --input fastq_pair.csv": {
         "content": [
@@ -557,43 +543,15 @@
                 "test2.recal.cram:md5,bac87cf9290577fd9a4def63e046031f"
             ],
             [
-                [
-                    "test.freebayes.vcf.gz",
-                    [
-                        "##INFO=<ID=NS,Number=1,Type=Integer,Description=\"Number of samples with data\">",
-                        "##INFO=<ID=DP,Number=1,Type=Integer,Description=\"Total read depth at the locus\">",
-                        "##INFO=<ID=DPB,Number=1,Type=Float,Description=\"Total read depth per bp at the locus; bases in reads overlapping / bases in haplotype\">",
-                        "##INFO=<ID=AC,Number=A,Type=Integer,Description=\"Total number of alternate alleles in called genotypes\">",
-                        "##INFO=<ID=AN,Number=1,Type=Integer,Description=\"Total number of alleles in called genotypes\">",
-                        "##INFO=<ID=AF,Number=A,Type=Float,Description=\"Estimated allele frequency in the range (0,1]\">",
-                        "##INFO=<ID=RO,Number=1,Type=Integer,Description=\"Count of full observations of the reference haplotype.\">",
-                        "##INFO=<ID=AO,Number=A,Type=Integer,Description=\"Count of full observations of this alternate haplotype.\">",
-                        "##INFO=<ID=PRO,Number=1,Type=Float,Description=\"Reference allele observation count, with partial observations recorded fractionally\">"
-                    ],
-                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=732, phased=false, phasedAutodetect=false]"
-                ],
-                [
-                    "test2_vs_test.freebayes.vcf.gz",
-                    [
-                        "##INFO=<ID=NS,Number=1,Type=Integer,Description=\"Number of samples with data\">",
-                        "##INFO=<ID=DP,Number=1,Type=Integer,Description=\"Total read depth at the locus\">",
-                        "##INFO=<ID=DPB,Number=1,Type=Float,Description=\"Total read depth per bp at the locus; bases in reads overlapping / bases in haplotype\">",
-                        "##INFO=<ID=AC,Number=A,Type=Integer,Description=\"Total number of alternate alleles in called genotypes\">",
-                        "##INFO=<ID=AN,Number=1,Type=Integer,Description=\"Total number of alleles in called genotypes\">",
-                        "##INFO=<ID=AF,Number=A,Type=Float,Description=\"Estimated allele frequency in the range (0,1]\">",
-                        "##INFO=<ID=RO,Number=1,Type=Integer,Description=\"Count of full observations of the reference haplotype.\">",
-                        "##INFO=<ID=AO,Number=A,Type=Integer,Description=\"Count of full observations of this alternate haplotype.\">",
-                        "##INFO=<ID=PRO,Number=1,Type=Float,Description=\"Reference allele observation count, with partial observations recorded fractionally\">"
-                    ],
-                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=1447, phased=false, phasedAutodetect=false]"
-                ]
+                "test.freebayes.vcf.gz:md5,d4c16ea6d8d4610211957dc45724a559",
+                "test2_vs_test.freebayes.vcf.gz:md5,c2dac15e4dd3ac0a22b1de808a1911fc"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-11T15:26:02.572579411"
+        "timestamp": "2025-08-12T11:34:04.04695707"
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20": {
         "content": [
@@ -928,28 +886,14 @@
                 "test.recal.cram:md5,e0b8589bcc82aecad1fbbc256e85a6ee"
             ],
             [
-                [
-                    "test.freebayes.vcf.gz",
-                    [
-                        "##FORMAT=<ID=AD,Number=R,Type=Integer,Description=\"Number of observation for each allele\">",
-                        "##FORMAT=<ID=AO,Number=A,Type=Integer,Description=\"Alternate allele observation count\">",
-                        "##FORMAT=<ID=DP,Number=1,Type=Integer,Description=\"Read Depth\">",
-                        "##FORMAT=<ID=GL,Number=G,Type=Float,Description=\"Genotype Likelihood, log10-scaled likelihoods of the data given the called genotype for each possible genotype generated from the reference and alternate alleles given the sample ploidy\">",
-                        "##FORMAT=<ID=GQ,Number=1,Type=Integer,Description=\"Genotype Quality\">",
-                        "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">",
-                        "##FORMAT=<ID=MIN_DP,Number=1,Type=Integer,Description=\"Minimum depth in gVCF output block.\">",
-                        "##FORMAT=<ID=PL,Number=G,Type=Integer,Description=\"Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification\">",
-                        "##FORMAT=<ID=QA,Number=A,Type=Integer,Description=\"Sum of quality of the alternate observations\">"
-                    ],
-                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=475, phased=false, phasedAutodetect=false]"
-                ]
+                "test.freebayes.vcf.gz:md5,87f3590ed5c59e01c0be6ea044b3f21d"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-11T15:17:45.061234335"
+        "timestamp": "2025-08-12T11:25:44.241488969"
     },
     "-profile test --tools freebayes --no_intervals": {
         "content": [
@@ -1267,28 +1211,14 @@
                 "test.recal.cram:md5,724c601c9daf019d356a53a7d5e1c8b1"
             ],
             [
-                [
-                    "test.freebayes.vcf.gz",
-                    [
-                        "##INFO=<ID=NS,Number=1,Type=Integer,Description=\"Number of samples with data\">",
-                        "##INFO=<ID=DP,Number=1,Type=Integer,Description=\"Total read depth at the locus\">",
-                        "##INFO=<ID=DPB,Number=1,Type=Float,Description=\"Total read depth per bp at the locus; bases in reads overlapping / bases in haplotype\">",
-                        "##INFO=<ID=AC,Number=A,Type=Integer,Description=\"Total number of alternate alleles in called genotypes\">",
-                        "##INFO=<ID=AN,Number=1,Type=Integer,Description=\"Total number of alleles in called genotypes\">",
-                        "##INFO=<ID=AF,Number=A,Type=Float,Description=\"Estimated allele frequency in the range (0,1]\">",
-                        "##INFO=<ID=RO,Number=1,Type=Integer,Description=\"Count of full observations of the reference haplotype.\">",
-                        "##INFO=<ID=AO,Number=A,Type=Integer,Description=\"Count of full observations of this alternate haplotype.\">",
-                        "##INFO=<ID=PRO,Number=1,Type=Float,Description=\"Reference allele observation count, with partial observations recorded fractionally\">"
-                    ],
-                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=738, phased=false, phasedAutodetect=false]"
-                ]
+                "test.freebayes.vcf.gz:md5,c451a7a7ff3864e8eae6cf63b68a08ed"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-11T15:20:16.284167843"
+        "timestamp": "2025-08-12T11:28:18.863686184"
     },
     "-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv": {
         "content": [
@@ -1460,28 +1390,14 @@
             "No BAM files",
             "No CRAM files",
             [
-                [
-                    "sample2.freebayes.vcf.gz",
-                    [
-                        "##INFO=<ID=NS,Number=1,Type=Integer,Description=\"Number of samples with data\">",
-                        "##INFO=<ID=DP,Number=1,Type=Integer,Description=\"Total read depth at the locus\">",
-                        "##INFO=<ID=DPB,Number=1,Type=Float,Description=\"Total read depth per bp at the locus; bases in reads overlapping / bases in haplotype\">",
-                        "##INFO=<ID=AC,Number=A,Type=Integer,Description=\"Total number of alternate alleles in called genotypes\">",
-                        "##INFO=<ID=AN,Number=1,Type=Integer,Description=\"Total number of alleles in called genotypes\">",
-                        "##INFO=<ID=AF,Number=A,Type=Float,Description=\"Estimated allele frequency in the range (0,1]\">",
-                        "##INFO=<ID=RO,Number=1,Type=Integer,Description=\"Count of full observations of the reference haplotype.\">",
-                        "##INFO=<ID=AO,Number=A,Type=Integer,Description=\"Count of full observations of this alternate haplotype.\">",
-                        "##INFO=<ID=PRO,Number=1,Type=Float,Description=\"Reference allele observation count, with partial observations recorded fractionally\">"
-                    ],
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=15485, phased=false, phasedAutodetect=false]"
-                ]
+                "sample2.freebayes.vcf.gz:md5,bc9c5fc14ce1ac163670c73539a8e883"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-11T15:28:52.963838165"
+        "timestamp": "2025-08-12T11:37:12.787932829"
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv": {
         "content": [
@@ -1872,42 +1788,14 @@
                 "test2.recal.cram:md5,cf197ddea4e392bfdccc817787fc4eb4"
             ],
             [
-                [
-                    "test.freebayes.vcf.gz",
-                    [
-                        "##FORMAT=<ID=AD,Number=R,Type=Integer,Description=\"Number of observation for each allele\">",
-                        "##FORMAT=<ID=AO,Number=A,Type=Integer,Description=\"Alternate allele observation count\">",
-                        "##FORMAT=<ID=DP,Number=1,Type=Integer,Description=\"Read Depth\">",
-                        "##FORMAT=<ID=GL,Number=G,Type=Float,Description=\"Genotype Likelihood, log10-scaled likelihoods of the data given the called genotype for each possible genotype generated from the reference and alternate alleles given the sample ploidy\">",
-                        "##FORMAT=<ID=GQ,Number=1,Type=Integer,Description=\"Genotype Quality\">",
-                        "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">",
-                        "##FORMAT=<ID=MIN_DP,Number=1,Type=Integer,Description=\"Minimum depth in gVCF output block.\">",
-                        "##FORMAT=<ID=PL,Number=G,Type=Integer,Description=\"Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification\">",
-                        "##FORMAT=<ID=QA,Number=A,Type=Integer,Description=\"Sum of quality of the alternate observations\">"
-                    ],
-                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=474, phased=false, phasedAutodetect=false]"
-                ],
-                [
-                    "test2_vs_test.freebayes.vcf.gz",
-                    [
-                        "##FORMAT=<ID=AD,Number=R,Type=Integer,Description=\"Number of observation for each allele\">",
-                        "##FORMAT=<ID=AO,Number=A,Type=Integer,Description=\"Alternate allele observation count\">",
-                        "##FORMAT=<ID=DP,Number=1,Type=Integer,Description=\"Read Depth\">",
-                        "##FORMAT=<ID=GL,Number=G,Type=Float,Description=\"Genotype Likelihood, log10-scaled likelihoods of the data given the called genotype for each possible genotype generated from the reference and alternate alleles given the sample ploidy\">",
-                        "##FORMAT=<ID=GQ,Number=1,Type=Integer,Description=\"Genotype Quality\">",
-                        "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">",
-                        "##FORMAT=<ID=MIN_DP,Number=1,Type=Integer,Description=\"Minimum depth in gVCF output block.\">",
-                        "##FORMAT=<ID=PL,Number=G,Type=Integer,Description=\"Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification\">",
-                        "##FORMAT=<ID=QA,Number=A,Type=Integer,Description=\"Sum of quality of the alternate observations\">"
-                    ],
-                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=966, phased=false, phasedAutodetect=false]"
-                ]
+                "test.freebayes.vcf.gz:md5,a0937f1c5298197a56f26560b5164a51",
+                "test2_vs_test.freebayes.vcf.gz:md5,424347d0ac66b98920be9163e220b10b"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-06-16T16:32:49.017293175"
+        "timestamp": "2025-08-12T11:31:19.663917871"
     }
 }
