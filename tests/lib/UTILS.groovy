@@ -14,10 +14,6 @@ class UTILS {
         // It will skip the first line of the txt file
         def include_muse_txt = args.include_muse_txt
 
-        // Use this args to run the test with vcf_gzip_lines
-        // It will use linesGzip to extract the provided range of lines from the vcf file
-        def vcf_gzip_lines = args.vcf_gzip_lines
-
         // stable_name: All files + folders in ${outdir}/ with a stable name
         def stable_name = getAllFilesFromDir(outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
         // stable_content: All files in ${outdir}/ with stable content
@@ -46,9 +42,7 @@ class UTILS {
             if (include_muse_txt) {
                 assertion.add(txt_files.isEmpty() ? 'No TXT files' : txt_files.collect{ file -> file.getName() + ":md5," + file.readLines()[2..-1].join('\n').md5() })
             }
-            if (vcf_gzip_lines) {
-                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[vcf_gzip_lines], path(file.toString()).vcf.summary] })
-            } else {
+            else {
                 assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 })
             }
         }
@@ -120,7 +114,7 @@ class UTILS {
                             // Number of successful tasks
                             workflow.trace.succeeded().size(),
                             // All assertions based on the scenario
-                            *UTILS.get_assertion(include_muse_txt: scenario.include_muse_txt, outdir: params.outdir, stub: scenario.stub, vcf_gzip_lines: scenario.vcf_gzip_lines)
+                            *UTILS.get_assertion(include_muse_txt: scenario.include_muse_txt, outdir: params.outdir, stub: scenario.stub)
                         ).match() }
                     )
                     // Check stdout if specified

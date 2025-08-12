@@ -17,7 +17,6 @@ nextflow_pipeline {
                 wes : true,
                 nucleotides_per_second : 20
             ],
-            vcf_gzip_lines: [2..10]
         ],
         [
             name: "-profile test --tools freebayes --no_intervals",
@@ -25,7 +24,6 @@ nextflow_pipeline {
                 tools : 'freebayes',
                 no_intervals : true
             ],
-            vcf_gzip_lines: [8..16]
         ],
         [
             name: "-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv",
@@ -36,7 +34,6 @@ nextflow_pipeline {
                 wes : true,
                 nucleotides_per_second : 20
             ],
-            vcf_gzip_lines: [2..10]
         ],
         [
             name: "-profile test --tools freebayes --no_intervals --wes --input fastq_pair.csv",
@@ -46,7 +43,6 @@ nextflow_pipeline {
                 no_intervals : true,
                 wes : true
             ],
-            vcf_gzip_lines: [8..16]
         ],
         [
             name: "-profile test,tools_tumoronly --tools freebayes --input recalibrated_tumoronly.csv",
@@ -62,7 +58,6 @@ nextflow_pipeline {
                 genome : null,
                 igenomes_ignore : true
             ],
-            vcf_gzip_lines: [2..10]
         ],
         [
             name: "-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv",
@@ -78,7 +73,6 @@ nextflow_pipeline {
                 igenomes_ignore : true,
                 no_intervals : true
             ],
-            vcf_gzip_lines: [8..16]
         ]
     ]
 
