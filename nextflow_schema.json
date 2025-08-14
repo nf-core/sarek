@@ -17,6 +17,7 @@
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
                     "help_text": "A design file with information about the samples in your experiment. Use this parameter to specify the location of the input files. It has to be a comma-separated file with a header row. See [usage docs](https://nf-co.re/sarek/usage#input).\n\nIf no input file is specified, sarek will attempt to locate one in the `{outdir}` directory. If no input should be supplied, i.e. when --step is supplied or --build_only_index, then set --input false",
                     "fa_icon": "fas fa-file-csv",
+                    "mimetype": "text/csv",
                     "type": "string",
                     "format": "file-path",
                     "exists": true,
@@ -241,7 +242,9 @@
                 },
                 "markduplicates_pixel_distance": {
                     "type": "integer",
-                    "help_text": "Pixel distance for GATK MarkDuplicates."
+                    "fa_icon": "fas fa-compress",
+                    "description": "Pixel distance for GATK MarkDuplicates.",
+                    "help_text": "Default is appropriate for unpatterned versions of the Illumina platform. For the patterned flowcell models, use 2500. More details [here](https://gatk.broadinstitute.org/hc/en-us/articles/30332022936475-MarkDuplicates-Picard#--OPTICAL_DUPLICATE_PIXEL_DISTANCE)."
                 }
             }
         },
@@ -424,7 +427,9 @@
                 "gatk_pcr_indel_model": {
                     "type": "string",
                     "default": "CONSERVATIVE",
-                    "help_text": "Option for selecting the PCR indel model used by GATK HaplotypeCaller."
+                    "fa_icon": "fas fa-bullseye",
+                    "description": "Option for selecting the PCR indel model used by GATK HaplotypeCaller.",
+                    "help_text": "The possible MODELs are: NONE (used for PCR free samples), and HOSTILE, AGGRESSIVE and CONSERVATIVE, in order of decreasing aggressiveness. The default value is CONSERVATIVE."
                 },
                 "concatenate_vcfs": {
                     "type": "boolean",
