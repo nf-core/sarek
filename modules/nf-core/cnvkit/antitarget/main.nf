@@ -4,8 +4,8 @@ process CNVKIT_ANTITARGET {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/cnvkit:0.9.11--pyhdfd78af_0':
-        'biocontainers/cnvkit:0.9.11--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/cnvkit:0.9.12--pyhdfd78af_0':
+        'biocontainers/cnvkit:0.9.12--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(targets)
@@ -18,16 +18,26 @@ process CNVKIT_ANTITARGET {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
+    def args   = task.ext.args   ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     cnvkit.py \\
         antitarget \\
-        $targets \\
+        ${targets} \\
         --output ${prefix}.antitarget.bed \\
-        $args
+        ${args}
 
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        cnvkit: \$(cnvkit.py version | sed -e "s/cnvkit v//g")
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.antitarget.bed
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         cnvkit: \$(cnvkit.py version | sed -e "s/cnvkit v//g")

@@ -27,7 +27,8 @@ process BWAMEM2_INDEX {
     bwa-mem2 \\
         index \\
         $args \\
-        $fasta -p bwamem2/${prefix}
+        -p bwamem2/${prefix} \\
+        $fasta
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -26,6 +26,7 @@ input:
         type: file
         description: BAM/CRAM file
         pattern: "*.{bam,cram,sam}"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -35,6 +36,7 @@ input:
         type: file
         description: Reference file the CRAM was created with (optional)
         pattern: "*.{fasta,fa}"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -44,9 +46,21 @@ input:
         type: file
         description: Index of the reference file the CRAM was created with (optional)
         pattern: "*.fai"
+        ontologies: []
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - gzi:
+        type: file
+        description: Index of the compressed reference file the CRAM was created with
+          (optional)
+        pattern: "*.gzi"
+        ontologies: []
 output:
-  - bam:
-      - meta:
+  bam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -55,8 +69,9 @@ output:
           type: file
           description: BAM file
           pattern: "*.{bam}"
-  - cram:
-      - meta:
+          ontologies: []
+  cram:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -65,8 +80,9 @@ output:
           type: file
           description: CRAM file
           pattern: "*.{cram}"
-  - csi:
-      - meta:
+          ontologies: []
+  csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -75,8 +91,9 @@ output:
           type: file
           description: BAM index file (optional)
           pattern: "*.csi"
-  - crai:
-      - meta:
+          ontologies: []
+  crai:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -85,11 +102,14 @@ output:
           type: file
           description: CRAM index file (optional)
           pattern: "*.crai"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@drpatelh"
   - "@yuukiiwa "

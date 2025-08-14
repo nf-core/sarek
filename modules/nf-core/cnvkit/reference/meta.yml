@@ -17,30 +17,36 @@ tools:
       licence: ["Apache-2.0"]
       identifier: biotools:cnvkit
 input:
-  - - fasta:
-        type: file
-        description: File containing reference genome
-        pattern: "*.{fasta}"
-  - - targets:
-        type: file
-        description: File containing genomic regions
-        pattern: "*.{bed}"
-  - - antitargets:
-        type: file
-        description: File containing off-target genomic regions
-        pattern: "*.{bed}"
+  - fasta:
+      type: file
+      description: File containing reference genome
+      pattern: "*.{fasta}"
+      ontologies: []
+  - targets:
+      type: file
+      description: File containing genomic regions
+      pattern: "*.{bed}"
+      ontologies: []
+  - antitargets:
+      type: file
+      description: File containing off-target genomic regions
+      pattern: "*.{bed}"
+      ontologies: []
 output:
-  - cnn:
-      - "*.cnn":
-          type: file
-          description: File containing a copy-number reference (required for CNV calling
-            in tumor_only mode)
-          pattern: "*.{cnn}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+  cnn:
+    - "*.cnn":
+        type: file
+        description: File containing a copy-number reference (required for CNV calling
+          in tumor_only mode)
+        pattern: "*.{cnn}"
+        ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@adamrtalbot"
   - "@priesgo"

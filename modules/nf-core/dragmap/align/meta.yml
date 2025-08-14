@@ -25,6 +25,7 @@ input:
         description: |
           List of input FastQ files of size 1 and 2 for single-end and paired-end data,
           respectively.
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -34,6 +35,7 @@ input:
         type: file
         description: DRAGMAP hash table
         pattern: "Directory containing DRAGMAP hash table *.{cmp,.bin,.txt}"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -43,12 +45,13 @@ input:
         type: file
         description: Genome fasta reference files
         pattern: "*.{fa,fasta,fna}"
-  - - sort_bam:
-        type: boolean
-        description: Sort the BAM file
+        ontologies: []
+  - sort_bam:
+      type: boolean
+      description: Sort the BAM file
 output:
-  - sam:
-      - meta:
+  sam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -57,17 +60,20 @@ output:
           type: file
           description: Output SAM file containing read alignments
           pattern: "*.{sam}"
-  - bam:
-      - meta:
-          type: file
-          description: Output BAM file containing read alignments
-          pattern: "*.{bam}"
+          ontologies: []
+  bam:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
       - "*.bam":
           type: file
           description: Output BAM file containing read alignments
           pattern: "*.{bam}"
-  - cram:
-      - meta:
+          ontologies: []
+  cram:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -76,8 +82,9 @@ output:
           type: file
           description: Output CRAM file containing read alignments
           pattern: "*.{cram}"
-  - crai:
-      - meta:
+          ontologies: []
+  crai:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -86,8 +93,9 @@ output:
           type: file
           description: Index file for CRAM file
           pattern: "*.{crai}"
-  - csi:
-      - meta:
+          ontologies: []
+  csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -96,8 +104,9 @@ output:
           type: file
           description: Index file for CRAM file
           pattern: "*.{csi}"
-  - log:
-      - meta:
+          ontologies: []
+  log:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -106,11 +115,14 @@ output:
           type: file
           description: Log file
           pattern: "*.{log}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@edmundmiller"
 maintainers:

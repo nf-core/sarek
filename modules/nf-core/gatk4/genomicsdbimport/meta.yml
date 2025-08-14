@@ -36,6 +36,7 @@ input:
         type: file
         description: file containing the intervals to be used when creating the genomicsdb
         pattern: "*.interval_list"
+        ontologies: []
     - interval_value:
         type: string
         description: if an intervals file has not been specified, the value entered
@@ -47,68 +48,60 @@ input:
           get intervals mode. This WILL NOT specify name of a new genomicsdb in create
           db mode.
         pattern: "/path/to/existing/gendb"
-  - - run_intlist:
-        type: boolean
-        description: Specify whether to run get interval list mode, this option cannot
-          be specified at the same time as run_updatewspace.
-        pattern: "true/false"
-  - - run_updatewspace:
-        type: boolean
-        description: Specify whether to run update genomicsdb mode, this option takes
-          priority over run_intlist.
-        pattern: "true/false"
-  - - input_map:
-        type: boolean
-        description: Specify whether the vcf input is providing a list of vcf file(s)
-          or a single file containing a map of paths to vcf files to be used to create
-          or update a genomicsdb.
-        pattern: "*.sample_map"
+        ontologies: []
+  - run_intlist:
+      type: boolean
+      description: Specify whether to run get interval list mode, this option cannot
+        be specified at the same time as run_updatewspace.
+      pattern: "true/false"
+  - run_updatewspace:
+      type: boolean
+      description: Specify whether to run update genomicsdb mode, this option takes
+        priority over run_intlist.
+      pattern: "true/false"
+  - input_map:
+      type: boolean
+      description: Specify whether the vcf input is providing a list of vcf file(s)
+        or a single file containing a map of paths to vcf files to be used to create
+        or update a genomicsdb.
+      pattern: "*.sample_map"
 output:
-  - genomicsdb:
-      - meta:
-          type: directory
-          description: Directory containing the files that compose the genomicsdb workspace,
-            this is only output for create mode, as update changes an existing db
-          pattern: "*/$prefix"
+  genomicsdb:
+    - - meta:
+          type: map
+          description: A Groovy map containing sample information
       - $prefix:
           type: directory
           description: Directory containing the files that compose the genomicsdb workspace,
             this is only output for create mode, as update changes an existing db
           pattern: "*/$prefix"
-  - updatedb:
-      - meta:
-          type: directory
-          description: Directory containing the files that compose the updated genomicsdb
-            workspace, this is only output for update mode, and should be the same path
-            as the input wspace.
-          pattern: "same/path/as/wspace"
+  updatedb:
+    - - meta:
+          type: map
+          description: A Groovy map containing sample information
       - $updated_db:
           type: directory
           description: Directory containing the files that compose the updated genomicsdb
             workspace, this is only output for update mode, and should be the same path
             as the input wspace.
           pattern: "same/path/as/wspace"
-  - intervallist:
-      - meta:
-          type: file
-          description: File containing the intervals used to generate the genomicsdb,
-            only created by get intervals mode.
-          pattern: "*.interval_list"
+  intervallist:
+    - - meta:
+          type: map
+          description: A Groovy map containing sample information
       - "*.interval_list":
           type: file
           description: File containing the intervals used to generate the genomicsdb,
             only created by get intervals mode.
           pattern: "*.interval_list"
-      - list:
-          type: file
-          description: File containing the intervals used to generate the genomicsdb,
-            only created by get intervals mode.
-          pattern: "*.interval_list"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@GCJMackenzie"
 maintainers:

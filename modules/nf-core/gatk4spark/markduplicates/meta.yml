@@ -28,21 +28,25 @@ input:
         type: file
         description: Sorted BAM file
         pattern: "*.{bam}"
-  - - fasta:
-        type: file
-        description: The reference fasta file
-        pattern: "*.fasta"
-  - - fasta_fai:
-        type: file
-        description: Index of reference fasta file
-        pattern: "*.fai"
-  - - dict:
-        type: file
-        description: GATK sequence dictionary
-        pattern: "*.dict"
+        ontologies: []
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+      ontologies: []
+  - fasta_fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "*.fai"
+      ontologies: []
+  - dict:
+      type: file
+      description: GATK sequence dictionary
+      pattern: "*.dict"
+      ontologies: []
 output:
-  - output:
-      - meta:
+  output:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -51,8 +55,9 @@ output:
           type: file
           description: Marked duplicates BAM/CRAM file
           pattern: "*.{bam,cram}"
-  - bam_index:
-      - meta:
+          ontologies: []
+  bam_index:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -61,8 +66,9 @@ output:
           type: file
           description: Optional BAM index file
           pattern: "*.bai"
-  - metrics:
-      - meta:
+          ontologies: []
+  metrics:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -71,11 +77,14 @@ output:
           type: file
           description: Metrics file
           pattern: "*.metrics"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@ajodeh-juma"
   - "@FriederikeHanssen"

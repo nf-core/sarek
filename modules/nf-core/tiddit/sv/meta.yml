@@ -22,10 +22,12 @@ input:
         type: file
         description: BAM/CRAM file
         pattern: "*.{bam,cram}"
+        ontologies: []
     - input_index:
         type: file
         description: BAM/CRAM index file
         pattern: "*.{bai,crai}"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -35,6 +37,7 @@ input:
         type: file
         description: Input FASTA file
         pattern: "*.{fasta,fa}"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -44,9 +47,10 @@ input:
         type: file
         description: BWA genome index files
         pattern: "Directory containing BWA index *.{amb,ann,bwt,pac,sa}"
+        ontologies: []
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -55,8 +59,9 @@ output:
           type: file
           description: vcf
           pattern: "*.{vcf}"
-  - ploidy:
-      - meta:
+          ontologies: []
+  ploidy:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -65,11 +70,14 @@ output:
           type: file
           description: tab
           pattern: "*.{ploidies.tab}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@maxulysse"
 maintainers:

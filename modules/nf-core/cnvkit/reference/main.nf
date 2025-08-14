@@ -4,8 +4,8 @@ process CNVKIT_REFERENCE {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/cnvkit:0.9.11--pyhdfd78af_0':
-        'biocontainers/cnvkit:0.9.11--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/cnvkit:0.9.12--pyhdfd78af_0':
+        'biocontainers/cnvkit:0.9.12--pyhdfd78af_0' }"
 
     input:
     path fasta
@@ -20,18 +20,29 @@ process CNVKIT_REFERENCE {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
+    def args   = task.ext.args   ?: ''
     def prefix = task.ext.prefix ?: targets.BaseName
 
     """
     cnvkit.py \\
         reference \\
-        --fasta $fasta \\
-        --targets $targets \\
-        --antitargets $antitargets \\
+        --fasta ${fasta} \\
+        --targets ${targets} \\
+        --antitargets ${antitargets} \\
         --output ${prefix}.reference.cnn \\
-        $args
+        ${args}
 
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        cnvkit: \$(cnvkit.py version | sed -e "s/cnvkit v//g")
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: targets.BaseName
+
+    """
+    touch ${prefix}.reference.cnn
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         cnvkit: \$(cnvkit.py version | sed -e "s/cnvkit v//g")

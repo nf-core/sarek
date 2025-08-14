@@ -55,52 +55,57 @@ input:
         ontologies:
           - edam: "http://edamontology.org/data_2044" # Sequence
           - edam: "http://edamontology.org/format_1929" # FASTA
-  - - sort_bam:
-        type: boolean
-        description: use samtools sort (true) or samtools view (false)
-        pattern: "true or false"
+  - sort_bam:
+      type: boolean
+      description: use samtools sort (true) or samtools view (false)
+      pattern: "true or false"
 output:
-  - bam:
-      - meta:
-          type: file
-          description: Output BAM file containing read alignments
+  bam:
+    - - meta:
+          type: map
+          description: Groovy Map containing sample information
       - "*.bam":
           type: file
           description: Output BAM file containing read alignments
           pattern: "*.{bam}"
           ontologies:
             - edam: "http://edamontology.org/format_2572" # BAM
-  - cram:
-      - meta:
+  cram:
+    - - meta:
           type: file
-          description: Output CRAM file containing read alignments
+          description: Output BAM file containing read alignments
+          ontologies: []
       - "*.cram":
           type: file
           description: Output CRAM file containing read alignments
           pattern: "*.{cram}"
           ontologies:
             - edam: "http://edamontology.org/format_3462" # CRAM
-  - csi:
-      - meta:
-          type: file
-          description: Optional index file for BAM file
+  csi:
+    - - meta:
+          type: map
+          description: Groovy Map containing sample information
       - "*.csi":
           type: file
           description: Optional index file for BAM file
           pattern: "*.{csi}"
-  - crai:
-      - meta:
-          type: file
-          description: Optional index file for CRAM file
+          ontologies: []
+  crai:
+    - - meta:
+          type: map
+          description: Groovy Map containing sample information
       - "*.crai":
           type: file
           description: Optional index file for CRAM file
           pattern: "*.{crai}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@drpatelh"
   - "@jeremy1805"

@@ -24,14 +24,15 @@ input:
         type: file
         description: Spring file to decompress.
         pattern: "*.{spring}"
-  - - write_one_fastq_gz:
-        type: boolean
-        description: |
-          Controls whether spring should write one fastq.gz file with reads from both directions or two fastq.gz files with reads from distinct directions
-        pattern: "true or false"
+        ontologies: []
+  - write_one_fastq_gz:
+      type: boolean
+      description: |
+        Controls whether spring should write one fastq.gz file with reads from both directions or two fastq.gz files with reads from distinct directions
+      pattern: "true or false"
 output:
-  - fastq:
-      - meta:
+  fastq:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -40,11 +41,14 @@ output:
           type: file
           description: Decompressed FASTQ file(s).
           pattern: "*.{fastq.gz}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@xec-cm"
 maintainers:

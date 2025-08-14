@@ -9,9 +9,13 @@ keywords:
 tools:
   - samtools:
       description: Tools for dealing with SAM, BAM and CRAM files
-      documentation: http://www.htslib.org/doc/1.1/samtools.html
+      homepage: "http://www.htslib.org"
+      documentation: "https://www.htslib.org/doc/samtools.html"
+      tool_dev_url: "https://github.com/samtools/samtools"
+      doi: "10.1093/bioinformatics/btp352"
       licence: ["MIT"]
       identifier: biotools:samtools
+
 input:
   - - meta:
         type: map
@@ -22,6 +26,7 @@ input:
         type: file
         description: BAM/CRAM/SAM file
         pattern: "*.{bam,cram,sam}"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -31,75 +36,74 @@ input:
         type: file
         description: Reference genome fasta file
         pattern: "*.{fasta,fa}"
-  - - interleave:
-        type: boolean
-        description: |
-          If true, the output is a single interleaved paired-end FASTQ
-          If false, the output split paired-end FASTQ
-        default: false
+        ontologies: []
+  - interleave:
+      type: boolean
+      description: |
+        If true, the output is a single interleaved paired-end FASTQ
+        If false, the output split paired-end FASTQ
+      default: false
 output:
-  - fastq:
-      - meta:
+  fastq:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-          pattern: "*_{1,2}.fq.gz"
       - "*_{1,2}.fq.gz":
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-          pattern: "*_{1,2}.fq.gz"
-  - fastq_interleaved:
-      - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-          pattern: "*_interleaved.fq.gz"
-      - "*_interleaved.fq":
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-          pattern: "*_interleaved.fq.gz"
-  - fastq_other:
-      - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-          pattern: "*_other.fq.gz"
-      - "*_other.fq.gz":
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-          pattern: "*_other.fq.gz"
-  - fastq_singleton:
-      - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-          pattern: "*_singleton.fq.gz"
-      - "*_singleton.fq.gz":
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-          pattern: "*_singleton.fq.gz"
-  - versions:
-      - versions.yml:
           type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          description: |
+            R1 and R2 FASTQ files
+          pattern: "*_{1,2}.fq.gz"
+          ontologies: []
+  fastq_interleaved:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*_interleaved.fq":
+          type: file
+          description: |
+            Interleaved paired end FASTQ files
+          pattern: "*_interleaved.fq.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  fastq_other:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*_other.fq.gz":
+          type: file
+          description: |
+            FASTQ files with reads where the READ1 and READ2 FLAG bits set are either both set or both unset.
+          pattern: "*_other.fq.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  fastq_singleton:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*_singleton.fq.gz":
+          type: file
+          description: |
+            FASTQ files with singleton reads.
+          pattern: "*_singleton.fq.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
-  - "@lescai"
-  - "@maxulysse"
-  - "@matthdsm"
-maintainers:
   - "@lescai"
   - "@maxulysse"
   - "@matthdsm"

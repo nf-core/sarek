@@ -34,30 +34,40 @@ input:
         type: file
         description: Optional Sequence Dictionary as input
         pattern: "*.dict"
+        ontologies: []
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: file
           description: merged vcf file
           pattern: "*.vcf.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
       - "*.vcf.gz":
           type: file
           description: merged vcf file
           pattern: "*.vcf.gz"
-  - tbi:
-      - meta:
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  tbi:
+    - - meta:
           type: file
-          description: index files for the merged vcf files
-          pattern: "*.tbi"
+          description: merged vcf file
+          pattern: "*.vcf.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
       - "*.tbi":
           type: file
           description: index files for the merged vcf files
           pattern: "*.tbi"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@kevinmenden"
 maintainers:

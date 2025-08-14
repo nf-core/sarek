@@ -23,7 +23,7 @@ process GATK4_APPLYBQSR {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}.cram"
     def interval_command = intervals ? "--intervals $intervals" : ""
 
     def avail_mem = 3072
@@ -36,7 +36,7 @@ process GATK4_APPLYBQSR {
     gatk --java-options "-Xmx${avail_mem}M -XX:-UsePerfData" \\
         ApplyBQSR \\
         --input $input \\
-        --output ${prefix}.${input.getExtension()} \\
+        --output ${prefix} \\
         --reference $fasta \\
         --bqsr-recal-file $bqsr_table \\
         $interval_command \\
@@ -50,11 +50,9 @@ process GATK4_APPLYBQSR {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def input_extension = input.getExtension()
-    def output_extension = input_extension == 'bam' ? 'bam' : 'cram'
+    def prefix = task.ext.prefix ?: "${meta.id}.cram"
     """
-    touch ${prefix}.${output_extension}
+    touch ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

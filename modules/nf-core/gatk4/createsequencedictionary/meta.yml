@@ -26,21 +26,26 @@ input:
         type: file
         description: Input fasta file
         pattern: "*.{fasta,fa}"
+        ontologies: []
 output:
-  - dict:
-      - meta:
+  dict:
+    - - meta:
           type: file
           description: gatk dictionary file
           pattern: "*.{dict}"
+          ontologies: []
       - "*.dict":
           type: file
           description: gatk dictionary file
           pattern: "*.{dict}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@maxulysse"
   - "@ramprasadn"

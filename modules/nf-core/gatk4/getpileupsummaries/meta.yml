@@ -27,15 +27,18 @@ input:
         type: file
         description: BAM/CRAM file to be summarised.
         pattern: "*.{bam,cram}"
+        ontologies: []
     - index:
         type: file
         description: Index file for the input BAM/CRAM file.
         pattern: "*.{bam.bai,cram.crai}"
+        ontologies: []
     - intervals:
         type: file
         description: File containing specified sites to be used for the summary. If
           this option is not specified, variants file is used instead automatically.
         pattern: "*.interval_list"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -45,6 +48,7 @@ input:
         type: file
         description: The reference fasta file
         pattern: "*.fasta"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -54,6 +58,7 @@ input:
         type: file
         description: Index of reference fasta file
         pattern: "*.fasta.fai"
+        ontologies: []
   - - meta4:
         type: map
         description: |
@@ -63,18 +68,22 @@ input:
         type: file
         description: GATK sequence dictionary
         pattern: "*.dict"
-  - - variants:
-        type: file
-        description: Population vcf of germline sequencing, containing allele fractions.
-          Is also used as sites file if no separate sites file is specified.
-        pattern: "*.vcf.gz"
-  - - variants_tbi:
-        type: file
-        description: Index file for the germline resource.
-        pattern: "*.vcf.gz.tbi"
+        ontologies: []
+  - variants:
+      type: file
+      description: Population vcf of germline sequencing, containing allele fractions.
+        Is also used as sites file if no separate sites file is specified.
+      pattern: "*.vcf.gz"
+      ontologies:
+        - edam: http://edamontology.org/format_3989 # GZIP format
+  - variants_tbi:
+      type: file
+      description: Index file for the germline resource.
+      pattern: "*.vcf.gz.tbi"
+      ontologies: []
 output:
-  - table:
-      - meta:
+  table:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -83,11 +92,14 @@ output:
           type: file
           description: Table containing read counts for each site.
           pattern: "*.pileups.table"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@GCJMackenzie"
 maintainers:

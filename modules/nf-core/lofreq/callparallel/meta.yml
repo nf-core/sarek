@@ -25,14 +25,17 @@ input:
         type: file
         description: Tumor sample sorted BAM file
         pattern: "*.{bam}"
+        ontologies: []
     - bai:
         type: file
         description: BAM index file
         pattern: "*.{bam.bai}"
+        ontologies: []
     - intervals:
         type: file
         description: BED file containing target regions for variant calling
         pattern: "*.{bed}"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -42,6 +45,7 @@ input:
         type: file
         description: Reference genome FASTA file
         pattern: "*.{fasta}"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -51,9 +55,10 @@ input:
         type: file
         description: Reference genome FASTA index file
         pattern: "*.{fai}"
+        ontologies: []
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -62,8 +67,9 @@ output:
           type: file
           description: Predicted variants file
           pattern: "*.{vcf}"
-  - tbi:
-      - meta:
+          ontologies: []
+  tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -72,11 +78,14 @@ output:
           type: file
           description: Index of vcf file
           pattern: "*.{vcf.gz.tbi}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@kaurravneet4123"
   - "@bjohnnyd"

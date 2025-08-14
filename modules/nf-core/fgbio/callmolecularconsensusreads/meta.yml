@@ -22,15 +22,16 @@ input:
         description: |
           The input SAM or BAM file, grouped by UMIs
         pattern: "*.{bam,sam}"
-  - - min_reads:
-        type: integer
-        description: Minimum number of original reads to build each consensus read.
-  - - min_baseq:
-        type: integer
-        description: Ignore bases in raw reads that have Q below this value.
+        ontologies: []
+  - min_reads:
+      type: integer
+      description: Minimum number of original reads to build each consensus read.
+  - min_baseq:
+      type: integer
+      description: Ignore bases in raw reads that have Q below this value.
 output:
-  - bam:
-      - meta:
+  bam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -40,11 +41,14 @@ output:
           description: |
             Output SAM or BAM file to write consensus reads.
           pattern: "*.{bam,sam}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@sruthipsuresh"
 maintainers:

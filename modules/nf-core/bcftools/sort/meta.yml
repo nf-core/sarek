@@ -23,9 +23,10 @@ input:
         type: file
         description: The VCF/BCF file to be sorted
         pattern: "*.{vcf.gz,vcf,bcf}"
+        ontologies: []
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -34,8 +35,9 @@ output:
           type: file
           description: Sorted VCF file
           pattern: "*.{vcf.gz}"
-  - tbi:
-      - meta:
+          ontologies: []
+  tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -44,8 +46,9 @@ output:
           type: file
           description: Alternative VCF file index
           pattern: "*.tbi"
-  - csi:
-      - meta:
+          ontologies: []
+  csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -54,11 +57,14 @@ output:
           type: file
           description: Default VCF file index
           pattern: "*.csi"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@Gwennid"
 maintainers:

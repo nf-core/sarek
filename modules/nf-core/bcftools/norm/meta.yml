@@ -26,11 +26,13 @@ input:
           The vcf file to be normalized
           e.g. 'file1.vcf'
         pattern: "*.{vcf,vcf.gz}"
+        ontologies: []
     - tbi:
         type: file
         description: |
           An optional index of the VCF file (for when the VCF is compressed)
         pattern: "*.vcf.gz.tbi"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -40,9 +42,10 @@ input:
         type: file
         description: FASTA reference file
         pattern: "*.{fasta,fa}"
+        ontologies: []
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -52,8 +55,9 @@ output:
           description: One of uncompressed VCF (.vcf), compressed VCF (.vcf.gz), compressed
             BCF (.bcf.gz) or uncompressed BCF (.bcf) normalized output file
           pattern: "*.{vcf,vcf.gz,bcf,bcf.gz}"
-  - tbi:
-      - meta:
+          ontologies: []
+  tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -62,8 +66,9 @@ output:
           type: file
           description: Alternative VCF file index
           pattern: "*.tbi"
-  - csi:
-      - meta:
+          ontologies: []
+  csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -72,11 +77,14 @@ output:
           type: file
           description: Default VCF file index
           pattern: "*.csi"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@abhi18av"
   - "@ramprasadn"

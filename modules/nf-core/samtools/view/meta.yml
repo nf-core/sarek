@@ -26,10 +26,12 @@ input:
         type: file
         description: BAM/CRAM/SAM file
         pattern: "*.{bam,cram,sam}"
+        ontologies: []
     - index:
         type: file
         description: BAM.BAI/BAM.CSI/CRAM.CRAI file (optional)
         pattern: "*.{.bai,.csi,.crai}"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -39,17 +41,19 @@ input:
         type: file
         description: Reference file the CRAM was created with (optional)
         pattern: "*.{fasta,fa}"
-  - - qname:
-        type: file
-        description: Optional file with read names to output only select alignments
-        pattern: "*.{txt,list}"
-  - - index_format:
-        type: string
-        description: Index format, used together with ext.args = '--write-index'
-        pattern: "bai|csi|crai"
+        ontologies: []
+  - qname:
+      type: file
+      description: Optional file with read names to output only select alignments
+      pattern: "*.{txt,list}"
+      ontologies: []
+  - index_format:
+      type: string
+      description: Index format, used together with ext.args = '--write-index'
+      pattern: "bai|csi|crai"
 output:
-  - bam:
-      - meta:
+  bam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -58,8 +62,9 @@ output:
           type: file
           description: optional filtered/converted BAM file
           pattern: "*.{bam}"
-  - cram:
-      - meta:
+          ontologies: []
+  cram:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -68,8 +73,9 @@ output:
           type: file
           description: optional filtered/converted CRAM file
           pattern: "*.{cram}"
-  - sam:
-      - meta:
+          ontologies: []
+  sam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -78,8 +84,9 @@ output:
           type: file
           description: optional filtered/converted SAM file
           pattern: "*.{sam}"
-  - bai:
-      - meta:
+          ontologies: []
+  bai:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -88,8 +95,9 @@ output:
           type: file
           description: optional BAM file index
           pattern: "*.{bai}"
-  - csi:
-      - meta:
+          ontologies: []
+  csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -98,8 +106,9 @@ output:
           type: file
           description: optional tabix BAM file index
           pattern: "*.{csi}"
-  - crai:
-      - meta:
+          ontologies: []
+  crai:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -108,8 +117,9 @@ output:
           type: file
           description: optional CRAM file index
           pattern: "*.{crai}"
-  - unselected:
-      - meta:
+          ontologies: []
+  unselected:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -118,8 +128,9 @@ output:
           type: file
           description: optional file with unselected alignments
           pattern: "*.unselected.{bam,cram,sam}"
-  - unselected_index:
-      - meta:
+          ontologies: []
+  unselected_index:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -128,11 +139,14 @@ output:
           type: file
           description: index for the "unselected" file
           pattern: "*.unselected.{csi,crai}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@drpatelh"
   - "@joseespinosa"

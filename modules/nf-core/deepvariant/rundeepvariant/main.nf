@@ -6,7 +6,7 @@ process DEEPVARIANT_RUNDEEPVARIANT {
     // https://github.com/bioconda/bioconda-recipes/pull/45214#issuecomment-1890937836
     // BUG https://github.com/nf-core/modules/issues/1754
     // BUG https://github.com/bioconda/bioconda-recipes/issues/30310
-    container "docker.io/google/deepvariant:1.8.0"
+    container "docker.io/google/deepvariant:1.9.0"
 
     input:
     tuple val(meta), path(input), path(index), path(intervals)
