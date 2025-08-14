@@ -190,7 +190,8 @@ workflow SAREK {
                 index_alignment,
                 intervals_and_num_intervals,
                 known_sites_indels,
-                "cram")
+                Channel.value("cram")
+            )
 
             // Gather preprocessing output
             cram_variant_calling = Channel.empty()
@@ -539,7 +540,7 @@ def addReadgroupToMeta(meta, files) {
         "\"@RG\\tID:${meta.sample}\\t${CN}PU:consensus\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\"" :
         "\"@RG\\tID:${sample_lane_id}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
 
-    meta  = meta - meta.subMap('lane') + [read_group: read_group.toString()]
+    meta  = meta - meta.subMap('lane') + [read_group: read_group.toString(), sample_lane_id: sample_lane_id.toString()]
     return [ meta, files ]
 }
 
