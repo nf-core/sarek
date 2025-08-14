@@ -2,10 +2,8 @@ lint:
   files_exist:
     - .github/workflows/awsfulltest.yml
     - .github/workflows/awstest.yml
-    - .github/workflows/ci.yml
     - conf/modules.config
   files_unchanged:
-    - .gitignore
     - assets/nf-core-sarek_logo_light.png
     - docs/images/nf-core-sarek_logo_dark.png
     - docs/images/nf-core-sarek_logo_light.png
