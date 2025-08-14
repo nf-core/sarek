@@ -4,6 +4,7 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
+include { BCFTOOLS_INDEX                        } from '../../../modules/nf-core/bcftools/index'
 include { BCFTOOLS_SORT                         } from '../../../modules/nf-core/bcftools/sort'
 include { FREEBAYES                             } from '../../../modules/nf-core/freebayes'
 include { GATK4_MERGEVCFS as MERGE_FREEBAYES    } from '../../../modules/nf-core/gatk4/mergevcfs'
@@ -49,7 +50,9 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'freebayes' ], vcf ] }
 
-    vcf_filtered = VCFLIB_VCFFILTER(ch_vcf.map{ meta, vcf -> [ meta, vcf, [] ] })
+    VCFLIB_VCFFILTER(ch_vcf.map{ meta, vcf -> [ meta, vcf, [] ] })
+    
+    vcf_filtered = VCFLIB_VCFFILTER.out.vcf
 
     ch_versions= ch_versions.mix(BCFTOOLS_SORT.out.versions)
     ch_versions= ch_versions.mix(MERGE_FREEBAYES.out.versions)
@@ -58,7 +61,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     ch_versions= ch_versions.mix(VCFLIB_VCFFILTER.out.versions)
 
     emit:
-    ch_vcf
+    vcf = ch_vcf
     vcf_filtered // channel: [ meta, vcf ]
-    ch_versions
+    versions = ch_versions
 }
