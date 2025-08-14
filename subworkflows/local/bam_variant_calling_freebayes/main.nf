@@ -45,11 +45,11 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     TABIX_VC_FREEBAYES(bcftools_vcf_out.no_intervals)
 
     // Mix intervals and no_intervals channels together
-    vcf = MERGE_FREEBAYES.out.vcf.mix(bcftools_vcf_out.no_intervals)
+    ch_vcf = MERGE_FREEBAYES.out.vcf.mix(bcftools_vcf_out.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'freebayes' ], vcf ] }
 
-    vcf_filtered = VCFLIB_VCFFILTER(vcf, ch_fasta, ch_fasta_fai, ch_dict)
+    vcf_filtered = VCFLIB_VCFFILTER(ch_vcf.map{ meta, vcf -> [ meta, vcf, [] ] })
 
     ch_versions= ch_versions.mix(BCFTOOLS_SORT.out.versions)
     ch_versions= ch_versions.mix(MERGE_FREEBAYES.out.versions)
@@ -58,6 +58,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     ch_versions= ch_versions.mix(VCFLIB_VCFFILTER.out.versions)
 
     emit:
-    vcf
+    ch_vcf
+    vcf_filtered // channel: [ meta, vcf ]
     ch_versions
 }
