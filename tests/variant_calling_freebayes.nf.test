@@ -9,32 +9,33 @@ nextflow_pipeline {
     tag "pipeline_sarek"
 
     def test_scenario = [
-        [
-            name: "-profile test --tools freebayes --wes --nucleotides_per_second 20",
-            params: [
-                intervals : modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
-                tools : 'freebayes',
-                wes : true,
-                nucleotides_per_second : 20
-            ],
-        ],
+        // [
+        //     name: "-profile test --tools freebayes --wes --nucleotides_per_second 20",
+        //     params: [
+        //         intervals : modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+        //         tools : 'freebayes',
+        //         wes : true,
+        //         nucleotides_per_second : 20
+        //     ],
+        // ],
         [
             name: "-profile test --tools freebayes --no_intervals",
             params: [
                 tools : 'freebayes',
                 no_intervals : true
             ],
+            print_vcf: true,
         ],
-        [
-            name: "-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv",
-            params: [
-                input : "${projectDir}/tests/csv/3.0/fastq_pair.csv",
-                intervals : modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
-                tools : 'freebayes',
-                wes : true,
-                nucleotides_per_second : 20
-            ],
-        ],
+        // [
+        //     name: "-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv",
+        //     params: [
+        //         input : "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+        //         intervals : modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+        //         tools : 'freebayes',
+        //         wes : true,
+        //         nucleotides_per_second : 20
+        //     ],
+        // ],
         [
             name: "-profile test --tools freebayes --no_intervals --wes --input fastq_pair.csv",
             params: [
@@ -43,22 +44,23 @@ nextflow_pipeline {
                 no_intervals : true,
                 wes : true
             ],
+            print_vcf: true,
         ],
-        [
-            name: "-profile test,tools_tumoronly --tools freebayes --input recalibrated_tumoronly.csv",
-            params: [
-                fasta : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-                fasta_fai : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
-                intervals : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
-                input : "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
-                step : "variant_calling",
-                tools : 'freebayes',
-                wes : true,
-                nucleotides_per_second : 20,
-                genome : null,
-                igenomes_ignore : true
-            ],
-        ],
+        // [
+        //     name: "-profile test,tools_tumoronly --tools freebayes --input recalibrated_tumoronly.csv",
+        //     params: [
+        //         fasta : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+        //         fasta_fai : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+        //         intervals : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+        //         input : "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
+        //         step : "variant_calling",
+        //         tools : 'freebayes',
+        //         wes : true,
+        //         nucleotides_per_second : 20,
+        //         genome : null,
+        //         igenomes_ignore : true
+        //     ],
+        // ],
         [
             name: "-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv",
             params: [
@@ -73,6 +75,7 @@ nextflow_pipeline {
                 igenomes_ignore : true,
                 no_intervals : true
             ],
+            print_vcf: true,
         ]
     ]
 

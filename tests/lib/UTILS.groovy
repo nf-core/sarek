@@ -14,6 +14,8 @@ class UTILS {
         // It will skip the first line of the txt file
         def include_muse_txt = args.include_muse_txt
 
+        def print_vcf = args.print_vcf
+
         // stable_name: All files + folders in ${outdir}/ with a stable name
         def stable_name = getAllFilesFromDir(outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
         // stable_content: All files in ${outdir}/ with stable content
@@ -41,6 +43,8 @@ class UTILS {
             assertion.add(cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," + cram(file.toString(), fasta).readsMD5 })
             if (include_muse_txt) {
                 assertion.add(txt_files.isEmpty() ? 'No TXT files' : txt_files.collect{ file -> file.getName() + ":md5," + file.readLines()[2..-1].join('\n').md5() })
+            } else if (print_vcf) {
+                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> path(file.toString()).linesGzip })
             }
             else {
                 assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 })
@@ -114,7 +118,7 @@ class UTILS {
                             // Number of successful tasks
                             workflow.trace.succeeded().size(),
                             // All assertions based on the scenario
-                            *UTILS.get_assertion(include_muse_txt: scenario.include_muse_txt, outdir: params.outdir, stub: scenario.stub)
+                            *UTILS.get_assertion(include_muse_txt: scenario.include_muse_txt, outdir: params.outdir, stub: scenario.stub, print_vcf: scenario.print_vcf)
                         ).match() }
                     )
                     // Check stdout if specified
