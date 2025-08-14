@@ -22,7 +22,7 @@
                     "gatk4": "4.6.1.0"
                 },
                 "FREEBAYES": {
-                    "freebayes": "1.3.6"
+                    "freebayes": "1.3.10"
                 },
                 "GATK4_HAPLOTYPECALLER": {
                     "gatk4": "4.6.1.0"
