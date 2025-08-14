@@ -12,9 +12,8 @@
                     },
                     "bcftools/annotate": {
                         "branch": "master",
-                        "git_sha": "c9c3ef86c1892413b3c86fb38c4e39fd7288512f",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/bcftools/annotate/bcftools-annotate.diff"
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
                     },
                     "bcftools/concat": {
                         "branch": "master",
