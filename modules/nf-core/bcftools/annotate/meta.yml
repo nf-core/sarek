@@ -23,24 +23,31 @@ input:
     - input:
         type: file
         description: Query VCF or BCF file, can be either uncompressed or compressed
+        ontologies: []
     - index:
         type: file
         description: Index of the query VCF or BCF file
+        ontologies: []
     - annotations:
         type: file
         description: Bgzip-compressed file with annotations
+        ontologies: []
     - annotations_index:
         type: file
         description: Index of the annotations file
-  - - header_lines:
-        type: file
-        description: Contains lines to append to the output VCF header
-  - - rename_chrs:
-        type: file
-        description: Rename annotations according to this file containing "old_name new_name\n" pairs separated by whitespaces, each on a separate line.
+        ontologies: []
+  - header_lines:
+      type: file
+      description: Contains lines to append to the output VCF header
+      ontologies: []
+  - rename_chrs:
+      type: file
+      description: Rename annotations according to this file containing "old_name new_name\n"
+        pairs separated by whitespaces, each on a separate line.
+      ontologies: []
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -49,8 +56,9 @@ output:
           type: file
           description: Compressed annotated VCF file
           pattern: "*{vcf,vcf.gz,bcf,bcf.gz}"
-  - tbi:
-      - meta:
+          ontologies: []
+  tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -59,8 +67,9 @@ output:
           type: file
           description: Alternative VCF file index
           pattern: "*.tbi"
-  - csi:
-      - meta:
+          ontologies: []
+  csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -69,11 +78,14 @@ output:
           type: file
           description: Default VCF file index
           pattern: "*.csi"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@projectoriented"
   - "@ramprasadn"
