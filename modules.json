@@ -72,32 +72,32 @@
                     },
                     "cnvkit/antitarget": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "7a7676e7e9343eb9814c47ab617a00302ce70277",
                         "installed_by": ["modules"]
                     },
                     "cnvkit/batch": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "7a7676e7e9343eb9814c47ab617a00302ce70277",
                         "installed_by": ["modules"]
                     },
                     "cnvkit/call": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "7a7676e7e9343eb9814c47ab617a00302ce70277",
                         "installed_by": ["modules"]
                     },
                     "cnvkit/export": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "7a7676e7e9343eb9814c47ab617a00302ce70277",
                         "installed_by": ["modules"]
                     },
                     "cnvkit/genemetrics": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "7a7676e7e9343eb9814c47ab617a00302ce70277",
                         "installed_by": ["modules"]
                     },
                     "cnvkit/reference": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "7a7676e7e9343eb9814c47ab617a00302ce70277",
                         "installed_by": ["modules"]
                     },
                     "controlfreec/assesssignificance": {

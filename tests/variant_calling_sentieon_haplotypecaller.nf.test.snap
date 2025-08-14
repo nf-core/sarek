@@ -3,6 +3,9 @@
         "content": [
             19,
             {
+                "BCFTOOLS_SORT": {
+                    "bcftools": 1.21
+                },
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
                 },
@@ -10,6 +13,9 @@
                     "gawk": "5.1.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
+                "MERGE_GENOTYPEGVCFS": {
                     "gatk4": "4.6.1.0"
                 },
                 "MOSDEPTH": {
