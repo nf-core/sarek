@@ -1,8 +1,8 @@
 //
 // SENTIEON DEDUP
 
-include { CRAM_QC_MOSDEPTH_SAMTOOLS } from '../cram_qc_mosdepth_samtools/main'
-include { SENTIEON_DEDUP            } from '../../../modules/nf-core/sentieon/dedup/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS } from '../cram_qc_mosdepth_samtools'
+include { SENTIEON_DEDUP            } from '../../../modules/nf-core/sentieon/dedup'
 
 workflow BAM_SENTIEON_DEDUP {
     take:
@@ -14,12 +14,12 @@ workflow BAM_SENTIEON_DEDUP {
 
     main:
     versions = Channel.empty()
-    reports  = Channel.empty()
+    reports = Channel.empty()
 
-    bam = bam.map{ meta, bam -> [ meta - meta.subMap('data_type'), bam ] }
-    bai = bai.map{ meta, bai -> [ meta - meta.subMap('data_type'), bai ] }
-    bam_bai = bam.join(bai, failOnMismatch:true, failOnDuplicate:true)
-    SENTIEON_DEDUP(bam_bai, fasta, fasta_fai)
+    bam = bam.map { meta, _bam -> [meta - meta.subMap('data_type'), _bam] }
+    bai = bai.map { meta, _bai -> [meta - meta.subMap('data_type'), _bai] }
+
+    SENTIEON_DEDUP(bam.join(bai, failOnMismatch: true, failOnDuplicate: true), fasta, fasta_fai)
 
     // Join with the crai file
     cram = SENTIEON_DEDUP.out.cram.join(SENTIEON_DEDUP.out.crai, failOnDuplicate: true, failOnMismatch: true)
@@ -40,6 +40,5 @@ workflow BAM_SENTIEON_DEDUP {
     emit:
     cram
     reports
-
-    versions    // channel: [ versions.yml ]
+    versions // channel: [ versions.yml ]
 }

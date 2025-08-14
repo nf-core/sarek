@@ -1,7 +1,7 @@
-include { BCFTOOLS_STATS                  } from '../../../modules/nf-core/bcftools/stats/main'
-include { VCFTOOLS as VCFTOOLS_SUMMARY    } from '../../../modules/nf-core/vcftools/main'
-include { VCFTOOLS as VCFTOOLS_TSTV_COUNT } from '../../../modules/nf-core/vcftools/main'
-include { VCFTOOLS as VCFTOOLS_TSTV_QUAL  } from '../../../modules/nf-core/vcftools/main'
+include { BCFTOOLS_STATS                  } from '../../../modules/nf-core/bcftools/stats'
+include { VCFTOOLS as VCFTOOLS_SUMMARY    } from '../../../modules/nf-core/vcftools'
+include { VCFTOOLS as VCFTOOLS_TSTV_COUNT } from '../../../modules/nf-core/vcftools'
+include { VCFTOOLS as VCFTOOLS_TSTV_QUAL  } from '../../../modules/nf-core/vcftools'
 
 workflow VCF_QC_BCFTOOLS_VCFTOOLS {
     take:
@@ -12,19 +12,20 @@ workflow VCF_QC_BCFTOOLS_VCFTOOLS {
 
     versions = Channel.empty()
 
-    BCFTOOLS_STATS(vcf.map{ meta, vcf -> [ meta, vcf, [] ] }, [[:],[]], [[:],[]], [[:],[]], [[:],[]], [[:],[]])
+    BCFTOOLS_STATS(vcf.map { meta, vcf_ -> [meta, vcf_, []] }, [[:], []], [[:], []], [[:], []], [[:], []], [[:], []])
     VCFTOOLS_TSTV_COUNT(vcf, target_bed, [])
     VCFTOOLS_TSTV_QUAL(vcf, target_bed, [])
     VCFTOOLS_SUMMARY(vcf, target_bed, [])
 
     versions = versions.mix(BCFTOOLS_STATS.out.versions)
+    versions = versions.mix(VCFTOOLS_SUMMARY.out.versions)
     versions = versions.mix(VCFTOOLS_TSTV_COUNT.out.versions)
+    versions = versions.mix(VCFTOOLS_TSTV_QUAL.out.versions)
 
     emit:
     bcftools_stats          = BCFTOOLS_STATS.out.stats
     vcftools_tstv_counts    = VCFTOOLS_TSTV_COUNT.out.tstv_count
     vcftools_tstv_qual      = VCFTOOLS_TSTV_QUAL.out.tstv_qual
     vcftools_filter_summary = VCFTOOLS_SUMMARY.out.filter_summary
-
     versions
 }
