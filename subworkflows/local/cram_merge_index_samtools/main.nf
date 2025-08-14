@@ -4,8 +4,8 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { SAMTOOLS_INDEX as INDEX_CRAM } from '../../../modules/nf-core/samtools/index/main'
-include { SAMTOOLS_MERGE as MERGE_CRAM } from '../../../modules/nf-core/samtools/merge/main'
+include { SAMTOOLS_INDEX as INDEX_CRAM } from '../../../modules/nf-core/samtools/index'
+include { SAMTOOLS_MERGE as MERGE_CRAM } from '../../../modules/nf-core/samtools/merge'
 
 workflow CRAM_MERGE_INDEX_SAMTOOLS {
     take:
@@ -17,14 +17,14 @@ workflow CRAM_MERGE_INDEX_SAMTOOLS {
     versions = Channel.empty()
 
     // Figuring out if there is one or more cram(s) from the same sample
-    cram_to_merge = cram.branch { meta, cram ->
-        single: cram.size() <= 1
-        return [meta, cram[0]]
-        multiple: cram.size() > 1
+    cram_to_merge = cram.branch { meta, cram_ ->
+        single: cram_.size() <= 1
+        return [meta, cram_[0]]
+        multiple: cram_.size() > 1
     }
 
     // Only when using intervals
-    MERGE_CRAM(cram_to_merge.multiple, fasta.map { it -> [[id: 'fasta'], it] }, fasta_fai.map { it -> [[id: 'fasta_fai'], it] })
+    MERGE_CRAM(cram_to_merge.multiple, fasta.map { it -> [[id: 'fasta'], it] }, fasta_fai.map { it -> [[id: 'fasta_fai'], it] }, [[:], []])
 
     // Mix intervals and no_intervals channels together
     cram_all = MERGE_CRAM.out.cram.mix(cram_to_merge.single)
