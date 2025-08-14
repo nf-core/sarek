@@ -4,7 +4,7 @@
             26,
             {
                 "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_BATCH": {
                     "cnvkit": "0.9.10",
@@ -20,7 +20,7 @@
                     "cnvkit": "0.9.10"
                 },
                 "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.1.0"
@@ -252,7 +252,7 @@
             12,
             {
                 "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_BATCH": {
                     "cnvkit": "0.9.10",
@@ -268,7 +268,7 @@
                     "cnvkit": "0.9.10"
                 },
                 "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.1.0"
@@ -403,7 +403,7 @@
             18,
             {
                 "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_BATCH": {
                     "cnvkit": "0.9.10",
@@ -419,7 +419,7 @@
                     "cnvkit": "0.9.10"
                 },
                 "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.1.0"
@@ -599,7 +599,7 @@
             12,
             {
                 "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_BATCH": {
                     "cnvkit": "0.9.10",
@@ -615,7 +615,7 @@
                     "cnvkit": "0.9.10"
                 },
                 "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.1.0"
