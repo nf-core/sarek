@@ -47,11 +47,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | -------------------------------------- | ----------- | ----------- |
 | `ASCAT`                                | 3.1.1       | 3.2.0       |
 | `bcftools`                             | 1.20        | 1.21        |
+| `cnvkit`                               | 0.9.10      | 0.9.12      |
+| `deepvariant`                          | 1.8.0       | 1.9.0       |
 | `ensemblvep`                           | 113.0       | 113.4       |
 | `fastp`                                | 0.23.4      | 0.24.0      |
-| `fgbio`                                | 2.2.1       | 2.4.0       |
+| `fgbio`                                | 2.2.1       | 2.5.21      |
+| `freebayes`                            | 1.3.6       | 1.3.10      |
 | `gatk4`                                | 4.5.0.0     | 4.6.1.0     |
 | `mosdepth`                             | 0.3.8       | 0.3.10      |
+| `msisensor-pro`                        | 1.2.0       | 1.3.0       |
 | `MuSE`                                 |             | 2.1.2       |
 | `MultiQC`                              | 1.25.1      | 1.30        |
 | `samtools` (in `BWAMEM1_MEM`)          | 1.2         | 1.21        |
@@ -117,6 +121,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1932](https://github.com/nf-core/sarek/pull/1932) - Refactor and simplify pipeline test suite
 - [1936](https://github.com/nf-core/sarek/pull/1936) - Template update for nf-core/tools v3.3.2
 - [1954](https://github.com/nf-core/sarek/pull/1954) - Refactor bcftools annotation subworkflows so that no diff is necessary from nf-core/modules
+- [1955](https://github.com/nf-core/sarek/pull/1955) - Update all modules and subworkflows
 
 #### Fixed
 
