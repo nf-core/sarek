@@ -154,11 +154,14 @@ workflow FASTQ_PREPROCESS_GATK {
         sort_bam = true
         FASTQ_ALIGN(reads_for_alignment, index_alignment, sort_bam, fasta, fasta_fai)
 
+        FASTQ_ALIGN.out.bam.view()
+        FASTQ_ALIGN.out.bai.view()
+
         aligned_bam = Channel.empty()
         aligned_bai = Channel.empty()
         // If UMIs started in read header or were put there by fastp, copy to RX tag
         if (params.umi_in_read_header || params.umi_location) {
-            FGBIO_COPYUMIFROMREADNAME(FASTQ_ALIGN.out.bam.join(FASTQ_ALIGN.out.bai, by: [0]))
+            FGBIO_COPYUMIFROMREADNAME(FASTQ_ALIGN.out.bam.map{meta, bam -> [meta, bam, []]})
             aligned_bam = FGBIO_COPYUMIFROMREADNAME.out.bam
             aligned_bai = FGBIO_COPYUMIFROMREADNAME.out.bai
             versions = versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
