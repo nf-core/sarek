@@ -331,7 +331,9 @@ workflow SAMPLESHEET_TO_CHANNEL {
     // Copied from fastquorum
     if( umi_read_structure) {
         try {
-            readStructure(umi_read_structure)
+        // Replace spaces with commas for plugin compatibility
+        def normalized_umi_read_structure = umi_read_structure.replaceAll(" +", ",")
+        readStructure(normalized_umi_read_structure)
         } catch (java.lang.reflect.InvocationTargetException ex) {
             def message = """
                 |Please check input samplesheet -> Read structure`${umi_read_structure}` invalid

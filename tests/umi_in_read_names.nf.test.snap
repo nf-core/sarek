@@ -53,11 +53,9 @@
                 "csv/markduplicates_no_table.csv",
                 "csv/recalibrated.csv",
                 "csv/variantcalled.csv",
-                "fgbio",
-                "fgbio/test-1_umi_extracted.bai",
-                "fgbio/test-1_umi_extracted.bam",
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
                 "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
                 "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
@@ -68,6 +66,7 @@
                 "multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt",
                 "multiqc/multiqc_data/gatk-base-recalibrator-reported-empirical-plot.txt",
                 "multiqc/multiqc_data/gatk_base_recalibrator.txt",
+                "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
                 "multiqc/multiqc_data/mosdepth_cov_dist.txt",
@@ -94,7 +93,8 @@
                 "multiqc/multiqc_plots/pdf",
                 "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-pct.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
                 "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
                 "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
                 "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
@@ -102,7 +102,6 @@
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.pdf",
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.pdf",
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-reported-empirical-plot.pdf",
-                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
@@ -116,7 +115,8 @@
                 "multiqc/multiqc_plots/png",
                 "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
                 "multiqc/multiqc_plots/png/bcftools-stats-subtypes-pct.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
                 "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
                 "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
                 "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
@@ -124,7 +124,6 @@
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.png",
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.png",
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-reported-empirical-plot.png",
-                "multiqc/multiqc_plots/png/general_stats_table.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
                 "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
@@ -138,7 +137,8 @@
                 "multiqc/multiqc_plots/svg",
                 "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
                 "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-pct.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
                 "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
                 "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
                 "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
@@ -146,7 +146,6 @@
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.svg",
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.svg",
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-reported-empirical-plot.svg",
-                "multiqc/multiqc_plots/svg/general_stats_table.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
@@ -212,8 +211,6 @@
                 "variant_calling/strelka/test-1/test-1.strelka.variants.vcf.gz.tbi"
             ],
             [
-                "test-1_umi_extracted.bai:md5,54cd6c61e145196643b502eadcc2bc0b",
-                "test-1_umi_extracted.bam:md5,2da4c2b75298daabb2a729944348fbb8",
                 "mosdepth-coverage-per-contig-single.txt:md5,6cb7ff3340241614e9b8af966e11790d",
                 "mosdepth-cumcoverage-dist-id.txt:md5,d478152491cdd5ca8eec458d97f50cf3",
                 "mosdepth_perchrom.txt:md5,6cb7ff3340241614e9b8af966e11790d",
@@ -237,9 +234,7 @@
                 "test-1.strelka.variants.FILTER.summary:md5,f58effcb4006be9b10081e4417197aa6",
                 "test-1.strelka.variants.TsTv.count:md5,203b21cb5c6f6364d2d1b0666f90f268"
             ],
-            [
-                "test-1_umi_extracted.bam:md5,1dd9ef98ff12ff54d1017fb73a6e11a4"
-            ],
+            "No BAM files",
             [
                 "test-1.md.cram:md5,1dd9ef98ff12ff54d1017fb73a6e11a4",
                 "test-1.recal.cram:md5,1dd9ef98ff12ff54d1017fb73a6e11a4"
@@ -253,7 +248,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-08-06T10:54:04.491437255"
+        "timestamp": "2025-08-15T15:28:56.763355565"
     },
     "-profile test --input tests/csv/3.0/bam_umi_header.csv --umi_in_read_header --tools markduplicates --step mapping": {
         "content": [
@@ -343,11 +338,9 @@
                 "csv/markduplicates_no_table.csv",
                 "csv/recalibrated.csv",
                 "csv/variantcalled.csv",
-                "fgbio",
-                "fgbio/test_umi_extracted.bai",
-                "fgbio/test_umi_extracted.bam",
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
                 "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
                 "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
@@ -370,6 +363,7 @@
                 "multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt",
                 "multiqc/multiqc_data/gatk-base-recalibrator-reported-empirical-plot.txt",
                 "multiqc/multiqc_data/gatk_base_recalibrator.txt",
+                "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
                 "multiqc/multiqc_data/mosdepth_cov_dist.txt",
@@ -397,7 +391,8 @@
                 "multiqc/multiqc_plots/pdf",
                 "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-pct.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
                 "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
                 "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
                 "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
@@ -418,7 +413,6 @@
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.pdf",
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.pdf",
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-reported-empirical-plot.pdf",
-                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
@@ -432,7 +426,8 @@
                 "multiqc/multiqc_plots/png",
                 "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
                 "multiqc/multiqc_plots/png/bcftools-stats-subtypes-pct.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
                 "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
                 "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
                 "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
@@ -453,7 +448,6 @@
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.png",
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.png",
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-reported-empirical-plot.png",
-                "multiqc/multiqc_plots/png/general_stats_table.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
                 "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
@@ -467,7 +461,8 @@
                 "multiqc/multiqc_plots/svg",
                 "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
                 "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-pct.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
                 "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
                 "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
                 "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
@@ -488,7 +483,6 @@
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.svg",
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.svg",
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-reported-empirical-plot.svg",
-                "multiqc/multiqc_plots/svg/general_stats_table.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
@@ -560,8 +554,6 @@
                 "variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi"
             ],
             [
-                "test_umi_extracted.bai:md5,744b067f0699c68651aa21044c8e019d",
-                "test_umi_extracted.bam:md5,18bcc3322a1fd579fa992ff56b603267",
                 "fastqc-status-check-heatmap.txt:md5,360c48a151504d816500299220311e35",
                 "fastqc_adapter_content_plot.txt:md5,b9f10f9b81f8f5fe094f5414bd2b4ec5",
                 "fastqc_overrepresented_sequences_plot.txt:md5,b708b395ebd0771517854b354a6cea66",
@@ -597,9 +589,7 @@
                 "test.strelka.variants.FILTER.summary:md5,869e416e19c9d8c7c6924758e66ea426",
                 "test.strelka.variants.TsTv.count:md5,fccdacf16ebe20d74f36bd7b38f11ca4"
             ],
-            [
-                "test_umi_extracted.bam:md5,93ff54aed62b2509c88611347f884c97"
-            ],
+            "No BAM files",
             [
                 "test.md.cram:md5,93ff54aed62b2509c88611347f884c97",
                 "test.recal.cram:md5,93ff54aed62b2509c88611347f884c97"
@@ -613,6 +603,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-08-06T10:50:56.793690614"
+        "timestamp": "2025-08-15T15:26:45.308348925"
     }
 }

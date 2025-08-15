@@ -154,9 +154,6 @@ workflow FASTQ_PREPROCESS_GATK {
         sort_bam = true
         FASTQ_ALIGN(reads_for_alignment, index_alignment, sort_bam, fasta, fasta_fai)
 
-        FASTQ_ALIGN.out.bam.view()
-        FASTQ_ALIGN.out.bai.view()
-
         aligned_bam = Channel.empty()
         aligned_bai = Channel.empty()
         // If UMIs started in read header or were put there by fastp, copy to RX tag
