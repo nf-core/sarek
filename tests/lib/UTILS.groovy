@@ -30,7 +30,7 @@ class UTILS {
         // txt_files: MuSE txt files
         def txt_files = getAllFilesFromDir(outdir, include: ['**/*.MuSE.txt'])
         // vcf_files: All vcf files
-        def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: ['**/test{N,T}.germline.vcf{,.gz}', '**/*.freebayes.vcf.gz'])
+        def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: ['**/test{N,T}.germline.vcf{,.gz}'])
 
         def assertion = []
 
