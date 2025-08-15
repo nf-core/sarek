@@ -27,6 +27,9 @@
                 "SENTIEON_APPLYVARCAL_INDEL": {
                     "sentieon": 202503
                 },
+                "SENTIEON_APPLYVARCAL_SNP": {
+                    "sentieon": 202503
+                },
                 "SENTIEON_GVCFTYPER": {
                     "sentieon": 202503
                 },

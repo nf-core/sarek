@@ -26,6 +26,12 @@
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "tabix": 1.21
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.16"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.16"
                 }
             },
             [
@@ -193,6 +199,12 @@
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.16"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.16"
                 }
             },
             [
