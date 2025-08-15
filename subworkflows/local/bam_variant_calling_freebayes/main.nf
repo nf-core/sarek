@@ -4,7 +4,6 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { BCFTOOLS_INDEX                        } from '../../../modules/nf-core/bcftools/index'
 include { BCFTOOLS_SORT                         } from '../../../modules/nf-core/bcftools/sort'
 include { FREEBAYES                             } from '../../../modules/nf-core/freebayes'
 include { GATK4_MERGEVCFS as MERGE_FREEBAYES    } from '../../../modules/nf-core/gatk4/mergevcfs'
@@ -20,7 +19,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     ch_intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
-    ch_versions= Channel.empty()
+    versions= Channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = ch_cram.combine(ch_intervals)
@@ -45,23 +44,30 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     // Only when no_intervals
     TABIX_VC_FREEBAYES(bcftools_vcf_out.no_intervals)
 
-    // Mix intervals and no_intervals channels together
-    ch_vcf = MERGE_FREEBAYES.out.vcf.mix(bcftools_vcf_out.no_intervals)
-        // add variantcaller to meta map and remove no longer necessary field: num_intervals
-        .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'freebayes' ], vcf ] }
+    // Mix intervals and no_intervals channels together, including the tabix index
+    merged_vcf_with_tbi = MERGE_FREEBAYES.out.vcf
+        .join(MERGE_FREEBAYES.out.tbi, by: [0])
+        .map{ meta, vcf, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'freebayes' ], vcf, tbi ] }
 
-    VCFLIB_VCFFILTER(ch_vcf.map{ meta, vcf -> [ meta, vcf, [] ] })
+    no_intervals_with_tbi = bcftools_vcf_out.no_intervals
+        .join(TABIX_VC_FREEBAYES.out.tbi, by: [0])
+        .map{ meta, vcf, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'freebayes' ], vcf, tbi ] }
+
+    // Final channel with VCF and its index
+    vcf = merged_vcf_with_tbi.mix(no_intervals_with_tbi)
+
+    VCFLIB_VCFFILTER(vcf)
     
     vcf_filtered = VCFLIB_VCFFILTER.out.vcf
 
-    ch_versions= ch_versions.mix(BCFTOOLS_SORT.out.versions)
-    ch_versions= ch_versions.mix(MERGE_FREEBAYES.out.versions)
-    ch_versions= ch_versions.mix(FREEBAYES.out.versions)
-    ch_versions= ch_versions.mix(TABIX_VC_FREEBAYES.out.versions)
-    ch_versions= ch_versions.mix(VCFLIB_VCFFILTER.out.versions)
+    versions= versions.mix(BCFTOOLS_SORT.out.versions)
+    versions= versions.mix(MERGE_FREEBAYES.out.versions)
+    versions= versions.mix(FREEBAYES.out.versions)
+    versions= versions.mix(TABIX_VC_FREEBAYES.out.versions)
+    versions= versions.mix(VCFLIB_VCFFILTER.out.versions)
 
     emit:
-    vcf = ch_vcf
+    vcf
     vcf_filtered // channel: [ meta, vcf ]
-    versions = ch_versions
+    versions
 }
