@@ -293,7 +293,7 @@
                     },
                     "gatk4spark/applybqsr": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "6e831d8a7e6519c239d209cfd1cad7f27511e1c5",
                         "installed_by": ["modules"]
                     },
                     "gatk4spark/baserecalibrator": {
