@@ -14,7 +14,9 @@ class UTILS {
         // It will skip the first line of the txt file
         def include_muse_txt = args.include_muse_txt
 
-        def print_vcf = args.print_vcf
+        // Use this args to include freebayes unfiltered vcf files in the assertion
+        // It will only print the vcf summary to avoid differing md5sums because of small differences in QUAL score
+        def include_freebayes_unfiltered = args.include_freebayes_unfiltered
 
         // stable_name: All files + folders in ${outdir}/ with a stable name
         def stable_name = getAllFilesFromDir(outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
@@ -30,7 +32,9 @@ class UTILS {
         // txt_files: MuSE txt files
         def txt_files = getAllFilesFromDir(outdir, include: ['**/*.MuSE.txt'])
         // vcf_files: All vcf files
-        def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: ['**/test{N,T}.germline.vcf{,.gz}'])
+        def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: ['**/test{N,T}.germline.vcf{,.gz}', '**/*.freebayes.vcf{,.gz}'])
+        // freebayes_filtered: vcf files from freebayes without quality filtering
+        def freebayes_filtered = getAllFilesFromDir(outdir, include: ['**/*.freebayes.vcf.gz'])
 
         def assertion = []
 
@@ -43,12 +47,11 @@ class UTILS {
             assertion.add(cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," + cram(file.toString(), fasta).readsMD5 })
             if (include_muse_txt) {
                 assertion.add(txt_files.isEmpty() ? 'No TXT files' : txt_files.collect{ file -> file.getName() + ":md5," + file.readLines()[2..-1].join('\n').md5() })
-            } else if (print_vcf) {
-                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip] })
             }
-            else {
-                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 })
+            if (include_freebayes_unfiltered) {
+                assertion.add(freebayes_filtered.isEmpty() ? 'No Freebayes unfiltered VCF files' : freebayes_filtered.collect { file -> [ file.getName(), path(file.toString()).vcf.summary ] })
             }
+            assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 })
         }
 
         return assertion
@@ -118,7 +121,7 @@ class UTILS {
                             // Number of successful tasks
                             workflow.trace.succeeded().size(),
                             // All assertions based on the scenario
-                            *UTILS.get_assertion(include_muse_txt: scenario.include_muse_txt, outdir: params.outdir, stub: scenario.stub, print_vcf: scenario.print_vcf)
+                            *UTILS.get_assertion(include_freebayes_unfiltered: scenario.include_freebayes_unfiltered ,include_muse_txt: scenario.include_muse_txt, outdir: params.outdir, stub: scenario.stub)
                         ).match() }
                     )
                     // Check stdout if specified

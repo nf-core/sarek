@@ -67,7 +67,9 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     versions=versions.mix(VCFLIB_VCFFILTER.out.versions)
 
     emit:
-    vcf = ch_vcf.map{ meta, vcf, _tbi -> [ meta, vcf ] } // channel: [ meta, vcf, tbi ]
-    vcf_filtered // channel: [ meta, vcf ]
+    vcf_unfiltered = ch_vcf // channel: [ meta, vcf, tbi ]
+
+    // Use the QUAL filtered vcfs for the next steps
+    vcf = vcf_filtered      // channel: [ meta, vcf ]
     versions
 }
