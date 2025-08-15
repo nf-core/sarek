@@ -224,10 +224,12 @@
                 "csv/recalibrated.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt",
                 "multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt",
                 "multiqc/multiqc_data/gatk-base-recalibrator-reported-empirical-plot.txt",
                 "multiqc/multiqc_data/gatk_base_recalibrator.txt",
+                "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
                 "multiqc/multiqc_data/mosdepth_cov_dist.txt",
@@ -254,7 +256,6 @@
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.pdf",
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.pdf",
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-reported-empirical-plot.pdf",
-                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
@@ -268,7 +269,6 @@
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.png",
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.png",
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-reported-empirical-plot.png",
-                "multiqc/multiqc_plots/png/general_stats_table.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
                 "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
@@ -282,7 +282,6 @@
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.svg",
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.svg",
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-reported-empirical-plot.svg",
-                "multiqc/multiqc_plots/svg/general_stats_table.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
@@ -302,10 +301,10 @@
                 "preprocessing/recalibrated/test",
                 "preprocessing/recalibrated/test/test.recal.cram",
                 "preprocessing/recalibrated/test/test.recal.cram.crai",
-                "preprocessing/sentieon_dedup",
-                "preprocessing/sentieon_dedup/test",
-                "preprocessing/sentieon_dedup/test/test.dedup.cram",
-                "preprocessing/sentieon_dedup/test/test.dedup.cram.crai",
+                "preprocessing/sentieon_consensus",
+                "preprocessing/sentieon_consensus/test",
+                "preprocessing/sentieon_consensus/test/test.consensus.cram",
+                "preprocessing/sentieon_consensus/test/test.consensus.cram.crai",
                 "reference",
                 "reports",
                 "reports/mosdepth",
@@ -326,8 +325,8 @@
                 "reports/samtools/test/test.recal.cram.stats",
                 "reports/sentieon_dedup",
                 "reports/sentieon_dedup/test",
-                "reports/sentieon_dedup/test/test.dedup.cram.metrics",
-                "reports/sentieon_dedup/test/test.dedup.cram.metrics.multiqc.tsv"
+                "reports/sentieon_dedup/test/test.consensus.cram.metrics",
+                "reports/sentieon_dedup/test/test.consensus.cram.metrics.multiqc.tsv"
             ],
             [
                 "mosdepth-coverage-per-contig-single.txt:md5,7aa9e9bbc9997fd415ec0bee7584aec2",
@@ -350,13 +349,13 @@
                 "test.recal.mosdepth.summary.txt:md5,3cf3700ecd4ec08825ab33e8bcbc3206",
                 "test.recal.regions.bed.gz:md5,ba570a03993dbc155da2e5bf8e42f62e",
                 "test.recal.regions.bed.gz.csi:md5,10b7f8e9ac2ac27205f8bc827a186195",
-                "test.dedup.cram.metrics:md5,c810146fc45f38c2331a304ad0032029",
-                "test.dedup.cram.metrics.multiqc.tsv:md5,b8983fcbf33da2154187a6701c600bbc"
+                "test.consensus.cram.metrics:md5,2da4b908668b44c0d05764b6f85eb828",
+                "test.consensus.cram.metrics.multiqc.tsv:md5,a8d35404cd504a7aaa8a139baa807ac7"
             ],
             "No BAM files",
             [
                 "test.recal.cram:md5,4b6c484e29620bcf71dd9d00ea7b8fa6",
-                "test.dedup.cram:md5,7b5a6380e09ad4da2a4b9a2e6bda2d1a"
+                "test.consensus.cram:md5,7b5a6380e09ad4da2a4b9a2e6bda2d1a"
             ],
             "No VCF files"
         ],
@@ -364,7 +363,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-08-07T08:34:18.96789776"
+        "timestamp": "2025-08-15T09:38:15.648926052"
     },
     "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/mapped_single_cram.csv": {
         "content": [
@@ -592,15 +591,14 @@
                 "csv/markduplicates.csv",
                 "csv/markduplicates_no_table.csv",
                 "csv/recalibrated.csv",
-                "fgbio",
-                "fgbio/test-1_umi_extracted.bai",
-                "fgbio/test-1_umi_extracted.bam",
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt",
                 "multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt",
                 "multiqc/multiqc_data/gatk-base-recalibrator-reported-empirical-plot.txt",
                 "multiqc/multiqc_data/gatk_base_recalibrator.txt",
+                "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
                 "multiqc/multiqc_data/mosdepth_cov_dist.txt",
@@ -627,7 +625,6 @@
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.pdf",
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.pdf",
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-reported-empirical-plot.pdf",
-                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
@@ -641,7 +638,6 @@
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.png",
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.png",
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-reported-empirical-plot.png",
-                "multiqc/multiqc_plots/png/general_stats_table.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
                 "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
@@ -655,7 +651,6 @@
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.svg",
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.svg",
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-reported-empirical-plot.svg",
-                "multiqc/multiqc_plots/svg/general_stats_table.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
@@ -703,8 +698,6 @@
                 "reports/sentieon_dedup/test-1/test-1.consensus.cram.metrics.multiqc.tsv"
             ],
             [
-                "test-1_umi_extracted.bai:md5,54cd6c61e145196643b502eadcc2bc0b",
-                "test-1_umi_extracted.bam:md5,2da4c2b75298daabb2a729944348fbb8",
                 "mosdepth-coverage-per-contig-single.txt:md5,1760ee9a81f1a0818d182c0bf991468b",
                 "mosdepth-cumcoverage-dist-id.txt:md5,0d6aa30c2cf9455308575852eb133f1a",
                 "mosdepth_perchrom.txt:md5,1760ee9a81f1a0818d182c0bf991468b",
@@ -728,9 +721,7 @@
                 "test-1.consensus.cram.metrics:md5,7e37920e31e83b48c9986ce77e183f78",
                 "test-1.consensus.cram.metrics.multiqc.tsv:md5,022e965f83a73c581a005e6dad8a1780"
             ],
-            [
-                "test-1_umi_extracted.bam:md5,1dd9ef98ff12ff54d1017fb73a6e11a4"
-            ],
+            "No BAM files",
             [
                 "test-1.recal.cram:md5,aa729f5aa32977f1714c0ba24f3aa1eb",
                 "test-1.consensus.cram:md5,aa729f5aa32977f1714c0ba24f3aa1eb"
@@ -741,7 +732,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-08-07T10:02:59.890789871"
+        "timestamp": "2025-08-15T10:02:22.395300103"
     },
     "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/bam_umi_header.csv --umi_in_read_header": {
         "content": [
@@ -786,15 +777,14 @@
                 "csv/markduplicates.csv",
                 "csv/markduplicates_no_table.csv",
                 "csv/recalibrated.csv",
-                "fgbio",
-                "fgbio/test-1_umi_extracted.bai",
-                "fgbio/test-1_umi_extracted.bam",
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt",
                 "multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt",
                 "multiqc/multiqc_data/gatk-base-recalibrator-reported-empirical-plot.txt",
                 "multiqc/multiqc_data/gatk_base_recalibrator.txt",
+                "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
                 "multiqc/multiqc_data/mosdepth_cov_dist.txt",
@@ -821,7 +811,6 @@
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.pdf",
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.pdf",
                 "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-reported-empirical-plot.pdf",
-                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
@@ -835,7 +824,6 @@
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.png",
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.png",
                 "multiqc/multiqc_plots/png/gatk-base-recalibrator-reported-empirical-plot.png",
-                "multiqc/multiqc_plots/png/general_stats_table.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
                 "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
@@ -849,7 +837,6 @@
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.svg",
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.svg",
                 "multiqc/multiqc_plots/svg/gatk-base-recalibrator-reported-empirical-plot.svg",
-                "multiqc/multiqc_plots/svg/general_stats_table.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
@@ -897,8 +884,6 @@
                 "reports/sentieon_dedup/test-1/test-1.dedup.cram.metrics.multiqc.tsv"
             ],
             [
-                "test-1_umi_extracted.bai:md5,54cd6c61e145196643b502eadcc2bc0b",
-                "test-1_umi_extracted.bam:md5,2da4c2b75298daabb2a729944348fbb8",
                 "mosdepth-coverage-per-contig-single.txt:md5,dbbf3d229e66275578422abff3659792",
                 "mosdepth-cumcoverage-dist-id.txt:md5,3a5a4e6c014ce9045f26459eba87e6db",
                 "mosdepth_perchrom.txt:md5,dbbf3d229e66275578422abff3659792",
@@ -922,9 +907,7 @@
                 "test-1.dedup.cram.metrics:md5,f277ab6b490456f0016f7addb94c70cb",
                 "test-1.dedup.cram.metrics.multiqc.tsv:md5,c5913ace06b1b334839fa8226a968d44"
             ],
-            [
-                "test-1_umi_extracted.bam:md5,1dd9ef98ff12ff54d1017fb73a6e11a4"
-            ],
+            "No BAM files",
             [
                 "test-1.recal.cram:md5,2f93d26f230611260a7497a4913af443",
                 "test-1.dedup.cram:md5,2f93d26f230611260a7497a4913af443"
@@ -935,6 +918,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-08-07T09:49:13.484929912"
+        "timestamp": "2025-08-15T09:50:20.120218465"
     }
 }
