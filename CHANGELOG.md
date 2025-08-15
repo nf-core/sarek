@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1890](https://github.com/nf-core/sarek/pull/1890) - Improve and update metro map
 - [1903](https://github.com/nf-core/sarek/pull/1903) - Double the default `time` for all processes
 - [1922](https://github.com/nf-core/sarek/pull/1922) - Update ASCAT module to v3.2.0
-- [1934](https://github.com/nf-core/sarek/pull/1937) - Swapped from samblaster to samtools within the fgbio consensus generation
+- [1937](https://github.com/nf-core/sarek/pull/1937) - Swapped from samblaster to samtools within the fgbio consensus generation
 
 ### Fixed
 
@@ -41,7 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1858](https://github.com/nf-core/sarek/pull/1858) - Fix bug in parameter validation
 - [1896](https://github.com/nf-core/sarek/pull/1896) - Add information on gatk_spark and save_output_as_bam
 - [1928](https://github.com/nf-core/sarek/pull/1928) - Fix cnvkit when using --no_intervals, and correct cpu allocation
-- [1934](https://github.com/nf-core/sarek/pull/1937) - Individual lanes are now merged together before fgbio consensus generation is performed
+- [1937](https://github.com/nf-core/sarek/pull/1937) - Individual lanes are now merged together before fgbio consensus generation is performed
 
 ### Removed
 
