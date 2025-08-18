@@ -1,5 +1,5 @@
 {
-    "-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
+    "-profile test --intervals false --save_reference --tools false --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
         "content": [
             10,
             {
@@ -79,7 +79,7 @@
         },
         "timestamp": "2025-06-12T14:05:08.486696871"
     },
-    "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
+    "-profile test --intervals genome.multi_intervals.bed --tools false --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
         "content": [
             10,
             {
@@ -134,7 +134,7 @@
         },
         "timestamp": "2025-06-12T14:02:08.414807739"
     },
-    "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
+    "-profile test --no_intervals --tools false --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
         "content": [
             7,
             {
@@ -186,7 +186,7 @@
         },
         "timestamp": "2025-06-12T14:03:37.066714747"
     },
-    "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub": {
+    "-profile test --no_intervals --tools false --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub": {
         "content": [
             7,
             {
@@ -232,7 +232,7 @@
         },
         "timestamp": "2025-07-02T11:53:00.073428657"
     },
-    "-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub": {
+    "-profile test --intervals false --save_reference --tools false --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub": {
         "content": [
             10,
             {
@@ -296,7 +296,7 @@
         },
         "timestamp": "2025-07-02T11:53:44.394696186"
     },
-    "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub": {
+    "-profile test --intervals genome.multi_intervals.bed --tools false --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub": {
         "content": [
             9,
             {

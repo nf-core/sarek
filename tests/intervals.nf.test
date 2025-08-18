@@ -9,7 +9,7 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
+            name: "-profile test --intervals genome.multi_intervals.bed --tools false --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
             params: [
                 intervals: modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.multi_intervals.bed",
                 nucleotides_per_second: 20,
@@ -19,7 +19,7 @@ nextflow_pipeline {
             ]
         ],
         [
-            name: "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
+            name: "-profile test --no_intervals --tools false --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
             params: [
                 no_intervals: true,
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
@@ -27,7 +27,7 @@ nextflow_pipeline {
             ]
         ],
         [
-            name: "-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
+            name: "-profile test --intervals false --save_reference --tools false --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
             params: [
                 intervals: false,
                 save_reference: true,
@@ -36,7 +36,7 @@ nextflow_pipeline {
             ]
         ],
         [
-            name: "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
+            name: "-profile test --intervals genome.multi_intervals.bed --tools false --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
             params: [
                 intervals: modules_testdata_base_path + "/genomics/homo_sapiens/genome/genome.multi_intervals.bed",
                 nucleotides_per_second: 20,
@@ -47,7 +47,7 @@ nextflow_pipeline {
             stub: true
         ],
         [
-            name: "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
+            name: "-profile test --no_intervals --tools false --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
             params: [
                 no_intervals: true,
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
@@ -56,7 +56,7 @@ nextflow_pipeline {
             stub: true
         ],
         [
-            name: "-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
+            name: "-profile test --intervals false --save_reference --tools false --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
             params: [
                 intervals: false,
                 save_reference: true,

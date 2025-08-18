@@ -1,5 +1,5 @@
 {
-    "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --tools null": {
+    "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --tools false": {
         "content": [
             13,
             {
@@ -175,7 +175,7 @@
         },
         "timestamp": "2025-06-16T13:03:47.021313698"
     },
-    "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --tools null": {
+    "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --tools false": {
         "content": [
             13,
             {
@@ -351,7 +351,7 @@
         },
         "timestamp": "2025-06-16T13:06:07.261866128"
     },
-    "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --skip_tools markduplicates --tools null": {
+    "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --skip_tools markduplicates --tools false": {
         "content": [
             12,
             {
@@ -499,7 +499,7 @@
         },
         "timestamp": "2025-06-16T13:04:53.758263352"
     },
-    "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --skip_tools markduplicates --tools null": {
+    "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --skip_tools markduplicates --tools false": {
         "content": [
             12,
             {

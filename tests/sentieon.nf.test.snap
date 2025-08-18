@@ -1,5 +1,5 @@
 {
-    "-profile test --aligner sentieon-bwamem --tools null -stub": {
+    "-profile test --aligner sentieon-bwamem --tools false -stub": {
         "content": [
             18,
             {

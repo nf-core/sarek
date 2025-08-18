@@ -1,5 +1,5 @@
 {
-    "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step prepare_recalibration --tools null": {
+    "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step prepare_recalibration --tools false": {
         "content": [
             10,
             {
@@ -397,7 +397,7 @@
         },
         "timestamp": "2025-07-11T13:01:44.772645301"
     },
-    "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --tools null": {
+    "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --tools false": {
         "content": [
             10,
             {

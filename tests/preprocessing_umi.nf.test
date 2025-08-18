@@ -9,7 +9,7 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null",
+            name: "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools false",
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_umi.csv",
                 tools: null,
@@ -17,7 +17,7 @@ nextflow_pipeline {
             ]
         ],
         [
-            name: "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null --aligner sentieon-bwamem",
+            name: "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools false --aligner sentieon-bwamem",
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_umi.csv",
                 tools: null,
@@ -28,7 +28,7 @@ nextflow_pipeline {
             stdout: "sentieon-bwamem is currently not compatible with FGBio UMI handling. Please choose a different aligner."
         ],
         [
-            name: "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null --aligner parabricks",
+            name: "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools false --aligner parabricks",
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_umi.csv",
                 tools: null,
