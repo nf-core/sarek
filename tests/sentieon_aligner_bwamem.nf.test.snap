@@ -114,9 +114,6 @@
             [
                 "csv",
                 "csv/markduplicates_no_table.csv",
-                "fgbio",
-                "fgbio/test_umi_extracted.bai",
-                "fgbio/test_umi_extracted.bam",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
@@ -137,15 +134,11 @@
                 "reports/sentieon_dedup/test/test.dedup.cram.metrics.multiqc.tsv"
             ],
             [
-                "test_umi_extracted.bai:md5,206cf935511856488a54e0cf0834b2c2",
-                "test_umi_extracted.bam:md5,b46cc8dde69232cedeeb0b746bc9a13e",
                 "test-test_L1.fastp.json:md5,d9107ec414e44408d0698b167cc445f9",
                 "test.dedup.cram.metrics:md5,9a211cdc83c96fd02b0f33d67a777f21",
                 "test.dedup.cram.metrics.multiqc.tsv:md5,b0918043a0610e070495488491bbbabc"
             ],
-            [
-                "test_umi_extracted.bam:md5,4b2f03b0b0b2ae2d2f208b3dd39c05dd"
-            ],
+            "No BAM files",
             [
                 "test.dedup.cram:md5,4b2f03b0b0b2ae2d2f208b3dd39c05dd"
             ],
@@ -155,7 +148,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.2"
         },
-        "timestamp": "2025-08-07T10:45:34.758335482"
+        "timestamp": "2025-08-18T06:00:05.261761108"
     },
     "-profile test --aligner sentieon-bwamem --save_reference --build_only_index": {
         "content": [
