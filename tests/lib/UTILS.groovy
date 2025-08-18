@@ -33,8 +33,8 @@ class UTILS {
         def txt_files = getAllFilesFromDir(outdir, include: ['**/*.MuSE.txt'])
         // vcf_files: All vcf files
         def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: ['**/test{N,T}.germline.vcf{,.gz}', '**/*.freebayes.vcf{,.gz}'])
-        // freebayes_filtered: vcf files from freebayes without quality filtering
-        def freebayes_filtered = getAllFilesFromDir(outdir, include: ['**/*.freebayes.vcf.gz'])
+        // freebayes_unfiltered: vcf files from freebayes without quality filtering
+        def freebayes_unfiltered = getAllFilesFromDir(outdir, include: ['**/*.freebayes.vcf.gz'])
 
         def assertion = []
 
@@ -49,7 +49,7 @@ class UTILS {
                 assertion.add(txt_files.isEmpty() ? 'No TXT files' : txt_files.collect{ file -> file.getName() + ":md5," + file.readLines()[2..-1].join('\n').md5() })
             }
             if (include_freebayes_unfiltered) {
-                assertion.add(freebayes_filtered.isEmpty() ? 'No Freebayes unfiltered VCF files' : freebayes_filtered.collect { file -> [ file.getName(), path(file.toString()).vcf.summary ] })
+                assertion.add(freebayes_unfiltered.isEmpty() ? 'No Freebayes unfiltered VCF files' : freebayes_unfiltered.collect { file -> [ file.getName(), path(file.toString()).vcf.summary ] })
             }
             assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 })
         }
