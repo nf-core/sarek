@@ -1,0 +1,59 @@
+#!/bin/bash
+APP_HOME="$HOME/.nf-test"
+APP_JAR="nf-test.jar"
+APP_UPDATE_URL="https://code.askimed.com/install/nf-test"
+
+set -e
+
+FOLDER=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+update() {
+  if command -v curl > /dev/null 2>&1; then
+    curl -fsSL ${APP_UPDATE_URL} | bash
+  else
+    wget -qO- ${APP_UPDATE_URL} | bash
+  fi
+}
+
+# nf-test uses the same logic as Nextflow to ensure to pick up the same jvm.
+# https://github.com/nextflow-io/nextflow/blob/master/nextflow#L263
+if [[ "$NXF_JAVA_HOME" ]]; then
+  JAVA_HOME="$NXF_JAVA_HOME"
+  unset JAVA_CMD
+fi
+# Determine the Java command to use to start the JVM.
+if [ ! -x "$JAVA_CMD" ] ; then
+    if [ -d "$JAVA_HOME" ] ; then
+        if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
+            # IBM's JDK on AIX uses strange locations for the executables
+            JAVA_CMD="$JAVA_HOME/jre/sh/java"
+        else
+            JAVA_CMD="$JAVA_HOME/bin/java"
+        fi
+    elif [ -x /usr/libexec/java_home ]; then
+        JAVA_CMD="$(/usr/libexec/java_home -v 1.8+)/bin/java"
+    else
+        JAVA_CMD="$(which java)" || JAVA_CMD=java
+    fi
+fi
+
+if test -f "${FOLDER}/${APP_JAR}"; then
+  FILE_PATH_JAR=${FOLDER}/${APP_JAR}
+else
+  FILE_PATH_JAR=${APP_HOME}/${APP_JAR}
+fi
+
+JAVA_ARGS="-Xmx10G"
+if [[ "$NFT_JAVA_ARGS" ]]; then
+  JAVA_ARGS="$NFT_JAVA_ARGS"
+fi
+
+export JAVA_PROGRAM_ARGS=`echo "$@"`
+
+if [ "${JAVA_PROGRAM_ARGS}" = "update" ]; then
+  echo "Updating application..."
+  cd "${FOLDER}"
+  update
+else
+  exec ${JAVA_CMD} ${JAVA_ARGS} -jar "${FILE_PATH_JAR}" "$@"
+fi
