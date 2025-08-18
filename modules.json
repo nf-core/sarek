@@ -528,7 +528,7 @@
                     },
                     "vcflib/vcffilter": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "401ec2b2b8d0938d12ae4f9e25819e14596b8f83",
                         "installed_by": ["modules"]
                     },
                     "vcftools": {
