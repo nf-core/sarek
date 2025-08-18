@@ -364,7 +364,7 @@
                 },
                 "freebayes_filter": {
                     "type": "string",
-                    "default": "QUAL > 30",
+                    "default": 30,
                     "description": "Filtering expression for vcflib/vcffilter",
                     "help_text": "Freebayes offers a QUAL score for each called variant. The QUAL estimate provides the phred-scaled probability that the locus is not polymorphic provided the data and the model. This is reasonably-well calibrated, so you can specify that you want things where we expect error rates of no more than 1/100 (QUAL > 20) or 1/1000 (QUAL > 30). Where the default setting for sarek is QUAL > 30."
                 },
