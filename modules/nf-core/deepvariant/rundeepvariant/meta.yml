@@ -88,16 +88,16 @@ output:
           pattern: "*.vcf.gz"
           ontologies:
             - edam: http://edamontology.org/format_3989 # GZIP format
-  vcf_tbi:
+  vcf_index:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - ${prefix}.vcf.gz.tbi:
+      - ${prefix}.vcf.gz.{tbi,csi}:
           type: file
           description: Tabix index file of compressed VCF
-          pattern: "*.vcf.gz.tbi"
+          pattern: "*.vcf.gz.{tbi,csi}"
           ontologies: []
   gvcf:
     - - meta:
@@ -111,16 +111,16 @@ output:
           pattern: "*.g.vcf.gz"
           ontologies:
             - edam: http://edamontology.org/format_3989 # GZIP format
-  gvcf_tbi:
+  gvcf_index:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - ${prefix}.g.vcf.gz.tbi:
+      - ${prefix}.g.vcf.gz.{tbi,csi}:
           type: file
           description: Tabix index file of compressed GVCF
-          pattern: "*.g.vcf.gz.tbi"
+          pattern: "*.g.vcf.gz.{tbi,csi}"
           ontologies: []
   versions:
     - versions.yml:

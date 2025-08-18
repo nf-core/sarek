@@ -16,11 +16,11 @@ process DEEPVARIANT_RUNDEEPVARIANT {
     tuple val(meta5), path(par_bed)
 
     output:
-    tuple val(meta), path("${prefix}.vcf.gz")      , emit: vcf
-    tuple val(meta), path("${prefix}.vcf.gz.tbi")  , emit: vcf_tbi
-    tuple val(meta), path("${prefix}.g.vcf.gz")    , emit: gvcf
-    tuple val(meta), path("${prefix}.g.vcf.gz.tbi"), emit: gvcf_tbi
-    path "versions.yml"                            , emit: versions
+    tuple val(meta), path("${prefix}.vcf.gz")             , emit: vcf
+    tuple val(meta), path("${prefix}.vcf.gz.{tbi,csi}")   , emit: vcf_index
+    tuple val(meta), path("${prefix}.g.vcf.gz")           , emit: gvcf
+    tuple val(meta), path("${prefix}.g.vcf.gz.{tbi,csi}") , emit: gvcf_index
+    path "versions.yml"                                   , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

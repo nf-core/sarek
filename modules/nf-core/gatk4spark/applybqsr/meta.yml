@@ -63,7 +63,7 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - '*.bam':
+      - "*.bam":
           type: file
           description: BAM file
           pattern: "*.{bam}"
@@ -73,7 +73,7 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - '*.cram':
+      - "*.cram":
           type: file
           description: CRAM file
           pattern: "*.{cram}"
