@@ -1,5 +1,5 @@
 {
-    "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T'": {
+    "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools false": {
         "content": [
             30,
             {
