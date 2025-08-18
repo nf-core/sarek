@@ -60,11 +60,11 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
 
     vcf_filtered = VCFLIB_VCFFILTER.out.vcf
 
-    versions=versions.mix(BCFTOOLS_SORT.out.versions)
-    versions=versions.mix(MERGE_FREEBAYES.out.versions)
-    versions=versions.mix(FREEBAYES.out.versions)
-    versions=versions.mix(TABIX_VC_FREEBAYES.out.versions)
-    versions=versions.mix(VCFLIB_VCFFILTER.out.versions)
+    versions = versions.mix(BCFTOOLS_SORT.out.versions)
+    versions = versions.mix(FREEBAYES.out.versions)
+    versions = versions.mix(MERGE_FREEBAYES.out.versions)
+    versions = versions.mix(TABIX_VC_FREEBAYES.out.versions)
+    versions = versions.mix(VCFLIB_VCFFILTER.out.versions)
 
     emit:
     vcf_unfiltered = ch_vcf // channel: [ meta, vcf, tbi ]
