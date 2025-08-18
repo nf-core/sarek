@@ -1,3 +1,0 @@
-key	path	size	display	mime_type
-**/reports/mosdepth/*/*.mosdepth.summary.txt	/mnt/lustre/groups/nahnsen/nahbu450/nf-core/sarek/testing/reports/mosdepth/test/test.md.mosdepth.summary.txt	166	All samples summary of mean depths per chromosome and within specified regions per chromosome	
-**/reports/mosdepth/*/*.mosdepth.summary.txt	/mnt/lustre/groups/nahnsen/nahbu450/nf-core/sarek/testing/reports/mosdepth/test/test.recal.mosdepth.summary.txt	166	All samples summary of mean depths per chromosome and within specified regions per chromosome	
