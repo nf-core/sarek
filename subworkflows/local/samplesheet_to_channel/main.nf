@@ -61,7 +61,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
             [combination_key, [meta.patient, meta.sample, meta.status, meta.lane]]
         }
         .groupTuple()
-        .map { combination_key, combination_list ->
+        .map { _combination_key, combination_list ->
             if (combination_list.size() > 1) {
                 def patient = combination_list[0][0]
                 def sample = combination_list[0][1]
@@ -83,9 +83,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
             // Return the patient and the list of sample ids
             [patient, samples.collect { it.sample }]
         }
-        // Flatten to [sample_id, patient] pairs
         .flatMap { patient, sample_ids -> sample_ids.collect { sample_id -> [sample_id, patient] } }
-        // Group by sample_id to collect all patient ids per sample
         .groupTuple()
         .map { sample_id, patient_ids ->
             def unique_patients = patient_ids.unique()
