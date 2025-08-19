@@ -147,6 +147,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [1814](https://github.com/nf-core/sarek/pull/1814) - Removed link to Twitter/X
 - [1884](https://github.com/nf-core/sarek/pull/1884) - Remove pytest-workflow from CI (copied from [1729](https://github.com/nf-core/sarek/pull/1729))
+- [1956](https://github.com/nf-core/sarek/pull/1956) - Remove tests for downloading cache (Snpeff and VEP) (we already have tests for the cache in the modules)
 
 ## [3.5.1](https://github.com/nf-core/sarek/releases/tag/3.5.1) - Akkatjåkkå
 
