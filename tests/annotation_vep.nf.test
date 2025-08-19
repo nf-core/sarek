@@ -9,15 +9,6 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --tools vep --download_cache --vep_include_fasta",
-            params: [
-                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
-                step: 'annotate',
-                download_cache: true,
-                tools: 'vep'
-            ]
-        ],
-        [
             name: "Fails with profile test --tools vep --vep_cache_version 1 --build_only_index",
             params: [
                 input: "${projectDir}/tests/csv/3.0/vcf_single.csv",

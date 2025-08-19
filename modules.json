@@ -12,9 +12,8 @@
                     },
                     "bcftools/annotate": {
                         "branch": "master",
-                        "git_sha": "c9c3ef86c1892413b3c86fb38c4e39fd7288512f",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/bcftools/annotate/bcftools-annotate.diff"
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
                     },
                     "bcftools/concat": {
                         "branch": "master",
@@ -179,7 +178,7 @@
                     },
                     "freebayes": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "d04951ee68e3e8b875ebf5ddb7ba6e05233624c1",
                         "installed_by": ["modules"]
                     },
                     "gatk4/applybqsr": {
@@ -545,6 +544,11 @@
                     "varlociraptor/preprocess": {
                         "branch": "master",
                         "git_sha": "3179219c5360ba9e624f64a28b102efe0cfadc49",
+                        "installed_by": ["modules"]
+                    },
+                    "vcflib/vcffilter": {
+                        "branch": "master",
+                        "git_sha": "401ec2b2b8d0938d12ae4f9e25819e14596b8f83",
                         "installed_by": ["modules"]
                     },
                     "vcftools": {

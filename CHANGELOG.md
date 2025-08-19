@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1938](https://github.com/nf-core/sarek/pull/1938) - Add checks for uniqueness of sample ids and lane ids
 - [1939](https://github.com/nf-core/sarek/pull/1939) - Modify config to add readgroups to fq2bam
 - [1940](https://github.com/nf-core/sarek/pull/1940) - Add varlociraptor for variant calling
+- [1953](https://github.com/nf-core/sarek/pull/1953) - Update freebayes and add QUAL filtering
 
 ### Changed
 
@@ -51,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `ensemblvep`                           | 113.0       | 113.4       |
 | `fastp`                                | 0.23.4      | 0.24.0      |
 | `fgbio`                                | 2.2.1       | 2.4.0       |
+| `freebayes`                            | 1.3.6       | 1.3.10      |
 | `gatk4`                                | 4.5.0.0     | 4.6.1.0     |
 | `mosdepth`                             | 0.3.8       | 0.3.10      |
 | `MuSE`                                 |             | 2.1.2       |
@@ -62,12 +64,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `sentieon`                             | 202308.03   | 202503      |
 | `tabix`                                | 1.2         | 1.21        |
 | `varlociraptor`                        |             | 8.7.3       |
+| `vcflib`                               |             | 1.0.14      |
 | `yte`                                  |             | 1.9.0       |
 
 ### Parameters
 
-| Params | Status |
-| ------ | ------ |
+| Params               | Status |
+| -------------------- | ------ |
+| `--freebayes_filter` | New    |
 
 ### Developer section
 
@@ -120,6 +124,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1927](https://github.com/nf-core/sarek/pull/1927) - Migrate pipeline pytest sentieon tests to nf-test
 - [1932](https://github.com/nf-core/sarek/pull/1932) - Refactor and simplify pipeline test suite
 - [1936](https://github.com/nf-core/sarek/pull/1936) - Template update for nf-core/tools v3.3.2
+- [1953](https://github.com/nf-core/sarek/pull/1953) - Change freebayes tests from gzip to md5sum
+- [1954](https://github.com/nf-core/sarek/pull/1954) - Refactor bcftools annotation subworkflows so that no diff is necessary from nf-core/modules
 
 #### Fixed
 
@@ -143,6 +149,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [1814](https://github.com/nf-core/sarek/pull/1814) - Removed link to Twitter/X
 - [1884](https://github.com/nf-core/sarek/pull/1884) - Remove pytest-workflow from CI (copied from [1729](https://github.com/nf-core/sarek/pull/1729))
+- [1956](https://github.com/nf-core/sarek/pull/1956) - Remove tests for downloading cache (Snpeff and VEP) (we already have tests for the cache in the modules)
+- [1957](https://github.com/nf-core/sarek/pull/1957) - Remove duplicated gpu profile from config
 
 ## [3.5.1](https://github.com/nf-core/sarek/releases/tag/3.5.1) - Akkatjåkkå
 

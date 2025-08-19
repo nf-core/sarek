@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::freebayes=1.3.10
+  - bioconda::vcflib=1.0.14
