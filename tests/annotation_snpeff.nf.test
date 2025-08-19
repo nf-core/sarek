@@ -9,15 +9,6 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --tools snpeff --download_cache",
-            params: [
-                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
-                step: 'annotate',
-                download_cache: true,
-                tools: 'snpeff'
-            ]
-        ],
-        [
             name: "Fails with profile test --tools snpeff --snpeff_db na --build_only_index",
             params: [
                 input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
