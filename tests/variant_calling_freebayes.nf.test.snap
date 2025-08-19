@@ -1,7 +1,7 @@
 {
     "-profile test,tools_tumoronly --tools freebayes --input recalibrated_tumoronly.csv": {
         "content": [
-            17,
+            18,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": 1.21
@@ -32,6 +32,9 @@
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "tabix": 1.21
+                },
+                "VCFLIB_VCFFILTER": {
+                    "vcflib": "1.0.14"
                 },
                 "VCFTOOLS_SUMMARY": {
                     "vcftools": "0.1.16"
@@ -138,7 +141,7 @@
                 "reports/bcftools",
                 "reports/bcftools/freebayes",
                 "reports/bcftools/freebayes/sample2",
-                "reports/bcftools/freebayes/sample2/sample2.freebayes.bcftools_stats.txt",
+                "reports/bcftools/freebayes/sample2/sample2.freebayes.filtered.bcftools_stats.txt",
                 "reports/mosdepth",
                 "reports/mosdepth/sample2",
                 "reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt",
@@ -154,12 +157,13 @@
                 "reports/vcftools",
                 "reports/vcftools/freebayes",
                 "reports/vcftools/freebayes/sample2",
-                "reports/vcftools/freebayes/sample2/sample2.freebayes.FILTER.summary",
-                "reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.count",
-                "reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.qual",
+                "reports/vcftools/freebayes/sample2/sample2.freebayes.filtered.FILTER.summary",
+                "reports/vcftools/freebayes/sample2/sample2.freebayes.filtered.TsTv.count",
+                "reports/vcftools/freebayes/sample2/sample2.freebayes.filtered.TsTv.qual",
                 "variant_calling",
                 "variant_calling/freebayes",
                 "variant_calling/freebayes/sample2",
+                "variant_calling/freebayes/sample2/sample2.freebayes.filtered.vcf.gz",
                 "variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz",
                 "variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi"
             ],
@@ -170,7 +174,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
-                "sample2.freebayes.bcftools_stats.txt:md5,716b2277c7498ce8d59f8357d500bf6c",
+                "sample2.freebayes.filtered.bcftools_stats.txt:md5,58e57fe87d5eb8b7ccd9b1ecd2d196df",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample2.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
@@ -178,38 +182,30 @@
                 "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
                 "sample2.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
                 "sample2.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
-                "sample2.freebayes.FILTER.summary:md5,0df3ddeec5779344b5d463347c9c6ea8",
-                "sample2.freebayes.TsTv.count:md5,b1d308ed5087361a584cb61e7b835e1e"
+                "sample2.freebayes.filtered.FILTER.summary:md5,0a8ab31642123f2fc365df90166f22d5",
+                "sample2.freebayes.filtered.TsTv.count:md5,1756160098a27e7537c0fa8ea5cffc5f"
             ],
             "No BAM files",
             "No CRAM files",
             [
                 [
                     "sample2.freebayes.vcf.gz",
-                    [
-                        "##FORMAT=<ID=AD,Number=R,Type=Integer,Description=\"Number of observation for each allele\">",
-                        "##FORMAT=<ID=AO,Number=A,Type=Integer,Description=\"Alternate allele observation count\">",
-                        "##FORMAT=<ID=DP,Number=1,Type=Integer,Description=\"Read Depth\">",
-                        "##FORMAT=<ID=GL,Number=G,Type=Float,Description=\"Genotype Likelihood, log10-scaled likelihoods of the data given the called genotype for each possible genotype generated from the reference and alternate alleles given the sample ploidy\">",
-                        "##FORMAT=<ID=GQ,Number=1,Type=Integer,Description=\"Genotype Quality\">",
-                        "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">",
-                        "##FORMAT=<ID=MIN_DP,Number=1,Type=Integer,Description=\"Minimum depth in gVCF output block.\">",
-                        "##FORMAT=<ID=PL,Number=G,Type=Integer,Description=\"Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification\">",
-                        "##FORMAT=<ID=QA,Number=A,Type=Integer,Description=\"Sum of quality of the alternate observations\">"
-                    ],
                     "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=15342, phased=false, phasedAutodetect=false]"
                 ]
+            ],
+            [
+                "sample2.freebayes.filtered.vcf.gz:md5,7ceeddfa65d53e50e6faeb39fd4f8133"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-11T15:27:30.46535837"
+        "timestamp": "2025-08-19T15:53:11.822129555"
     },
     "-profile test --tools freebayes --no_intervals --wes --input fastq_pair.csv": {
         "content": [
-            37,
+            39,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": 1.21
@@ -254,6 +250,9 @@
                 },
                 "TABIX_VC_FREEBAYES": {
                     "tabix": 1.21
+                },
+                "VCFLIB_VCFFILTER": {
+                    "vcflib": "1.0.14"
                 },
                 "VCFTOOLS_SUMMARY": {
                     "vcftools": "0.1.16"
@@ -453,9 +452,9 @@
                 "reports/bcftools",
                 "reports/bcftools/freebayes",
                 "reports/bcftools/freebayes/test",
-                "reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt",
+                "reports/bcftools/freebayes/test/test.freebayes.filtered.bcftools_stats.txt",
                 "reports/bcftools/freebayes/test2_vs_test",
-                "reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt",
+                "reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.bcftools_stats.txt",
                 "reports/fastqc",
                 "reports/fastqc/test-test_L1",
                 "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.html",
@@ -501,19 +500,21 @@
                 "reports/vcftools",
                 "reports/vcftools/freebayes",
                 "reports/vcftools/freebayes/test",
-                "reports/vcftools/freebayes/test/test.freebayes.FILTER.summary",
-                "reports/vcftools/freebayes/test/test.freebayes.TsTv.count",
-                "reports/vcftools/freebayes/test/test.freebayes.TsTv.qual",
+                "reports/vcftools/freebayes/test/test.freebayes.filtered.FILTER.summary",
+                "reports/vcftools/freebayes/test/test.freebayes.filtered.TsTv.count",
+                "reports/vcftools/freebayes/test/test.freebayes.filtered.TsTv.qual",
                 "reports/vcftools/freebayes/test2_vs_test",
-                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.FILTER.summary",
-                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.count",
-                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.qual",
+                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.FILTER.summary",
+                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.TsTv.count",
+                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.TsTv.qual",
                 "variant_calling",
                 "variant_calling/freebayes",
                 "variant_calling/freebayes/test",
+                "variant_calling/freebayes/test/test.freebayes.filtered.vcf.gz",
                 "variant_calling/freebayes/test/test.freebayes.vcf.gz",
                 "variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi",
                 "variant_calling/freebayes/test2_vs_test",
+                "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.vcf.gz",
                 "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz",
                 "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi"
             ],
@@ -538,8 +539,8 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,7a0481b59cdd57cc0b8bc9b5641614c6",
                 "samtools_alignment_plot.txt:md5,8e6178a26fe2a4fc4f45fac3175ba6c6",
-                "test.freebayes.bcftools_stats.txt:md5,cff6037c4982d00a133b9a32b2aeb435",
-                "test2_vs_test.freebayes.bcftools_stats.txt:md5,b16283c84db55e5fef4353b8234710d4",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,d3fdf79522d80c8524f0cea5eef17caa",
+                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,37fe13df36ceeb76ca9b42be53582824",
                 "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.md.mosdepth.summary.txt:md5,0010c2396a3173c7cf4983abe2eb6a4c",
                 "test.md.per-base.bed.gz:md5,34dfe443c0a0767562dd65272e3310ef",
@@ -556,10 +557,10 @@
                 "test2.recal.mosdepth.summary.txt:md5,d5e4084de2ea2a0a7b60b2d71c804d4b",
                 "test2.recal.per-base.bed.gz:md5,e1c6d60621d8f64aaf28fa1c1ddda921",
                 "test2.recal.per-base.bed.gz.csi:md5,4205a09ede17cdbdaad45e3553f73105",
-                "test.freebayes.FILTER.summary:md5,76c5919541536c12b5c8a6094d6d78d5",
-                "test.freebayes.TsTv.count:md5,91c93bad844367dc6a1adedea802b9d9",
-                "test2_vs_test.freebayes.FILTER.summary:md5,d2d717fef7c18ef9b40bbbc5c5bbf101",
-                "test2_vs_test.freebayes.TsTv.count:md5,fe2ee32e2f0b0a7923064e71ebae4502"
+                "test.freebayes.filtered.FILTER.summary:md5,1717445ff68c3826a6e5d6ad029da9c4",
+                "test.freebayes.filtered.TsTv.count:md5,7c5d75987694b107d6c95089545d6ea7",
+                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,7b18ce8b65ec030323ca5821d431345a",
+                "test2_vs_test.freebayes.filtered.TsTv.count:md5,d33ec592e142386d29df873310ca49aa"
             ],
             "No BAM files",
             [
@@ -571,33 +572,21 @@
             [
                 [
                     "test.freebayes.vcf.gz",
-                    [
-                        "##INFO=<ID=NS,Number=1,Type=Integer,Description=\"Number of samples with data\">",
-                        "##INFO=<ID=DP,Number=1,Type=Integer,Description=\"Total read depth at the locus\">",
-                        "##INFO=<ID=DPB,Number=1,Type=Float,Description=\"Total read depth per bp at the locus; bases in reads overlapping / bases in haplotype\">",
-                        "##INFO=<ID=AC,Number=A,Type=Integer,Description=\"Total number of alternate alleles in called genotypes\">",
-                        "##INFO=<ID=AN,Number=1,Type=Integer,Description=\"Total number of alleles in called genotypes\">",
-                        "##INFO=<ID=AF,Number=A,Type=Float,Description=\"Estimated allele frequency in the range (0,1]\">",
-                        "##INFO=<ID=RO,Number=1,Type=Integer,Description=\"Count of full observations of the reference haplotype.\">",
-                        "##INFO=<ID=AO,Number=A,Type=Integer,Description=\"Count of full observations of this alternate haplotype.\">",
-                        "##INFO=<ID=PRO,Number=1,Type=Float,Description=\"Reference allele observation count, with partial observations recorded fractionally\">"
-                    ],
                     "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=732, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "test2_vs_test.freebayes.vcf.gz",
-                    [
-                        "##INFO=<ID=NS,Number=1,Type=Integer,Description=\"Number of samples with data\">",
-                        "##INFO=<ID=DP,Number=1,Type=Integer,Description=\"Total read depth at the locus\">",
-                        "##INFO=<ID=DPB,Number=1,Type=Float,Description=\"Total read depth per bp at the locus; bases in reads overlapping / bases in haplotype\">",
-                        "##INFO=<ID=AC,Number=A,Type=Integer,Description=\"Total number of alternate alleles in called genotypes\">",
-                        "##INFO=<ID=AN,Number=1,Type=Integer,Description=\"Total number of alleles in called genotypes\">",
-                        "##INFO=<ID=AF,Number=A,Type=Float,Description=\"Estimated allele frequency in the range (0,1]\">",
-                        "##INFO=<ID=RO,Number=1,Type=Integer,Description=\"Count of full observations of the reference haplotype.\">",
-                        "##INFO=<ID=AO,Number=A,Type=Integer,Description=\"Count of full observations of this alternate haplotype.\">",
-                        "##INFO=<ID=PRO,Number=1,Type=Float,Description=\"Reference allele observation count, with partial observations recorded fractionally\">"
-                    ],
                     "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=1447, phased=false, phasedAutodetect=false]"
+                ]
+            ],
+            [
+                [
+                    "test.freebayes.filtered.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=105, phased=false, phasedAutodetect=false]"
+                ],
+                [
+                    "test2_vs_test.freebayes.filtered.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=140, phased=false, phasedAutodetect=false]"
                 ]
             ]
         ],
@@ -605,11 +594,11 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-11T15:26:02.572579411"
+        "timestamp": "2025-08-19T15:51:36.927902379"
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20": {
         "content": [
-            31,
+            32,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": 1.21
@@ -666,6 +655,9 @@
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "tabix": 1.21
+                },
+                "VCFLIB_VCFFILTER": {
+                    "vcflib": "1.0.14"
                 },
                 "VCFTOOLS_SUMMARY": {
                     "vcftools": "0.1.16"
@@ -854,7 +846,7 @@
                 "reports/bcftools",
                 "reports/bcftools/freebayes",
                 "reports/bcftools/freebayes/test",
-                "reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt",
+                "reports/bcftools/freebayes/test/test.freebayes.filtered.bcftools_stats.txt",
                 "reports/fastqc",
                 "reports/fastqc/test-test_L1",
                 "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.html",
@@ -892,12 +884,13 @@
                 "reports/vcftools",
                 "reports/vcftools/freebayes",
                 "reports/vcftools/freebayes/test",
-                "reports/vcftools/freebayes/test/test.freebayes.FILTER.summary",
-                "reports/vcftools/freebayes/test/test.freebayes.TsTv.count",
-                "reports/vcftools/freebayes/test/test.freebayes.TsTv.qual",
+                "reports/vcftools/freebayes/test/test.freebayes.filtered.FILTER.summary",
+                "reports/vcftools/freebayes/test/test.freebayes.filtered.TsTv.count",
+                "reports/vcftools/freebayes/test/test.freebayes.filtered.TsTv.qual",
                 "variant_calling",
                 "variant_calling/freebayes",
                 "variant_calling/freebayes/test",
+                "variant_calling/freebayes/test/test.freebayes.filtered.vcf.gz",
                 "variant_calling/freebayes/test/test.freebayes.vcf.gz",
                 "variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi"
             ],
@@ -922,7 +915,7 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,300b95526a211b05f18aaffd037dacd3",
                 "samtools_alignment_plot.txt:md5,5053f650b8612fe5e8527b0bca8ab905",
-                "test.freebayes.bcftools_stats.txt:md5,6cc46818b9aed1d38a1f1032090ef528",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,f6fb61720a10847b476690ccdd9d278f",
                 "test.md.mosdepth.global.dist.txt:md5,531a83245143e7975f18e1988c876138",
                 "test.md.mosdepth.region.dist.txt:md5,d25723bdd3fec6b17d2462abfa097b9e",
                 "test.md.mosdepth.summary.txt:md5,87be70cd1237d7af9aa40d8cd8b3a817",
@@ -937,8 +930,8 @@
                 "test.recal.per-base.bed.gz.csi:md5,d8038c7d544abd5d6335f2541de4e769",
                 "test.recal.regions.bed.gz:md5,f96fa1cdae548eb7e54ce6a481d928b9",
                 "test.recal.regions.bed.gz.csi:md5,c6d1ac97ef4dfe43731c8368d8391cab",
-                "test.freebayes.FILTER.summary:md5,25c222bca4740f969a44ae9705e98068",
-                "test.freebayes.TsTv.count:md5,8f48b74a55f5726568f7d088ae578de9"
+                "test.freebayes.filtered.FILTER.summary:md5,89f7bd63634475ae6bce0fa63e0bff08",
+                "test.freebayes.filtered.TsTv.count:md5,2cf8cb1bc31c6a2e9338b6cf00de70cf"
             ],
             "No BAM files",
             [
@@ -948,30 +941,22 @@
             [
                 [
                     "test.freebayes.vcf.gz",
-                    [
-                        "##FORMAT=<ID=AD,Number=R,Type=Integer,Description=\"Number of observation for each allele\">",
-                        "##FORMAT=<ID=AO,Number=A,Type=Integer,Description=\"Alternate allele observation count\">",
-                        "##FORMAT=<ID=DP,Number=1,Type=Integer,Description=\"Read Depth\">",
-                        "##FORMAT=<ID=GL,Number=G,Type=Float,Description=\"Genotype Likelihood, log10-scaled likelihoods of the data given the called genotype for each possible genotype generated from the reference and alternate alleles given the sample ploidy\">",
-                        "##FORMAT=<ID=GQ,Number=1,Type=Integer,Description=\"Genotype Quality\">",
-                        "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">",
-                        "##FORMAT=<ID=MIN_DP,Number=1,Type=Integer,Description=\"Minimum depth in gVCF output block.\">",
-                        "##FORMAT=<ID=PL,Number=G,Type=Integer,Description=\"Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification\">",
-                        "##FORMAT=<ID=QA,Number=A,Type=Integer,Description=\"Sum of quality of the alternate observations\">"
-                    ],
                     "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=475, phased=false, phasedAutodetect=false]"
                 ]
+            ],
+            [
+                "test.freebayes.filtered.vcf.gz:md5,e7cd95615161df4022ed51b71a091605"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-11T15:17:45.061234335"
+        "timestamp": "2025-08-19T15:42:58.263421456"
     },
     "-profile test --tools freebayes --no_intervals": {
         "content": [
-            22,
+            23,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": 1.21
@@ -1016,6 +1001,9 @@
                 },
                 "TABIX_VC_FREEBAYES": {
                     "tabix": 1.21
+                },
+                "VCFLIB_VCFFILTER": {
+                    "vcflib": "1.0.14"
                 },
                 "VCFTOOLS_SUMMARY": {
                     "vcftools": "0.1.16"
@@ -1207,7 +1195,7 @@
                 "reports/bcftools",
                 "reports/bcftools/freebayes",
                 "reports/bcftools/freebayes/test",
-                "reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt",
+                "reports/bcftools/freebayes/test/test.freebayes.filtered.bcftools_stats.txt",
                 "reports/fastqc",
                 "reports/fastqc/test-test_L1",
                 "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.html",
@@ -1241,12 +1229,13 @@
                 "reports/vcftools",
                 "reports/vcftools/freebayes",
                 "reports/vcftools/freebayes/test",
-                "reports/vcftools/freebayes/test/test.freebayes.FILTER.summary",
-                "reports/vcftools/freebayes/test/test.freebayes.TsTv.count",
-                "reports/vcftools/freebayes/test/test.freebayes.TsTv.qual",
+                "reports/vcftools/freebayes/test/test.freebayes.filtered.FILTER.summary",
+                "reports/vcftools/freebayes/test/test.freebayes.filtered.TsTv.count",
+                "reports/vcftools/freebayes/test/test.freebayes.filtered.TsTv.qual",
                 "variant_calling",
                 "variant_calling/freebayes",
                 "variant_calling/freebayes/test",
+                "variant_calling/freebayes/test/test.freebayes.filtered.vcf.gz",
                 "variant_calling/freebayes/test/test.freebayes.vcf.gz",
                 "variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi"
             ],
@@ -1271,7 +1260,7 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,9e836f09043529495de9e1c268ee8e82",
                 "samtools_alignment_plot.txt:md5,bcc2f176a4bc51b33a36bd4381f048a5",
-                "test.freebayes.bcftools_stats.txt:md5,8f7a988dfa09a2484fcff83e96c5eda9",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,8fc53b9a786bad636976fae5d80d6962",
                 "test.md.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.md.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.md.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
@@ -1282,8 +1271,8 @@
                 "test.recal.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
                 "test.recal.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
                 "test.recal.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
-                "test.freebayes.FILTER.summary:md5,d3606e0ad12a8b8947fd56ce22430ca1",
-                "test.freebayes.TsTv.count:md5,ba81c7be158efe78190bee509ee52255"
+                "test.freebayes.filtered.FILTER.summary:md5,2af4ccd01586b3f421c9a88a95412bdd",
+                "test.freebayes.filtered.TsTv.count:md5,7c5d75987694b107d6c95089545d6ea7"
             ],
             "No BAM files",
             [
@@ -1293,30 +1282,22 @@
             [
                 [
                     "test.freebayes.vcf.gz",
-                    [
-                        "##INFO=<ID=NS,Number=1,Type=Integer,Description=\"Number of samples with data\">",
-                        "##INFO=<ID=DP,Number=1,Type=Integer,Description=\"Total read depth at the locus\">",
-                        "##INFO=<ID=DPB,Number=1,Type=Float,Description=\"Total read depth per bp at the locus; bases in reads overlapping / bases in haplotype\">",
-                        "##INFO=<ID=AC,Number=A,Type=Integer,Description=\"Total number of alternate alleles in called genotypes\">",
-                        "##INFO=<ID=AN,Number=1,Type=Integer,Description=\"Total number of alleles in called genotypes\">",
-                        "##INFO=<ID=AF,Number=A,Type=Float,Description=\"Estimated allele frequency in the range (0,1]\">",
-                        "##INFO=<ID=RO,Number=1,Type=Integer,Description=\"Count of full observations of the reference haplotype.\">",
-                        "##INFO=<ID=AO,Number=A,Type=Integer,Description=\"Count of full observations of this alternate haplotype.\">",
-                        "##INFO=<ID=PRO,Number=1,Type=Float,Description=\"Reference allele observation count, with partial observations recorded fractionally\">"
-                    ],
                     "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=738, phased=false, phasedAutodetect=false]"
                 ]
+            ],
+            [
+                "test.freebayes.filtered.vcf.gz:md5,f390481d4a22b66dffbecfe2f57ea614"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-11T15:20:16.284167843"
+        "timestamp": "2025-08-19T15:45:36.45519927"
     },
     "-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv": {
         "content": [
-            12,
+            13,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": 1.21
@@ -1341,6 +1322,9 @@
                 },
                 "TABIX_VC_FREEBAYES": {
                     "tabix": 1.21
+                },
+                "VCFLIB_VCFFILTER": {
+                    "vcflib": "1.0.14"
                 },
                 "VCFTOOLS_SUMMARY": {
                     "vcftools": "0.1.16"
@@ -1450,7 +1434,7 @@
                 "reports/bcftools",
                 "reports/bcftools/freebayes",
                 "reports/bcftools/freebayes/sample2",
-                "reports/bcftools/freebayes/sample2/sample2.freebayes.bcftools_stats.txt",
+                "reports/bcftools/freebayes/sample2/sample2.freebayes.filtered.bcftools_stats.txt",
                 "reports/mosdepth",
                 "reports/mosdepth/sample2",
                 "reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt",
@@ -1463,12 +1447,13 @@
                 "reports/vcftools",
                 "reports/vcftools/freebayes",
                 "reports/vcftools/freebayes/sample2",
-                "reports/vcftools/freebayes/sample2/sample2.freebayes.FILTER.summary",
-                "reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.count",
-                "reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.qual",
+                "reports/vcftools/freebayes/sample2/sample2.freebayes.filtered.FILTER.summary",
+                "reports/vcftools/freebayes/sample2/sample2.freebayes.filtered.TsTv.count",
+                "reports/vcftools/freebayes/sample2/sample2.freebayes.filtered.TsTv.qual",
                 "variant_calling",
                 "variant_calling/freebayes",
                 "variant_calling/freebayes/sample2",
+                "variant_calling/freebayes/sample2/sample2.freebayes.filtered.vcf.gz",
                 "variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz",
                 "variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi"
             ],
@@ -1479,43 +1464,35 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
-                "sample2.freebayes.bcftools_stats.txt:md5,dcf6642bb2bbe09910685ac17b7bc4c8",
+                "sample2.freebayes.filtered.bcftools_stats.txt:md5,b83440f3699a3258015d0ce60eea0d46",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
                 "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
-                "sample2.freebayes.FILTER.summary:md5,ee513ecf779b6e201b8ef98f95f25aab",
-                "sample2.freebayes.TsTv.count:md5,2dc153ad5af26c9f8aa82442bf65b4bf"
+                "sample2.freebayes.filtered.FILTER.summary:md5,fac42829b9b347413acbfc9c0a17fef0",
+                "sample2.freebayes.filtered.TsTv.count:md5,f864a8b1d6bab1d5f877b60dde36863f"
             ],
             "No BAM files",
             "No CRAM files",
             [
                 [
                     "sample2.freebayes.vcf.gz",
-                    [
-                        "##INFO=<ID=NS,Number=1,Type=Integer,Description=\"Number of samples with data\">",
-                        "##INFO=<ID=DP,Number=1,Type=Integer,Description=\"Total read depth at the locus\">",
-                        "##INFO=<ID=DPB,Number=1,Type=Float,Description=\"Total read depth per bp at the locus; bases in reads overlapping / bases in haplotype\">",
-                        "##INFO=<ID=AC,Number=A,Type=Integer,Description=\"Total number of alternate alleles in called genotypes\">",
-                        "##INFO=<ID=AN,Number=1,Type=Integer,Description=\"Total number of alleles in called genotypes\">",
-                        "##INFO=<ID=AF,Number=A,Type=Float,Description=\"Estimated allele frequency in the range (0,1]\">",
-                        "##INFO=<ID=RO,Number=1,Type=Integer,Description=\"Count of full observations of the reference haplotype.\">",
-                        "##INFO=<ID=AO,Number=A,Type=Integer,Description=\"Count of full observations of this alternate haplotype.\">",
-                        "##INFO=<ID=PRO,Number=1,Type=Float,Description=\"Reference allele observation count, with partial observations recorded fractionally\">"
-                    ],
                     "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=15485, phased=false, phasedAutodetect=false]"
                 ]
+            ],
+            [
+                "sample2.freebayes.filtered.vcf.gz:md5,e68ce412428016fcc1f09735a91cdef"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-11T15:28:52.963838165"
+        "timestamp": "2025-08-19T15:54:29.614557602"
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv": {
         "content": [
-            52,
+            54,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": 1.21
@@ -1572,6 +1549,9 @@
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "tabix": 1.21
+                },
+                "VCFLIB_VCFFILTER": {
+                    "vcflib": "1.0.14"
                 },
                 "VCFTOOLS_SUMMARY": {
                     "vcftools": "0.1.16"
@@ -1768,9 +1748,9 @@
                 "reports/bcftools",
                 "reports/bcftools/freebayes",
                 "reports/bcftools/freebayes/test",
-                "reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt",
+                "reports/bcftools/freebayes/test/test.freebayes.filtered.bcftools_stats.txt",
                 "reports/bcftools/freebayes/test2_vs_test",
-                "reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt",
+                "reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.bcftools_stats.txt",
                 "reports/fastqc",
                 "reports/fastqc/test-test_L1",
                 "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.html",
@@ -1828,19 +1808,21 @@
                 "reports/vcftools",
                 "reports/vcftools/freebayes",
                 "reports/vcftools/freebayes/test",
-                "reports/vcftools/freebayes/test/test.freebayes.FILTER.summary",
-                "reports/vcftools/freebayes/test/test.freebayes.TsTv.count",
-                "reports/vcftools/freebayes/test/test.freebayes.TsTv.qual",
+                "reports/vcftools/freebayes/test/test.freebayes.filtered.FILTER.summary",
+                "reports/vcftools/freebayes/test/test.freebayes.filtered.TsTv.count",
+                "reports/vcftools/freebayes/test/test.freebayes.filtered.TsTv.qual",
                 "reports/vcftools/freebayes/test2_vs_test",
-                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.FILTER.summary",
-                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.count",
-                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.qual",
+                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.FILTER.summary",
+                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.TsTv.count",
+                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.TsTv.qual",
                 "variant_calling",
                 "variant_calling/freebayes",
                 "variant_calling/freebayes/test",
+                "variant_calling/freebayes/test/test.freebayes.filtered.vcf.gz",
                 "variant_calling/freebayes/test/test.freebayes.vcf.gz",
                 "variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi",
                 "variant_calling/freebayes/test2_vs_test",
+                "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.vcf.gz",
                 "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz",
                 "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi"
             ],
@@ -1865,8 +1847,8 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,ff7906db0da2f9c9ba5ce85c34694124",
                 "samtools_alignment_plot.txt:md5,89d0a6e7076223e9feadbecd794948d5",
-                "test.freebayes.bcftools_stats.txt:md5,f362a7d25112f3e50b30f04c7791d900",
-                "test2_vs_test.freebayes.bcftools_stats.txt:md5,8984334341cf01f91835324e83148233",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,40146f32811587c09164be13f0f596b9",
+                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,64a1d9f0e97577499def82b10fe5eb66",
                 "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.md.mosdepth.region.dist.txt:md5,835fdc6fa52cc33e6fb76c0c20a8a6c3",
                 "test.md.mosdepth.summary.txt:md5,dcc9ab2bf3248903e02d8da87e678977",
@@ -1895,10 +1877,10 @@
                 "test2.recal.per-base.bed.gz.csi:md5,8072f447199c60f24b01eede8b557333",
                 "test2.recal.regions.bed.gz:md5,0bb2549180165a99680ba3e453ea312f",
                 "test2.recal.regions.bed.gz.csi:md5,c6d1ac97ef4dfe43731c8368d8391cab",
-                "test.freebayes.FILTER.summary:md5,ac6a709b3f1a7c5e9f1b3d1eb42bc940",
-                "test.freebayes.TsTv.count:md5,698b790749e5cb643243572e2e7c1055",
-                "test2_vs_test.freebayes.FILTER.summary:md5,84039d55edf0981d6b9b81252aff6741",
-                "test2_vs_test.freebayes.TsTv.count:md5,6c6038d43eb7fa766909b495979d120e"
+                "test.freebayes.filtered.FILTER.summary:md5,259470a9823d503d5639946162b2ed19",
+                "test.freebayes.filtered.TsTv.count:md5,2cf8cb1bc31c6a2e9338b6cf00de70cf",
+                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,b1c561ac4fa25e388aa5f904d4c5d4ef",
+                "test2_vs_test.freebayes.filtered.TsTv.count:md5,9dc940f98dae9c0b49c9468a491836d4"
             ],
             "No BAM files",
             [
@@ -1910,40 +1892,22 @@
             [
                 [
                     "test.freebayes.vcf.gz",
-                    [
-                        "##FORMAT=<ID=AD,Number=R,Type=Integer,Description=\"Number of observation for each allele\">",
-                        "##FORMAT=<ID=AO,Number=A,Type=Integer,Description=\"Alternate allele observation count\">",
-                        "##FORMAT=<ID=DP,Number=1,Type=Integer,Description=\"Read Depth\">",
-                        "##FORMAT=<ID=GL,Number=G,Type=Float,Description=\"Genotype Likelihood, log10-scaled likelihoods of the data given the called genotype for each possible genotype generated from the reference and alternate alleles given the sample ploidy\">",
-                        "##FORMAT=<ID=GQ,Number=1,Type=Integer,Description=\"Genotype Quality\">",
-                        "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">",
-                        "##FORMAT=<ID=MIN_DP,Number=1,Type=Integer,Description=\"Minimum depth in gVCF output block.\">",
-                        "##FORMAT=<ID=PL,Number=G,Type=Integer,Description=\"Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification\">",
-                        "##FORMAT=<ID=QA,Number=A,Type=Integer,Description=\"Sum of quality of the alternate observations\">"
-                    ],
                     "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=474, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "test2_vs_test.freebayes.vcf.gz",
-                    [
-                        "##FORMAT=<ID=AD,Number=R,Type=Integer,Description=\"Number of observation for each allele\">",
-                        "##FORMAT=<ID=AO,Number=A,Type=Integer,Description=\"Alternate allele observation count\">",
-                        "##FORMAT=<ID=DP,Number=1,Type=Integer,Description=\"Read Depth\">",
-                        "##FORMAT=<ID=GL,Number=G,Type=Float,Description=\"Genotype Likelihood, log10-scaled likelihoods of the data given the called genotype for each possible genotype generated from the reference and alternate alleles given the sample ploidy\">",
-                        "##FORMAT=<ID=GQ,Number=1,Type=Integer,Description=\"Genotype Quality\">",
-                        "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">",
-                        "##FORMAT=<ID=MIN_DP,Number=1,Type=Integer,Description=\"Minimum depth in gVCF output block.\">",
-                        "##FORMAT=<ID=PL,Number=G,Type=Integer,Description=\"Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification\">",
-                        "##FORMAT=<ID=QA,Number=A,Type=Integer,Description=\"Sum of quality of the alternate observations\">"
-                    ],
                     "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=966, phased=false, phasedAutodetect=false]"
                 ]
+            ],
+            [
+                "test.freebayes.filtered.vcf.gz:md5,ecf22ac3060db26aa347b7a1e5af4d6e",
+                "test2_vs_test.freebayes.filtered.vcf.gz:md5,cdd8d19dfd11d25646a27c8e7572b170"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-06-16T16:32:49.017293175"
+        "timestamp": "2025-08-19T15:48:47.729977606"
     }
 }
