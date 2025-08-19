@@ -39,12 +39,14 @@ nextflow_pipeline {
             include_freebayes_unfiltered: true,
         ],
         [
-            name: "-profile test --tools freebayes --no_intervals --wes --input fastq_pair.csv",
+            name: "-profile test --tools freebayes --no_intervals --wes --freebayes_filter 140 --input fastq_pair.csv",
             params: [
                 input : "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 tools : 'freebayes',
                 no_intervals : true,
-                wes : true
+                wes : true,
+                // set filter score to 140 to get rid of one variant which was unstable in score between local and CI test
+                freebayes_filter: 140
             ],
             include_freebayes_unfiltered: true,
             print_vcf: true,
