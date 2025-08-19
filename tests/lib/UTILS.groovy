@@ -17,7 +17,9 @@ class UTILS {
         // Use this args to include freebayes unfiltered vcf files in the assertion
         // It will only print the vcf summary to avoid differing md5sums because of small differences in QUAL score
         def include_freebayes_unfiltered = args.include_freebayes_unfiltered
-        def print_vcf = args.print_vcf
+
+        // Will print the summary instead of the md5sum for vcf files
+        def no_vcf_md5sum = args.no_vcf_md5sum
 
         // stable_name: All files + folders in ${outdir}/ with a stable name
         def stable_name = getAllFilesFromDir(outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
@@ -52,10 +54,11 @@ class UTILS {
             if (include_freebayes_unfiltered) {
                 assertion.add(freebayes_unfiltered.isEmpty() ? 'No Freebayes unfiltered VCF files' : freebayes_unfiltered.collect { file -> [ file.getName(), path(file.toString()).vcf.summary ] })
             }
-            if (print_vcf) {
-                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [ file.getName(), path(file.toString()).linesGzip ] })
+            if (no_vcf_md5sum) {
+                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [ file.getName(), path(file.toString()).vcf.summary ] })
+            } else {
+                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 })
             }
-            assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 })
         }
 
         return assertion
@@ -125,7 +128,7 @@ class UTILS {
                             // Number of successful tasks
                             workflow.trace.succeeded().size(),
                             // All assertions based on the scenario
-                            *UTILS.get_assertion(include_freebayes_unfiltered: scenario.include_freebayes_unfiltered ,include_muse_txt: scenario.include_muse_txt, outdir: params.outdir, stub: scenario.stub, print_vcf: scenario.print_vcf)
+                            *UTILS.get_assertion(include_freebayes_unfiltered: scenario.include_freebayes_unfiltered ,include_muse_txt: scenario.include_muse_txt, no_vcf_md5sum: scenario.no_vcf_md5sum, outdir: params.outdir, stub: scenario.stub)
                         ).match() }
                     )
                     // Check stdout if specified
