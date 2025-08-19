@@ -1,7 +1,7 @@
 {
     "-profile test --normalize_vcfs --tools freebayes,haplotypecaller": {
         "content": [
-            57,
+            59,
             {
                 "ADD_INFO_TO_VCF": {
                     "gawk": "5.1.0"
@@ -22,7 +22,7 @@
                     "gatk4": "4.6.1.0"
                 },
                 "FREEBAYES": {
-                    "freebayes": "1.3.6"
+                    "freebayes": "1.3.10"
                 },
                 "GATK4_HAPLOTYPECALLER": {
                     "gatk4": "4.6.1.0"
@@ -50,6 +50,9 @@
                 },
                 "TABIX_VC_FREEBAYES": {
                     "tabix": 1.21
+                },
+                "VCFLIB_VCFFILTER": {
+                    "vcflib": "1.0.14"
                 },
                 "VCFS_NORM": {
                     "bcftools": 1.21
@@ -203,9 +206,11 @@
                 "variant_calling",
                 "variant_calling/freebayes",
                 "variant_calling/freebayes/testN",
+                "variant_calling/freebayes/testN/testN.freebayes.filtered.vcf.gz",
                 "variant_calling/freebayes/testN/testN.freebayes.vcf.gz",
                 "variant_calling/freebayes/testN/testN.freebayes.vcf.gz.tbi",
                 "variant_calling/freebayes/testT",
+                "variant_calling/freebayes/testT/testT.freebayes.filtered.vcf.gz",
                 "variant_calling/freebayes/testT/testT.freebayes.vcf.gz",
                 "variant_calling/freebayes/testT/testT.freebayes.vcf.gz.tbi",
                 "variant_calling/haplotypecaller",
@@ -242,8 +247,8 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,a0c101497a0566f60b9e8388207944ab",
                 "samtools_alignment_plot.txt:md5,563784066de81f3bc8ccf5fbbe82b3d5",
-                "testN.freebayes.norm.bcftools_stats.txt:md5,8ee17648261a9f0d2965cad198b315ca",
-                "testT.freebayes.norm.bcftools_stats.txt:md5,86ab34c27ff2a8733e90a03437553edf",
+                "testN.freebayes.norm.bcftools_stats.txt:md5,7ce748f781d97369c6beb8584d32ec98",
+                "testT.freebayes.norm.bcftools_stats.txt:md5,75e568ea4f7bc6a66da9a201ee9efe72",
                 "testN.haplotypecaller.norm.bcftools_stats.txt:md5,9913791329ce2582910657d0453d62fa",
                 "testT.haplotypecaller.norm.bcftools_stats.txt:md5,400d5ea02dde9351af0b7864fa5eb10b",
                 "testN.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
@@ -256,10 +261,10 @@
                 "testT.recal.mosdepth.summary.txt:md5,024649a659caff330dfbef4ac3560542",
                 "testT.recal.regions.bed.gz:md5,14b36a2cf428840aab471f95cfbe399f",
                 "testT.recal.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917",
-                "testN.freebayes.norm.FILTER.summary:md5,d621a188425df0da8babce002e2f34dc",
-                "testN.freebayes.norm.TsTv.count:md5,232bb44db986854d3992bda0df08f54b",
-                "testT.freebayes.norm.FILTER.summary:md5,50f90bd0cdd1e95c10d7e5d88d0346f8",
-                "testT.freebayes.norm.TsTv.count:md5,7dba80ae65355e64a4d2d8a100db822b",
+                "testN.freebayes.norm.FILTER.summary:md5,4b25443c427fd27761017e4f3a556b29",
+                "testN.freebayes.norm.TsTv.count:md5,803d74e40f7716202bae2a3a81c1ddfc",
+                "testT.freebayes.norm.FILTER.summary:md5,4b25443c427fd27761017e4f3a556b29",
+                "testT.freebayes.norm.TsTv.count:md5,803d74e40f7716202bae2a3a81c1ddfc",
                 "testN.haplotypecaller.norm.FILTER.summary:md5,4e2ceea7f3ff998004691fd71192d9ee",
                 "testN.haplotypecaller.norm.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663",
                 "testT.haplotypecaller.norm.FILTER.summary:md5,bedf7a690b985e8ff74eef9f4c1a8c34",
@@ -270,16 +275,26 @@
             "No BAM files",
             "No CRAM files",
             [
-                "testN.freebayes.vcf.gz:md5,1d98e39fe458af9020283de18c764055",
-                "testT.freebayes.vcf.gz:md5,387b7d48d04ad3b294f07173e6550fc7",
+                [
+                    "testN.freebayes.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=7, phased=false, phasedAutodetect=false]"
+                ],
+                [
+                    "testT.freebayes.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=10, phased=false, phasedAutodetect=false]"
+                ]
+            ],
+            [
+                "testN.freebayes.filtered.vcf.gz:md5,7a08d55c866e45d635cf378825ddba74",
+                "testT.freebayes.filtered.vcf.gz:md5,dc1b49ffa2401b2a5193a0527bf8cd0a",
                 "testN.haplotypecaller.filtered.vcf.gz:md5,df2040bf1bee0252581824d11d5d87d1",
                 "testN.haplotypecaller.vcf.gz:md5,9d9d103327d59d17e778b663b56136fb",
                 "testT.haplotypecaller.filtered.vcf.gz:md5,d1e2d43d91858677d2b35fc389ee81b1",
                 "testT.haplotypecaller.vcf.gz:md5,5a2f49f0a41e890f9564a0baa11dc1c6",
-                "testN.freebayes.norm.vcf.gz:md5,7a4bd608db8b02c02de0393f05edf12",
+                "testN.freebayes.norm.vcf.gz:md5,18992a755b06d72374bb072cc8af86f9",
                 "testN.haplotypecaller.norm.vcf.gz:md5,141a2cc53b0a9d4a0ab4d779cb1e487",
                 "testN.vcf.gz:md5,141a2cc53b0a9d4a0ab4d779cb1e487",
-                "testT.freebayes.norm.vcf.gz:md5,7bac441a7c84790f43d26a73e10be9b5",
+                "testT.freebayes.norm.vcf.gz:md5,574d3d9e73986d07839d5e720c3ea929",
                 "testT.haplotypecaller.norm.vcf.gz:md5,9119ee2c970c37729dcb35d4b88f9d10",
                 "testT.vcf.gz:md5,9119ee2c970c37729dcb35d4b88f9d10"
             ]
@@ -288,6 +303,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-11T15:56:40.382403477"
+        "timestamp": "2025-08-19T10:14:15.631474506"
     }
 }

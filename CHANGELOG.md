@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1934](https://github.com/nf-core/sarek/pull/1934) - Add sentieon TNscope for tumour/normal variant calling
 - [1938](https://github.com/nf-core/sarek/pull/1938) - Add checks for uniqueness of sample ids and lane ids
 - [1939](https://github.com/nf-core/sarek/pull/1939) - Modify config to add readgroups to fq2bam
+- [1953](https://github.com/nf-core/sarek/pull/1953) - Update freebayes and add QUAL filtering
 
 ### Changed
 
@@ -50,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `ensemblvep`                           | 113.0       | 113.4       |
 | `fastp`                                | 0.23.4      | 0.24.0      |
 | `fgbio`                                | 2.2.1       | 2.4.0       |
+| `freebayes`                            | 1.3.6.      | 1.3.10      |
 | `gatk4`                                | 4.5.0.0     | 4.6.1.0     |
 | `mosdepth`                             | 0.3.8       | 0.3.10      |
 | `MuSE`                                 |             | 2.1.2       |
@@ -59,11 +61,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `samtools` (in `GATK4_MARKDUPLICATES`) | 1.19.2      | 1.21        |
 | `sentieon`                             | 202308.03   | 202503      |
 | `tabix`                                | 1.2         | 1.21        |
+| `vcflib`                               |             | 1.0.14      |
 
 ### Parameters
 
-| Params | Status |
-| ------ | ------ |
+| Params               | Status |
+| -------------------- | ------ |
+| `--freebayes_filter` | New    |
 
 ### Developer section
 
@@ -116,6 +120,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1927](https://github.com/nf-core/sarek/pull/1927) - Migrate pipeline pytest sentieon tests to nf-test
 - [1932](https://github.com/nf-core/sarek/pull/1932) - Refactor and simplify pipeline test suite
 - [1936](https://github.com/nf-core/sarek/pull/1936) - Template update for nf-core/tools v3.3.2
+- [1953](https://github.com/nf-core/sarek/pull/1953) - Change freebayes tests from gzip to md5sum
 - [1954](https://github.com/nf-core/sarek/pull/1954) - Refactor bcftools annotation subworkflows so that no diff is necessary from nf-core/modules
 
 #### Fixed
