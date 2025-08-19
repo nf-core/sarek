@@ -13,11 +13,11 @@ nextflow_pipeline {
             params: [
                 input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
                 step: 'annotate',
-                snpeff_cache : 's3://annotation-cache/snpeff_cache/',
-                snpeff_db : "na",
-                input : false,
-                build_only_index : true,
-                tools : 'snpeff'
+                snpeff_cache: 's3://annotation-cache/snpeff_cache/',
+                snpeff_db: "na",
+                input: false,
+                build_only_index: true,
+                tools: 'snpeff'
             ],
             failure: true,
             stdout: "This path is not available within annotation-cache"
