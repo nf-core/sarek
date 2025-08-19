@@ -182,8 +182,8 @@ Akkatjåkkå is another glacier.
 
 ### Parameters
 
-| Params     | Status |
-| ---------- | ------ |
+| Params | Status |
+| ------ | ------ |
 
 ## [3.5.0](https://github.com/nf-core/sarek/releases/tag/3.5.0) - Áhkájiegna
 
