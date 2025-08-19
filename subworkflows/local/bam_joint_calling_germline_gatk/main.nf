@@ -10,7 +10,6 @@ include { GATK4_APPLYVQSR as GATK4_APPLYVQSR_SNP                 } from '../../.
 include { GATK4_GENOMICSDBIMPORT                                 } from '../../../modules/nf-core/gatk4/genomicsdbimport'
 include { GATK4_GENOTYPEGVCFS                                    } from '../../../modules/nf-core/gatk4/genotypegvcfs'
 include { GATK4_MERGEVCFS as MERGE_GENOTYPEGVCFS                 } from '../../../modules/nf-core/gatk4/mergevcfs'
-include { GATK4_MERGEVCFS as MERGE_VQSR                          } from '../../../modules/nf-core/gatk4/mergevcfs'
 include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_INDEL } from '../../../modules/nf-core/gatk4/variantrecalibrator'
 include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_SNP   } from '../../../modules/nf-core/gatk4/variantrecalibrator'
 
@@ -162,7 +161,6 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     versions = versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)
     versions = versions.mix(GATK4_GENOTYPEGVCFS.out.versions)
     versions = versions.mix(MERGE_GENOTYPEGVCFS.out.versions)
-    versions = versions.mix(MERGE_VQSR.out.versions)
     versions = versions.mix(VARIANTRECALIBRATOR_INDEL.out.versions)
     versions = versions.mix(VARIANTRECALIBRATOR_SNP.out.versions)
 
