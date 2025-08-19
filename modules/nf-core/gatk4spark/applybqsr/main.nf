@@ -14,10 +14,10 @@ process GATK4SPARK_APPLYBQSR {
     path dict
 
     output:
-    tuple val(meta), path("*.bam"), emit: bam, optional: true
-    tuple val(meta), path("*.bai"), emit: bai, optional: true
+    tuple val(meta), path("*.bam"),  emit: bam,  optional: true
+    tuple val(meta), path("*.bai"),  emit: bai,  optional: true
     tuple val(meta), path("*.cram"), emit: cram, optional: true
-    path "versions.yml", emit: versions
+    path "versions.yml",             emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -56,6 +56,9 @@ process GATK4SPARK_APPLYBQSR {
     def prefix = task.ext.prefix ?: "${meta.id}.cram"
     """
     touch ${prefix}
+    if [[ ${prefix} == *.bam ]]; then
+        touch ${prefix}.bai
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

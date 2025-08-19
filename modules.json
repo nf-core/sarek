@@ -183,7 +183,7 @@
                     },
                     "gatk4/applybqsr": {
                         "branch": "master",
-                        "git_sha": "a57253204b8f4022edfeaa3ae2f5e2abecd8858b",
+                        "git_sha": "c707c63a51a3b7920bb57614f8a490e379b9c5a2",
                         "installed_by": ["modules"]
                     },
                     "gatk4/applyvqsr": {
@@ -293,7 +293,7 @@
                     },
                     "gatk4spark/applybqsr": {
                         "branch": "master",
-                        "git_sha": "e25f4fa1cd5a2616de54ab42c3c39178947520b8",
+                        "git_sha": "c707c63a51a3b7920bb57614f8a490e379b9c5a2",
                         "installed_by": ["modules"]
                     },
                     "gatk4spark/baserecalibrator": {
@@ -537,7 +537,7 @@
                 "nf-core": {
                     "bam_ngscheckmate": {
                         "branch": "master",
-                        "git_sha": "a4b6cb0d25dcdc22425d5a938d3341382a9cfe86",
+                        "git_sha": "e89ff68a46b848c4d8aabb8569767516d46db319",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {
