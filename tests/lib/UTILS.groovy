@@ -53,7 +53,7 @@ class UTILS {
                 assertion.add(freebayes_unfiltered.isEmpty() ? 'No Freebayes unfiltered VCF files' : freebayes_unfiltered.collect { file -> [ file.getName(), path(file.toString()).vcf.summary ] })
             }
             if (print_vcf) {
-                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { [file -> file.getName(), path(file.toString()).linesGzip ] })
+                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [ file.getName(), path(file.toString()).linesGzip ] })
             }
             assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 })
         }

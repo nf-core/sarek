@@ -15,7 +15,8 @@ nextflow_pipeline {
                 step: 'variant_calling',
                 normalize_vcfs: true,
                 tools: 'freebayes,haplotypecaller'
-            ]
+            ],
+            include_freebayes_unfiltered: true,
         ]
     ]
 

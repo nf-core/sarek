@@ -47,6 +47,7 @@ nextflow_pipeline {
                 wes : true
             ],
             include_freebayes_unfiltered: true,
+            print_vcf: true,
         ],
         [
             name: "-profile test,tools_tumoronly --tools freebayes --input recalibrated_tumoronly.csv",

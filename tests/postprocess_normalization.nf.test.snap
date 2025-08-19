@@ -275,6 +275,16 @@
             "No BAM files",
             "No CRAM files",
             [
+                [
+                    "testN.freebayes.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=7, phased=false, phasedAutodetect=false]"
+                ],
+                [
+                    "testT.freebayes.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=10, phased=false, phasedAutodetect=false]"
+                ]
+            ],
+            [
                 "testN.freebayes.filtered.vcf.gz:md5,7a08d55c866e45d635cf378825ddba74",
                 "testT.freebayes.filtered.vcf.gz:md5,dc1b49ffa2401b2a5193a0527bf8cd0a",
                 "testN.haplotypecaller.filtered.vcf.gz:md5,df2040bf1bee0252581824d11d5d87d1",
@@ -293,6 +303,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-08-18T10:46:07.040774686"
+        "timestamp": "2025-08-19T10:14:15.631474506"
     }
 }
