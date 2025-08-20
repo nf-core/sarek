@@ -3,13 +3,13 @@
  * It creates a BAM containing only a header (so indexcov can get the sample name) and a BAM index were low quality reads, supplementary etc, have been removed
  */
 process SAMTOOLS_REINDEX_BAM {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/samtools:1.20--h50ea8bc_0' :
-        'biocontainers/samtools:1.20--h50ea8bc_0' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/samtools:1.20--h50ea8bc_0'
+        : 'biocontainers/samtools:1.20--h50ea8bc_0'}"
 
     input:
     tuple val(meta), path(input), path(input_index)
@@ -17,8 +17,8 @@ process SAMTOOLS_REINDEX_BAM {
     tuple val(meta3), path(fai)
 
     output:
-    tuple val(meta), path("${meta.id}.reindex.bam"), path("${meta.id}.reindex.bam.bai"),emit: output
-    path  "versions.yml"            , emit: versions
+    tuple val(meta), path("${meta.id}.reindex.bam"), path("${meta.id}.reindex.bam.bai"), emit: output
+    path "versions.yml",                                                                 emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -48,6 +48,17 @@ process SAMTOOLS_REINDEX_BAM {
         ${reference} \\
         ${args} \\
         ${input}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
+    """
+
+    stub:
+    """
+    touch ${meta.id}.reindex.bam
+    touch ${meta.id}.reindex.bam.bai
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
