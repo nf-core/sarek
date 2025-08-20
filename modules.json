@@ -7,12 +7,12 @@
                 "nf-core": {
                     "ascat": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "e88b4e59762c2e816ca90e623ed83300ecbc9222",
                         "installed_by": ["modules"]
                     },
                     "bcftools/annotate": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "8b09455ee60fe0cbf1323d1dee5bf9039e1ac733",
                         "installed_by": ["modules"]
                     },
                     "bcftools/concat": {
@@ -168,7 +168,7 @@
                     },
                     "fgbio/fastqtobam": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "16af45709c1eca0aa9a8378ed790f15696dd7f1e",
                         "installed_by": ["modules"]
                     },
                     "fgbio/groupreadsbyumi": {
@@ -313,12 +313,12 @@
                     },
                     "goleft/indexcov": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "2f955381ba60f6b7467ec2f4835a95835a5c626c",
                         "installed_by": ["modules"]
                     },
                     "lofreq/callparallel": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "8c0cf1994231ad6bb5c214db709ad9bf70aa318e",
                         "installed_by": ["modules"]
                     },
                     "manta/germline": {
@@ -368,7 +368,7 @@
                     },
                     "ngscheckmate/ncm": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "5e3fd0cbb85bdfaaafdc23e8070eaebea8b93814",
                         "installed_by": ["bam_ngscheckmate"]
                     },
                     "parabricks/fq2bam": {
