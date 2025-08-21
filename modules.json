@@ -428,47 +428,47 @@
                     },
                     "sentieon/applyvarcal": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "sentieon/bwamem": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "sentieon/dedup": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "sentieon/dnamodelapply": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "sentieon/dnascope": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "sentieon/gvcftyper": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "sentieon/haplotyper": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "sentieon/tnscope": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "sentieon/varcal": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "snpeff/download": {
@@ -478,7 +478,7 @@
                     },
                     "snpeff/snpeff": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "48ca3de1737b0144aa9fe05bea2b681f0ae45a95",
                         "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "spring/decompress": {
@@ -562,12 +562,12 @@
                     },
                     "vcf_annotate_ensemblvep": {
                         "branch": "master",
-                        "git_sha": "a96f42708b631dfc736f48980dbf2be418dd784b",
+                        "git_sha": "48ca3de1737b0144aa9fe05bea2b681f0ae45a95",
                         "installed_by": ["subworkflows"]
                     },
                     "vcf_annotate_snpeff": {
                         "branch": "master",
-                        "git_sha": "88200cde7c1a7e580283e9d010de5d81f2c23550",
+                        "git_sha": "48ca3de1737b0144aa9fe05bea2b681f0ae45a95",
                         "installed_by": ["subworkflows"]
                     }
                 }
