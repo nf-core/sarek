@@ -9,54 +9,55 @@ nextflow_pipeline {
     tag "pipeline_sarek"
 
     def test_scenario = [
-        // [
-        //     name: "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv",
-        //     params: [
-        //         input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
-        //         skip_tools: 'baserecalibrator',
-        //         step: "variant_calling",
-        //         tools: 'deepvariant'
-        //     ]
-        // ],
         [
-            name: "-profile test --tools deepvariant --input tests/csv/3.0/fastq_germline.csv",
+            name: "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv",
             params: [
-                input: "${projectDir}/tests/csv/3.0/fastq_germline.csv",
-                tools: 'deepvariant',
-                wes: true,
+                input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
+                skip_tools: 'baserecalibrator',
+                step: "variant_calling",
+                tools: 'deepvariant'
             ]
         ],
         // [
-        //     name: "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv -stub",
+        //     name: "-profile test --tools deepvariant --input tests/csv/3.0/prepare_recalibration_single_cram.csv",
         //     params: [
-        //         input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
-        //         skip_tools: 'baserecalibrator',
-        //         step: "variant_calling",
-        //         tools: 'deepvariant'
-        //     ],
-        //     stub: true
-        // ],
-        // [
-        //     name: "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals",
-        //     params: [
-        //         input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
-        //         skip_tools: 'baserecalibrator',
-        //         step: "variant_calling",
+        //         input: "${projectDir}/tests/csv/3.0/prepare_recalibration_single_cram.csv",
+        //         step: 'recalibrate',
         //         tools: 'deepvariant',
-        //         no_intervals: true
+        //         wes: true,
         //     ]
         // ],
-        // [
-        //     name: "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals -stub",
-        //     params: [
-        //         input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
-        //         skip_tools: 'baserecalibrator',
-        //         step: "variant_calling",
-        //         tools: 'deepvariant',
-        //         no_intervals: true
-        //     ],
-        //     stub: true
-        // ]
+        [
+            name: "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
+                skip_tools: 'baserecalibrator',
+                step: "variant_calling",
+                tools: 'deepvariant'
+            ],
+            stub: true
+        ],
+        [
+            name: "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
+                skip_tools: 'baserecalibrator',
+                step: "variant_calling",
+                tools: 'deepvariant',
+                no_intervals: true
+            ]
+        ],
+        [
+            name: "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
+                skip_tools: 'baserecalibrator',
+                step: "variant_calling",
+                tools: 'deepvariant',
+                no_intervals: true
+            ],
+            stub: true
+        ]
     ]
 
     test_scenario.each { scenario ->
