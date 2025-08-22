@@ -29,38 +29,45 @@ input:
         description: File containing the pileups summary table of a tumor sample to
           be used to calculate contamination.
         pattern: "*.pileups.table"
+        ontologies: []
     - matched:
         type: file
         description: File containing the pileups summary table of a normal sample that
           matches with the tumor sample specified in pileup argument. This is an optional
           input.
         pattern: "*.pileups.table"
+        ontologies: []
 output:
-  - contamination:
-      - meta:
+  contamination:
+    - - meta:
           type: file
           description: File containing the contamination table.
           pattern: "*.contamination.table"
+          ontologies: []
       - "*.contamination.table":
           type: file
           description: File containing the contamination table.
           pattern: "*.contamination.table"
-  - segmentation:
-      - meta:
+          ontologies: []
+  segmentation:
+    - - meta:
           type: file
-          description: output table containing segmentation of tumor minor allele fractions
-            (optional)
-          pattern: "*.segmentation.table"
+          description: File containing the contamination table.
+          pattern: "*.contamination.table"
+          ontologies: []
       - "*.segmentation.table":
           type: file
           description: output table containing segmentation of tumor minor allele fractions
             (optional)
           pattern: "*.segmentation.table"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@GCJMackenzie"
   - "@maxulysse"

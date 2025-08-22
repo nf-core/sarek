@@ -23,13 +23,15 @@ input:
         type: file
         description: CNR file
         pattern: "*.cnr"
+        ontologies: []
     - cns:
         type: file
         description: CNS file [Optional]
         pattern: "*.cns"
+        ontologies: []
 output:
-  - tsv:
-      - meta:
+  tsv:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -38,21 +40,15 @@ output:
           type: file
           description: TSV file
           pattern: "*.tsv"
-  - cnn:
-      - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-      - "*.cnn":
-          type: file
-          description: CNN file
-          pattern: "*.cnn"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3475 # TSV
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@adamrtalbot"
   - "@marrip"

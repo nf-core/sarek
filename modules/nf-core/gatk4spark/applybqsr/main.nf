@@ -14,16 +14,17 @@ process GATK4SPARK_APPLYBQSR {
     path dict
 
     output:
-    tuple val(meta), path("${prefix}.bam"),  emit: bam,  optional: true
-    tuple val(meta), path("${prefix}.cram"), emit: cram, optional: true
-    path "versions.yml",                     emit: versions
+    tuple val(meta), path("*.bam"),  emit: bam,  optional: true
+    tuple val(meta), path("*.bai"),  emit: bai,  optional: true
+    tuple val(meta), path("*.cram"), emit: cram, optional: true
+    path "versions.yml",             emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}.cram"
     def interval_command = intervals ? "--intervals ${intervals}" : ""
 
     def avail_mem = 3072
@@ -34,11 +35,10 @@ process GATK4SPARK_APPLYBQSR {
         avail_mem = (task.memory.mega * 0.8).intValue()
     }
     """
-    gatk \\
-        --java-options "-Xmx${avail_mem}M -XX:-UsePerfData" \\
+    gatk --java-options "-Xmx${avail_mem}M -XX:-UsePerfData" \\
         ApplyBQSRSpark \\
         --input ${input} \\
-        --output ${prefix}.${input.getExtension()} \\
+        --output ${prefix} \\
         --reference ${fasta} \\
         --bqsr-recal-file ${bqsr_table} \\
         ${interval_command} \\
@@ -53,10 +53,12 @@ process GATK4SPARK_APPLYBQSR {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}.cram"
     """
-    touch ${prefix}.bam
-    touch ${prefix}.cram
+    touch ${prefix}
+    if [[ ${prefix} == *.bam ]]; then
+        touch ${prefix}.bai
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

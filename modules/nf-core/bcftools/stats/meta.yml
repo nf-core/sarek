@@ -24,11 +24,13 @@ input:
         type: file
         description: VCF input file
         pattern: "*.{vcf}"
+        ontologies: []
     - tbi:
         type: file
         description: |
           The tab index for the VCF file to be inspected. Optional: only required when parameter regions is chosen.
         pattern: "*.tbi"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -38,6 +40,7 @@ input:
         type: file
         description: |
           Optionally, restrict the operation to regions listed in this file. (VCF, BED or tab-delimited)
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -47,6 +50,7 @@ input:
         type: file
         description: |
           Optionally, restrict the operation to regions listed in this file (doesn't rely upon tbi index files)
+        ontologies: []
   - - meta4:
         type: map
         description: |
@@ -57,6 +61,7 @@ input:
         description: |
           Optional, file of sample names to be included or excluded.
           e.g. 'file.tsv'
+        ontologies: []
   - - meta5:
         type: map
         description: |
@@ -67,6 +72,7 @@ input:
         description: |
           Tab-delimited file with exons for indel frameshifts (chr,beg,end; 1-based, inclusive, optionally bgzip compressed).
           e.g. 'exons.tsv.gz'
+        ontologies: []
   - - meta6:
         type: map
         description: |
@@ -77,9 +83,10 @@ input:
         description: |
           Faidx indexed reference sequence file to determine INDEL context.
           e.g. 'reference.fa'
+        ontologies: []
 output:
-  - stats:
-      - meta:
+  stats:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -88,11 +95,14 @@ output:
           type: file
           description: Text output file containing stats
           pattern: "*_{stats.txt}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@joseespinosa"
   - "@drpatelh"

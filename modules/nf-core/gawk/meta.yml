@@ -26,37 +26,42 @@ input:
     - input:
         type: file
         description: The input file - Specify the logic that needs to be executed on
-          this file on the `ext.args2` or in the program file.
-          If the files have a `.gz` extension, they will be unzipped using `zcat`.
+          this file on the `ext.args2` or in the program file. If the files have a `.gz`
+          extension, they will be unzipped using `zcat`.
         pattern: "*"
-  - - program_file:
-        type: file
-        description: Optional file containing logic for awk to execute. If you don't
-          wish to use a file, you can use `ext.args2` to specify the logic.
-        pattern: "*"
-  - - disable_redirect_output:
-        type: boolean
-        description: Disable the redirection of awk output to a given file. This is
-          useful if you want to use awk's built-in redirect to write files instead
-          of the shell's redirect.
+        ontologies: []
+  - program_file:
+      type: file
+      description: Optional file containing logic for awk to execute. If you don't wish
+        to use a file, you can use `ext.args2` to specify the logic.
+      pattern: "*"
+      ontologies: []
+  - disable_redirect_output:
+      type: boolean
+      description: Disable the redirection of awk output to a given file. This is useful
+        if you want to use awk's built-in redirect to write files instead of the shell's
+        redirect.
 output:
-  - output:
-      - meta:
+  output:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
       - "*.${suffix}":
           type: file
-          description: The output file - if using shell redirection, specify the name of this
-            file using `ext.prefix` and the extension using `ext.suffix`. Otherwise, ensure
-            the awk program produces files with the extension in `ext.suffix`.
+          description: The output file - if using shell redirection, specify the name
+            of this file using `ext.prefix` and the extension using `ext.suffix`. Otherwise,
+            ensure the awk program produces files with the extension in `ext.suffix`.
           pattern: "*"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@nvnieuwk"
 maintainers:

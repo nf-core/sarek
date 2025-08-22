@@ -20,21 +20,24 @@ input:
         type: file
         description: List of compressed / uncompressed files
         pattern: "*"
+        ontologies: []
 output:
-  - file_out:
-      - meta:
-          type: file
-          description: Concatenated file. Will be gzipped if file_out ends with ".gz"
-          pattern: "${file_out}"
+  file_out:
+    - - meta:
+          type: map
+          description: Groovy Map containing sample information
       - ${prefix}:
           type: file
           description: Concatenated file. Will be gzipped if file_out ends with ".gz"
           pattern: "${file_out}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@erikrikarddaniel"
   - "@FriederikeHanssen"

@@ -22,17 +22,19 @@ input:
     - variant_file:
         type: file
         description: variant input file which can be vcf, vcf.gz, or bcf format.
-  - - bed:
-        type: file
-        description: bed file which can be used with different arguments in vcftools
-          (optional)
-  - - diff_variant_file:
-        type: file
-        description: secondary variant file which can be used with the 'diff' suite
-          of tools (optional)
+        ontologies: []
+  - bed:
+      type: file
+      description: bed file which can be used with different arguments in vcftools (optional)
+      ontologies: []
+  - diff_variant_file:
+      type: file
+      description: secondary variant file which can be used with the 'diff' suite of
+        tools (optional)
+      ontologies: []
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -41,8 +43,9 @@ output:
           type: file
           description: vcf file (optional)
           pattern: "*.vcf"
-  - bcf:
-      - meta:
+          ontologies: []
+  bcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -51,8 +54,9 @@ output:
           type: file
           description: bcf file (optional)
           pattern: "*.bcf"
-  - frq:
-      - meta:
+          ontologies: []
+  frq:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -61,8 +65,9 @@ output:
           type: file
           description: Allele frequency for each site (optional)
           pattern: "*.frq"
-  - frq_count:
-      - meta:
+          ontologies: []
+  frq_count:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -71,8 +76,9 @@ output:
           type: file
           description: Allele counts for each site (optional)
           pattern: "*.frq.count"
-  - idepth:
-      - meta:
+          ontologies: []
+  idepth:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -81,8 +87,9 @@ output:
           type: file
           description: mean depth per individual (optional)
           pattern: "*.idepth"
-  - ldepth:
-      - meta:
+          ontologies: []
+  ldepth:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -91,8 +98,9 @@ output:
           type: file
           description: depth per site summed across individuals (optional)
           pattern: "*.ildepth"
-  - ldepth_mean:
-      - meta:
+          ontologies: []
+  ldepth_mean:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -101,8 +109,9 @@ output:
           type: file
           description: mean depth per site calculated across individuals (optional)
           pattern: "*.ldepth.mean"
-  - gdepth:
-      - meta:
+          ontologies: []
+  gdepth:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -111,8 +120,9 @@ output:
           type: file
           description: depth for each genotype in vcf file (optional)
           pattern: "*.gdepth"
-  - hap_ld:
-      - meta:
+          ontologies: []
+  hap_ld:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -121,30 +131,34 @@ output:
           type: file
           description: r2, D, and D’ statistics using phased haplotypes (optional)
           pattern: "*.hap.ld"
-  - geno_ld:
-      - meta:
+          ontologies: []
+  geno_ld:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
       - "*.geno.ld":
           type: file
-          description: squared correlation coefficient between genotypes encoded as 0,
-            1 and 2 to represent the number of non-reference alleles in each individual
+          description: squared correlation coefficient between genotypes encoded as
+            0, 1 and 2 to represent the number of non-reference alleles in each individual
             (optional)
           pattern: "*.geno.ld"
-  - geno_chisq:
-      - meta:
+          ontologies: []
+  geno_chisq:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
       - "*.geno.chisq":
           type: file
-          description: test for genotype independence via the chi-squared statistic (optional)
+          description: test for genotype independence via the chi-squared statistic
+            (optional)
           pattern: "*.geno.chisq"
-  - list_hap_ld:
-      - meta:
+          ontologies: []
+  list_hap_ld:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -154,8 +168,9 @@ output:
           description: r2 statistics of the sites contained in the provided input file
             verses all other sites (optional)
           pattern: "*.list.hap.ld"
-  - list_geno_ld:
-      - meta:
+          ontologies: []
+  list_geno_ld:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -165,28 +180,33 @@ output:
           description: r2 statistics of the sites contained in the provided input file
             verses all other sites (optional)
           pattern: "*.list.geno.ld"
-  - interchrom_hap_ld:
-      - meta:
+          ontologies: []
+  interchrom_hap_ld:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
       - "*.interchrom.hap.ld":
           type: file
-          description: r2 statistics for sites (haplotypes) on different chromosomes (optional)
+          description: r2 statistics for sites (haplotypes) on different chromosomes
+            (optional)
           pattern: "*.interchrom.hap.ld"
-  - interchrom_geno_ld:
-      - meta:
+          ontologies: []
+  interchrom_geno_ld:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
       - "*.interchrom.geno.ld":
           type: file
-          description: r2 statistics for sites (genotypes) on different chromosomes (optional)
+          description: r2 statistics for sites (genotypes) on different chromosomes
+            (optional)
           pattern: "*.interchrom.geno.ld"
-  - tstv:
-      - meta:
+          ontologies: []
+  tstv:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -196,8 +216,9 @@ output:
           description: Transition / Transversion ratio in bins of size defined in options
             (optional)
           pattern: "*.TsTv"
-  - tstv_summary:
-      - meta:
+          ontologies: []
+  tstv_summary:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -206,41 +227,45 @@ output:
           type: file
           description: Summary of all Transitions and Transversions (optional)
           pattern: "*.TsTv.summary"
-  - tstv_count:
-      - meta:
+          ontologies: []
+  tstv_count:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
       - "*.TsTv.count":
           type: file
-          description: Transition / Transversion ratio as a function of alternative allele
-            count (optional)
+          description: Transition / Transversion ratio as a function of alternative
+            allele count (optional)
           pattern: "*.TsTv.count"
-  - tstv_qual:
-      - meta:
+          ontologies: []
+  tstv_qual:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
       - "*.TsTv.qual":
           type: file
-          description: Transition / Transversion ratio as a function of SNP quality threshold
-            (optional)
+          description: Transition / Transversion ratio as a function of SNP quality
+            threshold (optional)
           pattern: "*.TsTv.qual"
-  - filter_summary:
-      - meta:
+          ontologies: []
+  filter_summary:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
       - "*.FILTER.summary":
           type: file
-          description: Summary of the number of SNPs and Ts/Tv ratio for each FILTER category
-            (optional)
+          description: Summary of the number of SNPs and Ts/Tv ratio for each FILTER
+            category (optional)
           pattern: "*.FILTER.summary"
-  - sites_pi:
-      - meta:
+          ontologies: []
+  sites_pi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -249,19 +274,21 @@ output:
           type: file
           description: Nucleotide divergency on a per-site basis (optional)
           pattern: "*.sites.pi"
-  - windowed_pi:
-      - meta:
+          ontologies: []
+  windowed_pi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
       - "*.windowed.pi":
           type: file
-          description: Nucleotide diversity in windows, with window size determined by
-            options (optional)
+          description: Nucleotide diversity in windows, with window size determined
+            by options (optional)
           pattern: "*windowed.pi"
-  - weir_fst:
-      - meta:
+          ontologies: []
+  weir_fst:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -270,8 +297,9 @@ output:
           type: file
           description: Fst estimate from Weir and Cockerham’s 1984 paper (optional)
           pattern: "*.weir.fst"
-  - heterozygosity:
-      - meta:
+          ontologies: []
+  heterozygosity:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -280,8 +308,9 @@ output:
           type: file
           description: Heterozygosity on a per-individual basis (optional)
           pattern: "*.het"
-  - hwe:
-      - meta:
+          ontologies: []
+  hwe:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -291,8 +320,9 @@ output:
           description: Contains the Observed numbers of Homozygotes and Heterozygotes
             and the corresponding Expected numbers under HWE (optional)
           pattern: "*.hwe"
-  - tajima_d:
-      - meta:
+          ontologies: []
+  tajima_d:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -302,8 +332,9 @@ output:
           description: Tajima’s D statistic in bins with size of the specified number
             in options (optional)
           pattern: "*.Tajima.D"
-  - freq_burden:
-      - meta:
+          ontologies: []
+  freq_burden:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -313,8 +344,9 @@ output:
           description: Number of variants within each individual of a specific frequency
             in options (optional)
           pattern: "*.ifreqburden"
-  - lroh:
-      - meta:
+          ontologies: []
+  lroh:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -323,8 +355,9 @@ output:
           type: file
           description: Long Runs of Homozygosity (optional)
           pattern: "*.LROH"
-  - relatedness:
-      - meta:
+          ontologies: []
+  relatedness:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -334,8 +367,9 @@ output:
           description: Relatedness statistic based on the method of Yang et al, Nature
             Genetics 2010 (doi:10.1038/ng.608) (optional)
           pattern: "*.relatedness"
-  - relatedness2:
-      - meta:
+          ontologies: []
+  relatedness2:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -345,8 +379,9 @@ output:
           description: Relatedness statistic based on the method of Manichaikul et al.,
             BIOINFORMATICS 2010 (doi:10.1093/bioinformatics/btq559) (optional)
           pattern: "*.relatedness2"
-  - lqual:
-      - meta:
+          ontologies: []
+  lqual:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -355,8 +390,9 @@ output:
           type: file
           description: per-site SNP quality (optional)
           pattern: "*.lqual"
-  - missing_individual:
-      - meta:
+          ontologies: []
+  missing_individual:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -365,8 +401,9 @@ output:
           type: file
           description: Missingness on a per-individual basis (optional)
           pattern: "*.imiss"
-  - missing_site:
-      - meta:
+          ontologies: []
+  missing_site:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -375,18 +412,21 @@ output:
           type: file
           description: Missingness on a per-site basis (optional)
           pattern: "*.lmiss"
-  - snp_density:
-      - meta:
+          ontologies: []
+  snp_density:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
       - "*.snpden":
           type: file
-          description: Number and density of SNPs in bins of size defined by option (optional)
+          description: Number and density of SNPs in bins of size defined by option
+            (optional)
           pattern: "*.snpden"
-  - kept_sites:
-      - meta:
+          ontologies: []
+  kept_sites:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -395,8 +435,9 @@ output:
           type: file
           description: All sites that have been kept after filtering (optional)
           pattern: "*.kept.sites"
-  - removed_sites:
-      - meta:
+          ontologies: []
+  removed_sites:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -405,8 +446,9 @@ output:
           type: file
           description: All sites that have been removed after filtering (optional)
           pattern: "*.removed.sites"
-  - singeltons:
-      - meta:
+          ontologies: []
+  singeltons:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -415,8 +457,9 @@ output:
           type: file
           description: Location of singletons, and the individual they occur in (optional)
           pattern: "*.singeltons"
-  - indel_hist:
-      - meta:
+          ontologies: []
+  indel_hist:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -425,8 +468,9 @@ output:
           type: file
           description: Histogram file of the length of all indels (including SNPs) (optional)
           pattern: "*.indel_hist"
-  - hapcount:
-      - meta:
+          ontologies: []
+  hapcount:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -435,8 +479,9 @@ output:
           type: file
           description: Unique haplotypes within user specified bins (optional)
           pattern: "*.hapcount"
-  - mendel:
-      - meta:
+          ontologies: []
+  mendel:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -445,8 +490,9 @@ output:
           type: file
           description: Mendel errors identified in trios (optional)
           pattern: "*.mendel"
-  - format:
-      - meta:
+          ontologies: []
+  format:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -456,8 +502,9 @@ output:
           description: Extracted information from the genotype fields in the VCF file
             relating to a specified FORMAT identifier (optional)
           pattern: "*.FORMAT"
-  - info:
-      - meta:
+          ontologies: []
+  info:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -466,8 +513,9 @@ output:
           type: file
           description: Extracted information from the INFO field in the VCF file (optional)
           pattern: "*.INFO"
-  - genotypes_matrix:
-      - meta:
+          ontologies: []
+  genotypes_matrix:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -480,19 +528,21 @@ output:
             Genotypes are represented as 0, 1 and 2, where the number represent that number of non-reference alleles.
             Missing genotypes are represented by -1 (optional)
           pattern: "*.012"
-  - genotypes_matrix_individual:
-      - meta:
+          ontologies: []
+  genotypes_matrix_individual:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
       - "*.012.indv":
           type: file
-          description: Details the individuals included in the main genotypes_matrix file
-            (optional)
+          description: Details the individuals included in the main genotypes_matrix
+            file (optional)
           pattern: "*.012.indv"
-  - genotypes_matrix_position:
-      - meta:
+          ontologies: []
+  genotypes_matrix_position:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -502,8 +552,9 @@ output:
           description: Details the site locations included in the main genotypes_matrix
             file (optional)
           pattern: "*.012.pos"
-  - impute_hap:
-      - meta:
+          ontologies: []
+  impute_hap:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -512,8 +563,9 @@ output:
           type: file
           description: Phased haplotypes in IMPUTE reference-panel format (optional)
           pattern: "*.impute.hap"
-  - impute_hap_legend:
-      - meta:
+          ontologies: []
+  impute_hap_legend:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -522,8 +574,9 @@ output:
           type: file
           description: Impute haplotype legend file (optional)
           pattern: "*.impute.hap.legend"
-  - impute_hap_indv:
-      - meta:
+          ontologies: []
+  impute_hap_indv:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -532,8 +585,9 @@ output:
           type: file
           description: Impute haplotype individuals file (optional)
           pattern: "*.impute.hap.indv"
-  - ldhat_sites:
-      - meta:
+          ontologies: []
+  ldhat_sites:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -542,8 +596,9 @@ output:
           type: file
           description: Output data in LDhat format, sites (optional)
           pattern: "*.ldhat.sites"
-  - ldhat_locs:
-      - meta:
+          ontologies: []
+  ldhat_locs:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -552,8 +607,9 @@ output:
           type: file
           description: output data in LDhat format, locations (optional)
           pattern: "*.ldhat.locs"
-  - beagle_gl:
-      - meta:
+          ontologies: []
+  beagle_gl:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -562,8 +618,9 @@ output:
           type: file
           description: Genotype likelihoods for biallelic sites (optional)
           pattern: "*.BEAGLE.GL"
-  - beagle_pl:
-      - meta:
+          ontologies: []
+  beagle_pl:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -572,8 +629,9 @@ output:
           type: file
           description: Genotype likelihoods for biallelic sites (optional)
           pattern: "*.BEAGLE.PL"
-  - ped:
-      - meta:
+          ontologies: []
+  ped:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -582,8 +640,9 @@ output:
           type: file
           description: output the genotype data in PLINK PED format (optional)
           pattern: "*.ped"
-  - map_:
-      - meta:
+          ontologies: []
+  map_:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -592,8 +651,9 @@ output:
           type: file
           description: output the genotype data in PLINK PED format (optional)
           pattern: "*.map"
-  - tped:
-      - meta:
+          ontologies: []
+  tped:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -602,8 +662,9 @@ output:
           type: file
           description: output the genotype data in PLINK PED format (optional)
           pattern: "*.tped"
-  - tfam:
-      - meta:
+          ontologies: []
+  tfam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -612,8 +673,9 @@ output:
           type: file
           description: output the genotype data in PLINK PED format (optional)
           pattern: "*.tfam"
-  - diff_sites_in_files:
-      - meta:
+          ontologies: []
+  diff_sites_in_files:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -623,8 +685,9 @@ output:
           description: Sites that are common / unique to each file specified in optional
             inputs (optional)
           pattern: "*.diff.sites.in.files"
-  - diff_indv_in_files:
-      - meta:
+          ontologies: []
+  diff_indv_in_files:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -634,8 +697,9 @@ output:
           description: Individuals that are common / unique to each file specified in
             optional inputs (optional)
           pattern: "*.diff.indv.in.files"
-  - diff_sites:
-      - meta:
+          ontologies: []
+  diff_sites:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -645,29 +709,33 @@ output:
           description: Discordance on a site by site basis, specified in optional inputs
             (optional)
           pattern: "*.diff.sites"
-  - diff_indv:
-      - meta:
+          ontologies: []
+  diff_indv:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
       - "*.diff.indv":
           type: file
-          description: Discordance on a individual by individual basis, specified in optional
-            inputs (optional)
+          description: Discordance on a individual by individual basis, specified in
+            optional inputs (optional)
           pattern: "*.diff.indv"
-  - diff_discd_matrix:
-      - meta:
+          ontologies: []
+  diff_discd_matrix:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
       - "*.diff.discordance.matrix":
           type: file
-          description: Discordance matrix between files specified in optional inputs (optional)
+          description: Discordance matrix between files specified in optional inputs
+            (optional)
           pattern: "*.diff.discordance.matrix"
-  - diff_switch_error:
-      - meta:
+          ontologies: []
+  diff_switch_error:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -676,11 +744,14 @@ output:
           type: file
           description: Switch errors found between sites (optional)
           pattern: "*.diff.switch"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@Mark-S-Hill"
 maintainers:

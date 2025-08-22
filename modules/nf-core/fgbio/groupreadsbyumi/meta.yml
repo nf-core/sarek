@@ -30,15 +30,16 @@ input:
         description: |
           BAM file. Note: the MQ tag is required on reads with mapped mates (!)
         pattern: "*.bam"
-  - - strategy:
-        type: string
-        enum: ["Identity", "Edit", "Adjacency", "Paired"]
-        description: |
-          Required argument: defines the UMI assignment strategy.
-          Must be chosen among: Identity, Edit, Adjacency, Paired.
+        ontologies: []
+  - strategy:
+      type: string
+      enum: ["Identity", "Edit", "Adjacency", "Paired"]
+      description: |
+        Required argument: defines the UMI assignment strategy.
+        Must be chosen among: Identity, Edit, Adjacency, Paired.
 output:
-  - bam:
-      - meta:
+  bam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -47,8 +48,9 @@ output:
           type: file
           description: UMI-grouped BAM
           pattern: "*.bam"
-  - histogram:
-      - meta:
+          ontologies: []
+  histogram:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -57,11 +59,25 @@ output:
           type: file
           description: A text file containing the tag family size counts
           pattern: "*.txt"
-  - versions:
-      - versions.yml:
+          ontologies: []
+  read_metrics:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*read-metrics.txt":
           type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          description: A text file containing the read count metrics from grouping
+          pattern: "*.txt"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@lescai"
 maintainers:

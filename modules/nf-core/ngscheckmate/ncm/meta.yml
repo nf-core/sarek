@@ -27,6 +27,7 @@ input:
         description: VCF or BAM files for each sample, in a merged channel (possibly
           gzipped). BAM files require an index too.
         pattern: "*.{vcf,vcf.gz,bam,bai}"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -36,6 +37,7 @@ input:
         type: file
         description: BED file containing the SNPs to analyse
         pattern: "*.{bed}"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -45,61 +47,72 @@ input:
         type: file
         description: fasta file for the genome, only used in the bam mode
         pattern: "*.{bed}"
+        ontologies: []
 output:
-  - corr_matrix:
-      - meta:
+  corr_matrix:
+    - - meta:
           type: file
           description: A text file containing the correlation matrix between each sample
           pattern: "*corr_matrix.txt"
+          ontologies: []
       - "*_corr_matrix.txt":
           type: file
           description: A text file containing the correlation matrix between each sample
           pattern: "*corr_matrix.txt"
-  - matched:
-      - meta:
+          ontologies: []
+  matched:
+    - - meta:
           type: file
-          description: A txt file containing only the samples that match with each other
-          pattern: "*matched.txt"
+          description: A text file containing the correlation matrix between each sample
+          pattern: "*corr_matrix.txt"
+          ontologies: []
       - "*_matched.txt":
           type: file
           description: A txt file containing only the samples that match with each other
           pattern: "*matched.txt"
-  - all:
-      - meta:
+          ontologies: []
+  all:
+    - - meta:
           type: file
-          description: A txt file containing all the sample comparisons, whether they
-            match or not
-          pattern: "*all.txt"
+          description: A text file containing the correlation matrix between each sample
+          pattern: "*corr_matrix.txt"
+          ontologies: []
       - "*_all.txt":
           type: file
           description: A txt file containing all the sample comparisons, whether they
             match or not
           pattern: "*all.txt"
-  - pdf:
-      - meta:
+          ontologies: []
+  pdf:
+    - - meta:
           type: file
-          description: A pdf containing a dendrogram showing how the samples match up
-          pattern: "*.{pdf}"
+          description: A text file containing the correlation matrix between each sample
+          pattern: "*corr_matrix.txt"
+          ontologies: []
       - "*.pdf":
           type: file
           description: A pdf containing a dendrogram showing how the samples match up
           pattern: "*.{pdf}"
-  - vcf:
-      - meta:
+          ontologies: []
+  vcf:
+    - - meta:
           type: file
-          description: If ran in bam mode, vcf files for each sample giving the SNP calls
-            used
-          pattern: "*.vcf"
+          description: A text file containing the correlation matrix between each sample
+          pattern: "*corr_matrix.txt"
+          ontologies: []
       - "*.vcf":
           type: file
-          description: If ran in bam mode, vcf files for each sample giving the SNP calls
-            used
+          description: If ran in bam mode, vcf files for each sample giving the SNP
+            calls used
           pattern: "*.vcf"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@sppearce"
 maintainers:

@@ -24,9 +24,11 @@ input:
         type: file
         description: ZIP file
         pattern: "*.zip"
+        ontologies:
+          - edam: http://edamontology.org/format_3987 # ZIP format
 output:
-  - unzipped_archive:
-      - meta:
+  unzipped_archive:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -35,11 +37,13 @@ output:
           type: directory
           description: Directory contents of the unzipped archive
           pattern: "${archive.baseName}/"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@jfy133"
 maintainers:

@@ -23,14 +23,17 @@ input:
         type: file
         description: Input BAM/CRAM file
         pattern: "*.{bam,cram}"
+        ontologies: []
     - bai:
         type: file
         description: Index for BAM/CRAM file
         pattern: "*.{bai,crai}"
+        ontologies: []
     - bed:
         type: file
         description: BED file with intersected intervals
         pattern: "*.{bed}"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -40,9 +43,10 @@ input:
         type: file
         description: Reference genome FASTA file
         pattern: "*.{fa,fasta}"
+        ontologies: []
 output:
-  - global_txt:
-      - meta:
+  global_txt:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -51,8 +55,9 @@ output:
           type: file
           description: Text file with global cumulative coverage distribution
           pattern: "*.{global.dist.txt}"
-  - summary_txt:
-      - meta:
+          ontologies: []
+  summary_txt:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -61,8 +66,9 @@ output:
           type: file
           description: Text file with summary mean depths per chromosome and regions
           pattern: "*.{summary.txt}"
-  - regions_txt:
-      - meta:
+          ontologies: []
+  regions_txt:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -71,8 +77,9 @@ output:
           type: file
           description: Text file with region cumulative coverage distribution
           pattern: "*.{region.dist.txt}"
-  - per_base_d4:
-      - meta:
+          ontologies: []
+  per_base_d4:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -81,8 +88,9 @@ output:
           type: file
           description: D4 file with per-base coverage
           pattern: "*.{per-base.d4}"
-  - per_base_bed:
-      - meta:
+          ontologies: []
+  per_base_bed:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -91,8 +99,9 @@ output:
           type: file
           description: BED file with per-base coverage
           pattern: "*.{per-base.bed.gz}"
-  - per_base_csi:
-      - meta:
+          ontologies: []
+  per_base_csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -101,8 +110,9 @@ output:
           type: file
           description: Index file for BED file with per-base coverage
           pattern: "*.{per-base.bed.gz.csi}"
-  - regions_bed:
-      - meta:
+          ontologies: []
+  regions_bed:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -111,8 +121,9 @@ output:
           type: file
           description: BED file with per-region coverage
           pattern: "*.{regions.bed.gz}"
-  - regions_csi:
-      - meta:
+          ontologies: []
+  regions_csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -121,8 +132,9 @@ output:
           type: file
           description: Index file for BED file with per-region coverage
           pattern: "*.{regions.bed.gz.csi}"
-  - quantized_bed:
-      - meta:
+          ontologies: []
+  quantized_bed:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -131,8 +143,9 @@ output:
           type: file
           description: BED file with binned coverage
           pattern: "*.{quantized.bed.gz}"
-  - quantized_csi:
-      - meta:
+          ontologies: []
+  quantized_csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -141,8 +154,9 @@ output:
           type: file
           description: Index file for BED file with binned coverage
           pattern: "*.{quantized.bed.gz.csi}"
-  - thresholds_bed:
-      - meta:
+          ontologies: []
+  thresholds_bed:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -152,8 +166,9 @@ output:
           description: BED file with the number of bases in each region that are covered
             at or above each threshold
           pattern: "*.{thresholds.bed.gz}"
-  - thresholds_csi:
-      - meta:
+          ontologies: []
+  thresholds_csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -162,11 +177,14 @@ output:
           type: file
           description: Index file for BED file with threshold coverage
           pattern: "*.{thresholds.bed.gz.csi}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@joseespinosa"
   - "@drpatelh"

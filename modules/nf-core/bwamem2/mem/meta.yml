@@ -55,13 +55,13 @@ input:
         ontologies:
           - edam: "http://edamontology.org/data_2044" # Sequence
           - edam: "http://edamontology.org/format_1929" # FASTA
-  - - sort_bam:
-        type: boolean
-        description: use samtools sort (true) or samtools view (false)
-        pattern: "true or false"
+  - sort_bam:
+      type: boolean
+      description: use samtools sort (true) or samtools view (false)
+      pattern: "true or false"
 output:
-  - sam:
-      - meta:
+  sam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -72,8 +72,8 @@ output:
           pattern: "*.{sam}"
           ontologies:
             - edam: "http://edamontology.org/format_2573" # SAM
-  - bam:
-      - meta:
+  bam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -84,8 +84,8 @@ output:
           pattern: "*.{bam}"
           ontologies:
             - edam: "http://edamontology.org/format_2572" # BAM
-  - cram:
-      - meta:
+  cram:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -96,8 +96,8 @@ output:
           pattern: "*.{cram}"
           ontologies:
             - edam: "http://edamontology.org/format_3462" # CRAM
-  - crai:
-      - meta:
+  crai:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -106,8 +106,9 @@ output:
           type: file
           description: Index file for CRAM file
           pattern: "*.{crai}"
-  - csi:
-      - meta:
+          ontologies: []
+  csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -116,11 +117,14 @@ output:
           type: file
           description: Index file for BAM file
           pattern: "*.{csi}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@maxulysse"
   - "@matthdsm"

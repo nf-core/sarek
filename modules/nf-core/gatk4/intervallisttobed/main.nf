@@ -12,7 +12,7 @@ process GATK4_INTERVALLISTTOBED {
 
     output:
     tuple val(meta), path("${prefix}.bed"), emit: bed
-    path "versions.yml", emit: versions
+    path "versions.yml",                    emit: versions
 
     when:
     task.ext.when == null || task.ext.when

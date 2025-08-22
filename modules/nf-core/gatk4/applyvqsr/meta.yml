@@ -31,60 +31,77 @@ input:
         description: VCF file to be recalibrated, this should be the same file as used
           for the first stage VariantRecalibrator.
         pattern: "*.vcf"
+        ontologies: []
     - vcf_tbi:
         type: file
         description: tabix index for the input vcf file.
         pattern: "*.vcf.tbi"
+        ontologies: []
     - recal:
         type: file
         description: Recalibration file produced when the input vcf was run through
           VariantRecalibrator in stage 1.
         pattern: "*.recal"
+        ontologies: []
     - recal_index:
         type: file
         description: Index file for the recalibration file.
         pattern: ".recal.idx"
+        ontologies: []
     - tranches:
         type: file
         description: Tranches file produced when the input vcf was run through VariantRecalibrator
           in stage 1.
         pattern: ".tranches"
-  - - fasta:
-        type: file
-        description: The reference fasta file
-        pattern: "*.fasta"
-  - - fai:
-        type: file
-        description: Index of reference fasta file
-        pattern: "*.fasta.fai"
-  - - dict:
-        type: file
-        description: GATK sequence dictionary
-        pattern: "*.dict"
+        ontologies: []
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+      ontologies: []
+  - fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "*.fasta.fai"
+      ontologies: []
+  - dict:
+      type: file
+      description: GATK sequence dictionary
+      pattern: "*.dict"
+      ontologies: []
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: file
           description: compressed vcf file containing the recalibrated variants.
           pattern: "*.vcf.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
       - "*.vcf.gz":
           type: file
           description: compressed vcf file containing the recalibrated variants.
           pattern: "*.vcf.gz"
-  - tbi:
-      - meta:
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  tbi:
+    - - meta:
           type: file
-          description: Index of recalibrated vcf file.
-          pattern: "*vcf.gz.tbi"
+          description: compressed vcf file containing the recalibrated variants.
+          pattern: "*.vcf.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
       - "*.tbi":
           type: file
           description: Index of recalibrated vcf file.
           pattern: "*vcf.gz.tbi"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions.
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions.
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@GCJMackenzie"
 maintainers:

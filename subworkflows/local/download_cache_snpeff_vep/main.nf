@@ -27,8 +27,7 @@ workflow DOWNLOAD_CACHE_SNPEFF_VEP {
     versions = versions.mix(SNPEFF_DOWNLOAD.out.versions)
 
     emit:
-    ensemblvep_cache = ENSEMBLVEP_DOWNLOAD.out.cache.collect()  // channel: [ meta, cache ]
-    snpeff_cache     = SNPEFF_DOWNLOAD.out.cache.collect()      // channel: [ meta, cache ]
-
-    versions // channel: [ versions.yml ]
+    ensemblvep_cache = ENSEMBLVEP_DOWNLOAD.out.cache.collect() // channel: [ meta, cache ]
+    snpeff_cache     = SNPEFF_DOWNLOAD.out.cache.collect() // channel: [ meta, cache ]
+    versions         // channel: [ versions.yml ]
 }

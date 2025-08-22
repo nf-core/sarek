@@ -23,10 +23,12 @@ input:
         type: file
         description: INPUT VCF file
         pattern: "*.{vcf,vcf.gz}"
+        ontologies: []
     - idx:
         type: file
         description: Index of the input VCF file
         pattern: "*.{tbi}"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -36,6 +38,7 @@ input:
         type: file
         description: Genome fasta file
         pattern: "*.{fa,fasta}"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -45,6 +48,7 @@ input:
         type: file
         description: Index of the genome fasta file
         pattern: "*.fai"
+        ontologies: []
   - - meta4:
         type: map
         description: |
@@ -54,9 +58,10 @@ input:
         type: file
         description: machine learning model file
         pattern: "*.model"
+        ontologies: []
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -65,8 +70,9 @@ output:
           type: file
           description: INPUT VCF file
           pattern: "*.{vcf,vcf.gz}"
-  - tbi:
-      - meta:
+          ontologies: []
+  tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -75,11 +81,14 @@ output:
           type: file
           description: Index of the input VCF file
           pattern: "*.{tbi}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@ramprasadn"
 maintainers:

@@ -8,7 +8,7 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --aligner sentieon-bwamem --tools null -stub",
+            name: "-profile test --aligner sentieon-bwamem --tools false -stub",
             params: [
                 aligner: "sentieon-bwamem",
                 tools: ''

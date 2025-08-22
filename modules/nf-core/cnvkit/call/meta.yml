@@ -24,13 +24,15 @@ input:
         type: file
         description: CNVKit CNS file.
         pattern: "*.cns"
+        ontologies: []
     - vcf:
         type: file
         description: Germline VCF file for BAF.
         pattern: "*.vcf{,.gz}"
+        ontologies: []
 output:
-  - cns:
-      - meta:
+  cns:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -39,11 +41,14 @@ output:
           type: file
           description: CNS file.
           pattern: "*.cns"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@adamrtalbot"
   - "@priesgo"

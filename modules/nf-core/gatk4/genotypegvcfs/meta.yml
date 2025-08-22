@@ -26,18 +26,22 @@ input:
         description: |
           gVCF(.gz) file or a GenomicsDB
         pattern: "*.{vcf,vcf.gz}"
+        ontologies: []
     - gvcf_index:
         type: file
         description: |
           index of gvcf file, or empty when providing GenomicsDB
         pattern: "*.{idx,tbi}"
+        ontologies: []
     - intervals:
         type: file
         description: Interval file with the genomic regions included in the library
           (optional)
+        ontologies: []
     - intervals_index:
         type: file
         description: Interval index file (optional)
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -47,6 +51,7 @@ input:
         type: file
         description: Reference fasta file
         pattern: "*.fasta"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -56,6 +61,7 @@ input:
         type: file
         description: Reference fasta index file
         pattern: "*.fai"
+        ontologies: []
   - - meta4:
         type: map
         description: |
@@ -65,6 +71,7 @@ input:
         type: file
         description: Reference fasta sequence dict file
         pattern: "*.dict"
+        ontologies: []
   - - meta5:
         type: map
         description: |
@@ -74,6 +81,8 @@ input:
         type: file
         description: dbSNP VCF file
         pattern: "*.vcf.gz"
+        ontologies:
+          - edam: http://edamontology.org/format_3989 # GZIP format
   - - meta6:
         type: map
         description: |
@@ -83,9 +92,10 @@ input:
         type: file
         description: dbSNP VCF index file
         pattern: "*.tbi"
+        ontologies: []
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -94,8 +104,10 @@ output:
           type: file
           description: Genotyped VCF file
           pattern: "*.vcf.gz"
-  - tbi:
-      - meta:
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -104,11 +116,15 @@ output:
           type: file
           description: Tbi index for VCF file
           pattern: "*.vcf.gz"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@santiagorevale"
   - "@maxulysse"

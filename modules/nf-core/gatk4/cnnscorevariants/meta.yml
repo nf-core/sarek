@@ -25,40 +25,51 @@ input:
         type: file
         description: VCF file
         pattern: "*.vcf.gz"
+        ontologies:
+          - edam: http://edamontology.org/format_3989 # GZIP format
     - tbi:
         type: file
         description: VCF index file
         pattern: "*.vcf.gz.tbi"
+        ontologies: []
     - aligned_input:
         type: file
         description: BAM/CRAM file from alignment (optional)
         pattern: "*.{bam,cram}"
+        ontologies: []
     - intervals:
         type: file
         description: Bed file with the genomic regions included in the library (optional)
-  - - fasta:
-        type: file
-        description: The reference fasta file
-        pattern: "*.fasta"
-  - - fai:
-        type: file
-        description: Index of reference fasta file
-        pattern: "*.fasta.fai"
-  - - dict:
-        type: file
-        description: GATK sequence dictionary
-        pattern: "*.dict"
-  - - architecture:
-        type: file
-        description: Neural Net architecture configuration json file (optional)
-        pattern: "*.json"
-  - - weights:
-        type: file
-        description: Keras model HD5 file with neural net weights. (optional)
-        pattern: "*.hd5"
+        ontologies: []
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+      ontologies: []
+  - fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "*.fasta.fai"
+      ontologies: []
+  - dict:
+      type: file
+      description: GATK sequence dictionary
+      pattern: "*.dict"
+      ontologies: []
+  - architecture:
+      type: file
+      description: Neural Net architecture configuration json file (optional)
+      pattern: "*.json"
+      ontologies:
+        - edam: http://edamontology.org/format_3464 # JSON
+  - weights:
+      type: file
+      description: Keras model HD5 file with neural net weights. (optional)
+      pattern: "*.hd5"
+      ontologies: []
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -67,8 +78,9 @@ output:
           type: file
           description: Annotated VCF file
           pattern: "*.vcf"
-  - tbi:
-      - meta:
+          ontologies: []
+  tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -77,11 +89,14 @@ output:
           type: file
           description: VCF index file
           pattern: "*.vcf.gz.tbi"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@FriederikeHanssen"
 maintainers:

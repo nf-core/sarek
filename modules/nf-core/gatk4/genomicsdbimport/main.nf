@@ -1,33 +1,33 @@
 process GATK4_GENOMICSDBIMPORT {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b2/b28daf5d9bb2f0d129dcad1b7410e0dd8a9b087aaf3ec7ced929b1f57624ad98/data':
-        'community.wave.seqera.io/library/gatk4_gcnvkernel:e48d414933d188cd' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b2/b28daf5d9bb2f0d129dcad1b7410e0dd8a9b087aaf3ec7ced929b1f57624ad98/data'
+        : 'community.wave.seqera.io/library/gatk4_gcnvkernel:e48d414933d188cd'}"
 
     input:
     tuple val(meta), path(vcf), path(tbi), path(interval_file), val(interval_value), path(wspace)
-    val   run_intlist
-    val   run_updatewspace
-    val   input_map
+    val run_intlist
+    val run_updatewspace
+    val input_map
 
     output:
-    tuple val(meta), path("$prefix")        , optional:true, emit: genomicsdb
-    tuple val(meta), path("$updated_db")    , optional:true, emit: updatedb
-    tuple val(meta), path("*.interval_list"), optional:true, emit: intervallist
-    path "versions.yml"                                    , emit: versions
+    tuple val(meta), path("${prefix}"),       emit: genomicsdb,   optional: true
+    tuple val(meta), path("${updated_db}"),   emit: updatedb,     optional: true
+    tuple val(meta), path("*.interval_list"), emit: intervallist, optional: true
+    path "versions.yml",                      emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args   ?: ''
-    prefix   = task.ext.prefix ?: "${meta.id}"
+    def args = task.ext.args ?: ''
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     // settings for running default create gendb mode
-    input_command = input_map ? "--sample-name-map ${vcf[0]}" : vcf.collect(){"--variant $it"}.join(' ')
+    input_command = input_map ? "--sample-name-map ${vcf[0]}" : vcf.collect { "--variant ${it}" }.join(' ')
 
     genomicsdb_command = "--genomicsdb-workspace-path ${prefix}"
     interval_command = interval_file ? "--intervals ${interval_file}" : "--intervals ${interval_value}"
@@ -48,18 +48,19 @@ process GATK4_GENOMICSDBIMPORT {
 
     def avail_mem = 3072
     if (!task.memory) {
-        log.info '[GATK GenomicsDBImport] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
-    } else {
-        avail_mem = (task.memory.mega*0.8).intValue()
+        log.info('[GATK GenomicsDBImport] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.')
+    }
+    else {
+        avail_mem = (task.memory.mega * 0.8).intValue()
     }
     """
     gatk --java-options "-Xmx${avail_mem}M -XX:-UsePerfData" \\
         GenomicsDBImport \\
-        $input_command \\
-        $genomicsdb_command \\
-        $interval_command \\
+        ${input_command} \\
+        ${genomicsdb_command} \\
+        ${interval_command} \\
         --tmp-dir . \\
-        $args
+        ${args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -68,7 +69,7 @@ process GATK4_GENOMICSDBIMPORT {
     """
 
     stub:
-    prefix   = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     genomicsdb_command = "--genomicsdb-workspace-path ${prefix}"
     interval_command = interval_file ? "--intervals ${interval_file}" : "--intervals ${interval_value}"
@@ -88,8 +89,8 @@ process GATK4_GENOMICSDBIMPORT {
     }
 
     def stub_genomicsdb = genomicsdb_command == "--genomicsdb-workspace-path ${prefix}" ? "touch ${prefix}" : ""
-    def stub_interval   = interval_command == "--output-interval-list-to-file ${prefix}.interval_list" ? "touch ${prefix}.interval_list" : ""
-    def stub_update     = updated_db != "" ? "touch ${wspace}" : ""
+    def stub_interval = interval_command == "--output-interval-list-to-file ${prefix}.interval_list" ? "touch ${prefix}.interval_list" : ""
+    def stub_update = updated_db != "" ? "touch ${wspace}" : ""
 
     """
     ${stub_genomicsdb}

@@ -27,10 +27,12 @@ input:
         type: file
         description: BAM file.
         pattern: "*.bam"
+        ontologies: []
     - bai:
         type: file
         description: BAI file
         pattern: "*.bai"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -40,6 +42,7 @@ input:
         type: file
         description: Genome fasta file
         pattern: "*.{fa,fasta}"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -49,9 +52,10 @@ input:
         type: file
         description: The index of the FASTA reference.
         pattern: "*.fai"
+        ontologies: []
 output:
-  - cram:
-      - meta:
+  cram:
+    - - meta:
           type: map
           description: |
             Groovy Map containing reference information.
@@ -60,8 +64,9 @@ output:
           type: file
           description: CRAM file
           pattern: "*.cram"
-  - crai:
-      - meta:
+          ontologies: []
+  crai:
+    - - meta:
           type: map
           description: |
             Groovy Map containing reference information.
@@ -70,8 +75,9 @@ output:
           type: file
           description: CRAM index file
           pattern: "*.crai"
-  - bam:
-      - meta:
+          ontologies: []
+  bam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing reference information.
@@ -80,8 +86,9 @@ output:
           type: file
           description: BAM file.
           pattern: "*.bam"
-  - bai:
-      - meta:
+          ontologies: []
+  bai:
+    - - meta:
           type: map
           description: |
             Groovy Map containing reference information.
@@ -90,19 +97,21 @@ output:
           type: file
           description: BAI file
           pattern: "*.bai"
-  - score:
-      - meta:
+          ontologies: []
+  score:
+    - - meta:
           type: map
           description: |
             Groovy Map containing reference information.
             e.g. [ id:'test', single_end:false ]
       - "*.score":
           type: file
-          description: The score file indicates which reads LocusCollector finds are likely
-            duplicates.
+          description: The score file indicates which reads LocusCollector finds are
+            likely duplicates.
           pattern: "*.score"
-  - metrics:
-      - meta:
+          ontologies: []
+  metrics:
+    - - meta:
           type: map
           description: |
             Groovy Map containing reference information.
@@ -111,8 +120,9 @@ output:
           type: file
           description: Output file containing Dedup metrics incl. histogram data.
           pattern: "*.metrics"
-  - metrics_multiqc_tsv:
-      - meta:
+          ontologies: []
+  metrics_multiqc_tsv:
+    - - meta:
           type: map
           description: |
             Groovy Map containing reference information.
@@ -121,11 +131,15 @@ output:
           type: file
           description: Output tsv-file containing Dedup metrics excl. histogram data.
           pattern: "*.metrics.multiqc.tsv"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3475 # TSV
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@asp8200"
 maintainers:

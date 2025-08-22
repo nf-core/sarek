@@ -23,12 +23,14 @@ input:
         type: file
         description: Pileup files from gatk4/getpileupsummaries
         pattern: "*.pileups.table"
-  - - dict:
-        type: file
-        description: dictionary
+        ontologies: []
+  - dict:
+      type: file
+      description: dictionary
+      ontologies: []
 output:
-  - table:
-      - meta:
+  table:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -37,11 +39,14 @@ output:
           type: file
           description: pileup summaries table file
           pattern: "*.pileups.table"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@FriederikeHanssen"
   - "@maxulysse"

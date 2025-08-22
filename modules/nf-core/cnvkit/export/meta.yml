@@ -26,9 +26,10 @@ input:
         type: file
         description: CNVKit CNS file.
         pattern: "*.cns"
+        ontologies: []
 output:
-  - output:
-      - meta:
+  output:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -36,11 +37,14 @@ output:
       - ${prefix}.${suffix}:
           type: file
           description: Output file
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@adamrtalbot"
   - "@priesgo"

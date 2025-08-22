@@ -31,8 +31,8 @@ input:
           List containing 2 or more index files (optional)
           e.g. [ 'file1.tbi', 'file2.tbi' ]
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -43,8 +43,8 @@ output:
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
           pattern: "*.{vcf,vcf.gz,bcf,bcf.gz}"
-  - tbi:
-      - meta:
+  tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -55,8 +55,8 @@ output:
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
           pattern: "*.tbi"
-  - csi:
-      - meta:
+  csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -67,11 +67,13 @@ output:
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
           pattern: "*.csi"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@abhi18av"
   - "@nvnieuwk"

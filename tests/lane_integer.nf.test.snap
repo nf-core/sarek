@@ -1,5 +1,5 @@
 {
-    "-profile test --input tests/csv/3.0/fastq_single_integer_lane.csv --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
+    "-profile test --input tests/csv/3.0/fastq_single_integer_lane.csv --tools false --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
         "content": [
             10,
             {

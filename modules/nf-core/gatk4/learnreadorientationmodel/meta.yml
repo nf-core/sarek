@@ -28,20 +28,26 @@ input:
         description: list of f1r2 files to be used as input.
         pattern: "*.f1r2.tar.gz"
 output:
-  - artifactprior:
-      - meta:
+  artifactprior:
+    - - meta:
           type: file
           description: file containing artifact-priors to be used by filtermutectcalls
           pattern: "*.tar.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
       - "*.tar.gz":
           type: file
           description: file containing artifact-priors to be used by filtermutectcalls
           pattern: "*.tar.gz"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@GCJMackenzie"
 maintainers:

@@ -29,81 +29,100 @@ input:
         type: file
         description: input vcf file containing the variants to be recalibrated
         pattern: "*.vcf.gz"
+        ontologies:
+          - edam: http://edamontology.org/format_3989 # GZIP format
     - tbi:
         type: file
         description: tbi file matching with -vcf
         pattern: "*.vcf.gz.tbi"
-  - - resource_vcf:
-        type: file
-        description: all resource vcf files that are used with the corresponding '--resource'
-          label
-        pattern: "*.vcf.gz"
-  - - resource_tbi:
-        type: file
-        description: all resource tbi files that are used with the corresponding '--resource'
-          label
-        pattern: "*.vcf.gz.tbi"
-  - - labels:
-        type: string
-        description: necessary arguments for GATK VariantRecalibrator. Specified to
-          directly match the resources provided. More information can be found at
-          https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator
-  - - fasta:
-        type: file
-        description: The reference fasta file
-        pattern: "*.fasta"
-  - - fai:
-        type: file
-        description: Index of reference fasta file
-        pattern: "fasta.fai"
-  - - dict:
-        type: file
-        description: GATK sequence dictionary
-        pattern: "*.dict"
+        ontologies: []
+  - resource_vcf:
+      type: file
+      description: all resource vcf files that are used with the corresponding '--resource'
+        label
+      pattern: "*.vcf.gz"
+      ontologies:
+        - edam: http://edamontology.org/format_3989 # GZIP format
+  - resource_tbi:
+      type: file
+      description: all resource tbi files that are used with the corresponding '--resource'
+        label
+      pattern: "*.vcf.gz.tbi"
+      ontologies: []
+  - labels:
+      type: string
+      description: necessary arguments for GATK VariantRecalibrator. Specified to directly
+        match the resources provided. More information can be found at
+        https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+      ontologies: []
+  - fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "fasta.fai"
+      ontologies: []
+  - dict:
+      type: file
+      description: GATK sequence dictionary
+      pattern: "*.dict"
+      ontologies: []
 output:
-  - recal:
-      - meta:
+  recal:
+    - - meta:
           type: file
           description: Output recal file used by ApplyVQSR
           pattern: "*.recal"
+          ontologies: []
       - "*.recal":
           type: file
           description: Output recal file used by ApplyVQSR
           pattern: "*.recal"
-  - idx:
-      - meta:
+          ontologies: []
+  idx:
+    - - meta:
           type: file
-          description: Index file for the recal output file
-          pattern: "*.idx"
+          description: Output recal file used by ApplyVQSR
+          pattern: "*.recal"
+          ontologies: []
       - "*.idx":
           type: file
           description: Index file for the recal output file
           pattern: "*.idx"
-  - tranches:
-      - meta:
+          ontologies: []
+  tranches:
+    - - meta:
           type: file
-          description: Output tranches file used by ApplyVQSR
-          pattern: "*.tranches"
+          description: Output recal file used by ApplyVQSR
+          pattern: "*.recal"
+          ontologies: []
       - "*.tranches":
           type: file
           description: Output tranches file used by ApplyVQSR
           pattern: "*.tranches"
-  - plots:
-      - meta:
+          ontologies: []
+  plots:
+    - - meta:
           type: file
-          description: Optional output rscript file to aid in visualization of the input
-            data and learned model.
-          pattern: "*plots.R"
+          description: Output recal file used by ApplyVQSR
+          pattern: "*.recal"
+          ontologies: []
       - "*plots.R":
           type: file
           description: Optional output rscript file to aid in visualization of the input
             data and learned model.
           pattern: "*plots.R"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3999 # R script
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@GCJMackenzie"
   - "@nickhsmith"

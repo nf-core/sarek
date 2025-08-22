@@ -27,13 +27,16 @@ input:
         type: file
         description: BAM/CRAM file from alignment
         pattern: "*.{bam,cram}"
+        ontologies: []
     - input_index:
         type: file
         description: BAI/CRAI file from alignment
         pattern: "*.{bai,crai}"
+        ontologies: []
     - intervals:
         type: file
         description: Bed file with the genomic regions included in the library (optional)
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -43,6 +46,7 @@ input:
         type: file
         description: The reference fasta file
         pattern: "*.fasta"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -52,6 +56,7 @@ input:
         type: file
         description: Index of reference fasta file
         pattern: "*.fasta.fai"
+        ontologies: []
   - - meta4:
         type: map
         description: |
@@ -61,6 +66,7 @@ input:
         type: file
         description: GATK sequence dictionary
         pattern: "*.dict"
+        ontologies: []
   - - meta5:
         type: map
         description: |
@@ -68,8 +74,10 @@ input:
           e.g. [ id:'genome']
     - known_sites:
         type: file
-        description: VCF files with known sites for indels / snps (optional)
+        description: VCF files with known sites for indels / snps
         pattern: "*.vcf.gz"
+        ontologies:
+          - edam: http://edamontology.org/format_3989 # GZIP format
   - - meta6:
         type: map
         description: |
@@ -77,11 +85,12 @@ input:
           e.g. [ id:'genome']
     - known_sites_tbi:
         type: file
-        description: Tabix index of the known_sites (optional)
+        description: Tabix index of the known_sites
         pattern: "*.vcf.gz.tbi"
+        ontologies: []
 output:
-  - table:
-      - meta:
+  table:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -90,11 +99,14 @@ output:
           type: file
           description: Recalibration table from BaseRecalibrator
           pattern: "*.{table}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@yocra3"
   - "@FriederikeHanssen"

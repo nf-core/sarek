@@ -3,23 +3,23 @@ process GOLEFT_INDEXCOV {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/goleft:0.2.4--h9ee0642_1':
-        'biocontainers/goleft:0.2.4--h9ee0642_1' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/goleft:0.2.4--h9ee0642_1'
+        : 'biocontainers/goleft:0.2.4--h9ee0642_1'}"
 
     input:
     tuple val(meta), path(bams), path(indexes)
     tuple val(meta2), path(fai)
 
     output:
-    tuple val(meta), path("${prefix}/*")          , emit: output
-    tuple val(meta), path("${prefix}/*ped")       , emit: ped , optional: true
-    tuple val(meta), path("${prefix}/*bed.gz")    , emit: bed , optional: true
-    tuple val(meta), path("${prefix}/*bed.gz.tbi"), emit: bed_index , optional: true
-    tuple val(meta), path("${prefix}/*roc")       , emit: roc , optional: true
-    tuple val(meta), path("${prefix}/*html")      , emit: html, optional: true
-    tuple val(meta), path("${prefix}/*png")       , emit: png , optional: true
-    path "versions.yml"                           , emit: versions
+    tuple val(meta), path("${prefix}/*"),           emit: output
+    tuple val(meta), path("${prefix}/*ped"),        emit: ped,       optional: true
+    tuple val(meta), path("${prefix}/*bed.gz"),     emit: bed,       optional: true
+    tuple val(meta), path("${prefix}/*bed.gz.tbi"), emit: bed_index, optional: true
+    tuple val(meta), path("${prefix}/*roc"),        emit: roc,       optional: true
+    tuple val(meta), path("${prefix}/*html"),       emit: html,      optional: true
+    tuple val(meta), path("${prefix}/*png"),        emit: png,       optional: true
+    path "versions.yml",                            emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -28,14 +28,14 @@ process GOLEFT_INDEXCOV {
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
     // indexcov uses BAM files or CRAI
-    def input_files = bams.findAll{it.name.endsWith(".bam")} + indexes.findAll{it.name.endsWith(".crai")}
-    def extranormalize = input_files.any{it.name.endsWith(".crai")} ? " --extranormalize " : ""
+    def input_files = bams.findAll { it.name.endsWith(".bam") } + indexes.findAll { it.name.endsWith(".crai") }
+    def extranormalize = input_files.any { it.name.endsWith(".crai") } ? " --extranormalize " : ""
     """
     goleft indexcov \\
         --fai ${fai}  \\
         --directory ${prefix} \\
         ${extranormalize} \\
-        $args \\
+        ${args} \\
         ${input_files.join(" ")}
 
     if [ -f "${prefix}/${prefix}-indexcov.bed.gz" ] ; then
@@ -48,8 +48,8 @@ process GOLEFT_INDEXCOV {
         tabix: \$(echo \$(tabix -h 2>&1) | sed 's/^.*Version: //; s/ .*\$//')
     END_VERSIONS
     """
+
     stub:
-    def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
     """
     mkdir "${prefix}"

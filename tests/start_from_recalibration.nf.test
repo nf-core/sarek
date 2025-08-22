@@ -9,7 +9,7 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null",
+            name: "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools false",
             params: [
 
                 input: "${projectDir}/tests/csv/3.0/prepare_recalibration_single_cram.csv",
@@ -38,7 +38,7 @@ nextflow_pipeline {
             ]
         ],
         [
-            name: "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null",
+            name: "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools false",
             params: [
 
                 input: "${projectDir}/tests/csv/3.0/prepare_recalibration_single_bam.csv",

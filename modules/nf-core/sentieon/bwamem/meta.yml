@@ -25,6 +25,7 @@ input:
     - reads:
         type: file
         description: Genome fastq files (single-end or paired-end)
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -34,6 +35,7 @@ input:
         type: file
         description: BWA genome index files
         pattern: "*.{amb,ann,bwt,pac,sa}"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -43,6 +45,7 @@ input:
         type: file
         description: Genome fasta file
         pattern: "*.{fa,fasta}"
+        ontologies: []
   - - meta4:
         type: map
         description: |
@@ -52,9 +55,10 @@ input:
         type: file
         description: The index of the FASTA reference.
         pattern: "*.fai"
+        ontologies: []
 output:
-  - bam_and_bai:
-      - meta:
+  bam_and_bai:
+    - - meta:
           type: map
           description: |
             Groovy Map containing reference information.
@@ -63,15 +67,19 @@ output:
           type: file
           description: BAM file with corresponding index.
           pattern: "*.{bam,bai}"
+          ontologies: []
       - ${prefix}.{bai,crai}:
           type: file
           description: BAM file with corresponding index.
           pattern: "*.{bam,bai}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@asp8200"
 maintainers:

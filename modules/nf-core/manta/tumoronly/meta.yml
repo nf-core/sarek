@@ -29,18 +29,22 @@ input:
         type: file
         description: BAM/CRAM/SAM file
         pattern: "*.{bam,cram,sam}"
+        ontologies: []
     - input_index:
         type: file
         description: BAM/CRAM/SAM index file
         pattern: "*.{bai,crai,sai}"
+        ontologies: []
     - target_bed:
         type: file
         description: BED file containing target regions for variant calling
         pattern: "*.{bed}"
+        ontologies: []
     - target_bed_tbi:
         type: file
         description: Index for BED file containing target regions for variant calling
         pattern: "*.{bed.tbi}"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -50,6 +54,7 @@ input:
         type: file
         description: Genome reference FASTA file
         pattern: "*.{fa,fasta}"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -59,13 +64,15 @@ input:
         type: file
         description: Genome reference FASTA index file
         pattern: "*.{fa.fai,fasta.fai}"
-  - - config:
-        type: file
-        description: Manta configuration file
-        pattern: "*.{ini,conf,config}"
+        ontologies: []
+  - config:
+      type: file
+      description: Manta configuration file
+      pattern: "*.{ini,conf,config}"
+      ontologies: []
 output:
-  - candidate_small_indels_vcf:
-      - meta:
+  candidate_small_indels_vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -74,8 +81,9 @@ output:
           type: file
           description: Gzipped VCF file containing variants
           pattern: "*.{vcf.gz}"
-  - candidate_small_indels_vcf_tbi:
-      - meta:
+          ontologies: []
+  candidate_small_indels_vcf_tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -84,8 +92,9 @@ output:
           type: file
           description: Index for gzipped VCF file containing variants
           pattern: "*.{vcf.gz.tbi}"
-  - candidate_sv_vcf:
-      - meta:
+          ontologies: []
+  candidate_sv_vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -94,8 +103,9 @@ output:
           type: file
           description: Gzipped VCF file containing variants
           pattern: "*.{vcf.gz}"
-  - candidate_sv_vcf_tbi:
-      - meta:
+          ontologies: []
+  candidate_sv_vcf_tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -104,8 +114,9 @@ output:
           type: file
           description: Index for gzipped VCF file containing variants
           pattern: "*.{vcf.gz.tbi}"
-  - tumor_sv_vcf:
-      - meta:
+          ontologies: []
+  tumor_sv_vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -114,8 +125,9 @@ output:
           type: file
           description: Gzipped VCF file containing variants
           pattern: "*.{vcf.gz}"
-  - tumor_sv_vcf_tbi:
-      - meta:
+          ontologies: []
+  tumor_sv_vcf_tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -124,11 +136,14 @@ output:
           type: file
           description: Index for gzipped VCF file containing variants
           pattern: "*.{vcf.gz.tbi}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@maxulysse"
   - "@nvnieuwk"

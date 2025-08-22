@@ -3,6 +3,9 @@
         "content": [
             19,
             {
+                "BCFTOOLS_SORT": {
+                    "bcftools": 1.21
+                },
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
                 },
@@ -12,6 +15,9 @@
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
                 },
+                "MERGE_GENOTYPEGVCFS": {
+                    "gatk4": "4.6.1.0"
+                },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
@@ -19,6 +25,9 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_APPLYVARCAL_INDEL": {
+                    "sentieon": 202503
+                },
+                "SENTIEON_APPLYVARCAL_SNP": {
                     "sentieon": 202503
                 },
                 "SENTIEON_GVCFTYPER": {
@@ -39,7 +48,13 @@
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "tabix": 1.21
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.16"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
                     "vcftools": "0.1.16"
                 }
             },
@@ -220,7 +235,13 @@
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.16"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
                     "vcftools": "0.1.16"
                 }
             },
@@ -403,7 +424,13 @@
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "tabix": 1.21
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.16"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
                     "vcftools": "0.1.16"
                 }
             },
@@ -586,7 +613,13 @@
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "tabix": 1.21
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.16"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
                     "vcftools": "0.1.16"
                 }
             },

@@ -24,9 +24,10 @@ input:
         type: file
         description: pair of reads to be converted into BAM file
         pattern: "*.{fastq.gz}"
+        ontologies: []
 output:
-  - bam:
-      - meta:
+  bam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -35,8 +36,9 @@ output:
           type: file
           description: Unaligned, unsorted BAM file
           pattern: "*.{bam}"
-  - cram:
-      - meta:
+          ontologies: []
+  cram:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -45,11 +47,14 @@ output:
           type: file
           description: Unaligned, unsorted CRAM file
           pattern: "*.{cram}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@lescai"
   - "@matthdsm"
