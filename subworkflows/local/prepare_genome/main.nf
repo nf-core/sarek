@@ -20,6 +20,7 @@ include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE    } from '../../../modules/nf-
 include { TABIX_TABIX as TABIX_KNOWN_INDELS         } from '../../../modules/nf-core/tabix/tabix'
 include { TABIX_TABIX as TABIX_KNOWN_SNPS           } from '../../../modules/nf-core/tabix/tabix'
 include { TABIX_TABIX as TABIX_PON                  } from '../../../modules/nf-core/tabix/tabix'
+include { TABIX_TABIX as TABIX_MUTECT2_FORCE_CALL   } from '../../../modules/nf-core/tabix/tabix'
 include { UNTAR as UNTAR_CHR_DIR                    } from '../../../modules/nf-core/untar'
 include { UNZIP as UNZIP_ALLELES                    } from '../../../modules/nf-core/unzip'
 include { UNZIP as UNZIP_GC                         } from '../../../modules/nf-core/unzip'
@@ -40,6 +41,7 @@ workflow PREPARE_GENOME {
     known_indels         // channel: [optional]  known_indels
     known_snps           // channel: [optional]  known_snps
     pon                  // channel: [optional]  pon
+    mutect2_force_call   // channel: [optional]  mutect2_force_call
 
 
     main:
@@ -63,6 +65,7 @@ workflow PREPARE_GENOME {
     TABIX_KNOWN_SNPS(known_snps.flatten().map{ it -> [ [ id:it.baseName ], it ] } )
     TABIX_KNOWN_INDELS(known_indels.flatten().map{ it -> [ [ id:it.baseName ], it ] } )
     TABIX_PON(pon.flatten().map{ it -> [ [ id:it.baseName ], it ] })
+    TABIX_MUTECT2_FORCE_CALL(mutect2_force_call.flatten().map{ it -> [ [ id:it.baseName ], it ] })
 
     // prepare ascat and controlfreec reference files
     if (!ascat_alleles) allele_files = Channel.empty()
@@ -113,6 +116,7 @@ workflow PREPARE_GENOME {
     versions = versions.mix(TABIX_KNOWN_INDELS.out.versions)
     versions = versions.mix(TABIX_KNOWN_SNPS.out.versions)
     versions = versions.mix(TABIX_PON.out.versions)
+    versions = versions.mix(TABIX_MUTECT2_FORCE_CALL.out.versions)
 
     emit:
     bcftools_annotations_tbi = TABIX_BCFTOOLS_ANNOTATIONS.out.tbi.map{ meta, tbi -> [tbi] }.collect()   // path: bcftools_annotations.vcf.gz.tbi
@@ -127,6 +131,7 @@ workflow PREPARE_GENOME {
     known_indels_tbi         = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }.collect()           // path: {known_indels*}.vcf.gz.tbi
     msisensorpro_scan        = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }                   // path: genome_msi.list
     pon_tbi                  = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }.collect()                    // path: pon.vcf.gz.tbi
+    mutect2_force_call_tbi   = TABIX_MUTECT2_FORCE_CALL.out.tbi.map{ meta, tbi -> [tbi] }.collect()     // path: mutect2_force_call.vcf.gz.tbi
 
     allele_files    // path: allele_files
     chr_files       // path: chr_files
