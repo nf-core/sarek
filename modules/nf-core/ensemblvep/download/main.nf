@@ -1,18 +1,18 @@
 process ENSEMBLVEP_DOWNLOAD {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ensembl-vep:113.4--pl5321h2a3209d_0' :
-        'biocontainers/ensembl-vep:113.4--pl5321h2a3209d_0' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/ensembl-vep:114.2--pl5321h2a3209d_0'
+        : 'biocontainers/ensembl-vep:114.2--pl5321h2a3209d_0'}"
 
     input:
     tuple val(meta), val(assembly), val(species), val(cache_version)
 
     output:
     tuple val(meta), path(prefix), emit: cache
-    path "versions.yml"          , emit: versions
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,11 +22,11 @@ process ENSEMBLVEP_DOWNLOAD {
     prefix = task.ext.prefix ?: 'vep_cache'
     """
     vep_install \\
-        --CACHEDIR $prefix \\
-        --SPECIES $species \\
-        --ASSEMBLY $assembly \\
-        --CACHE_VERSION $cache_version \\
-        $args
+        --CACHEDIR ${prefix} \\
+        --SPECIES ${species} \\
+        --ASSEMBLY ${assembly} \\
+        --CACHE_VERSION ${cache_version} \\
+        ${args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -37,7 +37,7 @@ process ENSEMBLVEP_DOWNLOAD {
     stub:
     prefix = task.ext.prefix ?: 'vep_cache'
     """
-    mkdir $prefix
+    mkdir ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

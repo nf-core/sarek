@@ -6,4 +6,3 @@ channels:
 
 dependencies:
   - bioconda::htslib=1.21
-  - bioconda::tabix=1.11

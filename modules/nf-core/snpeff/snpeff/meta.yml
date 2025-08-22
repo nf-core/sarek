@@ -25,10 +25,11 @@ input:
         type: file
         description: |
           vcf to annotate
-  - - db:
-        type: string
-        description: |
-          which db to annotate with
+        ontologies: []
+  - db:
+      type: string
+      description: |
+        which db to annotate with
   - - meta2:
         type: map
         description: |
@@ -38,52 +39,66 @@ input:
         type: file
         description: |
           path to snpEff cache (optional)
+        ontologies: []
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: file
           description: |
             annotated vcf
           pattern: "*.ann.vcf"
+          ontologies: []
       - "*.ann.vcf":
           type: file
           description: |
             annotated vcf
           pattern: "*.ann.vcf"
-  - report:
-      - meta:
+          ontologies: []
+  report:
+    - - meta:
           type: file
-          description: snpEff report csv file
-          pattern: "*.csv"
+          description: |
+            annotated vcf
+          pattern: "*.ann.vcf"
+          ontologies: []
       - "*.csv":
           type: file
           description: snpEff report csv file
           pattern: "*.csv"
-  - summary_html:
-      - meta:
+          ontologies:
+            - edam: http://edamontology.org/format_3752 # CSV
+  summary_html:
+    - - meta:
           type: file
-          description: snpEff summary statistics in html file
-          pattern: "*.html"
+          description: |
+            annotated vcf
+          pattern: "*.ann.vcf"
+          ontologies: []
       - "*.html":
           type: file
           description: snpEff summary statistics in html file
           pattern: "*.html"
-  - genes_txt:
-      - meta:
+          ontologies: []
+  genes_txt:
+    - - meta:
           type: file
-          description: txt (tab separated) file having counts of the number of variants
-            affecting each transcript and gene
-          pattern: "*.genes.txt"
+          description: |
+            annotated vcf
+          pattern: "*.ann.vcf"
+          ontologies: []
       - "*.genes.txt":
           type: file
           description: txt (tab separated) file having counts of the number of variants
             affecting each transcript and gene
           pattern: "*.genes.txt"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@maxulysse"
 maintainers:

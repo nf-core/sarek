@@ -21,28 +21,26 @@ input:
         description: |
           Groovy Map containing sample information
           e.g. [ id:'test', single_end:false ]
-    - genome:
-        type: file
-        description: Reference genome in FASTA format
-        pattern: "*.{fasta,fna,fa}"
-    - cache_version:
-        type: string
-        description: Version of the snpEff cache to download
+    - snpeff_db: {}
 output:
-  - cache:
-      - meta:
+  cache:
+    - - meta:
           type: file
           description: |
             snpEff cache
+          ontologies: []
       - snpeff_cache:
           type: file
           description: |
             snpEff cache
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@maxulysse"
 maintainers:
