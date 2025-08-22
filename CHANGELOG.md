@@ -29,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1890](https://github.com/nf-core/sarek/pull/1890) - Improve and update metro map
 - [1903](https://github.com/nf-core/sarek/pull/1903) - Double the default `time` for all processes
 - [1922](https://github.com/nf-core/sarek/pull/1922) - Update ASCAT module to v3.2.0
+- [1961](https://github.com/nf-core/sarek/pull/1961) - Update ensemblvep modules to 114.2
+- [1961](https://github.com/nf-core/sarek/pull/1961) - Update ensemblvep cache version to 114
 
 ### Fixed
 
@@ -50,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `bcftools`                             | 1.20        | 1.21        |
 | `cnvkit`                               | 0.9.10      | 0.9.12      |
 | `deepvariant`                          | 1.8.0       | 1.9.0       |
-| `ensemblvep`                           | 113.0       | 113.4       |
+| `ensemblvep`                           | 113.0       | 114.2       |
 | `fastp`                                | 0.23.4      | 0.24.0      |
 | `fgbio`                                | 2.2.1       | 2.5.21      |
 | `freebayes`                            | 1.3.6       | 1.3.10      |
