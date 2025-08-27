@@ -379,9 +379,6 @@ workflow SAMPLESHEET_TO_CHANNEL {
         if (pon && pon.contains("/Homo_sapiens/GATK/GRCh38/Annotation/GATKBundle/1000g_pon.hg38.vcf.gz")) {
             log.warn("The default Panel-of-Normals provided by GATK is used for Mutect2.\nIt is highly recommended to generate one from normal samples that are technical similar to the tumor ones.\nFor more information: https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-")
         }
-        if (mutect2_force_call && !mutect2_force_call.endsWith(".vcf.gz")) {
-            error("File for force-calling alleles must end with .vcf.gz")
-        }
     }
 
     // Fails when missing resources for baserecalibrator
