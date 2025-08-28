@@ -501,7 +501,7 @@
     },
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --skip_tools markduplicates --tools null": {
         "content": [
-            9,
+            12,
             {
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -514,6 +514,9 @@
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
+                },
+                "INDEX_CRAM": {
+                    "samtools": 1.21
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -530,6 +533,7 @@
             },
             [
                 "csv",
+                "csv/recalibrated.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/BETA-multiqc.parquet",
@@ -590,10 +594,19 @@
                 "preprocessing/recal_table",
                 "preprocessing/recal_table/test",
                 "preprocessing/recal_table/test/test.recal.table",
+                "preprocessing/recalibrated",
+                "preprocessing/recalibrated/test",
+                "preprocessing/recalibrated/test/test.recal.cram",
+                "preprocessing/recalibrated/test/test.recal.cram.crai",
                 "reference",
                 "reports",
                 "reports/mosdepth",
                 "reports/mosdepth/test",
+                "reports/mosdepth/test/test.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/test/test.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/test/test.recal.mosdepth.summary.txt",
+                "reports/mosdepth/test/test.recal.regions.bed.gz",
+                "reports/mosdepth/test/test.recal.regions.bed.gz.csi",
                 "reports/mosdepth/test/test.sorted.mosdepth.global.dist.txt",
                 "reports/mosdepth/test/test.sorted.mosdepth.region.dist.txt",
                 "reports/mosdepth/test/test.sorted.mosdepth.summary.txt",
@@ -601,15 +614,21 @@
                 "reports/mosdepth/test/test.sorted.regions.bed.gz.csi",
                 "reports/samtools",
                 "reports/samtools/test",
+                "reports/samtools/test/test.recal.cram.stats",
                 "reports/samtools/test/test.sorted.cram.stats"
             ],
             [
-                "mosdepth-coverage-per-contig-single.txt:md5,8b48f3336b063dcb1e086928b28a2cc6",
-                "mosdepth-cumcoverage-dist-id.txt:md5,3148977f0c4684ba681ee298d677fe38",
-                "mosdepth_perchrom.txt:md5,8b48f3336b063dcb1e086928b28a2cc6",
+                "mosdepth-coverage-per-contig-single.txt:md5,4153678ed78ce01defe11f5b9fb8deb4",
+                "mosdepth-cumcoverage-dist-id.txt:md5,fcecb7f7ed584a1395065568e0ec1259",
+                "mosdepth_perchrom.txt:md5,4153678ed78ce01defe11f5b9fb8deb4",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
-                "samtools-stats-dp.txt:md5,85c4ca7a3a6f2534d4d329937be49966",
-                "samtools_alignment_plot.txt:md5,301dda049c8aa2f848c98c81f584c315",
+                "samtools-stats-dp.txt:md5,dae2fa55a81049479a787e0fe5a64289",
+                "samtools_alignment_plot.txt:md5,b693942009526869bd21cbc42d54f53c",
+                "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
+                "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
+                "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
+                "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
+                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
                 "test.sorted.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.sorted.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.sorted.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
@@ -617,13 +636,15 @@
                 "test.sorted.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259"
             ],
             "No BAM files",
-            "No CRAM files",
+            [
+                "test.recal.cram:md5,463ac3b905fbf4ddf113a94dbfa8d69f"
+            ],
             "No VCF files"
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-06-12T16:34:13.509967515"
+        "timestamp": "2025-08-28T08:51:39.649962279"
     }
 }
