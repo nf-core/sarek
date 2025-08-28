@@ -30,6 +30,14 @@ output:
       description: |
         html reports
         Structure: [ path(html) ]
+  - summary:
+      description: |
+        html reports
+        Structure: [ path(csv) ]
+  - genes_txt:
+      description: |
+        html reports
+        Structure: [ path(txt) ]
   - versions:
       description: |
         Files containing software versions

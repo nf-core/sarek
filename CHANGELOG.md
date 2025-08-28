@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1934](https://github.com/nf-core/sarek/pull/1934) - Add sentieon TNscope for tumour/normal variant calling
 - [1938](https://github.com/nf-core/sarek/pull/1938) - Add checks for uniqueness of sample ids and lane ids
 - [1939](https://github.com/nf-core/sarek/pull/1939) - Modify config to add readgroups to fq2bam
+- [1953](https://github.com/nf-core/sarek/pull/1953) - Update freebayes and add QUAL filtering
 - [1937](https://github.com/nf-core/sarek/pull/1937) - Add UMI extraction for deduplication using fastp via `--umi_location`, `--umi_length` and `--umi_base_skip`
 - [1937](https://github.com/nf-core/sarek/pull/1937) - Add support for UMIs in read headers via `--umi_in_read_header`
 - [1937](https://github.com/nf-core/sarek/pull/1937) - Add consensus read generation when using sentieon dedup via `--sentieon_consensus`
@@ -32,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1890](https://github.com/nf-core/sarek/pull/1890) - Improve and update metro map
 - [1903](https://github.com/nf-core/sarek/pull/1903) - Double the default `time` for all processes
 - [1922](https://github.com/nf-core/sarek/pull/1922) - Update ASCAT module to v3.2.0
+- [1961](https://github.com/nf-core/sarek/pull/1961) - Update ensemblvep modules to 114.2
+- [1961](https://github.com/nf-core/sarek/pull/1961) - Update ensemblvep cache version to 114
 - [1937](https://github.com/nf-core/sarek/pull/1937) - Swapped from samblaster to samtools within the fgbio consensus generation
 
 ### Fixed
@@ -53,9 +56,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | -------------------------------------- | ----------- | ----------- |
 | `ASCAT`                                | 3.1.1       | 3.2.0       |
 | `bcftools`                             | 1.20        | 1.21        |
-| `ensemblvep`                           | 113.0       | 113.4       |
+| `ensemblvep`                           | 113.0       | 114.2       |
 | `fastp`                                | 0.23.4      | 0.24.0      |
 | `fgbio`                                | 2.2.1       | 2.4.0       |
+| `freebayes`                            | 1.3.6.      | 1.3.10      |
 | `gatk4`                                | 4.5.0.0     | 4.6.1.0     |
 | `mosdepth`                             | 0.3.8       | 0.3.10      |
 | `MuSE`                                 |             | 2.1.2       |
@@ -66,11 +70,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `samtools` (in `GATK4_MARKDUPLICATES`) | 1.19.2      | 1.21        |
 | `sentieon`                             | 202308.03   | 202503      |
 | `tabix`                                | 1.2         | 1.21        |
+| `vcflib`                               |             | 1.0.14      |
 
 ### Parameters
 
-| Params | Status |
-| ------ | ------ |
+| Params               | Status |
+| -------------------- | ------ |
+| `--freebayes_filter` | New    |
 
 ### Developer section
 
@@ -123,6 +129,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1927](https://github.com/nf-core/sarek/pull/1927) - Migrate pipeline pytest sentieon tests to nf-test
 - [1932](https://github.com/nf-core/sarek/pull/1932) - Refactor and simplify pipeline test suite
 - [1936](https://github.com/nf-core/sarek/pull/1936) - Template update for nf-core/tools v3.3.2
+- [1953](https://github.com/nf-core/sarek/pull/1953) - Change freebayes tests from gzip to md5sum
 - [1954](https://github.com/nf-core/sarek/pull/1954) - Refactor bcftools annotation subworkflows so that no diff is necessary from nf-core/modules
 
 #### Fixed
@@ -147,6 +154,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [1814](https://github.com/nf-core/sarek/pull/1814) - Removed link to Twitter/X
 - [1884](https://github.com/nf-core/sarek/pull/1884) - Remove pytest-workflow from CI (copied from [1729](https://github.com/nf-core/sarek/pull/1729))
+- [1956](https://github.com/nf-core/sarek/pull/1956) - Remove tests for downloading cache (Snpeff and VEP) (we already have tests for the cache in the modules)
+- [1957](https://github.com/nf-core/sarek/pull/1957) - Remove duplicated gpu profile from config
 
 ## [3.5.1](https://github.com/nf-core/sarek/releases/tag/3.5.1) - Akkatjåkkå
 
