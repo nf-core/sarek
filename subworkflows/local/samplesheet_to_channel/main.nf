@@ -330,13 +330,14 @@ workflow SAMPLESHEET_TO_CHANNEL {
     // Check the UMI read structure is correct using fgbio plugin
     // Copied from fastquorum
     if( umi_read_structure) {
+        umi_read_structure.tokenize(" ").each { rs->
+        // If parsing the read structure fails, then a java.lang.reflect.InvocationTargetException will be thrown, with
+        // the cause containing the exception produced by fgbio.
         try {
-        // Replace spaces with commas for plugin compatibility
-        def normalized_umi_read_structure = umi_read_structure.replaceAll(" +", ",")
-        readStructure(normalized_umi_read_structure)
+            readStructure(rs)
         } catch (java.lang.reflect.InvocationTargetException ex) {
             def message = """
-                |Please check input samplesheet -> Read structure`${umi_read_structure}` invalid
+                |Please check the input UMI Read structure`${umi_read_structure}` invalid
                 |
                 |   ${ex.getCause().getMessage()}
                 |
@@ -347,6 +348,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
             error(message)
             throw ex
         }
+    }
     }
 
     // Fails or warns when missing files or params for ascat
