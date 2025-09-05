@@ -1,0 +1,60 @@
+nextflow_process {
+
+    name "Test Process ENSEMBLVEP_DOWNLOAD"
+    script "../main.nf"
+    process "ENSEMBLVEP_DOWNLOAD"
+    config "./nextflow.config"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "ensemblvep"
+    tag "ensemblvep/download"
+
+    test("celegans - download") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [id:"115_WBcel235"],
+                    params.vep_genome,
+                    params.vep_species,
+                    params.vep_cache_version
+                ])
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("celegans - download - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [id:"115_WBcel235"],
+                    params.vep_genome,
+                    params.vep_species,
+                    params.vep_cache_version
+                ])
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assertAll(
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

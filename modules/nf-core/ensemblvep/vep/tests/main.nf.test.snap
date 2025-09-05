@@ -1,0 +1,28 @@
+{
+    "test_ensemblvep_vep_fasta_tab_gz": {
+        "content": [
+            [
+                "versions.yml:md5,2493bc05e298c188c2da5be3572b52fe"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-09-04T11:01:10.109574"
+    },
+    "test_ensemblvep_vep_fasta_vcf - stub (not really but linting complains otherwise)": {
+        "content": [
+            [
+                "versions.yml:md5,2493bc05e298c188c2da5be3572b52fe"
+            ],
+            "d41d8cd98f00b204e9800998ecf8427e",
+            "test.vcf.gz.tbi"
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-09-04T11:00:51.880865"
+    }
+}
