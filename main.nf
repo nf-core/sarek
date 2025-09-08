@@ -164,7 +164,9 @@ workflow NFCORE_SAREK {
         aligner == "bwa-mem2" ? bwamem2 :
         dragmap
 
+    // TODO: add a params for msisensor2
     // TODO: add a params for msisensorpro_scan
+    msisensor2_scan        = PREPARE_GENOME.out.msisensor2_scan
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
 
     // For ASCAT, extracted from zip or tar.gz files
@@ -293,6 +295,7 @@ workflow NFCORE_SAREK {
         known_snps_vqsr,
         loci_files,
         mappability,
+        msisensor2_scan,
         msisensorpro_scan,
         ngscheckmate_bed,
         pon,

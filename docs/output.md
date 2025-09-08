@@ -56,6 +56,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [CNVKit](#cnvkit)
     - [Control-FREEC](#control-freec)
   - [Microsatellite instability (MSI)](#microsatellite-instability-msi)
+    - [MSIsensor2](#msisensor2)
     - [MSIsensorPro](#msisensorpro)
   - [Concatenation](#concatenation)
   - [Normalization](#normalization)
@@ -897,6 +898,23 @@ It also detects subclonal gains and losses and evaluates the most likely average
 
 [Microsatellite instability](https://en.wikipedia.org/wiki/Microsatellite_instability) is a genetic condition associated with deficiencies in the mismatch repair (MMR) system which causes a tendency to accumulate a high number of mutations (SNVs and indels).
 An altered distribution of microsatellite length is associated with a missed replication slippage which would be corrected under normal MMR conditions.
+
+#### MSIsensor2
+
+[MSIsensor2](https://github.com/niu-lab/msisensor2) is a tool to detect the MSI status for tumor only sequencing data, including Cell-Free DNA (cfDNA), Formalin-Fixed Paraffin-Embedded(FFPE) and other sample types.
+
+<details markdown="1">
+<summary>Output files for tumor only samples</summary>
+
+**Output directory: `{outdir}/variantcalling/msisensor2/<tumorsample>/`**
+
+<!-- TODO: add output files -->
+
+- `<tumorsample>`
+  - MSI score output, contains information about the number of somatic sites.
+- `<tumorsample>_dis`
+  - The normal and tumor length distribution for each microsatellite position.
+  </details>
 
 #### MSIsensorPro
 

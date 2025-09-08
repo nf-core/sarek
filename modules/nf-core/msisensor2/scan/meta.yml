@@ -1,0 +1,54 @@
+name: "msisensor2_scan"
+description: msisensor2 detection of MSI regions.
+keywords:
+  - microsatellite
+  - instability
+  - detection
+  - tumor
+tools:
+  - "msisensor2":
+      description: "MSIsensor2 is a novel algorithm based machine learning, featuring
+        a large upgrade in the microsatellite instability (MSI) detection for tumor
+        only sequencing data, including Cell-Free DNA (cfDNA), Formalin-Fixed Paraffin-Embedded(FFPE)
+        and other sample types. The original MSIsensor is specially designed for tumor/normal
+        paired sequencing data."
+      homepage: "https://github.com/niu-lab/msisensor2"
+      documentation: "https://github.com/niu-lab/msisensor2/blob/master/README.md"
+      tool_dev_url: "https://github.com/niu-lab/msisensor2"
+      licence: ["GPL-3.0"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - fasta:
+        type: file
+        description: Reference genome
+        pattern: "*.{fasta}"
+        ontologies:
+          - edam: http://edamontology.org/format_1929 # FASTA
+output:
+  scan:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.scan":
+          type: file
+          description: File containing microsatellite list
+          pattern: "*.{scan}"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@adamrtalbot"
+maintainers:
+  - "@adamrtalbot"

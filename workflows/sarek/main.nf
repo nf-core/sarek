@@ -92,6 +92,7 @@ workflow SAREK {
         known_snps_vqsr
         loci_files
         mappability
+        msisensor2_scan
         msisensorpro_scan
         ngscheckmate_bed
         pon
@@ -361,6 +362,7 @@ workflow SAREK {
             intervals_bed_combined,
             intervals_bed_gz_tbi_combined, // [] if no_intervals, else interval_bed_combined_gz, interval_bed_combined_gz_tbi
             mappability,
+            msisensor2_scan,
             pon,
             pon_tbi,
             params.joint_mutect2,
@@ -386,6 +388,7 @@ workflow SAREK {
             intervals_bed_combined,
             intervals_bed_gz_tbi_combined, // [] if no_intervals, else interval_bed_combined_gz, interval_bed_combined_gz_tbi
             mappability,
+            msisensor2_scan,
             msisensorpro_scan,
             pon,
             pon_tbi,
