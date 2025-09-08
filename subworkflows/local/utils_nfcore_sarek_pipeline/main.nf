@@ -65,6 +65,7 @@ workflow PIPELINE_INITIALISATION {
         params.bwamem2,
         params.bcftools_annotations,
         params.bcftools_annotations_tbi,
+        params.bcftools_columns,
         params.bcftools_header_lines,
         params.cf_chrom_len,
         params.chr_dir,

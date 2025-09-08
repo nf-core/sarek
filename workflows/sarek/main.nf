@@ -62,6 +62,7 @@ include { MULTIQC                                           } from '../../module
 
 workflow SAREK {
     take:
+<<<<<<< HEAD
     input_sample
     allele_files
     aligner
@@ -111,6 +112,56 @@ workflow SAREK {
     vep_genome
     vep_species
     versions
+=======
+        input_sample
+        allele_files
+        aligner
+        bcftools_annotations
+        bcftools_annotations_tbi
+        bcftools_columns
+        bcftools_header_lines
+        cf_chrom_len
+        chr_files
+        cnvkit_reference
+        dbsnp
+        dbsnp_tbi
+        dbsnp_vqsr
+        dict
+        fasta
+        fasta_fai
+        gc_file
+        germline_resource
+        germline_resource_tbi
+        index_alignment
+        intervals_and_num_intervals
+        intervals_bed_combined
+        intervals_bed_combined_for_variant_calling
+        intervals_bed_gz_tbi_and_num_intervals
+        intervals_bed_gz_tbi_combined
+        intervals_for_preprocessing
+        known_indels_vqsr
+        known_sites_indels
+        known_sites_indels_tbi
+        known_sites_snps
+        known_sites_snps_tbi
+        known_snps_vqsr
+        loci_files
+        mappability
+        msisensorpro_scan
+        ngscheckmate_bed
+        pon
+        pon_tbi
+        rt_file
+        sentieon_dnascope_model
+        snpeff_cache
+        vep_cache
+        vep_cache_version
+        vep_extra_files
+        vep_fasta
+        vep_genome
+        vep_species
+        versions
+>>>>>>> bd5a62f3b (Update bcftools/annotate to pick up columns file input)
 
     main:
 
@@ -554,8 +605,13 @@ workflow SAREK {
                 vep_extra_files,
                 bcftools_annotations,
                 bcftools_annotations_tbi,
+<<<<<<< HEAD
                 bcftools_header_lines,
             )
+=======
+                bcftools_columns,
+                bcftools_header_lines)
+>>>>>>> bd5a62f3b (Update bcftools/annotate to pick up columns file input)
 
             // Gather used softwares versions
             versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)

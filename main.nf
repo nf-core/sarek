@@ -285,6 +285,7 @@ workflow NFCORE_SAREK {
         aligner,
         bcftools_annotations,
         bcftools_annotations_tbi,
+        bcftools_columns,
         bcftools_header_lines,
         cf_chrom_len,
         PREPARE_GENOME.out.chr_files,

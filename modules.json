@@ -12,7 +12,7 @@
                     },
                     "bcftools/annotate": {
                         "branch": "master",
-                        "git_sha": "8b09455ee60fe0cbf1323d1dee5bf9039e1ac733",
+                        "git_sha": "28438d38e50710e20885ff2594344b9d5a03dec7",
                         "installed_by": ["modules"]
                     },
                     "bcftools/concat": {
