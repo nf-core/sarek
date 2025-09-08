@@ -35,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1922](https://github.com/nf-core/sarek/pull/1922) - Update ASCAT module to v3.2.0
 - [1961](https://github.com/nf-core/sarek/pull/1961) - Update ensemblvep modules to 114.2
 - [1961](https://github.com/nf-core/sarek/pull/1961) - Update ensemblvep cache version to 114
+- [1961](https://github.com/nf-core/sarek/pull/1961) - Update ensemblvep modules to 115.0
+- [1961](https://github.com/nf-core/sarek/pull/1961) - Update ensemblvep cache version to 115
 - [1937](https://github.com/nf-core/sarek/pull/1937) - Swapped from samblaster to samtools within the fgbio consensus generation
 
 ### Fixed
@@ -56,7 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | -------------------------------------- | ----------- | ----------- |
 | `ASCAT`                                | 3.1.1       | 3.2.0       |
 | `bcftools`                             | 1.20        | 1.21        |
-| `ensemblvep`                           | 113.0       | 114.2       |
+| `ensemblvep`                           | 113.0       | 115.0       |
 | `fastp`                                | 0.23.4      | 0.24.0      |
 | `fgbio`                                | 2.2.1       | 2.4.0       |
 | `freebayes`                            | 1.3.6.      | 1.3.10      |
