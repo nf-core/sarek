@@ -64,7 +64,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     out_indexcov     = Channel.empty()
 
     bam_normal = Channel.empty()
-    bam_tumor = Channel.empty()
+    bam_tumor  = Channel.empty()
 
 
     // CRAM_TO_BAM
