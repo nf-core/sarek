@@ -21,7 +21,7 @@ samples:
         from: normal
         somatic: true
     contamination:
-    # TODO: set contamination per user
+      # TODO: set contamination per user
       by: normal
       fraction: 0.1
   normal:
