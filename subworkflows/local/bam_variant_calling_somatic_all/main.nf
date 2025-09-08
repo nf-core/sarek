@@ -64,7 +64,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     out_indexcov     = Channel.empty()
 
     bam_normal = Channel.empty()
-    bam_tumor = Channel.empty()
+    bam_tumor  = Channel.empty()
 
 
     // CRAM_TO_BAM
@@ -72,7 +72,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     //   TODO: this could be done upstream in the workflows/sarek/main.nf
     if (tools.split(',').contains('muse')) {
         cram_normal = cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] }
-        cram_tumor = cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
+        cram_tumor  = cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
 
         CRAM_TO_BAM_NORMAL(cram_normal, fasta, fasta_fai)
         CRAM_TO_BAM_TUMOR(cram_tumor, fasta, fasta_fai)
