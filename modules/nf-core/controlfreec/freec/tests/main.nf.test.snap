@@ -1,0 +1,203 @@
+{
+    "human - mpileup - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "test_ratio.BedGraph:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "test_sample.cpn:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "GC_profile.test.cpn:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "test_BAF.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "test_CNVs:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "test_info.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "test_ratio.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "8": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "config.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "9": [
+                    "versions.yml:md5,e704fc0e6d1ac333dc419498fa128769"
+                ],
+                "BAF": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "test_BAF.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "CNV": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "test_CNVs:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bedgraph": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "test_ratio.BedGraph:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "config": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "config.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "control_cpn": [
+                    
+                ],
+                "gcprofile_cpn": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "GC_profile.test.cpn:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "info": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "test_info.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "ratio": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "test_ratio.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "sample_cpn": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "test_sample.cpn:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,e704fc0e6d1ac333dc419498fa128769"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-09T10:41:07.003311"
+    },
+    "human - mpileup": {
+        "content": [
+            "test2.mpileup.gz_sample.cpn",
+            "test2.mpileup.gz_CNVs",
+            "Chromosome\tPosition\tBAF\tFittedA\tFittedB\tA\tB\tuncertainty",
+            "Chromosome\tStart\tRatio\tMedianRatio\tCopyNumber\tBAF\testimatedBAF\tGenotype\tUncertaintyOfGT",
+            "[general]",
+            "Program_Version\tv11.6",
+            [
+                "versions.yml:md5,e704fc0e6d1ac333dc419498fa128769"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-09T10:40:42.538035"
+    }
+}
