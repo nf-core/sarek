@@ -166,6 +166,11 @@
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
+                    "fgbio/copyumifromreadname": {
+                        "branch": "master",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
+                    },
                     "fgbio/fastqtobam": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
@@ -374,11 +379,6 @@
                     "parabricks/fq2bam": {
                         "branch": "master",
                         "git_sha": "083667c2f0d3b57aa373ffa8891d04b3c839b0b4",
-                        "installed_by": ["modules"]
-                    },
-                    "samblaster": {
-                        "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
                     "samtools/bam2fq": {

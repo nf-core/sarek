@@ -24,6 +24,34 @@ nextflow_pipeline {
                 step: 'markduplicates',
                 tools: 'sentieon_dedup'
             ]
+        ],
+        [
+            name: "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/mapped_single_cram.csv --sentieon_consensus",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
+                step: 'markduplicates',
+                tools: 'sentieon_dedup',
+                sentieon_consensus: true
+            ]
+        ],
+        [
+            name: "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/bam_umi_header.csv --umi_in_read_header",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/bam_umi_header.csv",
+                step: 'markduplicates',
+                tools: 'sentieon_dedup',
+                umi_in_read_header: true
+            ]
+        ],
+        [
+            name: "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/bam_umi_header.csv --sentieon_consensus --umi_in_read_header",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/bam_umi_header.csv",
+                step: 'markduplicates',
+                tools: 'sentieon_dedup',
+                sentieon_consensus: true,
+                umi_in_read_header: true
+            ]
         ]
     ]
 
