@@ -22,7 +22,11 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
     versions = Channel.empty()
     ch_dbsnp = dbsnp.map{ it -> [ [id:it.name], it ] }
     ch_dbsnp_tbi = dbsnp_tbi.map{ it -> [ [id:it.baseName], it ] }
-    ch_dbsnp_with_tbi = ch_dbsnp.join(ch_dbsnp_tbi, by: [0]).collect()  // Join by meta.id
+    // Join by meta.id
+    // Then take only the first element to create a value channel
+    ch_dbsnp_with_tbi = ch_dbsnp.join(ch_dbsnp_tbi, by: [0])
+        .map { meta, dbsnp_file, dbsnp_tbi_file -> [meta, dbsnp_file, dbsnp_tbi_file] }
+        .first()
 
     CRAM_TO_BAM_TUMOR(
         cram_tumor,
@@ -41,14 +45,14 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
     ch_tumor_bam = CRAM_TO_BAM_TUMOR.out.bam
     ch_tumor_bai = CRAM_TO_BAM_TUMOR.out.bai
 
-    // Combine normal BAM and BAI
-    ch_normal = ch_normal_bam.join(ch_normal_bai, by: [0])  // Join by meta
+    // Combine normal BAM and BAI by meta
+    ch_normal = ch_normal_bam.join(ch_normal_bai, by: [0])
 
-    // Combine tumor BAM and BAI
-    ch_tumor = ch_tumor_bam.join(ch_tumor_bai, by: [0])  // Join by meta
+    // Combine tumor BAM and BAI by meta
+    ch_tumor = ch_tumor_bam.join(ch_tumor_bai, by: [0])
 
-    // Combine normal and tumor data
-    ch_bam = ch_tumor.join(ch_normal, by: [0])  // Join by meta
+    // Combine normal and tumor data by meta
+    ch_bam = ch_tumor.join(ch_normal, by: [0])
 
     MUSE_CALL(
         ch_bam,
