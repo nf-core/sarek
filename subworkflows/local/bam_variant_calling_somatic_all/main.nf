@@ -48,6 +48,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
 
     main:
+    // Channels are often remapped to match module/subworkflow
+
     versions = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
@@ -62,10 +64,12 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     out_indexcov     = Channel.empty()
 
     bam_normal = Channel.empty()
-    bam_tumor  = Channel.empty()
+    bam_tumor = Channel.empty()
 
-    // This is a conversion from CRAM to BAM, which is necessary for some modules
-    // TODO: this could be done upstream in the workflows/sarek/main.nf
+
+    // CRAM_TO_BAM
+    //   This is a conversion from CRAM to BAM, which is necessary for some modules
+    //   TODO: this could be done upstream in the workflows/sarek/main.nf
     if (tools.split(',').contains('muse')) {
         cram_normal = cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] }
         cram_tumor = cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
@@ -98,7 +102,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // CONTROLFREEC
     if (tools.split(',').contains('controlfreec')) {
-        // Remap channels to match module/subworkflow
         cram_normal = cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] }
         cram_tumor = cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
 
@@ -118,22 +121,18 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         mpileup_normal = MPILEUP_NORMAL.out.mpileup
         mpileup_tumor = MPILEUP_TUMOR.out.mpileup
-        // Remap channel to match module/subworkflow
+
         mpileup_pair = mpileup_normal.cross(mpileup_tumor).map { normal, tumor -> [normal[0], normal[1], tumor[1], [], [], [], []] }
-
-        length_file = cf_chrom_len ?: fasta_fai.map { _meta, fasta_fai_ -> [fasta_fai_] }
-
-        intervals_controlfreec = wes ? intervals_bed_combined : []
 
         BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC(
             mpileup_pair,
             fasta.map { _meta, fasta_ -> [fasta_] },
-            length_file,
+            cf_chrom_len ?: fasta_fai.map { _meta, fasta_fai_ -> [fasta_fai_] },
             dbsnp,
             dbsnp_tbi,
             chr_files,
             mappability,
-            intervals_controlfreec,
+            wes ? intervals_bed_combined : [],
         )
 
         versions = versions.mix(MPILEUP_NORMAL.out.versions)
@@ -182,7 +181,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
 
-    // INDEXCOV, for WGS only
+    // INDEXCOV
+    //   WGS only
     if (params.wes == false && tools.split(',').contains('indexcov')) {
         BAM_VARIANT_CALLING_INDEXCOV(
             cram,
@@ -197,7 +197,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // STRELKA
     if (tools.split(',').contains('strelka')) {
-        // Remap channel to match module/subworkflow
         cram_strelka = tools.split(',').contains('manta')
             ? cram.join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf, failOnDuplicate: true, failOnMismatch: true).join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf_tbi, failOnDuplicate: true, failOnMismatch: true)
             : cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], []] }
@@ -238,6 +237,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // MUTECT2
     if (tools.split(',').contains('mutect2')) {
+        // joint_mutect2 mode needs different meta.map than regular mode
+        //   we need to keep all fields and then remove on a per-tool-basis to ensure proper joining at the filtering step
         BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
             cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
                 joint_mutect2
