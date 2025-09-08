@@ -143,12 +143,12 @@
                     },
                     "ensemblvep/download": {
                         "branch": "master",
-                        "git_sha": "48ca3de1737b0144aa9fe05bea2b681f0ae45a95",
+                        "git_sha": "2fcc53751152a999bfc9c24f75f494b9e5bb338f",
                         "installed_by": ["modules"]
                     },
                     "ensemblvep/vep": {
                         "branch": "master",
-                        "git_sha": "48ca3de1737b0144aa9fe05bea2b681f0ae45a95",
+                        "git_sha": "2fcc53751152a999bfc9c24f75f494b9e5bb338f",
                         "installed_by": ["modules", "vcf_annotate_ensemblvep"]
                     },
                     "fastp": {
@@ -164,6 +164,11 @@
                     "fgbio/callmolecularconsensusreads": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "installed_by": ["modules"]
+                    },
+                    "fgbio/copyumifromreadname": {
+                        "branch": "master",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "fgbio/fastqtobam": {
@@ -386,11 +391,6 @@
                         "git_sha": "083667c2f0d3b57aa373ffa8891d04b3c839b0b4",
                         "installed_by": ["modules"]
                     },
-                    "samblaster": {
-                        "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["modules"]
-                    },
                     "samtools/bam2fq": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
@@ -572,7 +572,7 @@
                     },
                     "vcf_annotate_ensemblvep": {
                         "branch": "master",
-                        "git_sha": "48ca3de1737b0144aa9fe05bea2b681f0ae45a95",
+                        "git_sha": "2fcc53751152a999bfc9c24f75f494b9e5bb338f",
                         "installed_by": ["subworkflows"]
                     },
                     "vcf_annotate_snpeff": {

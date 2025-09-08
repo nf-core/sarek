@@ -51,50 +51,40 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
 
     main:
+    // Channels are often remapped to match module/subworkflow
+
     versions = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    out_indexcov = Channel.empty()
-    out_msisensor2 = Channel.empty()
+    vcf_freebayes    = Channel.empty()
+    vcf_manta        = Channel.empty()
     out_msisensorpro = Channel.empty()
-    vcf_freebayes = Channel.empty()
-    vcf_manta = Channel.empty()
-    vcf_muse = Channel.empty()
-    vcf_mutect2 = Channel.empty()
-    vcf_strelka = Channel.empty()
-    vcf_tiddit = Channel.empty()
-    vcf_tnscope = Channel.empty()
+    vcf_muse         = Channel.empty()
+    vcf_mutect2      = Channel.empty()
+    vcf_strelka      = Channel.empty()
+    vcf_tnscope      = Channel.empty()
+    vcf_tiddit       = Channel.empty()
+    out_indexcov     = Channel.empty()
 
-    ch_normal = Channel.empty()
-    ch_tumor = Channel.empty()
+    bam_normal = Channel.empty()
+    bam_tumor  = Channel.empty()
 
-    if (tools.split(',').contains('muse') || tools.split(',').contains('msisensor2')) {
-        cram_normal = cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [meta, normal_cram, normal_crai] }
-        cram_tumor = cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
 
-        CRAM_TO_BAM_TUMOR(
-            cram_tumor,
-            fasta,
-            fasta_fai,
-        )
+    // CRAM_TO_BAM
+    //   This is a conversion from CRAM to BAM, which is necessary for some modules
+    //   TODO: this could be done upstream in the workflows/sarek/main.nf
+    if (tools.split(',').contains('msisensor2') || tools.split(',').contains('muse')) {
+        cram_normal = cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] }
+        cram_tumor  = cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
 
-        CRAM_TO_BAM_NORMAL(
-            cram_normal,
-            fasta,
-            fasta_fai,
-        )
+        CRAM_TO_BAM_NORMAL(cram_normal, fasta, fasta_fai)
+        CRAM_TO_BAM_TUMOR(cram_tumor, fasta, fasta_fai)
 
-        ch_normal_bam = CRAM_TO_BAM_NORMAL.out.bam
-        ch_normal_bai = CRAM_TO_BAM_NORMAL.out.bai
-        ch_tumor_bam = CRAM_TO_BAM_TUMOR.out.bam
-        ch_tumor_bai = CRAM_TO_BAM_TUMOR.out.bai
+        // Combine BAM and BAI and join by meta
+        bam_normal = CRAM_TO_BAM_NORMAL.out.bam.join(CRAM_TO_BAM_NORMAL.out.bai, by: [0])
+        bam_tumor  = CRAM_TO_BAM_TUMOR.out.bam.join(CRAM_TO_BAM_TUMOR.out.bai, by: [0])
 
-        // Combine normal BAM and BAI
-        ch_normal = ch_normal_bam.join(ch_normal_bai, by: [0])
-        // Join by meta
-
-        // Combine tumor BAM and BAI
-        ch_tumor = ch_tumor_bam.join(ch_tumor_bai, by: [0])
+        // Versions
 
         versions = versions.mix(CRAM_TO_BAM_NORMAL.out.versions)
         versions = versions.mix(CRAM_TO_BAM_TUMOR.out.versions)
@@ -106,7 +96,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             allele_files,
             loci_files,
             (wes ? intervals_bed_combined : []),
-            fasta.map { meta, fasta -> [fasta] },
+            fasta.map { _meta, fasta_ -> [fasta_] },
             gc_file,
             rt_file,
         )
@@ -116,9 +106,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // CONTROLFREEC
     if (tools.split(',').contains('controlfreec')) {
-        // Remap channels to match module/subworkflow
-        cram_normal = cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [meta, normal_cram, normal_crai] }
-        cram_tumor = cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
+        cram_normal = cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] }
+        cram_tumor = cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
 
         MPILEUP_NORMAL(
             cram_normal,
@@ -136,22 +125,17 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         mpileup_normal = MPILEUP_NORMAL.out.mpileup
         mpileup_tumor = MPILEUP_TUMOR.out.mpileup
-        // Remap channel to match module/subworkflow
         mpileup_pair = mpileup_normal.cross(mpileup_tumor).map { normal, tumor -> [normal[0], normal[1], tumor[1], [], [], [], []] }
-
-        length_file = cf_chrom_len ?: fasta_fai.map { meta, fasta_fai -> [fasta_fai] }
-
-        intervals_controlfreec = wes ? intervals_bed_combined : []
 
         BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC(
             mpileup_pair,
-            fasta.map { meta, fasta -> [fasta] },
-            length_file,
+            fasta.map { _meta, fasta_ -> [fasta_] },
+            cf_chrom_len ?: fasta_fai.map { _meta, fasta_fai_ -> [fasta_fai_] },
             dbsnp,
             dbsnp_tbi,
             chr_files,
             mappability,
-            intervals_controlfreec,
+            wes ? intervals_bed_combined : [],
         )
 
         versions = versions.mix(MPILEUP_NORMAL.out.versions)
@@ -162,10 +146,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     // CNVKIT
     if (tools.split(',').contains('cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT(
-            cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, normal_cram] },
+            cram.map { meta, normal_cram, _normal_crai, tumor_cram, _tumor_crai -> [meta, tumor_cram, normal_cram] },
             fasta,
             fasta_fai,
-            intervals_bed_combined.map { it -> it ? [[id: it[0].baseName], it] : [[id: 'no_intervals'], []] },
+            intervals_bed_combined.map { _intervals -> _intervals ? [[id: _intervals[0].baseName], _intervals] : [[id: 'no_intervals'], []] },
             [[id: "null"], []],
         )
 
@@ -200,7 +184,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
 
-    // INDEXCOV, for WGS only
+    // INDEXCOV
+    //   WGS only
     if (params.wes == false && tools.split(',').contains('indexcov')) {
         BAM_VARIANT_CALLING_INDEXCOV(
             cram,
@@ -215,7 +200,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // STRELKA
     if (tools.split(',').contains('strelka')) {
-        // Remap channel to match module/subworkflow
         cram_strelka = tools.split(',').contains('manta')
             ? cram.join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf, failOnDuplicate: true, failOnMismatch: true).join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf_tbi, failOnDuplicate: true, failOnMismatch: true)
             : cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], []] }
@@ -223,8 +207,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         BAM_VARIANT_CALLING_SOMATIC_STRELKA(
             cram_strelka,
             dict,
-            fasta.map { meta, fasta -> [fasta] },
-            fasta_fai.map { meta, fasta_fai -> [fasta_fai] },
+            fasta.map { _meta, fasta_ -> [fasta_] },
+            fasta_fai.map { _meta, fasta_fai_ -> [fasta_fai_] },
             intervals_bed_gz_tbi,
         )
 
@@ -234,7 +218,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // MSISENSOR
     if (tools.split(',').contains('msisensorpro')) {
-        MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta.map { meta, fasta -> [fasta] }, msisensorpro_scan)
+        MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta.map { _meta, fasta_ -> [fasta_] }, msisensorpro_scan)
 
         versions = versions.mix(MSISENSORPRO_MSISOMATIC.out.versions)
         out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSISOMATIC.out.output_report)
@@ -257,8 +241,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     // MuSE
     if (tools.split(',').contains('muse')) {
         BAM_VARIANT_CALLING_SOMATIC_MUSE(
-            ch_normal,
-            ch_tumor,
+            bam_normal,
+            bam_tumor,
             fasta,
             dbsnp,
             dbsnp_tbi,
@@ -270,6 +254,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // MUTECT2
     if (tools.split(',').contains('mutect2')) {
+        // joint_mutect2 mode needs different meta.map than regular mode
+        //   we need to keep all fields and then remove on a per-tool-basis to ensure proper joining at the filtering step
         BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
             cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
                 joint_mutect2
@@ -315,8 +301,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     // TIDDIT
     if (tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SOMATIC_TIDDIT(
-            cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [meta, normal_cram, normal_crai] },
-            cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] },
+            cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] },
+            cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] },
             fasta,
             bwa,
         )

@@ -116,10 +116,6 @@
 
 - [P7Zip](http://p7zip.sourceforge.net/)
 
-- [Samblaster](https://academic.oup.com/bioinformatics/article/30/17/2503/2748175)
-
-  > Gregory G. Faust, Ira M. Hall, SAMBLASTER: fast duplicate marking and structural variant read extraction, Bioinformatics, Volume 30, Issue 17, 1 September 2014, Pages 2503–2505. doi: 10.1093/bioinformatics/btu314. PubMed PMID: 24812344. PubMed Central PMCID: PMC4147885.
-
 - [SAMtools](https://pubmed.ncbi.nlm.nih.gov/19505943/)
 
   > Li H, Handsaker B, Wysoker A, Fennell T, Ruan J, Homer N, Marth G, Abecasis G, Durbin R; 1000 Genome Project Data Processing Subgroup. The Sequence Alignment/Map format and SAMtools. Bioinformatics. 2009 Aug 15;25(16):2078-9. doi: 10.1093/bioinformatics/btp352. Epub 2009 Jun 8. PubMed PMID: 19505943; PubMed Central PMCID: PMC2723002.

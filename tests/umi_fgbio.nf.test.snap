@@ -1,7 +1,7 @@
 {
     "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null": {
         "content": [
-            30,
+            29,
             {
                 "BAM2FASTQ": {
                     "samtools": 1.21
@@ -55,10 +55,6 @@
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
-                },
-                "SAMBLASTER": {
-                    "samblaster": "0.1.26",
-                    "samtools": "1.19.2"
                 },
                 "SAMTOOLS_MERGE_UNMAP": {
                     "samtools": 1.21
@@ -223,7 +219,7 @@
                 "preprocessing/recalibrated/test/test.recal.cram.crai",
                 "preprocessing/umi",
                 "preprocessing/umi/test",
-                "preprocessing/umi/test/test-test_L1_umi-consensus.bam",
+                "preprocessing/umi/test/test_umi-consensus.bam",
                 "reference",
                 "reports",
                 "reports/fastqc",
@@ -252,7 +248,7 @@
                 "reports/samtools/test/test.md.cram.stats",
                 "reports/samtools/test/test.recal.cram.stats",
                 "reports/umi",
-                "reports/umi/test-test_L1_umi-grouped_histogram.txt"
+                "reports/umi/test_umi-grouped_histogram.txt"
             ],
             [
                 "fastqc-status-check-heatmap.txt:md5,92fcedba625d8394492d1ef6e2eb64f0",
@@ -286,10 +282,10 @@
                 "test.recal.mosdepth.summary.txt:md5,9bbea5e4d213a51f501c2aadff8d4526",
                 "test.recal.regions.bed.gz:md5,e24c18ad56e54376c41fdaacec372f9e",
                 "test.recal.regions.bed.gz.csi:md5,d0713716f63ac573f4a3385733e9a537",
-                "test-test_L1_umi-grouped_histogram.txt:md5,85292e9acb83edf17110dce17be27f44"
+                "test_umi-grouped_histogram.txt:md5,85292e9acb83edf17110dce17be27f44"
             ],
             [
-                "test-test_L1_umi-consensus.bam:md5,18d420720f72366289d3a324f4552522"
+                "test_umi-consensus.bam:md5,18d420720f72366289d3a324f4552522"
             ],
             [
                 "test.md.cram:md5,2d0c176fed158d84a061b69e1947994c",
@@ -299,8 +295,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-06-16T10:56:22.096321902"
+        "timestamp": "2025-08-28T09:52:02.920639673"
     }
 }
