@@ -79,7 +79,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         // Combine BAM and BAI and join by meta
         bam_normal = CRAM_TO_BAM_NORMAL.out.bam.join(CRAM_TO_BAM_NORMAL.out.bai, by: [0])
-        bam_tumor = CRAM_TO_BAM_TUMOR.out.bam.join(CRAM_TO_BAM_TUMOR.out.bai, by: [0])
+        bam_tumor  = CRAM_TO_BAM_TUMOR.out.bam.join(CRAM_TO_BAM_TUMOR.out.bai, by: [0])
 
         // Versions
         versions = versions.mix(CRAM_TO_BAM_NORMAL.out.versions)
