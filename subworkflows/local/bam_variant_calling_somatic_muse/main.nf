@@ -17,14 +17,11 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
 
     main:
     versions = Channel.empty()
-    ch_dbsnp = dbsnp.map { it -> [[id: it.name], it] }
-    ch_dbsnp_tbi = dbsnp_tbi.map { it -> [[id: it.baseName], it] }
-    ch_dbsnp_with_tbi = ch_dbsnp.join(ch_dbsnp_tbi, by: [0]).collect()
-    // Join by meta.id
+
+    def ch_dbsnp_with_tbi = dbsnp.combine(dbsnp_tbi).map { vcf, tbi -> [[id: 'dbsnp'], vcf, tbi] }.collect()
 
     // Combine normal and tumor data
     ch_bam = bam_tumor.join(bam_normal, by: [0])
-    // Join by meta
 
     MUSE_CALL(
         ch_bam,
