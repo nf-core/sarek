@@ -22,6 +22,7 @@ include { TABIX_TABIX as TABIX_KNOWN_INDELS         } from '../../../modules/nf-
 include { TABIX_TABIX as TABIX_KNOWN_SNPS           } from '../../../modules/nf-core/tabix/tabix'
 include { TABIX_TABIX as TABIX_PON                  } from '../../../modules/nf-core/tabix/tabix'
 include { UNTAR as UNTAR_CHR_DIR                    } from '../../../modules/nf-core/untar'
+include { UNTAR as UNTAR_MSISENSOR2_MODELS          } from '../../../modules/nf-core/untar'
 include { UNZIP as UNZIP_ALLELES                    } from '../../../modules/nf-core/unzip'
 include { UNZIP as UNZIP_GC                         } from '../../../modules/nf-core/unzip'
 include { UNZIP as UNZIP_LOCI                       } from '../../../modules/nf-core/unzip'
@@ -40,7 +41,11 @@ workflow PREPARE_GENOME {
     germline_resource    // channel: [optional]  germline_resource
     known_indels         // channel: [optional]  known_indels
     known_snps           // channel: [optional]  known_snps
+    msisensor2_models    // channel: [optional]  msisensor2_models
+    msisensor2_scan      // channel: [optional]  msisensor2_scan
+    msisensorpro_scan    // channel: [optional]  msisensorpro_scan
     pon                  // channel: [optional]  pon
+    tools
 
     main:
     versions = Channel.empty()
@@ -53,8 +58,6 @@ workflow PREPARE_GENOME {
     DRAGMAP_HASHTABLE(fasta)
 
     GATK4_CREATESEQUENCEDICTIONARY(fasta)
-    MSISENSORPRO_SCAN(fasta)
-    MSISENSOR2_SCAN(fasta)
     SAMTOOLS_FAIDX(fasta, [[id: 'no_fai'], []], false)
 
     // the following are flattened and mapped in case the user supplies more than one value for the param
@@ -129,13 +132,50 @@ workflow PREPARE_GENOME {
         chr_files = Channel.fromPath(chr_dir).collect()
     }
 
+    // msisensor2 models
+    if (!msisensor2_models) {
+        msisensor2_models_folder = Channel.value([])
+    }
+    else if (msisensor2_models.endsWith(".tar.gz")) {
+        UNTAR_MSISENSOR2_MODELS(Channel.fromPath(file(msisensor2_models)).collect().map { it -> [[id: it[0].simpleName], it] })
+        msisensor2_models_folder = UNTAR_MSISENSOR2_MODELS.out.untar.map { it[1] }
+        versions = versions.mix(UNTAR_MSISENSOR2_MODELS.out.versions)
+    }
+    else {
+        msisensor2_models_folder = Channel.fromPath(msisensor2_models).collect()
+    }
+
+    if (msisensor2_scan) {
+        msisensor2_scan_file = Channel.fromPath(msisensor2_scan)
+    }
+    else if (tools.split(',').contains('msisensor2')) {
+        MSISENSOR2_SCAN(fasta)
+        msisensor2_scan_file = MSISENSOR2_SCAN.out.scan.map { _meta, list -> [list] }
+
+        versions = versions.mix(MSISENSOR2_SCAN.out.versions)
+    }
+    else {
+        msisensor2_scan_file = Channel.value([])
+    }
+
+    if (msisensorpro_scan) {
+        msisensorpro_scan_file = Channel.fromPath(msisensorpro_scan)
+    }
+    else if (tools.split(',').contains('msisensorpro')) {
+        MSISENSORPRO_SCAN(fasta)
+        msisensorpro_scan_file = MSISENSORPRO_SCAN.out.list.map { _meta, list -> [list] }
+
+        versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
+    }
+    else {
+        msisensorpro_scan_file = Channel.value([])
+    }
+
     // Gather versions of all tools used
     versions = versions.mix(BWAMEM1_INDEX.out.versions)
     versions = versions.mix(BWAMEM2_INDEX.out.versions)
     versions = versions.mix(DRAGMAP_HASHTABLE.out.versions)
     versions = versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
-    versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
-    versions = versions.mix(MSISENSOR2_SCAN.out.versions)
     versions = versions.mix(SAMTOOLS_FAIDX.out.versions)
     versions = versions.mix(TABIX_BCFTOOLS_ANNOTATIONS.out.versions)
     versions = versions.mix(TABIX_DBSNP.out.versions)
@@ -155,8 +195,9 @@ workflow PREPARE_GENOME {
     germline_resource_tbi    = TABIX_GERMLINE_RESOURCE.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: germline_resource.vcf.gz.tbi
     known_snps_tbi           = TABIX_KNOWN_SNPS.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: {known_indels*}.vcf.gz.tbi
     known_indels_tbi         = TABIX_KNOWN_INDELS.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: {known_indels*}.vcf.gz.tbi
-    msisensor2_scan          = MSISENSOR2_SCAN.out.scan.map { meta, list -> [list] } // path: genome_msi.list
-    msisensorpro_scan        = MSISENSORPRO_SCAN.out.list.map { meta, list -> [list] } // path: genome_msi.list
+    msisensor2_models        = msisensor2_models_folder
+    msisensor2_scan          = msisensor2_scan_file // path: genome_msi.list
+    msisensorpro_scan        = msisensorpro_scan_file // path: genome_msi.list
     pon_tbi                  = TABIX_PON.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: pon.vcf.gz.tbi
     allele_files             // path: allele_files
     chr_files                // path: chr_files

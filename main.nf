@@ -51,6 +51,9 @@ params.known_snps              = getGenomeAttribute('known_snps')
 params.known_snps_tbi          = getGenomeAttribute('known_snps_tbi')
 params.known_snps_vqsr         = getGenomeAttribute('known_snps_vqsr')
 params.mappability             = getGenomeAttribute('mappability')
+params.msisensor2_models       = getGenomeAttribute('msisensor2_models')
+params.msisensor2_scan         = getGenomeAttribute('msisensor2_scan')
+params.msisensorpro_scan       = getGenomeAttribute('msisensorpro_scan')
 params.ngscheckmate_bed        = getGenomeAttribute('ngscheckmate_bed')
 params.pon                     = getGenomeAttribute('pon')
 params.pon_tbi                 = getGenomeAttribute('pon_tbi')
@@ -143,7 +146,11 @@ workflow NFCORE_SAREK {
         germline_resource,
         known_indels,
         known_snps,
-        pon)
+        params.msisensor2_models,
+        params.msisensor2_scan,
+        params.msisensorpro_scan,
+        pon,
+        params.tools?:"no_tools")
 
     // Gather built indices or get them from the params
     // Built from the fasta file:
@@ -163,11 +170,6 @@ workflow NFCORE_SAREK {
     index_alignment = (aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks") ? bwa :
         aligner == "bwa-mem2" ? bwamem2 :
         dragmap
-
-    // TODO: add a params for msisensor2
-    // TODO: add a params for msisensorpro_scan
-    msisensor2_scan        = PREPARE_GENOME.out.msisensor2_scan
-    msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
 
     // For ASCAT, extracted from zip or tar.gz files
     allele_files           = PREPARE_GENOME.out.allele_files
@@ -295,8 +297,9 @@ workflow NFCORE_SAREK {
         known_snps_vqsr,
         loci_files,
         mappability,
-        msisensor2_scan,
-        msisensorpro_scan,
+        PREPARE_GENOME.out.msisensor2_models,
+        PREPARE_GENOME.out.msisensor2_scan,
+        PREPARE_GENOME.out.msisensorpro_scan,
         ngscheckmate_bed,
         pon,
         pon_tbi,
