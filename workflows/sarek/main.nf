@@ -286,7 +286,7 @@ workflow SAREK {
         //
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
         //
-        cram_variant_calling_status = cram_variant_calling_status_tmp.cram.branch { meta, file, index ->
+        cram_variant_calling_status = cram_variant_calling.branch { meta, file, index ->
             normal: meta.status == 0
             tumor: meta.status == 1
         }
