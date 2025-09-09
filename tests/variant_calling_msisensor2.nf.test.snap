@@ -35,8 +35,8 @@
                 "reference/dict/genome.dict",
                 "reference/intervals",
                 "reference/intervals/no_intervals.bed.gz",
-                "reference/msi",
-                "reference/msi/genome.scan"
+                "reference/msisensor2",
+                "reference/msisensor2/genome.scan"
             ],
             [
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
@@ -52,7 +52,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-08T11:53:53.537324093"
+        "timestamp": "2025-09-09T11:24:56.533867052"
     },
     "-profile test --tools msisensor2 somatic": {
         "content": [
@@ -141,7 +141,7 @@
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
                 "reference/dict",
-                "reference/msi",
+                "reference/msisensor2",
                 "reports",
                 "reports/mosdepth",
                 "reports/mosdepth/sample3",
@@ -213,7 +213,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-09T09:49:53.449702911"
+        "timestamp": "2025-09-09T11:23:54.240223067"
     },
     "-profile test --tools msisensor2 --build_only_index --input false -stub": {
         "content": [
@@ -245,15 +245,15 @@
                 "reference/dict/genome.dict",
                 "reference/intervals",
                 "reference/intervals/no_intervals.bed.gz",
-                "reference/msi",
-                "reference/msi/genome.scan"
+                "reference/msisensor2",
+                "reference/msisensor2/genome.scan"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-09T08:53:35.224128377"
+        "timestamp": "2025-09-09T11:25:51.187229916"
     },
     "-profile test --tools msisensor2 tumor_only": {
         "content": [
@@ -330,7 +330,7 @@
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
                 "reference/dict",
-                "reference/msi",
+                "reference/msisensor2",
                 "reports",
                 "reports/mosdepth",
                 "reports/mosdepth/test-1",
@@ -375,6 +375,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-09T10:04:52.734768926"
+        "timestamp": "2025-09-09T11:22:21.727066284"
     }
 }
