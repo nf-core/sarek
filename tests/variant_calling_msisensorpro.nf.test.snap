@@ -29,8 +29,8 @@
                 "reference/dict/genome.dict",
                 "reference/intervals",
                 "reference/intervals/no_intervals.bed.gz",
-                "reference/msi",
-                "reference/msi/genome.msisensor_scan.list"
+                "reference/msisensorpro",
+                "reference/msisensorpro/genome.msisensor_scan.list"
             ]
         ],
         "meta": {
@@ -115,7 +115,7 @@
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
                 "reference/dict",
-                "reference/msi",
+                "reference/msisensorpro",
                 "reports",
                 "reports/mosdepth",
                 "reports/mosdepth/sample3",
@@ -219,8 +219,8 @@
                 "reference/dict/genome.dict",
                 "reference/intervals",
                 "reference/intervals/no_intervals.bed.gz",
-                "reference/msi",
-                "reference/msi/genome.msisensor_scan.list"
+                "reference/msisensorpro",
+                "reference/msisensorpro/genome.msisensor_scan.list"
             ],
             [
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
