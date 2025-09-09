@@ -17,12 +17,11 @@ include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_c
 include { BAM_VARIANT_CALLING_SOMATIC_TNSCOPE           } from '../bam_variant_calling_somatic_tnscope'
 include { MSISENSOR2_MSI                                } from '../../../modules/nf-core/msisensor2/msi'
 include { MSISENSORPRO_MSISOMATIC                       } from '../../../modules/nf-core/msisensorpro/msisomatic'
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM_NORMAL        } from '../../../modules/nf-core/samtools/convert'
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM_TUMOR         } from '../../../modules/nf-core/samtools/convert'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     take:
     tools                         // Mandatory, list of tools to apply
+    bam                           // channel: [mandatory] bam
     cram                          // channel: [mandatory] cram
     bwa                           // channel: [optional] bwa
     cf_chrom_len                  // channel: [optional] controlfreec length file
@@ -67,28 +66,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_strelka      = Channel.empty()
     vcf_tiddit       = Channel.empty()
     vcf_tnscope      = Channel.empty()
-
-    bam = Channel.empty()
-
-    // CRAM_TO_BAM
-    //   This is a conversion from CRAM to BAM, which is necessary for some modules
-    //   TODO: this could be done upstream in the workflows/sarek/main.nf
-    if (tools.split(',').contains('msisensor2') || tools.split(',').contains('muse')) {
-        cram_normal = cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] }
-        cram_tumor = cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
-
-        CRAM_TO_BAM_NORMAL(cram_normal, fasta, fasta_fai)
-        CRAM_TO_BAM_TUMOR(cram_tumor, fasta, fasta_fai)
-
-        // Combine BAM and BAI and join by meta
-        bam_normal = CRAM_TO_BAM_NORMAL.out.bam.join(CRAM_TO_BAM_NORMAL.out.bai, by: [0])
-        bam_tumor = CRAM_TO_BAM_TUMOR.out.bam.join(CRAM_TO_BAM_TUMOR.out.bai, by: [0])
-        bam = bam_normal.join(bam_tumor, by: [0])
-
-        // Versions
-        versions = versions.mix(CRAM_TO_BAM_NORMAL.out.versions)
-        versions = versions.mix(CRAM_TO_BAM_TUMOR.out.versions)
-    }
 
     if (tools.split(',').contains('ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
@@ -240,8 +217,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     // MuSE
     if (tools.split(',').contains('muse')) {
         BAM_VARIANT_CALLING_SOMATIC_MUSE(
-            bam_normal,
-            bam_tumor,
+            bam.map { meta, normal_bam, normal_bai, _tumor_bam, _tumor_bai -> [meta, normal_bam, normal_bai] },
+            bam.map { meta, _normal_bam, _normal_bai, tumor_bam, tumor_bai -> [meta, tumor_bam, tumor_bai] },
             fasta,
             dbsnp,
             dbsnp_tbi,

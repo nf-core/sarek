@@ -17,6 +17,7 @@ include { MSISENSOR2_MSI                              } from '../../../modules/n
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
     tools                         // Mandatory, list of tools to apply
+    bam                           // channel: [mandatory] bam
     cram                          // channel: [mandatory] cram
     bwa                           // channel: [optional] bwa
     cf_chrom_len                  // channel: [optional] controlfreec length file
@@ -117,7 +118,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         def msisensor2_scan = []
 
         // no intervals either as it seems to crash when we use it
-        MSISENSOR2_MSI(cram.map { meta, cram, crai -> [meta, cram, crai, [], [], []] }, msisensor2_scan, msisensor2_models)
+        MSISENSOR2_MSI(bam.map { meta, bam, bai -> [meta, bam, bai, [], [], []] }, msisensor2_scan, msisensor2_models)
 
         versions = versions.mix(MSISENSOR2_MSI.out.versions)
         out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.distribution)
