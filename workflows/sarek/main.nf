@@ -266,6 +266,8 @@ workflow SAREK {
             cram: file.toString().endsWith('.cram')
         }
 
+        bam_variant_calling_status_tmp = Channel.empty()
+
         if (params.tools.split(',').contains('msisensor2') || params.tools.split(',').contains('muse')) {
             CRAM_TO_BAM(cram_variant_calling_status_tmp.cram, fasta, fasta_fai)
 
