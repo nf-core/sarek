@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1937](https://github.com/nf-core/sarek/pull/1937) - Add support for UMIs in read headers via `--umi_in_read_header`
 - [1937](https://github.com/nf-core/sarek/pull/1937) - Add consensus read generation when using sentieon dedup via `--sentieon_consensus`
 - [1937](https://github.com/nf-core/sarek/pull/1937) - Use fgbio plugin to check read structure parameter is valid
+- [1965](https://github.com/nf-core/sarek/pull/1965) - Add msisensor2
+- [1965](https://github.com/nf-core/sarek/pull/1965) - Add params for msisensor2 models and scan and msisensorpro scan
 
 ### Changed
 
@@ -63,6 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `fgbio`                                | 2.2.1       | 2.4.0       |
 | `freebayes`                            | 1.3.6.      | 1.3.10      |
 | `gatk4`                                | 4.5.0.0     | 4.6.1.0     |
+| `msisensor2`                           |             | 0.1         |
 | `mosdepth`                             | 0.3.8       | 0.3.10      |
 | `MuSE`                                 |             | 2.1.2       |
 | `MultiQC`                              | 1.25.1      | 1.30        |
@@ -133,6 +136,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1936](https://github.com/nf-core/sarek/pull/1936) - Template update for nf-core/tools v3.3.2
 - [1953](https://github.com/nf-core/sarek/pull/1953) - Change freebayes tests from gzip to md5sum
 - [1954](https://github.com/nf-core/sarek/pull/1954) - Refactor bcftools annotation subworkflows so that no diff is necessary from nf-core/modules
+- [1965](https://github.com/nf-core/sarek/pull/1965) - Refactor cram to bam conversion which is now is done even more upstream (following [1967](https://github.com/nf-core/sarek/pull/1967))
 - [1967](https://github.com/nf-core/sarek/pull/1967) - Refactor muse subworkflows so that cram to bam conversion is done upstream
 
 #### Fixed
