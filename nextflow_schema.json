@@ -186,23 +186,65 @@
                     "fa_icon": "fas fa-save",
                     "description": "Save trimmed FastQ file intermediates."
                 },
+                "save_split_fastqs": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-vial",
+                    "description": "If set, publishes split FASTQ files. Intended for testing purposes."
+                }
+            }
+        },
+        "umi_processing": {
+            "title": "Unique Molecular Identifiers",
+            "type": "object",
+            "description": "Parameters related to the handling of Unique Molecular Identifiers (UMIs)",
+            "fa_icon": "fas fa-cut",
+            "properties": {
                 "umi_read_structure": {
                     "type": "string",
                     "fa_icon": "fas fa-tape",
-                    "description": "Specify UMI read structure",
+                    "description": "Specify UMI read structure for fgbio UMI consensus read generation",
                     "help_text": "One structure if UMI is present on one end (i.e. '+T 2M11S+T'), or two structures separated by a blank space if UMIs a present on both ends (i.e. '2M11S+T 2M11S+T'); please note, this does not handle duplex-UMIs.\n\nFor more info on UMI usage in the pipeline, also check docs [here](./docs/usage/#how-to-handle-umis)."
                 },
                 "group_by_umi_strategy": {
                     "type": "string",
                     "default": "Adjacency",
                     "fa_icon": "fas fa-tape",
-                    "description": "Default strategy with UMI",
+                    "description": "Default strategy for fgbio UMI-based consensus read generation ",
                     "enum": ["Identity", "Edit", "Adjacency", "Paired"]
                 },
-                "save_split_fastqs": {
+                "umi_in_read_header": {
                     "type": "boolean",
-                    "fa_icon": "fas fa-vial",
-                    "description": "If set, publishes split FASTQ files. Intended for testing purposes."
+                    "fa_icon": "fas fa-tape",
+                    "description": "Move UMIs from fastq read headers to a tag prior to deduplication.",
+                    "help_text": "Set to true if UMIs are already present in the header of the read, for instance from using OverrideCycles in bclconvert or umi_tools/extract."
+                },
+                "umi_location": {
+                    "type": "string",
+                    "default": null,
+                    "fa_icon": "fas fa-tape",
+                    "description": "Location of the UMI(s) to be extracted with fastp.",
+                    "help_text": "Use if UMIs are not present in the read header, but in a specific location within the reads/fastq header index. This will be used to extract UMIs from reads or index in the fastq header and store them in the RX tag.",
+                    "enum": ["read1", "read2", "per_read", "index1", "index2", "per_index"]
+                },
+                "umi_length": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "fa_icon": "fas fa-tape",
+                    "description": "Length of the UMI(s) in the read.",
+                    "help_text": "If UMIs are being extracted using fastp, specify the length of the UMI here. This will be used to extract UMIs from reads and store them in the RX tag."
+                },
+                "umi_base_skip": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "fa_icon": "fas fa-tape",
+                    "description": "Number of bases to skip after the UMI(s) in the read when extracting with fastp.",
+                    "help_text": "If UMIs are being extracted using fastp, specify the number of bases to skip after the UMI here. This will trim some bases after the UMI."
+                },
+                "umi_tag": {
+                    "type": "string",
+                    "fa_icon": "fas fa-tape",
+                    "description": "Tag detailing where UMIs are present inside the bam/cram file (e.g. RX).",
+                    "help_text": "If UMIs are already present in the cram/bam file, this details the tag which will be used in GATK MarkDuplicates and Sentieon dedup. This should be set to RX if restarting from bam files where the UMIs have been extracted by the umi_in_read_header or umi_length options. Note this is not compatible with MarkDuplicates Spark."
                 }
             }
         },
@@ -242,6 +284,12 @@
                 "markduplicates_pixel_distance": {
                     "type": "integer",
                     "help_text": "Pixel distance for GATK MarkDuplicates."
+                },
+                "sentieon_consensus": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-tape",
+                    "description": "Generate consensus reads with Sentieon dedup rather than choosing one best read.",
+                    "help_text": "If set, the Sentieon dedup output will combine duplicate reads into single consensus read. This is only relevant if `--tools` contains `sentieon_dedup`."
                 }
             }
         },
@@ -1109,6 +1157,9 @@
         },
         {
             "$ref": "#/$defs/fastq_preprocessing"
+        },
+        {
+            "$ref": "#/$defs/umi_processing"
         },
         {
             "$ref": "#/$defs/preprocessing"
