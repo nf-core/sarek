@@ -1,7 +1,7 @@
 {
     "-profile test --tools msisensor2 --build_only_index --input false": {
         "content": [
-            4,
+            5,
             {
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
@@ -11,6 +11,9 @@
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
+                },
+                "UNTAR_MSISENSOR2_MODELS": {
+                    "untar": 1.34
                 }
             },
             [
@@ -36,13 +39,50 @@
                 "reference/intervals",
                 "reference/intervals/no_intervals.bed.gz",
                 "reference/msisensor2",
-                "reference/msisensor2/genome.scan"
+                "reference/msisensor2/genome.scan",
+                "reference/msisensor2/models",
+                "reference/msisensor2/models/016a16e12aca2bdba3713a3be76f72cd",
+                "reference/msisensor2/models/02d42c2bda19aac304d6e86390c7f328",
+                "reference/msisensor2/models/1030c0aa35ca5c263daeae866ad18632",
+                "reference/msisensor2/models/15c3f5ec1c020d8f44283e40a2d9b6bb",
+                "reference/msisensor2/models/15d6012f9a234b7adbbeecec524aea7d",
+                "reference/msisensor2/models/2cf9a58f57e78b88acd86d792fe6a7b3",
+                "reference/msisensor2/models/3ba04410c7ccbfc33e8b1b11d8132ae9",
+                "reference/msisensor2/models/4431c9dc08be932c460a9e67192e7c57",
+                "reference/msisensor2/models/4f5fa7bed97b48093375222d242fc982",
+                "reference/msisensor2/models/657a38415ac5a5d36609d9c180170b7a",
+                "reference/msisensor2/models/71e6c0d59ea09d2a7acc566560841e34",
+                "reference/msisensor2/models/8144b15900bba7086e86b31a0e1f8cfd",
+                "reference/msisensor2/models/9bf6f7a544f369c3262a3a6f72cfdd7b",
+                "reference/msisensor2/models/b8a36f2274b33cb0ed932e85cd1ddd5a",
+                "reference/msisensor2/models/c08f164ded323a8c2606c408c555d73d",
+                "reference/msisensor2/models/ceaa36ddbb76dc6eb6199ed946945788",
+                "reference/msisensor2/models/e05d5da7208a924762311eddc4ec96c0",
+                "reference/msisensor2/models/f8a20acf51ccb2b0ce6af42f24a8b5ef"
             ],
             [
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "genome.dict:md5,de4ff13287d28c1679a11ae989a3a980",
                 "no_intervals.bed.gz:md5,f3dac01ea66b95fe477446fde2d31489",
-                "genome.scan:md5,b942593774e50c35946f8e98836d0c3b"
+                "genome.scan:md5,b942593774e50c35946f8e98836d0c3b",
+                "016a16e12aca2bdba3713a3be76f72cd:md5,26ddcb7b64f43835f254a13b29adf3fc",
+                "02d42c2bda19aac304d6e86390c7f328:md5,15ab43fe84b8b7169979d62e267e2b5f",
+                "1030c0aa35ca5c263daeae866ad18632:md5,41e6de8e7e35f66b691072d9839e128a",
+                "15c3f5ec1c020d8f44283e40a2d9b6bb:md5,7fe77d6cd3e0714d5b4390e37df7e7b9",
+                "15d6012f9a234b7adbbeecec524aea7d:md5,9b11cce514fc209f54501e042a7aad8e",
+                "2cf9a58f57e78b88acd86d792fe6a7b3:md5,9d894caf8575df7a218d37f249e5d09f",
+                "3ba04410c7ccbfc33e8b1b11d8132ae9:md5,71083a4e40f7b9e3e1ceaad6f58755f7",
+                "4431c9dc08be932c460a9e67192e7c57:md5,f32023840c68cb430c79f4df7db8d36e",
+                "4f5fa7bed97b48093375222d242fc982:md5,412fbe16dfdd680e5edb2d06c2aee0b6",
+                "657a38415ac5a5d36609d9c180170b7a:md5,3aa2c66007f669e888e061649e92f0a0",
+                "71e6c0d59ea09d2a7acc566560841e34:md5,994c5dfd8179ba3a230f84d6938eda8e",
+                "8144b15900bba7086e86b31a0e1f8cfd:md5,cee5db3ea768ca6311048b9e2aa30ba9",
+                "9bf6f7a544f369c3262a3a6f72cfdd7b:md5,0dee4e2124f75a2848f0864aa59647a2",
+                "b8a36f2274b33cb0ed932e85cd1ddd5a:md5,92f84a4b951c4763bde72bf4f4ea875c",
+                "c08f164ded323a8c2606c408c555d73d:md5,a9f42a43cb03a9ff37c238f13a75b614",
+                "ceaa36ddbb76dc6eb6199ed946945788:md5,b4c563c94f59d7cb2c5c26d04d441a01",
+                "e05d5da7208a924762311eddc4ec96c0:md5,0dd92cb27616630b4882bd71e4a85d9e",
+                "f8a20acf51ccb2b0ce6af42f24a8b5ef:md5,2b3ede1d6fc4bc83ab2052f3eaa2618c"
             ],
             "No BAM files",
             "No CRAM files",
@@ -52,7 +92,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-09T11:24:56.533867052"
+        "timestamp": "2025-09-09T12:10:31.923115151"
     },
     "-profile test --tools msisensor2 somatic": {
         "content": [
@@ -217,7 +257,7 @@
     },
     "-profile test --tools msisensor2 --build_only_index --input false -stub": {
         "content": [
-            4,
+            5,
             {
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
@@ -227,6 +267,9 @@
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
+                },
+                "UNTAR_MSISENSOR2_MODELS": {
+                    "untar": 1.34
                 }
             },
             [
@@ -246,14 +289,33 @@
                 "reference/intervals",
                 "reference/intervals/no_intervals.bed.gz",
                 "reference/msisensor2",
-                "reference/msisensor2/genome.scan"
+                "reference/msisensor2/genome.scan",
+                "reference/msisensor2/models",
+                "reference/msisensor2/models/016a16e12aca2bdba3713a3be76f72cd",
+                "reference/msisensor2/models/02d42c2bda19aac304d6e86390c7f328",
+                "reference/msisensor2/models/1030c0aa35ca5c263daeae866ad18632",
+                "reference/msisensor2/models/15c3f5ec1c020d8f44283e40a2d9b6bb",
+                "reference/msisensor2/models/15d6012f9a234b7adbbeecec524aea7d",
+                "reference/msisensor2/models/2cf9a58f57e78b88acd86d792fe6a7b3",
+                "reference/msisensor2/models/3ba04410c7ccbfc33e8b1b11d8132ae9",
+                "reference/msisensor2/models/4431c9dc08be932c460a9e67192e7c57",
+                "reference/msisensor2/models/4f5fa7bed97b48093375222d242fc982",
+                "reference/msisensor2/models/657a38415ac5a5d36609d9c180170b7a",
+                "reference/msisensor2/models/71e6c0d59ea09d2a7acc566560841e34",
+                "reference/msisensor2/models/8144b15900bba7086e86b31a0e1f8cfd",
+                "reference/msisensor2/models/9bf6f7a544f369c3262a3a6f72cfdd7b",
+                "reference/msisensor2/models/b8a36f2274b33cb0ed932e85cd1ddd5a",
+                "reference/msisensor2/models/c08f164ded323a8c2606c408c555d73d",
+                "reference/msisensor2/models/ceaa36ddbb76dc6eb6199ed946945788",
+                "reference/msisensor2/models/e05d5da7208a924762311eddc4ec96c0",
+                "reference/msisensor2/models/f8a20acf51ccb2b0ce6af42f24a8b5ef"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-09T11:25:51.187229916"
+        "timestamp": "2025-09-09T12:11:22.808965974"
     },
     "-profile test --tools msisensor2 tumor_only": {
         "content": [
