@@ -261,26 +261,26 @@ workflow SAREK {
 
     if (params.tools) {
 
-        cram_variant_calling_status_tmp = cram_variant_calling.branch { meta, file, index ->
-            bam: file.toString().endsWith('.bam')
-            cram: file.toString().endsWith('.cram')
-        }
-
-        bam_variant_calling_status_tmp = Channel.empty()
+        bam_variant_calling_status = Channel.empty()
 
         if (params.tools.split(',').contains('msisensor2') || params.tools.split(',').contains('muse')) {
+
+            cram_variant_calling_status_tmp = cram_variant_calling.branch { meta, file, index ->
+                bam: file.toString().endsWith('.bam')
+                cram: file.toString().endsWith('.cram')
+            }
+
+
             CRAM_TO_BAM(cram_variant_calling_status_tmp.cram, fasta, fasta_fai)
 
-            bam_variant_calling_status_tmp = CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, by: [0])
+            bam_variant_calling_status = CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, by: [0]).map{ meta, bam, bai ->
+                [ meta + [data_type:'bam'], bam, bai]
+            }.branch { meta, file, index ->
+                normal: meta.status == 0
+                tumor: meta.status == 1
+            }
 
             versions = versions.mix(CRAM_TO_BAM.out.versions)
-        }
-
-        bam_variant_calling_status = bam_variant_calling_status_tmp.mix(cram_variant_calling_status_tmp.bam).map{ meta, bam, bai ->
-            [ meta + [data_type:'bam'], bam, bai]
-        }.branch { meta, file, index ->
-            normal: meta.status == 0
-            tumor: meta.status == 1
         }
 
         //
