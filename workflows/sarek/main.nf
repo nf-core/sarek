@@ -261,19 +261,22 @@ workflow SAREK {
 
     if (params.tools) {
 
-        bam_variant_calling_status_tmp = Channel.empty()
+        bam_variant_calling = Channel.empty()
 
+        //  For msisensor2 and muse we need to use bam input and not cram
         if (params.tools.split(',').contains('msisensor2') || params.tools.split(',').contains('muse')) {
 
+            // Differentiate between bam and cram files
             cram_variant_calling_status_tmp = cram_variant_calling.branch { meta, file, index ->
                 bam: file.toString().endsWith('.bam')
                 cram: file.toString().endsWith('.cram')
             }
 
-
+            // convert cram files
             CRAM_TO_BAM(cram_variant_calling_status_tmp.cram, fasta, fasta_fai)
 
-            bam_variant_calling_status_tmp = CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, by: [0])
+            // gather all bam files
+            bam_variant_calling = CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, by: [0])
                 .mix(cram_variant_calling_status_tmp.bam)
                 .map{ meta, bam, bai ->
                     [ meta + [data_type:'bam'], bam, bai]
@@ -282,15 +285,14 @@ workflow SAREK {
             versions = versions.mix(CRAM_TO_BAM.out.versions)
         }
 
-        bam_variant_calling_status = Channel.empty().mix(bam_variant_calling_status_tmp).branch { meta, file, index ->
+        // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
+        cram_variant_calling_status = cram_variant_calling.branch { meta, file, index ->
             normal: meta.status == 0
             tumor: meta.status == 1
         }
 
-        //
-        // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
-        //
-        cram_variant_calling_status = cram_variant_calling.branch { meta, file, index ->
+        // Follow the same logic with bam as we have with cram
+        bam_variant_calling_status = bam_variant_calling.branch { meta, file, index ->
             normal: meta.status == 0
             tumor: meta.status == 1
         }
