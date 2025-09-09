@@ -53,39 +53,41 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     main:
     // Channels are often remapped to match module/subworkflow
 
+    // Gather all versions
     versions = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
+    out_indexcov     = Channel.empty()
+    out_msisensor2   = Channel.empty()
+    out_msisensorpro = Channel.empty()
     vcf_freebayes    = Channel.empty()
     vcf_manta        = Channel.empty()
-    out_msisensorpro = Channel.empty()
     vcf_muse         = Channel.empty()
     vcf_mutect2      = Channel.empty()
     vcf_strelka      = Channel.empty()
-    vcf_tnscope      = Channel.empty()
     vcf_tiddit       = Channel.empty()
-    out_indexcov     = Channel.empty()
+    vcf_tnscope      = Channel.empty()
 
     bam_normal = Channel.empty()
-    bam_tumor  = Channel.empty()
-
+    bam_tumor = Channel.empty()
+    bam = Channel.empty()
 
     // CRAM_TO_BAM
     //   This is a conversion from CRAM to BAM, which is necessary for some modules
     //   TODO: this could be done upstream in the workflows/sarek/main.nf
     if (tools.split(',').contains('msisensor2') || tools.split(',').contains('muse')) {
         cram_normal = cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] }
-        cram_tumor  = cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
+        cram_tumor = cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
 
         CRAM_TO_BAM_NORMAL(cram_normal, fasta, fasta_fai)
         CRAM_TO_BAM_TUMOR(cram_tumor, fasta, fasta_fai)
 
         // Combine BAM and BAI and join by meta
         bam_normal = CRAM_TO_BAM_NORMAL.out.bam.join(CRAM_TO_BAM_NORMAL.out.bai, by: [0])
-        bam_tumor  = CRAM_TO_BAM_TUMOR.out.bam.join(CRAM_TO_BAM_TUMOR.out.bai, by: [0])
+        bam_tumor = CRAM_TO_BAM_TUMOR.out.bam.join(CRAM_TO_BAM_TUMOR.out.bai, by: [0])
+        bam = bam_normal.join(bam_tumor, by: [0])
 
         // Versions
-
         versions = versions.mix(CRAM_TO_BAM_NORMAL.out.versions)
         versions = versions.mix(CRAM_TO_BAM_TUMOR.out.versions)
     }
@@ -212,7 +214,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             intervals_bed_gz_tbi,
         )
 
-        vcf_strelka = Channel.empty().mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.vcf)
+        vcf_strelka = BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.versions)
     }
 
@@ -229,8 +231,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         // no need for models in tumor normal mode
         def models = []
 
-
-        MSISENSOR2_MSI(cram.combine(intervals_bed_combined), msisensor2_scan, models)
+        MSISENSOR2_MSI(bam.combine(intervals_bed_combined), msisensor2_scan, models)
 
         versions = versions.mix(MSISENSOR2_MSI.out.versions)
         out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.distribution)

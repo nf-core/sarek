@@ -56,8 +56,14 @@
     },
     "-profile test --tools msisensor2": {
         "content": [
-            10,
+            13,
             {
+                "CRAM_TO_BAM_NORMAL": {
+                    "samtools": 1.21
+                },
+                "CRAM_TO_BAM_TUMOR": {
+                    "samtools": 1.21
+                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.1.0"
                 },
@@ -66,6 +72,9 @@
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
+                },
+                "MSISENSOR2_MSI": {
+                    "msisensor2": 0.1
                 },
                 "MSISENSOR2_SCAN": {
                     "msisensor2": 0.1
@@ -81,6 +90,11 @@
                 }
             },
             [
+                "cram",
+                "cram/sample3.bam",
+                "cram/sample3.bam.bai",
+                "cram/sample4.bam",
+                "cram/sample4.bam.bai",
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
@@ -150,9 +164,20 @@
                 "reports/samtools/sample3",
                 "reports/samtools/sample3/sample3.recal.cram.stats",
                 "reports/samtools/sample4",
-                "reports/samtools/sample4/sample4.recal.cram.stats"
+                "reports/samtools/sample4/sample4.recal.cram.stats",
+                "variant_calling",
+                "variant_calling/msisensor2",
+                "variant_calling/msisensor2/sample4_vs_sample3",
+                "variant_calling/msisensor2/sample4_vs_sample3/sample4_vs_sample3",
+                "variant_calling/msisensor2/sample4_vs_sample3/sample4_vs_sample3_dis",
+                "variant_calling/msisensor2/sample4_vs_sample3/sample4_vs_sample3_germline",
+                "variant_calling/msisensor2/sample4_vs_sample3/sample4_vs_sample3_somatic"
             ],
             [
+                "sample3.bam:md5,8cfa7f35990240ab663a0776ae67ecdc",
+                "sample3.bam.bai:md5,c55142e20838c3b56d93ff853a7b7189",
+                "sample4.bam:md5,fe8ceee2ede1f9b0b4f2aaa3f1a97241",
+                "sample4.bam.bai:md5,c6d0e6be2e5d8a6bd312517d9ba0f4af",
                 "mosdepth-coverage-per-contig-single.txt:md5,4ee05f71086179b42a01cd2fb450346f",
                 "mosdepth-cumcoverage-dist-id.txt:md5,cb7468f51b8be1230fb3ac5b130be31f",
                 "mosdepth_perchrom.txt:md5,4ee05f71086179b42a01cd2fb450346f",
@@ -172,9 +197,15 @@
                 "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
                 "sample4.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
                 "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample4.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4"
+                "sample4.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
+                "sample4_vs_sample3:md5,f4593b018c562728d12b856341602368",
+                "sample4_vs_sample3_dis:md5,03e93efc2099d220e022a4c4d397266d",
+                "sample4_vs_sample3_germline:md5,0070f2373526057e02e65bbed851b572"
             ],
-            "No BAM files",
+            [
+                "sample3.bam:md5,891da60dc1cc5c6455bfc1442aea0982",
+                "sample4.bam:md5,36856b3e6dd1bc0f10688b9d8c02faa8"
+            ],
             "No CRAM files",
             "No VCF files"
         ],
@@ -182,6 +213,46 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-08T11:52:57.010766561"
+        "timestamp": "2025-09-09T09:01:08.849111633"
+    },
+    "-profile test --tools msisensor2 --build_only_index --input false -stub": {
+        "content": [
+            4,
+            {
+                "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.6.1.0"
+                },
+                "MSISENSOR2_SCAN": {
+                    "msisensor2": 0.1
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                }
+            },
+            [
+                "csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_report.html",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/dict",
+                "reference/dict/genome.dict",
+                "reference/intervals",
+                "reference/intervals/no_intervals.bed.gz",
+                "reference/msi",
+                "reference/msi/genome.scan"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-09-09T08:53:35.224128377"
     }
 }
