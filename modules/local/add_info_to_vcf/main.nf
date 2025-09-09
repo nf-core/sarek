@@ -1,18 +1,18 @@
 process ADD_INFO_TO_VCF {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gawk:5.1.0' :
-        'biocontainers/gawk:5.1.0' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/gawk:5.3.0'
+        : 'biocontainers/gawk:5.3.0'}"
 
     input:
     tuple val(meta), path(vcf_gz)
 
     output:
     tuple val(meta), path("*.added_info.vcf"), emit: vcf
-    path "versions.yml"                      , emit: versions
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -21,7 +21,7 @@ process ADD_INFO_TO_VCF {
     """
     input="input.vcf"
     output="${vcf_gz.baseName.minus(".vcf")}.added_info.vcf"
-    zcat $vcf_gz > \$input
+    zcat ${vcf_gz} > \$input
     ## Add info header lines
     grep -E "^##" \$input > \$output
     ## Add description of new INFO value
@@ -30,7 +30,7 @@ process ADD_INFO_TO_VCF {
     grep -E "^#CHROM" \$input >> \$output
     ## Add SOURCE value to INFO column of variant calls
     if grep -Ev "^#" \$input; then
-        grep -Ev "^#" \$input | awk 'BEGIN{FS=OFS="\t"} { \$8=="." ? \$8="SOURCE=$vcf_gz" : \$8=\$8";SOURCE=$vcf_gz"; print }' >> \$output
+        grep -Ev "^#" \$input | awk 'BEGIN{FS=OFS="\t"} { \$8=="." ? \$8="SOURCE=${vcf_gz}" : \$8=\$8";SOURCE=${vcf_gz}"; print }' >> \$output
     fi
 
     cat <<-END_VERSIONS > versions.yml

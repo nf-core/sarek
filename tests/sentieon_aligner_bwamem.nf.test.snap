@@ -86,7 +86,7 @@
                     "bwa": "0.7.18-r1243-dirty"
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FASTP": {
                     "fastp": "0.24.0"
