@@ -901,6 +901,30 @@
                     "description": "Path to Control-FREEC mappability file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
+                "msisensor2_models": {
+                    "type": "string",
+                    "format": "path",
+                    "exists": true,
+                    "fa_icon": "fas fa-folder-open",
+                    "description": "Path to models folder used with MSIsensor2.",
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "msisensor2_scan": {
+                    "type": "string",
+                    "format": "path",
+                    "exists": true,
+                    "fa_icon": "fas fa-folder-open",
+                    "description": "Path to scan file used with MSIsensor2.",
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "msisensorpro_scan": {
+                    "type": "string",
+                    "format": "path",
+                    "exists": true,
+                    "fa_icon": "fas fa-folder-open",
+                    "description": "Path to scan file used with MSIsensorPro.",
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
+                },
                 "ngscheckmate_bed": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
