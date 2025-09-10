@@ -37,6 +37,7 @@ input:
         type: file
         description: Specify region the tools is run on.
         pattern: ".{bed,interval_list}"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -46,6 +47,7 @@ input:
         type: file
         description: The reference fasta file
         pattern: "*.fasta"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -55,6 +57,7 @@ input:
         type: file
         description: Index of reference fasta file
         pattern: "*.fasta.fai"
+        ontologies: []
   - - meta4:
         type: map
         description: |
@@ -64,77 +67,91 @@ input:
         type: file
         description: GATK sequence dictionary
         pattern: "*.dict"
-  - - germline_resource:
-        type: file
-        description: Population vcf of germline sequencing, containing allele fractions.
-        pattern: "*.vcf.gz"
-  - - germline_resource_tbi:
-        type: file
-        description: Index file for the germline resource.
-        pattern: "*.vcf.gz.tbi"
-  - - panel_of_normals:
-        type: file
-        description: vcf file to be used as a panel of normals.
-        pattern: "*.vcf.gz"
-  - - panel_of_normals_tbi:
-        type: file
-        description: Index for the panel of normals.
-        pattern: "*.vcf.gz.tbi"
-  - - mutect2_force_call:
-        type: file
-        description: vcf file to be used to force-call alleles.
-        pattern: "*.vcf.gz"
-  - - mutect2_force_call_tbi:
-        type: file
-        description: Index for alleles to be force-called.
-        pattern: "*.vcf.gz.tbi"
+        ontologies: []
+  - alleles:
+      type: file
+      description: vcf file to be used to force-call alleles.
+      pattern: "*.vcf.gz"
+      ontologies:
+        - edam: http://edamontology.org/format_3989 # GZIP format
+  - alleles_tbi:
+      type: file
+      description: Index file for alleles to be force-called.
+      pattern: "*.vcf.gz.tbi"
+      ontologies: []
+  - germline_resource:
+      type: file
+      description: Population vcf of germline sequencing, containing allele fractions.
+      pattern: "*.vcf.gz"
+      ontologies:
+        - edam: http://edamontology.org/format_3989 # GZIP format
+  - germline_resource_tbi:
+      type: file
+      description: Index file for the germline resource.
+      pattern: "*.vcf.gz.tbi"
+      ontologies: []
+  - panel_of_normals:
+      type: file
+      description: vcf file to be used as a panel of normals.
+      pattern: "*.vcf.gz"
+      ontologies:
+        - edam: http://edamontology.org/format_3989 # GZIP format
+  - panel_of_normals_tbi:
+      type: file
+      description: Index for the panel of normals.
+      pattern: "*.vcf.gz.tbi"
+      ontologies: []
 output:
-  - vcf:
-      - meta:
-          type: file
-          description: compressed vcf file
-          pattern: "*.vcf.gz"
+  vcf:
+    - - meta:
+          type: map
+          description: A Groovy map containing sample information
       - "*.vcf.gz":
           type: file
           description: compressed vcf file
           pattern: "*.vcf.gz"
-  - tbi:
-      - meta:
-          type: file
-          description: Index of vcf file
-          pattern: "*vcf.gz.tbi"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  tbi:
+    - - meta:
+          type: map
+          description: A Groovy map containing sample information
       - "*.tbi":
           type: file
           description: Index of vcf file
           pattern: "*vcf.gz.tbi"
-  - stats:
-      - meta:
-          type: file
-          description: Stats file that pairs with output vcf file
-          pattern: "*vcf.gz.stats"
+          ontologies: []
+  stats:
+    - - meta:
+          type: map
+          description: A Groovy map containing sample information
       - "*.stats":
           type: file
           description: Stats file that pairs with output vcf file
           pattern: "*vcf.gz.stats"
-  - f1r2:
-      - meta:
-          type: file
-          description: file containing information to be passed to LearnReadOrientationModel
-            (only outputted when tumor_normal_pair mode is run)
-          pattern: "*.f1r2.tar.gz"
+          ontologies: []
+  f1r2:
+    - - meta:
+          type: map
+          description: A Groovy map containing sample information
       - "*.f1r2.tar.gz":
           type: file
           description: file containing information to be passed to LearnReadOrientationModel
             (only outputted when tumor_normal_pair mode is run)
           pattern: "*.f1r2.tar.gz"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@GCJMackenzie"
   - "@ramprasadn"
 maintainers:
   - "@GCJMackenzie"
   - "@ramprasadn"
+  
