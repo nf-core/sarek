@@ -70,7 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `samtools` (in `BWAMEM1_MEM`)          | 1.2         | 1.21        |
 | `samtools` (in `BWAMEM2_MEM`)          | 1.19.2      | 1.21        |
 | `samtools` (in `GATK4_MARKDUPLICATES`) | 1.19.2      | 1.21        |
-| `sentieon`                             | 202308.03   | 202503      |
+| `sentieon`                             | 202308.03   | 202503.01   |
 | `tabix`                                | 1.2         | 1.21        |
 | `vcflib`                               |             | 1.0.14      |
 
