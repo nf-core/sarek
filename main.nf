@@ -202,8 +202,8 @@ workflow NFCORE_SAREK {
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     // [interval.bed] all intervals in one file
-    intervals_bed_combined                     = params.no_intervals ? Channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_combined
-    intervals_bed_gz_tbi_combined              = params.no_intervals ? Channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_gz_tbi_combined
+    intervals_bed_combined        = params.no_intervals ? Channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_combined
+    intervals_bed_gz_tbi_combined = params.no_intervals ? Channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_gz_tbi_combined
     intervals_bed_combined_for_variant_calling = PREPARE_INTERVALS.out.intervals_bed_combined
 
     // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
