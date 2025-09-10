@@ -39,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1961](https://github.com/nf-core/sarek/pull/1961) - Update ensemblvep cache version to 114
 - [1961](https://github.com/nf-core/sarek/pull/1961) - Update ensemblvep cache version to 115
 - [1961](https://github.com/nf-core/sarek/pull/1961) - Update ensemblvep modules to 114.2
-- [1961](https://github.com/nf-core/sarek/pull/1961) - Update ensemblvep modules to 115.0
+- [1964](https://github.com/nf-core/sarek/pull/1964) - Update ensemblvep modules to 115.0
 
 ### Fixed
 
