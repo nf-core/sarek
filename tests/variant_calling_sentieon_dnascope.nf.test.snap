@@ -533,7 +533,7 @@
             "No BAM files",
             "No CRAM files",
             [
-                "joint_germline.vcf.gz:md5,eafa1afc28dc1f1f3c7d282d70bb558a",
+                "joint_germline.vcf.gz:md5,ef572f2d4597e009fb10037b736b6b5b",
                 "test.dnascope.g.vcf.gz:md5,2eec090f63df75523e2c0ecbc369a755"
             ]
         ],
