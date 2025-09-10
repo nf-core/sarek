@@ -141,13 +141,18 @@ workflow NFCORE_SAREK {
         params.ascat_loci_gc,
         params.ascat_loci_rt,
         bcftools_annotations,
+        params.bwa,
+        params.bwamem2,
         params.chr_dir,
         dbsnp,
+        params.dragmap,
         params.fasta,
         germline_resource,
         known_indels,
         known_snps,
         pon,
+        params.aligner,
+        params.step,
         params.vep_include_fasta,
     )
 
@@ -159,23 +164,6 @@ workflow NFCORE_SAREK {
     fasta_fai = params.fasta_fai
         ? Channel.fromPath(params.fasta_fai).map { it -> [[id: 'fai'], it] }.collect()
         : PREPARE_GENOME.out.fasta_fai
-    bwa = params.bwa
-        ? Channel.fromPath(params.bwa).map { it -> [[id: 'bwa'], it] }.collect()
-        : PREPARE_GENOME.out.bwa
-    bwamem2 = params.bwamem2
-        ? Channel.fromPath(params.bwamem2).map { it -> [[id: 'bwamem2'], it] }.collect()
-        : PREPARE_GENOME.out.bwamem2
-    dragmap = params.dragmap
-        ? Channel.fromPath(params.dragmap).map { it -> [[id: 'dragmap'], it] }.collect()
-        : PREPARE_GENOME.out.hashtable
-
-    // Gather index for mapping given the chosen aligner
-    aligner = params.aligner
-    index_alignment = aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks"
-        ? bwa
-        : aligner == "bwa-mem2"
-            ? bwamem2
-            : dragmap
 
     // TODO: add a params for msisensorpro_scan
     msisensorpro_scan = PREPARE_GENOME.out.msisensorpro_scan
@@ -275,7 +263,7 @@ workflow NFCORE_SAREK {
     SAREK(
         samplesheet,
         PREPARE_GENOME.out.allele_files,
-        aligner,
+        params.aligner,
         bcftools_annotations,
         bcftools_annotations_tbi,
         bcftools_header_lines,
@@ -291,7 +279,7 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.gc_file,
         germline_resource,
         germline_resource_tbi,
-        index_alignment,
+        PREPARE_GENOME.out.index_alignment,
         intervals_and_num_intervals,
         intervals_bed_combined,
         intervals_bed_combined_for_variant_calling,

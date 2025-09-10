@@ -23,27 +23,53 @@ workflow PREPARE_GENOME {
     ascat_loci_gc        // params.ascat_loci_gc
     ascat_loci_rt        // params.ascat_loci_rt
     bcftools_annotations // channel: [optional] bcftools annotations file
+    bwa_in               // params.bwa
+    bwamem2_in           // params.bwamem2
     chr_dir              // params.chr_dir
     dbsnp                // channel: [optional]  dbsnp
-    raw_fasta            // params.fasta
+    dragmap_in           // params.dragmap
+    fasta_in             // params.fasta
     germline_resource    // channel: [optional]  germline_resource
     known_indels         // channel: [optional]  known_indels
     known_snps           // channel: [optional]  known_snps
     pon                  // channel: [optional]  pon
+    aligner              // params.aligner
+    step                 // params.step
     vep_include_fasta    // params.vep_include_fasta
 
     main:
     versions = Channel.empty()
 
-    fasta = raw_fasta ? Channel.fromPath(raw_fasta).map { fasta -> [[id: fasta.baseName], fasta] }.collect() : Channel.empty()
+    // TODO: EXTRACT FASTA FILE?
+    fasta = fasta_in ? Channel.fromPath(fasta_in).map { fasta -> [[id: fasta.baseName], fasta] }.collect() : Channel.empty()
     vep_fasta = vep_include_fasta ? fasta : [[id: 'null'], []]
 
-    BWAMEM1_INDEX(fasta)
-    // If aligner is bwa-mem
-    BWAMEM2_INDEX(fasta)
-    // If aligner is bwa-mem2
-    DRAGMAP_HASHTABLE(fasta)
-    // If aligner is dragmap
+    index_alignment = Channel.empty()
+
+    if (!bwa_in && step == 'mapping' && (aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks")) {
+        BWAMEM1_INDEX(fasta)
+        index_alignment = BWAMEM1_INDEX.out.index.collect()
+        versions = versions.mix(BWAMEM1_INDEX.out.versions)
+    }
+    else if (bwa_in && step == 'mapping' && (aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks")) {
+        index_alignment = Channel.fromPath(bwa_in).map { index -> [[id: 'bwa'], index] }.collect()
+    }
+    else if (!bwamem2_in && step == 'mapping' && aligner == 'bwa-mem2') {
+        BWAMEM2_INDEX(fasta)
+        index_alignment = BWAMEM2_INDEX.out.index.collect()
+        versions = versions.mix(BWAMEM2_INDEX.out.versions)
+    }
+    else if (bwamem2_in && step == 'mapping' && aligner == 'bwa-mem2') {
+        index_alignment = Channel.fromPath(bwamem2_in).map { index -> [[id: 'bwamem2'], index] }.collect()
+    }
+    else if (!dragmap_in && step == 'mapping' && aligner == 'dragmap') {
+        DRAGMAP_HASHTABLE(fasta)
+        index_alignment = DRAGMAP_HASHTABLE.out.hashmap.collect()
+        versions = versions.mix(DRAGMAP_HASHTABLE.out.versions)
+    }
+    else if (dragmap_in && step == 'mapping' && aligner == 'dragmap') {
+        index_alignment = Channel.fromPath(dragmap_in).map { index -> [[id: 'dragmap'], index] }.collect()
+    }
 
     GATK4_CREATESEQUENCEDICTIONARY(fasta)
     MSISENSORPRO_SCAN(fasta)
@@ -122,9 +148,6 @@ workflow PREPARE_GENOME {
     }
 
     // Gather versions of all tools used
-    versions = versions.mix(BWAMEM1_INDEX.out.versions)
-    versions = versions.mix(BWAMEM2_INDEX.out.versions)
-    versions = versions.mix(DRAGMAP_HASHTABLE.out.versions)
     versions = versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
     versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
     versions = versions.mix(SAMTOOLS_FAIDX.out.versions)
@@ -136,14 +159,12 @@ workflow PREPARE_GENOME {
     versions = versions.mix(TABIX_PON.out.versions)
 
     emit:
+    fasta                    // Channel: [ meta, fasta ]
+    index_alignment          // Channel: [ meta, index_alignment ] either bwa, bwamem2 or dragmap
+    vep_fasta                // Channel: [ meta, vep_fasta ]
     bcftools_annotations_tbi = TABIX_BCFTOOLS_ANNOTATIONS.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: bcftools_annotations.vcf.gz.tbi
-    bwa                      = BWAMEM1_INDEX.out.index.collect() // path: bwa/*
-    bwamem2                  = BWAMEM2_INDEX.out.index.collect() // path: bwamem2/*
-    hashtable                = DRAGMAP_HASHTABLE.out.hashmap.collect() // path: dragmap/*
     dbsnp_tbi                = TABIX_DBSNP.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: dbsnb.vcf.gz.tbi
     dict                     = GATK4_CREATESEQUENCEDICTIONARY.out.dict.collect() // path: genome.fasta.dict
-    fasta                    // Channel: [ meta, fasta ]
-    vep_fasta                // Channel: [ meta, vep_fasta ]
     fasta_fai                = SAMTOOLS_FAIDX.out.fai.collect() // path: genome.fasta.fai
     germline_resource_tbi    = TABIX_GERMLINE_RESOURCE.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: germline_resource.vcf.gz.tbi
     known_snps_tbi           = TABIX_KNOWN_SNPS.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: {known_indels*}.vcf.gz.tbi
