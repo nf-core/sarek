@@ -19,12 +19,12 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     fasta                     // channel: /path/to/reference/fasta
     fai                       // channel: /path/to/reference/fasta/index
     dict                      // channel: /path/to/reference/fasta/dictionary
+    alleles                   // channel: /path/to/alleles
+    alleles_tbi               // channel: /path/to/alleles/index
     germline_resource         // channel: /path/to/germline/resource
     germline_resource_tbi     // channel: /path/to/germline/index
     panel_of_normals          // channel: /path/to/panel/of/normals
     panel_of_normals_tbi      // channel: /path/to/panel/of/normals/index
-    mutect2_force_call        // channel: /path/to/mutect2/force/alleles
-    mutect2_force_call_tbi    // channel: /path/to/mutect2/force/alleles/index
     intervals                 // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     joint_mutect2             // boolean: [mandatory] [default: false] run mutect2 in joint mode
 
@@ -51,11 +51,11 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
         input_joint_intervals = input_joint.combine(intervals)
         // Move num_intervals to meta map and reorganize channel for MUTECT2 module
             .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ] }
-        MUTECT2(input_joint_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi, mutect2_force_call, mutect2_force_call_tbi)
+        MUTECT2(input_joint_intervals, fasta, fai, dict, alleles, alleles_tbi, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
     }
     else {
         // Perform variant calling using mutect2 module in tumor single mode
-        MUTECT2(input_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi, mutect2_force_call, mutect2_force_call_tbi)
+        MUTECT2(input_intervals, fasta, fai, dict, alleles, alleles_tbi, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample

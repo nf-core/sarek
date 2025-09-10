@@ -50,6 +50,14 @@ input:
       type: file
       description: GATK sequence dictionary
       pattern: "*.dict"
+  - alleles:
+      type: file
+      description: vcf file to be used to force-call alleles.
+      pattern: "*.vcf.gz"
+  - alleles_tbi:
+      type: file
+      description: Index file for alleles to be force-called.
+      pattern: "*.vcf.gz.tbi"
   - germline_resource:
       type: file
       description: Population vcf of germline sequencing, containing allele fractions.
@@ -65,14 +73,6 @@ input:
   - panel_of_normals_tbi:
       type: file
       description: Index for the panel of normals.
-      pattern: "*.vcf.gz.tbi"
-  - mutect2_force_call:
-      type: file
-      description: vcf file to be used to force-call alleles.
-      pattern: "*.vcf.gz"
-  - mutect2_force_call_tbi:
-      type: file
-      description: Index for the force-call alleles.
       pattern: "*.vcf.gz.tbi"
   - interval_file:
       type: file
