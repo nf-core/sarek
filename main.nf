@@ -214,22 +214,15 @@ workflow NFCORE_SAREK {
     intervals = PREPARE_INTERVALS.out.intervals_bed
     // [ interval_bed, tbi, num_intervals ] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
     intervals_bed_gz_tbi = PREPARE_INTERVALS.out.intervals_bed_gz_tbi
-    intervals_and_num_intervals = intervals.map { interval, num_intervals ->
-        if (num_intervals < 1) {
-            [[], num_intervals]
-        }
-        else {
-            [interval, num_intervals]
-        }
+
+    intervals_and_num_intervals = intervals.map { file, num_intervals ->
+        [num_intervals < 1 ? [] : file, num_intervals]
     }
-    intervals_bed_gz_tbi_and_num_intervals = intervals_bed_gz_tbi.map { _file, num_intervals ->
-        if (num_intervals < 1) {
-            [[], [], num_intervals]
-        }
-        else {
-            [intervals[0], intervals[1], num_intervals]
-        }
+
+    intervals_bed_gz_tbi_and_num_intervals = intervals_bed_gz_tbi.map { file, num_intervals ->
+        [num_intervals < 1 ? [] : file[0], num_intervals < 1 ? [] : file[1], num_intervals]
     }
+
     if (params.tools && params.tools.split(',').contains('cnvkit')) {
         if (params.cnvkit_reference) {
             cnvkit_reference = Channel.fromPath(params.cnvkit_reference).collect()
