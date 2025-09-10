@@ -56,16 +56,16 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     versions = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    out_indexcov     = Channel.empty()
-    out_msisensor2   = Channel.empty()
+    out_indexcov = Channel.empty()
+    out_msisensor2 = Channel.empty()
     out_msisensorpro = Channel.empty()
-    vcf_freebayes    = Channel.empty()
-    vcf_manta        = Channel.empty()
-    vcf_muse         = Channel.empty()
-    vcf_mutect2      = Channel.empty()
-    vcf_strelka      = Channel.empty()
-    vcf_tiddit       = Channel.empty()
-    vcf_tnscope      = Channel.empty()
+    vcf_freebayes = Channel.empty()
+    vcf_manta = Channel.empty()
+    vcf_muse = Channel.empty()
+    vcf_mutect2 = Channel.empty()
+    vcf_strelka = Channel.empty()
+    vcf_tiddit = Channel.empty()
+    vcf_tnscope = Channel.empty()
 
     if (tools.split(',').contains('ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
@@ -208,7 +208,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // MSISENSORPRO
     if (tools.split(',').contains('msisensorpro')) {
-        MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta.map { _meta, fasta_ -> [fasta_] }, msisensorpro_scan)
+        MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta, msisensorpro_scan)
 
         versions = versions.mix(MSISENSORPRO_MSISOMATIC.out.versions)
         out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSISOMATIC.out.output_report)

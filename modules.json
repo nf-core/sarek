@@ -353,17 +353,17 @@
                     },
                     "msisensor2/scan": {
                         "branch": "master",
-                        "git_sha": "3dd258af3d271de7477016619e68f497456911f1",
+                        "git_sha": "4906b6ccc403a1ed972013e31608d233067b1cca",
                         "installed_by": ["modules"]
                     },
                     "msisensorpro/msisomatic": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "msisensorpro/scan": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {

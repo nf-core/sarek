@@ -58,17 +58,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency                             | Old version | New version |
 | -------------------------------------- | ----------- | ----------- |
-| `ASCAT`                                | 3.1.1       | 3.2.0       |
+| `ascat`                                | 3.1.1       | 3.2.0       |
 | `bcftools`                             | 1.20        | 1.21        |
 | `ensemblvep`                           | 113.0       | 115.0       |
 | `fastp`                                | 0.23.4      | 0.24.0      |
 | `fgbio`                                | 2.2.1       | 2.4.0       |
 | `freebayes`                            | 1.3.6.      | 1.3.10      |
 | `gatk4`                                | 4.5.0.0     | 4.6.1.0     |
-| `msisensor2`                           |             | 0.1         |
 | `mosdepth`                             | 0.3.8       | 0.3.10      |
-| `MuSE`                                 |             | 2.1.2       |
-| `MultiQC`                              | 1.25.1      | 1.30        |
+| `msisensor2`                           |             | 0.1         |
+| `msisensorpro`                         | 1.2.0       | 1.3.0       |
+| `multiqc`                              | 1.25.1      | 1.30        |
+| `muse`                                 |             | 2.1.2       |
 | `samblaster`                           | 0.1.26      | removed     |
 | `samtools` (in `BWAMEM1_MEM`)          | 1.2         | 1.21        |
 | `samtools` (in `BWAMEM2_MEM`)          | 1.19.2      | 1.21        |
