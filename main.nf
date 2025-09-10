@@ -155,8 +155,8 @@ workflow NFCORE_SAREK {
         params.msisensor2_models,
         params.msisensor2_scan,
         params.msisensorpro_scan,
-        params.tools?:"no_tools",
         pon,
+        params.tools?:"no_tools",
     )
 
     // Gather built indices or get them from the params
