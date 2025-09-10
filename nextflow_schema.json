@@ -519,7 +519,7 @@
                     "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to dbNSFP processed file.",
-                    "help_text": "To be used with `--vep_dbnsfp`.\ndbNSFP files and more information are available at https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#dbnsfp and https://sites.google.com/site/jpopgen/dbNSFP/"
+                    "help_text": "Will not work without a provided `dbnsfp_tbi`. To be used with `--vep_dbnsfp`.\ndbNSFP files and more information are available at https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#dbnsfp and https://sites.google.com/site/jpopgen/dbNSFP/"
                 },
                 "dbnsfp_tbi": {
                     "type": "string",
