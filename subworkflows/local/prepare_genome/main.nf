@@ -53,32 +53,34 @@ workflow PREPARE_GENOME {
     fasta = fasta_in ? Channel.fromPath(fasta_in).map { fasta -> [[id: fasta.baseName], fasta] }.collect() : Channel.empty()
     vep_fasta = vep_include_fasta ? fasta : [[id: 'null'], []]
 
-    if (!step == 'mapping') {
+    if (step == 'mapping') {
+        if (!bwa_in && (aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks")) {
+            BWAMEM1_INDEX(fasta)
+            index_alignment = BWAMEM1_INDEX.out.index.collect()
+            versions = versions.mix(BWAMEM1_INDEX.out.versions)
+        }
+        else if (aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks") {
+            index_alignment = Channel.fromPath(bwa_in).map { index -> [[id: 'bwa'], index] }.collect()
+        }
+        else if (!bwamem2_in && aligner == 'bwa-mem2') {
+            BWAMEM2_INDEX(fasta)
+            index_alignment = BWAMEM2_INDEX.out.index.collect()
+            versions = versions.mix(BWAMEM2_INDEX.out.versions)
+        }
+        else if (aligner == 'bwa-mem2') {
+            index_alignment = Channel.fromPath(bwamem2_in).map { index -> [[id: 'bwamem2'], index] }.collect()
+        }
+        else if (!dragmap_in && aligner == 'dragmap') {
+            DRAGMAP_HASHTABLE(fasta)
+            index_alignment = DRAGMAP_HASHTABLE.out.hashmap.collect()
+            versions = versions.mix(DRAGMAP_HASHTABLE.out.versions)
+        }
+        else if (aligner == 'dragmap') {
+            index_alignment = Channel.fromPath(dragmap_in).map { index -> [[id: 'dragmap'], index] }.collect()
+        }
+    }
+    else {
         index_alignment = Channel.empty()
-    }
-    else if (!bwa_in && (aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks")) {
-        BWAMEM1_INDEX(fasta)
-        index_alignment = BWAMEM1_INDEX.out.index.collect()
-        versions = versions.mix(BWAMEM1_INDEX.out.versions)
-    }
-    else if (aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks") {
-        index_alignment = Channel.fromPath(bwa_in).map { index -> [[id: 'bwa'], index] }.collect()
-    }
-    else if (!bwamem2_in && aligner == 'bwa-mem2') {
-        BWAMEM2_INDEX(fasta)
-        index_alignment = BWAMEM2_INDEX.out.index.collect()
-        versions = versions.mix(BWAMEM2_INDEX.out.versions)
-    }
-    else if (aligner == 'bwa-mem2') {
-        index_alignment = Channel.fromPath(bwamem2_in).map { index -> [[id: 'bwamem2'], index] }.collect()
-    }
-    else if (!dragmap_in && aligner == 'dragmap') {
-        DRAGMAP_HASHTABLE(fasta)
-        index_alignment = DRAGMAP_HASHTABLE.out.hashmap.collect()
-        versions = versions.mix(DRAGMAP_HASHTABLE.out.versions)
-    }
-    else if (aligner == 'dragmap') {
-        index_alignment = Channel.fromPath(dragmap_in).map { index -> [[id: 'dragmap'], index] }.collect()
     }
 
     if (!dict_in && step != "annotate") {
@@ -125,8 +127,7 @@ workflow PREPARE_GENOME {
     }
 
     if (!dbsnp_in) {
-        dbsnp = Channel.empty()
-        dbsnp_tbi = Channel.empty()
+        dbsnp = Channel.value([])
     }
     else {
         dbsnp = Channel.fromPath(dbsnp_in).collect()
@@ -141,12 +142,11 @@ workflow PREPARE_GENOME {
         dbsnp_tbi = Channel.fromPath(dbsnp_tbi_in).collect()
     }
     else {
-        dbsnp_tbi = Channel.empty()
+        dbsnp_tbi = Channel.value([])
     }
 
     if (!germline_resource_in) {
-        germline_resource = Channel.empty()
-        germline_resource_tbi = Channel.empty()
+        germline_resource = Channel.value([])
     }
     else {
         germline_resource = Channel.fromPath(germline_resource_in).collect()
@@ -161,12 +161,11 @@ workflow PREPARE_GENOME {
         germline_resource_tbi = Channel.fromPath(germline_resource_tbi_in).collect()
     }
     else {
-        germline_resource_tbi = Channel.empty()
+        germline_resource_tbi = Channel.value([])
     }
 
     if (!known_indels_in) {
-        known_indels = Channel.empty()
-        known_indels_tbi = Channel.empty()
+        known_indels = Channel.value([])
     }
     else {
         known_indels = Channel.fromPath(known_indels_in).collect()
@@ -181,12 +180,11 @@ workflow PREPARE_GENOME {
         known_indels_tbi = Channel.fromPath(known_indels_tbi_in).collect()
     }
     else {
-        known_indels_tbi = Channel.empty()
+        known_indels_tbi = Channel.value([])
     }
 
     if (!known_snps_in) {
-        known_snps = Channel.empty()
-        known_snps_tbi = Channel.empty()
+        known_snps = Channel.value([])
     }
     else {
         known_snps = Channel.fromPath(known_snps_in).collect()
@@ -201,12 +199,11 @@ workflow PREPARE_GENOME {
         known_snps_tbi = Channel.fromPath(known_snps_tbi_in).collect()
     }
     else {
-        known_snps_tbi = Channel.empty()
+        known_snps_tbi = Channel.value([])
     }
 
     if (!pon_in) {
-        pon = Channel.empty()
-        pon_tbi = Channel.empty()
+        pon = Channel.value([])
     }
     else {
         pon = Channel.fromPath(pon_in).collect()
@@ -221,7 +218,7 @@ workflow PREPARE_GENOME {
         pon_tbi = Channel.fromPath(pon_tbi_in).collect()
     }
     else {
-        pon_tbi = Channel.empty()
+        pon_tbi = Channel.value([])
     }
 
     // known_sites is made by grouping both the dbsnp and the known snps/indels resources
