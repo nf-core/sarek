@@ -109,116 +109,58 @@ workflow PREPARE_GENOME {
 
     MSISENSORPRO_SCAN(fasta)
 
-    if (!bcftools_annotations_in) {
-        bcftools_annotations = Channel.empty()
-        bcftools_annotations_tbi = Channel.empty()
-    }
-    else {
-        bcftools_annotations = Channel.fromPath(bcftools_annotations_in).collect()
-    }
+    bcftools_annotations = bcftools_annotations_in ? Channel.fromPath(bcftools_annotations_in).collect() : Channel.value([])
+    bcftools_annotations_tbi = bcftools_annotations_tbi_in ? Channel.fromPath(bcftools_annotations_tbi_in).collect() : Channel.value([])
 
     if (!bcftools_annotations_tbi_in && bcftools_annotations_in) {
-        TABIX_BCFTOOLS_ANNOTATIONS(bcftools_annotations)
-        bcftools_annotations_tbi_in = TABIX_BCFTOOLS_ANNOTATIONS.out.tbi.map { _meta, tbi -> [tbi] }.collect()
+        TABIX_BCFTOOLS_ANNOTATIONS(bcftools_annotations.flatten().map { vcf -> [[id: vcf.baseName], vcf] })
+        bcftools_annotations_tbi = TABIX_BCFTOOLS_ANNOTATIONS.out.tbi.map { _meta, tbi -> [tbi] }.collect()
         versions = versions.mix(TABIX_BCFTOOLS_ANNOTATIONS.out.versions)
     }
-    else {
-        bcftools_annotations_tbi = Channel.fromPath(bcftools_annotations_tbi_in).collect()
-    }
 
-    if (!dbsnp_in) {
-        dbsnp = Channel.value([])
-    }
-    else {
-        dbsnp = Channel.fromPath(dbsnp_in).collect()
-    }
+    dbsnp = dbsnp_in ? Channel.fromPath(dbsnp_in).collect() : Channel.value([])
+    dbsnp_tbi = dbsnp_tbi_in ? Channel.fromPath(dbsnp_tbi_in).collect() : Channel.value([])
 
     if (!dbsnp_tbi_in && dbsnp_in && ((step == "mapping" || step == "markduplicates" || step == "prepare_recalibration") || (tools.split(',').contains('controlfreec') || tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope') || tools.split(',').contains('muse') || tools.split(',').contains('mutect2')))) {
-        TABIX_DBSNP(dbsnp)
-        dbsnp_tbi_in = TABIX_DBSNP.out.tbi.map { _meta, tbi -> [tbi] }.collect()
+        TABIX_DBSNP(dbsnp.flatten().map { vcf -> [[id: vcf.baseName], vcf] })
+        dbsnp_tbi = TABIX_DBSNP.out.tbi.map { _meta, tbi -> [tbi] }.collect()
         versions = versions.mix(TABIX_DBSNP.out.versions)
     }
-    else if (dbsnp_in && ((step == "mapping" || step == "markduplicates" || step == "prepare_recalibration") || (tools.split(',').contains('controlfreec') || tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope') || tools.split(',').contains('muse') || tools.split(',').contains('mutect2')))) {
-        dbsnp_tbi = Channel.fromPath(dbsnp_tbi_in).collect()
-    }
-    else {
-        dbsnp_tbi = Channel.value([])
-    }
 
-    if (!germline_resource_in) {
-        germline_resource = Channel.value([])
-    }
-    else {
-        germline_resource = Channel.fromPath(germline_resource_in).collect()
-    }
+    germline_resource = germline_resource_in ? Channel.fromPath(germline_resource_in).collect() : Channel.value([])
+    germline_resource_tbi = germline_resource_tbi_in ? Channel.fromPath(germline_resource_tbi_in).collect() : Channel.value([])
 
     if (!germline_resource_tbi_in && germline_resource_in && (tools.split(',').contains('mutect2') || tools.split(',').contains('sentieon_tnscope'))) {
-        TABIX_GERMLINE_RESOURCE(germline_resource)
-        germline_resource_tbi_in = TABIX_GERMLINE_RESOURCE.out.tbi.map { _meta, tbi -> [tbi] }.collect()
+        TABIX_GERMLINE_RESOURCE(germline_resource.flatten().map { vcf -> [[id: vcf.baseName], vcf] })
+        germline_resource_tbi = TABIX_GERMLINE_RESOURCE.out.tbi.map { _meta, tbi -> [tbi] }.collect()
         versions = versions.mix(TABIX_GERMLINE_RESOURCE.out.versions)
     }
-    else if (germline_resource_tbi_in && germline_resource_in && (tools.split(',').contains('mutect2') || tools.split(',').contains('sentieon_tnscope'))) {
-        germline_resource_tbi = Channel.fromPath(germline_resource_tbi_in).collect()
-    }
-    else {
-        germline_resource_tbi = Channel.value([])
-    }
 
-    if (!known_indels_in) {
-        known_indels = Channel.value([])
-    }
-    else {
-        known_indels = Channel.fromPath(known_indels_in).collect()
-    }
+    known_indels = known_indels_in ? Channel.fromPath(known_indels_in).collect() : Channel.value([])
+    known_indels_tbi = known_indels_tbi_in ? Channel.fromPath(known_indels_tbi_in).collect() : Channel.value([])
 
     if (!known_indels_tbi_in && known_indels_in && (step == 'mapping' || step == "markduplicates" || step == 'prepare_recalibration' || (tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope')))) {
-        TABIX_KNOWN_INDELS(known_indels)
-        known_indels_tbi_in = TABIX_KNOWN_INDELS.out.tbi.map { _meta, tbi -> [tbi] }.collect()
+        TABIX_KNOWN_INDELS(known_indels.flatten().map { vcf -> [[id: vcf.baseName], vcf] })
+        known_indels_tbi = TABIX_KNOWN_INDELS.out.tbi.map { _meta, tbi -> [tbi] }.collect()
         versions = versions.mix(TABIX_KNOWN_INDELS.out.versions)
     }
-    else if (known_indels_tbi_in && known_indels_in && (step == 'mapping' || step == "markduplicates" || step == 'prepare_recalibration' || (tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope')))) {
-        known_indels_tbi = Channel.fromPath(known_indels_tbi_in).collect()
-    }
-    else {
-        known_indels_tbi = Channel.value([])
-    }
 
-    if (!known_snps_in) {
-        known_snps = Channel.value([])
-    }
-    else {
-        known_snps = Channel.fromPath(known_snps_in).collect()
-    }
+    known_snps = known_snps_in ? Channel.fromPath(known_snps_in).collect() : Channel.value([])
+    known_snps_tbi = known_snps_tbi_in ? Channel.fromPath(known_snps_tbi_in).collect() : Channel.value([])
 
     if (!known_snps_tbi_in && known_snps_in && (step == 'mapping' || step == "markduplicates" || step == 'prepare_recalibration' || (tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper')))) {
-        TABIX_KNOWN_SNPS(known_snps)
-        known_snps_tbi_in = TABIX_KNOWN_SNPS.out.tbi.map { _meta, tbi -> [tbi] }.collect()
+        TABIX_KNOWN_SNPS(known_snps.flatten().map { vcf -> [[id: vcf.baseName], vcf] })
+        known_snps_tbi = TABIX_KNOWN_SNPS.out.tbi.map { _meta, tbi -> [tbi] }.collect()
         versions = versions.mix(TABIX_KNOWN_SNPS.out.versions)
     }
-    else if (known_snps_tbi_in && known_snps_in && (step == 'mapping' || step == "markduplicates" || step == 'prepare_recalibration' || (tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper')))) {
-        known_snps_tbi = Channel.fromPath(known_snps_tbi_in).collect()
-    }
-    else {
-        known_snps_tbi = Channel.value([])
-    }
 
-    if (!pon_in) {
-        pon = Channel.value([])
-    }
-    else {
-        pon = Channel.fromPath(pon_in).collect()
-    }
+    pon = pon_in ? Channel.fromPath(pon_in).collect() : Channel.value([])
+    pon_tbi = pon_tbi_in ? Channel.fromPath(pon_tbi_in).collect() : Channel.value([])
 
     if (!pon_tbi_in && pon_in && tools.split(',').contains('mutect2')) {
-        TABIX_PON(pon)
-        pon_tbi_in = TABIX_PON.out.tbi.map { _meta, tbi -> [tbi] }.collect()
+        TABIX_PON(pon.flatten().map { vcf -> [[id: vcf.baseName], vcf] })
+        pon_tbi = TABIX_PON.out.tbi.map { _meta, tbi -> [tbi] }.collect()
         versions = versions.mix(TABIX_PON.out.versions)
-    }
-    else if (pon_tbi_in && pon_in && tools.split(',').contains('mutect2')) {
-        pon_tbi = Channel.fromPath(pon_tbi_in).collect()
-    }
-    else {
-        pon_tbi = Channel.value([])
     }
 
     // known_sites is made by grouping both the dbsnp and the known snps/indels resources
@@ -233,7 +175,7 @@ workflow PREPARE_GENOME {
         ascat_alleles = Channel.empty()
     }
     else if (ascat_alleles_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
-        UNZIP_ALLELES(Channel.fromPath(file(ascat_alleles_in)).collect().map { it -> [[id: it[0].baseName], it] })
+        UNZIP_ALLELES(Channel.fromPath(file(ascat_alleles_in)).collect().map { archive -> [[id: archive[0].baseName], archive] })
 
         ascat_alleles = UNZIP_ALLELES.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }
         versions = versions.mix(UNZIP_ALLELES.out.versions)
@@ -246,7 +188,7 @@ workflow PREPARE_GENOME {
         ascat_loci = Channel.empty()
     }
     else if (ascat_loci_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
-        UNZIP_LOCI(Channel.fromPath(file(ascat_loci_in)).collect().map { it -> [[id: it[0].baseName], it] })
+        UNZIP_LOCI(Channel.fromPath(file(ascat_loci_in)).collect().map { archive -> [[id: archive[0].baseName], archive] })
 
         ascat_loci = UNZIP_LOCI.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }
         versions = versions.mix(UNZIP_LOCI.out.versions)
@@ -259,7 +201,7 @@ workflow PREPARE_GENOME {
         ascat_loci_gc = Channel.value([])
     }
     else if (ascat_loci_gc_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
-        UNZIP_GC(Channel.fromPath(file(ascat_loci_gc_in)).collect().map { it -> [[id: it[0].baseName], it] })
+        UNZIP_GC(Channel.fromPath(file(ascat_loci_gc_in)).collect().map { archive -> [[id: archive[0].baseName], archive] })
 
         ascat_loci_gc = UNZIP_GC.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }
         versions = versions.mix(UNZIP_GC.out.versions)
@@ -272,7 +214,7 @@ workflow PREPARE_GENOME {
         ascat_loci_rt = Channel.value([])
     }
     else if (ascat_loci_rt_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
-        UNZIP_RT(Channel.fromPath(file(ascat_loci_rt_in)).collect().map { it -> [[id: it[0].baseName], it] })
+        UNZIP_RT(Channel.fromPath(file(ascat_loci_rt_in)).collect().map { archive -> [[id: archive[0].baseName], archive] })
 
         ascat_loci_rt = UNZIP_RT.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }
         versions = versions.mix(UNZIP_RT.out.versions)
@@ -285,7 +227,7 @@ workflow PREPARE_GENOME {
         chr_dir = Channel.value([])
     }
     else if (chr_dir_in.endsWith(".tar.gz") && tools.split(',').contains('controlfreec')) {
-        UNTAR_CHR_DIR(Channel.fromPath(file(chr_dir_in)).collect().map { it -> [[id: it[0].baseName], it] })
+        UNTAR_CHR_DIR(Channel.fromPath(file(chr_dir_in)).collect().map { archive -> [[id: archive[0].baseName], archive] })
 
         chr_dir = UNTAR_CHR_DIR.out.untar.map { _meta, extracted_archive -> extracted_archive }
         versions = versions.mix(UNTAR_CHR_DIR.out.versions)
