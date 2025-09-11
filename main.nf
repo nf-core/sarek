@@ -154,6 +154,7 @@ workflow NFCORE_SAREK {
         pon,
         params.aligner,
         params.step,
+        params.tools,
         params.vep_include_fasta,
     )
 

@@ -36,6 +36,7 @@ workflow PREPARE_GENOME {
     known_snps           // channel: [optional]  known_snps
     pon                  // channel: [optional]  pon
     aligner              // params.aligner
+    tools                // params.tools
     step                 // params.step
     vep_include_fasta    // params.vep_include_fasta
 
@@ -45,10 +46,6 @@ workflow PREPARE_GENOME {
     // TODO: EXTRACT FASTA FILE?
     fasta = fasta_in ? Channel.fromPath(fasta_in).map { fasta -> [[id: fasta.baseName], fasta] }.collect() : Channel.empty()
     vep_fasta = vep_include_fasta ? fasta : [[id: 'null'], []]
-
-    index_alignment = Channel.empty()
-    dict = Channel.empty()
-    fasta_fai = Channel.empty()
 
     if (!bwa_in && step == 'mapping' && (aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks")) {
         BWAMEM1_INDEX(fasta)
@@ -74,6 +71,9 @@ workflow PREPARE_GENOME {
     else if (dragmap_in && step == 'mapping' && aligner == 'dragmap') {
         index_alignment = Channel.fromPath(dragmap_in).map { index -> [[id: 'dragmap'], index] }.collect()
     }
+    else {
+        index_alignment = Channel.empty()
+    }
 
     if (!dict_in && step != "annotate") {
         GATK4_CREATESEQUENCEDICTIONARY(fasta)
@@ -83,6 +83,9 @@ workflow PREPARE_GENOME {
     else if (dict_in) {
         dict = Channel.fromPath(dict_in).map { it -> [[id: 'dict'], it] }.collect()
     }
+    else {
+        dict = Channel.empty()
+    }
 
     if (!fasta_fai_in && step != "annotate") {
         SAMTOOLS_FAIDX(fasta, [[id: 'no_fai'], []], false)
@@ -91,6 +94,9 @@ workflow PREPARE_GENOME {
     }
     else if (fasta_fai_in) {
         fasta_fai = Channel.fromPath(fasta_fai_in).map { it -> [[id: 'fai'], it] }.collect()
+    }
+    else {
+        fasta_fai = Channel.empty()
     }
 
     MSISENSORPRO_SCAN(fasta)
@@ -110,7 +116,7 @@ workflow PREPARE_GENOME {
     if (!ascat_alleles) {
         allele_files = Channel.empty()
     }
-    else if (ascat_alleles.endsWith(".zip")) {
+    else if (ascat_alleles.endsWith(".zip") && tools.split(',').contains('ascat')) {
         UNZIP_ALLELES(Channel.fromPath(file(ascat_alleles)).collect().map { it -> [[id: it[0].baseName], it] })
         allele_files = UNZIP_ALLELES.out.unzipped_archive.map { it[1] }
         versions = versions.mix(UNZIP_ALLELES.out.versions)
@@ -122,7 +128,7 @@ workflow PREPARE_GENOME {
     if (!ascat_loci) {
         loci_files = Channel.empty()
     }
-    else if (ascat_loci.endsWith(".zip")) {
+    else if (ascat_loci.endsWith(".zip") && tools.split(',').contains('ascat')) {
         UNZIP_LOCI(Channel.fromPath(file(ascat_loci)).collect().map { it -> [[id: it[0].baseName], it] })
         loci_files = UNZIP_LOCI.out.unzipped_archive.map { it[1] }
         versions = versions.mix(UNZIP_LOCI.out.versions)
@@ -134,7 +140,7 @@ workflow PREPARE_GENOME {
     if (!ascat_loci_gc) {
         gc_file = Channel.value([])
     }
-    else if (ascat_loci_gc.endsWith(".zip")) {
+    else if (ascat_loci_gc.endsWith(".zip") && tools.split(',').contains('ascat')) {
         UNZIP_GC(Channel.fromPath(file(ascat_loci_gc)).collect().map { it -> [[id: it[0].baseName], it] })
         gc_file = UNZIP_GC.out.unzipped_archive.map { it[1] }
         versions = versions.mix(UNZIP_GC.out.versions)
@@ -146,7 +152,7 @@ workflow PREPARE_GENOME {
     if (!ascat_loci_rt) {
         rt_file = Channel.value([])
     }
-    else if (ascat_loci_rt.endsWith(".zip")) {
+    else if (ascat_loci_rt.endsWith(".zip") && tools.split(',').contains('ascat')) {
         UNZIP_RT(Channel.fromPath(file(ascat_loci_rt)).collect().map { it -> [[id: it[0].baseName], it] })
         rt_file = UNZIP_RT.out.unzipped_archive.map { it[1] }
         versions = versions.mix(UNZIP_RT.out.versions)
@@ -158,7 +164,7 @@ workflow PREPARE_GENOME {
     if (!chr_dir) {
         chr_files = Channel.value([])
     }
-    else if (chr_dir.endsWith(".tar.gz")) {
+    else if (chr_dir.endsWith(".tar.gz") && tools.split(',').contains('controlfreec')) {
         UNTAR_CHR_DIR(Channel.fromPath(file(chr_dir)).collect().map { it -> [[id: it[0].baseName], it] })
         chr_files = UNTAR_CHR_DIR.out.untar.map { it[1] }
         versions = versions.mix(UNTAR_CHR_DIR.out.versions)
