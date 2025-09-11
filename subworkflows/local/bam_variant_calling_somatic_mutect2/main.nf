@@ -32,14 +32,11 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
 
     // If no germline resource is provided, then create an empty channel to avoid GetPileupsummaries from being run
     // Handle Channel.value([]) input from prepare_genome by converting to proper empty channel
-    germline_resource_pileup = germline_resource && germline_resource_tbi
-        ? germline_resource.filter { it != [] }
-        : Channel.empty()
-    germline_resource_pileup_tbi = germline_resource_tbi
-        .filter { it != [] }
-        .ifEmpty { Channel.empty() }
+    germline_resource_pileup = germline_resource.filter { it != [] }
+    germline_resource_pileup_tbi = germline_resource_tbi.filter { it != [] }
 
     // Combine input and intervals for spread and gather strategy
+    //   Move num_intervals to meta map and reorganize channel for MUTECT2_PAIRED module
     input_intervals = input
         .combine(intervals)
         .map { meta, input_list, input_index_list, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], input_list, input_index_list, intervals_] }
@@ -56,6 +53,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         // Remove duplicates from normal channel and merge normal and tumor crams by patient
         ch_tn_cram = ch_cram.normal.unique().mix(ch_cram.tumor).groupTuple()
         // Combine input and intervals for scatter and gather strategy
+        //   Move num_intervals to meta map and reorganize channel for MUTECT2_PAIRED module
         ch_tn_intervals = ch_tn_cram
             .combine(intervals)
             .map { meta, cram, crai, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], cram, crai, intervals_] }

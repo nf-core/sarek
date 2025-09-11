@@ -31,12 +31,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
 
     // If no germline resource is provided, then create an empty channel to avoid GetPileupsummaries from being run
     // Handle Channel.value([]) input from prepare_genome by converting to proper empty channel
-    germline_resource_pileup = germline_resource_tbi
-        ? germline_resource.filter { it != [] }
-        : Channel.empty()
-    germline_resource_pileup_tbi = germline_resource_tbi
-        .filter { it != [] }
-        .ifEmpty { Channel.empty() }
+    germline_resource_pileup = germline_resource.filter { it != [] }
+    germline_resource_pileup_tbi = germline_resource_tbi.filter { it != [] }
 
     // Combine input and intervals for spread and gather strategy
     input_intervals = input
