@@ -136,6 +136,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1967](https://github.com/nf-core/sarek/pull/1967) - Refactor muse subworkflows so that cram to bam conversion is done upstream
 - [1970](https://github.com/nf-core/sarek/pull/1970) - Update controlfreec modules to adhere to language server
 - [1975](https://github.com/nf-core/sarek/pull/1975) - Now fails when no dbnsfp_tbi is provided when dbnsfp is
+- [1979](https://github.com/nf-core/sarek/pull/1979) - Update prepare_genome subworkflow to adhere to language server
 
 #### Fixed
 
