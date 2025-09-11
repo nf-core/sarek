@@ -1,12 +1,12 @@
 process SENTIEON_TNSCOPE {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_high'
     label 'sentieon'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/80/80ccb05eb4f1a193a3bd99c4da90f55f74ea6556c25f154e53e1ff5a6caa372d/data' :
-        'community.wave.seqera.io/library/sentieon:202503--5e378058d837c58c' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/0f/0f1dfe59ef66d7326b43db9ab1f39ce6220b358a311078c949a208f9c9815d4e/data'
+        : 'community.wave.seqera.io/library/sentieon:202503.01--1863def31ed8e4d5'}"
 
     input:
     tuple val(meta), path(input), path(input_index), path(intervals)
@@ -20,40 +20,40 @@ process SENTIEON_TNSCOPE {
     tuple val(meta9), path(cosmic_tbi)
 
     output:
-    tuple val(meta), path("*.vcf.gz")    , emit: vcf
+    tuple val(meta), path("*.vcf.gz"),     emit: vcf
     tuple val(meta), path("*.vcf.gz.tbi"), emit: index
-    path "versions.yml"                  , emit: versions
+    path "versions.yml",                   emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def args         = task.ext.args     ?: ''
-    def args2        = task.ext.args2    ?: ''
-    def interval_str = intervals         ? "--interval ${intervals}" : ''
-    def cosmic_str   = cosmic            ? "--cosmic ${cosmic}"      : ''
-    def dbsnp_str    = dbsnp             ? "--dbsnp ${dbsnp}"        : ''
-    def pon_str      = pon               ? "--pon ${pon}"            : ''
-    def prefix       = task.ext.prefix   ?: "${meta.id}"
-    def inputs       = input.collect{ "-i $it"}.join(" ")
-    def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64 ?
-        "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; " :
-        ""
+    def args = task.ext.args ?: ''
+    def args2 = task.ext.args2 ?: ''
+    def interval_str = intervals ? "--interval ${intervals}" : ''
+    def cosmic_str = cosmic ? "--cosmic ${cosmic}" : ''
+    def dbsnp_str = dbsnp ? "--dbsnp ${dbsnp}" : ''
+    def pon_str = pon ? "--pon ${pon}" : ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def inputs = input.collect { "-i ${it}" }.join(" ")
+    def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64
+        ? "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; "
+        : ""
     """
-    $sentieonLicense
+    ${sentieonLicense}
 
 
     sentieon driver \\
-        -t $task.cpus \\
-        -r $fasta \\
-        $inputs \\
-        $interval_str \\
-        $args \\
+        -t ${task.cpus} \\
+        -r ${fasta} \\
+        ${inputs} \\
+        ${interval_str} \\
+        ${args} \\
         --algo TNscope \\
-        $args2 \\
-        $cosmic_str \\
-        $dbsnp_str \\
-        $pon_str \\
+        ${args2} \\
+        ${cosmic_str} \\
+        ${dbsnp_str} \\
+        ${pon_str} \\
         ${prefix}.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
