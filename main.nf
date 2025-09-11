@@ -89,35 +89,31 @@ workflow NFCORE_SAREK {
     main:
     versions = Channel.empty()
 
-    // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-    bcftools_annotations = params.bcftools_annotations ? Channel.fromPath(params.bcftools_annotations).collect() : Channel.empty()
-    dbsnp = params.dbsnp ? Channel.fromPath(params.dbsnp).collect() : Channel.value([])
-    // Mutect2 does not require a germline resource, so set to optional input
-    germline_resource = params.germline_resource ? Channel.fromPath(params.germline_resource).collect() : Channel.value([])
-    known_indels = params.known_indels ? Channel.fromPath(params.known_indels).collect() : Channel.value([])
-    known_snps = params.known_snps ? Channel.fromPath(params.known_snps).collect() : Channel.value([])
-    // PON is optional for Mutect2 (but highly recommended)
-    pon = params.pon ? Channel.fromPath(params.pon).collect() : Channel.value([])
-
     // build indexes if needed
     PREPARE_GENOME(
         params.ascat_alleles,
         params.ascat_loci,
         params.ascat_loci_gc,
         params.ascat_loci_rt,
-        bcftools_annotations,
+        params.bcftools_annotations,
+        params.bcftools_annotations_tbi,
         params.bwa,
         params.bwamem2,
         params.chr_dir,
+        params.dbsnp,
+        params.dbsnp_tbi,
         params.dict,
-        dbsnp,
         params.dragmap,
         params.fasta,
         params.fasta_fai,
-        germline_resource,
-        known_indels,
-        known_snps,
-        pon,
+        params.germline_resource,
+        params.germline_resource_tbi,
+        params.known_indels,
+        params.known_indels_tbi,
+        params.known_snps,
+        params.known_snps_tbi,
+        params.pon,
+        params.pon_tbi,
         params.aligner,
         params.step,
         params.tools,
@@ -126,22 +122,6 @@ workflow NFCORE_SAREK {
 
     // TODO: add a params for msisensorpro_scan
     msisensorpro_scan = PREPARE_GENOME.out.msisensorpro_scan
-
-    // Tabix indexed vcf files
-    bcftools_annotations_tbi = params.bcftools_annotations ? params.bcftools_annotations_tbi ? Channel.fromPath(params.bcftools_annotations_tbi).collect() : PREPARE_GENOME.out.bcftools_annotations_tbi : Channel.value([])
-    dbsnp_tbi = params.dbsnp ? params.dbsnp_tbi ? Channel.fromPath(params.dbsnp_tbi).collect() : PREPARE_GENOME.out.dbsnp_tbi : Channel.value([])
-    //do not change to Channel.value([]), the check for its existence then fails for Getpileupsumamries
-    germline_resource_tbi = params.germline_resource ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : []
-    known_indels_tbi = params.known_indels ? params.known_indels_tbi ? Channel.fromPath(params.known_indels_tbi).collect() : PREPARE_GENOME.out.known_indels_tbi : Channel.value([])
-    known_snps_tbi = params.known_snps ? params.known_snps_tbi ? Channel.fromPath(params.known_snps_tbi).collect() : PREPARE_GENOME.out.known_snps_tbi : Channel.value([])
-    pon_tbi = params.pon ? params.pon_tbi ? Channel.fromPath(params.pon_tbi).collect() : PREPARE_GENOME.out.pon_tbi : Channel.value([])
-
-    // known_sites is made by grouping both the dbsnp and the known snps/indels resources
-    // Which can either or both be optional
-    known_sites_indels = dbsnp.concat(known_indels).collect()
-    known_sites_indels_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
-    known_sites_snps = dbsnp.concat(known_snps).collect()
-    known_sites_snps_tbi = dbsnp_tbi.concat(known_snps_tbi).collect()
 
     // Build intervals if needed
     PREPARE_INTERVALS(PREPARE_GENOME.out.fasta_fai, params.intervals, params.no_intervals, params.nucleotides_per_second, params.outdir, params.step)
@@ -193,7 +173,7 @@ workflow NFCORE_SAREK {
         snpeff_info = Channel.of([[id: "${params.snpeff_db}"], params.snpeff_db])
         DOWNLOAD_CACHE_SNPEFF_VEP(ensemblvep_info, snpeff_info)
         snpeff_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.snpeff_cache
-        vep_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.ensemblvep_cache.map { meta, cache -> [cache] }
+        vep_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.ensemblvep_cache.map { _meta, cache -> [cache] }
 
         versions = versions.mix(DOWNLOAD_CACHE_SNPEFF_VEP.out.versions)
     }
@@ -242,21 +222,21 @@ workflow NFCORE_SAREK {
         samplesheet,
         PREPARE_GENOME.out.allele_files,
         params.aligner,
-        bcftools_annotations,
-        bcftools_annotations_tbi,
+        PREPARE_GENOME.out.bcftools_annotations,
+        PREPARE_GENOME.out.bcftools_annotations_tbi,
         params.bcftools_header_lines ? Channel.fromPath(params.bcftools_header_lines).collect() : Channel.empty(),
         params.cf_chrom_len ? Channel.fromPath(params.cf_chrom_len).collect() : [],
         PREPARE_GENOME.out.chr_files,
         cnvkit_reference,
-        dbsnp,
-        dbsnp_tbi,
+        PREPARE_GENOME.out.dbsnp,
+        PREPARE_GENOME.out.dbsnp_tbi,
         params.dbsnp_vqsr ? Channel.value(params.dbsnp_vqsr) : Channel.empty(),
         PREPARE_GENOME.out.dict,
         PREPARE_GENOME.out.fasta,
         PREPARE_GENOME.out.fasta_fai,
         PREPARE_GENOME.out.gc_file,
-        germline_resource,
-        germline_resource_tbi,
+        PREPARE_GENOME.out.germline_resource,
+        PREPARE_GENOME.out.germline_resource_tbi,
         PREPARE_GENOME.out.index_alignment,
         intervals_and_num_intervals,
         intervals_bed_combined,
@@ -265,17 +245,17 @@ workflow NFCORE_SAREK {
         intervals_bed_gz_tbi_combined,
         intervals_for_preprocessing,
         params.known_indels_vqsr ? Channel.value(params.known_indels_vqsr) : Channel.empty(),
-        known_sites_indels,
-        known_sites_indels_tbi,
-        known_sites_snps,
-        known_sites_snps_tbi,
+        PREPARE_GENOME.out.known_sites_indels,
+        PREPARE_GENOME.out.known_sites_indels_tbi,
+        PREPARE_GENOME.out.known_sites_snps,
+        PREPARE_GENOME.out.known_sites_snps_tbi,
         params.known_snps_vqsr ? Channel.value(params.known_snps_vqsr) : Channel.empty(),
         PREPARE_GENOME.out.loci_files,
         params.mappability ? Channel.fromPath(params.mappability).collect() : Channel.value([]),
         msisensorpro_scan,
         params.ngscheckmate_bed ? Channel.value(params.ngscheckmate_bed) : Channel.empty(),
-        pon,
-        pon_tbi,
+        PREPARE_GENOME.out.pon,
+        PREPARE_GENOME.out.pon_tbi,
         PREPARE_GENOME.out.rt_file,
         params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect() : Channel.value([]),
         snpeff_cache,

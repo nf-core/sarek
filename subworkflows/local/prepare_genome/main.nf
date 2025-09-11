@@ -18,27 +18,33 @@ include { UNZIP as UNZIP_RT                         } from '../../../modules/nf-
 
 workflow PREPARE_GENOME {
     take:
-    ascat_alleles        // params.ascat_alleles
-    ascat_loci           // params.ascat_loci
-    ascat_loci_gc        // params.ascat_loci_gc
-    ascat_loci_rt        // params.ascat_loci_rt
-    bcftools_annotations // channel: [optional] bcftools annotations file
-    bwa_in               // params.bwa
-    bwamem2_in           // params.bwamem2
-    chr_dir              // params.chr_dir
-    dict_in              // params.dict
-    dbsnp                // channel: [optional]  dbsnp
-    dragmap_in           // params.dragmap
-    fasta_in             // params.fasta
-    fasta_fai_in         // params.fasta_fai
-    germline_resource    // channel: [optional]  germline_resource
-    known_indels         // channel: [optional]  known_indels
-    known_snps           // channel: [optional]  known_snps
-    pon                  // channel: [optional]  pon
-    aligner              // params.aligner
-    tools                // params.tools
-    step                 // params.step
-    vep_include_fasta    // params.vep_include_fasta
+    ascat_alleles               // params.ascat_alleles
+    ascat_loci                  // params.ascat_loci
+    ascat_loci_gc               // params.ascat_loci_gc
+    ascat_loci_rt               // params.ascat_loci_rt
+    bcftools_annotations_in     // params.bcftools_annotations
+    bcftools_annotations_tbi_in // params.bcftools_annotations
+    bwa_in                      // params.bwa
+    bwamem2_in                  // params.bwamem2
+    chr_dir                     // params.chr_dir
+    dbsnp_in                    // params.dbsnp
+    dbsnp_tbi_in                // params.dbsnp_tbi
+    dict_in                     // params.dict
+    dragmap_in                  // params.dragmap
+    fasta_in                    // params.fasta
+    fasta_fai_in                // params.fasta_fai
+    germline_resource_in        // params.germline_resource
+    germline_resource_tbi_in    // params.germline_resource_tbi
+    known_indels_in             // params.known_indels
+    known_indels_tbi_in         // params.known_indels_tbi
+    known_snps_in               // params.known_snps
+    known_snps_tbi_in           // params.known_snps_tbi
+    pon_in                      // params.pon
+    pon_tbi_in                  // params.pon_tbi
+    aligner                     // params.aligner
+    tools                       // params.tools
+    step                        // params.step
+    vep_include_fasta           // params.vep_include_fasta
 
     main:
     versions = Channel.empty()
@@ -101,16 +107,129 @@ workflow PREPARE_GENOME {
 
     MSISENSORPRO_SCAN(fasta)
 
-    // the following are flattened and mapped in case the user supplies more than one value for the param
-    // written for KNOWN_INDELS, but preemptively applied to the rest
-    // [ file1, file2 ] becomes [ [ meta1, file1 ], [ meta2, file2 ] ]
-    // outputs are collected to maintain a single channel for relevant TBI files
-    TABIX_BCFTOOLS_ANNOTATIONS(bcftools_annotations.flatten().map { it -> [[id: it.baseName], it] })
-    TABIX_DBSNP(dbsnp.flatten().map { it -> [[id: it.baseName], it] })
-    TABIX_GERMLINE_RESOURCE(germline_resource.flatten().map { it -> [[id: it.baseName], it] })
-    TABIX_KNOWN_SNPS(known_snps.flatten().map { it -> [[id: it.baseName], it] })
-    TABIX_KNOWN_INDELS(known_indels.flatten().map { it -> [[id: it.baseName], it] })
-    TABIX_PON(pon.flatten().map { it -> [[id: it.baseName], it] })
+    if (!bcftools_annotations_in) {
+        bcftools_annotations = Channel.empty()
+        bcftools_annotations_tbi = Channel.empty()
+    }
+    else {
+        bcftools_annotations = Channel.fromPath(bcftools_annotations_in).collect()
+    }
+
+    if (!bcftools_annotations_tbi_in && bcftools_annotations_in) {
+        TABIX_BCFTOOLS_ANNOTATIONS(bcftools_annotations)
+        bcftools_annotations_tbi_in = TABIX_BCFTOOLS_ANNOTATIONS.out.tbi.map { _meta, tbi -> [tbi] }.collect()
+        versions = versions.mix(TABIX_BCFTOOLS_ANNOTATIONS.out.versions)
+    }
+    else {
+        bcftools_annotations_tbi = Channel.fromPath(bcftools_annotations_tbi_in).collect()
+    }
+
+    if (!dbsnp_in) {
+        dbsnp = Channel.empty()
+        dbsnp_tbi = Channel.empty()
+    }
+    else {
+        dbsnp = Channel.fromPath(dbsnp_in).collect()
+    }
+
+    if (!dbsnp_tbi_in && dbsnp_in) {
+        TABIX_DBSNP(dbsnp)
+        dbsnp_tbi_in = TABIX_DBSNP.out.tbi.map { _meta, tbi -> [tbi] }.collect()
+        versions = versions.mix(TABIX_DBSNP.out.versions)
+    }
+    else if (dbsnp_in) {
+        dbsnp_tbi = Channel.fromPath(dbsnp_tbi_in).collect()
+    }
+    else {
+        dbsnp_tbi = Channel.empty()
+    }
+
+    if (!germline_resource_in) {
+        germline_resource = Channel.empty()
+        germline_resource_tbi = Channel.empty()
+    }
+    else {
+        germline_resource = Channel.fromPath(germline_resource_in).collect()
+    }
+
+    if (!germline_resource_tbi_in && germline_resource_in) {
+        TABIX_GERMLINE_RESOURCE(germline_resource)
+        germline_resource_tbi_in = TABIX_GERMLINE_RESOURCE.out.tbi.map { _meta, tbi -> [tbi] }.collect()
+        versions = versions.mix(TABIX_GERMLINE_RESOURCE.out.versions)
+    }
+    else if (germline_resource_in) {
+        germline_resource_tbi = Channel.fromPath(germline_resource_tbi_in).collect()
+    }
+    else {
+        germline_resource_tbi = Channel.empty()
+    }
+
+    if (!known_indels_in) {
+        known_indels = Channel.empty()
+        known_indels_tbi = Channel.empty()
+    }
+    else {
+        known_indels = Channel.fromPath(known_indels_in).collect()
+    }
+
+    if (!known_indels_tbi_in && known_indels_in) {
+        TABIX_KNOWN_INDELS(known_indels)
+        known_indels_tbi_in = TABIX_KNOWN_INDELS.out.tbi.map { _meta, tbi -> [tbi] }.collect()
+        versions = versions.mix(TABIX_KNOWN_INDELS.out.versions)
+    }
+    else if (known_indels_in) {
+        known_indels_tbi = Channel.fromPath(known_indels_tbi_in).collect()
+    }
+    else {
+        known_indels_tbi = Channel.empty()
+    }
+
+    if (!known_snps_in) {
+        known_snps = Channel.empty()
+        known_snps_tbi = Channel.empty()
+    }
+    else {
+        known_snps = Channel.fromPath(known_snps_in).collect()
+    }
+
+    if (!known_snps_tbi_in && known_snps_in) {
+        TABIX_KNOWN_SNPS(known_snps)
+        known_snps_tbi_in = TABIX_KNOWN_SNPS.out.tbi.map { _meta, tbi -> [tbi] }.collect()
+        versions = versions.mix(TABIX_KNOWN_SNPS.out.versions)
+    }
+    else if (known_snps_in) {
+        known_snps_tbi = Channel.fromPath(known_snps_tbi_in).collect()
+    }
+    else {
+        known_snps_tbi = Channel.empty()
+    }
+
+    if (!pon_in) {
+        pon = Channel.empty()
+        pon_tbi = Channel.empty()
+    }
+    else {
+        pon = Channel.fromPath(pon_in).collect()
+    }
+
+    if (!pon_tbi_in && pon_in) {
+        TABIX_PON(pon)
+        pon_tbi_in = TABIX_PON.out.tbi.map { _meta, tbi -> [tbi] }.collect()
+        versions = versions.mix(TABIX_PON.out.versions)
+    }
+    else if (pon_in) {
+        pon_tbi = Channel.fromPath(pon_tbi_in).collect()
+    }
+    else {
+        pon_tbi = Channel.empty()
+    }
+
+    // known_sites is made by grouping both the dbsnp and the known snps/indels resources
+    // Which can either or both be optional
+    known_sites_indels = dbsnp.concat(known_indels).collect()
+    known_sites_indels_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
+    known_sites_snps = dbsnp.concat(known_snps).collect()
+    known_sites_snps_tbi = dbsnp_tbi.concat(known_snps_tbi).collect()
 
     // prepare ascat and controlfreec reference files
     if (!ascat_alleles) {
@@ -175,30 +294,34 @@ workflow PREPARE_GENOME {
 
     // Gather versions of all tools used
     versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
-    versions = versions.mix(TABIX_BCFTOOLS_ANNOTATIONS.out.versions)
-    versions = versions.mix(TABIX_DBSNP.out.versions)
-    versions = versions.mix(TABIX_GERMLINE_RESOURCE.out.versions)
-    versions = versions.mix(TABIX_KNOWN_INDELS.out.versions)
-    versions = versions.mix(TABIX_KNOWN_SNPS.out.versions)
-    versions = versions.mix(TABIX_PON.out.versions)
 
     emit:
-    fasta                    // Channel: [ meta, fasta ]
-    index_alignment          // Channel: [ meta, index_alignment ] either bwa, bwamem2 or dragmap
-    vep_fasta                // Channel: [ meta, vep_fasta ]
-    dict                     // Channel: [ meta, dict ]
-    fasta_fai                // Channel: [ meta, fasta_fai ]
-    bcftools_annotations_tbi = TABIX_BCFTOOLS_ANNOTATIONS.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: bcftools_annotations.vcf.gz.tbi
-    dbsnp_tbi                = TABIX_DBSNP.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: dbsnb.vcf.gz.tbi
-    germline_resource_tbi    = TABIX_GERMLINE_RESOURCE.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: germline_resource.vcf.gz.tbi
-    known_snps_tbi           = TABIX_KNOWN_SNPS.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: {known_indels*}.vcf.gz.tbi
-    known_indels_tbi         = TABIX_KNOWN_INDELS.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: {known_indels*}.vcf.gz.tbi
+    allele_files             // Channel: [meta, allele_files]
+    bcftools_annotations     // Channel: [ meta, bcftools_annotations ]
+    bcftools_annotations_tbi // Channel: [ meta, bcftools_annotations_tbi ]
+    chr_files                // Channel: [meta, chr_files]
+    dbsnp                    // Channel: [ meta, dbsnp ]
+    dbsnp_tbi                // Channel: [ meta, dbsnp_tbi ]
+    dict                     // Channel: [meta, dict]
+    fasta                    // Channel: [meta, fasta]
+    fasta_fai                // Channel: [meta, fasta_fai]
+    gc_file                  // Channel: [meta, gc_file]
+    germline_resource        // Channel: [ meta, germline_resource ]
+    germline_resource_tbi    // Channel: [ meta, germline_resource_tbi ]
+    index_alignment          // Channel: [meta, index_alignment] either bwa, bwamem2 or dragmap
+    known_indels             // Channel: [ meta, known_indels ]
+    known_indels_tbi         // Channel: [ meta, known_indels_tbi ]
+    known_sites_indels       // Channel: [meta, known_sites_indels]
+    known_sites_indels_tbi   // Channel: [meta, known_sites_indels_tbi]
+    known_sites_snps         // Channel: [meta, known_sites_snps]
+    known_sites_snps_tbi     // Channel: [meta, known_sites_snps_tbi]
+    known_snps               // Channel: [ meta, known_snps ]
+    known_snps_tbi           // Channel: [ meta, known_snps_tbi ]
+    loci_files               // Channel: [meta, loci_files]
     msisensorpro_scan        = MSISENSORPRO_SCAN.out.list.map { meta, list -> [list] } // path: genome_msi.list
-    pon_tbi                  = TABIX_PON.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: pon.vcf.gz.tbi
-    allele_files             // path: allele_files
-    chr_files                // path: chr_files
-    gc_file                  // path: gc_file
-    loci_files               // path: loci_files
-    rt_file                  // path: rt_file
+    pon                      // Channel: [ meta, pon ]
+    pon_tbi                  // Channel: [ meta, pon_tbi ]
+    rt_file                  // Channel: [meta, rt_file]
+    vep_fasta                // Channel: [ meta, vep_fasta ]
     versions                 // channel: [ versions.yml ]
 }
