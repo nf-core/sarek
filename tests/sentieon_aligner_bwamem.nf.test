@@ -1,3 +1,5 @@
+def projectDir = new File('.').absolutePath
+
 nextflow_pipeline {
 
     name "Test pipeline"
@@ -25,6 +27,18 @@ nextflow_pipeline {
                 save_reference: true,
                 skip_tools: 'multiqc',
                 tools: ''
+            ]
+        ],
+        [
+            name: "-profile test --input fastq_umi.csv --aligner sentieon-bwamem --umi_location read2 --umi_length 7 --umi_base_skip 1 --tools sentieon_dedup",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_umi.csv",
+                aligner: 'sentieon-bwamem',
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: 'sentieon_dedup',
+                umi_length: 7,
+                umi_base_skip: 1,
+                umi_location: 'read2'
             ]
         ]
     ]

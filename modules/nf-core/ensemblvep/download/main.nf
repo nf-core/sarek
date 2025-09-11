@@ -1,18 +1,18 @@
 process ENSEMBLVEP_DOWNLOAD {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ensembl-vep:113.4--pl5321h2a3209d_0' :
-        'biocontainers/ensembl-vep:113.4--pl5321h2a3209d_0' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/f1/f1872dbae2edaae3b7591ac2769efb2de3969adb34752a3ce7cdc9a1409640bb/data'
+        : 'community.wave.seqera.io/library/ensembl-vep:115--3f10c53a4cdeedf2'}"
 
     input:
     tuple val(meta), val(assembly), val(species), val(cache_version)
 
     output:
     tuple val(meta), path(prefix), emit: cache
-    path "versions.yml"          , emit: versions
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,11 +22,11 @@ process ENSEMBLVEP_DOWNLOAD {
     prefix = task.ext.prefix ?: 'vep_cache'
     """
     vep_install \\
-        --CACHEDIR $prefix \\
-        --SPECIES $species \\
-        --ASSEMBLY $assembly \\
-        --CACHE_VERSION $cache_version \\
-        $args
+        --CACHEDIR ${prefix} \\
+        --SPECIES ${species} \\
+        --ASSEMBLY ${assembly} \\
+        --CACHE_VERSION ${cache_version} \\
+        ${args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -37,7 +37,7 @@ process ENSEMBLVEP_DOWNLOAD {
     stub:
     prefix = task.ext.prefix ?: 'vep_cache'
     """
-    mkdir $prefix
+    mkdir ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

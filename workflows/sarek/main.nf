@@ -544,7 +544,10 @@ def addReadgroupToMeta(meta, files) {
     def sample_lane_id = flowcell ? "${flowcell}.${meta.sample}.${meta.lane}" : "${meta.sample}.${meta.lane}"
 
     // Don't use a random element for ID, it breaks resuming
-    def read_group = "\"@RG\\tID:${sample_lane_id}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
+    def read_group = params.umi_read_structure ?
+        "\"@RG\\tID:${meta.sample}\\t${CN}PU:consensus\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\"" :
+        "\"@RG\\tID:${sample_lane_id}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
+
     meta  = meta - meta.subMap('lane') + [read_group: read_group.toString(), sample_lane_id: sample_lane_id.toString()]
     return [ meta, files ]
 }

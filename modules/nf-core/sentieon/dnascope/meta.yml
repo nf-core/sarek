@@ -23,15 +23,18 @@ input:
         type: file
         description: BAM file.
         pattern: "*.bam"
+        ontologies: []
     - bai:
         type: file
         description: BAI file
         pattern: "*.bai"
+        ontologies: []
     - intervals:
         type: file
         description: bed or interval_list file containing interval in the reference
           that will be used in the analysis
         pattern: "*.{bed,interval_list}"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -40,6 +43,7 @@ input:
         type: file
         description: Genome fasta file
         pattern: "*.{fa,fasta}"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -48,6 +52,7 @@ input:
         type: file
         description: Index of the genome fasta file
         pattern: "*.fai"
+        ontologies: []
   - - meta4:
         type: map
         description: |
@@ -56,6 +61,8 @@ input:
         type: file
         description: Single Nucleotide Polymorphism database (dbSNP) file
         pattern: "*.vcf.gz"
+        ontologies:
+          - edam: http://edamontology.org/format_3989 # GZIP format
   - - meta5:
         type: map
         description: |
@@ -64,6 +71,7 @@ input:
         type: file
         description: Index of the Single Nucleotide Polymorphism database (dbSNP) file
         pattern: "*.vcf.gz.tbi"
+        ontologies: []
   - - meta6:
         type: map
         description: |
@@ -72,24 +80,25 @@ input:
         type: file
         description: machine learning model file
         pattern: "*.model"
-  - - pcr_indel_model:
-        type: string
-        description: |
-          Controls the option pcr_indel_model for Dnascope.
-          The possible options are "NONE" (used for PCR free samples), and "HOSTILE", "AGGRESSIVE" and "CONSERVATIVE".
-          See Sentieons documentation for further explanation.
-  - - emit_vcf:
-        type: string
-        description: |
-          Controls the vcf output from Dnascope.
-          Possible options are "all", "confident" and "variant".
-          See Sentieons documentation for further explanation.
-  - - emit_gvcf:
-        type: boolean
-        description: If true, the haplotyper will output a gvcf
+        ontologies: []
+  - pcr_indel_model:
+      type: string
+      description: |
+        Controls the option pcr_indel_model for Dnascope.
+        The possible options are "NONE" (used for PCR free samples), and "HOSTILE", "AGGRESSIVE" and "CONSERVATIVE".
+        See Sentieons documentation for further explanation.
+  - emit_vcf:
+      type: string
+      description: |
+        Controls the vcf output from Dnascope.
+        Possible options are "all", "confident" and "variant".
+        See Sentieons documentation for further explanation.
+  - emit_gvcf:
+      type: boolean
+      description: If true, the haplotyper will output a gvcf
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing reference information.
@@ -98,8 +107,10 @@ output:
           type: file
           description: Compressed VCF file
           pattern: "*.unfiltered.vcf.gz"
-  - vcf_tbi:
-      - meta:
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  vcf_tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing reference information.
@@ -108,8 +119,9 @@ output:
           type: file
           description: Index of VCF file
           pattern: "*.unfiltered.vcf.gz.tbi"
-  - gvcf:
-      - meta:
+          ontologies: []
+  gvcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing reference information.
@@ -118,8 +130,10 @@ output:
           type: file
           description: Compressed GVCF file
           pattern: "*.g.vcf.gz"
-  - gvcf_tbi:
-      - meta:
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  gvcf_tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing reference information.
@@ -128,11 +142,14 @@ output:
           type: file
           description: Index of GVCF file
           pattern: "*.g.vcf.gz.tbi"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@ramprasadn"
 maintainers:

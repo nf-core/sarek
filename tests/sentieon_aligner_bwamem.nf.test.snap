@@ -23,7 +23,7 @@
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -77,6 +77,78 @@
             "nextflow": "25.04.2"
         },
         "timestamp": "2025-06-21T10:32:56.848655102"
+    },
+    "-profile test --input fastq_umi.csv --aligner sentieon-bwamem --umi_location read2 --umi_length 7 --umi_base_skip 1 --tools sentieon_dedup": {
+        "content": [
+            9,
+            {
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
+                },
+                "FASTP": {
+                    "fastp": "0.24.0"
+                },
+                "FGBIO_COPYUMIFROMREADNAME": {
+                    "fgbio": "2.4.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
+                "SENTIEON_BWAMEM": {
+                    "bwa": "0.7.17-r1188",
+                    "sentieon": 202503.01
+                },
+                "SENTIEON_DEDUP": {
+                    "sentieon": 202503.01
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                }
+            },
+            [
+                "csv",
+                "csv/markduplicates_no_table.csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/sentieon_dedup",
+                "preprocessing/sentieon_dedup/test",
+                "preprocessing/sentieon_dedup/test/test.dedup.cram",
+                "preprocessing/sentieon_dedup/test/test.dedup.cram.crai",
+                "reference",
+                "reports",
+                "reports/fastp",
+                "reports/fastp/test",
+                "reports/fastp/test/test-test_L1.fastp.html",
+                "reports/fastp/test/test-test_L1.fastp.json",
+                "reports/fastp/test/test-test_L1.fastp.log",
+                "reports/sentieon_dedup",
+                "reports/sentieon_dedup/test",
+                "reports/sentieon_dedup/test/test.dedup.cram.metrics",
+                "reports/sentieon_dedup/test/test.dedup.cram.metrics.multiqc.tsv"
+            ],
+            [
+                "test-test_L1.fastp.json:md5,d9107ec414e44408d0698b167cc445f9",
+                "test.dedup.cram.metrics:md5,e232a68c4de44da87af0614b327268f0",
+                "test.dedup.cram.metrics.multiqc.tsv:md5,a1e31b30780c7501a1b771a0299236df"
+            ],
+            "No BAM files",
+            [
+                "test.dedup.cram:md5,4b2f03b0b0b2ae2d2f208b3dd39c05dd"
+            ],
+            "No VCF files"
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-08-18T06:00:05.261761108"
     },
     "-profile test --aligner sentieon-bwamem --save_reference --build_only_index": {
         "content": [
