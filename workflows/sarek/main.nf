@@ -60,7 +60,10 @@ include { MULTIQC                                           } from '../../module
 workflow SAREK {
     take:
         input_sample
-        allele_files
+        ascat_alleles
+        ascat_loci
+        ascat_loci_gc
+        ascat_loci_rt
         aligner
         bcftools_annotations
         bcftools_annotations_tbi
@@ -74,7 +77,6 @@ workflow SAREK {
         dict
         fasta
         fasta_fai
-        gc_file
         germline_resource
         germline_resource_tbi
         index_alignment
@@ -90,13 +92,11 @@ workflow SAREK {
         known_sites_snps
         known_sites_snps_tbi
         known_snps_vqsr
-        loci_files
         mappability
         msisensorpro_scan
         ngscheckmate_bed
         pon
         pon_tbi
-        rt_file
         sentieon_dnascope_model
         snpeff_cache
         snpeff_db
@@ -390,10 +390,10 @@ workflow SAREK {
             msisensorpro_scan,
             pon,
             pon_tbi,
-            allele_files,
-            loci_files,
-            gc_file,
-            rt_file,
+            ascat_alleles,
+            ascat_loci,
+            ascat_loci_gc,
+            ascat_loci_rt,
             params.joint_mutect2,
             params.wes
         )

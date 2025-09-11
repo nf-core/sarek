@@ -18,15 +18,15 @@ include { UNZIP as UNZIP_RT                         } from '../../../modules/nf-
 
 workflow PREPARE_GENOME {
     take:
-    ascat_alleles               // params.ascat_alleles
-    ascat_loci                  // params.ascat_loci
-    ascat_loci_gc               // params.ascat_loci_gc
-    ascat_loci_rt               // params.ascat_loci_rt
+    ascat_alleles_in            // params.ascat_alleles
+    ascat_loci_in               // params.ascat_loci
+    ascat_loci_gc_in            // params.ascat_loci_gc
+    ascat_loci_rt_in            // params.ascat_loci_rt
     bcftools_annotations_in     // params.bcftools_annotations
     bcftools_annotations_tbi_in // params.bcftools_annotations
     bwa_in                      // params.bwa
     bwamem2_in                  // params.bwamem2
-    chr_dir                     // params.chr_dir
+    chr_dir_in                  // params.chr_dir
     dbsnp_in                    // params.dbsnp
     dbsnp_tbi_in                // params.dbsnp_tbi
     dict_in                     // params.dict
@@ -232,96 +232,101 @@ workflow PREPARE_GENOME {
     known_sites_snps_tbi = dbsnp_tbi.concat(known_snps_tbi).collect()
 
     // prepare ascat and controlfreec reference files
-    if (!ascat_alleles) {
-        allele_files = Channel.empty()
+    if (!ascat_alleles_in) {
+        ascat_alleles = Channel.empty()
     }
-    else if (ascat_alleles.endsWith(".zip") && tools.split(',').contains('ascat')) {
-        UNZIP_ALLELES(Channel.fromPath(file(ascat_alleles)).collect().map { it -> [[id: it[0].baseName], it] })
-        allele_files = UNZIP_ALLELES.out.unzipped_archive.map { it[1] }
+    else if (ascat_alleles_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
+        UNZIP_ALLELES(Channel.fromPath(file(ascat_alleles_in)).collect().map { it -> [[id: it[0].baseName], it] })
+
+        ascat_alleles = UNZIP_ALLELES.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }
         versions = versions.mix(UNZIP_ALLELES.out.versions)
     }
     else {
-        allele_files = Channel.fromPath(ascat_alleles).collect()
+        ascat_alleles = Channel.fromPath(ascat_alleles_in).collect()
     }
 
-    if (!ascat_loci) {
-        loci_files = Channel.empty()
+    if (!ascat_loci_in) {
+        ascat_loci = Channel.empty()
     }
-    else if (ascat_loci.endsWith(".zip") && tools.split(',').contains('ascat')) {
-        UNZIP_LOCI(Channel.fromPath(file(ascat_loci)).collect().map { it -> [[id: it[0].baseName], it] })
-        loci_files = UNZIP_LOCI.out.unzipped_archive.map { it[1] }
+    else if (ascat_loci_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
+        UNZIP_LOCI(Channel.fromPath(file(ascat_loci_in)).collect().map { it -> [[id: it[0].baseName], it] })
+
+        ascat_loci = UNZIP_LOCI.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }
         versions = versions.mix(UNZIP_LOCI.out.versions)
     }
     else {
-        loci_files = Channel.fromPath(ascat_loci).collect()
+        ascat_loci = Channel.fromPath(ascat_loci_in).collect()
     }
 
-    if (!ascat_loci_gc) {
-        gc_file = Channel.value([])
+    if (!ascat_loci_gc_in) {
+        ascat_loci_gc = Channel.value([])
     }
-    else if (ascat_loci_gc.endsWith(".zip") && tools.split(',').contains('ascat')) {
-        UNZIP_GC(Channel.fromPath(file(ascat_loci_gc)).collect().map { it -> [[id: it[0].baseName], it] })
-        gc_file = UNZIP_GC.out.unzipped_archive.map { it[1] }
+    else if (ascat_loci_gc_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
+        UNZIP_GC(Channel.fromPath(file(ascat_loci_gc_in)).collect().map { it -> [[id: it[0].baseName], it] })
+
+        ascat_loci_gc = UNZIP_GC.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }
         versions = versions.mix(UNZIP_GC.out.versions)
     }
     else {
-        gc_file = Channel.fromPath(ascat_loci_gc).collect()
+        ascat_loci_gc = Channel.fromPath(ascat_loci_gc_in).collect()
     }
 
-    if (!ascat_loci_rt) {
-        rt_file = Channel.value([])
+    if (!ascat_loci_rt_in) {
+        ascat_loci_rt = Channel.value([])
     }
-    else if (ascat_loci_rt.endsWith(".zip") && tools.split(',').contains('ascat')) {
-        UNZIP_RT(Channel.fromPath(file(ascat_loci_rt)).collect().map { it -> [[id: it[0].baseName], it] })
-        rt_file = UNZIP_RT.out.unzipped_archive.map { it[1] }
+    else if (ascat_loci_rt_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
+        UNZIP_RT(Channel.fromPath(file(ascat_loci_rt_in)).collect().map { it -> [[id: it[0].baseName], it] })
+
+        ascat_loci_rt = UNZIP_RT.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }
         versions = versions.mix(UNZIP_RT.out.versions)
     }
     else {
-        rt_file = Channel.fromPath(ascat_loci_rt).collect()
+        ascat_loci_rt = Channel.fromPath(ascat_loci_rt_in).collect()
     }
 
-    if (!chr_dir) {
-        chr_files = Channel.value([])
+    if (!chr_dir_in) {
+        chr_dir = Channel.value([])
     }
-    else if (chr_dir.endsWith(".tar.gz") && tools.split(',').contains('controlfreec')) {
-        UNTAR_CHR_DIR(Channel.fromPath(file(chr_dir)).collect().map { it -> [[id: it[0].baseName], it] })
-        chr_files = UNTAR_CHR_DIR.out.untar.map { it[1] }
+    else if (chr_dir_in.endsWith(".tar.gz") && tools.split(',').contains('controlfreec')) {
+        UNTAR_CHR_DIR(Channel.fromPath(file(chr_dir_in)).collect().map { it -> [[id: it[0].baseName], it] })
+
+        chr_dir = UNTAR_CHR_DIR.out.untar.map { _meta, extracted_archive -> extracted_archive }
         versions = versions.mix(UNTAR_CHR_DIR.out.versions)
     }
     else {
-        chr_files = Channel.fromPath(chr_dir).collect()
+        chr_dir = Channel.fromPath(chr_dir_in).collect()
     }
 
     // Gather versions of all tools used
     versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
 
     emit:
-    allele_files             // Channel: [meta, allele_files]
-    bcftools_annotations     // Channel: [ meta, bcftools_annotations ]
-    bcftools_annotations_tbi // Channel: [ meta, bcftools_annotations_tbi ]
-    chr_files                // Channel: [meta, chr_files]
-    dbsnp                    // Channel: [ meta, dbsnp ]
-    dbsnp_tbi                // Channel: [ meta, dbsnp_tbi ]
+    ascat_alleles            // Channel: [ascat_alleles]
+    ascat_loci               // Channel: [ascat_loci]
+    ascat_loci_gc            // Channel: [ascat_loci_gc]
+    ascat_loci_rt            // Channel: [ascat_loci_rt]
+    bcftools_annotations     // Channel: [bcftools_annotations]
+    bcftools_annotations_tbi // Channel: [bcftools_annotations_tbi]
+    chr_dir                  // Channel: [chr_dir]
+    dbsnp                    // Channel: [dbsnp]
+    dbsnp_tbi                // Channel: [dbsnp_tbi]
     dict                     // Channel: [meta, dict]
     fasta                    // Channel: [meta, fasta]
     fasta_fai                // Channel: [meta, fasta_fai]
-    gc_file                  // Channel: [meta, gc_file]
-    germline_resource        // Channel: [ meta, germline_resource ]
-    germline_resource_tbi    // Channel: [ meta, germline_resource_tbi ]
+    germline_resource        // Channel: [germline_resource]
+    germline_resource_tbi    // Channel: [germline_resource_tbi]
     index_alignment          // Channel: [meta, index_alignment] either bwa, bwamem2 or dragmap
-    known_indels             // Channel: [ meta, known_indels ]
-    known_indels_tbi         // Channel: [ meta, known_indels_tbi ]
-    known_sites_indels       // Channel: [meta, known_sites_indels]
-    known_sites_indels_tbi   // Channel: [meta, known_sites_indels_tbi]
-    known_sites_snps         // Channel: [meta, known_sites_snps]
-    known_sites_snps_tbi     // Channel: [meta, known_sites_snps_tbi]
-    known_snps               // Channel: [ meta, known_snps ]
-    known_snps_tbi           // Channel: [ meta, known_snps_tbi ]
-    loci_files               // Channel: [meta, loci_files]
-    msisensorpro_scan        = MSISENSORPRO_SCAN.out.list.map { meta, list -> [list] } // path: genome_msi.list
-    pon                      // Channel: [ meta, pon ]
-    pon_tbi                  // Channel: [ meta, pon_tbi ]
-    rt_file                  // Channel: [meta, rt_file]
-    vep_fasta                // Channel: [ meta, vep_fasta ]
-    versions                 // channel: [ versions.yml ]
+    known_indels             // Channel: [known_indels]
+    known_indels_tbi         // Channel: [known_indels_tbi]
+    known_sites_indels       // Channel: [known_sites_indels]
+    known_sites_indels_tbi   // Channel: [known_sites_indels_tbi]
+    known_sites_snps         // Channel: [known_sites_snps]
+    known_sites_snps_tbi     // Channel: [known_sites_snps_tbi]
+    known_snps               // Channel: [known_snps]
+    known_snps_tbi           // Channel: [known_snps_tbi]
+    msisensorpro_scan        = MSISENSORPRO_SCAN.out.list.map { _meta, list -> [list] } // path: genome_msi.list
+    pon                      // Channel: [pon]
+    pon_tbi                  // Channel: [pon_tbi]
+    vep_fasta                // Channel: [meta, vep_fasta]
+    versions                 // channel: [versions.yml]
 }
