@@ -116,7 +116,7 @@ workflow NFCORE_SAREK {
         params.pon_tbi,
         params.aligner,
         params.step,
-        params.tools,
+        params.tools ?: 'no_tools',
         params.vep_include_fasta,
     )
 

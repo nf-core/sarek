@@ -42,8 +42,8 @@ workflow PREPARE_GENOME {
     pon_in                      // params.pon
     pon_tbi_in                  // params.pon_tbi
     aligner                     // params.aligner
-    tools                       // params.tools
     step                        // params.step
+    tools                       // params.tools
     vep_include_fasta           // params.vep_include_fasta
 
     main:
@@ -53,34 +53,32 @@ workflow PREPARE_GENOME {
     fasta = fasta_in ? Channel.fromPath(fasta_in).map { fasta -> [[id: fasta.baseName], fasta] }.collect() : Channel.empty()
     vep_fasta = vep_include_fasta ? fasta : [[id: 'null'], []]
 
-    if (step == 'mapping') {
-        if (!bwa_in && (aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks")) {
-            BWAMEM1_INDEX(fasta)
-            index_alignment = BWAMEM1_INDEX.out.index.collect()
-            versions = versions.mix(BWAMEM1_INDEX.out.versions)
-        }
-        else if (bwa_in && (aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks")) {
-            index_alignment = Channel.fromPath(bwa_in).map { index -> [[id: 'bwa'], index] }.collect()
-        }
-        else if (!bwamem2_in && aligner == 'bwa-mem2') {
-            BWAMEM2_INDEX(fasta)
-            index_alignment = BWAMEM2_INDEX.out.index.collect()
-            versions = versions.mix(BWAMEM2_INDEX.out.versions)
-        }
-        else if (bwamem2_in && aligner == 'bwa-mem2') {
-            index_alignment = Channel.fromPath(bwamem2_in).map { index -> [[id: 'bwamem2'], index] }.collect()
-        }
-        else if (!dragmap_in && aligner == 'dragmap') {
-            DRAGMAP_HASHTABLE(fasta)
-            index_alignment = DRAGMAP_HASHTABLE.out.hashmap.collect()
-            versions = versions.mix(DRAGMAP_HASHTABLE.out.versions)
-        }
-        else if (dragmap_in && aligner == 'dragmap') {
-            index_alignment = Channel.fromPath(dragmap_in).map { index -> [[id: 'dragmap'], index] }.collect()
-        }
-    }
-    else {
+    if (!step == 'mapping') {
         index_alignment = Channel.empty()
+    }
+    else if (!bwa_in && (aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks")) {
+        BWAMEM1_INDEX(fasta)
+        index_alignment = BWAMEM1_INDEX.out.index.collect()
+        versions = versions.mix(BWAMEM1_INDEX.out.versions)
+    }
+    else if (aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks") {
+        index_alignment = Channel.fromPath(bwa_in).map { index -> [[id: 'bwa'], index] }.collect()
+    }
+    else if (!bwamem2_in && aligner == 'bwa-mem2') {
+        BWAMEM2_INDEX(fasta)
+        index_alignment = BWAMEM2_INDEX.out.index.collect()
+        versions = versions.mix(BWAMEM2_INDEX.out.versions)
+    }
+    else if (aligner == 'bwa-mem2') {
+        index_alignment = Channel.fromPath(bwamem2_in).map { index -> [[id: 'bwamem2'], index] }.collect()
+    }
+    else if (!dragmap_in && aligner == 'dragmap') {
+        DRAGMAP_HASHTABLE(fasta)
+        index_alignment = DRAGMAP_HASHTABLE.out.hashmap.collect()
+        versions = versions.mix(DRAGMAP_HASHTABLE.out.versions)
+    }
+    else if (aligner == 'dragmap') {
+        index_alignment = Channel.fromPath(dragmap_in).map { index -> [[id: 'dragmap'], index] }.collect()
     }
 
     if (!dict_in && step != "annotate") {
