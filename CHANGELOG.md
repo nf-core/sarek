@@ -74,7 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `samtools` (in `BWAMEM1_MEM`)          | 1.2         | 1.21        |
 | `samtools` (in `BWAMEM2_MEM`)          | 1.19.2      | 1.21        |
 | `samtools` (in `GATK4_MARKDUPLICATES`) | 1.19.2      | 1.21        |
-| `sentieon`                             | 202308.03   | 202503      |
+| `sentieon`                             | 202308.03   | 202503.01   |
 | `tabix`                                | 1.2         | 1.21        |
 | `vcflib`                               |             | 1.0.14      |
 
@@ -142,6 +142,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1967](https://github.com/nf-core/sarek/pull/1967) - Update msisensorpro modules to adhere to language server
 - [1970](https://github.com/nf-core/sarek/pull/1970) - Update controlfreec modules to adhere to language server
 - [1975](https://github.com/nf-core/sarek/pull/1975) - Now fails when no dbnsfp_tbi is provided when dbnsfp is
+- [1977](https://github.com/nf-core/sarek/pull/1977) - Update sentieon modules to adhere to language server
 
 #### Fixed
 
