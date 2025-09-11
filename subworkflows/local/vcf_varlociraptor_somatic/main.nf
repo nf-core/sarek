@@ -1,7 +1,7 @@
 include { BCFTOOLS_CONCAT as MERGE_CALLED_CHUNKS                                  } from '../../../modules/nf-core/bcftools/concat'
+include { BCFTOOLS_CONCAT as MERGE_FREEBAYES_VCFS                                 } from '../../../modules/nf-core/bcftools/concat'
 include { BCFTOOLS_SORT as SORT_CALLED_CHUNKS                                     } from '../../../modules/nf-core/bcftools/sort'
-include { RBT_VCFSPLIT as VCFSPLIT_NORMAL                                         } from '../../../modules/nf-core/rbt/vcfsplit'
-include { RBT_VCFSPLIT as VCFSPLIT_TUMOR                                          } from '../../../modules/nf-core/rbt/vcfsplit'
+include { RBT_VCFSPLIT                                                            } from '../../../modules/nf-core/rbt/vcfsplit'
 include { VARLOCIRAPTOR_CALLVARIANTS                                              } from '../../../modules/nf-core/varlociraptor/callvariants'
 include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES as ALIGNMENTPROPERTIES_NORMAL } from '../../../modules/nf-core/varlociraptor/estimatealignmentproperties'
 include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES as ALIGNMENTPROPERTIES_TUMOR  } from '../../../modules/nf-core/varlociraptor/estimatealignmentproperties'
@@ -16,12 +16,12 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_fasta
     ch_fasta_fai
     ch_scenario
-    ch_vcf
+    ch_somatic_vcf
+    ch_germline_vcf
     val_num_chunks
 
     main:
     ch_versions = Channel.empty()
-    Channel.value(val_num_chunks).dump(tag: "val_num_chunks")
 
     meta_map = ch_cram.map{ meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai -> meta + [sex_string: (meta.sex == "XX" ? "female" : "male") ] }
 
@@ -54,18 +54,42 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_versions = ch_versions.mix(ALIGNMENTPROPERTIES_TUMOR.out.versions)
     ch_versions = ch_versions.mix(ALIGNMENTPROPERTIES_NORMAL.out.versions)
 
-    ch_vcf.view { "ch_vcf emits: $it" }
+    // Combine somatic and germline VCFs of freebayes
+    // Check if variantcaller is freebayes, if yes merge germline and somatic VCFs, otherwise use somatic VCF
+    ch_vcf = ch_somatic_vcf.branch {
+        freebayes: it[0].variantcaller == 'freebayes'
+        other: it[0].variantcaller != 'freebayes'
+    }
+
+    ch_vcf_merged = Channel.empty()
+    if (!ch_vcf.freebayes.isEmpty()) {
+        MERGE_FREEBAYES_VCFS(
+            ch_vcf.freebayes.map{ meta, vcf -> [ [meta.id, meta.variantcaller], meta, vcf ] }
+                .combine(ch_germline_vcf.map{ meta, vcf -> [ [meta.id, meta.variantcaller], meta, vcf ] }, by: 0)
+                .map{ _id, meta_somatic, somatic_vcf, _meta_germline, germline_vcf ->
+                    [ meta_somatic, [ somatic_vcf, germline_vcf ], [] ]
+                }
+        )
+        ch_vcf_merged = MERGE_FREEBAYES_VCFS.out.vcf
+    }
+
+    ch_vcf = ch_vcf_merged.mix(ch_vcf.other)
+
     //
-    // CHUNK AND PREPROCESS TUMOR VCF
+    // CHUNK VCF FILES
     //
-    VCFSPLIT_TUMOR(
+    RBT_VCFSPLIT(
         ch_vcf,
         val_num_chunks
     )
 
-    ch_versions = ch_versions.mix(VCFSPLIT_TUMOR.out.versions)
+    ch_versions = ch_versions.mix(RBT_VCFSPLIT.out.versions)
 
-    ch_chunked_tumor_vcfs = VCFSPLIT_TUMOR.out.bcfchunks
+
+    //
+    // PREPROCESS VCF WITH TUMOR CRAM
+    //
+    ch_chunked_tumor_vcfs = RBT_VCFSPLIT.out.bcfchunks
         .transpose(by:1)
         .map { meta, vcf_chunked ->
             def new_meta = meta + [chunk:vcf_chunked.name.split(/\./)[-2]]
@@ -104,17 +128,9 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_versions = ch_versions.mix(PREPROCESS_TUMOR.out.versions)
 
     //
-    // CHUNK AND PREPROCESS NORMAL VCF
+    // PREPROCESS VCF WITH NORMAL CRAM
     //
-
-    VCFSPLIT_NORMAL(
-        ch_vcf,
-        val_num_chunks
-    )
-
-    ch_versions = ch_versions.mix(VCFSPLIT_NORMAL.out.versions)
-
-    ch_chunked_normal_vcfs = VCFSPLIT_NORMAL.out.bcfchunks
+    ch_chunked_normal_vcfs = RBT_VCFSPLIT.out.bcfchunks
         .transpose(by:1)
         .map { meta, vcf_chunked ->
             def new_meta = meta + [chunk:vcf_chunked.name.split(/\./)[-2]]
