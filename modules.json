@@ -42,7 +42,7 @@
                     },
                     "bwa/index": {
                         "branch": "master",
-                        "git_sha": "a29f18660f5e3748d44d6f716241e70c942c065d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "bwa/mem": {
@@ -52,7 +52,7 @@
                     },
                     "bwamem2/index": {
                         "branch": "master",
-                        "git_sha": "a29f18660f5e3748d44d6f716241e70c942c065d",
+                        "git_sha": "b2902040b9cb9b7b32b62400f1c024a709bd4812",
                         "installed_by": ["modules"]
                     },
                     "bwamem2/mem": {
@@ -138,7 +138,7 @@
                     },
                     "dragmap/hashtable": {
                         "branch": "master",
-                        "git_sha": "8b06d86f6a82b6203f239ad409f606fdf71ec697",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "ensemblvep/download": {
@@ -213,7 +213,7 @@
                     },
                     "gatk4/createsequencedictionary": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "a57253204b8f4022edfeaa3ae2f5e2abecd8858b",
                         "installed_by": ["modules"]
                     },
                     "gatk4/estimatelibrarycomplexity": {
@@ -398,7 +398,7 @@
                     },
                     "samtools/faidx": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "samtools/index": {
@@ -518,12 +518,12 @@
                     },
                     "untar": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "unzip": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "vcflib/vcffilter": {

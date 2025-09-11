@@ -26,6 +26,7 @@ input:
         type: file
         description: FASTA file
         pattern: "*.{fa,fasta}"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -35,13 +36,14 @@ input:
         type: file
         description: FASTA index file
         pattern: "*.{fai}"
-  - - get_sizes:
-        type: boolean
-        description: use cut to get the sizes of the index (true) or not (false)
+        ontologies: []
+  - get_sizes:
+      type: boolean
+      description: use cut to get the sizes of the index (true) or not (false)
 
 output:
-  - fa:
-      - meta:
+  fa:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -50,18 +52,9 @@ output:
           type: file
           description: FASTA file
           pattern: "*.{fa}"
-  - fai:
-      - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-      - "*.fai":
-          type: file
-          description: FASTA index file
-          pattern: "*.{fai}"
-  - sizes:
-      - meta:
+          ontologies: []
+  sizes:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -70,8 +63,20 @@ output:
           type: file
           description: File containing chromosome lengths
           pattern: "*.{sizes}"
-  - gzi:
-      - meta:
+          ontologies: []
+  fai:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.fai":
+          type: file
+          description: FASTA index file
+          pattern: "*.{fai}"
+          ontologies: []
+  gzi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -80,11 +85,14 @@ output:
           type: file
           description: Optional gzip index file for compressed inputs
           pattern: "*.gzi"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@drpatelh"
   - "@ewels"
