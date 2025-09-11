@@ -132,12 +132,12 @@ workflow PREPARE_GENOME {
         dbsnp = Channel.fromPath(dbsnp_in).collect()
     }
 
-    if (!dbsnp_tbi_in && dbsnp_in) {
+    if (!dbsnp_tbi_in && dbsnp_in && ((step == "mapping" || step == "markduplicates" || step == "prepare_recalibration") || (tools.split(',').contains('controlfreec') || tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope') || tools.split(',').contains('muse') || tools.split(',').contains('mutect2')))) {
         TABIX_DBSNP(dbsnp)
         dbsnp_tbi_in = TABIX_DBSNP.out.tbi.map { _meta, tbi -> [tbi] }.collect()
         versions = versions.mix(TABIX_DBSNP.out.versions)
     }
-    else if (dbsnp_in) {
+    else if (dbsnp_in && ((step == "mapping" || step == "markduplicates" || step == "prepare_recalibration") || (tools.split(',').contains('controlfreec') || tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope') || tools.split(',').contains('muse') || tools.split(',').contains('mutect2')))) {
         dbsnp_tbi = Channel.fromPath(dbsnp_tbi_in).collect()
     }
     else {
@@ -152,12 +152,12 @@ workflow PREPARE_GENOME {
         germline_resource = Channel.fromPath(germline_resource_in).collect()
     }
 
-    if (!germline_resource_tbi_in && germline_resource_in) {
+    if (!germline_resource_tbi_in && germline_resource_in && tools.split(',').contains('mutect2')) {
         TABIX_GERMLINE_RESOURCE(germline_resource)
         germline_resource_tbi_in = TABIX_GERMLINE_RESOURCE.out.tbi.map { _meta, tbi -> [tbi] }.collect()
         versions = versions.mix(TABIX_GERMLINE_RESOURCE.out.versions)
     }
-    else if (germline_resource_in) {
+    else if (germline_resource_tbi_in && germline_resource_in && tools.split(',').contains('mutect2')) {
         germline_resource_tbi = Channel.fromPath(germline_resource_tbi_in).collect()
     }
     else {
@@ -172,12 +172,12 @@ workflow PREPARE_GENOME {
         known_indels = Channel.fromPath(known_indels_in).collect()
     }
 
-    if (!known_indels_tbi_in && known_indels_in) {
+    if (!known_indels_tbi_in && known_indels_in && (step == 'mapping' || step == "markduplicates" || step == 'prepare_recalibration' || (tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope')))) {
         TABIX_KNOWN_INDELS(known_indels)
         known_indels_tbi_in = TABIX_KNOWN_INDELS.out.tbi.map { _meta, tbi -> [tbi] }.collect()
         versions = versions.mix(TABIX_KNOWN_INDELS.out.versions)
     }
-    else if (known_indels_in) {
+    else if (known_indels_tbi_in && known_indels_in && (step == 'mapping' || step == "markduplicates" || step == 'prepare_recalibration' || (tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope')))) {
         known_indels_tbi = Channel.fromPath(known_indels_tbi_in).collect()
     }
     else {
@@ -192,12 +192,12 @@ workflow PREPARE_GENOME {
         known_snps = Channel.fromPath(known_snps_in).collect()
     }
 
-    if (!known_snps_tbi_in && known_snps_in) {
+    if (!known_snps_tbi_in && known_snps_in && (step == 'mapping' || step == "markduplicates" || step == 'prepare_recalibration' || (tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper')))) {
         TABIX_KNOWN_SNPS(known_snps)
         known_snps_tbi_in = TABIX_KNOWN_SNPS.out.tbi.map { _meta, tbi -> [tbi] }.collect()
         versions = versions.mix(TABIX_KNOWN_SNPS.out.versions)
     }
-    else if (known_snps_in) {
+    else if (known_snps_tbi_in && known_snps_in && (step == 'mapping' || step == "markduplicates" || step == 'prepare_recalibration' || (tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper')))) {
         known_snps_tbi = Channel.fromPath(known_snps_tbi_in).collect()
     }
     else {
@@ -212,12 +212,12 @@ workflow PREPARE_GENOME {
         pon = Channel.fromPath(pon_in).collect()
     }
 
-    if (!pon_tbi_in && pon_in) {
+    if (!pon_tbi_in && pon_in && tools.split(',').contains('mutect2')) {
         TABIX_PON(pon)
         pon_tbi_in = TABIX_PON.out.tbi.map { _meta, tbi -> [tbi] }.collect()
         versions = versions.mix(TABIX_PON.out.versions)
     }
-    else if (pon_in) {
+    else if (pon_tbi_in && pon_in && tools.split(',').contains('mutect2')) {
         pon_tbi = Channel.fromPath(pon_tbi_in).collect()
     }
     else {
