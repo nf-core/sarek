@@ -53,7 +53,7 @@ workflow POST_VARIANTCALLING {
     }
     if(tools.split(',').contains('varlociraptor')) {
         varlociraptor_scenario_file = Channel.fromPath("${projectDir}/assets/varlociraptor_somatic_with_priors.yte.yaml").collect()
-        VCF_VARLOCIRAPTOR_SOMATIC(cram_somatic, fasta, fai, varlociraptor_scenario_file, somatic_vcfs, germline_vcfs, varlociraptor_chunk_size)
+        VCF_VARLOCIRAPTOR_SOMATIC(cram_somatic, fasta, fai, varlociraptor_scenario_file, somatic_vcfs, varlociraptor_chunk_size)
         vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.vcf)
         versions = versions.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.versions)
     }

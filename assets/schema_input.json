@@ -104,8 +104,8 @@
                 "exists": true
             },
             "contamination": {
-                "errorMessage": "(1 - tumor purity) must be a float value between 0 and 1, set to 0 for normal samples",
-                "type": "float",
+                "errorMessage": "(1 - tumor purity) must be a value between 0 and 1, set to 0 for normal samples",
+                "type": "number",
                 "exists": true
             },
             "vcf": {

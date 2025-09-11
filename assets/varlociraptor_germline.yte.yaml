@@ -18,7 +18,5 @@ samples:
     somatic-effective-mutation-rate: 1e-10
 
 events:
-  somatic_tumor_high: "normal:0.0 & tumor:[0.1,1.0]"
-  somatic_tumor_low: "normal:0.0 & tumor:]0.0,0.1["
   somatic_normal: "normal:]0.0,0.5["
   germline: "normal:0.5 | normal:1.0"
