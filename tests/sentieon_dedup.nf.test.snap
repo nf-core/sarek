@@ -25,7 +25,7 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_DEDUP": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -166,8 +166,8 @@
                 "test.recal.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
                 "test.recal.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
                 "test.recal.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917",
-                "test.dedup.cram.metrics:md5,d99864ac23e7b1b0aac2d5a1ad788c65",
-                "test.dedup.cram.metrics.multiqc.tsv:md5,1fee305029fbbd84caaf98548096569b"
+                "test.dedup.cram.metrics:md5,c72a3169b913cecb3516c13e1f70261c",
+                "test.dedup.cram.metrics.multiqc.tsv:md5,0ec144545dc9935071fac71317bf72a9"
             ],
             "No BAM files",
             [
@@ -208,7 +208,7 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_DEDUP": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -349,8 +349,8 @@
                 "test.recal.mosdepth.summary.txt:md5,3cf3700ecd4ec08825ab33e8bcbc3206",
                 "test.recal.regions.bed.gz:md5,ba570a03993dbc155da2e5bf8e42f62e",
                 "test.recal.regions.bed.gz.csi:md5,10b7f8e9ac2ac27205f8bc827a186195",
-                "test.consensus.cram.metrics:md5,2da4b908668b44c0d05764b6f85eb828",
-                "test.consensus.cram.metrics.multiqc.tsv:md5,a8d35404cd504a7aaa8a139baa807ac7"
+                "test.consensus.cram.metrics:md5,8ead3cad17069aab420ff49fb607da91",
+                "test.consensus.cram.metrics.multiqc.tsv:md5,f929da7813cf663821f56cd51658b7b1"
             ],
             "No BAM files",
             [
@@ -391,7 +391,7 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_DEDUP": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -532,8 +532,8 @@
                 "test.recal.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
                 "test.recal.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
                 "test.recal.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917",
-                "test.dedup.cram.metrics:md5,d12cc3b5de3622957d1bee3dc05a5cee",
-                "test.dedup.cram.metrics.multiqc.tsv:md5,74df489b95883c9f49ec48b22f8db033"
+                "test.dedup.cram.metrics:md5,cc12c100888477d2e14f96e80b184545",
+                "test.dedup.cram.metrics.multiqc.tsv:md5,2f8bdffa8b1e68e594815d829f4b24d4"
             ],
             "No BAM files",
             [
@@ -577,7 +577,7 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_DEDUP": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -718,8 +718,8 @@
                 "test-1.recal.mosdepth.summary.txt:md5,17f1b050f76ba0bfc96cbd045b627cd4",
                 "test-1.recal.regions.bed.gz:md5,175dba70847fa0f2e5a44a014fa91027",
                 "test-1.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
-                "test-1.consensus.cram.metrics:md5,7e37920e31e83b48c9986ce77e183f78",
-                "test-1.consensus.cram.metrics.multiqc.tsv:md5,022e965f83a73c581a005e6dad8a1780"
+                "test-1.consensus.cram.metrics:md5,1f83b87e7a0c32382fdc9c388c37194b",
+                "test-1.consensus.cram.metrics.multiqc.tsv:md5,7960f333d46ab62a71155a8f31b85103"
             ],
             "No BAM files",
             [
@@ -763,7 +763,7 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_DEDUP": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -904,8 +904,8 @@
                 "test-1.recal.mosdepth.summary.txt:md5,c01b82249d58f2f2c0d7473c588ffaf4",
                 "test-1.recal.regions.bed.gz:md5,b49899dadd40a3b54b0c43033d740aa8",
                 "test-1.recal.regions.bed.gz.csi:md5,5c556fe6462be13681267bb28257b654",
-                "test-1.dedup.cram.metrics:md5,f277ab6b490456f0016f7addb94c70cb",
-                "test-1.dedup.cram.metrics.multiqc.tsv:md5,c5913ace06b1b334839fa8226a968d44"
+                "test-1.dedup.cram.metrics:md5,0ad4400263793b9c5a2d92ff13b659d2",
+                "test-1.dedup.cram.metrics.multiqc.tsv:md5,eb9e7ae7386e2285dfcfdd809688e0f9"
             ],
             "No BAM files",
             [
