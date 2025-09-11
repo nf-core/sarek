@@ -91,47 +91,16 @@ workflow NFCORE_SAREK {
 
     // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
     bcftools_annotations = params.bcftools_annotations ? Channel.fromPath(params.bcftools_annotations).collect() : Channel.empty()
-    bcftools_header_lines = params.bcftools_header_lines ? Channel.fromPath(params.bcftools_header_lines).collect() : Channel.empty()
-    cf_chrom_len = params.cf_chrom_len ? Channel.fromPath(params.cf_chrom_len).collect() : []
     dbsnp = params.dbsnp ? Channel.fromPath(params.dbsnp).collect() : Channel.value([])
     // Mutect2 does not require a germline resource, so set to optional input
     germline_resource = params.germline_resource ? Channel.fromPath(params.germline_resource).collect() : Channel.value([])
     known_indels = params.known_indels ? Channel.fromPath(params.known_indels).collect() : Channel.value([])
     known_snps = params.known_snps ? Channel.fromPath(params.known_snps).collect() : Channel.value([])
-    mappability = params.mappability ? Channel.fromPath(params.mappability).collect() : Channel.value([])
     // PON is optional for Mutect2 (but highly recommended)
     pon = params.pon ? Channel.fromPath(params.pon).collect() : Channel.value([])
-    sentieon_dnascope_model = params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect() : Channel.value([])
 
     // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
     ascat_genome = params.ascat_genome ?: Channel.empty()
-    dbsnp_vqsr = params.dbsnp_vqsr ? Channel.value(params.dbsnp_vqsr) : Channel.empty()
-    known_indels_vqsr = params.known_indels_vqsr ? Channel.value(params.known_indels_vqsr) : Channel.empty()
-    known_snps_vqsr = params.known_snps_vqsr ? Channel.value(params.known_snps_vqsr) : Channel.empty()
-    ngscheckmate_bed = params.ngscheckmate_bed ? Channel.value(params.ngscheckmate_bed) : Channel.empty()
-    snpeff_db = params.snpeff_db ?: Channel.empty()
-    vep_cache_version = params.vep_cache_version ?: Channel.empty()
-    vep_genome = params.vep_genome ?: Channel.empty()
-    vep_species = params.vep_species ?: Channel.empty()
-
-    vep_extra_files = []
-
-    if (params.dbnsfp && params.dbnsfp_tbi) {
-        vep_extra_files.add(file(params.dbnsfp, checkIfExists: true))
-        vep_extra_files.add(file(params.dbnsfp_tbi, checkIfExists: true))
-    }
-    else if (params.dbnsfp && !params.dbnsfp_tbi) {
-        System.err.println("DBNSFP: ${params.dbnsfp} has been provided with `--dbnsfp, but no dbnsfp_tbi has")
-        System.err.println("cf: https://nf-co.re/sarek/parameters/#dbnsfp")
-        error("Execution halted due to dbnsfp inconsistency.")
-    }
-
-    if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && params.spliceai_indel_tbi) {
-        vep_extra_files.add(file(params.spliceai_indel, checkIfExists: true))
-        vep_extra_files.add(file(params.spliceai_indel_tbi, checkIfExists: true))
-        vep_extra_files.add(file(params.spliceai_snv, checkIfExists: true))
-        vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
-    }
 
     // build indexes if needed
     PREPARE_GENOME(
@@ -250,6 +219,25 @@ workflow NFCORE_SAREK {
         vep_cache = ANNOTATION_CACHE_INITIALISATION.out.ensemblvep_cache
     }
 
+    vep_extra_files = []
+
+    if (params.dbnsfp && params.dbnsfp_tbi) {
+        vep_extra_files.add(file(params.dbnsfp, checkIfExists: true))
+        vep_extra_files.add(file(params.dbnsfp_tbi, checkIfExists: true))
+    }
+    else if (params.dbnsfp && !params.dbnsfp_tbi) {
+        System.err.println("DBNSFP: ${params.dbnsfp} has been provided with `--dbnsfp, but no dbnsfp_tbi has")
+        System.err.println("cf: https://nf-co.re/sarek/parameters/#dbnsfp")
+        error("Execution halted due to dbnsfp inconsistency.")
+    }
+
+    if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && params.spliceai_indel_tbi) {
+        vep_extra_files.add(file(params.spliceai_indel, checkIfExists: true))
+        vep_extra_files.add(file(params.spliceai_indel_tbi, checkIfExists: true))
+        vep_extra_files.add(file(params.spliceai_snv, checkIfExists: true))
+        vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
+    }
+
     //
     // WORKFLOW: Run pipeline
     //
@@ -259,13 +247,13 @@ workflow NFCORE_SAREK {
         params.aligner,
         bcftools_annotations,
         bcftools_annotations_tbi,
-        bcftools_header_lines,
-        cf_chrom_len,
+        params.bcftools_header_lines ? Channel.fromPath(params.bcftools_header_lines).collect() : Channel.empty(),
+        params.cf_chrom_len ? Channel.fromPath(params.cf_chrom_len).collect() : [],
         PREPARE_GENOME.out.chr_files,
         cnvkit_reference,
         dbsnp,
         dbsnp_tbi,
-        dbsnp_vqsr,
+        params.dbsnp_vqsr ? Channel.value(params.dbsnp_vqsr) : Channel.empty(),
         PREPARE_GENOME.out.dict,
         PREPARE_GENOME.out.fasta,
         PREPARE_GENOME.out.fasta_fai,
@@ -279,27 +267,28 @@ workflow NFCORE_SAREK {
         intervals_bed_gz_tbi_and_num_intervals,
         intervals_bed_gz_tbi_combined,
         intervals_for_preprocessing,
-        known_indels_vqsr,
+        params.known_indels_vqsr ? Channel.value(params.known_indels_vqsr) : Channel.empty(),
         known_sites_indels,
         known_sites_indels_tbi,
         known_sites_snps,
         known_sites_snps_tbi,
-        known_snps_vqsr,
+        params.known_snps_vqsr ? Channel.value(params.known_snps_vqsr) : Channel.empty(),
         PREPARE_GENOME.out.loci_files,
-        mappability,
+        params.mappability ? Channel.fromPath(params.mappability).collect() : Channel.value([]),
         msisensorpro_scan,
-        ngscheckmate_bed,
+        params.ngscheckmate_bed ? Channel.value(params.ngscheckmate_bed) : Channel.empty(),
         pon,
         pon_tbi,
         PREPARE_GENOME.out.rt_file,
-        sentieon_dnascope_model,
+        params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect() : Channel.value([]),
         snpeff_cache,
+        params.snpeff_db,
         vep_cache,
-        vep_cache_version,
+        params.vep_cache_version,
         vep_extra_files,
         PREPARE_GENOME.out.vep_fasta,
-        vep_genome,
-        vep_species,
+        params.vep_genome,
+        params.vep_species,
         versions,
     )
 

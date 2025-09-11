@@ -99,6 +99,7 @@ workflow SAREK {
         rt_file
         sentieon_dnascope_model
         snpeff_cache
+        snpeff_db
         vep_cache
         vep_cache_version
         vep_extra_files
@@ -456,7 +457,7 @@ workflow SAREK {
                 vcf_to_annotate.map{meta, vcf -> [ meta + [ file_name: vcf.baseName ], vcf ] },
                 vep_fasta,
                 params.tools,
-                params.snpeff_db,
+                snpeff_db,
                 snpeff_cache,
                 vep_genome,
                 vep_species,
