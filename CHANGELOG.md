@@ -26,7 +26,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1939](https://github.com/nf-core/sarek/pull/1939) - Modify config to add readgroups to fq2bam
 - [1953](https://github.com/nf-core/sarek/pull/1953) - Update freebayes and add QUAL filtering
 - [1965](https://github.com/nf-core/sarek/pull/1965) - Add msisensor2
-- [1965](https://github.com/nf-core/sarek/pull/1965) - Add params for msisensor2 models and scan and msisensorpro scan
 
 ### Changed
 
@@ -80,9 +79,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params               | Status |
 | -------------------- | ------ |
-| `--freebayes_filter` | New    |
+| Params | Status |
+| `--freebayes_filter` | New |
+| `--msisensor2_models` | New |
+| `--msisensor2_scan` | New |
+| `--msisensorpro_scan` | New |
+| `--sentieon_consensus` | New |
+| `--umi_base_skip` | New |
+| `--umi_in_read_header` | New |
+| `--umi_length` | New |
+| `--umi_location` | New |
+| `--umi_tag` | New |
 
 ### Developer section
 
