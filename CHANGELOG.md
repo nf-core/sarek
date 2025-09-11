@@ -79,18 +79,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| -------------------- | ------ |
-| Params | Status |
-| `--freebayes_filter` | New |
-| `--msisensor2_models` | New |
-| `--msisensor2_scan` | New |
-| `--msisensorpro_scan` | New |
-| `--sentieon_consensus` | New |
-| `--umi_base_skip` | New |
-| `--umi_in_read_header` | New |
-| `--umi_length` | New |
-| `--umi_location` | New |
-| `--umi_tag` | New |
+| Params                 | status |
+| ---------------------- | ------ |
+| `--freebayes_filter`   | New    |
+| `--msisensor2_models`  | New    |
+| `--msisensor2_scan`    | New    |
+| `--msisensorpro_scan`  | New    |
+| `--sentieon_consensus` | New    |
+| `--umi_base_skip`      | New    |
+| `--umi_in_read_header` | New    |
+| `--umi_length`         | New    |
+| `--umi_location`       | New    |
+| `--umi_tag`            | New    |
 
 ### Developer section
 
