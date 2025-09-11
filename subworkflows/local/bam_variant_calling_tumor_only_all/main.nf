@@ -88,7 +88,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     // CNVKIT
     if (tools.split(',').contains('cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT(
-            cram.map { meta, cram, crai -> [meta, cram, []] },
+            bam.map { meta, bam, bai -> [meta, bam, []] },
             fasta,
             fasta_fai,
             [[id: "null"], []],

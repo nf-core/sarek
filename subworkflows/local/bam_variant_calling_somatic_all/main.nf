@@ -56,16 +56,16 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     versions = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    out_indexcov = Channel.empty()
-    out_msisensor2 = Channel.empty()
+    out_indexcov     = Channel.empty()
+    out_msisensor2   = Channel.empty()
     out_msisensorpro = Channel.empty()
-    vcf_freebayes = Channel.empty()
-    vcf_manta = Channel.empty()
-    vcf_muse = Channel.empty()
-    vcf_mutect2 = Channel.empty()
-    vcf_strelka = Channel.empty()
-    vcf_tiddit = Channel.empty()
-    vcf_tnscope = Channel.empty()
+    vcf_freebayes    = Channel.empty()
+    vcf_manta        = Channel.empty()
+    vcf_muse         = Channel.empty()
+    vcf_mutect2      = Channel.empty()
+    vcf_strelka      = Channel.empty()
+    vcf_tiddit       = Channel.empty()
+    vcf_tnscope      = Channel.empty()
 
     if (tools.split(',').contains('ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
@@ -123,7 +123,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     // CNVKIT
     if (tools.split(',').contains('cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT(
-            cram.map { meta, normal_cram, _normal_crai, tumor_cram, _tumor_crai -> [meta, tumor_cram, normal_cram] },
+            bam.map { meta, normal_bam, _normal_bai, tumor_bam, _tumor_bai -> [meta, tumor_bam, normal_bam] },
             fasta,
             fasta_fai,
             intervals_bed_combined.map { _intervals -> _intervals ? [[id: _intervals[0].baseName], _intervals] : [[id: 'no_intervals'], []] },
