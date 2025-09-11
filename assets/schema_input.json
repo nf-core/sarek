@@ -103,6 +103,11 @@
                 "format": "file-path",
                 "exists": true
             },
+            "contamination": {
+                "errorMessage": "(1 - tumor purity) must be a float value between 0 and 1, set to 0 for normal samples",
+                "type": "float",
+                "exists": true
+            },
             "vcf": {
                 "errorMessage": "VCF file for reads 1 cannot contain spaces, has to be a string, has to exist and must have extension '.vcf' or '.vcf.gz'",
                 "type": "string",

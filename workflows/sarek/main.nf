@@ -99,7 +99,6 @@ workflow SAREK {
         rt_file
         sentieon_dnascope_model
         snpeff_cache
-        varlociraptor_scenario_file
         vep_cache
         vep_cache_version
         vep_extra_files
@@ -302,11 +301,12 @@ workflow SAREK {
             .map { normal, tumor ->
                 def meta = [:]
 
-                meta.id         = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
-                meta.normal_id  = normal[1].sample
-                meta.patient    = normal[0]
-                meta.sex        = normal[1].sex
-                meta.tumor_id   = tumor[1].sample
+                meta.id            = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
+                meta.normal_id     = normal[1].sample
+                meta.patient       = normal[0]
+                meta.sex           = normal[1].sex
+                meta.tumor_id      = tumor[1].sample
+                meta.contamination = tumor[1].contamination ?: 0.5
 
                 [ meta, normal[2], normal[3], tumor[2], tumor[3] ]
             }
@@ -411,7 +411,6 @@ workflow SAREK {
                 params.concatenate_vcfs,
                 params.normalize_vcfs,
                 params.varlociraptor_chunk_size,
-                varlociraptor_scenario_file
             )
 
         // Gather vcf files for annotation and QC

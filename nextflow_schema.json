@@ -438,12 +438,6 @@
                     "description": "Number of chunks to split the vcf-files for varlociraptor",
                     "hidden": true
                 },
-                "varlociraptor_scenario_file": {
-                    "type": "string",
-                    "hidden": true,
-                    "description": "Scenario file to be used for varlociraptor",
-                    "help_text": "More info can be found here: https://varlociraptor.github.io/varlociraptor-scenarios/landing/"
-                },
                 "concatenate_vcfs": {
                     "type": "boolean",
                     "fa_icon": "fas fa-tape",

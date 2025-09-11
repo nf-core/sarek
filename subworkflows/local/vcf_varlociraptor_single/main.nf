@@ -93,7 +93,6 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     // CALL VARIANTS WITH VARLOCIRAPTOR
     //
 
-    // TODO: joint varlociraptor calling of ALL germline VCFs
     VARLOCIRAPTOR_CALLVARIANTS(
         VARLOCIRAPTOR_PREPROCESS.out.bcf,
         ch_scenario_file.map{ it -> it[1] }.first(), // scenario file

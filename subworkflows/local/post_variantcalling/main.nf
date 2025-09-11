@@ -22,7 +22,6 @@ workflow POST_VARIANTCALLING {
     concatenate_vcfs
     normalize_vcfs
     varlociraptor_chunk_size      // integer: [mandatory] [default: 15] number of chunks to split BCF files when preprocessing and calling variants
-    varlociraptor_scenario_file   // string: [mandatory] [default: "$projectDir/assets/varlociraptor_somatic_with_priors.yte.yaml"] path to the varlociraptor scenario file
 
     main:
     versions = Channel.empty()
@@ -47,16 +46,19 @@ workflow POST_VARIANTCALLING {
     // VARLOCIRAPTOR
     //
     if(tools.split(',').contains('varlociraptor')) {
+        varlociraptor_scenario_file = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
         VCF_VARLOCIRAPTOR_GERMLINE(cram_germline, fasta, fai, varlociraptor_scenario_file, germline_vcfs, varlociraptor_chunk_size, 'normal')
         vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.vcf)
         versions = versions.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.versions)
     }
     if(tools.split(',').contains('varlociraptor')) {
-        VCF_VARLOCIRAPTOR_SOMATIC(cram_somatic, fasta, fai, varlociraptor_scenario_file, somatic_vcfs, varlociraptor_chunk_size)
+        varlociraptor_scenario_file = Channel.fromPath("${projectDir}/assets/varlociraptor_somatic_with_priors.yte.yaml").collect()
+        VCF_VARLOCIRAPTOR_SOMATIC(cram_somatic, fasta, fai, varlociraptor_scenario_file, somatic_vcfs, germline_vcfs, varlociraptor_chunk_size)
         vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.vcf)
         versions = versions.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.versions)
     }
     if(tools.split(',').contains('varlociraptor')) {
+        varlociraptor_scenario_file = Channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect()
         VCF_VARLOCIRAPTOR_TUMOR_ONLY(cram_tumor_only, fasta, fai, varlociraptor_scenario_file, tumor_only_vcfs, varlociraptor_chunk_size, 'tumor')
         vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.vcf)
         versions = versions.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.versions)

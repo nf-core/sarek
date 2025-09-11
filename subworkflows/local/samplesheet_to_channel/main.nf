@@ -102,8 +102,8 @@ workflow SAMPLESHEET_TO_CHANNEL {
     // Count number of lanes per sample
     // Combine with channel ch_with_patient_sample to add numLanes information
     input_sample = ch_from_samplesheet
-        .map { meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller ->
-            [meta.patient + meta.sample, [meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller]]
+        .map { meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, contamination, vcf, variantcaller ->
+            [meta.patient + meta.sample, [meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, contamination, vcf, variantcaller]]
         }
         .tap { ch_with_patient_sample }
         .groupTuple()
@@ -112,7 +112,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
         }
         .combine(ch_with_patient_sample, by: 0)
         .map { _patient_sample, num_lanes, ch_items ->
-            def (meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller) = ch_items
+            def (meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, contamination, vcf, variantcaller) = ch_items
 
             if ((meta.lane || meta.lane == 0) && fastq_2) {
                 // mapping from fastq files
@@ -208,6 +208,9 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 else {
                     error("Samplesheet contains bam files but step is `${step}`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
                 }
+            }
+            if (contamination) {
+                meta = meta + [ contamination: contamination]
             }
             else if (vcf) {
                 // annotation

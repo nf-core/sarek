@@ -13,16 +13,6 @@ species:
   genome-size: 3.5e9
 
 samples:
-  tumor:
-    sex: ?sex_string
-    somatic-effective-mutation-rate: 1e-6
-    inheritance:
-      clonal:
-        from: normal
-        somatic: true
-    contamination:
-      by: normal
-      fraction: ?contamination
   normal:
     sex: ?sex_string
     somatic-effective-mutation-rate: 1e-10

@@ -107,7 +107,6 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     // CHUNK AND PREPROCESS NORMAL VCF
     //
 
-    // TODO: do i need to use the germline VCF here?
     VCFSPLIT_NORMAL(
         ch_vcf,
         val_num_chunks
