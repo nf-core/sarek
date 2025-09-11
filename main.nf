@@ -94,7 +94,6 @@ workflow NFCORE_SAREK {
     bcftools_header_lines = params.bcftools_header_lines ? Channel.fromPath(params.bcftools_header_lines).collect() : Channel.empty()
     cf_chrom_len = params.cf_chrom_len ? Channel.fromPath(params.cf_chrom_len).collect() : []
     dbsnp = params.dbsnp ? Channel.fromPath(params.dbsnp).collect() : Channel.value([])
-    fasta_fai = params.fasta_fai ? Channel.fromPath(params.fasta_fai).collect() : Channel.empty()
     // Mutect2 does not require a germline resource, so set to optional input
     germline_resource = params.germline_resource ? Channel.fromPath(params.germline_resource).collect() : Channel.value([])
     known_indels = params.known_indels ? Channel.fromPath(params.known_indels).collect() : Channel.value([])
@@ -144,9 +143,11 @@ workflow NFCORE_SAREK {
         params.bwa,
         params.bwamem2,
         params.chr_dir,
+        params.dict,
         dbsnp,
         params.dragmap,
         params.fasta,
+        params.fasta_fai,
         germline_resource,
         known_indels,
         known_snps,
@@ -155,15 +156,6 @@ workflow NFCORE_SAREK {
         params.step,
         params.vep_include_fasta,
     )
-
-    // Gather built indices or get them from the params
-    // Built from the fasta file:
-    dict = params.dict
-        ? Channel.fromPath(params.dict).map { it -> [[id: 'dict'], it] }.collect()
-        : PREPARE_GENOME.out.dict
-    fasta_fai = params.fasta_fai
-        ? Channel.fromPath(params.fasta_fai).map { it -> [[id: 'fai'], it] }.collect()
-        : PREPARE_GENOME.out.fasta_fai
 
     // TODO: add a params for msisensorpro_scan
     msisensorpro_scan = PREPARE_GENOME.out.msisensorpro_scan
@@ -185,7 +177,7 @@ workflow NFCORE_SAREK {
     known_sites_snps_tbi = dbsnp_tbi.concat(known_snps_tbi).collect()
 
     // Build intervals if needed
-    PREPARE_INTERVALS(fasta_fai, params.intervals, params.no_intervals, params.nucleotides_per_second, params.outdir, params.step)
+    PREPARE_INTERVALS(PREPARE_GENOME.out.fasta_fai, params.intervals, params.no_intervals, params.nucleotides_per_second, params.outdir, params.step)
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     // [interval.bed] all intervals in one file
@@ -273,9 +265,9 @@ workflow NFCORE_SAREK {
         dbsnp,
         dbsnp_tbi,
         dbsnp_vqsr,
-        dict,
+        PREPARE_GENOME.out.dict,
         PREPARE_GENOME.out.fasta,
-        fasta_fai,
+        PREPARE_GENOME.out.fasta_fai,
         PREPARE_GENOME.out.gc_file,
         germline_resource,
         germline_resource_tbi,

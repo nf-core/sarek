@@ -26,9 +26,11 @@ workflow PREPARE_GENOME {
     bwa_in               // params.bwa
     bwamem2_in           // params.bwamem2
     chr_dir              // params.chr_dir
+    dict_in              // params.dict
     dbsnp                // channel: [optional]  dbsnp
     dragmap_in           // params.dragmap
     fasta_in             // params.fasta
+    fasta_fai_in         // params.fasta_fai
     germline_resource    // channel: [optional]  germline_resource
     known_indels         // channel: [optional]  known_indels
     known_snps           // channel: [optional]  known_snps
@@ -45,6 +47,8 @@ workflow PREPARE_GENOME {
     vep_fasta = vep_include_fasta ? fasta : [[id: 'null'], []]
 
     index_alignment = Channel.empty()
+    dict = Channel.empty()
+    fasta_fai = Channel.empty()
 
     if (!bwa_in && step == 'mapping' && (aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks")) {
         BWAMEM1_INDEX(fasta)
@@ -71,9 +75,25 @@ workflow PREPARE_GENOME {
         index_alignment = Channel.fromPath(dragmap_in).map { index -> [[id: 'dragmap'], index] }.collect()
     }
 
-    GATK4_CREATESEQUENCEDICTIONARY(fasta)
+    if (!dict_in && step != "annotate") {
+        GATK4_CREATESEQUENCEDICTIONARY(fasta)
+        dict = GATK4_CREATESEQUENCEDICTIONARY.out.dict.collect()
+        versions = versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
+    }
+    else if (dict_in) {
+        dict = Channel.fromPath(dict_in).map { it -> [[id: 'dict'], it] }.collect()
+    }
+
+    if (!fasta_fai_in && step != "annotate") {
+        SAMTOOLS_FAIDX(fasta, [[id: 'no_fai'], []], false)
+        fasta_fai = SAMTOOLS_FAIDX.out.fai.collect()
+        versions = versions.mix(SAMTOOLS_FAIDX.out.versions)
+    }
+    else if (fasta_fai_in) {
+        fasta_fai = Channel.fromPath(fasta_fai_in).map { it -> [[id: 'fai'], it] }.collect()
+    }
+
     MSISENSORPRO_SCAN(fasta)
-    SAMTOOLS_FAIDX(fasta, [[id: 'no_fai'], []], false)
 
     // the following are flattened and mapped in case the user supplies more than one value for the param
     // written for KNOWN_INDELS, but preemptively applied to the rest
@@ -148,9 +168,7 @@ workflow PREPARE_GENOME {
     }
 
     // Gather versions of all tools used
-    versions = versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
     versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
-    versions = versions.mix(SAMTOOLS_FAIDX.out.versions)
     versions = versions.mix(TABIX_BCFTOOLS_ANNOTATIONS.out.versions)
     versions = versions.mix(TABIX_DBSNP.out.versions)
     versions = versions.mix(TABIX_GERMLINE_RESOURCE.out.versions)
@@ -162,10 +180,10 @@ workflow PREPARE_GENOME {
     fasta                    // Channel: [ meta, fasta ]
     index_alignment          // Channel: [ meta, index_alignment ] either bwa, bwamem2 or dragmap
     vep_fasta                // Channel: [ meta, vep_fasta ]
+    dict                     // Channel: [ meta, dict ]
+    fasta_fai                // Channel: [ meta, fasta_fai ]
     bcftools_annotations_tbi = TABIX_BCFTOOLS_ANNOTATIONS.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: bcftools_annotations.vcf.gz.tbi
     dbsnp_tbi                = TABIX_DBSNP.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: dbsnb.vcf.gz.tbi
-    dict                     = GATK4_CREATESEQUENCEDICTIONARY.out.dict.collect() // path: genome.fasta.dict
-    fasta_fai                = SAMTOOLS_FAIDX.out.fai.collect() // path: genome.fasta.fai
     germline_resource_tbi    = TABIX_GERMLINE_RESOURCE.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: germline_resource.vcf.gz.tbi
     known_snps_tbi           = TABIX_KNOWN_SNPS.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: {known_indels*}.vcf.gz.tbi
     known_indels_tbi         = TABIX_KNOWN_INDELS.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: {known_indels*}.vcf.gz.tbi
