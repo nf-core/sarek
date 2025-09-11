@@ -152,12 +152,12 @@ workflow PREPARE_GENOME {
         germline_resource = Channel.fromPath(germline_resource_in).collect()
     }
 
-    if (!germline_resource_tbi_in && germline_resource_in && tools.split(',').contains('mutect2') && tools.split(',').contains('sentieon_tnscope')) {
+    if (!germline_resource_tbi_in && germline_resource_in && (tools.split(',').contains('mutect2') || tools.split(',').contains('sentieon_tnscope'))) {
         TABIX_GERMLINE_RESOURCE(germline_resource)
         germline_resource_tbi_in = TABIX_GERMLINE_RESOURCE.out.tbi.map { _meta, tbi -> [tbi] }.collect()
         versions = versions.mix(TABIX_GERMLINE_RESOURCE.out.versions)
     }
-    else if (germline_resource_tbi_in && germline_resource_in && tools.split(',').contains('mutect2') && tools.split(',').contains('sentieon_tnscope')) {
+    else if (germline_resource_tbi_in && germline_resource_in && (tools.split(',').contains('mutect2') || tools.split(',').contains('sentieon_tnscope'))) {
         germline_resource_tbi = Channel.fromPath(germline_resource_tbi_in).collect()
     }
     else {
