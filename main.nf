@@ -99,9 +99,6 @@ workflow NFCORE_SAREK {
     // PON is optional for Mutect2 (but highly recommended)
     pon = params.pon ? Channel.fromPath(params.pon).collect() : Channel.value([])
 
-    // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
-    ascat_genome = params.ascat_genome ?: Channel.empty()
-
     // build indexes if needed
     PREPARE_GENOME(
         params.ascat_alleles,
