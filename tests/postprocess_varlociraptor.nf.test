@@ -1,5 +1,6 @@
 def projectDir = new File('.').absolutePath
 def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+// NOTE: needs to be run with --profile test,mutect,singularity
 
 nextflow_pipeline {
 

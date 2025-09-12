@@ -62,16 +62,17 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     }
 
     ch_vcf_merged = Channel.empty()
-    if (!ch_vcf.freebayes.isEmpty()) {
-        MERGE_FREEBAYES_VCFS(
-            ch_vcf.freebayes.map{ meta, vcf -> [ [meta.id, meta.variantcaller], meta, vcf ] }
-                .combine(ch_germline_vcf.map{ meta, vcf -> [ [meta.id, meta.variantcaller], meta, vcf ] }, by: 0)
-                .map{ _id, meta_somatic, somatic_vcf, _meta_germline, germline_vcf ->
-                    [ meta_somatic, [ somatic_vcf, germline_vcf ], [] ]
-                }
-        )
-        ch_vcf_merged = MERGE_FREEBAYES_VCFS.out.vcf
-    }
+    MERGE_FREEBAYES_VCFS(
+        ch_vcf.freebayes.map{ meta, vcf -> [ [meta.id, meta.variantcaller], meta, vcf ] }
+            .combine(ch_germline_vcf.map{ meta, vcf -> [ [meta.id, meta.variantcaller], meta, vcf ] }, by: 0)
+            .map{ _id, meta_somatic, somatic_vcf, _meta_germline, germline_vcf ->
+                [ meta_somatic, [ somatic_vcf, germline_vcf ], [] ]
+            }
+    )
+
+    ch_versions = ch_versions.mix(MERGE_FREEBAYES_VCFS.out.versions)
+
+    ch_vcf_merged = MERGE_FREEBAYES_VCFS.out.vcf
 
     ch_vcf = ch_vcf_merged.mix(ch_vcf.other)
 
