@@ -306,7 +306,7 @@ workflow SAREK {
                 meta.patient       = normal[0]
                 meta.sex           = normal[1].sex
                 meta.tumor_id      = tumor[1].sample
-                meta.contamination = tumor[1].contamination ?: 0.5
+                meta.contamination = tumor[1].contamination
 
                 [ meta, normal[2], normal[3], tumor[2], tumor[3] ]
             }

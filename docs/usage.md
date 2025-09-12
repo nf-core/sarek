@@ -869,9 +869,7 @@ For a detailed tutorial on how to create a panel-of-normals, see [here](https://
 
 ## How to customize the varlociraptor calling
 
-Varlociraptor allows the usage of different scenario files, a few examples can be found in the [scenario catalog](https://varlociraptor.github.io/varlociraptor-scenarios/landing/). Currently only scenarios that have information on "normal" (germline case), "normal" and "tumor" (somatic and tumor-only case) are supported. You can use your own scenario file by adding it to the run command with `--varlociraptor_scenario_file <path/to/scenario/file`.
-
-You can also control the number of chunks that the candidate VCF file is split into by `--varlociraptor_chunk_size <integer>`, it is set to reasonable default (15) but more chunks might aid in accelerating your workflow run if you can run more processes in parallel.
+You can control the number of chunks that the candidate VCF file is split into by `--varlociraptor_chunk_size <integer>`, it is set to reasonable default (15) but more chunks might aid in accelerating your workflow run if you can run more processes in parallel.
 
 ## Spark related issues
 
