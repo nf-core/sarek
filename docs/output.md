@@ -936,10 +936,12 @@ As varlociraptor requires to provide a set of candidate variants to consider it 
   - JSON file containing alignment properties for normal sample cram (germline & somatic calling)
 - `<tumor_id>/<tumor_id>.alignment-properties.json`
   - JSON file containing alignment properties for tumor sample cram (tumor-only & somatic calling)
-- `<normal_id>/<normal_id>.<caller>.split.<0,1,2...>.bcf` and `<normal_id>/<normal_id>.<caller>.preprocess.<0,1,2...>.bcf`
-  - Candidate variants split into chunks and preprocessed for calling (germline & somatic calling)
-- `<tumor_id>/<tumor_id>.<caller>.split.<0,1,2...>.bcf` and `<tumor_id>/<tumor_id>.<caller>.preprocess.<0,1,2...>.bcf`
-  - Candidate variants split into chunks and preprocessed for calling (tumor-only & somatic calling)
+- `<sample>/<sample>.<caller>.split.<0,1,2...>.bcf`
+  - Candidate variants split into chunks
+- `<normal_id>/<normal_id>.<caller>.preprocess.<0,1,2...>.bcf`
+  - Candidate variants preprocessed for calling (germline & somatic calling)
+- `<tumor_id>/<tumor_id>.<caller>.preprocess.<0,1,2...>.bcf`
+  - Candidate variants split preprocessed for calling (tumor-only & somatic calling)
 - `<sample>/<sample>.<caller>.call.<0,1,2...>.bcf`, `<sample>/<sample>.<caller>.sort.<0,1,2...>.vcf.gz` and `<sample>/<sample>.<caller>.sort.<0,1,2...>.vcf.gz.tbi`
   - Called variants (call) and sorted variants (sort), still in chunks
   </details>
