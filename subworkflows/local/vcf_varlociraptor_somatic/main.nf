@@ -1,5 +1,5 @@
 include { BCFTOOLS_CONCAT as MERGE_CALLED_CHUNKS                                  } from '../../../modules/nf-core/bcftools/concat'
-include { BCFTOOLS_CONCAT as MERGE_FREEBAYES_VCFS                                 } from '../../../modules/nf-core/bcftools/concat'
+include { BCFTOOLS_CONCAT as MERGE_GERMLINE_SOMATIC_VCFS                          } from '../../../modules/nf-core/bcftools/concat'
 include { BCFTOOLS_SORT as SORT_CALLED_CHUNKS                                     } from '../../../modules/nf-core/bcftools/sort'
 include { RBT_VCFSPLIT                                                            } from '../../../modules/nf-core/rbt/vcfsplit'
 include { VARLOCIRAPTOR_CALLVARIANTS                                              } from '../../../modules/nf-core/varlociraptor/callvariants'
@@ -54,27 +54,39 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_versions = ch_versions.mix(ALIGNMENTPROPERTIES_TUMOR.out.versions)
     ch_versions = ch_versions.mix(ALIGNMENTPROPERTIES_NORMAL.out.versions)
 
-    // Combine somatic and germline VCFs of freebayes
-    // Check if variantcaller is freebayes, if yes merge germline and somatic VCFs, otherwise use somatic VCF
-    ch_vcf = ch_somatic_vcf.branch {
-        freebayes: it[0].variantcaller == 'freebayes'
-        other: it[0].variantcaller != 'freebayes'
-    }
+    // Prepare somatic and germline VCFs for matching
+    def somatic_with_key = ch_somatic_vcf.map { meta, vcf ->
+            [[id: meta.id, variantcaller: meta.variantcaller], meta, vcf]
+        }
 
-    ch_vcf_merged = Channel.empty()
-    MERGE_FREEBAYES_VCFS(
-        ch_vcf.freebayes.map{ meta, vcf -> [ [meta.id, meta.variantcaller], meta, vcf ] }
-            .combine(ch_germline_vcf.map{ meta, vcf -> [ [meta.id, meta.variantcaller], meta, vcf ] }, by: 0)
-            .map{ _id, meta_somatic, somatic_vcf, _meta_germline, germline_vcf ->
-                [ meta_somatic, [ somatic_vcf, germline_vcf ], [] ]
-            }
+    def germline_with_key = ch_germline_vcf.map { meta, vcf ->
+            [[id: meta.id, variantcaller: meta.variantcaller], meta, vcf]
+        }
+
+    // Join somatic and germline VCFs with matching ID and variantcaller
+    def matching_pairs = somatic_with_key.join(germline_with_key, failOnMismatch: false)
+
+    matching_pairs.dump{ tag: "matching_pairs" }
+
+    // Branch based on whether a matching germline VCF was found
+    def branched = matching_pairs.branch {
+            matched: it.size() == 5  // Contains [key, meta_somatic, somatic_vcf, meta_germline, germline_vcf]
+            unmatched: it.size() == 3  // Contains [key, meta_somatic, somatic_vcf]
+        }
+
+    // For matched pairs, merge the VCFs
+    MERGE_GERMLINE_SOMATIC_VCFS(
+        branched.matched.map { key, meta_somatic, somatic_vcf, meta_germline, germline_vcf ->
+            [meta_somatic, [somatic_vcf, germline_vcf], []]
+        }
     )
 
-    ch_versions = ch_versions.mix(MERGE_FREEBAYES_VCFS.out.versions)
+    ch_versions = ch_versions.mix(MERGE_GERMLINE_SOMATIC_VCFS.out.versions)
 
-    ch_vcf_merged = MERGE_FREEBAYES_VCFS.out.vcf
-
-    ch_vcf = ch_vcf_merged.mix(ch_vcf.other)
+    // Combine merged VCFs with unmatched somatic VCFs
+    ch_vcf = MERGE_GERMLINE_SOMATIC_VCFS.out.vcf.mix(
+        branched.unmatched.map { key, meta, vcf -> [meta, vcf] }
+        )
 
     //
     // CHUNK VCF FILES
