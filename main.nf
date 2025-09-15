@@ -184,14 +184,14 @@ workflow NFCORE_SAREK {
     msisensorpro_scan = PREPARE_GENOME.out.msisensorpro_scan
 
     // Tabix indexed vcf files
-    bcftools_annotations_tbi = params.bcftools_annotations ? params.bcftools_annotations_tbi ? Channel.fromPath(params.bcftools_annotations_tbi).collect()  : PREPARE_GENOME.out.bcftools_annotations_tbi : Channel.value([])
-    dbsnp_tbi                = params.dbsnp                ? params.dbsnp_tbi                ? Channel.fromPath(params.dbsnp_tbi).collect()                 : PREPARE_GENOME.out.dbsnp_tbi                : Channel.value([])
+    bcftools_annotations_tbi = params.bcftools_annotations ? params.bcftools_annotations_tbi ? Channel.fromPath(params.bcftools_annotations_tbi).collect() : PREPARE_GENOME.out.bcftools_annotations_tbi : Channel.value([])
+    dbsnp_tbi                = params.dbsnp                ? params.dbsnp_tbi                ? Channel.fromPath(params.dbsnp_tbi).collect()                : PREPARE_GENOME.out.dbsnp_tbi                : Channel.value([])
     //do not change to Channel.value([]), the check for its existence then fails for Getpileupsumamries
-    germline_resource_tbi    = params.germline_resource    ? params.germline_resource_tbi    ? Channel.fromPath(params.germline_resource_tbi).collect()     : PREPARE_GENOME.out.germline_resource_tbi    : []
-    known_indels_tbi         = params.known_indels         ? params.known_indels_tbi         ? Channel.fromPath(params.known_indels_tbi).collect()          : PREPARE_GENOME.out.known_indels_tbi         : Channel.value([])
-    known_snps_tbi           = params.known_snps           ? params.known_snps_tbi           ? Channel.fromPath(params.known_snps_tbi).collect()            : PREPARE_GENOME.out.known_snps_tbi           : Channel.value([])
-    mutect2_force_call_tbi   = params.mutect2_force_call   ? params.mutect2_force_call_tbi   ? Channel.fromPath(params.mutect2_force_call_tbi).collect()    : PREPARE_GENOME.out.mutect2_force_call_tbi   : Channel.value([])    
-    pon_tbi                  = params.pon                  ? params.pon_tbi                  ? Channel.fromPath(params.pon_tbi).collect()                   : PREPARE_GENOME.out.pon_tbi                  : Channel.value([])
+    germline_resource_tbi    = params.germline_resource    ? params.germline_resource_tbi    ? Channel.fromPath(params.germline_resource_tbi).collect()    : PREPARE_GENOME.out.germline_resource_tbi    : []
+    known_indels_tbi         = params.known_indels         ? params.known_indels_tbi         ? Channel.fromPath(params.known_indels_tbi).collect()         : PREPARE_GENOME.out.known_indels_tbi         : Channel.value([])
+    known_snps_tbi           = params.known_snps           ? params.known_snps_tbi           ? Channel.fromPath(params.known_snps_tbi).collect()           : PREPARE_GENOME.out.known_snps_tbi           : Channel.value([])
+    mutect2_force_call_tbi   = params.mutect2_force_call   ? params.mutect2_force_call_tbi   ? Channel.fromPath(params.mutect2_force_call_tbi).collect()   : PREPARE_GENOME.out.mutect2_force_call_tbi   : Channel.value([])    
+    pon_tbi                  = params.pon                  ? params.pon_tbi                  ? Channel.fromPath(params.pon_tbi).collect()                  : PREPARE_GENOME.out.pon_tbi                  : Channel.value([])
 
     // known_sites is made by grouping both the dbsnp and the known snps/indels resources
     // Which can either or both be optional
