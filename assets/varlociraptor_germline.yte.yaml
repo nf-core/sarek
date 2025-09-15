@@ -15,8 +15,6 @@ species:
 samples:
   normal:
     sex: ?sex_string
-    somatic-effective-mutation-rate: 1e-10
 
 events:
-  somatic_normal: "normal:]0.0,0.5["
   germline: "normal:0.5 | normal:1.0"
