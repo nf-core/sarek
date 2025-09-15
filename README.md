@@ -164,6 +164,7 @@ We thank the following people for their extensive assistance in the development 
 - [Jonas Kjellin](https://github.com/kjellinjonas)
 - [José Fernández Navarro](https://github.com/jfnavarro)
 - [Júlia Mir Pedrol](https://github.com/mirpedrol)
+- [Julian Chiu](https://github.com/jchchiu)
 - [Ken Brewer](https://github.com/kenibrewer)
 - [Lasse Westergaard Folkersen](https://github.com/lassefolkersen)
 - [Lucia Conde](https://github.com/lconde-ucl)

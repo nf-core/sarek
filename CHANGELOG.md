@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1937](https://github.com/nf-core/sarek/pull/1937) - Add support for UMIs in read headers via `--umi_in_read_header`
 - [1937](https://github.com/nf-core/sarek/pull/1937) - Add consensus read generation when using sentieon dedup via `--sentieon_consensus`
 - [1937](https://github.com/nf-core/sarek/pull/1937) - Use fgbio plugin to check read structure parameter is valid
+- [1952](https://github.com/nf-core/sarek/pull/1952) - Add --alleles force-calling parameter for GATK Mutect2
 
 ### Changed
 
