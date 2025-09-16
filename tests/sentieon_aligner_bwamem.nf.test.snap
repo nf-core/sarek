@@ -23,7 +23,7 @@
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -99,10 +99,10 @@
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "SENTIEON_DEDUP": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -135,8 +135,8 @@
             ],
             [
                 "test-test_L1.fastp.json:md5,d9107ec414e44408d0698b167cc445f9",
-                "test.dedup.cram.metrics:md5,9a211cdc83c96fd02b0f33d67a777f21",
-                "test.dedup.cram.metrics.multiqc.tsv:md5,b0918043a0610e070495488491bbbabc"
+                "test.dedup.cram.metrics:md5,e232a68c4de44da87af0614b327268f0",
+                "test.dedup.cram.metrics.multiqc.tsv:md5,a1e31b30780c7501a1b771a0299236df"
             ],
             "No BAM files",
             [

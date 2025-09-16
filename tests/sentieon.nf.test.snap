@@ -36,7 +36,7 @@
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21

@@ -143,12 +143,12 @@
                     },
                     "ensemblvep/download": {
                         "branch": "master",
-                        "git_sha": "2fcc53751152a999bfc9c24f75f494b9e5bb338f",
+                        "git_sha": "f9234d35f5b9143313a4773fb54716876c030323",
                         "installed_by": ["modules"]
                     },
                     "ensemblvep/vep": {
                         "branch": "master",
-                        "git_sha": "2fcc53751152a999bfc9c24f75f494b9e5bb338f",
+                        "git_sha": "f9234d35f5b9143313a4773fb54716876c030323",
                         "installed_by": ["modules", "vcf_annotate_ensemblvep"]
                     },
                     "fastp": {
@@ -346,14 +346,24 @@
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
+                    "msisensor2/msi": {
+                        "branch": "master",
+                        "git_sha": "3dd258af3d271de7477016619e68f497456911f1",
+                        "installed_by": ["modules"]
+                    },
+                    "msisensor2/scan": {
+                        "branch": "master",
+                        "git_sha": "4906b6ccc403a1ed972013e31608d233067b1cca",
+                        "installed_by": ["modules"]
+                    },
                     "msisensorpro/msisomatic": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "msisensorpro/scan": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {
@@ -428,47 +438,47 @@
                     },
                     "sentieon/applyvarcal": {
                         "branch": "master",
-                        "git_sha": "6b36f8e5427ec38911565398de57656ca3a2606a",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "sentieon/bwamem": {
                         "branch": "master",
-                        "git_sha": "6b36f8e5427ec38911565398de57656ca3a2606a",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "sentieon/dedup": {
                         "branch": "master",
-                        "git_sha": "6b36f8e5427ec38911565398de57656ca3a2606a",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "sentieon/dnamodelapply": {
                         "branch": "master",
-                        "git_sha": "6b36f8e5427ec38911565398de57656ca3a2606a",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "sentieon/dnascope": {
                         "branch": "master",
-                        "git_sha": "6b36f8e5427ec38911565398de57656ca3a2606a",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "sentieon/gvcftyper": {
                         "branch": "master",
-                        "git_sha": "6b36f8e5427ec38911565398de57656ca3a2606a",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "sentieon/haplotyper": {
                         "branch": "master",
-                        "git_sha": "6b36f8e5427ec38911565398de57656ca3a2606a",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "sentieon/tnscope": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "sentieon/varcal": {
                         "branch": "master",
-                        "git_sha": "6b36f8e5427ec38911565398de57656ca3a2606a",
+                        "git_sha": "256557155b2439c5d551f1a668bf6a7ff6b10f93",
                         "installed_by": ["modules"]
                     },
                     "snpeff/download": {
@@ -562,7 +572,7 @@
                     },
                     "vcf_annotate_ensemblvep": {
                         "branch": "master",
-                        "git_sha": "2fcc53751152a999bfc9c24f75f494b9e5bb338f",
+                        "git_sha": "f9234d35f5b9143313a4773fb54716876c030323",
                         "installed_by": ["subworkflows"]
                     },
                     "vcf_annotate_snpeff": {

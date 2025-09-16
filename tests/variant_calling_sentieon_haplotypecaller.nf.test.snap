@@ -19,19 +19,19 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_APPLYVARCAL_INDEL": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "SENTIEON_GVCFTYPER": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "SENTIEON_HAPLOTYPER": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "SENTIEON_VARCAL_INDEL": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "SENTIEON_VARCAL_SNP": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -215,7 +215,7 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_HAPLOTYPER": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -395,7 +395,7 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_HAPLOTYPER": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -578,7 +578,7 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_HAPLOTYPER": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21

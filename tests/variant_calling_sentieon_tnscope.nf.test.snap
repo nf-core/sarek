@@ -14,13 +14,13 @@
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "SENTIEON_DEDUP": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "SENTIEON_TNSCOPE": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -62,8 +62,8 @@
                 "variant_calling/sentieon_tnscope/test2/test2.tnscope.vcf.gz.tbi"
             ],
             [
-                "test2.dedup.cram.metrics:md5,aa78f8e3028913b6cbaffa5134b4569a",
-                "test2.dedup.cram.metrics.multiqc.tsv:md5,399553430c97bedf8e105fe526085ced",
+                "test2.dedup.cram.metrics:md5,5e27346cc4df557f9949a8dca07e3aed",
+                "test2.dedup.cram.metrics.multiqc.tsv:md5,0757ae87fd5dbb993b97d0cbc35a7d98",
                 "test2.tnscope.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test2.tnscope.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
@@ -96,13 +96,13 @@
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "SENTIEON_DEDUP": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "SENTIEON_TNSCOPE": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -163,12 +163,12 @@
                 "variant_calling/sentieon_tnscope/test3_vs_test/test3_vs_test.tnscope.vcf.gz.tbi"
             ],
             [
-                "test.dedup.cram.metrics:md5,cfa41d24ba78137c97942b8584dfccc9",
-                "test.dedup.cram.metrics.multiqc.tsv:md5,cfa41d24ba78137c97942b8584dfccc9",
-                "test2.dedup.cram.metrics:md5,aa78f8e3028913b6cbaffa5134b4569a",
-                "test2.dedup.cram.metrics.multiqc.tsv:md5,399553430c97bedf8e105fe526085ced",
-                "test3.dedup.cram.metrics:md5,77632b80ab51f13cc1ff28f33aeee829",
-                "test3.dedup.cram.metrics.multiqc.tsv:md5,475418050faa42fcabfc058112545edb",
+                "test.dedup.cram.metrics:md5,0a5b1288212daa5e83c60c1d594edc3c",
+                "test.dedup.cram.metrics.multiqc.tsv:md5,0a5b1288212daa5e83c60c1d594edc3c",
+                "test2.dedup.cram.metrics:md5,5e27346cc4df557f9949a8dca07e3aed",
+                "test2.dedup.cram.metrics.multiqc.tsv:md5,0757ae87fd5dbb993b97d0cbc35a7d98",
+                "test3.dedup.cram.metrics:md5,9a1611bed0f8dcc2dd84bbc050177bc3",
+                "test3.dedup.cram.metrics.multiqc.tsv:md5,5a17143ccd7e1c9a609e3178904cfcd8",
                 "test2_vs_test.tnscope.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test2_vs_test.tnscope.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test3_vs_test.tnscope.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
@@ -200,13 +200,13 @@
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "SENTIEON_DEDUP": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "SENTIEON_TNSCOPE": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -254,10 +254,10 @@
                 "variant_calling/sentieon_tnscope/test2_vs_test/test2_vs_test.tnscope.vcf.gz.tbi"
             ],
             [
-                "test.dedup.cram.metrics:md5,cfa41d24ba78137c97942b8584dfccc9",
-                "test.dedup.cram.metrics.multiqc.tsv:md5,cfa41d24ba78137c97942b8584dfccc9",
-                "test2.dedup.cram.metrics:md5,aa78f8e3028913b6cbaffa5134b4569a",
-                "test2.dedup.cram.metrics.multiqc.tsv:md5,399553430c97bedf8e105fe526085ced",
+                "test.dedup.cram.metrics:md5,0a5b1288212daa5e83c60c1d594edc3c",
+                "test.dedup.cram.metrics.multiqc.tsv:md5,0a5b1288212daa5e83c60c1d594edc3c",
+                "test2.dedup.cram.metrics:md5,5e27346cc4df557f9949a8dca07e3aed",
+                "test2.dedup.cram.metrics.multiqc.tsv:md5,0757ae87fd5dbb993b97d0cbc35a7d98",
                 "test2_vs_test.tnscope.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test2_vs_test.tnscope.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
             ],
@@ -291,13 +291,13 @@
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "SENTIEON_DEDUP": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "SENTIEON_TNSCOPE": {
-                    "sentieon": 202503
+                    "sentieon": 202503.01
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -345,10 +345,10 @@
                 "variant_calling/sentieon_tnscope/test2_vs_test/test2_vs_test.tnscope.vcf.gz.tbi"
             ],
             [
-                "test.dedup.cram.metrics:md5,cfa41d24ba78137c97942b8584dfccc9",
-                "test.dedup.cram.metrics.multiqc.tsv:md5,cfa41d24ba78137c97942b8584dfccc9",
-                "test2.dedup.cram.metrics:md5,aa78f8e3028913b6cbaffa5134b4569a",
-                "test2.dedup.cram.metrics.multiqc.tsv:md5,399553430c97bedf8e105fe526085ced",
+                "test.dedup.cram.metrics:md5,0a5b1288212daa5e83c60c1d594edc3c",
+                "test.dedup.cram.metrics.multiqc.tsv:md5,0a5b1288212daa5e83c60c1d594edc3c",
+                "test2.dedup.cram.metrics:md5,5e27346cc4df557f9949a8dca07e3aed",
+                "test2.dedup.cram.metrics.multiqc.tsv:md5,0757ae87fd5dbb993b97d0cbc35a7d98",
                 "test2_vs_test.tnscope.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test2_vs_test.tnscope.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
             ],
