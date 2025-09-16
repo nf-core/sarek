@@ -34,23 +34,48 @@ input:
     - intervals:
         type: file
         description: Bed file with the genomic regions included in the library (optional)
-  - - fasta:
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome']
+    - fasta:
         type: file
         description: The reference fasta file
         pattern: "*.fasta"
-  - - fai:
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome']
+    - fai:
         type: file
         description: Index of reference fasta file
         pattern: "*.fasta.fai"
-  - - dict:
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome']
+    - dict:
         type: file
         description: GATK sequence dictionary
         pattern: "*.dict"
-  - - known_sites:
+  - - meta5:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome']
+    - known_sites:
         type: file
         description: VCF files with known sites for indels / snps (optional)
         pattern: "*.vcf.gz"
-  - - known_sites_tbi:
+  - - meta6:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome']
+    - known_sites_tbi:
         type: file
         description: Tabix index of the known_sites (optional)
         pattern: "*.vcf.gz.tbi"

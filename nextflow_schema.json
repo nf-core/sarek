@@ -63,17 +63,15 @@
             "default": "",
             "properties": {
                 "split_fastq": {
+                    "type": "integer",
                     "oneOf": [
                         {
-                            "type": "integer",
                             "minimum": 250
                         },
                         {
-                            "type": "integer",
                             "const": 0
                         }
                     ],
-                    "type": "integer",
                     "default": 50000000,
                     "fa_icon": "fas fa-clock",
                     "description": "Specify how many reads each split of a FastQ file contains. Set 0 to turn off splitting at all.",
@@ -112,8 +110,8 @@
                     "type": "string",
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for duplicate marking, variant calling and/or for annotation.",
-                    "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper, Strelka\n- Structural Variants: indexcov, Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, mpileup, Mutect2, Lofreq, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Strelka2\n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC\n- Microsatellite Instability: MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively), and bcftools annotate (needs `--bcftools_annotation`).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
-                    "pattern": "^((ascat|bcfann|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|lofreq|muse|sentieon_dnascope|sentieon_haplotyper|manta|indexcov|merge|mpileup|msisensorpro|mutect2|ngscheckmate|sentieon_dedup|snpeff|strelka|tiddit|vep)?,?)*(?<!,)$"
+                    "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper \n- Structural Variants: indexcov, Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Lofreq, mpileup, Mutect2, Sentieon TNScope, Strelka\n- Structural Variants: Manta, Sentieon TNScope, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Sentieon TNScope, Strelka2 \n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC, Sentieon TNScope \n- Microsatellite Instability: MSIsensor2, MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively), and bcftools annotate (needs `--bcftools_annotation`).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
+                    "pattern": "^((ascat|bcfann|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|indexcov|lofreq|manta|merge|mpileup|msisensor2|msisensorpro|muse|mutect2|ngscheckmate|sentieon_dedup|sentieon_dnascope|sentieon_haplotyper|sentieon_tnscope|snpeff|strelka|tiddit|vep)?,?)*(?<!,)$"
                 },
                 "skip_tools": {
                     "type": "string",
@@ -188,26 +186,67 @@
                     "fa_icon": "fas fa-save",
                     "description": "Save trimmed FastQ file intermediates."
                 },
+                "save_split_fastqs": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-vial",
+                    "description": "If set, publishes split FASTQ files. Intended for testing purposes."
+                }
+            }
+        },
+        "umi_processing": {
+            "title": "Unique Molecular Identifiers",
+            "type": "object",
+            "description": "Parameters related to the handling of Unique Molecular Identifiers (UMIs)",
+            "fa_icon": "fas fa-cut",
+            "properties": {
                 "umi_read_structure": {
                     "type": "string",
                     "fa_icon": "fas fa-tape",
-                    "description": "Specify UMI read structure",
+                    "description": "Specify UMI read structure for fgbio UMI consensus read generation",
                     "help_text": "One structure if UMI is present on one end (i.e. '+T 2M11S+T'), or two structures separated by a blank space if UMIs a present on both ends (i.e. '2M11S+T 2M11S+T'); please note, this does not handle duplex-UMIs.\n\nFor more info on UMI usage in the pipeline, also check docs [here](./docs/usage/#how-to-handle-umis)."
                 },
                 "group_by_umi_strategy": {
                     "type": "string",
                     "default": "Adjacency",
                     "fa_icon": "fas fa-tape",
-                    "description": "Default strategy with UMI",
+                    "description": "Default strategy for fgbio UMI-based consensus read generation ",
                     "enum": ["Identity", "Edit", "Adjacency", "Paired"]
                 },
-                "save_split_fastqs": {
+                "umi_in_read_header": {
                     "type": "boolean",
-                    "fa_icon": "fas fa-vial",
-                    "description": "If set, publishes split FASTQ files. Intended for testing purposes.",
-                    "hidden": true
+                    "fa_icon": "fas fa-tape",
+                    "description": "Move UMIs from fastq read headers to a tag prior to deduplication.",
+                    "help_text": "Set to true if UMIs are already present in the header of the read, for instance from using OverrideCycles in bclconvert or umi_tools/extract."
                 },
-                "skip_bbsplit": {
+                "umi_location": {
+                    "type": "string",
+                    "default": null,
+                    "fa_icon": "fas fa-tape",
+                    "description": "Location of the UMI(s) to be extracted with fastp.",
+                    "help_text": "Use if UMIs are not present in the read header, but in a specific location within the reads/fastq header index. This will be used to extract UMIs from reads or index in the fastq header and store them in the RX tag.",
+                    "enum": ["read1", "read2", "per_read", "index1", "index2", "per_index"]
+                },
+                "umi_length": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "fa_icon": "fas fa-tape",
+                    "description": "Length of the UMI(s) in the read.",
+                    "help_text": "If UMIs are being extracted using fastp, specify the length of the UMI here. This will be used to extract UMIs from reads and store them in the RX tag."
+                },
+                "umi_base_skip": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "fa_icon": "fas fa-tape",
+                    "description": "Number of bases to skip after the UMI(s) in the read when extracting with fastp.",
+                    "help_text": "If UMIs are being extracted using fastp, specify the number of bases to skip after the UMI here. This will trim some bases after the UMI."
+                },
+                "umi_tag": {
+                    "type": "string",
+                    "fa_icon": "fas fa-tape",
+                    "description": "Tag detailing where UMIs are present inside the bam/cram file (e.g. RX).",
+                    "help_text": "If UMIs are already present in the cram/bam file, this details the tag which will be used in GATK MarkDuplicates and Sentieon dedup. This should be set to RX if restarting from bam files where the UMIs have been extracted by the umi_in_read_header or umi_length options. Note this is not compatible with MarkDuplicates Spark."
+                },
+                 "skip_bbsplit": {
                     "type": "boolean",
                     "default": true,
                     "fa_icon": "fas fa-fast-forward",
@@ -248,7 +287,7 @@
                     "type": "string",
                     "default": "bwa-mem",
                     "fa_icon": "fas fa-puzzle-piece",
-                    "enum": ["bwa-mem", "bwa-mem2", "dragmap", "sentieon-bwamem"],
+                    "enum": ["bwa-mem", "bwa-mem2", "dragmap", "sentieon-bwamem", "parabricks"],
                     "description": "Specify aligner to be used to map reads to reference genome.",
                     "help_text": "Sarek will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf DragMap is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. For more info see [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode)."
                 },
@@ -267,8 +306,18 @@
                     "type": "string",
                     "fa_icon": "fas fa-forward",
                     "description": "Enable usage of GATK Spark implementation for duplicate marking and/or base quality score recalibration",
-                    "help_text": "Multiple separated with commas.\n\n> The GATK4 Base Quality Score recalibration tools `Baserecalibrator` and `ApplyBQSR` are currently available as Beta release. Use with caution!",
+                    "help_text": "Multiple separated with commas.\n\n> The GATK4 Base Quality Score recalibration tools `Baserecalibrator` and `ApplyBQSR` are currently available as Beta release. Please be aware that `--use_gatk_spark` is not compatible with `--save_output_as_bam --save_mapped`. Use with caution!",
                     "pattern": "^((baserecalibrator|markduplicates)?,?)*(?<!,)$"
+                },
+                "markduplicates_pixel_distance": {
+                    "type": "integer",
+                    "help_text": "Pixel distance for GATK MarkDuplicates."
+                },
+                "sentieon_consensus": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-tape",
+                    "description": "Generate consensus reads with Sentieon dedup rather than choosing one best read.",
+                    "help_text": "If set, the Sentieon dedup output will combine duplicate reads into single consensus read. This is only relevant if `--tools` contains `sentieon_dedup`."
                 }
             }
         },
@@ -389,6 +438,12 @@
                     "help_text": "https://cnvkit.readthedocs.io/en/stable/pipeline.html?highlight=reference.cnn#batch",
                     "description": "Copy-number reference for CNVkit"
                 },
+                "freebayes_filter": {
+                    "type": "string",
+                    "default": 30,
+                    "description": "Filtering expression for vcflib/vcffilter",
+                    "help_text": "Freebayes offers a QUAL score for each called variant. The QUAL estimate provides the phred-scaled probability that the locus is not polymorphic provided the data and the model. This is reasonably-well calibrated, so you can specify that you want things where we expect error rates of no more than 1/100 (QUAL > 20) or 1/1000 (QUAL > 30). Where the default setting for sarek is QUAL > 30."
+                },
                 "joint_germline": {
                     "type": "boolean",
                     "fa_icon": "fas fa-toolbox",
@@ -457,7 +512,13 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-tape",
                     "description": "Option for concatenating germline vcf-files.",
-                    "help_text": "Concatenating the germline vcf-files from each applied variant-caller into one vcf-file using bcftools concat."
+                    "help_text": "Concatenating the germline vcf-files from each applied variant-caller into one vcf-file using bfctools concat."
+                },
+                "normalize_vcfs": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-tape",
+                    "description": "Option for normalization of vcf-files.",
+                    "help_text": "Normalization of all vcf-files from each applied variant-caller using bfctools norm."
                 }
             }
         },
@@ -486,7 +547,7 @@
                     "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to dbNSFP processed file.",
-                    "help_text": "To be used with `--vep_dbnsfp`.\ndbNSFP files and more information are available at https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#dbnsfp and https://sites.google.com/site/jpopgen/dbNSFP/"
+                    "help_text": "Will not work without a provided `dbnsfp_tbi`. To be used with `--vep_dbnsfp`.\ndbNSFP files and more information are available at https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#dbnsfp and https://sites.google.com/site/jpopgen/dbNSFP/"
                 },
                 "dbnsfp_tbi": {
                     "type": "string",
@@ -798,7 +859,6 @@
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
                     "pattern": "\\S+\\.vcf\\.gz$",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to GATK Mutect2 Germline Resource File.",
                     "help_text": "The germline resource VCF file (bgzipped and tabixed) needed by GATK4 Mutect2 is a collection of calls that are likely present in the sample, with allele frequencies.\nThe AF info field must be present.\nYou can find a smaller, stripped gnomAD VCF file (most of the annotation is removed and only calls signed by PASS are stored) in the AWS iGenomes Annotation/GermlineResource folder.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -808,7 +868,6 @@
                     "fa_icon": "fas fa-file",
                     "pattern": "\\S+\\.vcf\\.gz\\.tbi$",
                     "format": "file-path",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to GATK Mutect2 Germline Resource Index.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the Germline Resource file, if provided. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -866,9 +925,32 @@
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
                     "pattern": "^\\S+\\.gem$",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to Control-FREEC mappability file.",
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "msisensor2_models": {
+                    "type": "string",
+                    "format": "path",
+                    "exists": true,
+                    "fa_icon": "fas fa-folder-open",
+                    "description": "Path to models folder used with MSIsensor2.",
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "msisensor2_scan": {
+                    "type": "string",
+                    "format": "path",
+                    "exists": true,
+                    "fa_icon": "fas fa-folder-open",
+                    "description": "Path to scan file used with MSIsensor2.",
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "msisensorpro_scan": {
+                    "type": "string",
+                    "format": "path",
+                    "exists": true,
+                    "fa_icon": "fas fa-folder-open",
+                    "description": "Path to scan file used with MSIsensorPro.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "ngscheckmate_bed": {
@@ -876,7 +958,6 @@
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
                     "pattern": "^\\S+\\.bed$",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to SNP bed file for sample checking with NGSCheckMate",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
@@ -886,7 +967,6 @@
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
                     "pattern": "^\\S+\\.model$",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "description": "Machine learning model for Sentieon Dnascope.",
                     "help_text": " It is recommended to use DNAscope with a machine learning model to perform variant calling with higher accuracy by improving the candidate detection and filtering. Sentieon can provide you with a model trained using a subset of the data from the GiAB truth-set found in https://github.com/genome-in-a-bottle. In addition, Sentieon can assist you in the creation of models using your own data, which will calibrate the specifics of your sequencing and bio-informatics processing.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -1110,6 +1190,12 @@
                     "description": "Base URL or local path to location of pipeline test dataset files",
                     "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
                     "hidden": true
+                },
+                "trace_report_suffix": {
+                    "type": "string",
+                    "fa_icon": "far calendar",
+                    "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
+                    "hidden": true
                 }
             }
         }
@@ -1123,6 +1209,9 @@
         },
         {
             "$ref": "#/$defs/fastq_preprocessing"
+        },
+        {
+            "$ref": "#/$defs/umi_processing"
         },
         {
             "$ref": "#/$defs/preprocessing"

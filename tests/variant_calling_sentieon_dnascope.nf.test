@@ -1,0 +1,43 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+
+    def test_scenario = [
+        [
+            name: "-profile test --tools sentieon_dnascope",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
+                tools: "sentieon_dnascope",
+                step: "variant_calling"
+            ]
+        ],
+        [
+            name: "-profile test --tools sentieon_dnascope --skip_tools dnascope_filter",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
+                tools: "sentieon_dnascope",
+                step: "variant_calling",
+                skip_tools: "dnascope_filter"
+            ]
+        ],
+        [
+            name: "-profile test --tools sentieon_dnascope --joint_germline --sentieon_dnascope_emit_mode gvcf",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
+                tools: "sentieon_dnascope",
+                step: "variant_calling",
+                joint_germline: true,
+                sentieon_dnascope_emit_mode: "gvcf"
+            ]
+        ]
+    ]
+
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}

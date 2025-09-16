@@ -22,9 +22,10 @@ input:
         type: file
         description: TAB-delimited genome position file compressed with bgzip
         pattern: "*.{bed.gz,gff.gz,sam.gz,vcf.gz}"
+        ontologies: []
 output:
-  - tbi:
-      - meta:
+  tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -33,8 +34,9 @@ output:
           type: file
           description: tabix index file
           pattern: "*.{tbi}"
-  - csi:
-      - meta:
+          ontologies: []
+  csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -43,11 +45,14 @@ output:
           type: file
           description: coordinate sorted index file
           pattern: "*.{csi}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@joseespinosa"
   - "@drpatelh"

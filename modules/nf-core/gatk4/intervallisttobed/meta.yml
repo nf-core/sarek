@@ -30,10 +30,12 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.bed":
-          type: file
-          description: BED file
-          pattern: "*.bed"
+      - ${prefix}.bed:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "${prefix}.bed"
   - versions:
       - versions.yml:
           type: file

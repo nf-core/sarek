@@ -1,0 +1,113 @@
+name: "msisensor2_msi"
+description: msisensor2 detection of MSI regions.
+keywords:
+  - msi
+  - microsatellite
+  - microsatellite instability
+  - tumor
+  - cfDNA
+tools:
+  - "msisensor2":
+      description: "MSIsensor2 is a novel algorithm based machine learning, featuring
+        a large upgrade in the microsatellite instability (MSI) detection for tumor
+        only sequencing data, including Cell-Free DNA (cfDNA), Formalin-Fixed Paraffin-Embedded(FFPE)
+        and other sample types. The original MSIsensor is specially designed for tumor/normal
+        paired sequencing data."
+      homepage: "https://github.com/niu-lab/msisensor2"
+      documentation: "https://github.com/niu-lab/msisensor2/blob/master/README.md"
+      tool_dev_url: "https://github.com/niu-lab/msisensor2"
+      license: ["GPL-3.0"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - tumor_bam:
+        type: file
+        description: BAM/CRAM/SAM file
+        pattern: "*.{bam,cram,sam}"
+        ontologies: []
+    - tumor_bam_index:
+        type: file
+        description: BAM/CRAM/SAM index file
+        pattern: "*.{bai,crai}"
+        ontologies: []
+    - normal_bam:
+        type: file
+        description: BAM/CRAM/SAM file
+        pattern: "*.{bam,cram,sam}"
+        ontologies: []
+    - normal_bam_index:
+        type: file
+        description: BAM/CRAM/SAM index file
+        pattern: "*.{bai,crai}"
+        ontologies: []
+    - intervals:
+        type: file
+        description: BED
+        pattern: "*.bed"
+        ontologies: []
+  - scan:
+      type: file
+      description: Input scan file from MSIsensor2 scan module
+      ontologies: []
+  - models:
+      type: file
+      description: Folder of MSISensor2 models (available from Github or as a product
+        of msisensor2/scan)
+      pattern: "*/*"
+      ontologies: []
+output:
+  msi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}:
+          type: file
+          description: MSI classifications as a text file
+          ontologies: []
+  distribution:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}_dis:
+          type: file
+          description: Read count distributions of MSI regions
+          ontologies: []
+  somatic:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}_somatic:
+          type: file
+          description: Somatic MSI regions detected.
+          ontologies: []
+  germline:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}_germline:
+          type: file
+          description: Germline MSI regions detected.
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@adamrtalbot"
+maintainers:
+  - "@adamrtalbot"

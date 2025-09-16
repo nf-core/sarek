@@ -98,6 +98,8 @@
 
   > Brent S Pedersen, Aaron R Quinlan, Mosdepth: quick coverage calculation for genomes and exomes, Bioinformatics, Volume 34, Issue 5, 01 March 2018, Pages 867–868. doi: 10.1093/bioinformatics/btx699. PubMed PMID: 29096012. PubMed Central PMCID: PMC6030888.
 
+- [MSIsensor2](https://github.com/niu-lab/msisensor2)
+
 - [MSISensorPro](https://www.sciencedirect.com/science/article/pii/S1672022920300218)
 
   > Peng Jia, Xiaofei Yang, Li Guo, Bowen Liu, Jiadong Lin, Hao Liang, et al. MSIsensor-pro: fast, accurate, and matched-normal-sample-free detection of microsatellite instability. Genomics Proteomics Bioinformatics 2020,18(1). doi: 10.1016/j.gpb.2020.02.001. PubMed PMID: 32171661. PubMed Central PMCID: PMC7393535.
@@ -106,13 +108,13 @@
 
   > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
 
+- [NVIDIA Clara Parabricks](https://docs.nvidia.com/clara/parabricks/latest/index.html)
+
+  > NVIDIA (2025). Clara Parabricks (v.4.4.0-1 and above). <https://www.nvidia.com/en-us/clara/genomics/>
+
 - [PIGZ](https://zlib.net/pigz/)
 
 - [P7Zip](http://p7zip.sourceforge.net/)
-
-- [Samblaster](https://academic.oup.com/bioinformatics/article/30/17/2503/2748175)
-
-  > Gregory G. Faust, Ira M. Hall, SAMBLASTER: fast duplicate marking and structural variant read extraction, Bioinformatics, Volume 30, Issue 17, 1 September 2014, Pages 2503–2505. doi: 10.1093/bioinformatics/btu314. PubMed PMID: 24812344. PubMed Central PMCID: PMC4147885.
 
 - [SAMtools](https://pubmed.ncbi.nlm.nih.gov/19505943/)
 

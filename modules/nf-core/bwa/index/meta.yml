@@ -14,7 +14,7 @@ tools:
       documentation: https://bio-bwa.sourceforge.net/bwa.shtml
       arxiv: arXiv:1303.3997
       licence: ["GPL-3.0-or-later"]
-      identifier: ""
+      identifier: "biotools:bwa"
 input:
   - - meta:
         type: map
@@ -24,6 +24,9 @@ input:
     - fasta:
         type: file
         description: Input genome fasta file
+        ontologies:
+          - edam: "http://edamontology.org/data_2044" # Sequence
+          - edam: "http://edamontology.org/format_1929" # FASTA
 output:
   - index:
       - meta:
@@ -32,9 +35,13 @@ output:
             Groovy Map containing reference information.
             e.g. [ id:'test', single_end:false ]
       - bwa:
-          type: file
-          description: BWA genome index files
+          type: map
+          description: |
+            Groovy Map containing reference information.
+            e.g. [ id:'test', single_end:false ]
           pattern: "*.{amb,ann,bwt,pac,sa}"
+          ontologies:
+            - edam: "http://edamontology.org/data_3210" # Genome index
   - versions:
       - versions.yml:
           type: file

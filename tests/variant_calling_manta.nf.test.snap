@@ -4,16 +4,28 @@
             11,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
                 },
                 "MANTA_GERMLINE": {
                     "manta": "1.6.0"
                 },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -21,32 +33,50 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
                 "multiqc/multiqc_data/multiqc_software_versions.txt",
                 "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths.pdf",
-                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
-                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths.png",
-                "multiqc/multiqc_plots/png/general_stats_table.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
-                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths.svg",
-                "multiqc/multiqc_plots/svg/general_stats_table.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
-                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
@@ -79,47 +109,54 @@
                 "variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz.tbi"
             ],
             [
-                "bcftools_stats_indel-lengths.txt:md5,4fff39a36e9e89480a426b3303faeeea",
-                "multiqc_bcftools_stats.txt:md5,1435a5ad04571fafbe85281cdeb8e70a",
-                "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,cf8c8f421c7f8c8e00ee302e23c28c89",
-                "sample1.manta.diploid_sv.bcftools_stats.txt:md5,216eda1200c48453b7b0ed04748acf8a",
+                "mosdepth-coverage-per-contig-single.txt:md5,49fd828d21d79a5c9430cdb30d7f0126",
+                "mosdepth-cumcoverage-dist-id.txt:md5,edd8dfc8023e629e476e01c3a1448d30",
+                "mosdepth_perchrom.txt:md5,49fd828d21d79a5c9430cdb30d7f0126",
+                "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
+                "samtools-stats-dp.txt:md5,41d36c1a8413d565788a1a364b467606",
+                "samtools_alignment_plot.txt:md5,35f8fd2a557568b2237193f46afbab5c",
+                "sample1.manta.diploid_sv.bcftools_stats.txt:md5,636109db283cbee4539786928c811893",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample1.recal.regions.bed.gz.csi:md5,f17cc9d960aa4a1e96548d570585cc8a",
+                "sample1.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
                 "sample1.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample1.manta.diploid_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-                [
-                    "sample1.manta.diploid_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "sample1.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-03-07T18:06:19.953621702"
+        "timestamp": "2025-06-16T12:19:54.772016523"
     },
     "-profile test --tools manta --no_intervals tumoronly": {
         "content": [
             9,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "MANTA_TUMORONLY": {
                     "manta": "1.6.0"
                 },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -127,32 +164,50 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
                 "multiqc/multiqc_data/multiqc_software_versions.txt",
                 "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths.pdf",
-                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
-                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths.png",
-                "multiqc/multiqc_plots/png/general_stats_table.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
-                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths.svg",
-                "multiqc/multiqc_plots/svg/general_stats_table.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
-                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
                 "no_intervals.bed.gz",
@@ -188,38 +243,39 @@
                 "variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz.tbi"
             ],
             [
-                "bcftools_stats_indel-lengths.txt:md5,da0a036723ec0ecb170e9afe81483188",
-                "multiqc_bcftools_stats.txt:md5,5cb7ce32e4b3755c1e2fe3889ceb5c92",
-                "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,0db18d88309cade195695b84730c8be5",
-                "sample2.manta.tumor_sv.bcftools_stats.txt:md5,e57a0a2251b8acff3c804a59f01bb744",
+                "mosdepth-coverage-per-contig-single.txt:md5,ff38f1e35ce12244c751921db673b23c",
+                "mosdepth-cumcoverage-dist-id.txt:md5,8398d1127a10d0c002831ddedfb9713b",
+                "mosdepth_perchrom.txt:md5,ff38f1e35ce12244c751921db673b23c",
+                "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
+                "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
+                "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
+                "sample2.manta.tumor_sv.bcftools_stats.txt:md5,9fbe26c75869000b526b59b454f76f6a",
                 "sample2.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample2.recal.regions.bed.gz.csi:md5,4003c8833ed5e9b9f45282a6915c935e",
+                "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
                 "sample2.manta.tumor_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample2.manta.tumor_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-                [
-                    "sample2.manta.tumor_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "sample2.manta.tumor_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-03-07T18:22:50.778940237"
+        "timestamp": "2025-06-16T12:25:25.363364346"
     },
     "-profile test --tools manta --no_intervals somatic": {
         "content": [
             20,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "MANTA_GERMLINE": {
                     "manta": "1.6.0"
@@ -227,11 +283,17 @@
                 "MANTA_SOMATIC": {
                     "manta": "1.6.0"
                 },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -239,32 +301,50 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
                 "multiqc/multiqc_data/multiqc_software_versions.txt",
                 "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths.pdf",
-                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
-                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths.png",
-                "multiqc/multiqc_plots/png/general_stats_table.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
-                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths.svg",
-                "multiqc/multiqc_plots/svg/general_stats_table.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
-                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
                 "no_intervals.bed.gz",
@@ -323,23 +403,25 @@
                 "variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi"
             ],
             [
-                "bcftools_stats_indel-lengths.txt:md5,441a870bc60973b95f006cb5606ce38a",
-                "multiqc_bcftools_stats.txt:md5,69a6d711b0bb2dfcd56808377956c6ff",
-                "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,76122ea98d7e93e14e1c574034a4582e",
-                "sample3.manta.diploid_sv.bcftools_stats.txt:md5,8adad91e1c8dc8db63cf9b3607bee3a0",
-                "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,17dc847445b98885bc18622f862f44d9",
-                "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,a8660b352950f0b32768fcbbd6b48896",
+                "mosdepth-coverage-per-contig-single.txt:md5,336d786b273c4d4e714d51c44207ff56",
+                "mosdepth-cumcoverage-dist-id.txt:md5,0cc87c596a0fc30ebb676c4587e986de",
+                "mosdepth_perchrom.txt:md5,336d786b273c4d4e714d51c44207ff56",
+                "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
+                "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
+                "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
+                "sample3.manta.diploid_sv.bcftools_stats.txt:md5,36a838390faba81e3eabf5ac8a093a4a",
+                "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,f00cf810d34ef7e5c7980f7039bb4446",
+                "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,7af2ea2e84154ddf2a483b1bd1f0646c",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample3.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample3.recal.regions.bed.gz.csi:md5,f17cc9d960aa4a1e96548d570585cc8a",
+                "sample3.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
                 "sample4.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample4.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample4.recal.regions.bed.gz.csi:md5,4003c8833ed5e9b9f45282a6915c935e",
+                "sample4.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
                 "sample3.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample3.manta.diploid_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
                 "sample4_vs_sample3.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
@@ -347,42 +429,47 @@
                 "sample4_vs_sample3.manta.somatic_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample4_vs_sample3.manta.somatic_sv.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-                [
-                    "sample3.manta.diploid_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample4_vs_sample3.manta.diploid_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample4_vs_sample3.manta.somatic_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.manta.somatic_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-03-07T18:10:50.73230878"
+        "timestamp": "2025-06-16T12:23:10.460876781"
     },
     "-profile test --tools manta tumoronly": {
         "content": [
             11,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
                 },
                 "MANTA_TUMORONLY": {
                     "manta": "1.6.0"
                 },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -390,32 +477,50 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
                 "multiqc/multiqc_data/multiqc_software_versions.txt",
                 "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths.pdf",
-                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
-                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths.png",
-                "multiqc/multiqc_plots/png/general_stats_table.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
-                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths.svg",
-                "multiqc/multiqc_plots/svg/general_stats_table.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
-                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
@@ -448,38 +553,42 @@
                 "variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz.tbi"
             ],
             [
-                "bcftools_stats_indel-lengths.txt:md5,da0a036723ec0ecb170e9afe81483188",
-                "multiqc_bcftools_stats.txt:md5,5cb7ce32e4b3755c1e2fe3889ceb5c92",
-                "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,0db18d88309cade195695b84730c8be5",
-                "sample2.manta.tumor_sv.bcftools_stats.txt:md5,e57a0a2251b8acff3c804a59f01bb744",
+                "mosdepth-coverage-per-contig-single.txt:md5,ff38f1e35ce12244c751921db673b23c",
+                "mosdepth-cumcoverage-dist-id.txt:md5,8398d1127a10d0c002831ddedfb9713b",
+                "mosdepth_perchrom.txt:md5,ff38f1e35ce12244c751921db673b23c",
+                "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
+                "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
+                "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
+                "sample2.manta.tumor_sv.bcftools_stats.txt:md5,9fbe26c75869000b526b59b454f76f6a",
                 "sample2.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample2.recal.regions.bed.gz.csi:md5,4003c8833ed5e9b9f45282a6915c935e",
+                "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
                 "sample2.manta.tumor_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample2.manta.tumor_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-                [
-                    "sample2.manta.tumor_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "sample2.manta.tumor_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-03-07T18:21:32.118781506"
+        "timestamp": "2025-06-16T12:24:27.868416377"
     },
     "-profile test --tools manta --only_paired_variant_calling": {
         "content": [
             31,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
                 },
                 "MANTA_GERMLINE": {
                     "manta": "1.6.0"
@@ -490,11 +599,20 @@
                 "MANTA_TUMORONLY": {
                     "manta": "1.6.0"
                 },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -502,32 +620,50 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
                 "multiqc/multiqc_data/multiqc_software_versions.txt",
                 "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths.pdf",
-                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
-                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths.png",
-                "multiqc/multiqc_plots/png/general_stats_table.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
-                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths.svg",
-                "multiqc/multiqc_plots/svg/general_stats_table.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
-                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
@@ -608,34 +744,36 @@
                 "variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi"
             ],
             [
-                "bcftools_stats_indel-lengths.txt:md5,893f47ff7ef5c9dc20b0a7c21f79282e",
-                "multiqc_bcftools_stats.txt:md5,ac69e27604c71ee6481a8235223df90b",
-                "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,46d1a0e1b86eb2104c6b525e4ac4db3d",
-                "sample1.manta.diploid_sv.bcftools_stats.txt:md5,216eda1200c48453b7b0ed04748acf8a",
-                "sample2.manta.tumor_sv.bcftools_stats.txt:md5,e57a0a2251b8acff3c804a59f01bb744",
-                "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,17dc847445b98885bc18622f862f44d9",
-                "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,a8660b352950f0b32768fcbbd6b48896",
+                "mosdepth-coverage-per-contig-single.txt:md5,73ef9a077df1887f9021a581fbf207bc",
+                "mosdepth-cumcoverage-dist-id.txt:md5,ad0637d55d7025330f2f6cb7f9680e64",
+                "mosdepth_perchrom.txt:md5,73ef9a077df1887f9021a581fbf207bc",
+                "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
+                "samtools-stats-dp.txt:md5,b446a47b182d93a9e7e74f5f7c8d41c2",
+                "samtools_alignment_plot.txt:md5,7138a2d29f515993e1df8d745e27b757",
+                "sample1.manta.diploid_sv.bcftools_stats.txt:md5,636109db283cbee4539786928c811893",
+                "sample2.manta.tumor_sv.bcftools_stats.txt:md5,9fbe26c75869000b526b59b454f76f6a",
+                "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,f00cf810d34ef7e5c7980f7039bb4446",
+                "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,7af2ea2e84154ddf2a483b1bd1f0646c",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample1.recal.regions.bed.gz.csi:md5,f17cc9d960aa4a1e96548d570585cc8a",
+                "sample1.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
                 "sample2.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample2.recal.regions.bed.gz.csi:md5,4003c8833ed5e9b9f45282a6915c935e",
+                "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample3.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample3.recal.regions.bed.gz.csi:md5,f17cc9d960aa4a1e96548d570585cc8a",
+                "sample3.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
                 "sample4.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample4.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample4.recal.regions.bed.gz.csi:md5,4003c8833ed5e9b9f45282a6915c935e",
+                "sample4.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
                 "sample1.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample1.manta.diploid_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
                 "sample2.manta.tumor_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
@@ -645,57 +783,30 @@
                 "sample4_vs_sample3.manta.somatic_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample4_vs_sample3.manta.somatic_sv.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-                [
-                    "sample1.manta.diploid_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample2.manta.tumor_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample4_vs_sample3.manta.diploid_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample4_vs_sample3.manta.somatic_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "sample1.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2.manta.tumor_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.manta.somatic_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-03-07T18:05:02.516347733"
-    },
-    "-profile test --tools manta tumor_only": {
-        "content": [
-            0,
-            null,
-            [
-                "pipeline_info"
-            ],
-            [
-                
-            ],
-            [
-                
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
-        },
-        "timestamp": "2025-03-07T18:11:35.186658856"
+        "timestamp": "2025-06-16T12:18:59.766740371"
     },
     "-profile test --tools manta somatic": {
         "content": [
             22,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.1.0"
                 },
                 "MANTA_GERMLINE": {
                     "manta": "1.6.0"
@@ -703,11 +814,20 @@
                 "MANTA_SOMATIC": {
                     "manta": "1.6.0"
                 },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -715,32 +835,50 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
                 "multiqc/multiqc_data/multiqc_software_versions.txt",
                 "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths.pdf",
-                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
-                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths.png",
-                "multiqc/multiqc_plots/png/general_stats_table.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
-                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths.svg",
-                "multiqc/multiqc_plots/svg/general_stats_table.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
-                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
@@ -796,23 +934,25 @@
                 "variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi"
             ],
             [
-                "bcftools_stats_indel-lengths.txt:md5,441a870bc60973b95f006cb5606ce38a",
-                "multiqc_bcftools_stats.txt:md5,69a6d711b0bb2dfcd56808377956c6ff",
-                "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,76122ea98d7e93e14e1c574034a4582e",
-                "sample3.manta.diploid_sv.bcftools_stats.txt:md5,8adad91e1c8dc8db63cf9b3607bee3a0",
-                "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,17dc847445b98885bc18622f862f44d9",
-                "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,a8660b352950f0b32768fcbbd6b48896",
+                "mosdepth-coverage-per-contig-single.txt:md5,336d786b273c4d4e714d51c44207ff56",
+                "mosdepth-cumcoverage-dist-id.txt:md5,0cc87c596a0fc30ebb676c4587e986de",
+                "mosdepth_perchrom.txt:md5,336d786b273c4d4e714d51c44207ff56",
+                "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
+                "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
+                "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
+                "sample3.manta.diploid_sv.bcftools_stats.txt:md5,36a838390faba81e3eabf5ac8a093a4a",
+                "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,f00cf810d34ef7e5c7980f7039bb4446",
+                "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,7af2ea2e84154ddf2a483b1bd1f0646c",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample3.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample3.recal.regions.bed.gz.csi:md5,f17cc9d960aa4a1e96548d570585cc8a",
+                "sample3.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
                 "sample4.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample4.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample4.recal.regions.bed.gz.csi:md5,4003c8833ed5e9b9f45282a6915c935e",
+                "sample4.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
                 "sample3.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample3.manta.diploid_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
                 "sample4_vs_sample3.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
@@ -820,42 +960,41 @@
                 "sample4_vs_sample3.manta.somatic_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample4_vs_sample3.manta.somatic_sv.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-                [
-                    "sample3.manta.diploid_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample4_vs_sample3.manta.diploid_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ],
-                [
-                    "sample4_vs_sample3.manta.somatic_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.manta.somatic_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-03-07T18:09:06.106812565"
+        "timestamp": "2025-06-16T12:21:49.705512052"
     },
     "-profile test --tools manta --no_intervals germline": {
         "content": [
             9,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.2
+                    "bcftools": 1.21
                 },
                 "MANTA_GERMLINE": {
                     "manta": "1.6.0"
                 },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -863,32 +1002,50 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
                 "multiqc/multiqc_data/multiqc_software_versions.txt",
                 "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths.pdf",
-                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
-                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths.png",
-                "multiqc/multiqc_plots/png/general_stats_table.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
-                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths.svg",
-                "multiqc/multiqc_plots/svg/general_stats_table.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
-                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
                 "no_intervals.bed.gz",
@@ -924,50 +1081,31 @@
                 "variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz.tbi"
             ],
             [
-                "bcftools_stats_indel-lengths.txt:md5,4fff39a36e9e89480a426b3303faeeea",
-                "multiqc_bcftools_stats.txt:md5,1435a5ad04571fafbe85281cdeb8e70a",
-                "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,cf8c8f421c7f8c8e00ee302e23c28c89",
-                "sample1.manta.diploid_sv.bcftools_stats.txt:md5,216eda1200c48453b7b0ed04748acf8a",
+                "mosdepth-coverage-per-contig-single.txt:md5,49fd828d21d79a5c9430cdb30d7f0126",
+                "mosdepth-cumcoverage-dist-id.txt:md5,edd8dfc8023e629e476e01c3a1448d30",
+                "mosdepth_perchrom.txt:md5,49fd828d21d79a5c9430cdb30d7f0126",
+                "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
+                "samtools-stats-dp.txt:md5,41d36c1a8413d565788a1a364b467606",
+                "samtools_alignment_plot.txt:md5,35f8fd2a557568b2237193f46afbab5c",
+                "sample1.manta.diploid_sv.bcftools_stats.txt:md5,636109db283cbee4539786928c811893",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample1.recal.regions.bed.gz.csi:md5,f17cc9d960aa4a1e96548d570585cc8a",
+                "sample1.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
                 "sample1.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample1.manta.diploid_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
+            "No BAM files",
+            "No CRAM files",
             [
-                [
-                    "sample1.manta.diploid_sv.vcf.gz",
-                    "d41d8cd98f00b204e9800998ecf8427e"
-                ]
+                "sample1.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
+            "nextflow": "25.04.3"
         },
-        "timestamp": "2025-03-07T18:07:32.856816109"
-    },
-    "-profile test --tools manta --no_intervals tumor_only": {
-        "content": [
-            0,
-            null,
-            [
-                "pipeline_info"
-            ],
-            [
-                
-            ],
-            [
-                
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.01.0"
-        },
-        "timestamp": "2025-03-07T18:12:17.883872605"
+        "timestamp": "2025-06-16T12:20:47.159674827"
     }
 }

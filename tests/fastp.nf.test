@@ -1,111 +1,44 @@
+def projectDir = new File('.').absolutePath
+
 nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    tag "cpu"
 
-    test("trimming | -profile test,trimming --save_trimmed") {
+    def test_scenario = [
+        [
+            name: "-profile test,trimming --save_trimmed",
+            params: [
+                clip_r1: 1,
+                clip_r2: 1,
+                three_prime_clip_r1: 1,
+                three_prime_clip_r2: 1,
+                length_required: 50,
+                tools: null,
+                trim_fastq: true,
+                save_trimmed: true,
+                input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
+                genome: 'testdata.nf-core.sarek'
+            ]
+        ],
+        [
+            name: "-profile test,split_fastq",
+            params: [
+                save_split_fastqs: true,
+                split_fastq: 150000,
+                tools: null,
+                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
+                input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
+                igenomes_base: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
+                genome: 'testdata.nf-core.sarek'
+            ]
+        ]
+    ]
 
-        when {
-            params {
-                clip_r1             = 1
-                clip_r2             = 1
-                three_prime_clip_r1 = 1
-                three_prime_clip_r2 = 1
-                length_required     = 50
-                tools               = null
-                trim_fastq          = true
-                save_trimmed        = true
-                outdir              = "$outputDir"
-                // Base directory for nf-core/modules test data
-                // Input data
-                input = "${projectDir}/tests/csv/3.0/fastq_single.csv"
-                // small genome on igenomes
-                genome          = 'testdata.nf-core.sarek'
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            assertAll(
-                { assert workflow.success},
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path,
-                    // All bam files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> [file.getName(), bam(file.toString()).readsMD5] },
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] },
-                ).match() }
-            )
-        }
-    }
-
-    test("split fastq | -profile test,split_fastq") {
-
-        when {
-            params {
-                save_split_fastqs = true
-                split_fastq       = 150000
-                tools             = null
-                outdir            = "$outputDir"
-                // Base directory for nf-core/modules test data
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-                // Input data
-                input = "${projectDir}/tests/csv/3.0/fastq_single.csv"
-                // small genome on igenomes
-                igenomes_base   = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-                genome          = 'testdata.nf-core.sarek'
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            assertAll(
-                { assert workflow.success},
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path,
-                    // All bam files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> [file.getName(), bam(file.toString()).readsMD5] },
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] },
-                ).match() }
-            )
-        }
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
     }
 }
