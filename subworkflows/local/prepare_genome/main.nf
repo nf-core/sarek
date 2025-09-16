@@ -3,6 +3,7 @@ include { BWAMEM2_INDEX                             } from '../../../modules/nf-
 include { DRAGMAP_HASHTABLE                         } from '../../../modules/nf-core/dragmap/hashtable'
 include { GATK4_CREATESEQUENCEDICTIONARY            } from '../../../modules/nf-core/gatk4/createsequencedictionary'
 include { MSISENSORPRO_SCAN                         } from '../../../modules/nf-core/msisensorpro/scan'
+include { MSISENSOR2_SCAN                           } from '../../../modules/nf-core/msisensor2/scan'
 include { SAMTOOLS_FAIDX                            } from '../../../modules/nf-core/samtools/faidx'
 include { TABIX_TABIX as TABIX_BCFTOOLS_ANNOTATIONS } from '../../../modules/nf-core/tabix/tabix'
 include { TABIX_TABIX as TABIX_DBSNP                } from '../../../modules/nf-core/tabix/tabix'
@@ -11,6 +12,7 @@ include { TABIX_TABIX as TABIX_KNOWN_INDELS         } from '../../../modules/nf-
 include { TABIX_TABIX as TABIX_KNOWN_SNPS           } from '../../../modules/nf-core/tabix/tabix'
 include { TABIX_TABIX as TABIX_PON                  } from '../../../modules/nf-core/tabix/tabix'
 include { UNTAR as UNTAR_CHR_DIR                    } from '../../../modules/nf-core/untar'
+include { UNTAR as UNTAR_MSISENSOR2_MODELS          } from '../../../modules/nf-core/untar'
 include { UNZIP as UNZIP_ALLELES                    } from '../../../modules/nf-core/unzip'
 include { UNZIP as UNZIP_GC                         } from '../../../modules/nf-core/unzip'
 include { UNZIP as UNZIP_LOCI                       } from '../../../modules/nf-core/unzip'
@@ -39,6 +41,9 @@ workflow PREPARE_GENOME {
     known_indels_tbi_in         // params.known_indels_tbi
     known_snps_in               // params.known_snps
     known_snps_tbi_in           // params.known_snps_tbi
+    msisensor2_models           // channel: [optional]  msisensor2_models
+    msisensor2_scan             // channel: [optional]  msisensor2_scan
+    msisensorpro_scan           // channel: [optional]  msisensorpro_scan
     pon_in                      // params.pon
     pon_tbi_in                  // params.pon_tbi
     aligner                     // params.aligner
@@ -170,6 +175,46 @@ workflow PREPARE_GENOME {
     known_sites_snps = dbsnp.concat(known_snps).collect()
     known_sites_snps_tbi = dbsnp_tbi.concat(known_snps_tbi).collect()
 
+    // msisensor2 models
+    if (!msisensor2_models) {
+        msisensor2_models_folder = Channel.value([])
+    }
+    else if (msisensor2_models.endsWith(".tar.gz")) {
+        UNTAR_MSISENSOR2_MODELS(Channel.fromPath(file(msisensor2_models)).collect().map { it -> [[id: it[0].simpleName], it] })
+        msisensor2_models_folder = UNTAR_MSISENSOR2_MODELS.out.untar.map { it[1] }
+        versions = versions.mix(UNTAR_MSISENSOR2_MODELS.out.versions)
+    }
+    else {
+        msisensor2_models_folder = Channel.fromPath(msisensor2_models).collect()
+    }
+
+    if (msisensor2_scan) {
+        msisensor2_scan_file = Channel.fromPath(msisensor2_scan)
+    }
+    else if (tools.split(',').contains('msisensor2')) {
+        MSISENSOR2_SCAN(fasta)
+        msisensor2_scan_file = MSISENSOR2_SCAN.out.scan.map { _meta, list -> [list] }
+
+        versions = versions.mix(MSISENSOR2_SCAN.out.versions)
+    }
+    else {
+        msisensor2_scan_file = Channel.value([])
+    }
+
+    if (msisensorpro_scan) {
+        msisensorpro_scan_file = Channel.fromPath(msisensorpro_scan)
+    }
+    else if (tools.split(',').contains('msisensorpro')) {
+        MSISENSORPRO_SCAN(fasta)
+        msisensorpro_scan_file = MSISENSORPRO_SCAN.out.list.map { _meta, list -> [list] }
+
+        versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
+    }
+    else {
+        msisensorpro_scan_file = Channel.value([])
+    }
+
+
     // prepare ascat and controlfreec reference files
     if (!ascat_alleles_in) {
         ascat_alleles = Channel.empty()
@@ -263,7 +308,9 @@ workflow PREPARE_GENOME {
     known_sites_snps_tbi     // Channel: [known_sites_snps_tbi]
     known_snps               // Channel: [known_snps]
     known_snps_tbi           // Channel: [known_snps_tbi]
-    msisensorpro_scan        = MSISENSORPRO_SCAN.out.list.map { _meta, list -> [list] } // path: genome_msi.list
+    msisensor2_models        // Channel: [models/]
+    msisensor2_scan          // Channel: [genome_msi.list]
+    msisensorpro_scan        // Channel: [genome_msi.list]
     pon                      // Channel: [pon]
     pon_tbi                  // Channel: [pon_tbi]
     vep_fasta                // Channel: [meta, vep_fasta]
