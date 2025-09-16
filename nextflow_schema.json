@@ -215,7 +215,7 @@
                     "type": "string",
                     "default": "bwa-mem",
                     "fa_icon": "fas fa-puzzle-piece",
-                    "enum": ["bwa-mem", "bwa-mem2", "dragmap", "sentieon-bwamem"],
+                    "enum": ["bwa-mem", "bwa-mem2", "dragmap", "sentieon-bwamem", "minimap2"],
                     "description": "Specify aligner to be used to map reads to reference genome.",
                     "help_text": "Sarek will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf DragMap is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. For more info see [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode)."
                 },
@@ -758,6 +758,12 @@
                     "description": "Path to Control-FREEC mappability file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
+                "minimap2": {
+                    "type": "string",
+                    "fa_icon": "fas fa-copy",
+                    "description": "Path to minimap2 indices (or FASTA).",
+                    "help_text": "If you wish to recompute indices set `--minimap2 false`.\n\n>"
+                },
                 "ngscheckmate_bed": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
@@ -789,6 +795,11 @@
                     "fa_icon": "fas fa-database",
                     "description": "snpEff DB version.",
                     "help_text": "This is used to specify the database to be use to annotate with.\nAlternatively databases' names can be listed with the `snpEff databases`.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "validate_readgroups": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Run GATK ValidateSamFile on aligned BAMs to ensure GATK compatibility"
                 },
                 "vep_cache": {
                     "type": "string",

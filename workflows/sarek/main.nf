@@ -86,6 +86,10 @@ include { VCF_ANNOTATE_ALL                                  } from '../../subwor
 // MULTIQC
 include { MULTIQC                                           } from '../../modules/nf-core/multiqc/main'
 
+// Minimap2 subworkflows
+include { BAM_ALIGN_MINIMAP2        } from '../../subworkflows/local/bam_align_minimap2/main'
+include { PREPARE_GENOME_MINIMAP2   } from '../../subworkflows/local/prepare_genome_minimap2/main'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW

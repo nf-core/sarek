@@ -8,6 +8,7 @@ include { BWAMEM2_MEM            } from '../../../modules/nf-core/bwamem2/mem/ma
 include { BWA_MEM as BWAMEM1_MEM } from '../../../modules/nf-core/bwa/mem/main'
 include { DRAGMAP_ALIGN          } from '../../../modules/nf-core/dragmap/align/main'
 include { SENTIEON_BWAMEM        } from '../../../modules/nf-core/sentieon/bwamem/main'
+include { BAM_ALIGN_MINIMAP2     } from '../bam_align_minimap2/main'
 
 workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
     take:
@@ -28,6 +29,7 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
     DRAGMAP_ALIGN(reads, index, [[id:'no_fasta'], []], sort) // If aligner is dragmap
     // The sentieon-bwamem-module does sorting as part of the conversion from sam to bam.
     SENTIEON_BWAMEM(reads, index, fasta, fasta_fai) // If aligner is sentieon-bwamem
+    BAM_ALIGN_MINIMAP2(reads, index, sort, fasta, fasta_fai) // If aligner is minimap2
 
     // Get the bam files from the aligner
     // Only one aligner is run
@@ -36,8 +38,10 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
     bam = bam.mix(BWAMEM2_MEM.out.bam)
     bam = bam.mix(DRAGMAP_ALIGN.out.bam)
     bam = bam.mix(SENTIEON_BWAMEM.out.bam_and_bai.map{ meta, bam, bai -> [ meta, bam ] })
+    bam = bam.mix(BAM_ALIGN_MINIMAP2.out.bam)
 
     bai = SENTIEON_BWAMEM.out.bam_and_bai.map{ meta, bam, bai -> [ meta, bai ] }
+    bai = bai.mix(BAM_ALIGN_MINIMAP2.out.bai)
 
     // Gather reports of all tools used
     reports = reports.mix(DRAGMAP_ALIGN.out.log)
@@ -47,6 +51,7 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
     versions = versions.mix(BWAMEM2_MEM.out.versions)
     versions = versions.mix(DRAGMAP_ALIGN.out.versions)
     versions = versions.mix(SENTIEON_BWAMEM.out.versions)
+    versions = versions.mix(BAM_ALIGN_MINIMAP2.out.versions)
 
     emit:
     bam      // channel: [ [meta], bam ]
