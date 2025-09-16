@@ -12,7 +12,7 @@ process ADD_INFO_TO_VCF {
 
     output:
     tuple val(meta), path("*.added_info.vcf"), emit: vcf
-    path "versions.yml", emit: versions
+    path "versions.yml",                       emit: versions
 
     when:
     task.ext.when == null || task.ext.when

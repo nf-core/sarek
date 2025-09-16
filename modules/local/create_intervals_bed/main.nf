@@ -12,7 +12,7 @@ process CREATE_INTERVALS_BED {
     val nucleotides_per_second
 
     output:
-    path ("*.bed"), emit: bed
+    path ("*.bed"),      emit: bed
     path "versions.yml", emit: versions
 
     when:
