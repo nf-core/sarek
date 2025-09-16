@@ -176,16 +176,18 @@ workflow PREPARE_GENOME {
     known_sites_snps_tbi = dbsnp_tbi.concat(known_snps_tbi).collect()
 
     // MSI
-    msisensor2_models_folder = msisensor2_models && tools.split(',').contains('msisensor2') ? Channel.fromPath(msisensor2_models).collect() : Channel.value([])
-
-    if (msisensor2_models.endsWith(".tar.gz") && tools.split(',').contains('msisensor2')) {
+    if (msisensor2_models && msisensor2_models.endsWith(".tar.gz") && tools.split(',').contains('msisensor2')) {
         UNTAR_MSISENSOR2_MODELS(Channel.fromPath(file(msisensor2_models)).collect().map { it -> [[id: it[0].simpleName], it] })
         msisensor2_models_folder = UNTAR_MSISENSOR2_MODELS.out.untar.map { it[1] }
 
         versions = versions.mix(UNTAR_MSISENSOR2_MODELS.out.versions)
     }
-
-    msisensor2_scan_file = msisensor2_scan && tools.split(',').contains('msisensor2') ? Channel.fromPath(msisensor2_scan).collect() : Channel.value([])
+    else if (msisensor2_models && tools.split(',').contains('msisensor2')){
+        msisensor2_models_folder = Channel.fromPath(msisensor2_models).collect()
+    }
+    else {
+        msisensor2_models_folder = Channel.value([])
+    }
 
     if (!msisensor2_scan && tools.split(',').contains('msisensor2')) {
         MSISENSOR2_SCAN(fasta)
@@ -193,14 +195,24 @@ workflow PREPARE_GENOME {
 
         versions = versions.mix(MSISENSOR2_SCAN.out.versions)
     }
-
-    msisensorpro_scan_file = msisensorpro_scan && tools.split(',').contains('msisensorpro') ? Channel.fromPath(msisensorpro_scan).collect() : Channel.value([])
+    else if (msisensor2_scan && tools.split(',').contains('msisensor2')) {
+        msisensor2_scan_file = Channel.fromPath(msisensor2_scan).collect()
+    }
+    else {
+        msisensor2_scan_file = Channel.value([])
+    }
 
     if (!msisensorpro_scan && tools.split(',').contains('msisensorpro')) {
-        MSISENSORPRO_SCAN(fasta)
+        msisensorpro_scan(fasta)
         msisensorpro_scan_file = MSISENSORPRO_SCAN.out.scan.map { _meta, list -> [list] }
 
         versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
+    }
+    else if (msisensorpro_scan && tools.split(',').contains('msisensorpro')) {
+        msisensorpro_scan_file = Channel.fromPath(msisensorpro_scan).collect()
+    }
+    else {
+        msisensorpro_scan_file = Channel.value([])
     }
 
     // prepare ascat and controlfreec reference files
