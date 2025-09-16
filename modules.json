@@ -143,12 +143,12 @@
                     },
                     "ensemblvep/download": {
                         "branch": "master",
-                        "git_sha": "2fcc53751152a999bfc9c24f75f494b9e5bb338f",
+                        "git_sha": "f9234d35f5b9143313a4773fb54716876c030323",
                         "installed_by": ["modules"]
                     },
                     "ensemblvep/vep": {
                         "branch": "master",
-                        "git_sha": "2fcc53751152a999bfc9c24f75f494b9e5bb338f",
+                        "git_sha": "f9234d35f5b9143313a4773fb54716876c030323",
                         "installed_by": ["modules", "vcf_annotate_ensemblvep"]
                     },
                     "fastp": {
@@ -572,7 +572,7 @@
                     },
                     "vcf_annotate_ensemblvep": {
                         "branch": "master",
-                        "git_sha": "2fcc53751152a999bfc9c24f75f494b9e5bb338f",
+                        "git_sha": "f9234d35f5b9143313a4773fb54716876c030323",
                         "installed_by": ["subworkflows"]
                     },
                     "vcf_annotate_snpeff": {
