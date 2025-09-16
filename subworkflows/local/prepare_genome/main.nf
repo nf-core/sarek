@@ -41,9 +41,9 @@ workflow PREPARE_GENOME {
     known_indels_tbi_in         // params.known_indels_tbi
     known_snps_in               // params.known_snps
     known_snps_tbi_in           // params.known_snps_tbi
-    msisensor2_models           // channel: [optional]  msisensor2_models
-    msisensor2_scan             // channel: [optional]  msisensor2_scan
-    msisensorpro_scan           // channel: [optional]  msisensorpro_scan
+    msisensor2_models_in        // channel: [optional]  msisensor2_models
+    msisensor2_scan_in          // channel: [optional]  msisensor2_scan
+    msisensorpro_scan_in        // channel: [optional]  msisensorpro_scan
     pon_in                      // params.pon
     pon_tbi_in                  // params.pon_tbi
     aligner                     // params.aligner
@@ -174,43 +174,40 @@ workflow PREPARE_GENOME {
     known_sites_snps_tbi = dbsnp_tbi.concat(known_snps_tbi).collect()
 
     // MSI
-    if (msisensor2_models && msisensor2_models.endsWith(".tar.gz") && tools.split(',').contains('msisensor2')) {
-        UNTAR_MSISENSOR2_MODELS(Channel.fromPath(file(msisensor2_models)).collect().map { it -> [[id: it[0].simpleName], it] })
-        msisensor2_models_folder = UNTAR_MSISENSOR2_MODELS.out.untar.map { it[1] }
-
+    if (msisensor2_models_in && msisensor2_models_in.endsWith(".tar.gz") && tools.split(',').contains('msisensor2')) {
+        UNTAR_MSISENSOR2_MODELS(Channel.fromPath(file(msisensor2_models_in)).map { archive -> [[id: archive.baseName], archive] })
+        msisensor2_models = UNTAR_MSISENSOR2_MODELS.out.untar.map { _meta, extracted_archive -> extracted_archive }.collect()
         versions = versions.mix(UNTAR_MSISENSOR2_MODELS.out.versions)
     }
-    else if (msisensor2_models && tools.split(',').contains('msisensor2')){
-        msisensor2_models_folder = Channel.fromPath(msisensor2_models).collect()
+    else if (msisensor2_models_in && tools.split(',').contains('msisensor2')) {
+        msisensor2_models = Channel.fromPath(msisensor2_models_in).collect()
     }
     else {
-        msisensor2_models_folder = Channel.value([])
+        msisensor2_models = Channel.value([])
     }
 
-    if (!msisensor2_scan && tools.split(',').contains('msisensor2')) {
+    if (msisensor2_scan_in) {
+        msisensor2_scan = Channel.fromPath(msisensor2_scan_in)
+    }
+    else if (tools.split(',').contains('msisensor2')) {
         MSISENSOR2_SCAN(fasta)
-        msisensor2_scan_file = MSISENSOR2_SCAN.out.scan.map { _meta, list -> [list] }
-
+        msisensor2_scan = MSISENSOR2_SCAN.out.scan.map { _meta, list -> [list] }.collect()
         versions = versions.mix(MSISENSOR2_SCAN.out.versions)
     }
-    else if (msisensor2_scan && tools.split(',').contains('msisensor2')) {
-        msisensor2_scan_file = Channel.fromPath(msisensor2_scan).collect()
-    }
     else {
-        msisensor2_scan_file = Channel.value([])
+        msisensor2_scan = Channel.value([])
     }
 
-    if (!msisensorpro_scan && tools.split(',').contains('msisensorpro')) {
+    if (msisensorpro_scan_in) {
+        msisensorpro_scan = Channel.fromPath(msisensorpro_scan_in)
+    }
+    else if (tools.split(',').contains('msisensorpro')) {
         MSISENSORPRO_SCAN(fasta)
-        msisensorpro_scan_file = MSISENSORPRO_SCAN.out.scan.map { _meta, list -> [list] }
-
+        msisensorpro_scan = MSISENSORPRO_SCAN.out.list.map { _meta, list -> [list] }.collect()
         versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
     }
-    else if (msisensorpro_scan && tools.split(',').contains('msisensorpro')) {
-        msisensorpro_scan_file = Channel.fromPath(msisensorpro_scan).collect()
-    }
     else {
-        msisensorpro_scan_file = Channel.value([])
+        msisensorpro_scan = Channel.value([])
     }
 
     // prepare ascat and controlfreec reference files
@@ -218,9 +215,8 @@ workflow PREPARE_GENOME {
         ascat_alleles = Channel.empty()
     }
     else if (ascat_alleles_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
-        UNZIP_ALLELES(Channel.fromPath(file(ascat_alleles_in)).collect().map { archive -> [[id: archive[0].baseName], archive] })
-
-        ascat_alleles = UNZIP_ALLELES.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }
+        UNZIP_ALLELES(Channel.fromPath(file(ascat_alleles_in)).map { archive -> [[id: archive.baseName], archive] })
+        ascat_alleles = UNZIP_ALLELES.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }.collect()
         versions = versions.mix(UNZIP_ALLELES.out.versions)
     }
     else {
@@ -231,9 +227,8 @@ workflow PREPARE_GENOME {
         ascat_loci = Channel.empty()
     }
     else if (ascat_loci_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
-        UNZIP_LOCI(Channel.fromPath(file(ascat_loci_in)).collect().map { archive -> [[id: archive[0].baseName], archive] })
-
-        ascat_loci = UNZIP_LOCI.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }
+        UNZIP_LOCI(Channel.fromPath(file(ascat_loci_in)).map { archive -> [[id: archive.baseName], archive] })
+        ascat_loci = UNZIP_LOCI.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }.collect()
         versions = versions.mix(UNZIP_LOCI.out.versions)
     }
     else {
@@ -244,9 +239,8 @@ workflow PREPARE_GENOME {
         ascat_loci_gc = Channel.value([])
     }
     else if (ascat_loci_gc_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
-        UNZIP_GC(Channel.fromPath(file(ascat_loci_gc_in)).collect().map { archive -> [[id: archive[0].baseName], archive] })
-
-        ascat_loci_gc = UNZIP_GC.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }
+        UNZIP_GC(Channel.fromPath(file(ascat_loci_gc_in)).map { archive -> [[id: archive.baseName], archive] })
+        ascat_loci_gc = UNZIP_GC.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }.collect()
         versions = versions.mix(UNZIP_GC.out.versions)
     }
     else {
@@ -257,9 +251,8 @@ workflow PREPARE_GENOME {
         ascat_loci_rt = Channel.value([])
     }
     else if (ascat_loci_rt_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
-        UNZIP_RT(Channel.fromPath(file(ascat_loci_rt_in)).collect().map { archive -> [[id: archive[0].baseName], archive] })
-
-        ascat_loci_rt = UNZIP_RT.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }
+        UNZIP_RT(Channel.fromPath(file(ascat_loci_rt_in)).map { archive -> [[id: archive.baseName], archive] })
+        ascat_loci_rt = UNZIP_RT.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }.collect()
         versions = versions.mix(UNZIP_RT.out.versions)
     }
     else {
@@ -270,9 +263,8 @@ workflow PREPARE_GENOME {
         chr_dir = Channel.value([])
     }
     else if (chr_dir_in.endsWith(".tar.gz") && tools.split(',').contains('controlfreec')) {
-        UNTAR_CHR_DIR(Channel.fromPath(file(chr_dir_in)).collect().map { archive -> [[id: archive[0].baseName], archive] })
-
-        chr_dir = UNTAR_CHR_DIR.out.untar.map { _meta, extracted_archive -> extracted_archive }
+        UNTAR_CHR_DIR(Channel.fromPath(file(chr_dir_in)).map { archive -> [[id: archive.baseName], archive] })
+        chr_dir = UNTAR_CHR_DIR.out.untar.map { _meta, extracted_archive -> extracted_archive }.collect()
         versions = versions.mix(UNTAR_CHR_DIR.out.versions)
     }
     else {
@@ -286,7 +278,7 @@ workflow PREPARE_GENOME {
     ascat_loci_rt            // Channel: [ascat_loci_rt]
     bcftools_annotations     // Channel: [bcftools_annotations]
     bcftools_annotations_tbi // Channel: [bcftools_annotations_tbi]
-    chr_dir                  // Channel: [chr_dir]
+    chr_dir                  // Channel: [chr_dir/]
     dbsnp                    // Channel: [dbsnp]
     dbsnp_tbi                // Channel: [dbsnp_tbi]
     dict                     // Channel: [meta, dict]
@@ -294,7 +286,7 @@ workflow PREPARE_GENOME {
     fasta_fai                // Channel: [meta, fasta_fai]
     germline_resource        // Channel: [germline_resource]
     germline_resource_tbi    // Channel: [germline_resource_tbi]
-    index_alignment          // Channel: [meta, index_alignment] either bwa, bwamem2 or dragmap
+    index_alignment          // Channel: [meta, index_alignment/] either bwa/, bwamem2/ or dragmap/
     known_indels             // Channel: [known_indels]
     known_indels_tbi         // Channel: [known_indels_tbi]
     known_sites_indels       // Channel: [known_sites_indels]
