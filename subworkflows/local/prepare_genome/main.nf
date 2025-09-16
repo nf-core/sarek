@@ -112,8 +112,6 @@ workflow PREPARE_GENOME {
         fasta_fai = Channel.empty()
     }
 
-    MSISENSORPRO_SCAN(fasta)
-
     bcftools_annotations = bcftools_annotations_in ? Channel.fromPath(bcftools_annotations_in).collect() : Channel.value([])
     bcftools_annotations_tbi = bcftools_annotations_tbi_in ? Channel.fromPath(bcftools_annotations_tbi_in).collect() : Channel.value([])
 
@@ -203,7 +201,7 @@ workflow PREPARE_GENOME {
     }
 
     if (!msisensorpro_scan && tools.split(',').contains('msisensorpro')) {
-        msisensorpro_scan(fasta)
+        MSISENSORPRO_SCAN(fasta)
         msisensorpro_scan_file = MSISENSORPRO_SCAN.out.scan.map { _meta, list -> [list] }
 
         versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
@@ -280,9 +278,6 @@ workflow PREPARE_GENOME {
     else {
         chr_dir = Channel.fromPath(chr_dir_in).collect()
     }
-
-    // Gather versions of all tools used
-    versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
 
     emit:
     ascat_alleles            // Channel: [ascat_alleles]
