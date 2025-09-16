@@ -23,6 +23,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
     tools                             // Mandatory, list of tools to apply
     skip_tools                        // Mandatory, list of tools to skip
+    bam                               // channel: [mandatory] meta, bam
     cram                              // channel: [mandatory] meta, cram
     bwa                               // channel: [mandatory] meta, bwa
     cnvkit_reference                  // channel: [optional] cnvkit reference
