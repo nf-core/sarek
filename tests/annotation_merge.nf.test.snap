@@ -4,7 +4,7 @@
             7,
             {
                 "ENSEMBLVEP_VEP": {
-                    "ensemblvep": 115.0,
+                    "ensemblvep": 115.1,
                     "tabix": 1.21
                 },
                 "SNPEFF_SNPEFF": {
@@ -114,7 +114,7 @@
             5,
             {
                 "ENSEMBLVEP_VEP": {
-                    "ensemblvep": 115.0,
+                    "ensemblvep": 115.1,
                     "tabix": 1.21
                 },
                 "SNPEFF_SNPEFF": {
