@@ -26,9 +26,10 @@ input:
         type: file
         description: Reference genome
         pattern: "*.{fasta}"
+        ontologies: []
 output:
-  - list:
-      - meta:
+  list:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -37,11 +38,14 @@ output:
           type: file
           description: File containing microsatellite list
           pattern: "*.{list}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@FriederikeHanssen"
 maintainers:
