@@ -36,11 +36,13 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert path(process.out.candidate_small_indels_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
-                { assert path(process.out.candidate_sv_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
-                { assert path(process.out.diploid_sv_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
-                { assert path(process.out.somatic_sv_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
-                { assert snapshot(process.out.version).match("version") }
+                { assert snapshot (
+                    path(process.out.candidate_small_indels_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1"),
+                    path(process.out.candidate_sv_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1"),
+                    path(process.out.diploid_sv_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1"),
+                    path(process.out.somatic_sv_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1"),
+                    process.out.versions
+                ).match() }
             )
         }
 
@@ -73,11 +75,13 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert path(process.out.candidate_small_indels_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
-                { assert path(process.out.candidate_sv_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
-                { assert path(process.out.diploid_sv_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
-                { assert path(process.out.somatic_sv_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
-                { assert snapshot(process.out.version).match("bed_version") }
+                { assert snapshot (
+                    path(process.out.candidate_small_indels_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1"),
+                    path(process.out.candidate_sv_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1"),
+                    path(process.out.diploid_sv_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1"),
+                    path(process.out.somatic_sv_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1"),
+                    process.out.versions
+                ).match() }
             )
         }
 
