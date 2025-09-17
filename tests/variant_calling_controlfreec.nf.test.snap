@@ -136,7 +136,8 @@
             ],
             "No BAM files",
             "No CRAM files",
-            "No VCF files"
+            "No VCF files",
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -309,7 +310,8 @@
             ],
             "No BAM files",
             "No CRAM files",
-            "No VCF files"
+            "No VCF files",
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -414,7 +416,8 @@
                 "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.png",
                 "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.txt",
                 "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_sample.cpn"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -507,7 +510,8 @@
                 "variant_calling/controlfreec/sample2/sample2_ratio.png",
                 "variant_calling/controlfreec/sample2/sample2_ratio.txt",
                 "variant_calling/controlfreec/sample2/sample2_sample.cpn"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

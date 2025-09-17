@@ -344,7 +344,8 @@
                 "test.strelka.variants.vcf.gz:md5,e81855d97d9077edb8d99052ed595fd5",
                 "test2_vs_test.strelka.somatic_indels.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2_vs_test.strelka.somatic_snvs.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

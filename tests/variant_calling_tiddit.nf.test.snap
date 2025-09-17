@@ -132,7 +132,8 @@
             "No CRAM files",
             [
                 "sample1.tiddit.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -273,7 +274,8 @@
             "No CRAM files",
             [
                 "sample2.tiddit.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -450,7 +452,8 @@
                 "sample4_vs_sample3.tiddit.normal.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.tiddit.tumor.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.tiddit_sv_merge.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

@@ -160,7 +160,8 @@
             "No CRAM files",
             [
                 "test.haplotypecaller.vcf.gz:md5,9d9d103327d59d17e778b663b56136fb"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -341,7 +342,8 @@
             "No CRAM files",
             [
                 "test.haplotypecaller.vcf.gz:md5,9d9d103327d59d17e778b663b56136fb"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -519,7 +521,8 @@
             [
                 "test.haplotypecaller.filtered.vcf.gz:md5,df2040bf1bee0252581824d11d5d87d1",
                 "test.haplotypecaller.vcf.gz:md5,9d9d103327d59d17e778b663b56136fb"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -709,7 +712,8 @@
             [
                 "test.haplotypecaller.filtered.vcf.gz:md5,df2040bf1bee0252581824d11d5d87d1",
                 "test.haplotypecaller.vcf.gz:md5,9d9d103327d59d17e778b663b56136fb"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

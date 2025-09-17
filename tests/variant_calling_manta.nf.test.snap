@@ -128,7 +128,8 @@
             "No CRAM files",
             [
                 "sample1.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -262,7 +263,8 @@
             "No CRAM files",
             [
                 "sample2.manta.tumor_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -435,7 +437,8 @@
                 "sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.manta.somatic_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -572,7 +575,8 @@
             "No CRAM files",
             [
                 "sample2.manta.tumor_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -790,7 +794,8 @@
                 "sample2.manta.tumor_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.manta.somatic_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -966,7 +971,8 @@
                 "sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.manta.somatic_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -1100,7 +1106,8 @@
             "No CRAM files",
             [
                 "sample1.manta.diploid_sv.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

@@ -170,7 +170,8 @@
                 "variant_calling/muse/sample4_vs_sample3/sample4_vs_sample3.MuSE.txt",
                 "variant_calling/muse/sample4_vs_sample3/sample4_vs_sample3.muse.vcf.gz",
                 "variant_calling/muse/sample4_vs_sample3/sample4_vs_sample3.muse.vcf.gz.tbi"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -359,7 +360,8 @@
             ],
             [
                 "sample4_vs_sample3.muse.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

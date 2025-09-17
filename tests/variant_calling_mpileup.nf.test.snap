@@ -165,7 +165,8 @@
             "No CRAM files",
             [
                 "sample2.bcftools.vcf.gz:md5,439c858d3b61aa738252353e2fd04225"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -336,7 +337,8 @@
             "No CRAM files",
             [
                 "sample1.bcftools.vcf.gz:md5,83ab8ae7c467336e1ee7f672bbb037ad"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -507,7 +509,8 @@
             "No CRAM files",
             [
                 "sample2.bcftools.vcf.gz:md5,bb006620fd9b7eaf5104d64f34290901"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -681,7 +684,8 @@
             "No CRAM files",
             [
                 "sample1.bcftools.vcf.gz:md5,c55cf36bc05b6a7b4a98bb3ba925fc0a"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

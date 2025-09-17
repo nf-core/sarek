@@ -291,7 +291,8 @@
                 "test.md.cram:md5,2d0c176fed158d84a061b69e1947994c",
                 "test.recal.cram:md5,6927569ca52dbba512d27f8742bc6aae"
             ],
-            "No VCF files"
+            "No VCF files",
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

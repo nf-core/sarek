@@ -31,7 +31,8 @@
                 "reference/intervals/no_intervals.bed.gz",
                 "reference/msisensorpro",
                 "reference/msisensorpro/genome.msisensor_scan.list"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -171,7 +172,8 @@
             ],
             "No BAM files",
             "No CRAM files",
-            "No VCF files"
+            "No VCF files",
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -226,7 +228,8 @@
             ],
             "No BAM files",
             "No CRAM files",
-            "No VCF files"
+            "No VCF files",
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

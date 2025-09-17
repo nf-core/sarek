@@ -187,7 +187,8 @@
                 "joint_germline.vcf.gz:md5,118f8b58defd673dc9c053da6fcd9129",
                 "joint_germline_recalibrated_indel.vcf.gz:md5,8133d94724e35be846623fbdb186acc2",
                 "test.haplotyper.g.vcf.gz:md5,5a556dc23ecea0e9f15c7eeeff563a5f"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -367,7 +368,8 @@
             [
                 "test.haplotyper.filtered.vcf.gz:md5,a7cb2001286fa02622676547f21f263b",
                 "test.haplotyper.unfiltered.vcf.gz:md5,722b5007cf143487b8c39d54c20ab77f"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -544,7 +546,8 @@
             "No CRAM files",
             [
                 "test.haplotyper.unfiltered.vcf.gz:md5,722b5007cf143487b8c39d54c20ab77f"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -730,7 +733,8 @@
             [
                 "test.haplotyper.filtered.vcf.gz:md5,a7cb2001286fa02622676547f21f263b",
                 "test.haplotyper.unfiltered.vcf.gz:md5,722b5007cf143487b8c39d54c20ab77f"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

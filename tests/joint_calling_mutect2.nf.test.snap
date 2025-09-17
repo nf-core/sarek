@@ -150,7 +150,8 @@
             "No CRAM files",
             [
                 "test.mutect2.vcf.gz:md5,593f6a3b49d8a4e44b1e2696883116c0"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -298,7 +299,8 @@
             "No CRAM files",
             [
                 "test.mutect2.vcf.gz:md5,e064ce0953bb07416f3bc8a60c761238"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

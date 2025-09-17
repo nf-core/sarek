@@ -249,7 +249,8 @@
                 "sample3.strelka.variants.vcf.gz:md5,6e7f36df8e96c983ef075d376431d72a",
                 "sample4_vs_sample3.strelka.somatic_indels.vcf.gz:md5,6b8a01b52186fcaf3ec74e5bf1b5426",
                 "sample4_vs_sample3.strelka.somatic_snvs.vcf.gz:md5,262dcc485506abb0b67c8235354fd6e3"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -510,7 +511,8 @@
                 "sample3.strelka.variants.vcf.gz:md5,dbea8798de92494c7a1fbf686c363696",
                 "sample4_vs_sample3.strelka.somatic_indels.vcf.gz:md5,6b8a01b52186fcaf3ec74e5bf1b5426",
                 "sample4_vs_sample3.strelka.somatic_snvs.vcf.gz:md5,866236c526138e4e08fdc2fa87b08417"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

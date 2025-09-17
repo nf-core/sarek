@@ -229,7 +229,8 @@
                 "test2.md.cram:md5,b186d05619be54618852b198c1b19198",
                 "test2.recal.cram:md5,c1eec6185153a1044bd296a1db065f7d"
             ],
-            "No VCF files"
+            "No VCF files",
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -303,7 +304,8 @@
                 "test2.md.cram:md5,b186d05619be54618852b198c1b19198",
                 "test2.recal.cram:md5,c1eec6185153a1044bd296a1db065f7d"
             ],
-            "No VCF files"
+            "No VCF files",
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
