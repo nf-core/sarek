@@ -93,9 +93,6 @@ workflow NFCORE_SAREK {
 
     // Initialize fasta file with meta map:
     fasta = params.fasta ? Channel.fromPath(params.fasta).map { it -> [[id: it.baseName], it] }.collect() : Channel.empty()
-    
-    bbsplit_fasta_list = params.bbsplit_fasta_list
-    bbsplit_index      = params.bbsplit_index
 
     // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
     bcftools_annotations    = params.bcftools_annotations    ? Channel.fromPath(params.bcftools_annotations).collect()    : Channel.empty()
@@ -128,8 +125,7 @@ workflow NFCORE_SAREK {
     if (params.dbnsfp && params.dbnsfp_tbi) {
         vep_extra_files.add(file(params.dbnsfp, checkIfExists: true))
         vep_extra_files.add(file(params.dbnsfp_tbi, checkIfExists: true))
-    }
-    else if (params.dbnsfp && !params.dbnsfp_tbi) {
+    } else if (params.dbnsfp && !params.dbnsfp_tbi) {
         System.err.println("DBNSFP: ${params.dbnsfp} has been provided with `--dbnsfp, but no dbnsfp_tbi has")
         System.err.println("cf: https://nf-co.re/sarek/parameters/#dbnsfp")
         error("Execution halted due to dbnsfp inconsistency.")
@@ -160,8 +156,8 @@ workflow NFCORE_SAREK {
         params.msisensorpro_scan,
         pon,
         params.tools?:"no_tools",
-        bbsplit_fasta_list,
-        bbsplit_index
+        params.bbsplit_fasta_list,
+        params.bbsplit_index
     )
 
     // Gather built indices or get them from the params
@@ -182,8 +178,8 @@ workflow NFCORE_SAREK {
         ? Channel.fromPath(params.dragmap).map { it -> [[id: 'dragmap'], it] }.collect()
         : PREPARE_GENOME.out.hashtable
 
-    // get index from bbsplit
-    bbsplit_index           = PREPARE_GENOME.out.bbsplit_index
+    // Get bbsplit index from PREPARE_GENOME output
+    bbsplit_index_prepared     = PREPARE_GENOME.out.bbsplit_index
 
     // Gather index for mapping given the chosen aligner
     aligner = params.aligner
@@ -244,8 +240,7 @@ workflow NFCORE_SAREK {
             cnvkit_reference = PREPARE_REFERENCE_CNVKIT.out.cnvkit_reference
             versions = versions.mix(PREPARE_REFERENCE_CNVKIT.out.versions)
         }
-    }
-    else {
+    } else {
         cnvkit_reference = Channel.value([])
     }
     // Gather used softwares versions
@@ -264,8 +259,7 @@ workflow NFCORE_SAREK {
         vep_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.ensemblvep_cache.map { meta, cache -> [cache] }
 
         versions = versions.mix(DOWNLOAD_CACHE_SNPEFF_VEP.out.versions)
-    }
-    else {
+    } else {
         // Looks for cache information either locally or on the cloud
         ANNOTATION_CACHE_INITIALISATION(
             (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
@@ -336,9 +330,8 @@ workflow NFCORE_SAREK {
         vep_fasta,
         vep_genome,
         vep_species,
-        bbsplit_fasta_list,
-        bbsplit_index,
-        params.skip_bbsplit,
+        params.bbsplit_fasta_list,
+        bbsplit_index_prepared,
         versions,
     )
 
