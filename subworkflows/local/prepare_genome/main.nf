@@ -185,8 +185,8 @@ workflow PREPARE_GENOME {
     versions = versions.mix(TABIX_GERMLINE_RESOURCE.out.versions)
     versions = versions.mix(TABIX_KNOWN_INDELS.out.versions)
     versions = versions.mix(TABIX_KNOWN_SNPS.out.versions)
-    versions = versions.mix(TABIX_PON.out.versions)
     versions = versions.mix(TABIX_MUTECT2_FORCE_CALL.out.versions)
+    versions = versions.mix(TABIX_PON.out.versions)
 
     emit:
     bcftools_annotations_tbi = TABIX_BCFTOOLS_ANNOTATIONS.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: bcftools_annotations.vcf.gz.tbi
