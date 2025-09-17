@@ -282,13 +282,14 @@
             [
                 "test.strelka.genome.vcf.gz:md5,1e55bf36b678e91f8ac7ee73f37815c0",
                 "test.strelka.variants.vcf.gz:md5,e81855d97d9077edb8d99052ed595fd5"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-11T09:39:30.303130562"
+        "timestamp": "2025-09-17T09:40:24.951508283"
     },
     "-profile test -stub": {
         "content": [
@@ -487,12 +488,13 @@
                 "variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi",
                 "variant_calling/strelka/test/test.strelka.variants.vcf.gz",
                 "variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi"
-            ]
+            ],
+            "No tuple declaration warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-11T10:26:03.957093162"
+        "timestamp": "2025-09-17T09:41:38.503793146"
     }
 }
