@@ -153,10 +153,10 @@ workflow NFCORE_SAREK {
         germline_resource,
         known_indels,
         known_snps,
-        mutect2_force_call,
         params.msisensor2_models,
         params.msisensor2_scan,
         params.msisensorpro_scan,
+        mutect2_force_call,
         pon,
         params.tools?:"no_tools",
     )
