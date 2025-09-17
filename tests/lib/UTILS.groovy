@@ -128,7 +128,8 @@ class UTILS {
                             // Number of successful tasks
                             workflow.trace.succeeded().size(),
                             // All assertions based on the scenario
-                            *UTILS.get_assertion(include_freebayes_unfiltered: scenario.include_freebayes_unfiltered ,include_muse_txt: scenario.include_muse_txt, no_vcf_md5sum: scenario.no_vcf_md5sum, outdir: params.outdir, stub: scenario.stub)
+                            *UTILS.get_assertion(include_freebayes_unfiltered: scenario.include_freebayes_unfiltered ,include_muse_txt: scenario.include_muse_txt, no_vcf_md5sum: scenario.no_vcf_md5sum, outdir: params.outdir, stub: scenario.stub),
+                            filterNextflowOutput(workflow.stdout + workflow.stderr, include: ["WARN"])?:"No warning"
                         ).match() }
                     )
                     // Check stdout if specified
