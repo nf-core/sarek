@@ -108,7 +108,7 @@
             [
                 "sample2.mutect2.vcf.gz:md5,4a803cf2687fc368a8c4eef5e2fc8c9c"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -251,7 +251,7 @@
             [
                 "sample4_vs_sample3.mutect2.vcf.gz:md5,f2c46d0dae1b1a59180c0b9e595993d2"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -379,7 +379,7 @@
             [
                 "sample4_vs_sample3.mutect2.vcf.gz:md5,f2c46d0dae1b1a59180c0b9e595993d2"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -511,7 +511,7 @@
             [
                 "sample2.mutect2.vcf.gz:md5,4a803cf2687fc368a8c4eef5e2fc8c9c"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

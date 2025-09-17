@@ -282,7 +282,7 @@
                 "testT.haplotypecaller.filtered.vcf.gz:md5,d1e2d43d91858677d2b35fc389ee81b1",
                 "testT.haplotypecaller.vcf.gz:md5,5a2f49f0a41e890f9564a0baa11dc1c6"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

@@ -175,7 +175,7 @@
                 "test.dedup.cram:md5,2f11e4fe3390b8ad0a1852616fd1da04"
             ],
             "No VCF files",
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -359,7 +359,7 @@
                 "test.consensus.cram:md5,7b5a6380e09ad4da2a4b9a2e6bda2d1a"
             ],
             "No VCF files",
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -543,7 +543,7 @@
                 "test.dedup.cram:md5,2f11e4fe3390b8ad0a1852616fd1da04"
             ],
             "No VCF files",
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -730,7 +730,7 @@
                 "test-1.consensus.cram:md5,aa729f5aa32977f1714c0ba24f3aa1eb"
             ],
             "No VCF files",
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -917,7 +917,7 @@
                 "test-1.dedup.cram:md5,2f93d26f230611260a7497a4913af443"
             ],
             "No VCF files",
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

@@ -80,7 +80,7 @@
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourBAF.txt",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourLogR.txt"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -169,7 +169,7 @@
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourBAF.txt",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourLogR.txt"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -313,7 +313,7 @@
             "No BAM files",
             "No CRAM files",
             "No VCF files",
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -455,7 +455,7 @@
             "No BAM files",
             "No CRAM files",
             "No VCF files",
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

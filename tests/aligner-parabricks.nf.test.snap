@@ -207,7 +207,7 @@
                 "test-test_L2.cram:md5,56ead4e3efd69b35a8e539b1b697213d"
             ],
             "No VCF files",
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -509,7 +509,7 @@
                 "test2_vs_test.mutect2.filtered.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2_vs_test.mutect2.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

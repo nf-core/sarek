@@ -204,7 +204,7 @@
                 "testN.haplotypecaller.g.vcf.gz:md5,44590f25a9ed621929879cefc601f95a",
                 "testT.haplotypecaller.g.vcf.gz:md5,e37d210dda0bfe2716502353328b1103"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -414,7 +414,7 @@
                 "testN.haplotypecaller.g.vcf.gz:md5,44590f25a9ed621929879cefc601f95a",
                 "testT.haplotypecaller.g.vcf.gz:md5,e37d210dda0bfe2716502353328b1103"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

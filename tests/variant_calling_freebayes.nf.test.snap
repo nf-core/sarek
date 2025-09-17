@@ -379,7 +379,7 @@
                     "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=140, phased=false, phasedAutodetect=false]"
                 ]
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -578,7 +578,7 @@
             [
                 "sample2.freebayes.filtered.vcf.gz:md5,7ceeddfa65d53e50e6faeb39fd4f8133"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -931,7 +931,7 @@
             [
                 "test.freebayes.filtered.vcf.gz:md5,e7cd95615161df4022ed51b71a091605"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -1267,7 +1267,7 @@
             [
                 "test.freebayes.filtered.vcf.gz:md5,f390481d4a22b66dffbecfe2f57ea614"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -1457,7 +1457,7 @@
             [
                 "sample2.freebayes.filtered.vcf.gz:md5,e68ce412428016fcc1f09735a91cdef"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -1872,7 +1872,7 @@
                 "test.freebayes.filtered.vcf.gz:md5,ecf22ac3060db26aa347b7a1e5af4d6e",
                 "test2_vs_test.freebayes.filtered.vcf.gz:md5,cdd8d19dfd11d25646a27c8e7572b170"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

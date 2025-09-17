@@ -71,7 +71,7 @@
                 "test.sorted.cram:md5,5534c350547fd253f0f2b9450362bed"
             ],
             "No VCF files",
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -116,7 +116,7 @@
                 "reference/intervals/genome.stub.bed",
                 "reference/intervals/genome.stub.bed.gz"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -175,7 +175,7 @@
             "No BAM files",
             "No CRAM files",
             "No VCF files",
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -239,7 +239,7 @@
                 "reference/intervals/genome.stub.bed",
                 "reference/intervals/genome.stub.bed.gz"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

@@ -243,7 +243,7 @@
                 "test-1.strelka.genome.vcf.gz:md5,3424eff15c8246009bec4241150d6247",
                 "test-1.strelka.variants.vcf.gz:md5,55bdd68241e6e30cd8e5f3e8b10eb10b"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -599,7 +599,7 @@
                 "test.strelka.genome.vcf.gz:md5,cbc51ad6526f76d1263b7d59623ed790",
                 "test.strelka.variants.vcf.gz:md5,103151e3c39fc390f1f17673be568ab6"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

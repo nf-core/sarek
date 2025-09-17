@@ -87,7 +87,7 @@
             "No BAM files",
             "No CRAM files",
             "No VCF files",
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -246,7 +246,7 @@
             ],
             "No CRAM files",
             "No VCF files",
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -309,7 +309,7 @@
                 "reference/msisensor2/models/e05d5da7208a924762311eddc4ec96c0",
                 "reference/msisensor2/models/f8a20acf51ccb2b0ce6af42f24a8b5ef"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -432,7 +432,7 @@
             "No BAM files",
             "No CRAM files",
             "No VCF files",
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

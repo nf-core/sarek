@@ -129,7 +129,7 @@ class UTILS {
                             workflow.trace.succeeded().size(),
                             // All assertions based on the scenario
                             *UTILS.get_assertion(include_freebayes_unfiltered: scenario.include_freebayes_unfiltered ,include_muse_txt: scenario.include_muse_txt, no_vcf_md5sum: scenario.no_vcf_md5sum, outdir: params.outdir, stub: scenario.stub),
-                            filterNextflowOutput(workflow.stdout, include: ["Input tuple does not match tuple declaration"])?:"No tuple declaration warning"
+                            filterNextflowOutput(workflow.stdout + workflow.stderr, include: ["WARN"])?:"No warning"
                         ).match() }
                     )
                     // Check stdout if specified

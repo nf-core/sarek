@@ -169,7 +169,7 @@
             [
                 "test.dnascope.unfiltered.vcf.gz:md5,372f2f8f6588b98ceaaae8ecd21d4f6e"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -353,7 +353,7 @@
                 "test.dnascope.filtered.vcf.gz:md5,3415f9c0cbc1492008b70febe02f3e3e",
                 "test.dnascope.unfiltered.vcf.gz:md5,372f2f8f6588b98ceaaae8ecd21d4f6e"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -538,7 +538,7 @@
                 "joint_germline.vcf.gz:md5,ef572f2d4597e009fb10037b736b6b5b",
                 "test.dnascope.g.vcf.gz:md5,2eec090f63df75523e2c0ecbc369a755"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

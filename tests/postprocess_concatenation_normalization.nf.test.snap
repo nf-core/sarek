@@ -342,7 +342,7 @@
                 "testT.haplotypecaller.norm.vcf.gz:md5,9119ee2c970c37729dcb35d4b88f9d10",
                 "testT.vcf.gz:md5,9119ee2c970c37729dcb35d4b88f9d10"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

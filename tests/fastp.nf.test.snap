@@ -342,7 +342,7 @@
                 "test.recal.cram:md5,6730f24d62a7bc9aa1e9fb0f89ae9cde"
             ],
             "No VCF files",
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -717,7 +717,7 @@
                 "test.recal.cram:md5,f89c35bd0e96b2254e36b4e3660b1269"
             ],
             "No VCF files",
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",

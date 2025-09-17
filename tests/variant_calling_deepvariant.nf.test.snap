@@ -168,7 +168,7 @@
                 "test.deepvariant.g.vcf.gz:md5,a51327a75372557eece796de33dc3318",
                 "test.deepvariant.vcf.gz:md5,e4a7b726e2f3db8ac15d08dd7e564519"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -313,7 +313,7 @@
                 "variant_calling/deepvariant/test/test.deepvariant.vcf.gz",
                 "variant_calling/deepvariant/test/test.deepvariant.vcf.gz.tbi"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -452,7 +452,7 @@
                 "variant_calling/deepvariant/test/test.deepvariant.vcf.gz",
                 "variant_calling/deepvariant/test/test.deepvariant.vcf.gz.tbi"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -623,7 +623,7 @@
                 "test.deepvariant.g.vcf.gz:md5,a51327a75372557eece796de33dc3318",
                 "test.deepvariant.vcf.gz:md5,e4a7b726e2f3db8ac15d08dd7e564519"
             ],
-            "No tuple declaration warning"
+            "No warning"
         ],
         "meta": {
             "nf-test": "0.9.2",
