@@ -10,6 +10,10 @@ include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI         } from '../../../sub
 // TRIM/SPLIT FASTQ Files
 include { FASTP                                             } from '../../../modules/nf-core/fastp/main'
 
+// remove genomic contaminants with bbsplit
+include { BBMAP_BBSPLIT                                     } from '../../../modules/nf-core/bbmap/bbsplit/main'
+//TODO: WHAT ABOUT BBSPLIT RUNS WITH PARABRICKS?
+
 // Create umi consensus bams from fastq
 include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO                  } from '../../../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
 
@@ -44,10 +48,6 @@ include { BAM_BASERECALIBRATOR_SPARK                        } from '../../../sub
 // Create recalibrated cram files to use for variant calling (+QC)
 include { BAM_APPLYBQSR                                     } from '../../../subworkflows/local/bam_applybqsr/main'
 include { BAM_APPLYBQSR_SPARK                               } from '../../../subworkflows/local/bam_applybqsr_spark/main'
-
-// remove genomic contaminants with bbsplit
-include { BBMAP_BBSPLIT } from '../../../modules/nf-core/bbmap/bbsplit/main'
-//TODO: WHAT ABOUT BBSPLIT RUNS WITH PARABRICKS?
 
 workflow FASTQ_PREPROCESS_GATK {
     take:
@@ -124,33 +124,36 @@ workflow FASTQ_PREPROCESS_GATK {
             reports = reports.mix(FASTP.out.html.collect{ _meta, html -> html })
 
             if (params.split_fastq) {
-                reads_for_alignment = FASTP.out.reads.map{ meta, reads ->
+                reads_for_bbsplit = FASTP.out.reads.map{ meta, reads ->
                     def read_files = reads.sort(false) { a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
                     [ meta + [ n_fastq: read_files.size() ], read_files ]
                 }.transpose()
-            } else reads_for_alignment = FASTP.out.reads
+            } else reads_for_bbsplit = FASTP.out.reads
 
             versions = versions.mix(FASTP.out.versions)
 
         } else {
-            reads_for_alignment = reads_for_fastp
+            reads_for_bbsplit = reads_for_fastp
         }
 
         //
         // MODULE: Remove genome contaminant reads
         //
         if (params.tools.split(',').contains('bbsplit')) {
-            // prepare genome for bbsplit ...
-            BBMAP_BBSPLIT (
-                reads_for_alignment,
-                bbsplit_index,
-                [],
-                [ [], [] ],
-                false
-            )
-            .primary_fastq
-            .set { reads_for_alignment }
+
+            reads_for_alignment = BBMAP_BBSPLIT (
+                                        reads_for_bbsplit,
+                                        bbsplit_index,
+                                        [],
+                                        [ [], [] ],
+                                        false
+                                    )
+                                    .primary_fastq
+
             versions = versions.mix(BBMAP_BBSPLIT.out.versions.first())
+        
+        } else {
+            reads_for_alignment = reads_for_bbsplit
         }
 
 

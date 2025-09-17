@@ -330,7 +330,6 @@ workflow NFCORE_SAREK {
         vep_fasta,
         vep_genome,
         vep_species,
-        params.bbsplit_fasta_list,
         bbsplit_index_prepared,
         versions,
     )

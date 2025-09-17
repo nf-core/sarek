@@ -26,6 +26,10 @@ include { FASTQC                                            } from '../../module
 // QC on CRAM
 include { CRAM_SAMPLEQC                                     } from '../../subworkflows/local/cram_sampleqc'
 
+// remove genomic contaminants with bbsplit
+include { BBMAP_BBSPLIT                                     } from '../../modules/nf-core/bbmap/bbsplit/main'
+//TODO: WHAT ABOUT BBSPLIT RUNS WITH PARABRICKS?
+
 // Preprocessing
 include { FASTQ_PREPROCESS_GATK                             } from '../../subworkflows/local/fastq_preprocess_gatk'
 include { FASTQ_PREPROCESS_PARABRICKS                       } from '../../subworkflows/local/fastq_preprocess_parabricks'
@@ -110,7 +114,6 @@ workflow SAREK {
     vep_fasta
     vep_genome
     vep_species
-    bbsplit_fasta_list
     bbsplit_index
     versions
 
@@ -126,12 +129,6 @@ workflow SAREK {
         VALIDATE INPUTS
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
-
-    // Check if file with list of fastas is provided when running BBSplit
-    if (params.tools.split(',').contains('bbsplit') && !params.bbsplit_index && params.bbsplit_fasta_list) {
-        ch_bbsplit_fasta_list = file(params.bbsplit_fasta_list)
-        if (ch_bbsplit_fasta_list.isEmpty()) {exit 1, "File provided with --bbsplit_fasta_list is empty: ${ch_bbsplit_fasta_list.getName()}!"}
-    }
 
     // PREPROCESSING
     if (params.step == 'mapping') {
