@@ -17,6 +17,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [Trim adapters](#trim-adapters)
     - [Split FastQ files](#split-fastq-files)
     - [UMI consensus](#umi-consensus)
+    - [BBSplit contamination removal](#bbsplit-contamination-removal)
   - [Map to Reference](#map-to-reference)
     - [BWA](#bwa)
     - [BWA-mem2](#bwa-mem2)
@@ -167,6 +168,31 @@ These files are intermediate and by default not placed in the output-folder kept
 **Output directory: `{outdir}/reports/umi/`**
 
 - `<sample_lane_{1,2}_umi_histogram.txt>`
+
+</details>
+
+#### BBSplit contamination removal
+
+[BBSplit](http://seqanswers.com/forums/showthread.php?t=41288) is a tool that bins reads by mapping to multiple references simultaneously, using BBMap. The reads go to the bin of the reference they map to best. There are also disambiguation options, such that reads that map to multiple references can be binned with all of them, none of them, one of them, or put in a special "ambiguous" file for each of them.
+
+This functionality would be especially useful, for example, if you have [mouse PDX](https://en.wikipedia.org/wiki/Patient_derived_xenograft) samples that contain a mixture of human and mouse genomic DNA/RNA and you would like to filter out any mouse derived reads.
+
+The BBSplit index will have to be built at least once with this pipeline by providing [`--bbsplit_fasta_list`](https://nf-co.re/sarek/parameters#bbsplit_fasta_list) which has to be a file containing 2 columns: short name and full path to reference genome(s):
+
+```bash
+mm10,/path/to/mm10.fa
+ecoli,/path/to/ecoli.fa
+sarscov2,/path/to/sarscov2.fa
+```
+
+You can save the index by using the [`--save_reference`](https://nf-co.re/sarek/parameters#save_reference) parameter and then provide it via [`--bbsplit_index`](https://nf-co.re/sarek/parameters#bbsplit_index) for future runs. To enable the tool add `--tools bbsplit` to the run parameters. As described in the `Output files` dropdown box above the FastQ files relative to the main reference genome will always be called `*primary*.fastq.gz`.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `bbsplit/`
+  - `*.fastq.gz`: If `--save_bbsplit_reads` is specified FastQ files split by reference will be saved to the results directory. Reads from the main reference genome will be named "_primary_.fastq.gz". Reads from contaminating genomes will be named "_<SHORT_NAME>_.fastq.gz" where `<SHORT_NAME>` is the first column in `--bbsplit_fasta_list` that needs to be provided to initially build the index.
+  - `*.txt`: File containing statistics on how many reads were assigned to each reference.
 
 </details>
 
