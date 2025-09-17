@@ -7,7 +7,7 @@
    viewBox="0 0 744.09448 524.40944"
    id="svg4924"
    version="1.1"
-   inkscape:version="1.2.2 (1:1.2.2+202305151914+b0a8486541)"
+   inkscape:version="1.4.2 (1:1.4.2+202505120737+ebf0e940d0)"
    sodipodi:docname="sarek_indices_subway.svg"
    inkscape:export-filename="sarek_indices_subway.png"
    inkscape:export-xdpi="90"
@@ -2963,11 +2963,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.8521196"
-     inkscape:cx="181.31258"
-     inkscape:cy="100.9248"
+     inkscape:zoom="0.94779843"
+     inkscape:cx="442.60466"
+     inkscape:cy="358.72607"
      inkscape:document-units="px"
-     inkscape:current-layer="g2380"
+     inkscape:current-layer="layer4"
      showgrid="false"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -2976,14 +2976,15 @@
      units="mm"
      width="200mm"
      inkscape:window-width="1920"
-     inkscape:window-height="1132"
+     inkscape:window-height="1128"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      showguides="false"
      inkscape:pagecheckerboard="0"
      inkscape:showpageshadow="2"
-     inkscape:deskcolor="#d1d1d1" />
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:export-bgcolor="#ffffffff" />
   <metadata
      id="metadata4929">
     <rdf:RDF>
@@ -3749,14 +3750,14 @@
        inkscape:export-xdpi="90"
        inkscape:export-filename="./polygon4618.png"
        id="text3541"
-       y="214.34552"
-       x="565.89557"
+       y="209.10855"
+       x="560.65857"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';text-align:start;text-anchor:start;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.937499"
        xml:space="preserve"><tspan
          id="tspan3539"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';text-align:start;text-anchor:start;stroke-width:0.937499"
-         y="214.34552"
-         x="565.89557"
+         y="209.10855"
+         x="560.65857"
          sodipodi:role="line">gatk</tspan></text>
     <path
        inkscape:connector-curvature="0"
@@ -4008,16 +4009,16 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.937499"
-       x="683.04944"
-       y="118.75417"
+       x="677.81244"
+       y="113.5172"
        id="text6811-5"
        inkscape:export-filename="./polygon4618.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"
        transform="rotate(-45)"><tspan
          sodipodi:role="line"
-         x="683.04944"
-         y="118.75417"
+         x="677.81244"
+         y="113.5172"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';text-align:center;text-anchor:middle;stroke-width:0.937499"
          id="tspan6809-2">convert</tspan></text>
     <path
@@ -4064,16 +4065,16 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.937499"
-       x="516.32172"
-       y="263.93185"
+       x="512.19098"
+       y="259.80112"
        id="text3628"
        inkscape:export-filename="./polygon4618.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"
        transform="rotate(-45)"><tspan
          sodipodi:role="line"
-         x="516.32172"
-         y="263.93185"
+         x="512.19098"
+         y="259.80112"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';text-align:start;text-anchor:start;stroke-width:0.937499"
          id="tspan3626">bwa</tspan></text>
     <path
@@ -4120,16 +4121,16 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.937499"
-       x="467.92923"
-       y="312.32462"
+       x="463.79837"
+       y="308.19376"
        id="text3648"
        inkscape:export-filename="./polygon4618.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"
        transform="rotate(-45)"><tspan
          sodipodi:role="line"
-         x="467.92923"
-         y="312.32462"
+         x="463.79837"
+         y="308.19376"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';text-align:start;text-anchor:start;stroke-width:0.937499"
          id="tspan3646">bwamem2</tspan></text>
     <path
@@ -4182,16 +4183,16 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.937499"
-       x="419.53659"
-       y="360.71753"
+       x="415.56186"
+       y="356.7428"
        id="text3806"
        inkscape:export-filename="./polygon4618.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"
        transform="rotate(-45)"><tspan
          sodipodi:role="line"
-         x="419.53659"
-         y="360.71753"
+         x="415.56186"
+         y="356.7428"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';text-align:start;text-anchor:start;stroke-width:0.937499"
          id="tspan3804">dragmap</tspan></text>
     <path
@@ -4243,24 +4244,39 @@
        r="9.375" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.937499"
-       x="398.18173"
-       y="407.69101"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:0.75;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.937499"
+       x="404.52856"
+       y="417.61661"
        id="text4104"
        inkscape:export-filename="./polygon4618.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"
        transform="rotate(-45)"><tspan
          sodipodi:role="line"
-         x="398.18173"
-         y="407.69101"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';text-align:center;text-anchor:middle;stroke-width:0.937499"
-         id="tspan4161">msisensor</tspan><tspan
+         x="404.52856"
+         y="417.61661"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:0.75;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';text-align:center;text-anchor:middle;stroke-width:0.937499"
+         id="tspan4167">msisensor</tspan><tspan
          sodipodi:role="line"
-         x="398.18173"
-         y="423.31601"
+         x="404.52856"
+         y="426.99161"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:0.75;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';text-align:center;text-anchor:middle;stroke-width:0.937499"
+         id="tspan1">pro</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.937499"
+       x="398.00516"
+       y="405.50568"
+       id="text4104-6"
+       inkscape:export-filename="./polygon4618.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       transform="rotate(-45)"><tspan
+         sodipodi:role="line"
+         x="398.00516"
+         y="405.50568"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';text-align:center;text-anchor:middle;stroke-width:0.937499"
-         id="tspan4167">pro</tspan></text>
+         id="tspan4167-5">msisensor2,</tspan></text>
     <path
        sodipodi:nodetypes="cc"
        id="path4106"
