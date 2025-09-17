@@ -328,17 +328,17 @@
                     },
                     "manta/germline": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "ae6b18e8930fe66595c8b08633b484d42970a564",
                         "installed_by": ["modules"]
                     },
                     "manta/somatic": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "ae6b18e8930fe66595c8b08633b484d42970a564",
                         "installed_by": ["modules"]
                     },
                     "manta/tumoronly": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "ae6b18e8930fe66595c8b08633b484d42970a564",
                         "installed_by": ["modules"]
                     },
                     "mosdepth": {
