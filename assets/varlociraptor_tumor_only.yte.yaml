@@ -24,6 +24,7 @@ samples:
       by: normal
       fraction: ?contamination
   normal:
+    # TODO: remove "sex: ?sex_string" when updating varlociraptor, will be fixed in coming release
     sex: ?sex_string
     universe: "0.0 | 0.5 | 1.0"
 
