@@ -80,10 +80,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params                       | Status |
-| ---------------------------- | ------ |
-| `--freebayes_filter`         | New    |
-| `--varlociraptor_chunk_size` | New    |
+| Params                                | Status |
+| ------------------------------------- | ------ |
+| `--freebayes_filter`                  | New    |
+| `--varlociraptor_chunk_size`          | New    |
+| `--varlociraptor_scenario_germline`   | New    |
+| `--varlociraptor_scenario_somatic`    | New    |
+| `--varlociraptor_scenario_tumor_only` | New    |
 
 ### Developer section
 
