@@ -188,7 +188,7 @@
                     },
                     "gatk4/applybqsr": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "620300d96c4b9051d533a5ea5f9d3b2c64b781ce",
                         "installed_by": ["modules"]
                     },
                     "gatk4/applyvqsr": {
@@ -298,7 +298,7 @@
                     },
                     "gatk4spark/applybqsr": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "620300d96c4b9051d533a5ea5f9d3b2c64b781ce",
                         "installed_by": ["modules"]
                     },
                     "gatk4spark/baserecalibrator": {

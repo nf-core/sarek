@@ -397,7 +397,7 @@
                     "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FREEBAYES": {
                     "freebayes": "1.3.10"
@@ -602,7 +602,7 @@
                     "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -1478,7 +1478,7 @@
                     "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"

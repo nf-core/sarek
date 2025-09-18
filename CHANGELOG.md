@@ -62,6 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `ascat`                                | 3.1.1       | 3.2.0       |
 | `bcftools`                             | 1.20        | 1.21        |
 | `ensemblvep`                           | 113.0       | 115.1       |
+| `gawk`                                 | 5.1.0       | 5.3.0       |
 | `fastp`                                | 0.23.4      | 0.24.0      |
 | `fgbio`                                | 2.2.1       | 2.4.0       |
 | `freebayes`                            | 1.3.6.      | 1.3.10      |
@@ -147,6 +148,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1936](https://github.com/nf-core/sarek/pull/1936) - Template update for nf-core/tools v3.3.2
 - [1953](https://github.com/nf-core/sarek/pull/1953) - Change freebayes tests from gzip to md5sum
 - [1954](https://github.com/nf-core/sarek/pull/1954) - Refactor bcftools annotation subworkflows so that no diff is necessary from nf-core/modules
+- [1962](https://github.com/nf-core/sarek/pull/1962) - Update gatk and gatk4spark applybqsr modules and subsequent subworkflows to deal with the newly added ext.suffix
 - [1965](https://github.com/nf-core/sarek/pull/1965) - Refactor cram to bam conversion which is now is done even more upstream (following [1967](https://github.com/nf-core/sarek/pull/1967))
 - [1967](https://github.com/nf-core/sarek/pull/1967) - Refactor muse subworkflows so that cram to bam conversion is done upstream
 - [1967](https://github.com/nf-core/sarek/pull/1967) - Update msisensorpro modules to adhere to language server
