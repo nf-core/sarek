@@ -72,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `msisensorpro`                         | 1.2.0       | 1.3.0       |
 | `multiqc`                              | 1.25.1      | 1.30        |
 | `muse`                                 |             | 2.1.2       |
+| `parabricks`                           |             | 4.5.1-1     |
 | `samblaster`                           | 0.1.26      | removed     |
 | `samtools` (in `BWAMEM1_MEM`)          | 1.2         | 1.21        |
 | `samtools` (in `BWAMEM2_MEM`)          | 1.19.2      | 1.21        |
