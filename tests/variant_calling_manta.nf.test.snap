@@ -7,7 +7,7 @@
                     "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "MANTA_GERMLINE": {
                     "manta": "1.6.0"
@@ -451,7 +451,7 @@
                     "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "MANTA_TUMORONLY": {
                     "manta": "1.6.0"
@@ -588,7 +588,7 @@
                     "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "MANTA_GERMLINE": {
                     "manta": "1.6.0"
@@ -806,7 +806,7 @@
                     "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "MANTA_GERMLINE": {
                     "manta": "1.6.0"

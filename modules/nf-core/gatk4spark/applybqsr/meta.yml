@@ -65,8 +65,20 @@ output:
             e.g. [ id:'test', single_end:false ]
       - ${prefix}.bam:
           type: file
-          description: BAM file
-          pattern: "*.{bam}"
+          description: Recalibrated BAM file
+          pattern: "${prefix}.bam"
+          ontologies: []
+  bai:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}*bai:
+          type: file
+          description: Recalibrated BAM index file
+          pattern: "${prefix}*bai"
+          ontologies: []
   cram:
     - - meta:
           type: map
@@ -75,8 +87,9 @@ output:
             e.g. [ id:'test', single_end:false ]
       - ${prefix}.cram:
           type: file
-          description: CRAM file
-          pattern: "*.{cram}"
+          description: Recalibrated CRAM file
+          pattern: "${prefix}.cram"
+          ontologies: []
   versions:
     - versions.yml:
         type: file

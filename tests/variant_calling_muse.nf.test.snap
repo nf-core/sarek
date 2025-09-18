@@ -6,14 +6,11 @@
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
                 },
-                "CRAM_TO_BAM_NORMAL": {
-                    "samtools": 1.21
-                },
-                "CRAM_TO_BAM_TUMOR": {
+                "CRAM_TO_BAM": {
                     "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
@@ -45,11 +42,6 @@
                 }
             },
             [
-                "cram",
-                "cram/sample3.bam",
-                "cram/sample3.bam.bai",
-                "cram/sample4.bam",
-                "cram/sample4.bam.bai",
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
@@ -58,6 +50,15 @@
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/converted",
+                "preprocessing/converted/cram_to_bam",
+                "preprocessing/converted/cram_to_bam/sample3",
+                "preprocessing/converted/cram_to_bam/sample3/sample3.bam",
+                "preprocessing/converted/cram_to_bam/sample3/sample3.bam.bai",
+                "preprocessing/converted/cram_to_bam/sample4",
+                "preprocessing/converted/cram_to_bam/sample4/sample4.bam",
+                "preprocessing/converted/cram_to_bam/sample4/sample4.bam.bai",
                 "reference",
                 "reference/dbsnp",
                 "reference/dict",
@@ -175,7 +176,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-08T15:46:38.524330719"
+        "timestamp": "2025-09-09T16:07:33.70424911"
     },
     "-profile test --tools muse --input recalibrated_somatic.csv": {
         "content": [
@@ -184,14 +185,11 @@
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
                 },
-                "CRAM_TO_BAM_NORMAL": {
-                    "samtools": 1.21
-                },
-                "CRAM_TO_BAM_TUMOR": {
+                "CRAM_TO_BAM": {
                     "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
@@ -223,11 +221,6 @@
                 }
             },
             [
-                "cram",
-                "cram/sample3.bam",
-                "cram/sample3.bam.bai",
-                "cram/sample4.bam",
-                "cram/sample4.bam.bai",
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
@@ -279,6 +272,15 @@
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/converted",
+                "preprocessing/converted/cram_to_bam",
+                "preprocessing/converted/cram_to_bam/sample3",
+                "preprocessing/converted/cram_to_bam/sample3/sample3.bam",
+                "preprocessing/converted/cram_to_bam/sample3/sample3.bam.bai",
+                "preprocessing/converted/cram_to_bam/sample4",
+                "preprocessing/converted/cram_to_bam/sample4/sample4.bam",
+                "preprocessing/converted/cram_to_bam/sample4/sample4.bam.bai",
                 "reference",
                 "reference/dbsnp",
                 "reference/dict",
@@ -323,10 +325,6 @@
                 "variant_calling/muse/sample4_vs_sample3/sample4_vs_sample3.muse.vcf.gz.tbi"
             ],
             [
-                "sample3.bam:md5,8cfa7f35990240ab663a0776ae67ecdc",
-                "sample3.bam.bai:md5,c55142e20838c3b56d93ff853a7b7189",
-                "sample4.bam:md5,fe8ceee2ede1f9b0b4f2aaa3f1a97241",
-                "sample4.bam.bai:md5,c6d0e6be2e5d8a6bd312517d9ba0f4af",
                 "mosdepth-coverage-per-contig-single.txt:md5,4ee05f71086179b42a01cd2fb450346f",
                 "mosdepth-cumcoverage-dist-id.txt:md5,cb7468f51b8be1230fb3ac5b130be31f",
                 "mosdepth_perchrom.txt:md5,4ee05f71086179b42a01cd2fb450346f",
@@ -367,6 +365,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-08T15:45:25.173366113"
+        "timestamp": "2025-09-09T16:06:10.784548179"
     }
 }

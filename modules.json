@@ -143,12 +143,12 @@
                     },
                     "ensemblvep/download": {
                         "branch": "master",
-                        "git_sha": "2fcc53751152a999bfc9c24f75f494b9e5bb338f",
+                        "git_sha": "f9234d35f5b9143313a4773fb54716876c030323",
                         "installed_by": ["modules"]
                     },
                     "ensemblvep/vep": {
                         "branch": "master",
-                        "git_sha": "2fcc53751152a999bfc9c24f75f494b9e5bb338f",
+                        "git_sha": "f9234d35f5b9143313a4773fb54716876c030323",
                         "installed_by": ["modules", "vcf_annotate_ensemblvep"]
                     },
                     "fastp": {
@@ -188,7 +188,7 @@
                     },
                     "gatk4/applybqsr": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "620300d96c4b9051d533a5ea5f9d3b2c64b781ce",
                         "installed_by": ["modules"]
                     },
                     "gatk4/applyvqsr": {
@@ -298,7 +298,7 @@
                     },
                     "gatk4spark/applybqsr": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "620300d96c4b9051d533a5ea5f9d3b2c64b781ce",
                         "installed_by": ["modules"]
                     },
                     "gatk4spark/baserecalibrator": {
@@ -328,17 +328,17 @@
                     },
                     "manta/germline": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "ae6b18e8930fe66595c8b08633b484d42970a564",
                         "installed_by": ["modules"]
                     },
                     "manta/somatic": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "ae6b18e8930fe66595c8b08633b484d42970a564",
                         "installed_by": ["modules"]
                     },
                     "manta/tumoronly": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "ae6b18e8930fe66595c8b08633b484d42970a564",
                         "installed_by": ["modules"]
                     },
                     "mosdepth": {
@@ -346,14 +346,24 @@
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
+                    "msisensor2/msi": {
+                        "branch": "master",
+                        "git_sha": "3dd258af3d271de7477016619e68f497456911f1",
+                        "installed_by": ["modules"]
+                    },
+                    "msisensor2/scan": {
+                        "branch": "master",
+                        "git_sha": "4906b6ccc403a1ed972013e31608d233067b1cca",
+                        "installed_by": ["modules"]
+                    },
                     "msisensorpro/msisomatic": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "msisensorpro/scan": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {
@@ -587,7 +597,7 @@
                     },
                     "vcf_annotate_ensemblvep": {
                         "branch": "master",
-                        "git_sha": "2fcc53751152a999bfc9c24f75f494b9e5bb338f",
+                        "git_sha": "f9234d35f5b9143313a4773fb54716876c030323",
                         "installed_by": ["subworkflows"]
                     },
                     "vcf_annotate_snpeff": {

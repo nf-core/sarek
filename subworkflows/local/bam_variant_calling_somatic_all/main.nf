@@ -15,12 +15,13 @@ include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2           } from '../bam_variant_c
 include { BAM_VARIANT_CALLING_SOMATIC_STRELKA           } from '../bam_variant_calling_somatic_strelka'
 include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_calling_somatic_tiddit'
 include { BAM_VARIANT_CALLING_SOMATIC_TNSCOPE           } from '../bam_variant_calling_somatic_tnscope'
-include { MSISENSORPRO_MSISOMATIC                       } from '../../../modules/nf-core/msisensorpro/msisomatic/main'
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM_NORMAL        } from '../../../modules/nf-core/samtools/convert'
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM_TUMOR         } from '../../../modules/nf-core/samtools/convert'
+include { MSISENSOR2_MSI                                } from '../../../modules/nf-core/msisensor2/msi'
+include { MSISENSORPRO_MSISOMATIC                       } from '../../../modules/nf-core/msisensorpro/msisomatic'
+
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     take:
     tools                         // Mandatory, list of tools to apply
+    bam                           // channel: [mandatory] bam
     cram                          // channel: [mandatory] cram
     bwa                           // channel: [optional] bwa
     cf_chrom_len                  // channel: [optional] controlfreec length file
@@ -37,6 +38,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
     intervals_bed_gz_tbi_combined // channel: [mandatory] intervals/target regions in one file zipped
     mappability
+    msisensor2_scan               // channel: [optional]  msisensor2_scan
     msisensorpro_scan             // channel: [optional]  msisensorpro_scan
     panel_of_normals              // channel: [optional]  panel_of_normals
     panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
@@ -50,41 +52,20 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     main:
     // Channels are often remapped to match module/subworkflow
 
+    // Gather all versions
     versions = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
+    out_indexcov     = Channel.empty()
+    out_msisensor2   = Channel.empty()
+    out_msisensorpro = Channel.empty()
     vcf_freebayes    = Channel.empty()
     vcf_manta        = Channel.empty()
-    out_msisensorpro = Channel.empty()
     vcf_muse         = Channel.empty()
     vcf_mutect2      = Channel.empty()
     vcf_strelka      = Channel.empty()
-    vcf_tnscope      = Channel.empty()
     vcf_tiddit       = Channel.empty()
-    out_indexcov     = Channel.empty()
-
-    bam_normal = Channel.empty()
-    bam_tumor  = Channel.empty()
-
-
-    // CRAM_TO_BAM
-    //   This is a conversion from CRAM to BAM, which is necessary for some modules
-    //   TODO: this could be done upstream in the workflows/sarek/main.nf
-    if (tools.split(',').contains('muse')) {
-        cram_normal = cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] }
-        cram_tumor  = cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
-
-        CRAM_TO_BAM_NORMAL(cram_normal, fasta, fasta_fai)
-        CRAM_TO_BAM_TUMOR(cram_tumor, fasta, fasta_fai)
-
-        // Combine BAM and BAI and join by meta
-        bam_normal = CRAM_TO_BAM_NORMAL.out.bam.join(CRAM_TO_BAM_NORMAL.out.bai, by: [0])
-        bam_tumor  = CRAM_TO_BAM_TUMOR.out.bam.join(CRAM_TO_BAM_TUMOR.out.bai, by: [0])
-
-        // Versions
-        versions = versions.mix(CRAM_TO_BAM_NORMAL.out.versions)
-        versions = versions.mix(CRAM_TO_BAM_TUMOR.out.versions)
-    }
+    vcf_tnscope      = Channel.empty()
 
     if (tools.split(',').contains('ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
@@ -121,7 +102,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         mpileup_normal = MPILEUP_NORMAL.out.mpileup
         mpileup_tumor = MPILEUP_TUMOR.out.mpileup
-
         mpileup_pair = mpileup_normal.cross(mpileup_tumor).map { normal, tumor -> [normal[0], normal[1], tumor[1], [], [], [], []] }
 
         BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC(
@@ -143,7 +123,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     // CNVKIT
     if (tools.split(',').contains('cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT(
-            cram.map { meta, normal_cram, _normal_crai, tumor_cram, _tumor_crai -> [meta, tumor_cram, normal_cram] },
+            bam.map { meta, normal_bam, _normal_bai, tumor_bam, _tumor_bai -> [meta, tumor_bam, normal_bam] },
             fasta,
             fasta_fai,
             intervals_bed_combined.map { _intervals -> _intervals ? [[id: _intervals[0].baseName], _intervals] : [[id: 'no_intervals'], []] },
@@ -209,13 +189,26 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             intervals_bed_gz_tbi,
         )
 
-        vcf_strelka = Channel.empty().mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.vcf)
+        vcf_strelka = BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.versions)
     }
 
-    // MSISENSOR
+    // MSISENSOR2
+    if (tools.split(',').contains('msisensor2')) {
+        // no need for models in tumor normal mode
+        def models = []
+
+        MSISENSOR2_MSI(bam.combine(intervals_bed_combined), msisensor2_scan, models)
+
+        versions = versions.mix(MSISENSOR2_MSI.out.versions)
+        out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.distribution)
+        out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.somatic)
+        out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.germline)
+    }
+
+    // MSISENSORPRO
     if (tools.split(',').contains('msisensorpro')) {
-        MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta.map { _meta, fasta_ -> [fasta_] }, msisensorpro_scan)
+        MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta, msisensorpro_scan)
 
         versions = versions.mix(MSISENSORPRO_MSISOMATIC.out.versions)
         out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSISOMATIC.out.output_report)
@@ -224,8 +217,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     // MuSE
     if (tools.split(',').contains('muse')) {
         BAM_VARIANT_CALLING_SOMATIC_MUSE(
-            bam_normal,
-            bam_tumor,
+            bam.map { meta, normal_bam, normal_bai, _tumor_bam, _tumor_bai -> [meta, normal_bam, normal_bai] },
+            bam.map { meta, _normal_bam, _normal_bai, tumor_bam, tumor_bai -> [meta, tumor_bam, tumor_bai] },
             fasta,
             dbsnp,
             dbsnp_tbi,
@@ -307,6 +300,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     emit:
     out_indexcov
+    out_msisensor2
     out_msisensorpro
     vcf_all
     vcf_freebayes

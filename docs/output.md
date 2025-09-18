@@ -56,6 +56,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [CNVKit](#cnvkit)
     - [Control-FREEC](#control-freec)
   - [Microsatellite instability (MSI)](#microsatellite-instability-msi)
+    - [MSIsensor2](#msisensor2)
     - [MSIsensorPro](#msisensorpro)
   - [Varlociraptor](#varlociraptor)
   - [Concatenation](#concatenation)
@@ -899,6 +900,38 @@ It also detects subclonal gains and losses and evaluates the most likely average
 [Microsatellite instability](https://en.wikipedia.org/wiki/Microsatellite_instability) is a genetic condition associated with deficiencies in the mismatch repair (MMR) system which causes a tendency to accumulate a high number of mutations (SNVs and indels).
 An altered distribution of microsatellite length is associated with a missed replication slippage which would be corrected under normal MMR conditions.
 
+#### MSIsensor2
+
+[MSIsensor2](https://github.com/niu-lab/msisensor2) is a tool to detect the MSI status for tumor only sequencing data, including Cell-Free DNA (cfDNA), Formalin-Fixed Paraffin-Embedded(FFPE) and other sample types.
+
+<details markdown="1">
+<summary>Output files for tumor/normal paired samples</summary>
+
+**Output directory: `{outdir}/variantcalling/msisensor/<tumorsample_vs_normalsample>/`**
+
+- `<tumorsample_vs_normalsample>`
+  - MSI score output, contains information about the number of somatic sites.
+- `<tumorsample_vs_normalsample>_dis`
+  - The normal and tumor length distribution for each microsatellite position.
+- `<tumorsample_vs_normalsample>_germline`
+  - Germline sites detected.
+- `<tumorsample_vs_normalsample>_somatic`
+  - Somatic sites detected.
+  </details>
+
+<details markdown="1">
+<summary>Output files for tumor only samples</summary>
+
+**Output directory: `{outdir}/variantcalling/msisensor2/<tumorsample>/`**
+
+- `<tumorsample>`
+  - MSI score output, contains information about the number of somatic sites.
+- `<tumorsample>_dis`
+  - The normal and tumor length distribution for each microsatellite position.
+- `<tumorsample>_somatic`
+  - Somatic sites detected.
+  </details>
+
 #### MSIsensorPro
 
 [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro) is a tool to detect the MSI status of a tumor scanning the length of the microsatellite regions.
@@ -914,9 +947,9 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
 - `<tumorsample_vs_normalsample>_dis`
   - The normal and tumor length distribution for each microsatellite position.
 - `<tumorsample_vs_normalsample>_germline`
-  - Somatic sites detected.
-- `<tumorsample_vs_normalsample>_somatic`
   - Germline sites detected.
+- `<tumorsample_vs_normalsample>_somatic`
+  - Somatic sites detected.
   </details>
 
 ### Varlociraptor

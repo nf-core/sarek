@@ -7,7 +7,7 @@
                     "gatk4": "4.6.1.0"
                 },
                 "MSISENSORPRO_SCAN": {
-                    "msisensor-pro": "1.2.0"
+                    "msisensor-pro": "1.3.0"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -29,22 +29,22 @@
                 "reference/dict/genome.dict",
                 "reference/intervals",
                 "reference/intervals/no_intervals.bed.gz",
-                "reference/msi",
-                "reference/msi/genome.msisensor_scan.list"
+                "reference/msisensorpro",
+                "reference/msisensorpro/genome.msisensor_scan.list"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-11T11:22:33.689046738"
+        "timestamp": "2025-09-10T11:41:36.496838773"
     },
     "-profile test --tools msisensorpro somatic": {
         "content": [
             11,
             {
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
@@ -53,10 +53,10 @@
                     "mosdepth": "0.3.10"
                 },
                 "MSISENSORPRO_MSISOMATIC": {
-                    "msisensor-pro": "1.2.0"
+                    "msisensor-pro": "1.3.0"
                 },
                 "MSISENSORPRO_SCAN": {
-                    "msisensor-pro": "1.2.0"
+                    "msisensor-pro": "1.3.0"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
@@ -115,7 +115,7 @@
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
                 "reference/dict",
-                "reference/msi",
+                "reference/msisensorpro",
                 "reports",
                 "reports/mosdepth",
                 "reports/mosdepth/sample3",
@@ -143,9 +143,7 @@
                 "variant_calling/msisensorpro",
                 "variant_calling/msisensorpro/sample4_vs_sample3",
                 "variant_calling/msisensorpro/sample4_vs_sample3/sample4_vs_sample3",
-                "variant_calling/msisensorpro/sample4_vs_sample3/sample4_vs_sample3_dis",
-                "variant_calling/msisensorpro/sample4_vs_sample3/sample4_vs_sample3_germline",
-                "variant_calling/msisensorpro/sample4_vs_sample3/sample4_vs_sample3_somatic"
+                "variant_calling/msisensorpro/sample4_vs_sample3/sample4_vs_sample3_dis"
             ],
             [
                 "mosdepth-coverage-per-contig-single.txt:md5,4ee05f71086179b42a01cd2fb450346f",
@@ -168,10 +166,8 @@
                 "sample4.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
                 "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
                 "sample4.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
-                "sample4_vs_sample3:md5,db7f2cc99ea79f79b0ba011c4bcbb43d",
-                "sample4_vs_sample3_dis:md5,e2fd47a3359bb562f604a6f0a126e107",
-                "sample4_vs_sample3_germline:md5,ba585b355c08877b8bca4901f49d9311",
-                "sample4_vs_sample3_somatic:md5,836e617ddded07ec1e39089fd595c3d8"
+                "sample4_vs_sample3:md5,efc7a09642d444d7475d976c7c8110f4",
+                "sample4_vs_sample3_dis:md5,780b282473e51808c5ae32b50b4a6406"
             ],
             "No BAM files",
             "No CRAM files",
@@ -179,9 +175,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-06-16T13:35:44.903853389"
+        "timestamp": "2025-09-10T11:39:58.025403773"
     },
     "-profile test --tools msisensorpro somatic --build_only_index --input false": {
         "content": [
@@ -191,7 +187,7 @@
                     "gatk4": "4.6.1.0"
                 },
                 "MSISENSORPRO_SCAN": {
-                    "msisensor-pro": "1.2.0"
+                    "msisensor-pro": "1.3.0"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -219,14 +215,14 @@
                 "reference/dict/genome.dict",
                 "reference/intervals",
                 "reference/intervals/no_intervals.bed.gz",
-                "reference/msi",
-                "reference/msi/genome.msisensor_scan.list"
+                "reference/msisensorpro",
+                "reference/msisensorpro/genome.msisensor_scan.list"
             ],
             [
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "genome.dict:md5,de4ff13287d28c1679a11ae989a3a980",
                 "no_intervals.bed.gz:md5,f3dac01ea66b95fe477446fde2d31489",
-                "genome.msisensor_scan.list:md5,309d41b136993db24a9f3dade877753b"
+                "genome.msisensor_scan.list:md5,614754c7f1f44d5988dd80f8f21f69d1"
             ],
             "No BAM files",
             "No CRAM files",
@@ -234,8 +230,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-06-16T13:36:29.780998379"
+        "timestamp": "2025-09-10T11:40:50.160621436"
     }
 }

@@ -98,6 +98,8 @@
 
   > Brent S Pedersen, Aaron R Quinlan, Mosdepth: quick coverage calculation for genomes and exomes, Bioinformatics, Volume 34, Issue 5, 01 March 2018, Pages 867–868. doi: 10.1093/bioinformatics/btx699. PubMed PMID: 29096012. PubMed Central PMCID: PMC6030888.
 
+- [MSIsensor2](https://github.com/niu-lab/msisensor2)
+
 - [MSISensorPro](https://www.sciencedirect.com/science/article/pii/S1672022920300218)
 
   > Peng Jia, Xiaofei Yang, Li Guo, Bowen Liu, Jiadong Lin, Hao Liang, et al. MSIsensor-pro: fast, accurate, and matched-normal-sample-free detection of microsatellite instability. Genomics Proteomics Bioinformatics 2020,18(1). doi: 10.1016/j.gpb.2020.02.001. PubMed PMID: 32171661. PubMed Central PMCID: PMC7393535.
