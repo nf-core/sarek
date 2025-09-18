@@ -329,8 +329,8 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,7a0481b59cdd57cc0b8bc9b5641614c6",
                 "samtools_alignment_plot.txt:md5,8e6178a26fe2a4fc4f45fac3175ba6c6",
-                "test.freebayes.filtered.bcftools_stats.txt:md5,d3fdf79522d80c8524f0cea5eef17caa",
-                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,37fe13df36ceeb76ca9b42be53582824",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,dde124ceaf6f109cd274b837b950096b",
+                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,6f942caec2f4f02c69e1216226fa44a9",
                 "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.md.mosdepth.summary.txt:md5,0010c2396a3173c7cf4983abe2eb6a4c",
                 "test.md.per-base.bed.gz:md5,34dfe443c0a0767562dd65272e3310ef",
@@ -347,10 +347,10 @@
                 "test2.recal.mosdepth.summary.txt:md5,d5e4084de2ea2a0a7b60b2d71c804d4b",
                 "test2.recal.per-base.bed.gz:md5,e1c6d60621d8f64aaf28fa1c1ddda921",
                 "test2.recal.per-base.bed.gz.csi:md5,4205a09ede17cdbdaad45e3553f73105",
-                "test.freebayes.filtered.FILTER.summary:md5,1717445ff68c3826a6e5d6ad029da9c4",
-                "test.freebayes.filtered.TsTv.count:md5,7c5d75987694b107d6c95089545d6ea7",
-                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,7b18ce8b65ec030323ca5821d431345a",
-                "test2_vs_test.freebayes.filtered.TsTv.count:md5,d33ec592e142386d29df873310ca49aa"
+                "test.freebayes.filtered.FILTER.summary:md5,87e753ba2ad969475fb55661852f75e0",
+                "test.freebayes.filtered.TsTv.count:md5,845f64e5bb4224af98f3a47294cd5483",
+                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,126e83dcd37b82420f7c5d7b235479f1",
+                "test2_vs_test.freebayes.filtered.TsTv.count:md5,28919c7d29c998681391d2027af3e0f9"
             ],
             "No BAM files",
             [
@@ -372,19 +372,19 @@
             [
                 [
                     "test.freebayes.filtered.vcf.gz",
-                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=105, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=107, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "test2_vs_test.freebayes.filtered.vcf.gz",
-                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=140, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=137, phased=false, phasedAutodetect=false]"
                 ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-08-19T11:37:34.731490205"
+        "timestamp": "2025-09-17T05:31:47.633437952"
     },
     "-profile test,tools_tumoronly --tools freebayes --input recalibrated_tumoronly.csv": {
         "content": [
@@ -397,7 +397,7 @@
                     "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FREEBAYES": {
                     "freebayes": "1.3.10"
@@ -602,7 +602,7 @@
                     "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -897,7 +897,7 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,300b95526a211b05f18aaffd037dacd3",
                 "samtools_alignment_plot.txt:md5,5053f650b8612fe5e8527b0bca8ab905",
-                "test.freebayes.filtered.bcftools_stats.txt:md5,f6fb61720a10847b476690ccdd9d278f",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,5ad7fc8a51dd1dc0f827a46acbed01c4",
                 "test.md.mosdepth.global.dist.txt:md5,531a83245143e7975f18e1988c876138",
                 "test.md.mosdepth.region.dist.txt:md5,d25723bdd3fec6b17d2462abfa097b9e",
                 "test.md.mosdepth.summary.txt:md5,87be70cd1237d7af9aa40d8cd8b3a817",
@@ -912,8 +912,8 @@
                 "test.recal.per-base.bed.gz.csi:md5,d8038c7d544abd5d6335f2541de4e769",
                 "test.recal.regions.bed.gz:md5,f96fa1cdae548eb7e54ce6a481d928b9",
                 "test.recal.regions.bed.gz.csi:md5,c6d1ac97ef4dfe43731c8368d8391cab",
-                "test.freebayes.filtered.FILTER.summary:md5,89f7bd63634475ae6bce0fa63e0bff08",
-                "test.freebayes.filtered.TsTv.count:md5,2cf8cb1bc31c6a2e9338b6cf00de70cf"
+                "test.freebayes.filtered.FILTER.summary:md5,259470a9823d503d5639946162b2ed19",
+                "test.freebayes.filtered.TsTv.count:md5,162253eb6c406300678985b3ac7dc868"
             ],
             "No BAM files",
             [
@@ -927,14 +927,14 @@
                 ]
             ],
             [
-                "test.freebayes.filtered.vcf.gz:md5,e7cd95615161df4022ed51b71a091605"
+                "test.freebayes.filtered.vcf.gz:md5,2062214d7062a3cf37ea4c1d123c1a43"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-08-18T10:32:41.804210782"
+        "timestamp": "2025-09-17T05:21:57.944563711"
     },
     "-profile test --tools freebayes --no_intervals": {
         "content": [
@@ -1236,7 +1236,7 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,9e836f09043529495de9e1c268ee8e82",
                 "samtools_alignment_plot.txt:md5,bcc2f176a4bc51b33a36bd4381f048a5",
-                "test.freebayes.filtered.bcftools_stats.txt:md5,8fc53b9a786bad636976fae5d80d6962",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,c6b6e221504c69ee75b209f4a0b2506a",
                 "test.md.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.md.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.md.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
@@ -1247,8 +1247,8 @@
                 "test.recal.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
                 "test.recal.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
                 "test.recal.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
-                "test.freebayes.filtered.FILTER.summary:md5,2af4ccd01586b3f421c9a88a95412bdd",
-                "test.freebayes.filtered.TsTv.count:md5,7c5d75987694b107d6c95089545d6ea7"
+                "test.freebayes.filtered.FILTER.summary:md5,9ae0931339e231f90a4b5c330f7f6d55",
+                "test.freebayes.filtered.TsTv.count:md5,845f64e5bb4224af98f3a47294cd5483"
             ],
             "No BAM files",
             [
@@ -1262,14 +1262,14 @@
                 ]
             ],
             [
-                "test.freebayes.filtered.vcf.gz:md5,f390481d4a22b66dffbecfe2f57ea614"
+                "test.freebayes.filtered.vcf.gz:md5,bf085c88aa26191a55fbd23bff6a498f"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-08-18T10:47:01.827883758"
+        "timestamp": "2025-09-17T05:24:51.554755734"
     },
     "-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv": {
         "content": [
@@ -1478,7 +1478,7 @@
                     "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -1811,8 +1811,8 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,ff7906db0da2f9c9ba5ce85c34694124",
                 "samtools_alignment_plot.txt:md5,89d0a6e7076223e9feadbecd794948d5",
-                "test.freebayes.filtered.bcftools_stats.txt:md5,40146f32811587c09164be13f0f596b9",
-                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,64a1d9f0e97577499def82b10fe5eb66",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,b313075b3e9854e0b561dd8d754bf097",
+                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,17df64b64f9235afa93aae6bbe08e283",
                 "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.md.mosdepth.region.dist.txt:md5,835fdc6fa52cc33e6fb76c0c20a8a6c3",
                 "test.md.mosdepth.summary.txt:md5,dcc9ab2bf3248903e02d8da87e678977",
@@ -1841,9 +1841,9 @@
                 "test2.recal.per-base.bed.gz.csi:md5,8072f447199c60f24b01eede8b557333",
                 "test2.recal.regions.bed.gz:md5,0bb2549180165a99680ba3e453ea312f",
                 "test2.recal.regions.bed.gz.csi:md5,c6d1ac97ef4dfe43731c8368d8391cab",
-                "test.freebayes.filtered.FILTER.summary:md5,259470a9823d503d5639946162b2ed19",
-                "test.freebayes.filtered.TsTv.count:md5,2cf8cb1bc31c6a2e9338b6cf00de70cf",
-                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,b1c561ac4fa25e388aa5f904d4c5d4ef",
+                "test.freebayes.filtered.FILTER.summary:md5,449597c35ada505b4cb2530d5260e9d5",
+                "test.freebayes.filtered.TsTv.count:md5,162253eb6c406300678985b3ac7dc868",
+                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,0ae7467f2311c1382173d70d8d7efb0b",
                 "test2_vs_test.freebayes.filtered.TsTv.count:md5,9dc940f98dae9c0b49c9468a491836d4"
             ],
             "No BAM files",
@@ -1864,14 +1864,14 @@
                 ]
             ],
             [
-                "test.freebayes.filtered.vcf.gz:md5,ecf22ac3060db26aa347b7a1e5af4d6e",
-                "test2_vs_test.freebayes.filtered.vcf.gz:md5,cdd8d19dfd11d25646a27c8e7572b170"
+                "test.freebayes.filtered.vcf.gz:md5,c4793897a38d6781dc512a52d9046be5",
+                "test2_vs_test.freebayes.filtered.vcf.gz:md5,d1d0916fc56a666bd7637792047b82f8"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-08-18T10:48:30.080990301"
+        "timestamp": "2025-09-17T05:28:37.574475063"
     }
 }

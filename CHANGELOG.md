@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1961](https://github.com/nf-core/sarek/pull/1961) - Update ensemblvep modules to 114.2
 - [1964](https://github.com/nf-core/sarek/pull/1964) - Update ensemblvep modules to 115.0
 - [1982](https://github.com/nf-core/sarek/pull/1982) - Update ensemblvep modules to 115.1
+- [1988](https://github.com/nf-core/sarek/pull/1988) - Update manta modules to latest build
 
 ### Fixed
 
@@ -61,6 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `ascat`                                | 3.1.1       | 3.2.0       |
 | `bcftools`                             | 1.20        | 1.21        |
 | `ensemblvep`                           | 113.0       | 115.1       |
+| `gawk`                                 | 5.1.0       | 5.3.0       |
 | `fastp`                                | 0.23.4      | 0.24.0      |
 | `fgbio`                                | 2.2.1       | 2.4.0       |
 | `freebayes`                            | 1.3.6.      | 1.3.10      |
@@ -146,6 +148,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1936](https://github.com/nf-core/sarek/pull/1936) - Template update for nf-core/tools v3.3.2
 - [1953](https://github.com/nf-core/sarek/pull/1953) - Change freebayes tests from gzip to md5sum
 - [1954](https://github.com/nf-core/sarek/pull/1954) - Refactor bcftools annotation subworkflows so that no diff is necessary from nf-core/modules
+- [1962](https://github.com/nf-core/sarek/pull/1962) - Update gatk and gatk4spark applybqsr modules and subsequent subworkflows to deal with the newly added ext.suffix
 - [1965](https://github.com/nf-core/sarek/pull/1965) - Refactor cram to bam conversion which is now is done even more upstream (following [1967](https://github.com/nf-core/sarek/pull/1967))
 - [1967](https://github.com/nf-core/sarek/pull/1967) - Refactor muse subworkflows so that cram to bam conversion is done upstream
 - [1967](https://github.com/nf-core/sarek/pull/1967) - Update msisensorpro modules to adhere to language server
@@ -153,6 +156,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1975](https://github.com/nf-core/sarek/pull/1975) - Now fails when no dbnsfp_tbi is provided when dbnsfp is
 - [1977](https://github.com/nf-core/sarek/pull/1977) - Update sentieon modules to adhere to language server
 - [1979](https://github.com/nf-core/sarek/pull/1979) - Update prepare_genome subworkflow to adhere to language server
+- [1985](https://github.com/nf-core/sarek/pull/1985) - Update subway maps and workflow pictures to include msisensor2 following [1965](https://github.com/nf-core/sarek/pull/1965)
 
 #### Fixed
 
@@ -171,6 +175,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1932](https://github.com/nf-core/sarek/pull/1932) - Fix typo for in UMI warning message
 - [1933](https://github.com/nf-core/sarek/pull/1933) - Correct link in README
 - [1935](https://github.com/nf-core/sarek/pull/1935) - Fix bug in samplesheet_to_channel workflow due to bad integer handling with lane
+- [1984](https://github.com/nf-core/sarek/pull/1984) - Fix tuple mismatch in GATK_BASERECALIBRATOR
 
 #### Removed
 

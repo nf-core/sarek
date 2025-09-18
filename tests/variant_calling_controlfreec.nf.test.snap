@@ -152,7 +152,7 @@
                     "controlfreec": 11.6
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FREEC2BED": {
                     "controlfreec": "11.6b"
@@ -430,7 +430,7 @@
                     "controlfreec": 11.6
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FREEC2BED": {
                     "controlfreec": "11.6b"
