@@ -24,6 +24,7 @@ samples:
       by: normal
       fraction: ?contamination
   normal:
+    sex: ?sex_string
     universe: "0.0 | 0.5 | 1.0"
 
 events:

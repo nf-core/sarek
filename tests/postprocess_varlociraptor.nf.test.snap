@@ -4,16 +4,16 @@
             82,
             {
                 "ALIGNMENTPROPERTIES_NORMAL": {
-                    "varlociraptor": "8.7.3"
+                    "varlociraptor": "8.7.4"
                 },
                 "ALIGNMENTPROPERTIES_TUMOR": {
-                    "varlociraptor": "8.7.3"
+                    "varlociraptor": "8.7.4"
                 },
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FILL_SCENARIO_FILE": {
                     "yte": "1.9.0"
@@ -61,13 +61,13 @@
                     "tabix": 1.21
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
-                    "varlociraptor": "8.7.3"
+                    "varlociraptor": "8.7.4"
                 },
                 "VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES": {
-                    "varlociraptor": "8.7.3"
+                    "varlociraptor": "8.7.4"
                 },
                 "VARLOCIRAPTOR_PREPROCESS": {
-                    "varlociraptor": "8.7.3"
+                    "varlociraptor": "8.7.4"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -225,81 +225,6 @@
                 "variant_calling/varlociraptor/sample3.strelka.varlociraptor.vcf.gz.tbi",
                 "variant_calling/varlociraptor/sample3/sample3.alignment-properties.json",
                 "variant_calling/varlociraptor/sample3/sample3.scenario.varlociraptor.yaml",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.call.0.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.call.1.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.call.10.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.call.11.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.call.12.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.call.13.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.call.14.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.call.2.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.call.3.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.call.4.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.call.5.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.call.6.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.call.7.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.call.8.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.call.9.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.preprocess.0.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.preprocess.1.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.preprocess.10.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.preprocess.11.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.preprocess.12.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.preprocess.13.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.preprocess.14.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.preprocess.2.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.preprocess.3.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.preprocess.4.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.preprocess.5.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.preprocess.6.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.preprocess.7.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.preprocess.8.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.preprocess.9.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.0.vcf.gz",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.0.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.1.vcf.gz",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.1.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.10.vcf.gz",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.10.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.11.vcf.gz",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.11.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.12.vcf.gz",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.12.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.13.vcf.gz",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.13.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.14.vcf.gz",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.14.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.2.vcf.gz",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.2.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.3.vcf.gz",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.3.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.4.vcf.gz",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.4.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.5.vcf.gz",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.5.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.6.vcf.gz",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.6.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.7.vcf.gz",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.7.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.8.vcf.gz",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.8.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.9.vcf.gz",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.sort.9.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.split.0.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.split.1.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.split.10.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.split.11.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.split.12.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.split.13.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.split.14.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.split.2.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.split.3.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.split.4.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.split.5.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.split.6.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.split.7.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.split.8.bcf",
-                "variant_calling/varlociraptor/sample3/sample3.strelka.split.9.bcf",
                 "variant_calling/varlociraptor/sample3/versions.yml",
                 "variant_calling/varlociraptor/sample4",
                 "variant_calling/varlociraptor/sample4/sample4.alignment-properties.json",
@@ -339,9 +264,9 @@
                 "sample4_vs_sample3.strelka.somatic_indels.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,4fc17fa5625b4d1dcc5d791b1eb22d85",
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae",
-                "sample3.scenario.varlociraptor.yaml:md5,4c45bc2e60d03a023aea42951992095f",
-                "versions.yml:md5,a63bc0b16651b27b86c46544841882b2",
-                "versions.yml:md5,3a1784596e2e5408fccd2ebc7612b0b6",
+                "sample3.scenario.varlociraptor.yaml:md5,bdc995369d2dede79535e551530c0cf6",
+                "versions.yml:md5,50a02392a7c4ab732cbf3e992624948e",
+                "versions.yml:md5,70952e9eee32c9dbafd9f5f03976311f",
                 "sample4_vs_sample3.scenario.varlociraptor.yaml:md5,c8097a6ac7cf61639673b87c0a97eb6d",
                 "versions.yml:md5,1faa01049e0b1c8cf69a2a5a7628d24c",
                 "versions.yml:md5,727660c1a65c2574d554bd2d299d0ecd"
@@ -362,7 +287,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-15T13:40:32.576061773"
+        "timestamp": "2025-09-18T15:57:18.72198209"
     },
     "-profile test --tools mutect2,varlociraptor --input recalibrated_tumoronly.csv": {
         "content": [
@@ -375,7 +300,7 @@
                     "gatk4": "4.6.1.0"
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FILL_SCENARIO_FILE": {
                     "yte": "1.9.0"
@@ -426,13 +351,13 @@
                     "tabix": 1.21
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
-                    "varlociraptor": "8.7.3"
+                    "varlociraptor": "8.7.4"
                 },
                 "VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES": {
-                    "varlociraptor": "8.7.3"
+                    "varlociraptor": "8.7.4"
                 },
                 "VARLOCIRAPTOR_PREPROCESS": {
-                    "varlociraptor": "8.7.3"
+                    "varlociraptor": "8.7.4"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -567,81 +492,6 @@
                 "variant_calling/varlociraptor/sample2.mutect2.varlociraptor.vcf.gz",
                 "variant_calling/varlociraptor/sample2.mutect2.varlociraptor.vcf.gz.tbi",
                 "variant_calling/varlociraptor/sample2/sample2.alignment-properties.json",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.0.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.1.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.10.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.11.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.12.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.13.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.14.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.2.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.3.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.4.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.5.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.6.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.7.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.8.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.call.9.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.0.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.1.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.10.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.11.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.12.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.13.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.14.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.2.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.3.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.4.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.5.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.6.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.7.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.8.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.preprocess.9.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.0.vcf.gz",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.0.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.1.vcf.gz",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.1.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.10.vcf.gz",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.10.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.11.vcf.gz",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.11.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.12.vcf.gz",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.12.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.13.vcf.gz",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.13.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.14.vcf.gz",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.14.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.2.vcf.gz",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.2.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.3.vcf.gz",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.3.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.4.vcf.gz",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.4.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.5.vcf.gz",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.5.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.6.vcf.gz",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.6.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.7.vcf.gz",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.7.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.8.vcf.gz",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.8.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.9.vcf.gz",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.sort.9.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.0.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.1.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.10.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.11.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.12.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.13.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.14.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.2.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.3.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.4.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.5.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.6.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.7.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.8.bcf",
-                "variant_calling/varlociraptor/sample2/sample2.mutect2.split.9.bcf",
                 "variant_calling/varlociraptor/sample2/sample2.scenario.varlociraptor.yaml",
                 "variant_calling/varlociraptor/sample2/versions.yml",
                 "variant_calling/varlociraptor/versions.yml"
@@ -668,8 +518,8 @@
                 "sample2.mutect2.pileups.table:md5,df85ceff89be6f9a13707d9cda29dd6e",
                 "sample2.mutect2.segmentation.table:md5,f4643d9319bde4efbfbe516d6fb13052",
                 "sample2.mutect2.vcf.gz.stats:md5,3cc40a35727af6c5223fb45678f3f172",
-                "sample2.scenario.varlociraptor.yaml:md5,ca5b51b38af6914e6905d10787e20efe",
-                "versions.yml:md5,5801f6b93715e00746dfcc63d089237e",
+                "sample2.scenario.varlociraptor.yaml:md5,41c6ed5aa1df37570bfa35acf2f0d936",
+                "versions.yml:md5,79632e19de058e282f2c0b9e4101a712",
                 "versions.yml:md5,89014799369389411a683a1d4a7a06c7"
             ],
             "No BAM files",
@@ -686,7 +536,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-11T16:16:20.619306346"
+        "timestamp": "2025-09-18T15:54:54.441192536"
     },
     "-profile test --tools strelka,varlociraptor --input recalibrated_germline.csv": {
         "content": [
@@ -696,7 +546,7 @@
                     "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FILL_SCENARIO_FILE": {
                     "yte": "1.9.0"
@@ -735,13 +585,13 @@
                     "tabix": 1.21
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
-                    "varlociraptor": "8.7.3"
+                    "varlociraptor": "8.7.4"
                 },
                 "VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES": {
-                    "varlociraptor": "8.7.3"
+                    "varlociraptor": "8.7.4"
                 },
                 "VARLOCIRAPTOR_PREPROCESS": {
-                    "varlociraptor": "8.7.3"
+                    "varlociraptor": "8.7.4"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -870,81 +720,6 @@
                 "variant_calling/varlociraptor/sample1.strelka.varlociraptor.vcf.gz.tbi",
                 "variant_calling/varlociraptor/sample1/sample1.alignment-properties.json",
                 "variant_calling/varlociraptor/sample1/sample1.scenario.varlociraptor.yaml",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.call.0.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.call.1.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.call.10.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.call.11.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.call.12.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.call.13.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.call.14.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.call.2.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.call.3.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.call.4.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.call.5.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.call.6.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.call.7.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.call.8.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.call.9.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.0.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.1.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.10.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.11.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.12.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.13.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.14.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.2.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.3.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.4.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.5.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.6.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.7.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.8.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.preprocess.9.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.0.vcf.gz",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.0.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.1.vcf.gz",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.1.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.10.vcf.gz",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.10.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.11.vcf.gz",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.11.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.12.vcf.gz",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.12.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.13.vcf.gz",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.13.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.14.vcf.gz",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.14.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.2.vcf.gz",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.2.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.3.vcf.gz",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.3.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.4.vcf.gz",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.4.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.5.vcf.gz",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.5.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.6.vcf.gz",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.6.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.7.vcf.gz",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.7.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.8.vcf.gz",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.8.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.9.vcf.gz",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.sort.9.vcf.gz.tbi",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.split.0.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.split.1.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.split.10.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.split.11.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.split.12.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.split.13.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.split.14.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.split.2.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.split.3.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.split.4.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.split.5.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.split.6.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.split.7.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.split.8.bcf",
-                "variant_calling/varlociraptor/sample1/sample1.strelka.split.9.bcf",
                 "variant_calling/varlociraptor/sample1/versions.yml",
                 "variant_calling/varlociraptor/versions.yml"
             ],
@@ -965,8 +740,8 @@
                 "sample1.recal.regions.bed.gz.csi:md5,9cb0ad7039a3b703d16ca7d5b835c0ee",
                 "sample1.strelka.variants.FILTER.summary:md5,2048a5de0201a6052c988a0189979a5f",
                 "sample1.strelka.variants.TsTv.count:md5,c5b7a8eda2526d899098439ae4c06a49",
-                "sample1.scenario.varlociraptor.yaml:md5,4c45bc2e60d03a023aea42951992095f",
-                "versions.yml:md5,a63bc0b16651b27b86c46544841882b2",
+                "sample1.scenario.varlociraptor.yaml:md5,bdc995369d2dede79535e551530c0cf6",
+                "versions.yml:md5,34376d146cac48135bad767b2920bd37",
                 "versions.yml:md5,727660c1a65c2574d554bd2d299d0ecd"
             ],
             "No BAM files",
@@ -983,6 +758,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-11T16:04:40.54186601"
+        "timestamp": "2025-09-18T15:41:41.256047332"
     }
 }

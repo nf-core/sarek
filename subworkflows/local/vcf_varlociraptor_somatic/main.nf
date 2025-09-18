@@ -74,9 +74,10 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
             unmatched: it.size() == 3  // Contains [key, meta_somatic, somatic_vcf]
         }
 
+    // TODO: the matched channel seems to be empty for strelka but it should not be
     // For matched pairs, merge the VCFs
     MERGE_GERMLINE_SOMATIC_VCFS(
-        branched.matched.map { key, meta_somatic, somatic_vcf, meta_germline, germline_vcf ->
+        branched.matched.map { _key, meta_somatic, somatic_vcf, _meta_germline, germline_vcf ->
             [meta_somatic, [somatic_vcf, germline_vcf], []]
         }
     )
@@ -85,7 +86,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     // Combine merged VCFs with unmatched somatic VCFs
     ch_vcf = MERGE_GERMLINE_SOMATIC_VCFS.out.vcf.mix(
-        branched.unmatched.map { key, meta, vcf -> [meta, vcf] }
+        branched.unmatched.map { _key, meta, vcf -> [meta, vcf] }
         )
 
     //
