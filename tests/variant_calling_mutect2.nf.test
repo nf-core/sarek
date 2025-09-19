@@ -93,7 +93,7 @@ nextflow_pipeline {
             ]
         ],
         [
-            name: "-profile test --tools mutect2 tumoronly force_call_alleles_tbi",
+            name: "-profile test --tools mutect2 tumoronly force_call_alleles_tabix",
             params: [
                 genome: null,
                 igenomes_ignore: true,
