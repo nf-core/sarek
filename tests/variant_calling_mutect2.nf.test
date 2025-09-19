@@ -10,7 +10,6 @@ nextflow_pipeline {
     profile "test,mutect"
 
     def test_scenario = [
-
         [
             name: "-profile test --tools mutect2 somatic",
             params: [
