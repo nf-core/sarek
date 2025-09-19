@@ -1,5 +1,5 @@
 include { BCFTOOLS_CONCAT as MERGE_CALLED_CHUNKS                                  } from '../../../modules/nf-core/bcftools/concat'
-include { BCFTOOLS_CONCAT as MERGE_GERMLINE_SOMATIC_VCFS                          } from '../../../modules/nf-core/bcftools/concat'
+include { BCFTOOLS_MERGE as MERGE_GERMLINE_SOMATIC_VCFS                           } from '../../../modules/nf-core/bcftools/merge'
 include { BCFTOOLS_SORT as SORT_CALLED_CHUNKS                                     } from '../../../modules/nf-core/bcftools/sort'
 include { RBT_VCFSPLIT                                                            } from '../../../modules/nf-core/rbt/vcfsplit'
 include { VARLOCIRAPTOR_CALLVARIANTS                                              } from '../../../modules/nf-core/varlociraptor/callvariants'
@@ -56,7 +56,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     // Prepare somatic and germline VCFs for matching
     def somatic_with_key = ch_somatic_vcf.map { meta, vcf ->
-            [[id: meta.id, variantcaller: meta.variantcaller], meta, vcf]
+            [[id: meta.normal_id, variantcaller: meta.variantcaller], meta, vcf]
         }
 
     def germline_with_key = ch_germline_vcf.map { meta, vcf ->
@@ -66,20 +66,24 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     // Join somatic and germline VCFs with matching ID and variantcaller
     def matching_pairs = somatic_with_key.join(germline_with_key, failOnMismatch: false)
 
-    matching_pairs.dump{ tag: "matching_pairs" }
-
     // Branch based on whether a matching germline VCF was found
     def branched = matching_pairs.branch {
             matched: it.size() == 5  // Contains [key, meta_somatic, somatic_vcf, meta_germline, germline_vcf]
             unmatched: it.size() == 3  // Contains [key, meta_somatic, somatic_vcf]
         }
 
-    // TODO: the matched channel seems to be empty for strelka but it should not be
+    branched.matched.dump(tag: "matched_pairs")
+    branched.unmatched.dump(tag: "unmatched_somatic")
+
+    // TODO: TABIX
     // For matched pairs, merge the VCFs
     MERGE_GERMLINE_SOMATIC_VCFS(
         branched.matched.map { _key, meta_somatic, somatic_vcf, _meta_germline, germline_vcf ->
             [meta_somatic, [somatic_vcf, germline_vcf], []]
-        }
+        },
+        ch_fasta,
+        ch_fasta_fai,
+        [[],[]]
     )
 
     ch_versions = ch_versions.mix(MERGE_GERMLINE_SOMATIC_VCFS.out.versions)
@@ -108,8 +112,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         .map { meta, vcf_chunked ->
             def new_meta = meta + [chunk:vcf_chunked.name.split(/\./)[-2]]
             [ new_meta, vcf_chunked ]
-        }.dump(tag: "ch_chunked_tumor_vcfs")
-
+        }
 
     // Create a base channel for CRAM data that will be replicated for each chunk
     ch_cram_tumor_base = cram_tumor
