@@ -65,13 +65,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `gawk`                                 | 5.1.0       | 5.3.0       |
 | `fastp`                                | 0.23.4      | 0.24.0      |
 | `fgbio`                                | 2.2.1       | 2.4.0       |
-| `freebayes`                            | 1.3.6.      | 1.3.10      |
+| `freebayes`                            | 1.3.6       | 1.3.10      |
 | `gatk4`                                | 4.5.0.0     | 4.6.1.0     |
 | `mosdepth`                             | 0.3.8       | 0.3.10      |
 | `msisensor2`                           |             | 0.1         |
 | `msisensorpro`                         | 1.2.0       | 1.3.0       |
 | `multiqc`                              | 1.25.1      | 1.30        |
 | `muse`                                 |             | 2.1.2       |
+| `parabricks`                           |             | 4.5.1-1     |
 | `samblaster`                           | 0.1.26      | removed     |
 | `samtools` (in `BWAMEM1_MEM`)          | 1.2         | 1.21        |
 | `samtools` (in `BWAMEM2_MEM`)          | 1.19.2      | 1.21        |
@@ -156,6 +157,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1975](https://github.com/nf-core/sarek/pull/1975) - Now fails when no dbnsfp_tbi is provided when dbnsfp is
 - [1977](https://github.com/nf-core/sarek/pull/1977) - Update sentieon modules to adhere to language server
 - [1985](https://github.com/nf-core/sarek/pull/1985) - Update subway maps and workflow pictures to include msisensor2 following [1965](https://github.com/nf-core/sarek/pull/1965)
+- [1990](https://github.com/nf-core/sarek/pull/1990) - Update parabricks/fq2bam to 4.5.1-1
 
 #### Fixed
 
