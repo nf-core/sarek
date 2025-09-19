@@ -93,7 +93,7 @@ workflow NFCORE_SAREK {
 
     // Initialize fasta file with meta map:
     fasta = params.fasta ? Channel.fromPath(params.fasta).map { it -> [[id: it.baseName], it] }.collect() : Channel.empty()
-    
+
     bbsplit_fasta_list = params.bbsplit_fasta_list
     bbsplit_index      = params.bbsplit_index
 
