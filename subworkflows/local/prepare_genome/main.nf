@@ -232,4 +232,5 @@ workflow PREPARE_GENOME {
     versions                 // channel: [ versions.yml ]
     bbsplit_index            = ch_bbsplit_index                                                         // channel: path(bbsplit/index/)
 
+
 }
