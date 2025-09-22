@@ -555,7 +555,7 @@ workflow SAREK {
                 vep_extra_files,
                 bcftools_annotations,
                 bcftools_annotations_tbi,
-                bcftools_columns
+                bcftools_columns,
                 bcftools_header_lines,
             )
 
