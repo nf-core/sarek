@@ -10,7 +10,7 @@
                     "gawk": "5.3.0"
                 },
                 "DEEPVARIANT_RUNDEEPVARIANT": {
-                    "deepvariant": "1.8.0"
+                    "deepvariant": "1.9.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
@@ -186,7 +186,7 @@
                     "gawk": "5.3.0"
                 },
                 "DEEPVARIANT_RUNDEEPVARIANT": {
-                    "deepvariant": "1.8.0"
+                    "deepvariant": "1.9.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
@@ -327,7 +327,7 @@
                     "bcftools": 1.21
                 },
                 "DEEPVARIANT_RUNDEEPVARIANT": {
-                    "deepvariant": "1.8.0"
+                    "deepvariant": "1.9.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -465,7 +465,7 @@
                     "bcftools": 1.21
                 },
                 "DEEPVARIANT_RUNDEEPVARIANT": {
-                    "deepvariant": "1.8.0"
+                    "deepvariant": "1.9.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
