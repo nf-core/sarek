@@ -112,7 +112,6 @@ workflow SAREK {
     vep_species
     bbsplit_fasta_list
     bbsplit_index
-    skip_bbsplit
     versions
 
     main:
@@ -129,7 +128,7 @@ workflow SAREK {
     */
 
     // Check if file with list of fastas is provided when running BBSplit
-    if (!params.skip_bbsplit && !params.bbsplit_index && params.bbsplit_fasta_list) {
+    if (params.tools && params.tools.split(',').contains('bbsplit') && !params.bbsplit_index && params.bbsplit_fasta_list) {
         ch_bbsplit_fasta_list = file(params.bbsplit_fasta_list)
         if (ch_bbsplit_fasta_list.isEmpty()) {exit 1, "File provided with --bbsplit_fasta_list is empty: ${ch_bbsplit_fasta_list.getName()}!"}
     }

@@ -177,7 +177,7 @@ workflow PREPARE_GENOME {
 
     // prepare genome for bbsplit
     ch_bbsplit_index = Channel.empty()
-    if (!params.skip_bbsplit){
+    if (params.tools && params.tools.split(',').contains('bbsplit')){
         // Create a simple value channel for the fasta file
         ch_fasta = fasta
             .map { meta, path -> path }
@@ -242,6 +242,6 @@ workflow PREPARE_GENOME {
     loci_files               // path: loci_files
     rt_file                  // path: rt_file
     versions                 // channel: [ versions.yml ]
-    bbsplit_index            = params.skip_bbsplit ? Channel.empty() : ch_bbsplit_index  // Conditional emission                                                         // channel: path(bbsplit/index/)
+    bbsplit_index            = (params.tools && params.tools.split(',').contains('bbsplit')) ? Channel.empty() : ch_bbsplit_index  // Conditional emission                                                         // channel: path(bbsplit/index/)
 
 }

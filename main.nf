@@ -338,7 +338,6 @@ workflow NFCORE_SAREK {
         vep_species,
         bbsplit_fasta_list,
         bbsplit_index,
-        params.skip_bbsplit,
         versions,
     )
 
