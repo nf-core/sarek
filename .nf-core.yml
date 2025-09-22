@@ -12,6 +12,7 @@ lint:
   modules_config: false
   nf_test_content: false
   template_strings: false
+  schema_params: false
 nf_core_version: 3.3.2
 repository_type: pipeline
 template:
