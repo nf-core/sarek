@@ -50,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1896](https://github.com/nf-core/sarek/pull/1896) - Add information on gatk_spark and save_output_as_bam
 - [1928](https://github.com/nf-core/sarek/pull/1928) - Fix cnvkit when using --no_intervals, and correct cpu allocation
 - [1937](https://github.com/nf-core/sarek/pull/1937) - Individual lanes are now merged together before fgbio consensus generation is performed
+- [1992](https://github.com/nf-core/sarek/pull/1992) - Add `--sample_name` argument to deepvariant when `meta.sample` is available
 
 ### Removed
 
@@ -61,6 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | -------------------------------------- | ----------- | ----------- |
 | `ascat`                                | 3.1.1       | 3.2.0       |
 | `bcftools`                             | 1.20        | 1.21        |
+| `deepvariant`                          | 1.8.0       | 1.9.0       |
 | `ensemblvep`                           | 113.0       | 115.1       |
 | `gawk`                                 | 5.1.0       | 5.3.0       |
 | `fastp`                                | 0.23.4      | 0.24.0      |
