@@ -1,6 +1,9 @@
-include { BCFTOOLS_CONCAT as MERGE_CALLED_CHUNKS                                  } from '../../../modules/nf-core/bcftools/concat'
+include { BCFTOOLS_CONCAT as CONCAT_CALLED_CHUNKS                                 } from '../../../modules/nf-core/bcftools/concat'
+include { BCFTOOLS_CONCAT as CONCAT_SOMATIC_STRELKA                               } from '../../../modules/nf-core/bcftools/concat'
 include { BCFTOOLS_MERGE as MERGE_GERMLINE_SOMATIC_VCFS                           } from '../../../modules/nf-core/bcftools/merge'
 include { BCFTOOLS_SORT as SORT_CALLED_CHUNKS                                     } from '../../../modules/nf-core/bcftools/sort'
+include { TABIX_TABIX as TABIX_GERMLINE                                           } from '../../../modules/nf-core/tabix/tabix'
+include { TABIX_TABIX as TABIX_SOMATIC                                            } from '../../../modules/nf-core/tabix/tabix'
 include { RBT_VCFSPLIT                                                            } from '../../../modules/nf-core/rbt/vcfsplit'
 include { VARLOCIRAPTOR_CALLVARIANTS                                              } from '../../../modules/nf-core/varlociraptor/callvariants'
 include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES as ALIGNMENTPROPERTIES_NORMAL } from '../../../modules/nf-core/varlociraptor/estimatealignmentproperties'
@@ -15,8 +18,8 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_fasta
     ch_fasta_fai
     ch_scenario
-    ch_somatic_vcf_tbi
-    ch_germline_vcf_tbi
+    ch_somatic_vcf
+    ch_germline_vcf
     val_num_chunks
 
     main:
@@ -56,13 +59,42 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_versions = ch_versions.mix(ALIGNMENTPROPERTIES_NORMAL.out.versions)
 
     //
-    // CONCAT GERMLINE AND SOMATIC VCFs
+    // CONCAT SNV AND INDEL VCFS FOR STRELKA
     //
-
-    ch_versions = ch_versions.mix(TABIX_GERMLINE.out.versions)
+    TABIX_SOMATIC(ch_somatic_vcf)
     ch_versions = ch_versions.mix(TABIX_SOMATIC.out.versions)
+    ch_somatic_vcf_tbi = ch_somatic_vcf.join(TABIX_SOMATIC.out.tbi, by: [0])
 
-    def somatic_with_key = ch_somatic_vcf_tbi.map { meta, vcf, tbi ->
+    // CONCAT SNV / INDEL VCFs COMING FROM STRELKA
+    ch_somatic_branched = ch_somatic_vcf_tbi.branch {
+        strelka: it[0].variantcaller == 'strelka'
+        other: it[0].variantcaller != 'strelka'
+    }
+
+    // Group somatic strelka SNVs and INDELs by sample for concatenation
+    ch_somatic_strelka_grouped = ch_somatic_branched.strelka
+        .map { meta, vcf, tbi -> [[meta.normal_id, meta.patient], meta, vcf, tbi] }
+        .groupTuple(by: 0)
+        .map { _key, meta, vcf_list, tbi_list ->
+            [meta[0], vcf_list, tbi_list]
+        }
+
+    CONCAT_SOMATIC_STRELKA(ch_somatic_strelka_grouped)
+
+    // Use concatenated Strelka VCFs for somatic and germline calling, mix with other variant callers
+    ch_somatic_vcf_conc = CONCAT_SOMATIC_STRELKA.out.vcf
+        .join(CONCAT_SOMATIC_STRELKA.out.tbi, by: [0])
+        .mix(ch_somatic_branched.other)
+
+
+    //
+    // MERGE GERMLINE AND SOMATIC VCFs
+    //
+    TABIX_GERMLINE(ch_germline_vcf)
+    ch_versions = ch_versions.mix(TABIX_GERMLINE.out.versions)
+    ch_germline_vcf_tbi = ch_germline_vcf.join(TABIX_GERMLINE.out.tbi, by: [0])
+
+    def somatic_with_key = ch_somatic_vcf_conc.map { meta, vcf, tbi ->
         [[id: meta.normal_id, variantcaller: meta.variantcaller], meta, vcf, tbi]
     }
 
@@ -77,9 +109,6 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         matched: it.size() == 7
         unmatched: it.size() == 4
     }
-
-    branched.matched.dump(tag: "matched_pairs")
-    branched.unmatched.dump(tag: "unmatched_somatic")
 
     MERGE_GERMLINE_SOMATIC_VCFS(
         branched.matched.map { _key, meta_somatic, somatic_vcf, somatic_tbi, _meta_germline, germline_vcf, germline_tbi ->
@@ -214,16 +243,16 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         }
         .groupTuple(size: val_num_chunks)
 
-    MERGE_CALLED_CHUNKS(ch_vcf_tbi_chunks)
+    CONCAT_CALLED_CHUNKS(ch_vcf_tbi_chunks)
 
-    ch_final_vcf = MERGE_CALLED_CHUNKS.out.vcf
+    ch_final_vcf = CONCAT_CALLED_CHUNKS.out.vcf
         .map { meta, vcf -> [meta.id + meta.variantcaller, meta, vcf] }
         .join(
-            MERGE_CALLED_CHUNKS.out.tbi.map { meta, tbi -> [meta.id + meta.variantcaller, meta, tbi] }
+            CONCAT_CALLED_CHUNKS.out.tbi.map { meta, tbi -> [meta.id + meta.variantcaller, meta, tbi] }
         )
         .map { _id, meta_vcf, vcf, _meta_tbi, tbi -> [meta_vcf, vcf, tbi] }
 
-    ch_versions = ch_versions.mix(MERGE_CALLED_CHUNKS.out.versions)
+    ch_versions = ch_versions.mix(CONCAT_CALLED_CHUNKS.out.versions)
 
     emit:
     vcf      = ch_final_vcf

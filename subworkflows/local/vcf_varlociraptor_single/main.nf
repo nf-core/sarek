@@ -1,4 +1,4 @@
-include { BCFTOOLS_CONCAT as MERGE_CALLED_CHUNKS    } from '../../../modules/nf-core/bcftools/concat'
+include { BCFTOOLS_CONCAT as CONCAT_CALLED_CHUNKS   } from '../../../modules/nf-core/bcftools/concat'
 include { BCFTOOLS_SORT as SORT_CALLED_CHUNKS       } from '../../../modules/nf-core/bcftools/sort'
 include { RBT_VCFSPLIT                              } from '../../../modules/nf-core/rbt/vcfsplit'
 include { VARLOCIRAPTOR_CALLVARIANTS                } from '../../../modules/nf-core/varlociraptor/callvariants'
@@ -14,7 +14,6 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     ch_scenario
     ch_vcf
     val_num_chunks
-    // 'normal' or 'tumor'
     val_sampletype
 
     main:
@@ -115,16 +114,16 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
         }
         .groupTuple(size: val_num_chunks)
 
-    MERGE_CALLED_CHUNKS(ch_vcf_tbi_chunks)
+    CONCAT_CALLED_CHUNKS(ch_vcf_tbi_chunks)
 
-    ch_final_vcf = MERGE_CALLED_CHUNKS.out.vcf
+    ch_final_vcf = CONCAT_CALLED_CHUNKS.out.vcf
         .map { meta, vcf -> [meta.id + meta.variantcaller, meta, vcf] }
         .join(
-            MERGE_CALLED_CHUNKS.out.tbi.map { meta, tbi -> [meta.id + meta.variantcaller, meta, tbi] }
+            CONCAT_CALLED_CHUNKS.out.tbi.map { meta, tbi -> [meta.id + meta.variantcaller, meta, tbi] }
         )
         .map { _id, meta_vcf, vcf, _meta_tbi, tbi -> [meta_vcf, vcf, tbi] }
 
-    ch_versions = ch_versions.mix(MERGE_CALLED_CHUNKS.out.versions)
+    ch_versions = ch_versions.mix(CONCAT_CALLED_CHUNKS.out.versions)
 
     emit:
     vcf      = ch_final_vcf
