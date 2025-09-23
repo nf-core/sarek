@@ -1,7 +1,7 @@
 {
     "-profile test --tools strelka,varlociraptor --input recalibrated_somatic.csv": {
         "content": [
-            82,
+            148,
             {
                 "ALIGNMENTPROPERTIES_NORMAL": {
                     "varlociraptor": "8.7.4"
@@ -24,6 +24,9 @@
                 "MERGE_CALLED_CHUNKS": {
                     "bcftools": 1.21
                 },
+                "MERGE_GERMLINE_SOMATIC_VCFS": {
+                    "bcftools": 1.22
+                },
                 "MERGE_STRELKA": {
                     "gatk4": "4.6.1.0"
                 },
@@ -38,6 +41,12 @@
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
+                },
+                "PREPROCESS_NORMAL": {
+                    "varlociraptor": "8.7.4"
+                },
+                "PREPROCESS_TUMOR": {
+                    "varlociraptor": "8.7.4"
                 },
                 "RBT_VCFSPLIT": {
                     "Rust-Bio-Tools": "0.42.2"
@@ -58,6 +67,12 @@
                     "tabix": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                },
+                "TABIX_GERMLINE": {
+                    "tabix": 1.21
+                },
+                "TABIX_SOMATIC": {
                     "tabix": 1.21
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
@@ -221,8 +236,8 @@
                 "variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi",
                 "variant_calling/varlociraptor",
                 "variant_calling/varlociraptor/sample3",
-                "variant_calling/varlociraptor/sample3.strelka.varlociraptor.vcf.gz",
-                "variant_calling/varlociraptor/sample3.strelka.varlociraptor.vcf.gz.tbi",
+                "variant_calling/varlociraptor/sample3.strelka.germline.varlociraptor.vcf.gz",
+                "variant_calling/varlociraptor/sample3.strelka.germline.varlociraptor.vcf.gz.tbi",
                 "variant_calling/varlociraptor/sample3/sample3.alignment-properties.json",
                 "variant_calling/varlociraptor/sample3/sample3.scenario.varlociraptor.yaml",
                 "variant_calling/varlociraptor/sample3/versions.yml",
@@ -230,7 +245,10 @@
                 "variant_calling/varlociraptor/sample4/sample4.alignment-properties.json",
                 "variant_calling/varlociraptor/sample4/versions.yml",
                 "variant_calling/varlociraptor/sample4_vs_sample3",
+                "variant_calling/varlociraptor/sample4_vs_sample3.strelka.somatic.varlociraptor.vcf.gz",
+                "variant_calling/varlociraptor/sample4_vs_sample3.strelka.somatic.varlociraptor.vcf.gz.tbi",
                 "variant_calling/varlociraptor/sample4_vs_sample3/sample4_vs_sample3.scenario.varlociraptor.yaml",
+                "variant_calling/varlociraptor/sample4_vs_sample3/sample4_vs_sample3.strelka.merged.vcf",
                 "variant_calling/varlociraptor/sample4_vs_sample3/versions.yml",
                 "variant_calling/varlociraptor/versions.yml"
             ],
@@ -268,8 +286,8 @@
                 "versions.yml:md5,34376d146cac48135bad767b2920bd37",
                 "versions.yml:md5,70952e9eee32c9dbafd9f5f03976311f",
                 "sample4_vs_sample3.scenario.varlociraptor.yaml:md5,c8097a6ac7cf61639673b87c0a97eb6d",
-                "versions.yml:md5,1faa01049e0b1c8cf69a2a5a7628d24c",
-                "versions.yml:md5,727660c1a65c2574d554bd2d299d0ecd"
+                "versions.yml:md5,e64c6443917cb58e04b59fbed5a5b544",
+                "versions.yml:md5,2f207639ad85b335bd648a600b1d1fb7"
             ],
             "No BAM files",
             "No CRAM files",
@@ -277,17 +295,19 @@
                 "sample3.strelka.genome.vcf.gz:md5,9f77528d7bb6c4b2c09eacf71a716439",
                 "sample3.strelka.variants.vcf.gz:md5,5af34e7b632f604dc7a224f977fc2898",
                 "sample4_vs_sample3.strelka.somatic_indels.vcf.gz:md5,93000b399c48612413fdd5186f133933",
-                "sample4_vs_sample3.strelka.somatic_snvs.vcf.gz:md5,c1cfe002802bb3997e485f2e7d15f494"
+                "sample4_vs_sample3.strelka.somatic_snvs.vcf.gz:md5,c1cfe002802bb3997e485f2e7d15f494",
+                "sample4_vs_sample3.strelka.merged.vcf:md5,f9736f0fa030b7717c98a683c5d66397"
             ],
             [
-                "sample3.strelka.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=53245, phased=true, phasedAutodetect=false]"
+                "sample3.strelka.germline.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=53245, phased=true, phasedAutodetect=false]",
+                "sample4_vs_sample3.strelka.somatic.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=53249, phased=true, phasedAutodetect=false]"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-19T13:02:58.489549498"
+        "timestamp": "2025-09-23T09:54:13.338415683"
     },
     "-profile test --tools mutect2,varlociraptor --input recalibrated_tumoronly.csv": {
         "content": [
