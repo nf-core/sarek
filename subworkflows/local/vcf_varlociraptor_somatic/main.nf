@@ -2,8 +2,6 @@ include { BCFTOOLS_CONCAT as MERGE_CALLED_CHUNKS                                
 include { BCFTOOLS_MERGE as MERGE_GERMLINE_SOMATIC_VCFS                           } from '../../../modules/nf-core/bcftools/merge'
 include { BCFTOOLS_SORT as SORT_CALLED_CHUNKS                                     } from '../../../modules/nf-core/bcftools/sort'
 include { RBT_VCFSPLIT                                                            } from '../../../modules/nf-core/rbt/vcfsplit'
-include { TABIX_TABIX as TABIX_GERMLINE                                           } from '../../../modules/nf-core/tabix/tabix'
-include { TABIX_TABIX as TABIX_SOMATIC                                            } from '../../../modules/nf-core/tabix/tabix'
 include { VARLOCIRAPTOR_CALLVARIANTS                                              } from '../../../modules/nf-core/varlociraptor/callvariants'
 include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES as ALIGNMENTPROPERTIES_NORMAL } from '../../../modules/nf-core/varlociraptor/estimatealignmentproperties'
 include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES as ALIGNMENTPROPERTIES_TUMOR  } from '../../../modules/nf-core/varlociraptor/estimatealignmentproperties'
@@ -17,8 +15,8 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_fasta
     ch_fasta_fai
     ch_scenario
-    ch_somatic_vcf
-    ch_germline_vcf
+    ch_somatic_vcf_tbi
+    ch_germline_vcf_tbi
     val_num_chunks
 
     main:
@@ -60,11 +58,6 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     //
     // CONCAT GERMLINE AND SOMATIC VCFs
     //
-    TABIX_GERMLINE(ch_germline_vcf)
-    TABIX_SOMATIC(ch_somatic_vcf)
-
-    ch_germline_vcf_tbi = ch_germline_vcf.join(TABIX_GERMLINE.out.tbi, by: [0])
-    ch_somatic_vcf_tbi = ch_somatic_vcf.join(TABIX_SOMATIC.out.tbi, by: [0])
 
     ch_versions = ch_versions.mix(TABIX_GERMLINE.out.versions)
     ch_versions = ch_versions.mix(TABIX_SOMATIC.out.versions)
