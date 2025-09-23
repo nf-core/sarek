@@ -957,26 +957,46 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
 As varlociraptor requires to provide a set of candidate variants to consider it can be run in combination with any variant caller.
 
 <details markdown="1">
+<summary>Output files for germline samples</summary>
+
+**Output directory: `{outdir}/variantcalling/varlociraptor/{sample}`**
+
+- `<sample>.<variantcaller>.germline.varlociraptor.vcf.gz` and `<sample>.<variantcaller>.germline.varlociraptor.vcf.gz.tbi`
+  - Final VCF with tabix index
+- `<sample>/<sample>.scenario.varlociraptor.yaml`
+  - YAML file containing scenario for varlociraptor calling
+- `<sample>/<sample>.alignment-properties.json`
+  - JSON file containing alignment properties for normal sample cram
+  </details>
+
+<details markdown="1">
 <summary>Postprocessed VCF files for tumor-normal calling</summary>
 
-**Output directory: `{outdir}/variantcalling/varlociraptor/`**
+**Output directory: `{outdir}/variantcalling/varlociraptor/{tumorsample_vs_normalsample}`**
 
-- `<sample>.<variantcaller>.varlociraptor.vcf.gz` and `<sample>.<variantcaller>.varlociraptor.vcf.gz.tbi`
+- `<normal_id>_vs_.<tumor_id>.<variantcaller>.somatic.varlociraptor.vcf.gz` and `<normal_id>_vs_.<tumor_id>.<variantcaller>.somatic.varlociraptor.vcf.gz.tbi`
   - Final VCF with tabix index
-- `<sample>/*.filled.yaml`
+- `<normal_id>_vs_.<tumor_id>/<normal_id>_vs_.<tumor_id>.scenario.varlociraptor.yaml`
+  - YAML file containing scenario for varlociraptor calling (somatic calling)
+- `<normal_id>_vs_.<tumor_id>/<normal_id>.alignment-properties.json`
+  - JSON file containing alignment properties for normal sample cram
+- `<normal_id>_vs_.<tumor_id>/<tumor_id>.tumor.alignment-properties.json`
+  - JSON file containing alignment properties for tumor sample cram
+- `<sample>.<variantcaller>.merged.vcf.gz`
+  - VCF containing both somatic and germline variants
+  </details>
+
+<details markdown="1">
+<summary>Output files for tumor only samples</summary>
+
+**Output directory: `{outdir}/variantcalling/varlociraptor/{sample}`**
+
+- `<sample>.<variantcaller>.tumor_only.varlociraptor.vcf.gz` and `<sample>.<variantcaller>.tumor_only.varlociraptor.vcf.gz.tbi`
+  - Final VCF with tabix index
+- `<sample>/<sample>.scenario.varlociraptor.yaml`
   - YAML file containing scenario for varlociraptor calling
-- `<normal_id>/<normal_id>.alignment-properties.json`
-  - JSON file containing alignment properties for normal sample cram (germline & somatic calling)
-- `<tumor_id>/<tumor_id>.alignment-properties.json`
-  - JSON file containing alignment properties for tumor sample cram (tumor-only & somatic calling)
-- `<sample>/<sample>.<caller>.split.<0,1,2...>.bcf`
-  - Candidate variants split into chunks
-- `<normal_id>/<normal_id>.<caller>.preprocess.<0,1,2...>.bcf`
-  - Candidate variants preprocessed for calling (germline & somatic calling)
-- `<tumor_id>/<tumor_id>.<caller>.preprocess.<0,1,2...>.bcf`
-  - Candidate variants split preprocessed for calling (tumor-only & somatic calling)
-- `<sample>/<sample>.<caller>.call.<0,1,2...>.bcf`, `<sample>/<sample>.<caller>.sort.<0,1,2...>.vcf.gz` and `<sample>/<sample>.<caller>.sort.<0,1,2...>.vcf.gz.tbi`
-  - Called variants (call) and sorted variants (sort), still in chunks
+- `<sample>/<sample>.alignment-properties.json`
+  - JSON file containing alignment properties for tumor_only sample cram
   </details>
 
 ### Concatenation
