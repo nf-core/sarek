@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1964](https://github.com/nf-core/sarek/pull/1964) - Update ensemblvep modules to 115.0
 - [1982](https://github.com/nf-core/sarek/pull/1982) - Update ensemblvep modules to 115.1
 - [1988](https://github.com/nf-core/sarek/pull/1988) - Update manta modules to latest build
+- [TBD](https://github.com/nf-core/sarek/pull/TBD) - Update snpeff modules to latest build
 
 ### Fixed
 
@@ -80,6 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `samtools` (in `BWAMEM2_MEM`)          | 1.19.2      | 1.21        |
 | `samtools` (in `GATK4_MARKDUPLICATES`) | 1.19.2      | 1.21        |
 | `sentieon`                             | 202308.03   | 202503.01   |
+| `snpeff`                               | 5.0         | 5.3.0a      |
 | `tabix`                                | 1.2         | 1.21        |
 | `vcflib`                               |             | 1.0.14      |
 

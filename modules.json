@@ -483,12 +483,12 @@
                     },
                     "snpeff/download": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "b966311b31f51b65e87f124d08f948fec019787d",
                         "installed_by": ["modules"]
                     },
                     "snpeff/snpeff": {
                         "branch": "master",
-                        "git_sha": "48ca3de1737b0144aa9fe05bea2b681f0ae45a95",
+                        "git_sha": "b966311b31f51b65e87f124d08f948fec019787d",
                         "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "spring/decompress": {
@@ -577,7 +577,7 @@
                     },
                     "vcf_annotate_snpeff": {
                         "branch": "master",
-                        "git_sha": "48ca3de1737b0144aa9fe05bea2b681f0ae45a95",
+                        "git_sha": "b966311b31f51b65e87f124d08f948fec019787d",
                         "installed_by": ["subworkflows"]
                     }
                 }
