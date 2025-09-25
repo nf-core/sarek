@@ -275,9 +275,6 @@
             ],
             "No BAM files",
             [
-
-            ],
-            [
                 "test.strelka.genome.vcf.gz:md5,2396656fa8d478e5fd76cda3a1c91cbb",
                 "test.strelka.variants.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
