@@ -189,6 +189,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1956](https://github.com/nf-core/sarek/pull/1956) - Remove tests for downloading cache (Snpeff and VEP) (we already have tests for the cache in the modules)
 - [1957](https://github.com/nf-core/sarek/pull/1957) - Remove duplicated gpu profile from config
 - [1994](https://github.com/nf-core/sarek/pull/1994) - Prevent conda profile running on gpu
+- [1995](https://github.com/nf-core/sarek/pull/1995) - Remove md5sums of png files for controlfreec
 
 ## [3.5.1](https://github.com/nf-core/sarek/releases/tag/3.5.1) - Akkatjåkkå
 
