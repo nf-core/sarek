@@ -149,7 +149,7 @@ workflow FASTQ_PREPROCESS_GATK {
                                         false
                                     )
                                     .primary_fastq
-            
+
             versions = versions.mix(BBMAP_BBSPLIT.out.versions.first())
 
         } else {
