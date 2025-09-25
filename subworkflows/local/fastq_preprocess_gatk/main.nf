@@ -139,7 +139,7 @@ workflow FASTQ_PREPROCESS_GATK {
         //
         // MODULE: Remove genome contaminant reads
         //
-        if (params.tools.split(',').contains('bbsplit')) {
+        if (params.tools && params.tools.split(',').contains('bbsplit')) {
 
             reads_for_alignment = BBMAP_BBSPLIT (
                                         reads_for_bbsplit,
@@ -149,7 +149,7 @@ workflow FASTQ_PREPROCESS_GATK {
                                         false
                                     )
                                     .primary_fastq
-
+            
             versions = versions.mix(BBMAP_BBSPLIT.out.versions.first())
         
         } else {

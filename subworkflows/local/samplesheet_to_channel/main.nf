@@ -242,7 +242,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                     def tools_tumor = ['ascat', 'controlfreec', 'mutect2', 'msisensorpro']
                     def tools_tumor_asked = []
                     tools_tumor.each { tool ->
-                        if (tools.split(',').contains(tool)) {
+                        if (tools && tools.split(',').contains(tool)) {
                             tools_tumor_asked.add(tool)
                         }
                     }
@@ -259,7 +259,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller', 'msisensorpro']
                 def requested_tools_requiring_normal_samples = []
                 tools_requiring_normal_samples.each { tool_requiring_normal_samples ->
-                    if (tools.split(',').contains(tool_requiring_normal_samples)) {
+                    if (tools && tools.split(',').contains(tool_requiring_normal_samples)) {
                         requested_tools_requiring_normal_samples.add(tool_requiring_normal_samples)
                     }
                 }

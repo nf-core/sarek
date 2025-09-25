@@ -139,7 +139,7 @@ workflow PREPARE_GENOME {
 
     if (msisensor2_scan) {
         msisensor2_scan_file = Channel.fromPath(msisensor2_scan)
-    } else if (tools.split(',').contains('msisensor2')) {
+    } else if (tools && tools.split(',').contains('msisensor2')) {
         MSISENSOR2_SCAN(fasta)
         msisensor2_scan_file = MSISENSOR2_SCAN.out.scan.map { _meta, list -> [list] }
 
@@ -150,7 +150,7 @@ workflow PREPARE_GENOME {
 
     if (msisensorpro_scan) {
         msisensorpro_scan_file = Channel.fromPath(msisensorpro_scan)
-    } else if (tools.split(',').contains('msisensorpro')) {
+    } else if (tools && tools.split(',').contains('msisensorpro')) {
         MSISENSORPRO_SCAN(fasta)
         msisensorpro_scan_file = MSISENSORPRO_SCAN.out.list.map { _meta, list -> [list] }
 
@@ -161,7 +161,7 @@ workflow PREPARE_GENOME {
 
     // Prepare genome for BBSplit contamination filtering
     ch_bbsplit_index = Channel.empty()
-    if (tools.split(',').contains('bbsplit')) {
+    if (tools && tools.split(',').contains('bbsplit')) {
         if (bbsplit_index) {
             // Use user-provided bbsplit index
             if (bbsplit_index.endsWith('.tar.gz')) {

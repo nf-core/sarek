@@ -58,7 +58,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_tnscope    = Channel.empty()
 
     // MPILEUP
-    if (tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')) {
+    if (tools && tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')) {
         BAM_VARIANT_CALLING_MPILEUP(
             cram,
             dict,
@@ -70,7 +70,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // CONTROLFREEC (depends on MPILEUP)
-    if (tools.split(',').contains('controlfreec')) {
+    if (tools && tools.split(',').contains('controlfreec')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC(
             BAM_VARIANT_CALLING_MPILEUP.out.mpileup.map { meta, pileup_tumor -> [meta, [], pileup_tumor, [], [], [], []] },
             fasta.map { meta, fasta -> [fasta] },
@@ -86,7 +86,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // CNVKIT
-    if (tools.split(',').contains('cnvkit')) {
+    if (tools && tools.split(',').contains('cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT(
             bam.map { meta, bam, bai -> [meta, bam, []] },
             fasta,
@@ -99,7 +99,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // FREEBAYES
-    if (tools.split(',').contains('freebayes')) {
+    if (tools && tools.split(',').contains('freebayes')) {
         BAM_VARIANT_CALLING_FREEBAYES(
             cram.map { meta, cram, crai -> [meta, cram, crai, [], []] },
             dict,
@@ -113,7 +113,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // MSISENSOR
-    if (tools.split(',').contains('msisensor2')) {
+    if (tools && tools.split(',').contains('msisensor2')) {
         // no need for scan in tumor only mode
         def msisensor2_scan = []
 
@@ -127,7 +127,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // MUTECT2
-    if (tools.split(',').contains('mutect2')) {
+    if (tools && tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
             cram.map { meta, cram, crai ->
                 joint_mutect2
@@ -150,7 +150,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     //LOFREQ
-    if (tools.split(',').contains('lofreq')) {
+    if (tools && tools.split(',').contains('lofreq')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ(
             cram,
             fasta,
@@ -163,7 +163,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // MANTA
-    if (tools.split(',').contains('manta')) {
+    if (tools && tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA(
             cram,
             fasta,
@@ -176,7 +176,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // TIDDIT
-    if (tools.split(',').contains('tiddit')) {
+    if (tools && tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram,
             fasta,
@@ -188,7 +188,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // TNSCOPE
-    if (tools.split(',').contains('sentieon_tnscope')) {
+    if (tools && tools.split(',').contains('sentieon_tnscope')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE(
             cram,
             fasta,

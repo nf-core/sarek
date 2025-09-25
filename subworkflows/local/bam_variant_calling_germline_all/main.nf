@@ -70,7 +70,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_tiddit               = Channel.empty()
 
     // BCFTOOLS MPILEUP
-    if (tools.split(',').contains('mpileup')) {
+    if (tools && tools.split(',').contains('mpileup')) {
         BAM_VARIANT_CALLING_MPILEUP(
             cram,
             dict,
@@ -82,7 +82,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // CNVKIT
-    if (tools.split(',').contains('cnvkit')) {
+    if (tools && tools.split(',').contains('cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT(
             // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, [], cram ] },
@@ -95,7 +95,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // DEEPVARIANT
-    if (tools.split(',').contains('deepvariant')) {
+    if (tools && tools.split(',').contains('deepvariant')) {
         BAM_VARIANT_CALLING_DEEPVARIANT(
             cram,
             dict,
@@ -109,7 +109,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // FREEBAYES
-    if (tools.split(',').contains('freebayes')) {
+    if (tools && tools.split(',').contains('freebayes')) {
         // Input channel is remapped to match input of module/subworkflow
         BAM_VARIANT_CALLING_FREEBAYES(
             // Remap channel to match module/subworkflow
@@ -125,7 +125,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // HAPLOTYPECALLER
-    if (tools.split(',').contains('haplotypecaller')) {
+    if (tools && tools.split(',').contains('haplotypecaller')) {
         BAM_VARIANT_CALLING_HAPLOTYPECALLER(
             cram,
             fasta,
@@ -180,7 +180,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // MANTA
-    if (tools.split(',').contains('manta')) {
+    if (tools && tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_GERMLINE_MANTA (
             cram,
             fasta,
@@ -205,7 +205,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // SENTIEON DNASCOPE
-    if (tools.split(',').contains('sentieon_dnascope')) {
+    if (tools && tools.split(',').contains('sentieon_dnascope')) {
         BAM_VARIANT_CALLING_SENTIEON_DNASCOPE(
             cram,
             fasta,
@@ -265,7 +265,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // SENTIEON HAPLOTYPER
-    if (tools.split(',').contains('sentieon_haplotyper')) {
+    if (tools && tools.split(',').contains('sentieon_haplotyper')) {
         BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER(
             cram,
             fasta,
@@ -327,7 +327,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
     // STRELKA
 
-    if (tools.split(',').contains('strelka')) {
+    if (tools && tools.split(',').contains('strelka')) {
 
         BAM_VARIANT_CALLING_SINGLE_STRELKA(
             cram,
@@ -342,7 +342,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // TIDDIT
-    if (tools.split(',').contains('tiddit')) {
+    if (tools && tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram,
             // Remap channel to match module/subworkflow
