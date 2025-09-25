@@ -302,10 +302,7 @@
                 "sample4_vs_sample3.tumor.mpileup.gz_info.txt:md5,b79da6ae026d86777d60d9f9edb9c6f6",
                 "sample4_vs_sample3.tumor.mpileup.gz_ratio.BedGraph:md5,cb087117ea046a6350885a34cb4bf667",
                 "sample4_vs_sample3.tumor.mpileup.gz_ratio.txt:md5,690cbefd87a77a6a37689135585c401c",
-                "sample4_vs_sample3.tumor.mpileup.gz_sample.cpn:md5,b4f97163fdb6a3d97ca4ea560394cdb1",
-                "sample4_vs_sample3_BAF.png:md5,16456932bb16e79c8cec4f747846c321",
-                "sample4_vs_sample3_ratio.log2.png:md5,89dce170acbb4c438be8359d242940df",
-                "sample4_vs_sample3_ratio.png:md5,6ac35ba93babc019c2d863f7e06b49b1"
+                "sample4_vs_sample3.tumor.mpileup.gz_sample.cpn:md5,b4f97163fdb6a3d97ca4ea560394cdb1"
             ],
             "No BAM files",
             "No CRAM files",
