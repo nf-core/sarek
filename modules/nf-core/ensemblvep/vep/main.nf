@@ -4,8 +4,8 @@ process ENSEMBLVEP_VEP {
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/84/8480a9566a1d6162c5119c7ec7e2a9991c6ed4415eabe3b11c728bed2a85b77f/data'
-        : 'community.wave.seqera.io/library/ensembl-vep:115.1--dae34d4b1c5d54d2'}"
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/d8/d87c04c0467de98b87d60ec3fdbb253a97d2d3a5715014a316c4eceda8391a2e/data'
+        : 'community.wave.seqera.io/library/ensembl-vep:115.2--8803570802360a77'}"
 
     input:
     tuple val(meta), path(vcf), path(custom_extra_files)

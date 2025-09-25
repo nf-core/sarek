@@ -143,12 +143,12 @@
                     },
                     "ensemblvep/download": {
                         "branch": "master",
-                        "git_sha": "f9234d35f5b9143313a4773fb54716876c030323",
+                        "git_sha": "b6d0f7713ac25dfeedfe2fff8e0c92327501c6f8",
                         "installed_by": ["modules"]
                     },
                     "ensemblvep/vep": {
                         "branch": "master",
-                        "git_sha": "f9234d35f5b9143313a4773fb54716876c030323",
+                        "git_sha": "b6d0f7713ac25dfeedfe2fff8e0c92327501c6f8",
                         "installed_by": ["modules", "vcf_annotate_ensemblvep"]
                     },
                     "fastp": {
@@ -483,12 +483,12 @@
                     },
                     "snpeff/download": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "b966311b31f51b65e87f124d08f948fec019787d",
                         "installed_by": ["modules"]
                     },
                     "snpeff/snpeff": {
                         "branch": "master",
-                        "git_sha": "48ca3de1737b0144aa9fe05bea2b681f0ae45a95",
+                        "git_sha": "b966311b31f51b65e87f124d08f948fec019787d",
                         "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "spring/decompress": {
@@ -577,7 +577,7 @@
                     },
                     "vcf_annotate_snpeff": {
                         "branch": "master",
-                        "git_sha": "48ca3de1737b0144aa9fe05bea2b681f0ae45a95",
+                        "git_sha": "b966311b31f51b65e87f124d08f948fec019787d",
                         "installed_by": ["subworkflows"]
                     }
                 }
