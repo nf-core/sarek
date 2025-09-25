@@ -12,7 +12,7 @@ nextflow_workflow {
 
     test("BBSplit - build index from fasta list") {
 
-        when { 
+        when {
             params {
                 dict = params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.dict'
                 fasta_fai  = params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai'

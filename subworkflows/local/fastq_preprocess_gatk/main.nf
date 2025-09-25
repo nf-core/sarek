@@ -151,7 +151,7 @@ workflow FASTQ_PREPROCESS_GATK {
                                     .primary_fastq
             
             versions = versions.mix(BBMAP_BBSPLIT.out.versions.first())
-        
+
         } else {
             reads_for_alignment = reads_for_bbsplit
         }
