@@ -188,7 +188,7 @@ workflow SAREK {
         // Additional options to be set up
 
         // Lint FASTQ with FQ/LINT
-        if (!params.skip_tools && params.skip_tools.split(',').contains('fq_lint')) {
+        if (params.skip_tools && params.skip_tools.split(',').contains('fq_lint')) {
             FQ_LINT(input_fastq)
             versions = versions.mix(FQ_LINT.out.versions)
         }
