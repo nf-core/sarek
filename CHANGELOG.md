@@ -181,6 +181,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1933](https://github.com/nf-core/sarek/pull/1933) - Correct link in README
 - [1935](https://github.com/nf-core/sarek/pull/1935) - Fix bug in samplesheet_to_channel workflow due to bad integer handling with lane
 - [1984](https://github.com/nf-core/sarek/pull/1984) - Fix tuple mismatch in GATK_BASERECALIBRATOR
+- [1996](https://github.com/nf-core/sarek/pull/1996) - MuSE: change to htslib for bgzip and tabix & language server
 
 #### Removed
 
