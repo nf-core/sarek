@@ -1,11 +1,11 @@
 process MUSE_CALL {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/9f/9f0ebb574ef5eed2a6e034f1b2feea6c252d1ab0c8bc5135a669059aa1f4d2ca/data':
-        'community.wave.seqera.io/library/muse:6637291dcbb0bdb8' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/9f/9f0ebb574ef5eed2a6e034f1b2feea6c252d1ab0c8bc5135a669059aa1f4d2ca/data'
+        : 'community.wave.seqera.io/library/muse:6637291dcbb0bdb8'}"
 
     input:
     tuple val(meta), path(tumor_bam), path(tumor_bai), path(normal_bam), path(normal_bai)
@@ -13,7 +13,7 @@ process MUSE_CALL {
 
     output:
     tuple val(meta), path("*.MuSE.txt"), emit: txt
-    path "versions.yml"                , emit: versions
+    path "versions.yml",                 emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -24,12 +24,12 @@ process MUSE_CALL {
     """
     MuSE \\
         call \\
-        $args \\
-        -f $reference \\
+        ${args} \\
+        -f ${reference} \\
         -O ${prefix}  \\
-        -n $task.cpus \\
-        $tumor_bam    \\
-        $normal_bam
+        -n ${task.cpus} \\
+        ${tumor_bam}    \\
+        ${normal_bam}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
