@@ -33,20 +33,24 @@ input:
         description: |
           cache version
 output:
-  - cache:
-      - meta:
+  cache:
+    - - meta:
           type: file
           description: cache
           pattern: "*"
+          ontologies: []
       - prefix:
           type: file
           description: cache
           pattern: "*"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@maxulysse"
 maintainers:

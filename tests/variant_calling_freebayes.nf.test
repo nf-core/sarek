@@ -1,0 +1,90 @@
+def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+
+    def test_scenario = [
+        [
+            name: "-profile test --tools freebayes --wes --nucleotides_per_second 20",
+            params: [
+                intervals : modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                tools : 'freebayes',
+                wes : true,
+                nucleotides_per_second : 20
+            ],
+            include_freebayes_unfiltered: true,
+        ],
+        [
+            name: "-profile test --tools freebayes --no_intervals",
+            params: [
+                tools : 'freebayes',
+                no_intervals : true
+            ],
+            include_freebayes_unfiltered: true,
+        ],
+        [
+            name: "-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv",
+            params: [
+                input : "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                intervals : modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                tools : 'freebayes',
+                wes : true,
+                nucleotides_per_second : 20
+            ],
+            include_freebayes_unfiltered: true,
+        ],
+        [
+            name: "-profile test --tools freebayes --no_intervals --wes --input fastq_pair.csv",
+            params: [
+                input : "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                tools : 'freebayes',
+                no_intervals : true,
+                wes : true
+            ],
+            include_freebayes_unfiltered: true,
+            // instability in QUAL and genotype scores
+            no_vcf_md5sum: true,
+        ],
+        [
+            name: "-profile test,tools_tumoronly --tools freebayes --input recalibrated_tumoronly.csv",
+            params: [
+                fasta : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                intervals : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                input : "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
+                step : "variant_calling",
+                tools : 'freebayes',
+                wes : true,
+                nucleotides_per_second : 20,
+                genome : null,
+                igenomes_ignore : true
+            ],
+            include_freebayes_unfiltered: true,
+        ],
+        [
+            name: "-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv",
+            params: [
+                fasta : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                input : "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
+                step : "variant_calling",
+                tools : 'freebayes',
+                wes : true,
+                nucleotides_per_second : 20,
+                genome : null,
+                igenomes_ignore : true,
+                no_intervals : true
+            ],
+            include_freebayes_unfiltered: true,
+        ]
+    ]
+
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}

@@ -28,6 +28,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Base Quality Score Recalibration](#base-quality-score-recalibration)
     - [GATK BaseRecalibrator (Spark)](#gatk-baserecalibrator-spark)
     - [GATK ApplyBQSR (Spark)](#gatk-applybqsr-spark)
+  - [Parabricks FQ2BAM](#parabricks-fq2bam)
   - [CSV files](#csv-files)
 - [Variant Calling](#variant-calling)
   - [SNVs and small indels](#snvs-and-small-indels)
@@ -38,14 +39,16 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
       - [GATK Germline Single Sample Variant Calling](#gatk-germline-single-sample-variant-calling)
       - [GATK Joint Germline Variant Calling](#gatk-joint-germline-variant-calling)
     - [GATK Mutect2](#gatk-mutect2)
+    - [Lofreq](#lofreq)
+    - [MuSE](#muse)
     - [Sentieon DNAscope](#sentieon-dnascope)
       - [Sentieon DNAscope joint germline variant calling](#sentieon-dnascope-joint-germline-variant-calling)
     - [Sentieon Haplotyper](#sentieon-haplotyper)
       - [Sentieon Haplotyper joint germline variant calling](#sentieon-haplotyper-joint-germline-variant-calling)
+    - [Sentieon TNscope](#sentieon-tnscope)
     - [Strelka](#strelka)
-    - [Lofreq](#lofreq)
   - [Structural Variants](#structural-variants)
-    - [Indexcov](#indexcov)
+    - [indexcov](#indexcov)
     - [Manta](#manta)
     - [TIDDIT](#tiddit)
   - [Sample heterogeneity, ploidy and CNVs](#sample-heterogeneity-ploidy-and-cnvs)
@@ -53,8 +56,10 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [CNVKit](#cnvkit)
     - [Control-FREEC](#control-freec)
   - [Microsatellite instability (MSI)](#microsatellite-instability-msi)
+    - [MSIsensor2](#msisensor2)
     - [MSIsensorPro](#msisensorpro)
   - [Concatenation](#concatenation)
+  - [Normalization](#normalization)
 - [Variant annotation](#variant-annotation)
   - [snpEff](#snpeff)
   - [VEP](#vep)
@@ -81,7 +86,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 The default directory structure is as follows
 
-```
+```text
 {outdir}
 ├── csv
 ├── multiqc
@@ -148,7 +153,7 @@ These files are intermediate and by default not placed in the output-folder kept
 
 #### UMI consensus
 
-Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools.
+Sarek can create consensus reads when Unique Molecular Identifiers (UMIs) exist, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools. Please note that if your UMIs are part of additional index fastq files then you can use [nf-core/fastquorum](https://nf-co.re/fastquorum) to process them.
 
 These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_split` to enable publishing of these files to:
 
@@ -195,7 +200,6 @@ The alignment files (BAM or CRAM) produced by the chosen aligner are not publish
 **Output directory: `{outdir}/preprocessing/mapped/<sample>/`**
 
 - if `--save_mapped`: `<sample>.sorted.cram` and `<sample>.sorted.cram.crai`
-
   - CRAM file and index
 
 - if `--save_mapped --save_output_as_bam`: `<sample>.sorted.bam` and `<sample>.sorted.bam.bai`
@@ -287,6 +291,25 @@ The resulting recalibrated CRAM files are delivered to the user. Recalibrated CR
   - CRAM file and index
 - if `--save_output_as_bam`:
   - `<sample>.recal.bam` and `<sample>.recal.bam.bai` - BAM file and index
+  </details>
+
+### Parabricks FQ2BAM
+
+:::info
+This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
+:::
+
+[Parabricks FQ2BAM](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html) runs as alternative to GATK preprocessing, enables by `--aligner parabricks --profile <docker/singularity>,gpu`.
+
+The resulting recalibrated CRAM files are delivered to the user.
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+**Output directory: `{outdir}/preprocessing/parabricks/<sample>/`**
+
+- `<sample>.cram` and `<sample>.cram.crai`
+  - CRAM file and index
   </details>
 
 ### CSV files
@@ -453,6 +476,36 @@ Files created:
 
 </details>
 
+#### Lofreq
+
+[Lofreq](https://github.com/CSB5/lofreq) is a fast and sensitive variant-caller for inferring SNVs and indels from next-generation sequencing data. It makes full use of base-call qualities and other sources of errors inherent in sequencing, which are usually ignored by other methods or only used for filtering. For further reading and documentation see the [Lofreq user guide](https://csb5.github.io/lofreq/).
+
+<details markdown = "1">
+<summary>Output files for tumor-only samples</summary>
+
+**Output directory: `{outdir}/variant_calling/lofreq/<sample>/`**
+
+- `<tumorsample>.vcf.gz`
+  - VCF which provides a detailed description of the detected genetic variants.
+
+  </details>
+
+#### MuSE
+
+[MuSE](https://github.com/wwylab/MuSE) is an accurate and ultra-fast somatic mutation calling tool for whole-genome sequencing (WGS) and whole-exome sequencing (WES) data from heterogeneous tumor samples. This tool is unique in accounting for tumor heterogeneity using a sample-specific error model that improves sensitivity and specificity in mutation calling from sequencing data. For further reading see the [recently published paper](https://genome.cshlp.org/content/early/2024/05/03/gr.278456.123.long).
+
+<details markdown = "1">
+<summary>Output files for tumor-normal samples</summary>
+
+**Output directory: `{outdir}/variant_calling/muse/<tumorsample_vs_normalsample>/`**
+
+- `<tumorsample_vs_normalsample>.MuSE.txt`
+  - TXT containing position-specific summary statistics.
+- `<tumorsample_vs_normalsample>.muse.vcf.gz`
+  - VCF with called variants. Fields are named TUMOR and NORMAL.
+
+</details>
+
 #### Sentieon DNAscope
 
 [Sentieon DNAscope](https://support.sentieon.com/appnotes/dnascope_ml/#dnascope-germline-variant-calling-with-a-machine-learning-model) is a variant-caller which aims at outperforming GATK's Haplotypecaller in terms of both speed and accuracy. DNAscope allows you to use a machine learning model to perform variant calling with higher accuracy by improving the candidate detection and filtering.
@@ -549,6 +602,20 @@ In Sentieon's package DNAseq, joint germline variant calling is done by first ru
 
 </details>
 
+#### Sentieon TNscope
+
+[Sentieon TNscope](https://support.sentieon.com/manual/usages/general/#tnscope-algorithm) is Sentieon's proprietary somatic variant and structural variant caller.
+
+<details markdown="1">
+<summary>VCF-files for tumor-only and tumor/normal samples</summary>
+
+**Output directory: `{outdir}/variantcalling/sentieon_tnscope/<sample>/`**
+
+- `<sample>.tnscope.vcf.gz` and `<sample>.tnscope.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
 #### Strelka
 
 [Strelka](https://github.com/Illumina/strelka) is a fast and accurate small variant caller optimized for analysis of germline variation in small cohorts and somatic variation in tumor/normal sample pairs. For further reading and documentation see the [Strelka user guide](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md). If [Strelka](https://github.com/Illumina/strelka) is used for somatic variant calling and [Manta](https://github.com/Illumina/manta) is also specified in tools, the output candidate indels from [Manta](https://github.com/Illumina/manta) are used according to [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example).
@@ -576,20 +643,6 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
   - VCF with tabix index with all somatic SNVs inferred in the tumor sample.
 
 </details>
-
-#### Lofreq
-
-[Lofreq](https://github.com/CSB5/lofreq) is a fast and sensitive variant-caller for inferring SNVs and indels from next-generation sequencing data. It makes full use of base-call qualities and other sources of errors inherent in sequencing, which are usually ignored by other methods or only used for filtering. For further reading and documentation see the [Lofreq user guide](https://csb5.github.io/lofreq/).
-
-<details markdown = "1">
-<summary>Output files for tumor-only samples</summary>
-
-**Output directory: `{outdir}/variant_calling/lofreq/<sample>/`**
-
--`<tumorsample>.vcf.gz`
--VCF which provides a detailed description of the detected genetic variants.
-
-  </details>
 
 ### Structural Variants
 
@@ -846,6 +899,38 @@ It also detects subclonal gains and losses and evaluates the most likely average
 [Microsatellite instability](https://en.wikipedia.org/wiki/Microsatellite_instability) is a genetic condition associated with deficiencies in the mismatch repair (MMR) system which causes a tendency to accumulate a high number of mutations (SNVs and indels).
 An altered distribution of microsatellite length is associated with a missed replication slippage which would be corrected under normal MMR conditions.
 
+#### MSIsensor2
+
+[MSIsensor2](https://github.com/niu-lab/msisensor2) is a tool to detect the MSI status for tumor only sequencing data, including Cell-Free DNA (cfDNA), Formalin-Fixed Paraffin-Embedded(FFPE) and other sample types.
+
+<details markdown="1">
+<summary>Output files for tumor/normal paired samples</summary>
+
+**Output directory: `{outdir}/variantcalling/msisensor/<tumorsample_vs_normalsample>/`**
+
+- `<tumorsample_vs_normalsample>`
+  - MSI score output, contains information about the number of somatic sites.
+- `<tumorsample_vs_normalsample>_dis`
+  - The normal and tumor length distribution for each microsatellite position.
+- `<tumorsample_vs_normalsample>_germline`
+  - Germline sites detected.
+- `<tumorsample_vs_normalsample>_somatic`
+  - Somatic sites detected.
+  </details>
+
+<details markdown="1">
+<summary>Output files for tumor only samples</summary>
+
+**Output directory: `{outdir}/variantcalling/msisensor2/<tumorsample>/`**
+
+- `<tumorsample>`
+  - MSI score output, contains information about the number of somatic sites.
+- `<tumorsample>_dis`
+  - The normal and tumor length distribution for each microsatellite position.
+- `<tumorsample>_somatic`
+  - Somatic sites detected.
+  </details>
+
 #### MSIsensorPro
 
 [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro) is a tool to detect the MSI status of a tumor scanning the length of the microsatellite regions.
@@ -861,9 +946,9 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
 - `<tumorsample_vs_normalsample>_dis`
   - The normal and tumor length distribution for each microsatellite position.
 - `<tumorsample_vs_normalsample>_germline`
-  - Somatic sites detected.
-- `<tumorsample_vs_normalsample>_somatic`
   - Germline sites detected.
+- `<tumorsample_vs_normalsample>_somatic`
+  - Somatic sites detected.
   </details>
 
 ### Concatenation
@@ -876,6 +961,21 @@ Germline VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, 
 **Output directory: `{outdir}/variantcalling/concat/<sample>/`**
 
 - `<sample>.germline.vcf.gz` and `<sample>.germline.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
+### Normalization
+
+_Experimental Feature_ All VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, `Manta`, `bcftools mpileup`, `Strelka`, or `Tiddit` are normalized with `bcftools norm`. The field `SOURCE` is added to the VCF header to report the variant caller.
+The concatenized VCFs are not normalized at the moment.
+
+<details markdown="1">
+<summary>Normalized VCF-files for normal and tumor samples</summary>
+
+**Output directory: `{outdir}/variantcalling/normalized/<sample>/`**
+
+- `<sample>.<variantcaller>.norm.vcf.gz` and `<sample>.<variantcaller>.norm.vcf.gz.tbi`
   - VCF with tabix index
 
 </details>

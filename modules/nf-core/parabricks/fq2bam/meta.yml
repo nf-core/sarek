@@ -1,0 +1,175 @@
+name: "parabricks_fq2bam"
+description: NVIDIA Clara Parabricks GPU-accelerated alignment, sorting, BQSR calculation,
+  and duplicate marking. Note this nf-core module requires files to be copied into
+  the working directory and not symlinked.
+keywords:
+  - align
+  - sort
+  - bqsr
+  - duplicates
+tools:
+  - "parabricks":
+      description: "NVIDIA Clara Parabricks GPU-accelerated genomics tools"
+      homepage: "https://www.nvidia.com/en-us/clara/genomics/"
+      documentation: "https://docs.nvidia.com/clara/parabricks/latest/index.html"
+      licence: ["custom"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: fastq.gz files
+        pattern: "*.fastq.gz"
+        ontologies:
+          - edam: "http://edamontology.org/format_1930" # FASTQ
+          - edam: "http://edamontology.org/format_3989" # GZIP format
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing fasta information
+    - fasta:
+        type: file
+        description: reference fasta file - must be unzipped
+        pattern: "*.fasta"
+        ontologies:
+          - edam: "http://edamontology.org/format_1929" # FASTA
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing index information
+    - index:
+        type: file
+        description: reference BWA index
+        pattern: "*.{amb,ann,bwt,pac,sa}"
+        ontologies: []
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing index information
+    - interval_file:
+        type: file
+        description: (optional) file(s) containing genomic intervals for use in base
+          quality score recalibration (BQSR)
+        pattern: "*.{bed,interval_list,picard,list,intervals}"
+        ontologies: []
+  - - meta5:
+        type: map
+        description: |
+          Groovy Map containing known sites information
+    - known_sites:
+        type: file
+        description: (optional) known sites file(s) for calculating BQSR. markdups must
+          be true to perform BQSR.
+        pattern: "*.vcf.gz"
+        ontologies:
+          - edam: "http://edamontology.org/format_3016" # VCF
+          - edam: "http://edamontology.org/format_3989" # GZIP
+  - output_fmt:
+      type: string
+      description: Output format for the alignment. Options are 'bam' or 'cram'
+      pattern: "{bam,cram}"
+output:
+  bam:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bam":
+          type: file
+          description: Sorted BAM file
+          pattern: "*.bam"
+          ontologies: []
+  bai:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bai":
+          type: file
+          description: index corresponding to sorted BAM file
+          pattern: "*.bai"
+          ontologies: []
+  cram:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.cram":
+          type: file
+          description: Sorted CRAM file
+          pattern: "*.cram"
+          ontologies: []
+  crai:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.crai":
+          type: file
+          description: index corresponding to sorted CRAM file
+          pattern: "*.crai"
+          ontologies: []
+  bqsr_table:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.table":
+          type: file
+          description: (optional) table from base quality score recalibration calculation,
+            to be used with parabricks/applybqsr
+          pattern: "*.table"
+          ontologies: []
+  qc_metrics:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*_qc_metrics":
+          type: directory
+          description: (optional) optional directory of qc metrics
+          pattern: "*_qc_metrics"
+  duplicate_metrics:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.duplicate-metrics.txt":
+          type: file
+          description: (optional) metrics calculated from marking duplicates in the
+            bam file
+          pattern: "*.duplicate-metrics.txt"
+          ontologies: []
+  compatible_versions:
+    - compatible_versions.yml:
+        type: file
+        description: File containing info on compatible CPU-based software versions.
+        pattern: "compatible_versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: "http://edamontology.org/format_3750" # YAML
+authors:
+  - "@bsiranosian"
+  - "@adamrtalbot"
+maintainers:
+  - "@bsiranosian"
+  - "@adamrtalbot"
+  - "@gallvp"
+  - "@famosab"

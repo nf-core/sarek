@@ -21,7 +21,7 @@ input:
         type: map
         description: |
           Groovy Map containing sample information
-          e.g. [ id:'test', single_end:false ]
+          e.g. [ id:'test' ]
     - input:
         type: file
         description: BAM/CRAM/SAM file
@@ -30,7 +30,12 @@ input:
         type: file
         description: Interval FILE
         pattern: "*.bed"
-  - - fasta:
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test' ]
+    - fasta:
         type: file
         description: FASTA reference file
         pattern: "*.{fasta,fa}"

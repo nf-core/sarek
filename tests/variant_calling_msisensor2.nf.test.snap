@@ -1,0 +1,439 @@
+{
+    "-profile test --tools msisensor2 --build_only_index --input false": {
+        "content": [
+            5,
+            {
+                "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.6.1.0"
+                },
+                "MSISENSOR2_SCAN": {
+                    "msisensor2": 0.1
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "UNTAR_MSISENSOR2_MODELS": {
+                    "untar": 1.34
+                }
+            },
+            [
+                "csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_report.html",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/dict",
+                "reference/dict/genome.dict",
+                "reference/intervals",
+                "reference/intervals/no_intervals.bed.gz",
+                "reference/msisensor2",
+                "reference/msisensor2/genome.scan",
+                "reference/msisensor2/models",
+                "reference/msisensor2/models/016a16e12aca2bdba3713a3be76f72cd",
+                "reference/msisensor2/models/02d42c2bda19aac304d6e86390c7f328",
+                "reference/msisensor2/models/1030c0aa35ca5c263daeae866ad18632",
+                "reference/msisensor2/models/15c3f5ec1c020d8f44283e40a2d9b6bb",
+                "reference/msisensor2/models/15d6012f9a234b7adbbeecec524aea7d",
+                "reference/msisensor2/models/2cf9a58f57e78b88acd86d792fe6a7b3",
+                "reference/msisensor2/models/3ba04410c7ccbfc33e8b1b11d8132ae9",
+                "reference/msisensor2/models/4431c9dc08be932c460a9e67192e7c57",
+                "reference/msisensor2/models/4f5fa7bed97b48093375222d242fc982",
+                "reference/msisensor2/models/657a38415ac5a5d36609d9c180170b7a",
+                "reference/msisensor2/models/71e6c0d59ea09d2a7acc566560841e34",
+                "reference/msisensor2/models/8144b15900bba7086e86b31a0e1f8cfd",
+                "reference/msisensor2/models/9bf6f7a544f369c3262a3a6f72cfdd7b",
+                "reference/msisensor2/models/b8a36f2274b33cb0ed932e85cd1ddd5a",
+                "reference/msisensor2/models/c08f164ded323a8c2606c408c555d73d",
+                "reference/msisensor2/models/ceaa36ddbb76dc6eb6199ed946945788",
+                "reference/msisensor2/models/e05d5da7208a924762311eddc4ec96c0",
+                "reference/msisensor2/models/f8a20acf51ccb2b0ce6af42f24a8b5ef"
+            ],
+            [
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
+                "genome.dict:md5,de4ff13287d28c1679a11ae989a3a980",
+                "no_intervals.bed.gz:md5,f3dac01ea66b95fe477446fde2d31489",
+                "genome.scan:md5,b942593774e50c35946f8e98836d0c3b",
+                "016a16e12aca2bdba3713a3be76f72cd:md5,26ddcb7b64f43835f254a13b29adf3fc",
+                "02d42c2bda19aac304d6e86390c7f328:md5,15ab43fe84b8b7169979d62e267e2b5f",
+                "1030c0aa35ca5c263daeae866ad18632:md5,41e6de8e7e35f66b691072d9839e128a",
+                "15c3f5ec1c020d8f44283e40a2d9b6bb:md5,7fe77d6cd3e0714d5b4390e37df7e7b9",
+                "15d6012f9a234b7adbbeecec524aea7d:md5,9b11cce514fc209f54501e042a7aad8e",
+                "2cf9a58f57e78b88acd86d792fe6a7b3:md5,9d894caf8575df7a218d37f249e5d09f",
+                "3ba04410c7ccbfc33e8b1b11d8132ae9:md5,71083a4e40f7b9e3e1ceaad6f58755f7",
+                "4431c9dc08be932c460a9e67192e7c57:md5,f32023840c68cb430c79f4df7db8d36e",
+                "4f5fa7bed97b48093375222d242fc982:md5,412fbe16dfdd680e5edb2d06c2aee0b6",
+                "657a38415ac5a5d36609d9c180170b7a:md5,3aa2c66007f669e888e061649e92f0a0",
+                "71e6c0d59ea09d2a7acc566560841e34:md5,994c5dfd8179ba3a230f84d6938eda8e",
+                "8144b15900bba7086e86b31a0e1f8cfd:md5,cee5db3ea768ca6311048b9e2aa30ba9",
+                "9bf6f7a544f369c3262a3a6f72cfdd7b:md5,0dee4e2124f75a2848f0864aa59647a2",
+                "b8a36f2274b33cb0ed932e85cd1ddd5a:md5,92f84a4b951c4763bde72bf4f4ea875c",
+                "c08f164ded323a8c2606c408c555d73d:md5,a9f42a43cb03a9ff37c238f13a75b614",
+                "ceaa36ddbb76dc6eb6199ed946945788:md5,b4c563c94f59d7cb2c5c26d04d441a01",
+                "e05d5da7208a924762311eddc4ec96c0:md5,0dd92cb27616630b4882bd71e4a85d9e",
+                "f8a20acf51ccb2b0ce6af42f24a8b5ef:md5,2b3ede1d6fc4bc83ab2052f3eaa2618c"
+            ],
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files"
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-09-09T12:10:31.923115151"
+    },
+    "-profile test --tools msisensor2 somatic": {
+        "content": [
+            13,
+            {
+                "CRAM_TO_BAM": {
+                    "samtools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.6.1.0"
+                },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "MSISENSOR2_MSI": {
+                    "msisensor2": 0.1
+                },
+                "MSISENSOR2_SCAN": {
+                    "msisensor2": 0.1
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                }
+            },
+            [
+                "csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/converted",
+                "preprocessing/converted/cram_to_bam",
+                "preprocessing/converted/cram_to_bam/sample3",
+                "preprocessing/converted/cram_to_bam/sample3/sample3.bam",
+                "preprocessing/converted/cram_to_bam/sample3/sample3.bam.bai",
+                "preprocessing/converted/cram_to_bam/sample4",
+                "preprocessing/converted/cram_to_bam/sample4/sample4.bam",
+                "preprocessing/converted/cram_to_bam/sample4/sample4.bam.bai",
+                "reference",
+                "reference/dict",
+                "reference/msisensor2",
+                "reports",
+                "reports/mosdepth",
+                "reports/mosdepth/sample3",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample3/sample3.recal.regions.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.regions.bed.gz.csi",
+                "reports/mosdepth/sample4",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample4/sample4.recal.regions.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.regions.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample3",
+                "reports/samtools/sample3/sample3.recal.cram.stats",
+                "reports/samtools/sample4",
+                "reports/samtools/sample4/sample4.recal.cram.stats",
+                "variant_calling",
+                "variant_calling/msisensor2",
+                "variant_calling/msisensor2/sample4_vs_sample3",
+                "variant_calling/msisensor2/sample4_vs_sample3/sample4_vs_sample3",
+                "variant_calling/msisensor2/sample4_vs_sample3/sample4_vs_sample3_dis",
+                "variant_calling/msisensor2/sample4_vs_sample3/sample4_vs_sample3_germline",
+                "variant_calling/msisensor2/sample4_vs_sample3/sample4_vs_sample3_somatic"
+            ],
+            [
+                "mosdepth-coverage-per-contig-single.txt:md5,4ee05f71086179b42a01cd2fb450346f",
+                "mosdepth-cumcoverage-dist-id.txt:md5,cb7468f51b8be1230fb3ac5b130be31f",
+                "mosdepth_perchrom.txt:md5,4ee05f71086179b42a01cd2fb450346f",
+                "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
+                "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
+                "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
+                "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
+                "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
+                "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
+                "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
+                "sample3.recal.per-base.bed.gz.csi:md5,c67dcd711b096eb42f43784d5eadbc0d",
+                "sample3.recal.regions.bed.gz:md5,314ce8d7273eff353072108aa77c327c",
+                "sample3.recal.regions.bed.gz.csi:md5,9cb0ad7039a3b703d16ca7d5b835c0ee",
+                "sample4.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
+                "sample4.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
+                "sample4.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
+                "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
+                "sample4.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
+                "sample4.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
+                "sample4_vs_sample3:md5,f4593b018c562728d12b856341602368",
+                "sample4_vs_sample3_dis:md5,03e93efc2099d220e022a4c4d397266d",
+                "sample4_vs_sample3_germline:md5,0070f2373526057e02e65bbed851b572"
+            ],
+            [
+                "sample3.bam:md5,891da60dc1cc5c6455bfc1442aea0982",
+                "sample4.bam:md5,36856b3e6dd1bc0f10688b9d8c02faa8"
+            ],
+            "No CRAM files",
+            "No VCF files"
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-09-09T16:02:04.383021211"
+    },
+    "-profile test --tools msisensor2 --build_only_index --input false -stub": {
+        "content": [
+            5,
+            {
+                "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.6.1.0"
+                },
+                "MSISENSOR2_SCAN": {
+                    "msisensor2": 0.1
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "UNTAR_MSISENSOR2_MODELS": {
+                    "untar": 1.34
+                }
+            },
+            [
+                "csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_report.html",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/dict",
+                "reference/dict/genome.dict",
+                "reference/intervals",
+                "reference/intervals/no_intervals.bed.gz",
+                "reference/msisensor2",
+                "reference/msisensor2/genome.scan",
+                "reference/msisensor2/models",
+                "reference/msisensor2/models/016a16e12aca2bdba3713a3be76f72cd",
+                "reference/msisensor2/models/02d42c2bda19aac304d6e86390c7f328",
+                "reference/msisensor2/models/1030c0aa35ca5c263daeae866ad18632",
+                "reference/msisensor2/models/15c3f5ec1c020d8f44283e40a2d9b6bb",
+                "reference/msisensor2/models/15d6012f9a234b7adbbeecec524aea7d",
+                "reference/msisensor2/models/2cf9a58f57e78b88acd86d792fe6a7b3",
+                "reference/msisensor2/models/3ba04410c7ccbfc33e8b1b11d8132ae9",
+                "reference/msisensor2/models/4431c9dc08be932c460a9e67192e7c57",
+                "reference/msisensor2/models/4f5fa7bed97b48093375222d242fc982",
+                "reference/msisensor2/models/657a38415ac5a5d36609d9c180170b7a",
+                "reference/msisensor2/models/71e6c0d59ea09d2a7acc566560841e34",
+                "reference/msisensor2/models/8144b15900bba7086e86b31a0e1f8cfd",
+                "reference/msisensor2/models/9bf6f7a544f369c3262a3a6f72cfdd7b",
+                "reference/msisensor2/models/b8a36f2274b33cb0ed932e85cd1ddd5a",
+                "reference/msisensor2/models/c08f164ded323a8c2606c408c555d73d",
+                "reference/msisensor2/models/ceaa36ddbb76dc6eb6199ed946945788",
+                "reference/msisensor2/models/e05d5da7208a924762311eddc4ec96c0",
+                "reference/msisensor2/models/f8a20acf51ccb2b0ce6af42f24a8b5ef"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-09-09T12:11:22.808965974"
+    },
+    "-profile test --tools msisensor2 tumor_only": {
+        "content": [
+            10,
+            {
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.6.1.0"
+                },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "MSISENSOR2_MSI": {
+                    "msisensor2": 0.1
+                },
+                "MSISENSOR2_SCAN": {
+                    "msisensor2": 0.1
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                },
+                "UNTAR_MSISENSOR2_MODELS": {
+                    "untar": 1.34
+                }
+            },
+            [
+                "csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/dict",
+                "reference/msisensor2",
+                "reports",
+                "reports/mosdepth",
+                "reports/mosdepth/test-1",
+                "reports/mosdepth/test-1/test-1.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/test-1/test-1.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/test-1/test-1.recal.mosdepth.summary.txt",
+                "reports/mosdepth/test-1/test-1.recal.per-base.bed.gz",
+                "reports/mosdepth/test-1/test-1.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/test-1/test-1.recal.regions.bed.gz",
+                "reports/mosdepth/test-1/test-1.recal.regions.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/test-1",
+                "reports/samtools/test-1/test-1.recal.cram.stats",
+                "variant_calling",
+                "variant_calling/msisensor2",
+                "variant_calling/msisensor2/test-1",
+                "variant_calling/msisensor2/test-1/test-1",
+                "variant_calling/msisensor2/test-1/test-1_dis",
+                "variant_calling/msisensor2/test-1/test-1_somatic"
+            ],
+            [
+                "mosdepth-coverage-per-contig-single.txt:md5,412342be69a71d2b0f26a50843602fa4",
+                "mosdepth_perchrom.txt:md5,412342be69a71d2b0f26a50843602fa4",
+                "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
+                "samtools-stats-dp.txt:md5,81cb10ffcfe09ec7f5121ae4be8e29fb",
+                "samtools_alignment_plot.txt:md5,552f61adac97b6b40c201f921195e315",
+                "test-1.recal.mosdepth.global.dist.txt:md5,96d22fe7b6f5824cde06c98c96dec304",
+                "test-1.recal.mosdepth.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "test-1.recal.mosdepth.summary.txt:md5,81c058bd237404d95b3f838bae176303",
+                "test-1.recal.per-base.bed.gz:md5,bafb7489cc40a55cfe85f99ea6d36cc7",
+                "test-1.recal.per-base.bed.gz.csi:md5,e72e7c7886d42728d785bb97dffd2a07",
+                "test-1.recal.regions.bed.gz:md5,d7e8ac59cdfd4cfb70712e699c6848f5",
+                "test-1.recal.regions.bed.gz.csi:md5,d9cfb4c9a4ffcf4b0122c378a547162a",
+                "test-1:md5,a3290f7539dbbf83777e8590156c0e28",
+                "test-1_dis:md5,85205504ea8652ebdee46ac07ee1a8f6"
+            ],
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files"
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-09-09T11:22:21.727066284"
+    }
+}

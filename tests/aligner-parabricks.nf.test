@@ -1,0 +1,39 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    profile "test,gpu"
+
+    def test_scenario = [
+        [
+            name: "-profile test --aligner parabricks --wes",
+            params: [
+                aligner: 'parabricks',
+                save_reference: true,
+                tools: '',
+                wes : true,
+            ],
+            gpu: true
+        ],
+        [
+            name: "-profile test --aligner parabricks --tools mutect2 --wes --input fastq_pair.csv",
+            params: [
+                input : "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                aligner: 'parabricks',
+                save_reference: true,
+                tools: 'mutect2',
+                wes : true,
+            ],
+            gpu: true
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}

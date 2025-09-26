@@ -1,0 +1,57 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+
+    def test_scenario = [
+        [
+            name: "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_umi.csv",
+                tools: null,
+                umi_read_structure: '+T 7M1S+T'
+            ]
+        ],
+        [
+            name: "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_umi.csv",
+                tools: null,
+                umi_read_structure: '12+T S'
+            ],
+            failure: true,
+            stdout: "Please check the input UMI Read structure"
+        ],
+        [
+            name: "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null --aligner sentieon-bwamem",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_umi.csv",
+                tools: null,
+                umi_read_structure: '+T 7M1S+T',
+                aligner: 'sentieon-bwamem'
+            ],
+            failure: true,
+            stdout: "sentieon-bwamem is currently not compatible with FGBio UMI handling. Please choose a different aligner."
+        ],
+        [
+            name: "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null --aligner parabricks",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_umi.csv",
+                tools: null,
+                umi_read_structure: '+T 7M1S+T',
+                aligner: 'parabricks'
+            ],
+            failure: true,
+            stdout: "parabricks is currently not compatible with FGBio UMI handling. Please choose a different aligner."
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}
