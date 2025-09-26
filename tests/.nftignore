@@ -44,7 +44,6 @@ variant_calling/ascat/*/*.metrics.txt
 variant_calling/ascat/*/*.png
 variant_calling/cnvkit/*/*.{pdf,png}
 variant_calling/controlfreec/*/config.txt
-variant_calling/controlfreec/*/*.png
 variant_calling/msisensor2/*/*_somatic
 variant_calling/muse/*/*.MuSE.txt
 variant_calling/mutect2/*/*.mutect2.artifactprior.tar.gz
