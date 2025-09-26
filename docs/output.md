@@ -190,7 +190,7 @@ You can save the index by using the [`--save_reference`](https://nf-co.re/sarek/
 <details markdown="1">
 <summary>Output files</summary>
 
-- `bbsplit/`
+- `preprocessing/bbsplit/`
   - `*.fastq.gz`: If `--save_bbsplit_reads` is specified FastQ files split by reference will be saved to the results directory. Reads from the main reference genome will be named "_primary_.fastq.gz". Reads from contaminating genomes will be named "_<SHORT_NAME>_.fastq.gz" where `<SHORT_NAME>` is the first column in `--bbsplit_fasta_list` that needs to be provided to initially build the index.
   - `*.txt`: File containing statistics on how many reads were assigned to each reference.
 
