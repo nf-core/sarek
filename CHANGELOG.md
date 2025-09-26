@@ -191,7 +191,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1957](https://github.com/nf-core/sarek/pull/1957) - Remove duplicated gpu profile from config
 - [1994](https://github.com/nf-core/sarek/pull/1994) - Prevent conda profile running on gpu
 - [1995](https://github.com/nf-core/sarek/pull/1995) - Remove md5sums of png files for controlfreec
-- [1997](https://github.com/nf-core/sarek/pull/1997) - Remove md5sums of png files for CNVkit
+- [1997](https://github.com/nf-core/sarek/pull/1997) - Remove png and pdf md5sums for all variant callers
 
 ## [3.5.1](https://github.com/nf-core/sarek/releases/tag/3.5.1) - Akkatjåkkå
 
