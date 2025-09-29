@@ -17,7 +17,7 @@
                     "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -266,24 +266,24 @@
                 "fastqc_sequence_counts_plot.txt:md5,7f0f19a58e8e54e792a751fd04a9ae13",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,92b02e250ff78725deb9a10d510fcecc",
                 "fastqc_sequence_length_distribution_plot.txt:md5,fb04dce68ec566314125bc9438211b28",
-                "mosdepth-coverage-per-contig-single.txt:md5,7c68c7b9dd5c681fc95a7e3c9e47996b",
-                "mosdepth-cumcoverage-dist-id.txt:md5,eda04c1afa93e09875bab547f4f0c337",
-                "mosdepth_perchrom.txt:md5,7c68c7b9dd5c681fc95a7e3c9e47996b",
+                "mosdepth-coverage-per-contig-single.txt:md5,8aed596c5d95eeafeef183e0d947e6cd",
+                "mosdepth-cumcoverage-dist-id.txt:md5,abf3e34bd5e570a035e21bed8afb8e2b",
+                "mosdepth_perchrom.txt:md5,8aed596c5d95eeafeef183e0d947e6cd",
                 "multiqc_citations.txt:md5,790a7694da30294b51fa1d6c3eb8ba2b",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "test-test_L1.stats.txt:md5,0cdc9135e088ceeb1acc87dacd52359f",
-                "test-test_L2.stats.txt:md5,f0be98dec71aa5aad945a7153baa843d",
+                "test-test_L1.stats.txt:md5,f0be98dec71aa5aad945a7153baa843d",
+                "test-test_L2.stats.txt:md5,3282f48cd6fb9c8a20f973c90f86dc80",
                 "test.strelka.variants.bcftools_stats.txt:md5,b6511034fcbf5c396ed035207b4aea41",
                 "test.strelka.variants.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
             "No BAM files",
             [
-                "test.md.cram:md5,6999f3b9e2bb54511ac3ede98b0c9a0d",
-                "test.recal.cram:md5,53066d54533baa947c63ec97fd55266b"
+                "test.md.cram:md5,81c76a62603d22cc0b4c1315f69bc887",
+                "test.recal.cram:md5,99fb4526454e7b55068194b2a9d19a4"
             ],
             [
                 "test.strelka.genome.vcf.gz:md5,2396656fa8d478e5fd76cda3a1c91cbb",
@@ -294,7 +294,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-29T11:08:18.129407291"
+        "timestamp": "2025-09-29T16:02:21.831086528"
     },
     "-profile test --tools bbsplit,strelka --bbsplit_fasta_list -stub": {
         "content": [
@@ -314,7 +314,7 @@
                     "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -509,6 +509,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-29T11:09:00.18406443"
+        "timestamp": "2025-09-29T16:03:04.253833632"
     }
 }
