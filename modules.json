@@ -498,12 +498,12 @@
                     },
                     "strelka/germline": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "039730fab3f0150585ad46c402c6bf95396d88b5",
                         "installed_by": ["modules"]
                     },
                     "strelka/somatic": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "039730fab3f0150585ad46c402c6bf95396d88b5",
                         "installed_by": ["modules"]
                     },
                     "svdb/merge": {
