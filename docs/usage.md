@@ -868,7 +868,9 @@ In particular, in cloud computing setting it is often advisable to reduce the nu
 
 For a detailed tutorial on how to create a panel-of-normals, see [here](https://gatk.broadinstitute.org/hc/en-us/articles/360035531132).
 
-## How to customize the varlociraptor calling
+## How to use varlociraptor
+
+You will need to add another column called `contamination` to the samplesheet for tumor-only or somatic variant calling. There you should add the fraction of contamination the tumor sample. This is `1 - purity` or `1- tumor_cell_content`. If you do not have access to that information for your samples put in a reasonable approximation by literature search for the tumor type you are working with.
 
 Varlociraptor allows the usage of different scenario files, a few examples can be found in the [scenario catalog](https://varlociraptor.github.io/varlociraptor-scenarios/landing/). Currently only scenarios that have information on "normal" (germline case), "normal" and "tumor" (somatic and tumor-only case) are supported. You can use your own scenario file by adding it to the run command with `--varlociraptor_scenario_germline <path/to/germline/scenario/file>`, `--varlociraptor_scenario_somatic <path/to/somatic/scenario/file>` or `--varlociraptor_scenario_tumor_only <path/to/tumor_only/scenario/file>`.
 
