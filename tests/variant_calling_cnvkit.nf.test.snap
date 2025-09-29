@@ -26,7 +26,7 @@
                     "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -216,7 +216,6 @@
                 "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multi_intervals.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
                 "reference.cnn:md5,891454915f82d0eeda0be13d71e0d5d7",
-                "test.paired_end.recalibrated.sorted-scatter.png:md5,2a82254094015efde86e78f38c6487f0",
                 "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.paired_end.recalibrated.sorted.bintest.cns:md5,8d0301673b584a6a8d88bdaad87ba09d",
                 "test.paired_end.recalibrated.sorted.call.cns:md5,9254686f5d1a2718cc2a20f28d0ef3d7",
@@ -227,7 +226,6 @@
                 "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,4153756b30abc934f10717c023bd262f",
                 "cnvkit.reference.antitarget-tmp.bed:md5,3d4d20f9f23b39970865d29ef239d20b",
                 "cnvkit.reference.target-tmp.bed:md5,657b25dbda8516624efa8cb2cf3716ca",
-                "sample2-scatter.png:md5,779dee84907d67970982d46e8ed00242",
                 "sample2.antitargetcoverage.cnn:md5,067115082c4af4b64d58c0dc3a3642e4",
                 "sample2.bintest.cns:md5,7a66b5f63acb05e6dfb0784c215851ec",
                 "sample2.call.cns:md5,f7caeca04aba28b125ce26b511f42afb",
@@ -241,7 +239,6 @@
                 "reference.cnn:md5,e0aefc1c8a40e6919dc9cfb686e51f7c",
                 "sample3.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "sample3.targetcoverage.cnn:md5,826087b08d380135a271e2774c94084c",
-                "sample4-scatter.png:md5,f6bb1f87dd0f30479a0b88a7cd3aa904",
                 "sample4.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "sample4.bintest.cns:md5,b5ccf48e99562082026e94f8d8aa1133",
                 "sample4.call.cns:md5,8202ec610e834c58bb7199761fccd9e5",
@@ -297,7 +294,7 @@
                     "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -408,7 +405,6 @@
                 "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multi_intervals.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
                 "reference.cnn:md5,891454915f82d0eeda0be13d71e0d5d7",
-                "test.paired_end.recalibrated.sorted-scatter.png:md5,2a82254094015efde86e78f38c6487f0",
                 "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.paired_end.recalibrated.sorted.bintest.cns:md5,8d0301673b584a6a8d88bdaad87ba09d",
                 "test.paired_end.recalibrated.sorted.call.cns:md5,9254686f5d1a2718cc2a20f28d0ef3d7",
@@ -459,7 +455,7 @@
                     "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -603,7 +599,6 @@
                 "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multi_intervals.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
                 "reference.cnn:md5,891454915f82d0eeda0be13d71e0d5d7",
-                "test.paired_end.recalibrated.sorted-scatter.png:md5,2a82254094015efde86e78f38c6487f0",
                 "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.paired_end.recalibrated.sorted.bintest.cns:md5,8d0301673b584a6a8d88bdaad87ba09d",
                 "test.paired_end.recalibrated.sorted.call.cns:md5,9254686f5d1a2718cc2a20f28d0ef3d7",
@@ -617,7 +612,6 @@
                 "reference.cnn:md5,e0aefc1c8a40e6919dc9cfb686e51f7c",
                 "sample3.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "sample3.targetcoverage.cnn:md5,826087b08d380135a271e2774c94084c",
-                "sample4-scatter.png:md5,f6bb1f87dd0f30479a0b88a7cd3aa904",
                 "sample4.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "sample4.bintest.cns:md5,b5ccf48e99562082026e94f8d8aa1133",
                 "sample4.call.cns:md5,8202ec610e834c58bb7199761fccd9e5",
@@ -669,7 +663,7 @@
                     "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -778,7 +772,6 @@
                 "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
                 "cnvkit.reference.antitarget-tmp.bed:md5,3d4d20f9f23b39970865d29ef239d20b",
                 "cnvkit.reference.target-tmp.bed:md5,657b25dbda8516624efa8cb2cf3716ca",
-                "sample2-scatter.png:md5,779dee84907d67970982d46e8ed00242",
                 "sample2.antitargetcoverage.cnn:md5,067115082c4af4b64d58c0dc3a3642e4",
                 "sample2.bintest.cns:md5,7a66b5f63acb05e6dfb0784c215851ec",
                 "sample2.call.cns:md5,f7caeca04aba28b125ce26b511f42afb",
@@ -1076,7 +1069,6 @@
                 "genome.bed:md5,9c6cc178da8c2c27364be9f25c9df96d",
                 "genome.target.bed:md5,d6bb0e93de375af227a800a032f08f03",
                 "reference.cnn:md5,3fa091a8b523751440fcd28dbf8a07ad",
-                "test.paired_end.recalibrated.sorted-scatter.png:md5,366fa8776337f7b1ec8dc7273d2a8069",
                 "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.paired_end.recalibrated.sorted.bintest.cns:md5,0eee70a9c66e9fe98deb5ca66b7bced5",
                 "test.paired_end.recalibrated.sorted.call.cns:md5,2613ce28533ce6b6a81a9225cc3ad498",
@@ -1091,7 +1083,6 @@
                 "reference.cnn:md5,8c53491ff76a2a06b7a977714db862bb",
                 "sample3.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "sample3.targetcoverage.cnn:md5,0067cc3a0e479b23ab3bf056cead31b4",
-                "sample4-scatter.png:md5,a816b67e6b001682c97840d16fcc37fe",
                 "sample4.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "sample4.bintest.cns:md5,b6701cceb525c3087f4dad432d20100c",
                 "sample4.call.cns:md5,2e0cc8813e274b25175b4346f4698fbb",

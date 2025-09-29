@@ -7,7 +7,7 @@
                     "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
@@ -163,14 +163,17 @@
             "No BAM files",
             "No CRAM files",
             [
-                "sample2.lofreq.vcf.gz:md5,2ce064ca2c41aa28eea9fab83228f10d"
+                [
+                    "sample2.lofreq.vcf.gz",
+                    "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=69, phased=true, phasedAutodetect=true]"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-11T13:10:10.40760193"
+        "timestamp": "2025-09-29T15:12:32.128575976"
     },
     "-profile test --tools lofreq --no_intervals tumoronly": {
         "content": [
@@ -327,13 +330,16 @@
             "No BAM files",
             "No CRAM files",
             [
-                "sample2.lofreq.vcf.gz:md5,a8dd79484623135b4d0cf8e346965c6e"
+                [
+                    "sample2.lofreq.vcf.gz",
+                    "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=70, phased=true, phasedAutodetect=true]"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-11T13:11:39.061018435"
+        "timestamp": "2025-09-29T15:13:38.653593143"
     }
 }

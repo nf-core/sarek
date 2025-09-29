@@ -21,7 +21,9 @@ nextflow_pipeline {
                 wes: true,
                 genome: null,
                 igenomes_ignore: true
-            ]
+            ],
+            // Instable MD5SUM between conda and docker/singularity
+            no_vcf_md5sum: true,
         ],
         [
             name: "-profile test --tools lofreq --no_intervals tumoronly",
@@ -36,7 +38,9 @@ nextflow_pipeline {
                 genome: null,
                 igenomes_ignore: true,
                 no_intervals: true
-            ]
+            ],
+            // Instable MD5SUM between conda and docker/singularity
+            no_vcf_md5sum: true,
         ]
     ]
 

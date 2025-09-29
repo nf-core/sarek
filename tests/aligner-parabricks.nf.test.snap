@@ -7,7 +7,7 @@
                     "bwa": "0.7.18-r1243-dirty"
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -19,7 +19,7 @@
                     "mosdepth": "0.3.10"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "pbrun": "4.4.0-1"
+                    "pbrun": "4.5.1-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
@@ -212,7 +212,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-30T16:45:16.934496981"
+        "timestamp": "2025-09-18T16:34:19.841021716"
     },
     "-profile test --aligner parabricks --tools mutect2 --wes --input fastq_pair.csv": {
         "content": [
@@ -228,7 +228,7 @@
                     "gatk4": "4.6.1.0"
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -255,7 +255,7 @@
                     "gatk4": "4.6.1.0"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "pbrun": "4.4.0-1"
+                    "pbrun": "4.5.1-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
@@ -513,6 +513,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-31T11:28:17.863776153"
+        "timestamp": "2025-09-18T16:36:16.566283117"
     }
 }

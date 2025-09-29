@@ -4,7 +4,7 @@
             59,
             {
                 "ADD_INFO_TO_VCF": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "BCFTOOLS_SORT": {
                     "bcftools": 1.21
@@ -16,7 +16,7 @@
                     "gatk4": "4.5.0.0"
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FILTERVARIANTTRANCHES": {
                     "gatk4": "4.6.1.0"

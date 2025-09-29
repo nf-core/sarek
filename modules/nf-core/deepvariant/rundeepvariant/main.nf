@@ -6,7 +6,7 @@ process DEEPVARIANT_RUNDEEPVARIANT {
     // https://github.com/bioconda/bioconda-recipes/pull/45214#issuecomment-1890937836
     // BUG https://github.com/nf-core/modules/issues/1754
     // BUG https://github.com/bioconda/bioconda-recipes/issues/30310
-    container "docker.io/google/deepvariant:1.8.0"
+    container "docker.io/google/deepvariant:1.9.0"
 
     input:
     tuple val(meta), path(input), path(index), path(intervals)
@@ -16,11 +16,11 @@ process DEEPVARIANT_RUNDEEPVARIANT {
     tuple val(meta5), path(par_bed)
 
     output:
-    tuple val(meta), path("${prefix}.vcf.gz")      , emit: vcf
-    tuple val(meta), path("${prefix}.vcf.gz.tbi")  , emit: vcf_tbi
-    tuple val(meta), path("${prefix}.g.vcf.gz")    , emit: gvcf
-    tuple val(meta), path("${prefix}.g.vcf.gz.tbi"), emit: gvcf_tbi
-    path "versions.yml"                            , emit: versions
+    tuple val(meta), path("${prefix}.vcf.gz")             , emit: vcf
+    tuple val(meta), path("${prefix}.vcf.gz.{tbi,csi}")   , emit: vcf_index
+    tuple val(meta), path("${prefix}.g.vcf.gz")           , emit: gvcf
+    tuple val(meta), path("${prefix}.g.vcf.gz.{tbi,csi}") , emit: gvcf_index
+    path "versions.yml"                                   , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
