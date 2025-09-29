@@ -1,0 +1,236 @@
+nextflow_workflow {
+
+    name "Test Subworkflow PREPARE_GENOME - BBSplit functionality"
+    script "../main.nf"
+    workflow "PREPARE_GENOME"
+    config "./nextflow.config"
+
+    tag "subworkflows"
+    tag "subworkflows_local"
+    tag "prepare_genome"
+    tag "bbsplit"
+
+    test("BBSplit - build index from fasta list") {
+
+        when {
+            params {
+                dict = params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.dict'
+                fasta_fai  = params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai'
+            }
+            workflow {
+                """
+                input[0]  = null                                                                                                                                       // ascat_alleles
+                input[1]  = null                                                                                                                                       // ascat_loci
+                input[2]  = null                                                                                                                                       // ascat_loci_gc
+                input[3]  = null                                                                                                                                       // ascat_loci_rt
+                input[4]  = Channel.empty()                                                                                                                            // bcftools_annotations
+                input[5]  = null                                                                                                                                       // chr_dir
+                input[6]  = Channel.empty()                                                                                                                            // dbsnp
+                input[7]  = Channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
+                input[8]  = Channel.empty()                                                                                                                            // germline_resource
+                input[9]  = Channel.empty()                                                                                                                            // known_indels
+                input[10] = Channel.empty()                                                                                                                            // known_snps
+                input[11] = null                                                                                                                                       // msisensor2_models
+                input[12] = null                                                                                                                                       // msisensor2_scan
+                input[13] = null                                                                                                                                       // msisensorpro_scan
+                input[14] = Channel.empty()                                                                                                                            // pon
+                input[15] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
+                input[16] = "${projectDir}/tests/csv/bbsplit_fasta_list.csv"                                                                                           // bbsplit_fasta_list
+                input[17] = null                                                                                                                                       // bbsplit_index
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.bbsplit_index,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("Don't run BBSplit - tools without bbsplit") {
+
+        when {
+            params {
+                dict = params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.dict'
+                fasta_fai = params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai'
+            }
+
+            workflow {
+                """
+                input[0]  = null                                                                                                                                       // ascat_alleles
+                input[1]  = null                                                                                                                                       // ascat_loci
+                input[2]  = null                                                                                                                                       // ascat_loci_gc
+                input[3]  = null                                                                                                                                       // ascat_loci_rt
+                input[4]  = Channel.empty()                                                                                                                            // bcftools_annotations
+                input[5]  = null                                                                                                                                       // chr_dir
+                input[6]  = Channel.empty()                                                                                                                            // dbsnp
+                input[7]  = Channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
+                input[8]  = Channel.empty()                                                                                                                            // germline_resource
+                input[9]  = Channel.empty()                                                                                                                            // known_indels
+                input[10] = Channel.empty()                                                                                                                            // known_snps
+                input[11] = null                                                                                                                                       // msisensor2_models
+                input[12] = null                                                                                                                                       // msisensor2_scan
+                input[13] = null                                                                                                                                       // msisensorpro_scan
+                input[14] = Channel.empty()                                                                                                                            // pon
+                input[15] = "no_tools"                                                                                                                                 // tools - bbsplit not enabled
+                input[16] = null                                                                                                                                       // bbsplit_fasta_list
+                input[17] = null                                                                                                                                       // bbsplit_index
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.bbsplit_index.size() == 0 }  // Should be empty when skipped
+            )
+        }
+    }
+
+    test("BBSplit - use provided directory index") {
+
+        when {
+            params {
+                dict = params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.dict'
+                fasta_fai = params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai'
+            }
+
+            workflow {
+                """
+                // Create a mock directory for testing
+                def mock_index_dir = file("${workDir}/mock_bbsplit_index")
+                mock_index_dir.mkdirs()
+
+                input[0]  = null                                                                                                                                       // ascat_alleles
+                input[1]  = null                                                                                                                                       // ascat_loci
+                input[2]  = null                                                                                                                                       // ascat_loci_gc
+                input[3]  = null                                                                                                                                       // ascat_loci_rt
+                input[4]  = Channel.empty()                                                                                                                            // bcftools_annotations
+                input[5]  = null                                                                                                                                       // chr_dir
+                input[6]  = Channel.empty()                                                                                                                            // dbsnp
+                input[7]  = Channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
+                input[8]  = Channel.empty()                                                                                                                            // germline_resource
+                input[9]  = Channel.empty()                                                                                                                            // known_indels
+                input[10] = Channel.empty()                                                                                                                            // known_snps
+                input[11] = null                                                                                                                                       // msisensor2_models
+                input[12] = null                                                                                                                                       // msisensor2_scan
+                input[13] = null                                                                                                                                       // msisensorpro_scan
+                input[14] = Channel.empty()                                                                                                                            // pon
+                input[15] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
+                input[16] = null                                                                                                                                       // bbsplit_fasta_list
+                input[17] = mock_index_dir.toString()                                                                                                                  // bbsplit_index (directory)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.bbsplit_index,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+
+    test("BBSplit - build index - stub") {
+
+        options "-stub"
+
+        when {
+            params {
+                dict = params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.dict'
+                fasta_fai = params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai'
+            }
+
+            workflow {
+                """
+                input[0]  = null                                                                                                                                       // ascat_alleles
+                input[1]  = null                                                                                                                                       // ascat_loci
+                input[2]  = null                                                                                                                                       // ascat_loci_gc
+                input[3]  = null                                                                                                                                       // ascat_loci_rt
+                input[4]  = Channel.empty()                                                                                                                            // bcftools_annotations
+                input[5]  = null                                                                                                                                       // chr_dir
+                input[6]  = Channel.empty()                                                                                                                            // dbsnp
+                input[7]  = Channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
+                input[8]  = Channel.empty()                                                                                                                            // germline_resource
+                input[9]  = Channel.empty()                                                                                                                            // known_indels
+                input[10] = Channel.empty()                                                                                                                            // known_snps
+                input[11] = null                                                                                                                                       // msisensor2_models
+                input[12] = null                                                                                                                                       // msisensor2_scan
+                input[13] = null                                                                                                                                       // msisensorpro_scan
+                input[14] = Channel.empty()                                                                                                                            // pon
+                input[15] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
+                input[16] = "${projectDir}/tests/csv/bbsplit_fasta_list.csv"                                                                                           // bbsplit_fasta_list
+                input[17] = null                                                                                                                                       // bbsplit_index
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.bbsplit_index,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("BBSplit - use provided tar.gz index - stub") {
+        // Using stub tests because we don't have a good tar archive right now
+        options "-stub"
+
+        when {
+            params {
+                dict = params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.dict'
+                fasta_fai = params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai'
+            }
+
+            workflow {
+                """
+                // Create a dummy tar.gz file just for checkIfExists validation in stub mode
+                def dummy_tar = file("${workDir}/bbsplit_index.tar.gz")
+                dummy_tar.text = "dummy file for stub test"
+
+                input[0]  = null                                                                                                                                       // ascat_alleles
+                input[1]  = null                                                                                                                                       // ascat_loci
+                input[2]  = null                                                                                                                                       // ascat_loci_gc
+                input[3]  = null                                                                                                                                       // ascat_loci_rt
+                input[4]  = Channel.empty()                                                                                                                            // bcftools_annotations
+                input[5]  = null                                                                                                                                       // chr_dir
+                input[6]  = Channel.empty()                                                                                                                            // dbsnp
+                input[7]  = Channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
+                input[8]  = Channel.empty()                                                                                                                            // germline_resource
+                input[9]  = Channel.empty()                                                                                                                            // known_indels
+                input[10] = Channel.empty()                                                                                                                            // known_snps
+                input[11] = null                                                                                                                                       // msisensor2_models
+                input[12] = null                                                                                                                                       // msisensor2_scan
+                input[13] = null                                                                                                                                       // msisensorpro_scan
+                input[14] = Channel.empty()                                                                                                                            // pon
+                input[15] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
+                input[16] = null                                                                                                                                       // bbsplit_fasta_list
+                input[17] = dummy_tar.toString()                                                                                                                       // bbsplit_index (tar.gz file)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.bbsplit_index,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+}

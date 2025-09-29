@@ -1,0 +1,43 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline - BBSplit contamination removal"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    tag "bbsplit"
+
+    def test_scenario = [
+        [
+            name: "-profile test --tools bbsplit,strelka --bbsplit_fasta_list",
+            params: [
+                tools: 'bbsplit,strelka',
+                bbsplit_fasta_list: "${projectDir}/tests/csv/bbsplit_fasta_list.csv",
+                save_bbsplit_reads: true,
+                input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
+                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
+                igenomes_base: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
+                genome: 'testdata.nf-core.sarek'
+            ]
+        ],
+        [
+            name: "-profile test --tools bbsplit,strelka --bbsplit_fasta_list -stub",
+            params: [
+                tools: 'bbsplit,strelka',
+                bbsplit_fasta_list: "${projectDir}/tests/csv/bbsplit_fasta_list.csv",
+                save_bbsplit_reads: true,
+                input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
+                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
+                igenomes_base: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
+                genome: 'testdata.nf-core.sarek'
+            ],
+            stub: true
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}

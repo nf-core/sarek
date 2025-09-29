@@ -1,0 +1,91 @@
+{
+    "BBSplit - build index from fasta list": {
+        "content": [
+            [
+                [
+                    [
+                        [
+                            [
+                                "chr1.chrom.gz:md5,8fec4c63ec642613ad10adf4cc2e6ade",
+                                "info.txt:md5,1ae2e720b78ab5ea4408205ffa5eafa0",
+                                "merged_ref_9222711925177839698.fa.gz:md5,a87e375668975e41efe20d96f2d9df47",
+                                "namelist.txt:md5,c26fae3e77a7b86aded8dbb20e387f38",
+                                "reflist.txt:md5,88c753e7ca80d2ecd7cfdbeca012df87",
+                                "scaffolds.txt.gz:md5,453f57e696ee55b27c78a35ce6e62a41",
+                                "summary.txt:md5,36d8a46bdc3c170c607b78d4257c0d15"
+                            ]
+                        ],
+                        [
+                            [
+                                "chr1_index_k13_c13_b1.block:md5,385913c1e84b77dc7bf36288ee1c8706",
+                                "chr1_index_k13_c13_b1.block2.gz:md5,2556b45206835a0ff7078d683b5fd6e2"
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
+                "versions.yml:md5,de3dcee7a7d0e6a6913520a1c6e37372"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-09-17T16:07:43.063105"
+    },
+    "BBSplit - use provided directory index": {
+        "content": [
+            [
+                [
+                    
+                ]
+            ],
+            [
+                "versions.yml:md5,de3dcee7a7d0e6a6913520a1c6e37372"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-09-17T16:09:18.854073"
+    },
+    "BBSplit - use provided tar.gz index - stub": {
+        "content": [
+            [
+                [
+                    
+                ]
+            ],
+            [
+                "versions.yml:md5,1f674a661ce65c9163f467cc49a064c1",
+                "versions.yml:md5,de3dcee7a7d0e6a6913520a1c6e37372"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-09-17T16:12:52.6461"
+    },
+    "BBSplit - build index - stub": {
+        "content": [
+            [
+                [
+                    
+                ]
+            ],
+            [
+                "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
+                "versions.yml:md5,de3dcee7a7d0e6a6913520a1c6e37372"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-09-17T16:10:43.234163"
+    }
+}
