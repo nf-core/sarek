@@ -30,10 +30,10 @@ pipeline_info/*.{html,json,txt,yml}
 preprocessing/**/*.{bam,bam.bai,cram,cram.crai,fastq.gz,table}
 reference/dragmap/hash_table.{cfg,cfg.bin}
 reference/dragmap/hash_table_stats.txt
+reports/**/*.cram.metrics{,.multiqc.tsv}
 reports/EnsemblVEP/*/*.ann.summary.html
 reports/fastp/**/*.fastp.{log,html}
 reports/fastqc/**/*_fastqc.{html,zip}
-reports/markduplicates/**/*.md.cram.metrics
 reports/mosdepth/**/*.{stats.txt,id.txt,perchrom.txt,dist.txt,summary.txt,bed.gz,bed.gz.csi}
 reports/ngscheckmate/ngscheckmate.pdf
 reports/ngscheckmate/vcfs/*.ngscheckmate.vcf.gz

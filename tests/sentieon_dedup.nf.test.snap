@@ -324,9 +324,7 @@
                 "multiqc_dedup_metrics.txt:md5,39184426a647ce0e9a1c93082800baf8",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "test.consensus.cram.metrics:md5,8ead3cad17069aab420ff49fb607da91",
-                "test.consensus.cram.metrics.multiqc.tsv:md5,f929da7813cf663821f56cd51658b7b1"
+                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             "No BAM files",
             [
@@ -495,9 +493,7 @@
                 "multiqc_dedup_metrics.txt:md5,4756b5e5f80faca763179470951ef0f3",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "test.dedup.cram.metrics:md5,cc12c100888477d2e14f96e80b184545",
-                "test.dedup.cram.metrics.multiqc.tsv:md5,2f8bdffa8b1e68e594815d829f4b24d4"
+                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             "No BAM files",
             [
@@ -669,9 +665,7 @@
                 "multiqc_dedup_metrics.txt:md5,b2aea3c46773a3422dcf98ab6a8a31a1",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "test-1.consensus.cram.metrics:md5,1f83b87e7a0c32382fdc9c388c37194b",
-                "test-1.consensus.cram.metrics.multiqc.tsv:md5,7960f333d46ab62a71155a8f31b85103"
+                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             "No BAM files",
             [
@@ -843,9 +837,7 @@
                 "multiqc_dedup_metrics.txt:md5,b2aea3c46773a3422dcf98ab6a8a31a1",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "test-1.dedup.cram.metrics:md5,0ad4400263793b9c5a2d92ff13b659d2",
-                "test-1.dedup.cram.metrics.multiqc.tsv:md5,eb9e7ae7386e2285dfcfdd809688e0f9"
+                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             "No BAM files",
             [
