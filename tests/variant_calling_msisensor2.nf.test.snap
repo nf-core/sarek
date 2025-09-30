@@ -219,10 +219,6 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,cb7468f51b8be1230fb3ac5b130be31f",
                 "mosdepth_perchrom.txt:md5,4ee05f71086179b42a01cd2fb450346f",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
-                "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
-                "sample3.recal.per-base.bed.gz.csi:md5,c67dcd711b096eb42f43784d5eadbc0d",
-                "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample4.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
                 "sample4_vs_sample3:md5,f4593b018c562728d12b856341602368",
                 "sample4_vs_sample3_dis:md5,03e93efc2099d220e022a4c4d397266d",
                 "sample4_vs_sample3_germline:md5,0070f2373526057e02e65bbed851b572"
@@ -402,8 +398,6 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,412342be69a71d2b0f26a50843602fa4",
                 "mosdepth_perchrom.txt:md5,412342be69a71d2b0f26a50843602fa4",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
-                "test-1.recal.per-base.bed.gz:md5,bafb7489cc40a55cfe85f99ea6d36cc7",
-                "test-1.recal.per-base.bed.gz.csi:md5,e72e7c7886d42728d785bb97dffd2a07",
                 "test-1:md5,a3290f7539dbbf83777e8590156c0e28",
                 "test-1_dis:md5,85205504ea8652ebdee46ac07ee1a8f6"
             ],

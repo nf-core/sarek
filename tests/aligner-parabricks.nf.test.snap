@@ -465,8 +465,6 @@
                 "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
                 "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
                 "test2_vs_test.mutect2.filtered.bcftools_stats.txt:md5,46384bbd90894ff023684d88df891fd6",
-                "test2.recal.per-base.bed.gz:md5,43c9591759011ecd0d6bddba7ebbf888",
-                "test2.recal.per-base.bed.gz.csi:md5,fee1776dc4b39f62fe81aed02606c636",
                 "test2_vs_test.mutect2.filtered.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test2_vs_test.mutect2.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test.mutect2.pileups.table:md5,ad58c5068cd87aa2ba417cd4fa08df87",
