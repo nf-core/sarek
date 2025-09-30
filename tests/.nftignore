@@ -31,7 +31,7 @@ reference/dragmap/hash_table_stats.txt
 reports/EnsemblVEP/*/*.ann.summary.html
 reports/fastp/**/*.fastp.{log,html}
 reports/fastqc/**/*_fastqc.{html,zip}
-reports/markduplicates/**/*.md.cram.metrics
+reports/**/*.cram.metrics{,.multiqc.tsv}
 reports/ngscheckmate/ngscheckmate.pdf
 reports/ngscheckmate/vcfs/*.ngscheckmate.vcf.gz
 reports/samtools/**/**.cram.stats

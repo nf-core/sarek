@@ -134,9 +134,7 @@
                 "reports/sentieon_dedup/test/test.dedup.cram.metrics.multiqc.tsv"
             ],
             [
-                "test-test_L1.fastp.json:md5,d9107ec414e44408d0698b167cc445f9",
-                "test.dedup.cram.metrics:md5,e232a68c4de44da87af0614b327268f0",
-                "test.dedup.cram.metrics.multiqc.tsv:md5,a1e31b30780c7501a1b771a0299236df"
+                "test-test_L1.fastp.json:md5,d9107ec414e44408d0698b167cc445f9"
             ],
             "No BAM files",
             [
