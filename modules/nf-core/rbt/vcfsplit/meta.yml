@@ -1,0 +1,60 @@
+name: "rbt_vcfsplit"
+description: A tool for splitting VCF/BCF files into N equal chunks, including BND support
+keywords:
+  - genomics
+  - splitting
+  - VCF
+  - BCF
+  - variants
+tools:
+  - rust-bio-tools:
+      description: "A growing collection of fast and secure command line utilities for dealing with NGS data implemented on top of Rust-Bio."
+      homepage: "https://github.com/rust-bio/rust-bio-tools"
+      documentation: "https://github.com/rust-bio/rust-bio-tools"
+      tool_dev_url: "https://github.com/rust-bio/rust-bio-tools"
+      doi: "no DOI available"
+      licence: ["MIT"]
+      identifier: ""
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+    - vcf:
+        type: file
+        description: VCF file with variants to be split
+        pattern: "*.{vcf,bcf,vcf.gz}"
+        ontologies:
+          - edam: "http://edamontology.org/format_3016" # VCF
+          - edam: http://edamontology.org/format_3020 # BCF
+  - numchunks:
+      type: integer
+      description: Number of chunks to split the VCF file into. The default is 15.
+
+output:
+  bcfchunks:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "*.bcf":
+          type: file
+          description: Chunks of the input VCF file, split into `numchunks` equal parts.
+          pattern: "*.bcf"
+          ontologies:
+            - edam: http://edamontology.org/format_3020 # BCF
+  versions:
+    - "versions.yml":
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: "http://edamontology.org/format_3750" # YAML
+
+authors:
+  - "@famosab"
+maintainers:
+  - "@famosab"

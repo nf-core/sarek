@@ -2,17 +2,26 @@
 // POST VARIANT CALLING: processes run on variantcalled but not annotated VCFs
 //
 
-include { CONCATENATE_GERMLINE_VCFS } from '../vcf_concatenate_germline'
-include { NORMALIZE_VCFS            } from '../vcf_normalization'
+include { CONCATENATE_GERMLINE_VCFS                                } from '../vcf_concatenate_germline'
+include { NORMALIZE_VCFS                                           } from '../vcf_normalization'
+include { VCF_VARLOCIRAPTOR_SINGLE as VCF_VARLOCIRAPTOR_GERMLINE   } from '../vcf_varlociraptor_single'
+include { VCF_VARLOCIRAPTOR_SOMATIC                                } from '../vcf_varlociraptor_somatic'
+include { VCF_VARLOCIRAPTOR_SINGLE as VCF_VARLOCIRAPTOR_TUMOR_ONLY } from '../vcf_varlociraptor_single'
 
 workflow POST_VARIANTCALLING {
     take:
+    tools
+    cram_germline
     germline_vcfs
+    cram_tumor_only
     tumor_only_vcfs
+    cram_somatic
     somatic_vcfs
     fasta
+    fai
     concatenate_vcfs
     normalize_vcfs
+    varlociraptor_chunk_size // integer: [mandatory] [default: 15] number of chunks to split BCF files when preprocessing and calling variants
 
     main:
     versions = Channel.empty()
@@ -31,6 +40,36 @@ workflow POST_VARIANTCALLING {
         vcfs = vcfs.mix(NORMALIZE_VCFS.out.vcfs)
 
         versions = versions.mix(NORMALIZE_VCFS.out.versions)
+    }
+
+    //
+    // VARLOCIRAPTOR
+    //
+    if (tools.split(',').contains('varlociraptor')) {
+        // GERMLINE
+        varlociraptor_scenario_germline = params.varlociraptor_scenario_germline
+            ? Channel.fromPath(params.varlociraptor_scenario_germline).map { it -> [[id: it.baseName - '.yte'], it] }.collect()
+            : Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
+        VCF_VARLOCIRAPTOR_GERMLINE(cram_germline, fasta, fai, varlociraptor_scenario_germline, germline_vcfs, varlociraptor_chunk_size, 'normal')
+        vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.vcf)
+        versions = versions.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.versions)
+
+        // SOMATIC
+        varlociraptor_scenario_somatic = params.varlociraptor_scenario_somatic
+            ? Channel.fromPath(params.varlociraptor_scenario_somatic).map { it -> [[id: it.baseName - '.yte'], it] }.collect()
+            : Channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect()
+
+        VCF_VARLOCIRAPTOR_SOMATIC(cram_somatic, fasta, fai, varlociraptor_scenario_somatic, somatic_vcfs, germline_vcfs, varlociraptor_chunk_size)
+        vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.vcf)
+        versions = versions.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.versions)
+
+        // TUMOR ONLY
+        varlociraptor_scenario_tumor_only = params.varlociraptor_scenario_tumor_only
+            ? Channel.fromPath(params.varlociraptor_scenario_tumor_only).map { it -> [[id: it.baseName - '.yte'], it] }.collect()
+            : Channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect()
+        VCF_VARLOCIRAPTOR_TUMOR_ONLY(cram_tumor_only, fasta, fai, varlociraptor_scenario_tumor_only, tumor_only_vcfs, varlociraptor_chunk_size, 'tumor')
+        vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.vcf)
+        versions = versions.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.versions)
     }
 
     emit:

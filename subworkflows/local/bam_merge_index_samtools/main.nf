@@ -15,11 +15,11 @@ workflow BAM_MERGE_INDEX_SAMTOOLS {
     versions = Channel.empty()
 
     // Figuring out if there is one or more bam(s) from the same sample
-    bam_to_merge = bam.branch{ meta, bam ->
+    bam_to_merge = bam.branch{ meta, bam_ ->
         // bam is a list, so use bam.size() to asses number of intervals
-        single:   bam.size() <= 1
-            return [ meta, bam[0] ]
-        multiple: bam.size() > 1
+        single:   bam_.size() <= 1
+            return [ meta, bam_[0] ]
+        multiple: bam_.size() > 1
     }
 
     // Only when using intervals

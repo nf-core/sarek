@@ -11,5 +11,3 @@ testing*
 *.pyc
 bin/
 ro-crate-metadata.json
-modules/nf-core/
-subworkflows/nf-core/

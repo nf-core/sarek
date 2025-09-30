@@ -4,4 +4,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::ensembl-vep=113.4
+  # renovate: datasource=conda depName=bioconda/ensembl-vep
+  - bioconda::ensembl-vep=115.2=pl5321h2a3209d_1

@@ -1,118 +1,48 @@
+def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
 nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    tag "cpu"
 
-    test("-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 20") {
+    def test_scenario = [
+        [
+            name: "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 20",
+            params: [
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
+                step: "variant_calling",
+                tools: 'haplotypecaller',
+                joint_germline: true,
+                dbsnp_vqsr: false,
+                known_snps_vqsr: false,
+                known_indels_vqsr: false,
+                wes: true,
+                nucleotides_per_second: 20
+            ]
+        ],
+        [
+            name: "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 100",
+            params: [
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
+                step: "variant_calling",
+                tools: 'haplotypecaller',
+                joint_germline: true,
+                dbsnp_vqsr: false,
+                known_snps_vqsr: false,
+                known_indels_vqsr: false,
+                wes: true,
+                nucleotides_per_second: 100
+            ]
+        ]
+    ]
 
-        when {
-            params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-                intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed'
-                input = "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv"
-                outdir = "$outputDir"
-                step = "variant_calling"
-                tools = 'haplotypecaller'
-                joint_germline = true
-                dbsnp_vqsr = false
-                known_snps_vqsr = false
-                known_indels_vqsr = false
-                wes = true
-                nucleotides_per_second = 20
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable content' : stable_path,
-                    // All cram files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
-                    // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
-                ).match() }
-            )
-        }
-    }
-
-    test("-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 100") {
-
-        when {
-            params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-                intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed'
-                input = "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv"
-                outdir = "$outputDir"
-                step = "variant_calling"
-                tools = 'haplotypecaller'
-                joint_germline = true
-                dbsnp_vqsr = false
-                known_snps_vqsr = false
-                known_indels_vqsr = false
-                wes = true
-                nucleotides_per_second = 100
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable content' : stable_path,
-                    // All cram files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
-                    // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
-                ).match() }
-            )
-        }
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
     }
 }

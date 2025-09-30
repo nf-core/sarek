@@ -1,331 +1,90 @@
+def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
 nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    tag "cpu"
 
-    test("-profile test --tools freebayes --wes --nucleotides_per_second 20") {
+    def test_scenario = [
+        [
+            name: "-profile test --tools freebayes --wes --nucleotides_per_second 20",
+            params: [
+                intervals : modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                tools : 'freebayes',
+                wes : true,
+                nucleotides_per_second : 20
+            ],
+            include_freebayes_unfiltered: true,
+        ],
+        [
+            name: "-profile test --tools freebayes --no_intervals",
+            params: [
+                tools : 'freebayes',
+                no_intervals : true
+            ],
+            include_freebayes_unfiltered: true,
+        ],
+        [
+            name: "-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv",
+            params: [
+                input : "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                intervals : modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                tools : 'freebayes',
+                wes : true,
+                nucleotides_per_second : 20
+            ],
+            include_freebayes_unfiltered: true,
+        ],
+        [
+            name: "-profile test --tools freebayes --no_intervals --wes --input fastq_pair.csv",
+            params: [
+                input : "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                tools : 'freebayes',
+                no_intervals : true,
+                wes : true
+            ],
+            include_freebayes_unfiltered: true,
+            // instability in QUAL and genotype scores
+            no_vcf_md5sum: true,
+        ],
+        [
+            name: "-profile test,tools_tumoronly --tools freebayes --input recalibrated_tumoronly.csv",
+            params: [
+                fasta : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                intervals : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                input : "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
+                step : "variant_calling",
+                tools : 'freebayes',
+                wes : true,
+                nucleotides_per_second : 20,
+                genome : null,
+                igenomes_ignore : true
+            ],
+            include_freebayes_unfiltered: true,
+        ],
+        [
+            name: "-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv",
+            params: [
+                fasta : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                input : "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
+                step : "variant_calling",
+                tools : 'freebayes',
+                wes : true,
+                nucleotides_per_second : 20,
+                genome : null,
+                igenomes_ignore : true,
+                no_intervals : true
+            ],
+            include_freebayes_unfiltered: true,
+        ]
+    ]
 
-        // -profile test,targeted --tools freebayes
-
-        // targeted is --wes --nucleotides_per_second 20 --intervals 'genomics/homo_sapiens/genome/genome.multi_intervals.bed
-
-        when {
-            params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-                intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed'
-                outdir = "$outputDir"
-                tools = 'freebayes'
-                wes = true
-                nucleotides_per_second = 20
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable content' : stable_path,
-                    // All cram files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
-                    // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
-                ).match() }
-            )
-        }
-    }
-
-    test("-profile test --tools freebayes --no_intervals") {
-
-        // -profile test --tools freebayes --no_intervals
-
-        when {
-            params {
-                outdir = "$outputDir"
-                no_intervals = true
-                tools = 'freebayes'
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable content' : stable_path,
-                    // All cram files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
-                    // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[8..16], path(file.toString()).vcf.summary] }
-                ).match() }
-            )
-        }
-    }
-
-    test("-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv") {
-
-        // -profile test,pair,targeted --tools freebayes
-
-        // targeted is --wes --nucleotides_per_second 20 --intervals 'genomics/homo_sapiens/genome/genome.multi_intervals.bed
-
-        // pair is --input "${projectDir}/tests/csv/3.0/fastq_pair.csv"
-
-        when {
-            params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-                intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed'
-                input = "${projectDir}/tests/csv/3.0/fastq_pair.csv"
-                outdir = "$outputDir"
-                tools = 'freebayes'
-                wes = true
-                nucleotides_per_second = 20
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable content' : stable_path,
-                    // All cram files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
-                    // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
-                ).match() }
-            )
-        }
-    }
-
-    test("-profile test --tools freebayes --no_intervals --wes --input fastq_pair.csv") {
-
-        // -profile test,pair,targeted --tools freebayes --no_intervals
-
-        // pair is --input "${projectDir}/tests/csv/3.0/fastq_pair.csv"
-
-        when {
-            params {
-                input = "${projectDir}/tests/csv/3.0/fastq_pair.csv"
-                outdir = "$outputDir"
-                no_intervals = true
-                tools = 'freebayes'
-                wes = true
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable content' : stable_path,
-                    // All cram files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
-                    // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[8..16], path(file.toString()).vcf.summary] }
-                ).match() }
-            )
-        }
-    }
-
-    test("-profile test,tools_tumoronly --tools freebayes --input recalibrated_tumoronly.csv") {
-
-        // -profile test,tools_tumoronly --tools freebayes
-
-        when {
-            params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-                fasta = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta'
-                fasta_fai = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai'
-                intervals = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed'
-                input = "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv"
-                outdir = "$outputDir"
-                step = "variant_calling"
-                tools = 'freebayes'
-                wes = true
-                nucleotides_per_second = 20
-                genome                 = null
-                igenomes_ignore        = true
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable content' : stable_path,
-                    // All cram files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
-                    // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[2..10], path(file.toString()).vcf.summary] }
-                ).match() }
-            )
-        }
-    }
-
-    test("-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv") {
-
-        // -profile test,tools_tumoronly --tools freebayes --no_intervals
-
-        when {
-            params {
-                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-                fasta = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta'
-                fasta_fai = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai'
-                input = "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv"
-                outdir = "$outputDir"
-                step = "variant_calling"
-                tools = 'freebayes'
-                wes = true
-                nucleotides_per_second = 20
-                genome                 = null
-                igenomes_ignore        = true
-                no_intervals = true
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable content' : stable_path,
-                    // All cram files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
-                    // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [file.getName(), path(file.toString()).linesGzip[8..16], path(file.toString()).vcf.summary] }
-                ).match() }
-            )
-        }
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
     }
 }

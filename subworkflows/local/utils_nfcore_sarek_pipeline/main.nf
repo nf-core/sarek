@@ -143,6 +143,9 @@ workflow PIPELINE_INITIALISATION {
         params.snpeff_db,
         params.step,
         params.tools,
+        params.umi_length,
+        params.umi_location,
+        params.umi_in_read_header,
         params.umi_read_structure,
         params.wes,
     )
@@ -170,7 +173,7 @@ workflow PIPELINE_COMPLETION {
 
     main:
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
-    def multiqc_report_list = multiqc_report.toList()
+    def multiqc_reports = multiqc_report.toList()
 
     // Completion email and summary
     workflow.onComplete {
@@ -182,7 +185,7 @@ workflow PIPELINE_COMPLETION {
                 plaintext_email,
                 outdir,
                 monochrome_logs,
-                multiqc_report_list.getVal(),
+                multiqc_reports.getVal(),
             )
         }
 
@@ -205,6 +208,7 @@ workflow PIPELINE_COMPLETION {
 // Check and validate pipeline parameters
 def validateInputParameters() {
     genomeExistsError()
+    sparkAndBam()
 }
 
 // Exit pipeline if incorrect --genome key provided
@@ -214,6 +218,16 @@ def genomeExistsError() {
         error(error_string)
     }
 }
+
+//  Exit if trying to use "use_gatk_spark", "save_mapped": true and "save_output_as_bam"
+def sparkAndBam() {
+    if (params.use_gatk_spark && params.save_mapped && params.save_output_as_bam) {
+        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  The --use_gatk_spark option is not compatible with --save_mapped and --save_output_as_bam.\n" + "  If you want to save your bam files please swap to the normal gatk implementation.\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        System.err.println(error_string)
+        error(error_string)
+    }
+}
+
 // Generate methods description for MultiQC
 def toolCitationText() {
     // TODO nf-core: Optionally add in-text citation tools to this list.

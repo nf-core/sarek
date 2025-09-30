@@ -1,10 +1,10 @@
 {
     "-profile test --normalize_vcfs --concatenate_vcfs --tools freebayes,haplotypecaller": {
         "content": [
-            93,
+            95,
             {
                 "ADD_INFO_TO_VCF": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "BCFTOOLS_SORT": {
                     "bcftools": 1.21
@@ -15,13 +15,19 @@
                 "CNNSCOREVARIANTS": {
                     "gatk4": "4.5.0.0"
                 },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
                 "FILTERVARIANTTRANCHES": {
                     "gatk4": "4.6.1.0"
                 },
                 "FREEBAYES": {
-                    "freebayes": "1.3.6"
+                    "freebayes": "1.3.10"
                 },
                 "GATK4_HAPLOTYPECALLER": {
+                    "gatk4": "4.6.1.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
                 },
                 "GERMLINE_VCFS_CONCAT": {
@@ -29,6 +35,18 @@
                 },
                 "GERMLINE_VCFS_CONCAT_SORT": {
                     "bcftools": 1.21
+                },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 },
                 "TABIX_EXT_VCF": {
                     "tabix": 1.21
@@ -42,6 +60,9 @@
                 "TABIX_VC_FREEBAYES": {
                     "tabix": 1.21
                 },
+                "VCFLIB_VCFFILTER": {
+                    "vcflib": "1.0.14"
+                },
                 "VCFS_NORM": {
                     "bcftools": 1.21
                 },
@@ -50,9 +71,6 @@
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -60,6 +78,7 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
                 "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
                 "multiqc/multiqc_data/bcftools_stats_variant_depths.txt",
@@ -67,50 +86,77 @@
                 "multiqc/multiqc_data/bcftools_stats_vqc_Count_SNP.txt",
                 "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transitions.txt",
                 "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transversions.txt",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
                 "multiqc/multiqc_data/multiqc_software_versions.txt",
                 "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
                 "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-pct.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
                 "multiqc/multiqc_plots/pdf/bcftools_stats_variant_depths.pdf",
                 "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
                 "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
                 "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
                 "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
-                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
                 "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
                 "multiqc/multiqc_plots/png/bcftools-stats-subtypes-pct.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
                 "multiqc/multiqc_plots/png/bcftools_stats_variant_depths.png",
                 "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
                 "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
                 "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
                 "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
-                "multiqc/multiqc_plots/png/general_stats_table.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
                 "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
                 "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-pct.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
                 "multiqc/multiqc_plots/svg/bcftools_stats_variant_depths.svg",
                 "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
                 "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
                 "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
                 "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
-                "multiqc/multiqc_plots/svg/general_stats_table.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -192,9 +238,11 @@
                 "variant_calling/concat/testT/testT.germline.vcf.gz.tbi",
                 "variant_calling/freebayes",
                 "variant_calling/freebayes/testN",
+                "variant_calling/freebayes/testN/testN.freebayes.filtered.vcf.gz",
                 "variant_calling/freebayes/testN/testN.freebayes.vcf.gz",
                 "variant_calling/freebayes/testN/testN.freebayes.vcf.gz.tbi",
                 "variant_calling/freebayes/testT",
+                "variant_calling/freebayes/testT/testT.freebayes.filtered.vcf.gz",
                 "variant_calling/freebayes/testT/testT.freebayes.vcf.gz",
                 "variant_calling/freebayes/testT/testT.freebayes.vcf.gz.tbi",
                 "variant_calling/haplotypecaller",
@@ -225,11 +273,16 @@
                 "variant_calling/normalized/testT/versions.yml"
             ],
             [
-                "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "testN.freebayes.norm.bcftools_stats.txt:md5,8ee17648261a9f0d2965cad198b315ca",
-                "testN.germline.bcftools_stats.txt:md5,d5b648e305bc08e25b6d1309b74f9ba2",
-                "testT.freebayes.norm.bcftools_stats.txt:md5,86ab34c27ff2a8733e90a03437553edf",
-                "testT.germline.bcftools_stats.txt:md5,e4cf2c468bc50f44d55e8820c6e72a42",
+                "mosdepth-coverage-per-contig-single.txt:md5,9cfd38310d4da59c7242b2a7ae6bd651",
+                "mosdepth-cumcoverage-dist-id.txt:md5,f0177ed551b6ec930854d0d221904ec0",
+                "mosdepth_perchrom.txt:md5,9cfd38310d4da59c7242b2a7ae6bd651",
+                "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
+                "samtools-stats-dp.txt:md5,a0c101497a0566f60b9e8388207944ab",
+                "samtools_alignment_plot.txt:md5,563784066de81f3bc8ccf5fbbe82b3d5",
+                "testN.freebayes.norm.bcftools_stats.txt:md5,7ce748f781d97369c6beb8584d32ec98",
+                "testN.germline.bcftools_stats.txt:md5,65abb7016b17909d04b9153085e43730",
+                "testT.freebayes.norm.bcftools_stats.txt:md5,75e568ea4f7bc6a66da9a201ee9efe72",
+                "testT.germline.bcftools_stats.txt:md5,18e29b35d9feca0b776cbd8080cb7493",
                 "testN.germline.bcftools_stats.txt:md5,26e80f52f0070ada22b4c9333543d2cf",
                 "testN.haplotypecaller.norm.bcftools_stats.txt:md5,9913791329ce2582910657d0453d62fa",
                 "testT.germline.bcftools_stats.txt:md5,23451376749eae192f2127a2a97bb49d",
@@ -244,14 +297,14 @@
                 "testT.recal.mosdepth.summary.txt:md5,024649a659caff330dfbef4ac3560542",
                 "testT.recal.regions.bed.gz:md5,14b36a2cf428840aab471f95cfbe399f",
                 "testT.recal.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917",
-                "testN.freebayes.norm.FILTER.summary:md5,d621a188425df0da8babce002e2f34dc",
-                "testN.freebayes.norm.TsTv.count:md5,232bb44db986854d3992bda0df08f54b",
-                "testN.germline.FILTER.summary:md5,2ec507a210cf7de0425b6c8028a6edf8",
-                "testN.germline.TsTv.count:md5,4913577b275634ea33077dd023325dee",
-                "testT.freebayes.norm.FILTER.summary:md5,50f90bd0cdd1e95c10d7e5d88d0346f8",
-                "testT.freebayes.norm.TsTv.count:md5,7dba80ae65355e64a4d2d8a100db822b",
-                "testT.germline.FILTER.summary:md5,50f90bd0cdd1e95c10d7e5d88d0346f8",
-                "testT.germline.TsTv.count:md5,7dba80ae65355e64a4d2d8a100db822b",
+                "testN.freebayes.norm.FILTER.summary:md5,4b25443c427fd27761017e4f3a556b29",
+                "testN.freebayes.norm.TsTv.count:md5,803d74e40f7716202bae2a3a81c1ddfc",
+                "testN.germline.FILTER.summary:md5,e2f8e86fb18631c0bf6ccd7d9d4039c8",
+                "testN.germline.TsTv.count:md5,89562fef808b5c3db629682d36fd86fc",
+                "testT.freebayes.norm.FILTER.summary:md5,4b25443c427fd27761017e4f3a556b29",
+                "testT.freebayes.norm.TsTv.count:md5,803d74e40f7716202bae2a3a81c1ddfc",
+                "testT.germline.FILTER.summary:md5,4b25443c427fd27761017e4f3a556b29",
+                "testT.germline.TsTv.count:md5,803d74e40f7716202bae2a3a81c1ddfc",
                 "testN.germline.FILTER.summary:md5,4e2ceea7f3ff998004691fd71192d9ee",
                 "testN.germline.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663",
                 "testN.haplotypecaller.norm.FILTER.summary:md5,4e2ceea7f3ff998004691fd71192d9ee",
@@ -266,26 +319,34 @@
             "No BAM files",
             "No CRAM files",
             [
-                "testN.germline.vcf.gz:md5,141a2cc53b0a9d4a0ab4d779cb1e487",
-                "testT.germline.vcf.gz:md5,7bac441a7c84790f43d26a73e10be9b5",
-                "testN.freebayes.vcf.gz:md5,1d98e39fe458af9020283de18c764055",
-                "testT.freebayes.vcf.gz:md5,387b7d48d04ad3b294f07173e6550fc7",
+                [
+                    "testN.freebayes.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=7, phased=false, phasedAutodetect=false]"
+                ],
+                [
+                    "testT.freebayes.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=10, phased=false, phasedAutodetect=false]"
+                ]
+            ],
+            [
+                "testN.freebayes.filtered.vcf.gz:md5,7a08d55c866e45d635cf378825ddba74",
+                "testT.freebayes.filtered.vcf.gz:md5,dc1b49ffa2401b2a5193a0527bf8cd0a",
                 "testN.haplotypecaller.filtered.vcf.gz:md5,df2040bf1bee0252581824d11d5d87d1",
                 "testN.haplotypecaller.vcf.gz:md5,9d9d103327d59d17e778b663b56136fb",
                 "testT.haplotypecaller.filtered.vcf.gz:md5,d1e2d43d91858677d2b35fc389ee81b1",
                 "testT.haplotypecaller.vcf.gz:md5,5a2f49f0a41e890f9564a0baa11dc1c6",
-                "testN.freebayes.norm.vcf.gz:md5,7a4bd608db8b02c02de0393f05edf12",
+                "testN.freebayes.norm.vcf.gz:md5,18992a755b06d72374bb072cc8af86f9",
                 "testN.haplotypecaller.norm.vcf.gz:md5,141a2cc53b0a9d4a0ab4d779cb1e487",
                 "testN.vcf.gz:md5,141a2cc53b0a9d4a0ab4d779cb1e487",
-                "testT.freebayes.norm.vcf.gz:md5,7bac441a7c84790f43d26a73e10be9b5",
+                "testT.freebayes.norm.vcf.gz:md5,574d3d9e73986d07839d5e720c3ea929",
                 "testT.haplotypecaller.norm.vcf.gz:md5,9119ee2c970c37729dcb35d4b88f9d10",
                 "testT.vcf.gz:md5,9119ee2c970c37729dcb35d4b88f9d10"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.1"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-05-13T18:05:02.912735659"
+        "timestamp": "2025-08-19T10:13:39.960759385"
     }
 }

@@ -1,78 +1,44 @@
+def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
 nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    tag "cpu"
 
-    test("-profile test --tools vep --download_cache --vep_include_fasta") {
+    def test_scenario = [
+        [
+            name: "Fails with profile test --tools vep --vep_cache_version 1 --build_only_index",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
+                step: 'annotate',
+                vep_cache: 's3://annotation-cache/vep_cache/',
+                vep_cache_version: 1,
+                input: false,
+                build_only_index: true,
+                tools: 'vep'
+            ],
+            failure: true,
+            stdout: "This path is not available within annotation-cache"
+        ],
+        [
+            name: "Fails with profile test --dbnsfp and no dbnsfp_tbi",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
+                step: 'annotate',
+                vep_cache: 's3://annotation-cache/vep_cache/',
+                dbnsfp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+                tools: 'vep'
+            ],
+            failure: true,
+            stdout: "Execution halted due to dbnsfp inconsistency"
+        ]
+    ]
 
-        when {
-            params {
-                outdir = "$outputDir"
-                input = "${projectDir}/tests/csv/3.0/vcf_single.csv"
-                step  = 'annotate'
-                download_cache = true
-                tools = 'vep'
-            }
-        }
-
-        then {
-            // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
-            // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            // Fasta file for cram verification with nft-bam
-            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'])
-            assert workflow.success
-            assertAll(
-                { assert snapshot(
-                    // Number of successful tasks
-                    workflow.trace.succeeded().size(),
-                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
-                    // All stable path name, with a relative path
-                    stable_name,
-                    // All files with stable contents
-                    stable_path.isEmpty() ? 'No stable content' : stable_path,
-                    // All cram files
-                    bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," +  bam(file.toString()).readsMD5 },
-                    // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," +  cram(file.toString(), fasta).readsMD5 },
-                    // All vcf files
-                    vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
-                ).match() }
-            )
-        }
-    }
-
-    test("Fails with profile test --tools vep --vep_cache_version 1 --build_only_index") {
-        when {
-            params {
-                outdir = "$outputDir"
-                input = "${projectDir}/tests/csv/3.0/vcf_single.csv"
-                step  = 'annotate'
-                vep_cache = 's3://annotation-cache/vep_cache/'
-                vep_cache_version = 1
-                input = false
-                build_only_index = true
-                tools = 'vep'
-            }
-        }
-
-        then {
-            assert workflow.failed
-            assertAll(
-                { assert workflow.stdout.toString().contains("This path is not available within annotation-cache") }
-            )
-        }
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
     }
 }

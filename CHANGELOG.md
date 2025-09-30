@@ -11,24 +11,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [1682](https://github.com/nf-core/sarek/pull/1682), [1770](https://github.com/nf-core/sarek/pull/1770) - Add `bcftools_norm` in `POST_VARIANTCALLING` for normalization of all vcf files
 - [1744](https://github.com/nf-core/sarek/pull/1744) - Add MuSE as new somatic variant caller
-- [1817](https://github.com/nf-core/sarek/pull/1817) - Added new contributor
 - [1804](https://github.com/nf-core/sarek/pull/1840) - Add parabricks/fq2bam as alternative to fastq_preprocess_gatk
+- [1817](https://github.com/nf-core/sarek/pull/1817) - Added new contributor
 - [1841](https://github.com/nf-core/sarek/pull/1841) - Add pcr-indel-model parameter for GATK HaplotypeCaller
 - [1848](https://github.com/nf-core/sarek/pull/1848) - Add parameter for setting pixel distance for GATK MarkDuplicates
 - [1856](https://github.com/nf-core/sarek/pull/1856) - Added early failure when more than 1 normal sample per patient is provided for somatic variant calling
 - [1904](https://github.com/nf-core/sarek/pull/1904) - Icon support
+- [1934](https://github.com/nf-core/sarek/pull/1934) - Add sentieon TNscope for tumour/normal variant calling
+- [1937](https://github.com/nf-core/sarek/pull/1937) - Add UMI extraction for deduplication using fastp via `--umi_location`, `--umi_length` and `--umi_base_skip`
+- [1937](https://github.com/nf-core/sarek/pull/1937) - Add consensus read generation when using sentieon dedup via `--sentieon_consensus`
+- [1937](https://github.com/nf-core/sarek/pull/1937) - Add support for UMIs in read headers via `--umi_in_read_header`
+- [1937](https://github.com/nf-core/sarek/pull/1937) - Use fgbio plugin to check read structure parameter is valid
+- [1938](https://github.com/nf-core/sarek/pull/1938) - Add checks for uniqueness of sample ids and lane ids
+- [1939](https://github.com/nf-core/sarek/pull/1939) - Modify config to add readgroups to fq2bam
+- [1940](https://github.com/nf-core/sarek/pull/1940) - Add varlociraptor for variant calling
+- [1953](https://github.com/nf-core/sarek/pull/1953) - Update freebayes and add QUAL filtering
+- [1965](https://github.com/nf-core/sarek/pull/1965) - Add msisensor2
 
 ### Changed
 
 - [1682](https://github.com/nf-core/sarek/pull/1682) - Edit vcf_concatenate_germline subworkflow
 - [1810](https://github.com/nf-core/sarek/pull/1810) - Move non-informative information in the CHANGELOG for the end user to its own Developer section
+- [1890](https://github.com/nf-core/sarek/pull/1890) - Improve and update metro map
 - [1903](https://github.com/nf-core/sarek/pull/1903) - Double the default `time` for all processes
+- [1922](https://github.com/nf-core/sarek/pull/1922) - Update ASCAT module to v3.2.0
+- [1937](https://github.com/nf-core/sarek/pull/1937) - Swapped from samblaster to samtools within the fgbio consensus generation
+- [1961](https://github.com/nf-core/sarek/pull/1961) - Update ensemblvep cache version to 114
+- [1961](https://github.com/nf-core/sarek/pull/1961) - Update ensemblvep cache version to 115
+- [1961](https://github.com/nf-core/sarek/pull/1961) - Update ensemblvep modules to 114.2
+- [1964](https://github.com/nf-core/sarek/pull/1964) - Update ensemblvep modules to 115.0
+- [1982](https://github.com/nf-core/sarek/pull/1982) - Update ensemblvep modules to 115.1
+- [1988](https://github.com/nf-core/sarek/pull/1988) - Update manta modules to latest build
+- [1993](https://github.com/nf-core/sarek/pull/1993) - Update snpeff modules to 5.3.0a and ensemblvep modules to 115.2
+- [2003](https://github.com/nf-core/sarek/pull/2003) - Update subway map to clarify post-variantcalling processing options
 
 ### Fixed
 
 - [1842](https://github.com/nf-core/sarek/pull/1842) - Updated the input validation of the pipeline to be more strict, thus preventing more issues when running the pipeline
 - [1849](https://github.com/nf-core/sarek/pull/1849) - Fix bug in sample_lane_id definition in addReadgroupToMeta function
 - [1858](https://github.com/nf-core/sarek/pull/1858) - Fix bug in parameter validation
+- [1896](https://github.com/nf-core/sarek/pull/1896) - Add information on gatk_spark and save_output_as_bam
+- [1928](https://github.com/nf-core/sarek/pull/1928) - Fix cnvkit when using --no_intervals, and correct cpu allocation
+- [1937](https://github.com/nf-core/sarek/pull/1937) - Individual lanes are now merged together before fgbio consensus generation is performed
+- [1992](https://github.com/nf-core/sarek/pull/1992) - Add `--sample_name` argument to deepvariant when `meta.sample` is available
 
 ### Removed
 
@@ -38,24 +63,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency                             | Old version | New version |
 | -------------------------------------- | ----------- | ----------- |
+| `ascat`                                | 3.1.1       | 3.2.0       |
 | `bcftools`                             | 1.20        | 1.21        |
-| `ensemblvep`                           | 113.0       | 113.4       |
+| `deepvariant`                          | 1.8.0       | 1.9.0       |
+| `ensemblvep`                           | 113.0       | 115.2       |
+| `gawk`                                 | 5.1.0       | 5.3.0       |
 | `fastp`                                | 0.23.4      | 0.24.0      |
 | `fgbio`                                | 2.2.1       | 2.4.0       |
+| `freebayes`                            | 1.3.6       | 1.3.10      |
 | `gatk4`                                | 4.5.0.0     | 4.6.1.0     |
 | `mosdepth`                             | 0.3.8       | 0.3.10      |
-| `MuSE`                                 |             | 2.1.2       |
-| `MultiQC`                              | 1.25.1      | 1.28        |
+| `msisensor2`                           |             | 0.1         |
+| `msisensorpro`                         | 1.2.0       | 1.3.0       |
+| `multiqc`                              | 1.25.1      | 1.30        |
+| `muse`                                 |             | 2.1.2       |
+| `parabricks`                           |             | 4.5.1-1     |
+| `rbt`                                  |             | 0.42.2      |
+| `samblaster`                           | 0.1.26      | removed     |
 | `samtools` (in `BWAMEM1_MEM`)          | 1.2         | 1.21        |
 | `samtools` (in `BWAMEM2_MEM`)          | 1.19.2      | 1.21        |
 | `samtools` (in `GATK4_MARKDUPLICATES`) | 1.19.2      | 1.21        |
-| `sentieon`                             | 202308.03   | 202503      |
+| `sentieon`                             | 202308.03   | 202503.01   |
+| `snpeff`                               | 5.1         | 5.3.0a      |
 | `tabix`                                | 1.2         | 1.21        |
+| `varlociraptor`                        |             | 8.7.4       |
+| `vcflib`                               |             | 1.0.14      |
+| `yte`                                  |             | 1.9.0       |
 
 ### Parameters
 
-| Params | Status |
-| ------ | ------ |
+| Params                                | status |
+| ------------------------------------- | ------ |
+| `--freebayes_filter`                  | New    |
+| `--msisensor2_models`                 | New    |
+| `--msisensor2_scan`                   | New    |
+| `--msisensorpro_scan`                 | New    |
+| `--sentieon_consensus`                | New    |
+| `--umi_base_skip`                     | New    |
+| `--umi_in_read_header`                | New    |
+| `--umi_length`                        | New    |
+| `--umi_location`                      | New    |
+| `--umi_tag`                           | New    |
+| `--varlociraptor_chunk_size`          | New    |
+| `--varlociraptor_scenario_germline`   | New    |
+| `--varlociraptor_scenario_somatic`    | New    |
+| `--varlociraptor_scenario_tumor_only` | New    |
 
 ### Developer section
 
@@ -67,6 +119,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1815](https://github.com/nf-core/sarek/pull/1815) - Create nf-test pipeline vcf concatenation + normalize tests
 - [1829](https://github.com/nf-core/sarek/pull/1829) - Add muse as variant caller to images
 - [1835](https://github.com/nf-core/sarek/pull/1835) - Add GPU testing possibilities
+- [1855](https://github.com/nf-core/sarek/pull/1855) - Add contributors info to the contributors field in the manifest
+- [1922](https://github.com/nf-core/sarek/pull/1922) - Added tests for ASCAT
 
 #### Changed
 
@@ -75,8 +129,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1809](https://github.com/nf-core/sarek/pull/1809) - Replace `getReadsMD5()` by `readsMD5` from `nft-bam` plugin for more global cohesion with usage of `nft-vcf` plugin
 - [1810](https://github.com/nf-core/sarek/pull/1810) - Implement automatic sharding for nf-test tests
 - [1810](https://github.com/nf-core/sarek/pull/1810) - Skip all CI but linting on docs changes
-- [1815](https://github.com/nf-core/sarek/pull/1815) - Migrate pipeline pytest vcf normalize tests to nf-test
 - [1812](https://github.com/nf-core/sarek/pull/1812) - Move gatk based preprocessing to local subworkflow
+- [1815](https://github.com/nf-core/sarek/pull/1815) - Migrate pipeline pytest vcf normalize tests to nf-test
 - [1819](https://github.com/nf-core/sarek/pull/1819) - Migrate pipeline pytest tiddit tests to nf-test
 - [1820](https://github.com/nf-core/sarek/pull/1820) - Migrate pipeline pytest manta tests to nf-test
 - [1821](https://github.com/nf-core/sarek/pull/1821) - Migrate pipeline pytest freebayes tests to nf-test
@@ -100,8 +154,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1876](https://github.com/nf-core/sarek/pull/1876) - Migrate pipeline pytest ngscheckmate tests to nf-test
 - [1877](https://github.com/nf-core/sarek/pull/1877) - Migrate pipeline pytest msisensorpro tests to nf-test
 - [1878](https://github.com/nf-core/sarek/pull/1878) - Migrate pipeline pytest umi tests to nf-test
-- [1879](https://github.com/nf-core/sarek/pull/1879) - Template update for nf-core/tools v3.21
+- [1879](https://github.com/nf-core/sarek/pull/1879) - Template update for nf-core/tools v3.2.1
 - [1892](https://github.com/nf-core/sarek/pull/1892) - Make jobs automatically resubmit for exit code 175
+- [1917](https://github.com/nf-core/sarek/pull/1917) - stub tests have stub tag
+- [1927](https://github.com/nf-core/sarek/pull/1927) - Migrate pipeline pytest sentieon tests to nf-test
+- [1932](https://github.com/nf-core/sarek/pull/1932) - Refactor and simplify pipeline test suite
+- [1936](https://github.com/nf-core/sarek/pull/1936) - Template update for nf-core/tools v3.3.2
+- [1953](https://github.com/nf-core/sarek/pull/1953) - Change freebayes tests from gzip to md5sum
+- [1954](https://github.com/nf-core/sarek/pull/1954) - Refactor bcftools annotation subworkflows so that no diff is necessary from nf-core/modules
+- [1962](https://github.com/nf-core/sarek/pull/1962) - Update gatk and gatk4spark applybqsr modules and subsequent subworkflows to deal with the newly added ext.suffix
+- [1965](https://github.com/nf-core/sarek/pull/1965) - Refactor cram to bam conversion which is now is done even more upstream (following [1967](https://github.com/nf-core/sarek/pull/1967))
+- [1967](https://github.com/nf-core/sarek/pull/1967) - Refactor muse subworkflows so that cram to bam conversion is done upstream
+- [1967](https://github.com/nf-core/sarek/pull/1967) - Update msisensorpro modules to adhere to language server
+- [1970](https://github.com/nf-core/sarek/pull/1970) - Update controlfreec modules to adhere to language server
+- [1975](https://github.com/nf-core/sarek/pull/1975) - Now fails when no dbnsfp_tbi is provided when dbnsfp is
+- [1977](https://github.com/nf-core/sarek/pull/1977) - Update sentieon modules to adhere to language server
+- [1985](https://github.com/nf-core/sarek/pull/1985) - Update subway maps and workflow pictures to include msisensor2 following [1965](https://github.com/nf-core/sarek/pull/1965)
+- [1990](https://github.com/nf-core/sarek/pull/1990) - Update parabricks/fq2bam to 4.5.1-1
+- [2001](https://github.com/nf-core/sarek/pull/2001) - Remove lofreq VCF MD5sum - use summary
 
 #### Fixed
 
@@ -109,16 +179,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1809](https://github.com/nf-core/sarek/pull/1809) - Deals with nf-test snapshoting empty lists in a better way (https://github.com/nf-core/sarek/issues/1807)
 - [1814](https://github.com/nf-core/sarek/pull/1814) - Fix link to GHA CI broken by [1810](https://github.com/nf-core/sarek/pull/1810)
 - [1845](https://github.com/nf-core/sarek/pull/1845) - Modifying `.nftignore` should retrigger nf-test (cf https://github.com/nf-core/tools/pull/3508)
-- [1852](https://github.com/nf-core/sarek/pull/1852) - Modifying `assets/schema_input.json` and `nextflow_schema.json` should retrigger nf-test (cf https://github.com/nf-core/sarek/pull/1842)
 - [1852](https://github.com/nf-core/sarek/pull/1852) - Fix path to `license_message.py` script
+- [1852](https://github.com/nf-core/sarek/pull/1852) - Modifying `assets/schema_input.json` and `nextflow_schema.json` should retrigger nf-test (cf https://github.com/nf-core/sarek/pull/1842)
 - [1855](https://github.com/nf-core/sarek/pull/1855) - Fix json schema cf_chrom_len input broken by [1842](https://github.com/nf-core/sarek/pull/1842)
 - [1859](https://github.com/nf-core/sarek/pull/1859) - Fix: change dbsnp channel from queue to value in muse subworkflow, wrong implemented in [1744](https://github.com/nf-core/sarek/pull/1744)
 - [1899](https://github.com/nf-core/sarek/pull/1899) - Ensure nf-test runs for all profiles on release
+- [1917](https://github.com/nf-core/sarek/pull/1917) - Ensure all versions and reports are reported to MultiQC
+- [1927](https://github.com/nf-core/sarek/pull/1927) - Fixed Sentieon variant calling broken by [1871](https://github.com/nf-core/sarek/pull/1871)
+- [1930](https://github.com/nf-core/sarek/pull/1930) - Fixed tests when no sentieon license/ENV are provided
+- [1932](https://github.com/nf-core/sarek/pull/1932) - Fix typo for in UMI warning message
+- [1933](https://github.com/nf-core/sarek/pull/1933) - Correct link in README
+- [1935](https://github.com/nf-core/sarek/pull/1935) - Fix bug in samplesheet_to_channel workflow due to bad integer handling with lane
+- [1984](https://github.com/nf-core/sarek/pull/1984) - Fix tuple mismatch in GATK_BASERECALIBRATOR
+- [1996](https://github.com/nf-core/sarek/pull/1996) - MuSE: change to htslib for bgzip and tabix & language server
+- [1998](https://github.com/nf-core/sarek/pull/1998) - Adjust VEP versions in snap files with corrected module
+- [2002](https://github.com/nf-core/sarek/pull/2002) - Update strelka to specific build to fix error in somatic mode
 
 #### Removed
 
 - [1814](https://github.com/nf-core/sarek/pull/1814) - Removed link to Twitter/X
 - [1884](https://github.com/nf-core/sarek/pull/1884) - Remove pytest-workflow from CI (copied from [1729](https://github.com/nf-core/sarek/pull/1729))
+- [1956](https://github.com/nf-core/sarek/pull/1956) - Remove tests for downloading cache (Snpeff and VEP) (we already have tests for the cache in the modules)
+- [1957](https://github.com/nf-core/sarek/pull/1957) - Remove duplicated gpu profile from config
+- [1994](https://github.com/nf-core/sarek/pull/1994) - Prevent conda profile running on gpu
+- [1995](https://github.com/nf-core/sarek/pull/1995) - Remove md5sums of png files for controlfreec
+- [1997](https://github.com/nf-core/sarek/pull/1997) - Remove png and pdf md5sums for all variant callers
 
 ## [3.5.1](https://github.com/nf-core/sarek/releases/tag/3.5.1) - Akkatjåkkå
 

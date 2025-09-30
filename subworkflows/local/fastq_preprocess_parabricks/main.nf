@@ -15,8 +15,23 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     ch_versions = Channel.empty()
     ch_reports  = Channel.empty()
 
+    ch_reads.map { meta, reads ->
+            [ meta.subMap('patient', 'sample', 'sex', 'status'), reads ]
+        }
+        .groupTuple()
+        .map { meta, reads ->
+            meta + [ n_fastq: reads.size() ] // We can drop the FASTQ files now that we know how many there are
+        }
+        .set { reads_grouping_key }
+
+    ch_reads = ch_reads.map{ meta, reads ->
+        // Update meta.id to meta.sample no multiple lanes or splitted fastqs
+        if (meta.size * meta.num_lanes == 1) [ meta + [ id:meta.sample ], reads ]
+        else [ meta, reads ]
+    }
+
     // Adjust ch_interval_file
-    ch_interval_file = ch_interval_file.map { file, num ->
+    ch_interval_file = ch_interval_file.collect().map { file, num ->
         [['id': 'interval_file', 'num':num], file]
     }
 
@@ -36,9 +51,11 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
 
     ch_versions = ch_versions.mix(PARABRICKS_FQ2BAM.out.versions)
 
-    cram_variant_calling =
-        PARABRICKS_FQ2BAM.out.cram
+    cram_variant_calling = PARABRICKS_FQ2BAM.out.cram
         .join(PARABRICKS_FQ2BAM.out.crai, failOnDuplicate: true, failOnMismatch: true)
+        .map { meta, cram, crai ->
+                    [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size', 'sample_lane_id') + [ data_type: 'cram', id: meta.sample ], cram, crai ]
+                }
 
     CHANNEL_ALIGN_CREATE_CSV(
         cram_variant_calling,
@@ -51,4 +68,3 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     versions  = ch_versions              // channel: [ versions.yml ]
     reports   = ch_reports
 }
-

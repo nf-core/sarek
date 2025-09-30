@@ -98,6 +98,8 @@
 
   > Brent S Pedersen, Aaron R Quinlan, Mosdepth: quick coverage calculation for genomes and exomes, Bioinformatics, Volume 34, Issue 5, 01 March 2018, Pages 867–868. doi: 10.1093/bioinformatics/btx699. PubMed PMID: 29096012. PubMed Central PMCID: PMC6030888.
 
+- [MSIsensor2](https://github.com/niu-lab/msisensor2)
+
 - [MSISensorPro](https://www.sciencedirect.com/science/article/pii/S1672022920300218)
 
   > Peng Jia, Xiaofei Yang, Li Guo, Bowen Liu, Jiadong Lin, Hao Liang, et al. MSIsensor-pro: fast, accurate, and matched-normal-sample-free detection of microsatellite instability. Genomics Proteomics Bioinformatics 2020,18(1). doi: 10.1016/j.gpb.2020.02.001. PubMed PMID: 32171661. PubMed Central PMCID: PMC7393535.
@@ -113,10 +115,6 @@
 - [PIGZ](https://zlib.net/pigz/)
 
 - [P7Zip](http://p7zip.sourceforge.net/)
-
-- [Samblaster](https://academic.oup.com/bioinformatics/article/30/17/2503/2748175)
-
-  > Gregory G. Faust, Ira M. Hall, SAMBLASTER: fast duplicate marking and structural variant read extraction, Bioinformatics, Volume 30, Issue 17, 1 September 2014, Pages 2503–2505. doi: 10.1093/bioinformatics/btu314. PubMed PMID: 24812344. PubMed Central PMCID: PMC4147885.
 
 - [SAMtools](https://pubmed.ncbi.nlm.nih.gov/19505943/)
 
@@ -145,6 +143,10 @@
 - [TIDDIT](https://pubmed.ncbi.nlm.nih.gov/28781756/)
 
   > Eisfeldt J, Vezzi F, Olason P, et al.: TIDDIT, an efficient and comprehensive structural variant caller for massive parallel sequencing data. F1000Res. 2017 May 10;6:664. doi: 10.12688/f1000research.11168.2. eCollection 2017. PubMed PMID: 28781756; PubMed Central PMCID: PMC5521161.
+
+- [Varlociraptor](https://pubmed.ncbi.nlm.nih.gov/32345333/)
+
+  > Köster, J., Dijkstra, L.J., Marschall, T. et al. Varlociraptor: enhancing sensitivity and controlling false discovery rate in somatic indel discovery. Genome Biol 21, 98 (2020). https://doi.org/10.1186/s13059-020-01993-6
 
 - [VCFTools](https://pubmed.ncbi.nlm.nih.gov/21653522/)
 

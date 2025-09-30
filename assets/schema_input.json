@@ -36,21 +36,23 @@
             "lane": {
                 "type": "string",
                 "pattern": "^\\S+$",
+                "description": "Lane identifier used to distinguish between different sequencing runs of the same sample.",
+                "errorMessage": "Lane identifier cannot contain spaces",
                 "meta": ["lane"]
             },
             "fastq_1": {
-                "errorMessage": "FastQ file for reads 1 cannot contain spaces, has to be a string, has to exist and must have extension '.fq.gz' or '.fastq.gz'",
                 "type": "string",
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
                 "format": "file-path",
-                "exists": true
+                "exists": true,
+                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
+                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             },
             "fastq_2": {
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces, has to be a string, has to exist and must have extension '.fq.gz' or '.fastq.gz'",
                 "type": "string",
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
                 "format": "file-path",
-                "exists": true
+                "exists": true,
+                "pattern": "^([\\S\\s]*\\/)?[^\\s\\/]+\\.f(ast)?q\\.gz$",
+                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
             },
             "spring_1": {
                 "errorMessage": "Gzipped and spring-compressed FastQ file for reads 1 cannot contain spaces, has to be a string, has to exist and must have extension '.fq.gz.spring' or '.fastq.gz.spring'",
@@ -101,6 +103,11 @@
                 "format": "file-path",
                 "exists": true
             },
+            "contamination": {
+                "errorMessage": "(1 - tumor purity) must be a value between 0 and 1, set to 0 for normal samples",
+                "type": "number",
+                "exists": true
+            },
             "vcf": {
                 "errorMessage": "VCF file for reads 1 cannot contain spaces, has to be a string, has to exist and must have extension '.vcf' or '.vcf.gz'",
                 "type": "string",
@@ -114,19 +121,13 @@
         },
         "anyOf": [
             {
-                "dependentRequired": {
-                    "lane": ["fastq_1"]
-                }
+                "dependentRequired": { "lane": ["fastq_1"] }
             },
             {
-                "dependentRequired": {
-                    "lane": ["spring_1"]
-                }
+                "dependentRequired": { "lane": ["spring_1"] }
             },
             {
-                "dependentRequired": {
-                    "lane": ["bam"]
-                }
+                "dependentRequired": { "lane": ["bam"] }
             }
         ],
         "dependentRequired": {

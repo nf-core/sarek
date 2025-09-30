@@ -3,8 +3,23 @@
         "content": [
             17,
             {
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
+                "BCFTOOLS_MPILEUP": {
+                    "bcftools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 }
             },
             [
@@ -89,92 +104,82 @@
                 "reports/samtools/sample3/sample3.recal.cram.stats",
                 "reports/samtools/sample4",
                 "reports/samtools/sample4/sample4.recal.cram.stats"
-            ],
-            [
-                "sample1.recal.global.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample1.recal.per-base.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample1.recal.per-base.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample1.recal.per-base.d4:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample1.recal.quantized.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample1.recal.quantized.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample1.recal.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample1.recal.regions.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample1.recal.regions.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample1.recal.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample1.recal.thresholds.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample1.recal.thresholds.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample2.recal.global.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample2.recal.per-base.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample2.recal.per-base.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample2.recal.per-base.d4:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample2.recal.quantized.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample2.recal.quantized.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample2.recal.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample2.recal.regions.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample2.recal.regions.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample2.recal.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample2.recal.thresholds.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample2.recal.thresholds.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample3.recal.global.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample3.recal.per-base.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample3.recal.per-base.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample3.recal.per-base.d4:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample3.recal.quantized.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample3.recal.quantized.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample3.recal.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample3.recal.regions.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample3.recal.regions.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample3.recal.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample3.recal.thresholds.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample3.recal.thresholds.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample4.recal.global.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample4.recal.per-base.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample4.recal.per-base.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample4.recal.per-base.d4:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample4.recal.quantized.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample4.recal.quantized.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample4.recal.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample4.recal.regions.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample4.recal.regions.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample4.recal.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "sample4.recal.thresholds.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample4.recal.thresholds.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "ngscheckmate_all.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "ngscheckmate_matched.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "ngscheckmate_output_corr_matrix.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ],
-            "No BAM files",
-            "No CRAM files",
-            [
-                "sample1.ngscheckmate.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample2.ngscheckmate.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample3.ngscheckmate.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                "sample4.ngscheckmate.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-04-29T11:26:05.486351559"
+        "timestamp": "2025-07-11T10:30:53.073758168"
     },
     "-profile test --tools ngscheckmate": {
         "content": [
             17,
             {
-                "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
+                "BCFTOOLS_MPILEUP": {
+                    "bcftools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "NGSCHECKMATE_NCM": {
+                    "ngscheckmate": "1.0.1"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
                 }
             },
             [
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/BETA-multiqc.parquet",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
                 "multiqc/multiqc_data/multiqc_software_versions.txt",
                 "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
@@ -226,7 +231,12 @@
                 "reports/samtools/sample4/sample4.recal.cram.stats"
             ],
             [
-                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
+                "mosdepth-coverage-per-contig-single.txt:md5,73ef9a077df1887f9021a581fbf207bc",
+                "mosdepth-cumcoverage-dist-id.txt:md5,ad0637d55d7025330f2f6cb7f9680e64",
+                "mosdepth_perchrom.txt:md5,73ef9a077df1887f9021a581fbf207bc",
+                "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
+                "samtools-stats-dp.txt:md5,b446a47b182d93a9e7e74f5f7c8d41c2",
+                "samtools_alignment_plot.txt:md5,7138a2d29f515993e1df8d745e27b757",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -262,8 +272,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-05-08T12:14:15.942392268"
+        "timestamp": "2025-07-11T12:19:18.022351369"
     }
 }

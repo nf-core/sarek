@@ -45,6 +45,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
       - [Sentieon DNAscope joint germline variant calling](#sentieon-dnascope-joint-germline-variant-calling)
     - [Sentieon Haplotyper](#sentieon-haplotyper)
       - [Sentieon Haplotyper joint germline variant calling](#sentieon-haplotyper-joint-germline-variant-calling)
+    - [Sentieon TNscope](#sentieon-tnscope)
     - [Strelka](#strelka)
   - [Structural Variants](#structural-variants)
     - [indexcov](#indexcov)
@@ -55,7 +56,9 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [CNVKit](#cnvkit)
     - [Control-FREEC](#control-freec)
   - [Microsatellite instability (MSI)](#microsatellite-instability-msi)
+    - [MSIsensor2](#msisensor2)
     - [MSIsensorPro](#msisensorpro)
+  - [Varlociraptor](#varlociraptor)
   - [Concatenation](#concatenation)
   - [Normalization](#normalization)
 - [Variant annotation](#variant-annotation)
@@ -151,7 +154,7 @@ These files are intermediate and by default not placed in the output-folder kept
 
 #### UMI consensus
 
-Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools.
+Sarek can create consensus reads when Unique Molecular Identifiers (UMIs) exist, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools. Please note that if your UMIs are part of additional index fastq files then you can use [nf-core/fastquorum](https://nf-co.re/fastquorum) to process them.
 
 These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_split` to enable publishing of these files to:
 
@@ -198,7 +201,6 @@ The alignment files (BAM or CRAM) produced by the chosen aligner are not publish
 **Output directory: `{outdir}/preprocessing/mapped/<sample>/`**
 
 - if `--save_mapped`: `<sample>.sorted.cram` and `<sample>.sorted.cram.crai`
-
   - CRAM file and index
 
 - if `--save_mapped --save_output_as_bam`: `<sample>.sorted.bam` and `<sample>.sorted.bam.bai`
@@ -485,7 +487,6 @@ Files created:
 **Output directory: `{outdir}/variant_calling/lofreq/<sample>/`**
 
 - `<tumorsample>.vcf.gz`
-
   - VCF which provides a detailed description of the detected genetic variants.
 
   </details>
@@ -599,6 +600,20 @@ In Sentieon's package DNAseq, joint germline variant calling is done by first ru
   - VCF with tabix index
 - `joint_germline_recalibrated.vcf.gz` and `joint_germline_recalibrated.vcf.gz.tbi`
   - variant recalibrated VCF with tabix index (if VarCal is applied)
+
+</details>
+
+#### Sentieon TNscope
+
+[Sentieon TNscope](https://support.sentieon.com/manual/usages/general/#tnscope-algorithm) is Sentieon's proprietary somatic variant and structural variant caller.
+
+<details markdown="1">
+<summary>VCF-files for tumor-only and tumor/normal samples</summary>
+
+**Output directory: `{outdir}/variantcalling/sentieon_tnscope/<sample>/`**
+
+- `<sample>.tnscope.vcf.gz` and `<sample>.tnscope.vcf.gz.tbi`
+  - VCF with tabix index
 
 </details>
 
@@ -885,6 +900,38 @@ It also detects subclonal gains and losses and evaluates the most likely average
 [Microsatellite instability](https://en.wikipedia.org/wiki/Microsatellite_instability) is a genetic condition associated with deficiencies in the mismatch repair (MMR) system which causes a tendency to accumulate a high number of mutations (SNVs and indels).
 An altered distribution of microsatellite length is associated with a missed replication slippage which would be corrected under normal MMR conditions.
 
+#### MSIsensor2
+
+[MSIsensor2](https://github.com/niu-lab/msisensor2) is a tool to detect the MSI status for tumor only sequencing data, including Cell-Free DNA (cfDNA), Formalin-Fixed Paraffin-Embedded(FFPE) and other sample types.
+
+<details markdown="1">
+<summary>Output files for tumor/normal paired samples</summary>
+
+**Output directory: `{outdir}/variantcalling/msisensor/<tumorsample_vs_normalsample>/`**
+
+- `<tumorsample_vs_normalsample>`
+  - MSI score output, contains information about the number of somatic sites.
+- `<tumorsample_vs_normalsample>_dis`
+  - The normal and tumor length distribution for each microsatellite position.
+- `<tumorsample_vs_normalsample>_germline`
+  - Germline sites detected.
+- `<tumorsample_vs_normalsample>_somatic`
+  - Somatic sites detected.
+  </details>
+
+<details markdown="1">
+<summary>Output files for tumor only samples</summary>
+
+**Output directory: `{outdir}/variantcalling/msisensor2/<tumorsample>/`**
+
+- `<tumorsample>`
+  - MSI score output, contains information about the number of somatic sites.
+- `<tumorsample>_dis`
+  - The normal and tumor length distribution for each microsatellite position.
+- `<tumorsample>_somatic`
+  - Somatic sites detected.
+  </details>
+
 #### MSIsensorPro
 
 [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro) is a tool to detect the MSI status of a tumor scanning the length of the microsatellite regions.
@@ -900,9 +947,56 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
 - `<tumorsample_vs_normalsample>_dis`
   - The normal and tumor length distribution for each microsatellite position.
 - `<tumorsample_vs_normalsample>_germline`
-  - Somatic sites detected.
-- `<tumorsample_vs_normalsample>_somatic`
   - Germline sites detected.
+- `<tumorsample_vs_normalsample>_somatic`
+  - Somatic sites detected.
+  </details>
+
+### Varlociraptor
+
+As varlociraptor requires to provide a set of candidate variants to consider it can be run in combination with any variant caller.
+
+<details markdown="1">
+<summary>Output files for germline samples</summary>
+
+**Output directory: `{outdir}/variantcalling/varlociraptor/{sample}`**
+
+- `<sample>.<variantcaller>.germline.varlociraptor.vcf.gz` and `<sample>.<variantcaller>.germline.varlociraptor.vcf.gz.tbi`
+  - Final VCF with tabix index
+- `<sample>/<sample>.scenario.varlociraptor.yaml`
+  - YAML file containing scenario for varlociraptor calling
+- `<sample>/<sample>.alignment-properties.json`
+  - JSON file containing alignment properties for normal sample cram
+  </details>
+
+<details markdown="1">
+<summary>Postprocessed VCF files for tumor-normal calling</summary>
+
+**Output directory: `{outdir}/variantcalling/varlociraptor/{tumorsample_vs_normalsample}`**
+
+- `<normal_id>_vs_.<tumor_id>.<variantcaller>.somatic.varlociraptor.vcf.gz` and `<normal_id>_vs_.<tumor_id>.<variantcaller>.somatic.varlociraptor.vcf.gz.tbi`
+  - Final VCF with tabix index
+- `<normal_id>_vs_.<tumor_id>/<normal_id>_vs_.<tumor_id>.scenario.varlociraptor.yaml`
+  - YAML file containing scenario for varlociraptor calling (somatic calling)
+- `<normal_id>_vs_.<tumor_id>/<normal_id>.alignment-properties.json`
+  - JSON file containing alignment properties for normal sample cram
+- `<normal_id>_vs_.<tumor_id>/<tumor_id>.tumor.alignment-properties.json`
+  - JSON file containing alignment properties for tumor sample cram
+- `<sample>.<variantcaller>.merged.vcf.gz`
+  - VCF containing both somatic and germline variants
+  </details>
+
+<details markdown="1">
+<summary>Output files for tumor only samples</summary>
+
+**Output directory: `{outdir}/variantcalling/varlociraptor/{sample}`**
+
+- `<sample>.<variantcaller>.tumor_only.varlociraptor.vcf.gz` and `<sample>.<variantcaller>.tumor_only.varlociraptor.vcf.gz.tbi`
+  - Final VCF with tabix index
+- `<sample>/<sample>.scenario.varlociraptor.yaml`
+  - YAML file containing scenario for varlociraptor calling
+- `<sample>/<sample>.alignment-properties.json`
+  - JSON file containing alignment properties for tumor_only sample cram
   </details>
 
 ### Concatenation

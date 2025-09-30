@@ -26,6 +26,9 @@ include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING           } from '../../../mod
 include { SAMTOOLS_CONVERT as CRAM_TO_BAM                   } from '../../../modules/nf-core/samtools/convert/main'
 include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL             } from '../../../modules/nf-core/samtools/convert/main'
 
+// Copy UMIs from read name to RX tag
+include { FGBIO_COPYUMIFROMREADNAME                         } from '../../../modules/nf-core/fgbio/copyumifromreadname/main'
+
 // Mark Duplicates (+QC)
 include { BAM_MARKDUPLICATES                                } from '../../../subworkflows/local/bam_markduplicates/main'
 include { BAM_MARKDUPLICATES_SPARK                          } from '../../../subworkflows/local/bam_markduplicates_spark/main'
@@ -100,7 +103,7 @@ workflow FASTQ_PREPROCESS_GATK {
         }
 
         // Trimming and/or splitting
-        if (params.trim_fastq || params.split_fastq > 0) {
+        if (params.trim_fastq || params.split_fastq > 0 || params.umi_location) {
 
             save_trimmed_fail = false
             save_merged = false
@@ -151,10 +154,23 @@ workflow FASTQ_PREPROCESS_GATK {
         sort_bam = true
         FASTQ_ALIGN(reads_for_alignment, index_alignment, sort_bam, fasta, fasta_fai)
 
+        aligned_bam = Channel.empty()
+        aligned_bai = Channel.empty()
+        // If UMIs started in read header or were put there by fastp, copy to RX tag
+        if (params.umi_in_read_header || params.umi_location) {
+            FGBIO_COPYUMIFROMREADNAME(FASTQ_ALIGN.out.bam.map{meta, bam -> [meta, bam, []]})
+            aligned_bam = FGBIO_COPYUMIFROMREADNAME.out.bam
+            aligned_bai = FGBIO_COPYUMIFROMREADNAME.out.bai
+            versions = versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
+        } else {
+            aligned_bam = FASTQ_ALIGN.out.bam
+            aligned_bai = FASTQ_ALIGN.out.bai
+        }
+
         // Grouping the bams from the same samples not to stall the workflow
         // Use groupKey to make sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all reads from all channels are mapped
-        bam_mapped = FASTQ_ALIGN.out.bam
+        bam_mapped = aligned_bam
             .combine(reads_grouping_key) // Creates a tuple of [ meta, bam, reads_grouping_key ]
             .filter { meta1, _bam, meta2 -> meta1.sample == meta2.sample }
             // Add n_fastq and other variables to meta
@@ -163,7 +179,7 @@ workflow FASTQ_PREPROCESS_GATK {
             }
             // Manipulate meta map to remove old fields and add new ones
             .map { meta, bam ->
-                [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size') + [ data_type: 'bam', id: meta.sample ], bam ]
+                [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size', 'sample_lane_id') + [ data_type: 'bam', id: meta.sample ], bam ]
             }
             // Create groupKey from meta map
             .map { meta, bam ->
@@ -172,7 +188,7 @@ workflow FASTQ_PREPROCESS_GATK {
             // Group
             .groupTuple()
 
-        bai_mapped = FASTQ_ALIGN.out.bai
+        bai_mapped = aligned_bai
             .combine(reads_grouping_key) // Creates a tuple of [ meta, bai, reads_grouping_key ]
             .filter { meta1, _bai, meta2 -> meta1.sample == meta2.sample }
             // Add n_fastq and other variables to meta
@@ -181,7 +197,7 @@ workflow FASTQ_PREPROCESS_GATK {
             }
             // Manipulate meta map to remove old fields and add new ones
             .map { meta, bai ->
-                [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size') + [ data_type: 'bai', id: meta.sample ], bai ]
+                [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size', 'sample_lane_id') + [ data_type: 'bai', id: meta.sample ], bai ]
             }
             // Create groupKey from meta map
             .map { meta, bai ->
@@ -229,6 +245,13 @@ workflow FASTQ_PREPROCESS_GATK {
         // ch_bam_for_markduplicates will contain bam mapped with FASTQ_ALIGN when step is mapping
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
         cram_for_markduplicates = params.step == 'mapping' ? bam_mapped : input_sample.map{ meta, input, _index -> [ meta, input ] }
+
+        if(params.step == 'markduplicates' && params.umi_in_read_header) {
+            FGBIO_COPYUMIFROMREADNAME(cram_for_markduplicates.map{ meta, bam -> [ meta, bam, [] ] })
+            cram_for_markduplicates = FGBIO_COPYUMIFROMREADNAME.out.bam
+            versions = versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
+        }
+
         // if no MD is done, then run QC on mapped & converted CRAM files
         // or the input BAM (+converted) or CRAM files
         cram_skip_markduplicates = Channel.empty()
@@ -269,7 +292,9 @@ workflow FASTQ_PREPROCESS_GATK {
             // Gather used softwares versions
             versions = versions.mix(BAM_MARKDUPLICATES_SPARK.out.versions)
         } else if (params.tools && params.tools.split(',').contains('sentieon_dedup')) {
-            crai_for_markduplicates = params.step == 'mapping' ? bai_mapped : input_sample.map{ meta, _input, index -> [ meta, index ] }
+            crai_for_markduplicates = params.step == 'mapping'
+                ? bai_mapped
+                : ( params.umi_in_read_header ? FGBIO_COPYUMIFROMREADNAME.out.bai : input_sample.map{ meta, _input, index -> [ meta, index ] } )
             BAM_SENTIEON_DEDUP(
                 cram_for_markduplicates,
                 crai_for_markduplicates,
@@ -285,6 +310,7 @@ workflow FASTQ_PREPROCESS_GATK {
             // Gather used softwares versions
             versions = versions.mix(BAM_SENTIEON_DEDUP.out.versions)
         } else {
+
             BAM_MARKDUPLICATES(
                 cram_for_markduplicates,
                 fasta,
