@@ -6,7 +6,6 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    tag "conda"
 
     def test_scenario = [
         [
@@ -18,6 +17,7 @@ nextflow_pipeline {
                 tools: 'freebayes,haplotypecaller'
             ],
             include_freebayes_unfiltered: true,
+            tag: "no_conda"
         ]
     ]
 

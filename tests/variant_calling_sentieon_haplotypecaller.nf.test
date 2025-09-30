@@ -6,9 +6,27 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    tag "conda"
 
     def test_scenario = [
+        [
+            name: "-profile test --tools sentieon_haplotyper",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
+                tools: "sentieon_haplotyper",
+                step: "variant_calling"
+            ],
+            tag: "no_conda"
+        ],
+        [
+            name: "-profile test --tools sentieon_haplotyper --no_intervals",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
+                tools: "sentieon_haplotyper",
+                step: "variant_calling",
+                no_intervals: true
+            ],
+            tag: "no_conda"
+        ],
         [
             name: "-profile test --tools sentieon_haplotyper --skip_tools haplotyper_filter",
             params: [
