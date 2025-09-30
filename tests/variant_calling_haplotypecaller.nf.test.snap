@@ -147,8 +147,6 @@
                 "mosdepth_perchrom.txt:md5,93a8fd4ad5c5a4fcdf9e67a07183c7cb",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "test.haplotypecaller.bcftools_stats.txt:md5,1497941f37b14c39a24490a50a97e365",
-                "test.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
-                "test.recal.per-base.bed.gz.csi:md5,9e649ac749ff6c6073bef5ab63e8aaa4",
                 "test.haplotypecaller.FILTER.summary:md5,87a84b5f8ac3d3cbeeef7d60afcdbfe7",
                 "test.haplotypecaller.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
@@ -321,8 +319,6 @@
                 "mosdepth_perchrom.txt:md5,6e1f4a26793f1912cd83cee7259635c6",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "test.haplotypecaller.bcftools_stats.txt:md5,1497941f37b14c39a24490a50a97e365",
-                "test.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
-                "test.recal.per-base.bed.gz.csi:md5,9e649ac749ff6c6073bef5ab63e8aaa4",
                 "test.haplotypecaller.FILTER.summary:md5,87a84b5f8ac3d3cbeeef7d60afcdbfe7",
                 "test.haplotypecaller.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
@@ -494,8 +490,6 @@
                 "mosdepth_perchrom.txt:md5,93a8fd4ad5c5a4fcdf9e67a07183c7cb",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "test.haplotypecaller.filtered.bcftools_stats.txt:md5,bfdbcc0c0513be1e223434eefee3b90b",
-                "test.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
-                "test.recal.per-base.bed.gz.csi:md5,9e649ac749ff6c6073bef5ab63e8aaa4",
                 "test.haplotypecaller.filtered.FILTER.summary:md5,4e2ceea7f3ff998004691fd71192d9ee",
                 "test.haplotypecaller.filtered.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
@@ -677,8 +671,6 @@
                 "mosdepth_perchrom.txt:md5,6e1f4a26793f1912cd83cee7259635c6",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "test.haplotypecaller.filtered.bcftools_stats.txt:md5,bfdbcc0c0513be1e223434eefee3b90b",
-                "test.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
-                "test.recal.per-base.bed.gz.csi:md5,9e649ac749ff6c6073bef5ab63e8aaa4",
                 "test.haplotypecaller.filtered.FILTER.summary:md5,4e2ceea7f3ff998004691fd71192d9ee",
                 "test.haplotypecaller.filtered.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],

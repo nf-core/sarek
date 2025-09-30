@@ -190,9 +190,7 @@
                 "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
-                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
-                "test.recal.per-base.bed.gz:md5,6fc83a7a31931bc4c1bbb6e652c1fc33",
-                "test.recal.per-base.bed.gz.csi:md5,423628957501bc7737de4bfd900cd1bc"
+                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
             ],
             "No BAM files",
             [
@@ -467,8 +465,6 @@
                 "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
                 "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
                 "test2_vs_test.mutect2.filtered.bcftools_stats.txt:md5,46384bbd90894ff023684d88df891fd6",
-                "test.recal.per-base.bed.gz:md5,6fc83a7a31931bc4c1bbb6e652c1fc33",
-                "test.recal.per-base.bed.gz.csi:md5,423628957501bc7737de4bfd900cd1bc",
                 "test2.recal.per-base.bed.gz:md5,43c9591759011ecd0d6bddba7ebbf888",
                 "test2.recal.per-base.bed.gz.csi:md5,fee1776dc4b39f62fe81aed02606c636",
                 "test2_vs_test.mutect2.filtered.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
