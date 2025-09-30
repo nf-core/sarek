@@ -123,6 +123,7 @@ workflow PIPELINE_INITIALISATION {
         params.ascat_loci_rt,
         params.bcftools_annotations,
         params.bcftools_annotations_tbi,
+        params.bcftools_columns,
         params.bcftools_header_lines,
         params.build_only_index,
         params.dbsnp,
