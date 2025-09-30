@@ -43,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1982](https://github.com/nf-core/sarek/pull/1982) - Update ensemblvep modules to 115.1
 - [1988](https://github.com/nf-core/sarek/pull/1988) - Update manta modules to latest build
 - [1993](https://github.com/nf-core/sarek/pull/1993) - Update snpeff modules to 5.3.0a and ensemblvep modules to 115.2
-- [2003](https://github.com/nf-core/sarek/pull/2003) - Update subway map to clarify post-variantcalling processing options
+- [2003](https://github.com/nf-core/sarek/pull/2003),[2005](https://github.com/nf-core/sarek/pull/2005) - Update subway map to clarify post-variantcalling processing options, and add BBSplit
 
 ### Fixed
 
