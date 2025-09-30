@@ -173,6 +173,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1990](https://github.com/nf-core/sarek/pull/1990) - Update parabricks/fq2bam to 4.5.1-1
 - [2001](https://github.com/nf-core/sarek/pull/2001) - Remove lofreq VCF MD5sum - use summary
 - [2007](https://github.com/nf-core/sarek/pull/2007) - Sort tools in test_full configs and add msisensor2
+- [2008](https://github.com/nf-core/sarek/pull/2008) - Skip conda tests that cannot be run due to lacking dependencies
 
 #### Fixed
 

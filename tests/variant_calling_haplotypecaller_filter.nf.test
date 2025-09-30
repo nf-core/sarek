@@ -7,37 +7,29 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    tag "conda"
 
     def test_scenario = [
         [
-            name: "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 20",
+            name: "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20",
             params: [
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
-                input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
+                input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
                 step: "variant_calling",
                 tools: 'haplotypecaller',
-                joint_germline: true,
-                dbsnp_vqsr: false,
-                known_snps_vqsr: false,
-                known_indels_vqsr: false,
                 wes: true,
                 nucleotides_per_second: 20
             ]
         ],
         [
-            name: "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 100",
+            name: "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20 --no_intervals",
             params: [
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
-                input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
+                input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
                 step: "variant_calling",
                 tools: 'haplotypecaller',
-                joint_germline: true,
-                dbsnp_vqsr: false,
-                known_snps_vqsr: false,
-                known_indels_vqsr: false,
                 wes: true,
-                nucleotides_per_second: 100
+                nucleotides_per_second: 20,
+                no_intervals: true
             ]
         ]
     ]

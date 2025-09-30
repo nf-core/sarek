@@ -72,6 +72,7 @@ runs:
         nf-test test \
           --profile=+${{ inputs.profile }} \
           $(if [ -n "${{ inputs.tags }}" ]; then echo "--tag ${{ inputs.tags }}"; fi) \
+          $(if [ "${{ inputs.profile == conda }}" ]; then echo "--tag ${{ conda }}"; fi) \
           --ci \
           --changed-since HEAD^ \
           --verbose \

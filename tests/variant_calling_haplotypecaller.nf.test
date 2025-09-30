@@ -7,31 +7,9 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
+    tag "conda"
 
     def test_scenario = [
-        [
-            name: "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20",
-            params: [
-                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
-                input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
-                step: "variant_calling",
-                tools: 'haplotypecaller',
-                wes: true,
-                nucleotides_per_second: 20
-            ]
-        ],
-        [
-            name: "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20 --no_intervals",
-            params: [
-                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
-                input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
-                step: "variant_calling",
-                tools: 'haplotypecaller',
-                wes: true,
-                nucleotides_per_second: 20,
-                no_intervals: true
-            ]
-        ],
         [
             name: "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20 --skip_tools haplotypecaller_filter",
             params: [

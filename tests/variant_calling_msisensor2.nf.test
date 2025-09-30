@@ -7,6 +7,7 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
+    tag "conda"
 
 
     def test_scenario = [
