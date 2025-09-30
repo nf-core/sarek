@@ -41,7 +41,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
     ch_from_samplesheet.dump(tag: "ch_from_samplesheet")
 
     ch_from_samplesheet
-        .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _vcf, _variantcaller ->
+        .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _contamination, _vcf, _variantcaller ->
             // Get only the patient, sample and status fields from the meta map
             [meta.patient, meta.subMap('sample', 'status')]
         }
@@ -60,7 +60,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
         }
 
     ch_from_samplesheet
-        .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _vcf, _variantcaller ->
+        .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _contamination, _vcf, _variantcaller ->
             // Create a unique key for patient-sample-status-lane combination
             def combination_key = "${meta.patient}-${meta.sample}-${meta.status}-${meta.lane}"
             [combination_key, [meta.patient, meta.sample, meta.status, meta.lane]]
@@ -78,7 +78,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
         }
 
     ch_from_samplesheet
-        .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _vcf, _variantcaller ->
+        .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _contamination, _vcf, _variantcaller ->
             // Get only the patient, sample and status fields from the meta map
             [meta.patient, meta.subMap('sample', 'status')]
         }
@@ -107,8 +107,8 @@ workflow SAMPLESHEET_TO_CHANNEL {
     // Count number of lanes per sample
     // Combine with channel ch_with_patient_sample to add numLanes information
     input_sample = ch_from_samplesheet
-        .map { meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller ->
-            [meta.patient + meta.sample, [meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller]]
+        .map { meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, contamination, vcf, variantcaller ->
+            [meta.patient + meta.sample, [meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, contamination, vcf, variantcaller]]
         }
         .tap { ch_with_patient_sample }
         .groupTuple()
@@ -117,8 +117,11 @@ workflow SAMPLESHEET_TO_CHANNEL {
         }
         .combine(ch_with_patient_sample, by: 0)
         .map { _patient_sample, num_lanes, ch_items ->
-            def (meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller) = ch_items
+            def (meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, contamination, vcf, variantcaller) = ch_items
 
+            if (contamination) {
+                meta = meta + [ contamination: contamination]
+            }
             if ((meta.lane || meta.lane == 0) && fastq_2) {
                 // mapping from fastq files
                 meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "fastq_gz", num_lanes: num_lanes.toInteger(), size: 1]
@@ -420,11 +423,20 @@ Joint germline variant calling also requires intervals in order to genotype the 
         error("Please specify at least one tool when using `--step ${step}`.\nhttps://nf-co.re/sarek/parameters#tools")
     }
 
-    // Fails when missing sex information for CNV tools
-    if (tools && (tools.split(',').contains('ascat') || tools.split(',').contains('controlfreec'))) {
+    // Fails when missing sex information for CNV tools or varlociraptor
+    if (tools && (tools.split(',').contains('ascat') || tools.split(',').contains('controlfreec') || tools.split(',').contains('varlociraptor'))) {
         input_sample.map {
             if (it[0].sex == 'NA') {
-                error("Please specify sex information for each sample in your samplesheet when using '--tools' with 'ascat' or 'controlfreec'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+                error("Please specify sex information for each sample in your samplesheet when using '--tools' with 'ascat' or 'controlfreec' or 'varlociraptor'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+            }
+        }
+    }
+
+    // Fails when varlociraptor is enable for tumor samples but no contamination is provided
+    if (tools && tools.split(',').contains('varlociraptor')) {
+        input_sample.map {
+            if (it[0].status == 1 && !it[0].containsKey('contamination')) {
+                error("Please specify contamination information for each tumor sample in your samplesheet when using '--tools' with 'varlociraptor'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
             }
         }
     }

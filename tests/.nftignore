@@ -38,8 +38,7 @@ reports/samtools/**/**.cram.stats
 reports/snpeff/*/*_snpEff.csv
 reports/snpeff/*/snpEff_summary.html
 reports/vcftools/**/*.TsTv.qual
-variant_calling/**/*.vcf
-variant_calling/**/*.vcf.{gz,gz.tbi}
+variant_calling/**/*.{bcf,vcf,vcf.gz,vcf.gz.tbi}
 variant_calling/ascat/*/*.metrics.txt
 variant_calling/**/*.{pdf,png}
 variant_calling/controlfreec/*/config.txt
@@ -47,3 +46,4 @@ variant_calling/msisensor2/*/*_somatic
 variant_calling/muse/*/*.MuSE.txt
 variant_calling/mutect2/*/*.mutect2.artifactprior.tar.gz
 variant_calling/tiddit/*/*.tiddit.ploidies.tab
+variant_calling/varlociraptor/*/*.alignment-properties.json

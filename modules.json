@@ -20,6 +20,11 @@
                         "git_sha": "1503efe8f6450e71218097f93cf43e4b625018d4",
                         "installed_by": ["modules"]
                     },
+                    "bcftools/merge": {
+                        "branch": "master",
+                        "git_sha": "f17049e03697726ace7499d2fe342f892594f6f3",
+                        "installed_by": ["modules"]
+                    },
                     "bcftools/mpileup": {
                         "branch": "master",
                         "git_sha": "c9c3ef86c1892413b3c86fb38c4e39fd7288512f",
@@ -391,6 +396,11 @@
                         "git_sha": "e824d95384679ea50c6c49aae9851160de80a301",
                         "installed_by": ["modules"]
                     },
+                    "rbt/vcfsplit": {
+                        "branch": "master",
+                        "git_sha": "3e5034548e2398b006a9e01fb82673ffa5c83d9f",
+                        "installed_by": ["modules"]
+                    },
                     "samtools/bam2fq": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
@@ -536,6 +546,21 @@
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["modules"]
                     },
+                    "varlociraptor/callvariants": {
+                        "branch": "master",
+                        "git_sha": "36cf856b511b7623a2d90788c9afa2a655fe6d43",
+                        "installed_by": ["modules"]
+                    },
+                    "varlociraptor/estimatealignmentproperties": {
+                        "branch": "master",
+                        "git_sha": "36cf856b511b7623a2d90788c9afa2a655fe6d43",
+                        "installed_by": ["modules"]
+                    },
+                    "varlociraptor/preprocess": {
+                        "branch": "master",
+                        "git_sha": "36cf856b511b7623a2d90788c9afa2a655fe6d43",
+                        "installed_by": ["modules"]
+                    },
                     "vcflib/vcffilter": {
                         "branch": "master",
                         "git_sha": "401ec2b2b8d0938d12ae4f9e25819e14596b8f83",
@@ -544,6 +569,11 @@
                     "vcftools": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "installed_by": ["modules"]
+                    },
+                    "yte": {
+                        "branch": "master",
+                        "git_sha": "3179219c5360ba9e624f64a28b102efe0cfadc49",
                         "installed_by": ["modules"]
                     }
                 }

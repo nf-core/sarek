@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1937](https://github.com/nf-core/sarek/pull/1937) - Use fgbio plugin to check read structure parameter is valid
 - [1938](https://github.com/nf-core/sarek/pull/1938) - Add checks for uniqueness of sample ids and lane ids
 - [1939](https://github.com/nf-core/sarek/pull/1939) - Modify config to add readgroups to fq2bam
+- [1940](https://github.com/nf-core/sarek/pull/1940) - Add varlociraptor for variant calling
 - [1953](https://github.com/nf-core/sarek/pull/1953) - Update freebayes and add QUAL filtering
 - [1965](https://github.com/nf-core/sarek/pull/1965) - Add msisensor2
 
@@ -76,6 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `multiqc`                              | 1.25.1      | 1.30        |
 | `muse`                                 |             | 2.1.2       |
 | `parabricks`                           |             | 4.5.1-1     |
+| `rbt`                                  |             | 0.42.2      |
 | `samblaster`                           | 0.1.26      | removed     |
 | `samtools` (in `BWAMEM1_MEM`)          | 1.2         | 1.21        |
 | `samtools` (in `BWAMEM2_MEM`)          | 1.19.2      | 1.21        |
@@ -83,22 +85,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `sentieon`                             | 202308.03   | 202503.01   |
 | `snpeff`                               | 5.1         | 5.3.0a      |
 | `tabix`                                | 1.2         | 1.21        |
+| `varlociraptor`                        |             | 8.7.4       |
 | `vcflib`                               |             | 1.0.14      |
+| `yte`                                  |             | 1.9.0       |
 
 ### Parameters
 
-| Params                 | status |
-| ---------------------- | ------ |
-| `--freebayes_filter`   | New    |
-| `--msisensor2_models`  | New    |
-| `--msisensor2_scan`    | New    |
-| `--msisensorpro_scan`  | New    |
-| `--sentieon_consensus` | New    |
-| `--umi_base_skip`      | New    |
-| `--umi_in_read_header` | New    |
-| `--umi_length`         | New    |
-| `--umi_location`       | New    |
-| `--umi_tag`            | New    |
+| Params                                | status |
+| ------------------------------------- | ------ |
+| `--freebayes_filter`                  | New    |
+| `--msisensor2_models`                 | New    |
+| `--msisensor2_scan`                   | New    |
+| `--msisensorpro_scan`                 | New    |
+| `--sentieon_consensus`                | New    |
+| `--umi_base_skip`                     | New    |
+| `--umi_in_read_header`                | New    |
+| `--umi_length`                        | New    |
+| `--umi_location`                      | New    |
+| `--umi_tag`                           | New    |
+| `--varlociraptor_chunk_size`          | New    |
+| `--varlociraptor_scenario_germline`   | New    |
+| `--varlociraptor_scenario_somatic`    | New    |
+| `--varlociraptor_scenario_tumor_only` | New    |
 
 ### Developer section
 
