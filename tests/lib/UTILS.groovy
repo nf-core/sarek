@@ -21,6 +21,10 @@ class UTILS {
         // Will print the summary instead of the md5sum for vcf files
         def no_vcf_md5sum = args.no_vcf_md5sum
 
+        // Use this args to include varlociraptor vcf files in the assertion
+        // It will use the summary method to extract the vcf file content
+        def include_varlociraptor_vcf = args.include_varlociraptor_vcf
+
         // stable_name: All files + folders in ${outdir}/ with a stable name
         def stable_name = getAllFilesFromDir(outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
         // stable_content: All files in ${outdir}/ with stable content
@@ -35,9 +39,12 @@ class UTILS {
         // txt_files: MuSE txt files
         def txt_files = getAllFilesFromDir(outdir, include: ['**/*.MuSE.txt'])
         // vcf_files: All vcf files
-        def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: ['**/test{N,T}.germline.vcf{,.gz}', '**/*.freebayes.vcf{,.gz}'])
+        def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: ['**/test{N,T}.germline.vcf{,.gz}', '**/*.freebayes.vcf{,.gz}',  '**/*.varlociraptor.{vcf}{,.gz}'])
         // freebayes_unfiltered: vcf files from freebayes without quality filtering
         def freebayes_unfiltered = getAllFilesFromDir(outdir, include: ['**/*.freebayes.vcf.gz'])
+        // varlociraptor vcf
+        def varlociraptor_vcf = getAllFilesFromDir(outdir, include: ['**/*.varlociraptor.{vcf}{,.gz}'] )
+
 
         def assertion = []
 
@@ -58,6 +65,9 @@ class UTILS {
                 assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [ file.getName(), path(file.toString()).vcf.summary ] })
             } else {
                 assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 })
+                if (include_varlociraptor_vcf) {
+                    assertion.add(varlociraptor_vcf.isEmpty() ? 'No Varlociraptor VCF files' : varlociraptor_vcf.collect { file -> file.getName() + ":summary," + path(file.toString()).vcf.summary })
+                }
             }
         }
 
@@ -128,7 +138,7 @@ class UTILS {
                             // Number of successful tasks
                             workflow.trace.succeeded().size(),
                             // All assertions based on the scenario
-                            *UTILS.get_assertion(include_freebayes_unfiltered: scenario.include_freebayes_unfiltered ,include_muse_txt: scenario.include_muse_txt, no_vcf_md5sum: scenario.no_vcf_md5sum, outdir: params.outdir, stub: scenario.stub)
+                            *UTILS.get_assertion(include_freebayes_unfiltered: scenario.include_freebayes_unfiltered, include_muse_txt: scenario.include_muse_txt, include_varlociraptor_vcf: scenario.include_varlociraptor_vcf, no_vcf_md5sum: scenario.no_vcf_md5sum, outdir: params.outdir, stub: scenario.stub)
                         ).match() }
                     )
                     // Check stdout if specified

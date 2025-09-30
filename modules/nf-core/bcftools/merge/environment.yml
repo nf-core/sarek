@@ -4,5 +4,7 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - conda-forge::python=2.7.15
-  - bioconda::strelka=2.9.10=h9ee0642_1
+  # renovate: datasource=conda depName=bioconda/htslib
+  - bioconda::htslib=1.22.1
+  # renovate: datasource=conda depName=bioconda/bcftools
+  - bioconda::bcftools=1.22
