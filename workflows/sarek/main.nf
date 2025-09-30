@@ -352,11 +352,12 @@ workflow SAREK {
             .map { normal, tumor ->
                 def meta = [:]
 
-                meta.id        = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
-                meta.normal_id = normal[1].sample
-                meta.patient   = normal[0]
-                meta.sex       = normal[1].sex
-                meta.tumor_id  = tumor[1].sample
+                meta.id            = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
+                meta.normal_id     = normal[1].sample
+                meta.patient       = normal[0]
+                meta.sex           = normal[1].sex
+                meta.tumor_id      = tumor[1].sample
+                meta.contamination = tumor[1].contamination
 
                 [meta, normal[2], normal[3], tumor[2], tumor[3]]
             }
@@ -482,14 +483,19 @@ workflow SAREK {
         )
 
         // POST VARIANTCALLING
-        POST_VARIANTCALLING(
-            BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
-            BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all,
-            BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all,
-            fasta,
-            params.concatenate_vcfs,
-            params.normalize_vcfs,
-        )
+        POST_VARIANTCALLING(params.tools,
+                cram_variant_calling_status_normal,
+                BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
+                cram_variant_calling_tumor_only,
+                BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all,
+                cram_variant_calling_pair,
+                BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all,
+                fasta,
+                fasta_fai,
+                params.concatenate_vcfs,
+                params.normalize_vcfs,
+                params.varlociraptor_chunk_size,
+            )
 
         // Gather vcf files for annotation and QC
         vcf_to_annotate = Channel.empty()
