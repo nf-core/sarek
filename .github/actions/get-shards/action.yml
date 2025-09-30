@@ -32,6 +32,7 @@ runs:
         nftest_output=$(nf-test test \
           --profile +docker \
           $(if [ -n "${{ inputs.tags }}" ]; then echo "--tag ${{ inputs.tags }}"; fi) \
+          $(if [ "${{ inputs.profile == conda }}" ]; then echo "--tag ${{ conda }}"; fi) \
           --dry-run \
           --ci \
           --changed-since HEAD^) || {
