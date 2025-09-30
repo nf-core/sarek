@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1939](https://github.com/nf-core/sarek/pull/1939) - Modify config to add readgroups to fq2bam
 - [1953](https://github.com/nf-core/sarek/pull/1953) - Update freebayes and add QUAL filtering
 - [1965](https://github.com/nf-core/sarek/pull/1965) - Add msisensor2
+- [1952](https://github.com/nf-core/sarek/pull/1952) - Add --alleles force-calling parameter for GATK Mutect2
 
 ### Changed
 

@@ -20,6 +20,7 @@ include { TABIX_TABIX as TABIX_DBSNP                } from '../../../modules/nf-
 include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE    } from '../../../modules/nf-core/tabix/tabix'
 include { TABIX_TABIX as TABIX_KNOWN_INDELS         } from '../../../modules/nf-core/tabix/tabix'
 include { TABIX_TABIX as TABIX_KNOWN_SNPS           } from '../../../modules/nf-core/tabix/tabix'
+include { TABIX_TABIX as TABIX_MUTECT2_FORCE_CALL   } from '../../../modules/nf-core/tabix/tabix'
 include { TABIX_TABIX as TABIX_PON                  } from '../../../modules/nf-core/tabix/tabix'
 include { UNTAR as UNTAR_CHR_DIR                    } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_MSISENSOR2_MODELS          } from '../../../modules/nf-core/untar'
@@ -44,6 +45,7 @@ workflow PREPARE_GENOME {
     msisensor2_models    // channel: [optional]  msisensor2_models
     msisensor2_scan      // channel: [optional]  msisensor2_scan
     msisensorpro_scan    // channel: [optional]  msisensorpro_scan
+    mutect2_force_call   // channel: [optional]  mutect2_force_call
     pon                  // channel: [optional]  pon
     tools
 
@@ -69,6 +71,7 @@ workflow PREPARE_GENOME {
     TABIX_GERMLINE_RESOURCE(germline_resource.flatten().map { it -> [[id: it.baseName], it] })
     TABIX_KNOWN_SNPS(known_snps.flatten().map { it -> [[id: it.baseName], it] })
     TABIX_KNOWN_INDELS(known_indels.flatten().map { it -> [[id: it.baseName], it] })
+    TABIX_MUTECT2_FORCE_CALL(mutect2_force_call.flatten().map { it -> [[id: it.baseName], it] })
     TABIX_PON(pon.flatten().map { it -> [[id: it.baseName], it] })
 
     // prepare ascat and controlfreec reference files
@@ -182,6 +185,7 @@ workflow PREPARE_GENOME {
     versions = versions.mix(TABIX_GERMLINE_RESOURCE.out.versions)
     versions = versions.mix(TABIX_KNOWN_INDELS.out.versions)
     versions = versions.mix(TABIX_KNOWN_SNPS.out.versions)
+    versions = versions.mix(TABIX_MUTECT2_FORCE_CALL.out.versions)
     versions = versions.mix(TABIX_PON.out.versions)
 
     emit:
@@ -198,6 +202,7 @@ workflow PREPARE_GENOME {
     msisensor2_models        = msisensor2_models_folder
     msisensor2_scan          = msisensor2_scan_file // path: genome_msi.list
     msisensorpro_scan        = msisensorpro_scan_file // path: genome_msi.list
+    mutect2_force_call_tbi   = TABIX_MUTECT2_FORCE_CALL.out.tbi.map{ meta, tbi -> [tbi] }.collect()     // path: mutect2_force_call.vcf.gz.tbi
     pon_tbi                  = TABIX_PON.out.tbi.map { meta, tbi -> [tbi] }.collect() // path: pon.vcf.gz.tbi
     allele_files             // path: allele_files
     chr_files                // path: chr_files
