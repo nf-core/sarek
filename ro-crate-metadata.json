@@ -137,7 +137,7 @@
                     "@id": "https://orcid.org/0000-0003-3966-8481"
                 },
                 {
-                    "@id": "https://orcid.org/0000-0002-5762-6253"
+                    "@id": "https://orcid.org/0000-0003-3966-8481"
                 },
                 {
                     "@id": "https://orcid.org/0009-0001-9875-5262"
@@ -161,7 +161,7 @@
                     "@id": "https://orcid.org/0009-0006-2111-4316"
                 },
                 {
-                    "@id": "https://orcid.org/0000-0001-6280-4643"
+                    "@id": "https://orcid.org/0000-0002-5762-6253"
                 },
                 {
                     "@id": "#max.u.garcia@gmail.com"
@@ -173,7 +173,7 @@
                     "@id": "#jc.fernandez.navarro@gmail.com"
                 },
                 {
-                    "@id": "https://orcid.org/0000-0003-3996-0909"
+                    "@id": "https://orcid.org/0000-0001-7409-305X"
                 },
                 {
                     "@id": "https://orcid.org/0000-0001-7409-305X"
@@ -182,7 +182,7 @@
                     "@id": "https://orcid.org/0009-0007-7860-1155"
                 },
                 {
-                    "@id": "https://orcid.org/0000-0001-6104-9260"
+                    "@id": "#53608000+lescai@users.noreply.github.com"
                 },
                 {
                     "@id": "#yehwhey@gmail.com"
@@ -250,7 +250,7 @@
                     "@id": "https://orcid.org/0009-0007-7860-1155"
                 },
                 {
-                    "@id": "https://orcid.org/0000-0001-6104-9260"
+                    "@id": "https://orcid.org/0000-0001-7409-305X"
                 },
                 {
                     "@id": "#yehwhey@gmail.com"
@@ -456,10 +456,16 @@
             "name": "Paul Cantalupo"
         },
         {
-            "@id": "https://orcid.org/0000-0002-5762-6253",
+            "@id": "https://orcid.org/0000-0003-3966-8481",
             "@type": "Person",
-            "email": "bounlu@gmail.com",
-            "name": "\u00d6mer An"
+            "email": "pcantalupo@gmail.com",
+            "name": "Paul Cantalupo"
+        },
+        {
+            "@id": "#adr.lar@me.com",
+            "@type": "Person",
+            "email": "adr.lar@me.com",
+            "name": "Adrian Larkeryd"
         },
         {
             "@id": "https://orcid.org/0009-0001-9875-5262",
@@ -504,10 +510,10 @@
             "name": "Smith Nicholas"
         },
         {
-            "@id": "https://orcid.org/0000-0001-6280-4643",
+            "@id": "https://orcid.org/0000-0001-7409-305X",
             "@type": "Person",
-            "email": "szilveszter.juhos@scilifelab.se",
-            "name": "Szilveszter Juhos"
+            "email": "david.mas.p@gmail.com",
+            "name": "David Mas-Ponte"
         },
         {
             "@id": "#l.conde@ucl.ac.uk",
@@ -558,7 +564,7 @@
             "name": "Simon Pearce"
         },
         {
-            "@id": "https://orcid.org/0000-0002-6503-2180",
+            "@id": "#jc.fernandez.navarro@gmail.com",
             "@type": "Person",
             "email": "apeltzer@users.noreply.github.com",
             "name": "Alexander Peltzer"
