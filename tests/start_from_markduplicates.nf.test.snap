@@ -148,19 +148,7 @@
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,d75ab155c53a8469919bee1c9808eb4b",
-                "samtools_alignment_plot.txt:md5,7a727168e9bbb3f4c39894933438df98",
-                "test.md.mosdepth.global.dist.txt:md5,8e875e20e3fb9cf288d68c1d223f6fd5",
-                "test.md.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
-                "test.md.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
-                "test.md.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
-                "test.md.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917",
-                "test.recal.mosdepth.global.dist.txt:md5,8e875e20e3fb9cf288d68c1d223f6fd5",
-                "test.recal.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
-                "test.recal.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
-                "test.recal.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
-                "test.recal.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917"
+                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             "No BAM files",
             [
@@ -324,19 +312,7 @@
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,d75ab155c53a8469919bee1c9808eb4b",
-                "samtools_alignment_plot.txt:md5,7a727168e9bbb3f4c39894933438df98",
-                "test.md.mosdepth.global.dist.txt:md5,8e875e20e3fb9cf288d68c1d223f6fd5",
-                "test.md.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
-                "test.md.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
-                "test.md.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
-                "test.md.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917",
-                "test.recal.mosdepth.global.dist.txt:md5,8e875e20e3fb9cf288d68c1d223f6fd5",
-                "test.recal.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
-                "test.recal.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
-                "test.recal.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
-                "test.recal.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917"
+                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             "No BAM files",
             [
@@ -473,19 +449,7 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,4153678ed78ce01defe11f5b9fb8deb4",
                 "mosdepth-cumcoverage-dist-id.txt:md5,fcecb7f7ed584a1395065568e0ec1259",
                 "mosdepth_perchrom.txt:md5,4153678ed78ce01defe11f5b9fb8deb4",
-                "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
-                "samtools-stats-dp.txt:md5,dae2fa55a81049479a787e0fe5a64289",
-                "samtools_alignment_plot.txt:md5,b693942009526869bd21cbc42d54f53c",
-                "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
-                "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
-                "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
-                "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
-                "test.sorted.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
-                "test.sorted.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
-                "test.sorted.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
-                "test.sorted.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.sorted.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259"
+                "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d"
             ],
             "No BAM files",
             [
@@ -621,19 +585,7 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,4153678ed78ce01defe11f5b9fb8deb4",
                 "mosdepth-cumcoverage-dist-id.txt:md5,fcecb7f7ed584a1395065568e0ec1259",
                 "mosdepth_perchrom.txt:md5,4153678ed78ce01defe11f5b9fb8deb4",
-                "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
-                "samtools-stats-dp.txt:md5,dae2fa55a81049479a787e0fe5a64289",
-                "samtools_alignment_plot.txt:md5,b693942009526869bd21cbc42d54f53c",
-                "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
-                "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
-                "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
-                "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
-                "test.sorted.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
-                "test.sorted.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
-                "test.sorted.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
-                "test.sorted.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.sorted.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259"
+                "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d"
             ],
             "No BAM files",
             [

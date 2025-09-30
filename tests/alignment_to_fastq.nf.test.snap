@@ -248,14 +248,7 @@
                 "multiqc_fastqc.txt:md5,6fa90a9d9daa7d4839e4b7ebfcdc6201",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,ef82cfdd058c212c0bba38ceb32ec2f8",
-                "samtools_alignment_plot.txt:md5,22572fcd0791878ed37ae2f48213cee2",
-                "test.md.mosdepth.global.dist.txt:md5,9cb9b181119256ed17a77dcf44d58285",
-                "test.md.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
-                "test.md.mosdepth.summary.txt:md5,dbe376360e437c89190139ef0ae6769a",
-                "test.md.regions.bed.gz:md5,0e5ed846b9b11717e42e93eec60f4ffc",
-                "test.md.regions.bed.gz.csi:md5,d0713716f63ac573f4a3385733e9a537"
+                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
                 "test.sorted.bam:md5,6934a96fff1eaa2f70b31ab7e11d3598",

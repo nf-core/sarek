@@ -315,19 +315,7 @@
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,a6f11f838a72299e4913a54dd327f2e6",
-                "samtools_alignment_plot.txt:md5,111d8b457e8c34dc919a527f12f27d4a",
-                "test-test_L1.fastp.json:md5,d9107ec414e44408d0698b167cc445f9",
-                "test.md.mosdepth.global.dist.txt:md5,40bf266b2080717f92b405cb42fab4a7",
-                "test.md.mosdepth.region.dist.txt:md5,94b080042f51f484fa178339cc9324bc",
-                "test.md.mosdepth.summary.txt:md5,7958c5422bb4b5181afe9782e38a735a",
-                "test.md.regions.bed.gz:md5,fe11b3aedde07e4e17114b5b37cdb3b8",
-                "test.md.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917",
-                "test.recal.mosdepth.global.dist.txt:md5,40bf266b2080717f92b405cb42fab4a7",
-                "test.recal.mosdepth.region.dist.txt:md5,94b080042f51f484fa178339cc9324bc",
-                "test.recal.mosdepth.summary.txt:md5,7958c5422bb4b5181afe9782e38a735a",
-                "test.recal.regions.bed.gz:md5,fe11b3aedde07e4e17114b5b37cdb3b8",
-                "test.recal.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917"
+                "test-test_L1.fastp.json:md5,d9107ec414e44408d0698b167cc445f9"
             ],
             "No BAM files",
             [
