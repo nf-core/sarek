@@ -68,6 +68,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
 - Post-variant calling options:
   - `BCFtools concat` for germline vcfs
   - _Experimental Feature_ `BCFtools norm` for all vcfs
+  - `Varlociraptor` for all vcfs
 - Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`)
 - Summarise and represent QC (`MultiQC`)
 
