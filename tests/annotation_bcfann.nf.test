@@ -15,6 +15,15 @@ nextflow_pipeline {
                 step: 'annotate',
                 tools: 'bcfann'
             ]
+        ],
+        [
+            name: "-profile test --tools bcfann --bcftools_columns",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
+                bcftools_columns: "$projectDir/tests/config/bcfann_test_columns.txt",
+                step: 'annotate',
+                tools: 'bcfann'
+            ]
         ]
     ]
 
