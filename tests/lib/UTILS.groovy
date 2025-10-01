@@ -86,14 +86,26 @@ class UTILS {
             // If the test is for a stub, we add options -stub
             // And we append "_stub" to the cpu/gpu tag
 
+            // All options should be:
+            // gpu
+            // cpu
+            // gpu_conda
+            // cpu_conda
+            // gpu_stub
+            // cpu_stub
+            // gpu_conda_stub
+            // cpu_conda_stub
+
             if (scenario.stub) {
                 options "-stub"
             }
+
             if (scenario.gpu) {
-                tag "gpu${!scenario.no_conda ? "_conda" : scenario.stub ? "_stub" : ""}"
+                tag "gpu${!scenario.no_conda ? '_conda' : ''}${scenario.stub ? '_stub' : ''}"
             }
+
             if (!scenario.gpu) {
-                tag "cpu${!scenario.no_conda ? "_conda" : scenario.stub ? "_stub" : ""}"
+                tag "cpu${!scenario.no_conda ? '_conda' : ''}${scenario.stub ? '_stub' : ''}"
             }
 
             // If a tag is provided, add it to the test
