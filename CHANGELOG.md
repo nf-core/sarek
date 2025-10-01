@@ -42,8 +42,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1964](https://github.com/nf-core/sarek/pull/1964) - Update ensemblvep modules to 115.0
 - [1982](https://github.com/nf-core/sarek/pull/1982) - Update ensemblvep modules to 115.1
 - [1988](https://github.com/nf-core/sarek/pull/1988) - Update manta modules to latest build
-- [1993](https://github.com/nf-core/sarek/pull/1993) - Update snpeff modules to 5.3.0a and ensemblvep modules to 115.2
+- [1993](https://github.com/nf-core/sarek/pull/1993) - Update snpeff modules to 5.3a and ensemblvep modules to 115.2
 - [2003](https://github.com/nf-core/sarek/pull/2003) - Update subway map to clarify post-variantcalling processing options
+- [2011](https://github.com/nf-core/sarek/pull/2011) - Downgrade snpeff db to at least 99 due to 105 not being available at the moment
 
 ### Fixed
 
@@ -84,7 +85,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `samtools` (in `BWAMEM2_MEM`)          | 1.19.2      | 1.21        |
 | `samtools` (in `GATK4_MARKDUPLICATES`) | 1.19.2      | 1.21        |
 | `sentieon`                             | 202308.03   | 202503.01   |
-| `snpeff`                               | 5.1         | 5.3.0a      |
+| `snpeff`                               | 5.1         | 5.3a        |
 | `tabix`                                | 1.2         | 1.21        |
 | `varlociraptor`                        |             | 8.7.4       |
 | `vcflib`                               |             | 1.0.14      |
