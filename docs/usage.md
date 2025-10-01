@@ -1181,7 +1181,7 @@ Enable with `--vep_dbnsfp`. The following parameters are mandatory:
 - `--dbnsfp`, to specify the path to the dbNSFP processed file.
 - `--dbnsfp_tbi`, to specify the path to the dbNSFP tabix indexed file.
 
-The following parameters are optionnal:
+The following parameters are optional:
 
 - `--dbnsfp_consequence`, to filter/limit outputs to a specific effect of the variant.
   - The set of consequence terms is defined by the Sequence Ontology and an overview of those used in VEP can be found [here](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html).
@@ -1217,11 +1217,15 @@ For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/
 
 ### BCFTOOLS Annotate
 
-It is possible to annotate a VCF file with a custom annotation file using [BCFTOOLS Annotate](https://samtools.github.io/bcftools/bcftools.html#annotate). This can be done by setting adding bcfann to the tools list and setting the following parameters:
+It is possible to annotate a VCF file with a custom annotation file using [BCFTOOLS Annotate](https://samtools.github.io/bcftools/bcftools.html#annotate). This can be done by adding `bcfann` to the tools list. The following parameters are mandatory:
 
-- annotations: path to vcf annotation file
-- annotations_index: path to vcf annotation index file
-- header_lines: path to header lines file
+- `--bcftools_annotations`, path to vcf annotation file
+- `--bcftools_annotations_index`, path to vcf annotation index file
+- `--bcftools_header_lines`, path to vcf annotation header lines file
+
+The following parameters are optional:
+
+- `--bcftools_columns`, path to vcf annotation columns file
 
 ## MultiQC related issues
 
