@@ -12,6 +12,9 @@
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
+                "NGSCHECKMATE_NCM": {
+                    "ngscheckmate": "1.0.1"
+                },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
