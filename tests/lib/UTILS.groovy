@@ -81,7 +81,7 @@ class UTILS {
         return {
             // If the test is for a gpu, we add the gpu tag
             // Otherwise, we add the cpu tag
-            // If the tests has some conda incompatibilities
+            // If the tests has no conda incompatibilities
             // then we append "_conda" to the cpu/gpu tag
             // If the test is for a stub, we add options -stub
             // And we append "_stub" to the cpu/gpu tag
