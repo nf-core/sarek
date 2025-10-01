@@ -1220,7 +1220,7 @@ For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/
 It is possible to annotate a VCF file with a custom annotation file using [BCFTOOLS Annotate](https://samtools.github.io/bcftools/bcftools.html#annotate). This can be done by adding `bcfann` to the tools list. The following parameters are mandatory:
 
 - `--bcftools_annotations`, path to vcf annotation file
-- `--bcftools_annotations_index`, path to vcf annotation index file
+- `--bcftools_annotations_tbi`, path to vcf annotation index file
 - `--bcftools_header_lines`, path to vcf annotation header lines file
 
 The following parameters are optional:
