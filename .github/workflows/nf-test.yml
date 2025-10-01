@@ -103,7 +103,7 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
-          tags: "cpu"
+          tags: ${{ matrix.profile == 'conda' && 'cpu_conda' || 'cpu' }}
       - name: Report test status
         if: ${{ always() }}
         run: |
