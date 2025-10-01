@@ -144,6 +144,10 @@
 
   > Eisfeldt J, Vezzi F, Olason P, et al.: TIDDIT, an efficient and comprehensive structural variant caller for massive parallel sequencing data. F1000Res. 2017 May 10;6:664. doi: 10.12688/f1000research.11168.2. eCollection 2017. PubMed PMID: 28781756; PubMed Central PMCID: PMC5521161.
 
+- [Varlociraptor](https://pubmed.ncbi.nlm.nih.gov/32345333/)
+
+  > Köster, J., Dijkstra, L.J., Marschall, T. et al. Varlociraptor: enhancing sensitivity and controlling false discovery rate in somatic indel discovery. Genome Biol 21, 98 (2020). https://doi.org/10.1186/s13059-020-01993-6
+
 - [VCFTools](https://pubmed.ncbi.nlm.nih.gov/21653522/)
 
   > Danecek P, Auton A, Abecasis G, et al.: The variant call format and VCFtools. Bioinformatics. 2011 Aug 1;27(15):2156-8. doi: 10.1093/bioinformatics/btr330. Epub 2011 Jun 7. PubMed PMID: 21653522; PubMed Central PMCID: PMC3137218.

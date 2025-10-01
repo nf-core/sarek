@@ -129,10 +129,7 @@
                 "sample2.tumor.mpileup.gz_info.txt:md5,fed6aa0e0f4232255d5152f5774161b9",
                 "sample2.tumor.mpileup.gz_ratio.BedGraph:md5,d2347daecbb4eb1f1a3b5558acdf657a",
                 "sample2.tumor.mpileup.gz_ratio.txt:md5,7587b17b4303715aa45eae017e357c23",
-                "sample2.tumor.mpileup.gz_sample.cpn:md5,8bf25e5cf94e89bcbbd4bb0d453d3057",
-                "sample2_BAF.png:md5,32e1189f07f9ddb4892cae10f4003e4a",
-                "sample2_ratio.log2.png:md5,6d8b8cabc35d391f9a92ede6128eb378",
-                "sample2_ratio.png:md5,47fce58116c63d6cad34f80575e34e43"
+                "sample2.tumor.mpileup.gz_sample.cpn:md5,8bf25e5cf94e89bcbbd4bb0d453d3057"
             ],
             "No BAM files",
             "No CRAM files",
@@ -302,10 +299,7 @@
                 "sample4_vs_sample3.tumor.mpileup.gz_info.txt:md5,b79da6ae026d86777d60d9f9edb9c6f6",
                 "sample4_vs_sample3.tumor.mpileup.gz_ratio.BedGraph:md5,cb087117ea046a6350885a34cb4bf667",
                 "sample4_vs_sample3.tumor.mpileup.gz_ratio.txt:md5,690cbefd87a77a6a37689135585c401c",
-                "sample4_vs_sample3.tumor.mpileup.gz_sample.cpn:md5,b4f97163fdb6a3d97ca4ea560394cdb1",
-                "sample4_vs_sample3_BAF.png:md5,16456932bb16e79c8cec4f747846c321",
-                "sample4_vs_sample3_ratio.log2.png:md5,89dce170acbb4c438be8359d242940df",
-                "sample4_vs_sample3_ratio.png:md5,6ac35ba93babc019c2d863f7e06b49b1"
+                "sample4_vs_sample3.tumor.mpileup.gz_sample.cpn:md5,b4f97163fdb6a3d97ca4ea560394cdb1"
             ],
             "No BAM files",
             "No CRAM files",
