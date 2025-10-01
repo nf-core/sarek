@@ -65,6 +65,8 @@ jobs:
       fail-fast: false
       matrix:
         shard: ${{ fromJson(needs.nf-test-gpu-changes.outputs.shard) }}
+        # Note: at the moment, in sarek no processes using gpu are supported with conda
+        # Which is why the profile matrix is limited to docker and singularity
         profile: [docker, singularity]
         isMain:
           - ${{ github.base_ref == 'master' || github.base_ref == 'main' }}
