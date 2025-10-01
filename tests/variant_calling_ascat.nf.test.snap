@@ -197,7 +197,6 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
@@ -205,6 +204,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
@@ -285,6 +285,7 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,a79d8d9cb20cf117f7510eb1e3674997",
                 "mosdepth-cumcoverage-dist-id.txt:md5,c5095d8ac96d906979d5ead383b14d73",
                 "mosdepth_perchrom.txt:md5,a79d8d9cb20cf117f7510eb1e3674997",
+                "multiqc.parquet:md5,fe0afd51f760077bfd5f9041d83d6559",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,272184ca54d87094df9ab12335618e9a",
                 "samtools_alignment_plot.txt:md5,cd6531ba39758cf6ad96ba9d83df2230",
@@ -313,10 +314,10 @@
             "No VCF files"
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-07-03T07:56:35.822595523"
+        "timestamp": "2025-09-30T22:09:59.120270404"
     },
     "-profile test --tools ascat --input ascat_somatic.csv": {
         "content": [
@@ -340,7 +341,6 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
@@ -348,6 +348,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
@@ -426,6 +427,7 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,a79d8d9cb20cf117f7510eb1e3674997",
                 "mosdepth-cumcoverage-dist-id.txt:md5,c5095d8ac96d906979d5ead383b14d73",
                 "mosdepth_perchrom.txt:md5,a79d8d9cb20cf117f7510eb1e3674997",
+                "multiqc.parquet:md5,294979f07005fcc47cac21281eb66000",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,272184ca54d87094df9ab12335618e9a",
                 "samtools_alignment_plot.txt:md5,cd6531ba39758cf6ad96ba9d83df2230",
@@ -454,9 +456,9 @@
             "No VCF files"
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-07-03T08:02:34.73546408"
+        "timestamp": "2025-09-30T22:09:00.15700005"
     }
 }

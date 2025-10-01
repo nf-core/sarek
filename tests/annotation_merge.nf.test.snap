@@ -29,9 +29,9 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
@@ -86,6 +86,7 @@
                 "reports/snpeff/test/test_snpEff.genes.txt"
             ],
             [
+                "multiqc.parquet:md5,de626ae8744954a11f4ede7088e7785b",
                 "multiqc_citations.txt:md5,ebf9f49bc020eeb38546ddab3a98171e",
                 "multiqc_snpeff.txt:md5,03a2b1c461cb6e5cccac64033a2f6526",
                 "snpeff_effects.txt:md5,3c5e9a1c191b77c781dc4d033b1dd1f7",
@@ -104,10 +105,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
+            "nf-test": "0.9.3",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-09-24T14:06:25.979232833"
+        "timestamp": "2025-09-30T20:16:10.361249106"
     },
     "-profile test --tools merge": {
         "content": [
@@ -135,9 +136,9 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
@@ -188,6 +189,7 @@
                 "reports/snpeff/test"
             ],
             [
+                "multiqc.parquet:md5,b1732911f32e9c290fea5084b7f2d7fc",
                 "multiqc_citations.txt:md5,ebf9f49bc020eeb38546ddab3a98171e",
                 "multiqc_snpeff.txt:md5,03a2b1c461cb6e5cccac64033a2f6526",
                 "snpeff_effects.txt:md5,3c5e9a1c191b77c781dc4d033b1dd1f7",
@@ -203,9 +205,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
+            "nf-test": "0.9.3",
             "nextflow": "25.04.7"
         },
-        "timestamp": "2025-09-24T14:05:19.17570252"
+        "timestamp": "2025-09-30T20:15:05.266731747"
     }
 }

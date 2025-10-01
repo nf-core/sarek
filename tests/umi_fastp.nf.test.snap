@@ -58,7 +58,6 @@
                 "csv/recalibrated.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/fastp-insert-size-plot.txt",
                 "multiqc/multiqc_data/fastp-seq-content-gc-plot_Read_1_After_filtering.txt",
                 "multiqc/multiqc_data/fastp-seq-content-gc-plot_Read_1_Before_filtering.txt",
@@ -96,6 +95,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_fastp.txt",
@@ -107,6 +107,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/picard_MarkIlluminaAdapters_histogram.txt",
                 "multiqc/multiqc_data/picard_MeanQualityByCycle_histogram.txt",
+                "multiqc/multiqc_data/picard_MeanQualityByCycle_histogram_1.txt",
                 "multiqc/multiqc_data/picard_QualityScoreDistribution_histogram.txt",
                 "multiqc/multiqc_data/picard_deduplication.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
@@ -309,11 +310,13 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,45bca136491a7675ebba87def2534f26",
                 "mosdepth-cumcoverage-dist-id.txt:md5,5e049e05573f1afd0bb893f2cb4076c6",
                 "mosdepth_perchrom.txt:md5,45bca136491a7675ebba87def2534f26",
+                "multiqc.parquet:md5,0daebd93bd14dbcd681ed568686079f3",
                 "multiqc_citations.txt:md5,0e2971e7a873c92592112775fa99fb02",
                 "multiqc_fastp.txt:md5,8e11d751e997877e4ffc487c52756f62",
                 "multiqc_fastqc.txt:md5,0ca2cba4204d9076a1eb17596379d10c",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,a6f11f838a72299e4913a54dd327f2e6",
                 "samtools_alignment_plot.txt:md5,111d8b457e8c34dc919a527f12f27d4a",
@@ -337,10 +340,10 @@
             "No VCF files"
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-08-15T15:21:46.201227943"
+        "timestamp": "2025-09-30T22:00:22.489872264"
     },
     "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null": {
         "content": [
