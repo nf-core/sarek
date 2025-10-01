@@ -43,7 +43,7 @@ nextflow_pipeline {
                 nucleotides_per_second: 20,
                 skip_tools: 'haplotypecaller_filter'
             ],
-            tag: "no_conda"
+            no_conda: true
         ],
         [
             name: "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20 --skip_tools haplotypecaller_filter --no_intervals",
@@ -56,7 +56,7 @@ nextflow_pipeline {
                 skip_tools: 'haplotypecaller_filter',
                 no_intervals: true
             ],
-            tag: "no_conda"
+            no_conda: true
         ]
     ]
 
