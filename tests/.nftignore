@@ -20,8 +20,6 @@ multiqc/multiqc_data/multiqc_samtools_stats.txt
 multiqc/multiqc_data/multiqc_software_versions.txt
 multiqc/multiqc_data/multiqc_sources.txt
 multiqc/multiqc_data/picard_deduplication.txt
-multiqc/multiqc_data/samtools-stats-dp.txt
-multiqc/multiqc_data/samtools_alignment_plot.txt
 multiqc/multiqc_data/vcftools*.txt
 multiqc/multiqc_plots/{svg,pdf,png}/*.{svg,pdf,png}
 multiqc/multiqc_report.html
@@ -34,10 +32,10 @@ reports/**/*.cram.metrics{,.multiqc.tsv}
 reports/EnsemblVEP/*/*.ann.summary.html
 reports/fastp/**/*.fastp.{log,html}
 reports/fastqc/**/*_fastqc.{html,zip}
-reports/mosdepth/**/*.{stats.txt,id.txt,perchrom.txt,dist.txt,summary.txt,bed.gz,bed.gz.csi}
+reports/**/*.cram.metrics{,.multiqc.tsv}
 reports/ngscheckmate/ngscheckmate.pdf
 reports/ngscheckmate/vcfs/*.ngscheckmate.vcf.gz
-reports/samtools/**/*.cram.stats
+reports/samtools/**/**.cram.stats
 reports/snpeff/*/*_snpEff.csv
 reports/snpeff/*/snpEff_summary.html
 reports/vcftools/**/*.TsTv.qual

@@ -65,7 +65,6 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/fastqc-status-check-heatmap.txt",
                 "multiqc/multiqc_data/fastqc_adapter_content_plot.txt",
                 "multiqc/multiqc_data/fastqc_per_base_n_content_plot.txt",
@@ -87,6 +86,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
@@ -98,6 +98,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/picard_MarkIlluminaAdapters_histogram.txt",
                 "multiqc/multiqc_data/picard_MeanQualityByCycle_histogram.txt",
+                "multiqc/multiqc_data/picard_MeanQualityByCycle_histogram_1.txt",
                 "multiqc/multiqc_data/picard_QualityScoreDistribution_histogram.txt",
                 "multiqc/multiqc_data/picard_deduplication.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
@@ -266,24 +267,38 @@
                 "fastqc_sequence_counts_plot.txt:md5,7f0f19a58e8e54e792a751fd04a9ae13",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,92b02e250ff78725deb9a10d510fcecc",
                 "fastqc_sequence_length_distribution_plot.txt:md5,fb04dce68ec566314125bc9438211b28",
-                "mosdepth-coverage-per-contig-single.txt:md5,8aed596c5d95eeafeef183e0d947e6cd",
-                "mosdepth-cumcoverage-dist-id.txt:md5,abf3e34bd5e570a035e21bed8afb8e2b",
-                "mosdepth_perchrom.txt:md5,8aed596c5d95eeafeef183e0d947e6cd",
+                "mosdepth-coverage-per-contig-single.txt:md5,9e6ccfcb1142613ea5d82fddb87d3f54",
+                "mosdepth-cumcoverage-dist-id.txt:md5,be16b5b86989b5bc4c8e099ea9b5f23d",
+                "mosdepth_perchrom.txt:md5,9e6ccfcb1142613ea5d82fddb87d3f54",
+                "multiqc.parquet:md5,2b858256326de14ec9baf337cdea88c6",
                 "multiqc_citations.txt:md5,790a7694da30294b51fa1d6c3eb8ba2b",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "test-test_L1.stats.txt:md5,f0be98dec71aa5aad945a7153baa843d",
-                "test-test_L2.stats.txt:md5,3282f48cd6fb9c8a20f973c90f86dc80",
+                "samtools-stats-dp.txt:md5,f32a566b9cb2af338d9ae9727209309c",
+                "samtools_alignment_plot.txt:md5,9da7a4f835b0fbbe2faa08499dbd6e5d",
+                "test-test_L1.stats.txt:md5,0cdc9135e088ceeb1acc87dacd52359f",
+                "test-test_L2.stats.txt:md5,235b872ee3ddd665d90b47013ad17314",
                 "test.strelka.variants.bcftools_stats.txt:md5,b6511034fcbf5c396ed035207b4aea41",
+                "test.md.mosdepth.global.dist.txt:md5,1cdce49e421ca4f35dd8b069762abb33",
+                "test.md.mosdepth.region.dist.txt:md5,4b7ca058d3f22f311ac754b9651be4ce",
+                "test.md.mosdepth.summary.txt:md5,5edad46839a432dd12a6f098a33b69f1",
+                "test.md.regions.bed.gz:md5,40e76a7aa3eb76714dcc5f9bb0be8f3c",
+                "test.md.regions.bed.gz.csi:md5,506ef3515eb3a9b3ee79b0457cd618f1",
+                "test.recal.mosdepth.global.dist.txt:md5,1cdce49e421ca4f35dd8b069762abb33",
+                "test.recal.mosdepth.region.dist.txt:md5,4b7ca058d3f22f311ac754b9651be4ce",
+                "test.recal.mosdepth.summary.txt:md5,5edad46839a432dd12a6f098a33b69f1",
+                "test.recal.regions.bed.gz:md5,40e76a7aa3eb76714dcc5f9bb0be8f3c",
+                "test.recal.regions.bed.gz.csi:md5,506ef3515eb3a9b3ee79b0457cd618f1",
                 "test.strelka.variants.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
             "No BAM files",
             [
-                "test.md.cram:md5,81c76a62603d22cc0b4c1315f69bc887",
-                "test.recal.cram:md5,99fb4526454e7b55068194b2a9d19a4"
+                "test.md.cram:md5,5970cd793f9044f793593255299cd763",
+                "test.recal.cram:md5,1f279a6e75e206d0cc06dbeecb7db7a9"
             ],
             [
                 "test.strelka.genome.vcf.gz:md5,2396656fa8d478e5fd76cda3a1c91cbb",
@@ -294,7 +309,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-29T16:02:21.831086528"
+        "timestamp": "2025-10-01T23:16:52.859305"
     },
     "-profile test --tools bbsplit,strelka --bbsplit_fasta_list -stub": {
         "content": [
@@ -509,6 +524,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-29T16:03:04.253833632"
+        "timestamp": "2025-10-01T23:24:58.655921"
     }
 }
