@@ -101,6 +101,11 @@ class UTILS {
                 tag scenario.tag
             }
 
+            // Add conda tag if not provided or not no_conda
+            if (!scenario.tag || scenario.tag != "no_conda") {
+                tag "conda"
+            }
+
             when {
                 params {
                     // Mandatory, as we always need an outdir
