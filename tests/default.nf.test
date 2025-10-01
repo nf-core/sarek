@@ -6,10 +6,10 @@ nextflow_pipeline {
     tag "pipeline_sarek"
 
     def test_scenario = [
-        // [
-        //     name: "-profile test",
-        //     params: []
-        // ],
+        [
+            name: "-profile test",
+            params: []
+        ],
         [
             name: "-profile test -stub",
             params: [],

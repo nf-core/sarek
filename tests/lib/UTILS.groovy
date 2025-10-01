@@ -87,13 +87,13 @@ class UTILS {
             // And we append "_stub" to the cpu/gpu tag
 
             // All options should be:
-            // gpu
-            // cpu
-            // gpu_conda
-            // cpu_conda
+            // gpu (this is the default for gpu)
+            // cpu (this is the default for tests without conda)
+            // gpu_conda (this should never happen)
+            // cpu_conda (this is the default for tests with conda compatibility)
             // gpu_stub
             // cpu_stub
-            // gpu_conda_stub
+            // gpu_conda_stub (this should never happen)
             // cpu_conda_stub
 
             if (scenario.stub) {
