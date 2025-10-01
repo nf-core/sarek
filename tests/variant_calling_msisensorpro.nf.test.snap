@@ -149,7 +149,6 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,4ee05f71086179b42a01cd2fb450346f",
                 "mosdepth-cumcoverage-dist-id.txt:md5,cb7468f51b8be1230fb3ac5b130be31f",
                 "mosdepth_perchrom.txt:md5,4ee05f71086179b42a01cd2fb450346f",
-                "multiqc.parquet:md5,46bb40fd3f64090e8e23cf20eab24f8f",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
@@ -220,7 +219,6 @@
                 "reference/msisensorpro/genome.msisensor_scan.list"
             ],
             [
-                "multiqc.parquet:md5,9a09821641056e36d139a779bab4bc60",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "genome.dict:md5,de4ff13287d28c1679a11ae989a3a980",
                 "no_intervals.bed.gz:md5,f3dac01ea66b95fe477446fde2d31489",

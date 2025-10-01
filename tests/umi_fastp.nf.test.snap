@@ -310,7 +310,6 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,45bca136491a7675ebba87def2534f26",
                 "mosdepth-cumcoverage-dist-id.txt:md5,5e049e05573f1afd0bb893f2cb4076c6",
                 "mosdepth_perchrom.txt:md5,45bca136491a7675ebba87def2534f26",
-                "multiqc.parquet:md5,0daebd93bd14dbcd681ed568686079f3",
                 "multiqc_citations.txt:md5,0e2971e7a873c92592112775fa99fb02",
                 "multiqc_fastp.txt:md5,8e11d751e997877e4ffc487c52756f62",
                 "multiqc_fastqc.txt:md5,0ca2cba4204d9076a1eb17596379d10c",

@@ -276,7 +276,6 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,9cfd38310d4da59c7242b2a7ae6bd651",
                 "mosdepth-cumcoverage-dist-id.txt:md5,f0177ed551b6ec930854d0d221904ec0",
                 "mosdepth_perchrom.txt:md5,9cfd38310d4da59c7242b2a7ae6bd651",
-                "multiqc.parquet:md5,476f67006244c9618d2a472c54b84c6d",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,a0c101497a0566f60b9e8388207944ab",
                 "samtools_alignment_plot.txt:md5,563784066de81f3bc8ccf5fbbe82b3d5",

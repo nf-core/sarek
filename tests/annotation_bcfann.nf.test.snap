@@ -27,7 +27,6 @@
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml"
             ],
             [
-                "multiqc.parquet:md5,3d3d68302b7905811c8fc2c37067fe39",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ],
             "No BAM files",

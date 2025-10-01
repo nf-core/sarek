@@ -86,7 +86,6 @@
                 "reports/snpeff/test/test_snpEff.genes.txt"
             ],
             [
-                "multiqc.parquet:md5,de626ae8744954a11f4ede7088e7785b",
                 "multiqc_citations.txt:md5,ebf9f49bc020eeb38546ddab3a98171e",
                 "multiqc_snpeff.txt:md5,03a2b1c461cb6e5cccac64033a2f6526",
                 "snpeff_effects.txt:md5,3c5e9a1c191b77c781dc4d033b1dd1f7",
@@ -189,7 +188,6 @@
                 "reports/snpeff/test"
             ],
             [
-                "multiqc.parquet:md5,b1732911f32e9c290fea5084b7f2d7fc",
                 "multiqc_citations.txt:md5,ebf9f49bc020eeb38546ddab3a98171e",
                 "multiqc_snpeff.txt:md5,03a2b1c461cb6e5cccac64033a2f6526",
                 "snpeff_effects.txt:md5,3c5e9a1c191b77c781dc4d033b1dd1f7",

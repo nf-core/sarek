@@ -96,7 +96,6 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,115b9a93bcf511419e6622919172f321",
                 "mosdepth-cumcoverage-dist-id.txt:md5,df2fc825dfc41e30f72f5d125a6447ee",
                 "mosdepth_perchrom.txt:md5,115b9a93bcf511419e6622919172f321",
-                "multiqc.parquet:md5,4b2b9cbc3245b34a38423573b9b0b531",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,c8deaa643c44fd800cbf14ac35fb7719",
                 "samtools_alignment_plot.txt:md5,8908b56b3040f2c53b15591adf93a266",
@@ -224,7 +223,6 @@
                 "variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi"
             ],
             [
-                "multiqc.parquet:md5,73ee0edfe00573b132dc749447884e3c",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "test.strelka.variants.bcftools_stats.txt:md5,bffd4c0cf553a42c5b183220d71a1466",
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
@@ -349,7 +347,6 @@
                 "variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi"
             ],
             [
-                "multiqc.parquet:md5,b792a749c0092feb0e4cb72b0a1ce152",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "test.strelka.variants.bcftools_stats.txt:md5,bffd4c0cf553a42c5b183220d71a1466",
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
@@ -465,7 +462,6 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,115b9a93bcf511419e6622919172f321",
                 "mosdepth-cumcoverage-dist-id.txt:md5,df2fc825dfc41e30f72f5d125a6447ee",
                 "mosdepth_perchrom.txt:md5,115b9a93bcf511419e6622919172f321",
-                "multiqc.parquet:md5,90f2721d69ad25883eb2626dbaf2bbf2",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,c8deaa643c44fd800cbf14ac35fb7719",
                 "samtools_alignment_plot.txt:md5,8908b56b3040f2c53b15591adf93a266",

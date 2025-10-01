@@ -337,7 +337,6 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,7c01ea3a011867911ed0b612acb42007",
                 "mosdepth-cumcoverage-dist-id.txt:md5,c013414788f3acfff722a725b5c4938e",
                 "mosdepth_perchrom.txt:md5,7c01ea3a011867911ed0b612acb42007",
-                "multiqc.parquet:md5,e1e15d1ea0868a8372e36ab34149f24e",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
                 "multiqc_fastqc.txt:md5,ae908328010c1f8a5eb15ca080b92993",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
