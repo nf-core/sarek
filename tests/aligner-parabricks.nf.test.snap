@@ -7,7 +7,7 @@
                     "bwa": "0.7.18-r1243-dirty"
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.3.0"
+                    "gawk": "5.1.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -19,7 +19,7 @@
                     "mosdepth": "0.3.10"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "pbrun": "4.5.1-1"
+                    "pbrun": "4.4.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
@@ -182,6 +182,8 @@
                 "mosdepth_perchrom.txt:md5,838f41ebbcf239a8473744a7720fb71d",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
+                "samtools-stats-dp.txt:md5,f9537d88129465c4ea65ba8929826778",
+                "samtools_alignment_plot.txt:md5,cfd7ad770341639774ad373a443db348",
                 "genome.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
                 "genome.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
                 "genome.bwt:md5,815eded87e4cb6b0f1daab5c4d6e30af",
@@ -190,7 +192,14 @@
                 "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
-                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
+                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
+                "test.recal.mosdepth.global.dist.txt:md5,cf69c941bd8522b025bd752b71ed340b",
+                "test.recal.mosdepth.region.dist.txt:md5,cf69c941bd8522b025bd752b71ed340b",
+                "test.recal.mosdepth.summary.txt:md5,4b79f8f2951740b29de41b7210981867",
+                "test.recal.per-base.bed.gz:md5,6fc83a7a31931bc4c1bbb6e652c1fc33",
+                "test.recal.per-base.bed.gz.csi:md5,423628957501bc7737de4bfd900cd1bc",
+                "test.recal.regions.bed.gz:md5,c5242dacd5170ddcbb0637dc0ef73826",
+                "test.recal.regions.bed.gz.csi:md5,a43bfb8c598e3091406b25ba174c0270"
             ],
             "No BAM files",
             [
@@ -203,7 +212,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-18T16:34:19.841021716"
+        "timestamp": "2025-07-30T16:45:16.934496981"
     },
     "-profile test --aligner parabricks --tools mutect2 --wes --input fastq_pair.csv": {
         "content": [
@@ -219,7 +228,7 @@
                     "gatk4": "4.6.1.0"
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.3.0"
+                    "gawk": "5.1.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -246,7 +255,7 @@
                     "gatk4": "4.6.1.0"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "pbrun": "4.5.1-1"
+                    "pbrun": "4.4.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
@@ -455,6 +464,8 @@
                 "mosdepth_perchrom.txt:md5,9dc5b737b4d13e11dbe60d49b91e11f7",
                 "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
                 "multiqc_fastqc.txt:md5,2fd25e8c81f962594b801d5a9df3cd87",
+                "samtools-stats-dp.txt:md5,efc913b940ffe1d16e4ef99f2491f7a2",
+                "samtools_alignment_plot.txt:md5,e5320927fac21e1c23aaffa805f74a57",
                 "genome.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
                 "genome.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
                 "genome.bwt:md5,815eded87e4cb6b0f1daab5c4d6e30af",
@@ -465,6 +476,20 @@
                 "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
                 "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
                 "test2_vs_test.mutect2.filtered.bcftools_stats.txt:md5,46384bbd90894ff023684d88df891fd6",
+                "test.recal.mosdepth.global.dist.txt:md5,cf69c941bd8522b025bd752b71ed340b",
+                "test.recal.mosdepth.region.dist.txt:md5,cf69c941bd8522b025bd752b71ed340b",
+                "test.recal.mosdepth.summary.txt:md5,4b79f8f2951740b29de41b7210981867",
+                "test.recal.per-base.bed.gz:md5,6fc83a7a31931bc4c1bbb6e652c1fc33",
+                "test.recal.per-base.bed.gz.csi:md5,423628957501bc7737de4bfd900cd1bc",
+                "test.recal.regions.bed.gz:md5,c5242dacd5170ddcbb0637dc0ef73826",
+                "test.recal.regions.bed.gz.csi:md5,a43bfb8c598e3091406b25ba174c0270",
+                "test2.recal.mosdepth.global.dist.txt:md5,16a273b6639342c7b065161bcf0b83cd",
+                "test2.recal.mosdepth.region.dist.txt:md5,16a273b6639342c7b065161bcf0b83cd",
+                "test2.recal.mosdepth.summary.txt:md5,55d1cefb0003c5f68918ffb24a8df56d",
+                "test2.recal.per-base.bed.gz:md5,43c9591759011ecd0d6bddba7ebbf888",
+                "test2.recal.per-base.bed.gz.csi:md5,fee1776dc4b39f62fe81aed02606c636",
+                "test2.recal.regions.bed.gz:md5,e39e7bd4ab2033a8c6c6688fc9ea2961",
+                "test2.recal.regions.bed.gz.csi:md5,a43bfb8c598e3091406b25ba174c0270",
                 "test2_vs_test.mutect2.filtered.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test2_vs_test.mutect2.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test.mutect2.pileups.table:md5,ad58c5068cd87aa2ba417cd4fa08df87",
@@ -488,6 +513,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-09-18T16:36:16.566283117"
+        "timestamp": "2025-07-31T11:28:17.863776153"
     }
 }
