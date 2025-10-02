@@ -44,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1988](https://github.com/nf-core/sarek/pull/1988) - Update manta modules to latest build
 - [1993](https://github.com/nf-core/sarek/pull/1993) - Update snpeff modules to 5.3.0a and ensemblvep modules to 115.2
 - [2003](https://github.com/nf-core/sarek/pull/2003) - Update subway map to clarify post-variantcalling processing options
+- [2009](https://github.com/nf-core/sarek/pull/2009) - Update multiqc module to 1.31
 
 ### Fixed
 
@@ -75,7 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `mosdepth`                             | 0.3.8       | 0.3.10      |
 | `msisensor2`                           |             | 0.1         |
 | `msisensorpro`                         | 1.2.0       | 1.3.0       |
-| `multiqc`                              | 1.25.1      | 1.30        |
+| `multiqc`                              | 1.25.1      | 1.31        |
 | `muse`                                 |             | 2.1.2       |
 | `parabricks`                           |             | 4.5.1-1     |
 | `rbt`                                  |             | 0.42.2      |
