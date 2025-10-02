@@ -10,6 +10,11 @@
                         "git_sha": "edd5dd7ef8d99cc059dcdff2de08d936838b8ca4",
                         "installed_by": ["modules"]
                     },
+                    "bbmap/bbsplit": {
+                        "branch": "master",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
+                    },
                     "bcftools/annotate": {
                         "branch": "master",
                         "git_sha": "8b09455ee60fe0cbf1323d1dee5bf9039e1ac733",
@@ -324,6 +329,11 @@
                     "goleft/indexcov": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "installed_by": ["modules"]
+                    },
+                    "gunzip": {
+                        "branch": "master",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
                         "installed_by": ["modules"]
                     },
                     "lofreq/callparallel": {
