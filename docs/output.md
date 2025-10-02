@@ -296,9 +296,8 @@ The resulting recalibrated CRAM files are delivered to the user. Recalibrated CR
 
 ### Parabricks FQ2BAM
 
-:::info
-This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
-:::
+> [!NOTE]
+> This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
 
 [Parabricks FQ2BAM](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html) runs as alternative to GATK preprocessing, enables by `--aligner parabricks --profile <docker/singularity>,gpu`.
 
