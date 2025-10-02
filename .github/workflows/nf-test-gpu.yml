@@ -65,6 +65,8 @@ jobs:
       fail-fast: false
       matrix:
         shard: ${{ fromJson(needs.nf-test-gpu-changes.outputs.shard) }}
+        # Note: at the moment, in sarek no processes using gpu are supported with conda
+        # Which is why the profile matrix is limited to docker and singularity
         profile: [docker, singularity]
         isMain:
           - ${{ github.base_ref == 'master' || github.base_ref == 'main' }}
@@ -84,6 +86,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Test CUDA
+        run: |
+          nvidia-smi -L
+
       - name: Run nf-test on GPU
         id: run_nf_test_gpu
         uses: ./.github/actions/nf-test
@@ -98,7 +104,7 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
-          tags: "gpu"
+          tags: ${{ matrix.profile == 'conda' && 'gpu_conda' || 'gpu,gpu_conda' }}
       - name: Report test status
         if: ${{ always() }}
         run: |

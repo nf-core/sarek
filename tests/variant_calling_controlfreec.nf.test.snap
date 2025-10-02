@@ -38,7 +38,6 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
@@ -46,6 +45,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
@@ -136,10 +136,10 @@
             "No VCF files"
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-06-16T11:58:00.939944816"
+        "timestamp": "2025-09-30T22:28:08.497498851"
     },
     "-profile test --tools controlfreec somatic": {
         "content": [
@@ -186,7 +186,6 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
@@ -194,6 +193,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
@@ -306,10 +306,10 @@
             "No VCF files"
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-06-16T11:56:38.313417532"
+        "timestamp": "2025-09-30T22:26:38.500794704"
     },
     "-profile test --tools controlfreec --no_intervals somatic -stub": {
         "content": [

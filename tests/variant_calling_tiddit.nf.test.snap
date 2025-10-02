@@ -36,7 +36,6 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
@@ -44,6 +43,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
@@ -135,10 +135,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-06-16T13:55:08.429670554"
+        "timestamp": "2025-09-30T23:54:42.930330768"
     },
     "-profile test --tools tiddit tumoronly": {
         "content": [
@@ -177,7 +177,6 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
@@ -185,6 +184,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
@@ -276,10 +276,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-06-16T13:58:10.477605895"
+        "timestamp": "2025-09-30T23:57:29.483541412"
     },
     "-profile test --tools tiddit somatic": {
         "content": [
@@ -322,7 +322,6 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
@@ -330,6 +329,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
@@ -453,9 +453,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-06-16T13:56:59.053821936"
+        "timestamp": "2025-09-30T23:56:22.640069514"
     }
 }
