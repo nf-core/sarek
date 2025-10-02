@@ -428,26 +428,6 @@ Whilst the default requirements set within the pipeline will hopefully work for 
 
 To change the resource requests, please see the [max resources](https://nf-co.re/docs/usage/configuration#max-resources) and [tuning workflow resources](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources) section of the nf-core website.
 
-### Custom Containers
-
-In some cases, you may wish to change the container or conda environment used by a pipeline steps for a particular tool. By default, nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However, in some cases the pipeline specified version maybe out of date.
-
-To use a different container from the default container or conda environment specified in a pipeline, please see the [updating tool versions](https://nf-co.re/docs/usage/configuration#updating-tool-versions) section of the nf-core website.
-
-### Custom Tool Arguments
-
-A pipeline might not always support every possible argument or option of a particular tool used in pipeline. Fortunately, nf-core pipelines provide some freedom to users to insert additional parameters that the pipeline does not include by default.
-
-To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/usage/configuration#customising-tool-arguments) section of the nf-core website.
-
-### nf-core/configs
-
-In most cases, you will only need to create a custom config as a one-off but if you and others within your organisation are likely to be running nf-core pipelines regularly and need to use the same settings regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter. You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
-
-See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for more information about creating your own configuration files.
-
-If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
-
 ## Running in the background
 
 Nextflow handles job submissions and supervises the running jobs. The Nextflow process must run until the pipeline is finished.
@@ -1015,19 +995,33 @@ SNPeff and VEP both require a large resource of files known as a cache.
 These are folders composed of multiple gigabytes of files which need to be available for the software to properly function.
 To use these, supply the parameters `--vep_cache` and/or `--snpeff_cache` with the locations to the root of the annotation cache folder for each tool.
 
+## What happened with snpeff db 105
+
+At the time of writing, the SnpEff db 105 is not available to download from the SnpEff website, or to use with snpeff 5.3a, even with an already downloaded cache.
+If you wish to continue using cache 105, we would recommend to overwrite with a custom config the container for the snpeff process and use a prior version of the tool.
+ie:
+
+```nextflow
+withName: SNPEFF_SNPEFF {
+    container = 'quay.io/biocontainers/snpeff:5.1--hdfd78af_2'
+}
+```
+
+Please note that if you do so, the download is not working anymore.
+
 ### Specify the cache location
 
 Params `--snpeff_cache` and `--vep_cache` are used to specify the locations to the root of the annotation cache folder.
 The cache will be located within a subfolder with the path `${snpeff_species}.${snpeff_version}` for SnpEff and `${vep_species}/${vep_cache_version}_${vep_genome}` for VEP.
 If this directory is missing, Sarek will raise an error.
 
-For example this is a typical folder structure for `GRCh38` and `WBCel235`, with SNPeff cache version 105 and VEP cache version 110:
+For example this is a typical folder structure for `GRCh38` and `WBCel235`, with SNPeff cache version 99 and VEP cache version 110:
 
 ```text
 /data/
 ├─ snpeff_cache/
-│  ├─ GRCh38.105/
-│  ├─ WBcel235.105/
+│  ├─ GRCh38.99/
+│  ├─ WBcel235.99/
 ├─ vep_cache/
 │  ├─ caenorhabditis_elegans/
 │  │  ├─ 110_WBCel235/
@@ -1051,7 +1045,7 @@ Explanation can be found for all params in the documentation:
 With the previous example of `GRCh38`, these are the values that were used for these params:
 
 ```bash
-snpeff_db         = 'GRCh38.105'
+snpeff_db         = 'GRCh38.99'
 vep_cache_version = '110'
 vep_genome        = 'GRCh38'
 vep_species       = 'homo_sapiens'
