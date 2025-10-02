@@ -81,19 +81,31 @@ class UTILS {
         return {
             // If the test is for a gpu, we add the gpu tag
             // Otherwise, we add the cpu tag
+            // If the tests has no conda incompatibilities
+            // then we append "_conda" to the cpu/gpu tag
             // If the test is for a stub, we add options -stub
             // And we append "_stub" to the cpu/gpu tag
 
-            if (scenario.stub && scenario.gpu) {
+            // All options should be:
+            // gpu (this is the default for gpu)
+            // cpu (this is the default for tests without conda)
+            // gpu_conda (this should never happen)
+            // cpu_conda (this is the default for tests with conda compatibility)
+            // gpu_stub
+            // cpu_stub
+            // gpu_conda_stub (this should never happen)
+            // cpu_conda_stub
+
+            if (scenario.stub) {
                 options "-stub"
-                tag "gpu_stub"
-            } else if (scenario.stub && !scenario.gpu) {
-                options "-stub"
-                tag "cpu_stub"
-            } else if (!scenario.stub && scenario.gpu) {
-                tag "gpu"
-            } else if (!scenario.stub && !scenario.gpu) {
-                tag "cpu"
+            }
+
+            if (scenario.gpu) {
+                tag "gpu${!scenario.no_conda ? '_conda' : ''}${scenario.stub ? '_stub' : ''}"
+            }
+
+            if (!scenario.gpu) {
+                tag "cpu${!scenario.no_conda ? '_conda' : ''}${scenario.stub ? '_stub' : ''}"
             }
 
             // If a tag is provided, add it to the test

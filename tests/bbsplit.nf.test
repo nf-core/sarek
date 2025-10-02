@@ -1,0 +1,149 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline - BBSplit contamination removal"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    tag "bbsplit"
+
+    def test_scenario = [
+        [
+            name: "-profile test --tools bbsplit,strelka --bbsplit_fasta_list",
+            params: [
+                tools: 'bbsplit,strelka',
+                bbsplit_fasta_list: "${projectDir}/tests/csv/bbsplit_fasta_list.csv",
+                save_bbsplit_reads: true,
+                input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
+                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
+                igenomes_base: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
+                genome: 'testdata.nf-core.sarek'
+            ]
+        ],
+        [
+            name: "-profile test --tools bbsplit,strelka --bbsplit_fasta_list -stub",
+            params: [
+                tools: 'bbsplit,strelka',
+                bbsplit_fasta_list: "${projectDir}/tests/csv/bbsplit_fasta_list.csv",
+                save_bbsplit_reads: true,
+                input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
+                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
+                igenomes_base: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
+                genome: 'testdata.nf-core.sarek'
+            ],
+            stub: true
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name) {
+            // If the test is for a stub, we add options -stub
+            if (scenario.stub) {
+                options "-stub"
+                tag "cpu_stub"
+            } else {
+                tag "cpu"
+            }
+
+            when {
+                params {
+                    // Mandatory, as we always need an outdir
+                    outdir = "${outputDir}"
+                    // Apply scenario-specific params
+                    scenario.params.each { key, value ->
+                        delegate."$key" = value
+                    }
+                }
+            }
+
+            then {
+                assert workflow.success
+
+                // Get file lists
+                def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+                def bam_files = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
+                def cram_files = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
+                def vcf_files = getAllFilesFromDir(params.outdir, include: ['**/*.vcf{,.gz}'], ignore: ['**/test{N,T}.germline.vcf{,.gz}', '**/*.freebayes.vcf{,.gz}',  '**/*.varlociraptor.{vcf}{,.gz}'])
+
+                // Fasta file for cram verification
+                def fasta_base = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+                def fasta = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
+
+                if (scenario.stub) {
+                    // For stub tests, only check file names
+                    assertAll(
+                        { assert snapshot(
+                            // Number of successful tasks
+                            workflow.trace.succeeded().size(),
+                            // Software versions
+                            removeFromYamlMap("${params.outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"),
+                            // All files with stable names
+                            stable_name
+                        ).match() }
+                    )
+                } else {
+                    // For non-stub tests, check content
+                    def stable_content = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+
+                    // Files with unstable checksums - only check names
+                    def unstable_files = [
+                        'test-test_L1_chr22_1.fastq.gz',
+                        'test-test_L1_chr22_2.fastq.gz',
+                        'test-test_L2_chr22_1.fastq.gz',
+                        'test-test_L2_chr22_2.fastq.gz',
+                        'test-test_L1_primary_1.fastq.gz',
+                        'test-test_L1_primary_2.fastq.gz',
+                        'test-test_L2_primary_1.fastq.gz',
+                        'test-test_L2_primary_2.fastq.gz',
+                        'mosdepth-coverage-per-contig-single.txt',
+                        'mosdepth-cumcoverage-dist-id.txt',
+                        'mosdepth_perchrom.txt',
+                        'multiqc.parquet',
+                        'samtools-stats-dp.txt',
+                        'samtools_alignment_plot.txt',
+                        'test-test_L1.stats.txt',
+                        'test-test_L2.stats.txt',
+                        'test.md.mosdepth.global.dist.txt',
+                        'test.md.mosdepth.region.dist.txt',
+                        'test.md.mosdepth.summary.txt',
+                        'test.md.regions.bed.gz',
+                        'test.md.regions.bed.gz.csi',
+                        'test.recal.mosdepth.global.dist.txt',
+                        'test.recal.mosdepth.region.dist.txt',
+                        'test.recal.mosdepth.summary.txt',
+                        'test.recal.regions.bed.gz',
+                        'test.recal.regions.bed.gz.csi',
+                        'test.md.cram',
+                        'test.recal.cram'
+                    ]
+
+                    // Get stable content files with md5sum, excluding unstable files
+                    def stable_content_with_md5 = stable_content.findAll { file ->
+                        !unstable_files.any { unstableFile -> file.getName() == unstableFile }
+                    }
+
+                    assertAll(
+                        { assert snapshot(
+                            // Number of successful tasks
+                            workflow.trace.succeeded().size(),
+                            // Software versions
+                            removeFromYamlMap("${params.outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"),
+                            // All files with stable names
+                            stable_name,
+                            // Files with stable content and checksums
+                            stable_content_with_md5.isEmpty() ? 'No stable content' : stable_content_with_md5,
+                            // BAM files
+                            bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," + bam(file.toString()).readsMD5 },
+                            // CRAM files - only check names for unstable ones
+                            cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() },
+                            // VCF files
+                            vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 }
+                        ).match() }
+                    )
+                }
+            }
+        }
+    }
+}

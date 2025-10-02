@@ -18,6 +18,7 @@ nextflow_pipeline {
                 tools: 'freebayes,haplotypecaller'
             ],
             include_freebayes_unfiltered: true,
+            no_conda: true
         ]
     ]
 

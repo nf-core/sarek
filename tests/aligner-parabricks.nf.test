@@ -17,7 +17,8 @@ nextflow_pipeline {
                 tools: '',
                 wes : true,
             ],
-            gpu: true
+            gpu: true,
+            no_conda: true
         ],
         [
             name: "-profile test --aligner parabricks --tools mutect2 --wes --input fastq_pair.csv",
@@ -28,7 +29,8 @@ nextflow_pipeline {
                 tools: 'mutect2',
                 wes : true,
             ],
-            gpu: true
+            gpu: true,
+            no_conda: true
         ]
     ]
 

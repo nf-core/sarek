@@ -18,7 +18,8 @@ nextflow_pipeline {
                 tools: 'haplotypecaller',
                 wes: true,
                 nucleotides_per_second: 20
-            ]
+            ],
+            no_conda: true
         ],
         [
             name: "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20 --no_intervals",
@@ -30,7 +31,8 @@ nextflow_pipeline {
                 wes: true,
                 nucleotides_per_second: 20,
                 no_intervals: true
-            ]
+            ],
+            no_conda: true
         ],
         [
             name: "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20 --skip_tools haplotypecaller_filter",
