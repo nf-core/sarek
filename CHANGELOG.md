@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1940](https://github.com/nf-core/sarek/pull/1940) - Add varlociraptor for variant calling
 - [1953](https://github.com/nf-core/sarek/pull/1953) - Update freebayes and add QUAL filtering
 - [1965](https://github.com/nf-core/sarek/pull/1965) - Add msisensor2
-- [1965](https://github.com/nf-core/sarek/pull/1973) - Update bcftools/annotate to pick up columns file input
+- [1973](https://github.com/nf-core/sarek/pull/1973) - Update bcftools/annotate to pick up columns file input
 
 ### Changed
 
