@@ -11,7 +11,7 @@ include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI         } from '../../../sub
 include { FASTP                                             } from '../../../modules/nf-core/fastp/main'
 
 // remove genomic contaminants with bbsplit
-include { BBMAP_BBSPLIT                                     } from '../../../modules/nf-core/bbmap/bbsplit/main'
+include { BBMAP_BBSPLIT                                     } from '../../../modules/nf-core/bbmap/bbsplit'
 //TODO: WHAT ABOUT BBSPLIT RUNS WITH PARABRICKS?
 
 // Create umi consensus bams from fastq

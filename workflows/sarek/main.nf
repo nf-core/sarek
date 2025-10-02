@@ -26,9 +26,6 @@ include { FASTQC                                            } from '../../module
 // QC on CRAM
 include { CRAM_SAMPLEQC                                     } from '../../subworkflows/local/cram_sampleqc'
 
-// remove genomic contaminants with bbsplit
-include { BBMAP_BBSPLIT                                     } from '../../modules/nf-core/bbmap/bbsplit/main'
-//TODO: WHAT ABOUT BBSPLIT RUNS WITH PARABRICKS?
 
 // Preprocessing
 include { FASTQ_PREPROCESS_GATK                             } from '../../subworkflows/local/fastq_preprocess_gatk'
