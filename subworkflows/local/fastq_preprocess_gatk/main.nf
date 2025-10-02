@@ -10,6 +10,10 @@ include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI         } from '../../../sub
 // TRIM/SPLIT FASTQ Files
 include { FASTP                                             } from '../../../modules/nf-core/fastp/main'
 
+// remove genomic contaminants with bbsplit
+include { BBMAP_BBSPLIT                                     } from '../../../modules/nf-core/bbmap/bbsplit'
+//TODO: WHAT ABOUT BBSPLIT RUNS WITH PARABRICKS?
+
 // Create umi consensus bams from fastq
 include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO                  } from '../../../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
 
@@ -57,6 +61,7 @@ workflow FASTQ_PREPROCESS_GATK {
         intervals_for_preprocessing
         known_sites_indels
         known_sites_indels_tbi
+        bbsplit_index
 
     main:
 
@@ -119,17 +124,38 @@ workflow FASTQ_PREPROCESS_GATK {
             reports = reports.mix(FASTP.out.html.collect{ _meta, html -> html })
 
             if (params.split_fastq) {
-                reads_for_alignment = FASTP.out.reads.map{ meta, reads ->
+                reads_for_bbsplit = FASTP.out.reads.map{ meta, reads ->
                     def read_files = reads.sort(false) { a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
                     [ meta + [ n_fastq: read_files.size() ], read_files ]
                 }.transpose()
-            } else reads_for_alignment = FASTP.out.reads
+            } else reads_for_bbsplit = FASTP.out.reads
 
             versions = versions.mix(FASTP.out.versions)
 
         } else {
-            reads_for_alignment = reads_for_fastp
+            reads_for_bbsplit = reads_for_fastp
         }
+
+        //
+        // MODULE: Remove genome contaminant reads
+        //
+        if (params.tools && params.tools.split(',').contains('bbsplit')) {
+
+            reads_for_alignment = BBMAP_BBSPLIT (
+                                        reads_for_bbsplit,
+                                        bbsplit_index,
+                                        [],
+                                        [ [], [] ],
+                                        false
+                                    )
+                                    .primary_fastq
+
+            versions = versions.mix(BBMAP_BBSPLIT.out.versions.first())
+
+        } else {
+            reads_for_alignment = reads_for_bbsplit
+        }
+
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         // First, we must calculate number of lanes for each sample (meta.n_fastq)
