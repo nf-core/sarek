@@ -273,7 +273,14 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools_alignment_plot.txt:md5,3ccf1b9c7aca092ab8c092cb3151758e",
+                "test-test_L1_chr22_1.fastq.gz:md5,121af28995745aa72a3d087cdbd93eb8",
+                "test-test_L1_chr22_2.fastq.gz:md5,40e9dd87b4c9d2ae5db978c136dfd8bb",
+                "test-test_L1_primary_1.fastq.gz:md5,8cc1d3b13cf601f1545179185bbb83ce",
+                "test-test_L1_primary_2.fastq.gz:md5,50a60b323657af9ed7b7be6e1a4654ed",
+                "test-test_L2_chr22_1.fastq.gz:md5,bc36db6dbb935236c17ac687433752ed",
+                "test-test_L2_chr22_2.fastq.gz:md5,89058b849349808d3be6abaef9f358d2",
+                "test-test_L2_primary_1.fastq.gz:md5,9257bcda0da37c5bc4dbf4fd548aa4d0",
+                "test-test_L2_primary_2.fastq.gz:md5,1207b9575f8e150b8675de78ae0f5816",
                 "test.strelka.variants.bcftools_stats.txt:md5,b6511034fcbf5c396ed035207b4aea41",
                 "test.strelka.variants.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
@@ -292,7 +299,7 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-10-02T12:22:55.775377"
+        "timestamp": "2025-10-02T13:35:50.286438"
     },
     "-profile test --tools bbsplit,strelka --bbsplit_fasta_list -stub": {
         "content": [
@@ -507,6 +514,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-10-02T12:24:21.224759"
+        "timestamp": "2025-10-02T13:37:08.566771"
     }
 }

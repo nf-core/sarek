@@ -94,6 +94,7 @@ nextflow_pipeline {
                         'mosdepth_perchrom.txt',
                         'multiqc.parquet',
                         'samtools-stats-dp.txt',
+                        'samtools_alignment_plot.txt',
                         'test-test_L1.stats.txt',
                         'test-test_L2.stats.txt',
                         'test.md.mosdepth.global.dist.txt',
