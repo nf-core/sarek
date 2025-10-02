@@ -86,6 +86,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Test CUDA
+        run: |
+          nvidia-smi -L
+
       - name: Run nf-test on GPU
         id: run_nf_test_gpu
         uses: ./.github/actions/nf-test
