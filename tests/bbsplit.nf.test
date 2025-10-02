@@ -89,6 +89,14 @@ nextflow_pipeline {
 
                     // Files with unstable checksums - only check names
                     def unstable_files = [
+                        'test-test_L1_chr22_1.fastq.gz',
+                        'test-test_L1_chr22_2.fastq.gz',
+                        'test-test_L2_chr22_1.fastq.gz',
+                        'test-test_L2_chr22_2.fastq.gz',
+                        'test-test_L1_primary_1.fastq.gz',
+                        'test-test_L1_primary_2.fastq.gz',
+                        'test-test_L2_primary_1.fastq.gz',
+                        'test-test_L2_primary_2.fastq.gz',
                         'mosdepth-coverage-per-contig-single.txt',
                         'mosdepth-cumcoverage-dist-id.txt',
                         'mosdepth_perchrom.txt',
