@@ -44,7 +44,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1982](https://github.com/nf-core/sarek/pull/1982) - Update ensemblvep modules to 115.1
 - [1988](https://github.com/nf-core/sarek/pull/1988) - Update manta modules to latest build
 - [1993](https://github.com/nf-core/sarek/pull/1993) - Update snpeff modules to 5.3.0a and ensemblvep modules to 115.2
-- [2003](https://github.com/nf-core/sarek/pull/2003) - Update subway map to clarify post-variantcalling processing options
+- [2003](https://github.com/nf-core/sarek/pull/2003),[2005](https://github.com/nf-core/sarek/pull/2005) - Update subway map to clarify post-variantcalling processing options, and add BBSplit
+- [2009](https://github.com/nf-core/sarek/pull/2009) - Update multiqc module to 1.31
+- [2011](https://github.com/nf-core/sarek/pull/2011) - Downgrade snpeff db to at least 99 due to 105 not being available at the moment
 
 ### Fixed
 
@@ -76,7 +78,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `mosdepth`                             | 0.3.8       | 0.3.10      |
 | `msisensor2`                           |             | 0.1         |
 | `msisensorpro`                         | 1.2.0       | 1.3.0       |
-| `multiqc`                              | 1.25.1      | 1.30        |
+| `multiqc`                              | 1.25.1      | 1.31        |
 | `muse`                                 |             | 2.1.2       |
 | `parabricks`                           |             | 4.5.1-1     |
 | `rbt`                                  |             | 0.42.2      |
@@ -85,7 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `samtools` (in `BWAMEM2_MEM`)          | 1.19.2      | 1.21        |
 | `samtools` (in `GATK4_MARKDUPLICATES`) | 1.19.2      | 1.21        |
 | `sentieon`                             | 202308.03   | 202503.01   |
-| `snpeff`                               | 5.1         | 5.3.0a      |
+| `snpeff`                               | 5.1         | 5.3a        |
 | `tabix`                                | 1.2         | 1.21        |
 | `varlociraptor`                        |             | 8.7.4       |
 | `vcflib`                               |             | 1.0.14      |
@@ -174,6 +176,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1990](https://github.com/nf-core/sarek/pull/1990) - Update parabricks/fq2bam to 4.5.1-1
 - [2001](https://github.com/nf-core/sarek/pull/2001) - Remove lofreq VCF MD5sum - use summary
 - [2007](https://github.com/nf-core/sarek/pull/2007) - Sort tools in test_full configs and add msisensor2
+- [2008](https://github.com/nf-core/sarek/pull/2008), [2010](https://github.com/nf-core/sarek/pull/2010) - Skip conda tests that cannot be run due to lacking dependencies
 
 #### Fixed
 
@@ -196,6 +199,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1996](https://github.com/nf-core/sarek/pull/1996) - MuSE: change to htslib for bgzip and tabix & language server
 - [1998](https://github.com/nf-core/sarek/pull/1998) - Adjust VEP versions in snap files with corrected module
 - [2002](https://github.com/nf-core/sarek/pull/2002) - Update strelka to specific build to fix error in somatic mode
+- [2013](https://github.com/nf-core/sarek/pull/2013) - Fix snaps after MultiQC update
 
 #### Removed
 

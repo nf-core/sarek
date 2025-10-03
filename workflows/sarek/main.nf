@@ -26,6 +26,7 @@ include { FASTQC                                            } from '../../module
 // QC on CRAM
 include { CRAM_SAMPLEQC                                     } from '../../subworkflows/local/cram_sampleqc'
 
+
 // Preprocessing
 include { FASTQ_PREPROCESS_GATK                             } from '../../subworkflows/local/fastq_preprocess_gatk'
 include { FASTQ_PREPROCESS_PARABRICKS                       } from '../../subworkflows/local/fastq_preprocess_parabricks'
@@ -111,6 +112,7 @@ workflow SAREK {
     vep_fasta
     vep_genome
     vep_species
+    bbsplit_index
     versions
 
     main:
@@ -120,6 +122,13 @@ workflow SAREK {
     multiqc_report   = Channel.empty()
     reports          = Channel.empty()
 
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        VALIDATE INPUTS
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
+    // PREPROCESSING
     if (params.step == 'mapping') {
         // Figure out if input is bam, fastq, or spring
         input_sample_type = input_sample.branch {
@@ -226,6 +235,7 @@ workflow SAREK {
                 intervals_for_preprocessing,
                 known_sites_indels,
                 known_sites_indels_tbi,
+                bbsplit_index
             )
 
             // Gather preprocessing output

@@ -197,7 +197,6 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
@@ -205,6 +204,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
@@ -313,10 +313,10 @@
             "No VCF files"
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-07-03T07:56:35.822595523"
+        "timestamp": "2025-09-30T22:09:59.120270404"
     },
     "-profile test --tools ascat --input ascat_somatic.csv": {
         "content": [
@@ -340,7 +340,6 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
@@ -348,6 +347,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
@@ -454,9 +454,9 @@
             "No VCF files"
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-07-03T08:02:34.73546408"
+        "timestamp": "2025-09-30T22:09:00.15700005"
     }
 }

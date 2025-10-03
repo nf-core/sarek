@@ -14,7 +14,8 @@ nextflow_pipeline {
                 input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
                 tools: "sentieon_haplotyper",
                 step: "variant_calling"
-            ]
+            ],
+            no_conda: true
         ],
         [
             name: "-profile test --tools sentieon_haplotyper --no_intervals",
@@ -23,7 +24,8 @@ nextflow_pipeline {
                 tools: "sentieon_haplotyper",
                 step: "variant_calling",
                 no_intervals: true
-            ]
+            ],
+            no_conda: true
         ],
         [
             name: "-profile test --tools sentieon_haplotyper --skip_tools haplotyper_filter",
