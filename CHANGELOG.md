@@ -75,7 +75,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `freebayes`                            | 1.3.6       | 1.3.10      |
 | `gatk4`                                | 4.5.0.0     | 4.6.1.0     |
 | `mosdepth`                             | 0.3.8       | 0.3.10      |
-| `msisensor2`                           |             | 0.1         |
 | `msisensorpro`                         | 1.2.0       | 1.3.0       |
 | `multiqc`                              | 1.25.1      | 1.31        |
 | `muse`                                 |             | 2.1.2       |
@@ -97,8 +96,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Params                                | status |
 | ------------------------------------- | ------ |
 | `--freebayes_filter`                  | New    |
-| `--msisensor2_models`                 | New    |
-| `--msisensor2_scan`                   | New    |
 | `--msisensorpro_scan`                 | New    |
 | `--sentieon_consensus`                | New    |
 | `--umi_base_skip`                     | New    |
@@ -210,6 +207,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1995](https://github.com/nf-core/sarek/pull/1995) - Remove md5sums of png files for controlfreec
 - [1997](https://github.com/nf-core/sarek/pull/1997) - Remove png and pdf md5sums for all variant callers
 - [2004](https://github.com/nf-core/sarek/pull/2004) - Remove .cram.metrics and .cram.metrics.multiqc.tsv md5sums for sentieon
+- Remove MSISensor2 because of unforseen errors
 
 ## [3.5.1](https://github.com/nf-core/sarek/releases/tag/3.5.1) - Akkatjåkkå
 

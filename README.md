@@ -60,7 +60,6 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `Lofreq`
   - `Manta`
   - `mpileup`
-  - `MSIsensor2`
   - `MSIsensor-pro`
   - `MuSE`
   - `Sentieon Haplotyper`

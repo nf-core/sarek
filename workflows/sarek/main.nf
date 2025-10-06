@@ -96,8 +96,6 @@ workflow SAREK {
     known_snps_vqsr
     loci_files
     mappability
-    msisensor2_models
-    msisensor2_scan
     msisensorpro_scan
     ngscheckmate_bed
     pon
@@ -273,8 +271,8 @@ workflow SAREK {
 
         bam_variant_calling = Channel.empty()
 
-        //  For cnvkit, msisensor2 and muse we need to use bam input and not cram
-        if (params.tools.split(',').contains('cnvkit') || params.tools.split(',').contains('msisensor2') || params.tools.split(',').contains('muse')) {
+        //  For cnvkit and muse we need to use bam input and not cram
+        if (params.tools.split(',').contains('cnvkit') || params.tools.split(',').contains('muse')) {
 
             // Differentiate between bam and cram files
             cram_variant_calling_status_tmp = cram_variant_calling.branch { meta, file, index ->
@@ -449,7 +447,6 @@ workflow SAREK {
             intervals_bed_combined,
             intervals_bed_gz_tbi_combined,
             mappability,
-            msisensor2_models,
             pon,
             pon_tbi,
             params.joint_mutect2,
@@ -480,7 +477,6 @@ workflow SAREK {
             intervals_bed_combined,
             intervals_bed_gz_tbi_combined,
             mappability,
-            msisensor2_scan,
             msisensorpro_scan,
             pon,
             pon_tbi,

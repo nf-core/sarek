@@ -12,7 +12,6 @@ include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA        } from '../bam_variant_cal
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2      } from '../bam_variant_calling_tumor_only_mutect2'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ       } from '../bam_variant_calling_tumor_only_lofreq'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE      } from '../bam_variant_calling_tumor_only_tnscope'
-include { MSISENSOR2_MSI                              } from '../../../modules/nf-core/msisensor2/msi'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
@@ -35,7 +34,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
     intervals_bed_gz_tbi_combined // channel: [mandatory] intervals/target regions in one file zipped
     mappability
-    msisensor2_models
     panel_of_normals              // channel: [optional]  panel_of_normals
     panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
     joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
@@ -48,7 +46,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     versions = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    out_msisensor2 = Channel.empty()
     vcf_freebayes  = Channel.empty()
     vcf_lofreq     = Channel.empty()
     vcf_manta      = Channel.empty()
@@ -110,20 +107,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
         vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
-    }
-
-    // MSISENSOR
-    if (tools && tools.split(',').contains('msisensor2')) {
-        // no need for scan in tumor only mode
-        def msisensor2_scan = []
-
-        // no intervals either as it seems to crash when we use it
-        MSISENSOR2_MSI(bam.map { meta, bam, bai -> [meta, bam, bai, [], [], []] }, msisensor2_scan, msisensor2_models)
-
-        versions = versions.mix(MSISENSOR2_MSI.out.versions)
-        out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.distribution)
-        out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.somatic)
-        out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.germline)
     }
 
     // MUTECT2
@@ -217,7 +200,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         )
 
     emit:
-    out_msisensor2
     vcf_all
     vcf_freebayes
     vcf_lofreq

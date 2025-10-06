@@ -50,8 +50,6 @@ params.known_snps              = getGenomeAttribute('known_snps')
 params.known_snps_tbi          = getGenomeAttribute('known_snps_tbi')
 params.known_snps_vqsr         = getGenomeAttribute('known_snps_vqsr')
 params.mappability             = getGenomeAttribute('mappability')
-params.msisensor2_models       = getGenomeAttribute('msisensor2_models')
-params.msisensor2_scan         = getGenomeAttribute('msisensor2_scan')
 params.msisensorpro_scan       = getGenomeAttribute('msisensorpro_scan')
 params.ngscheckmate_bed        = getGenomeAttribute('ngscheckmate_bed')
 params.pon                     = getGenomeAttribute('pon')
@@ -151,8 +149,6 @@ workflow NFCORE_SAREK {
         germline_resource,
         known_indels,
         known_snps,
-        params.msisensor2_models,
-        params.msisensor2_scan,
         params.msisensorpro_scan,
         pon,
         params.tools?:"no_tools",
@@ -315,8 +311,6 @@ workflow NFCORE_SAREK {
         known_snps_vqsr,
         PREPARE_GENOME.out.loci_files,
         mappability,
-        PREPARE_GENOME.out.msisensor2_models,
-        PREPARE_GENOME.out.msisensor2_scan,
         PREPARE_GENOME.out.msisensorpro_scan,
         ngscheckmate_bed,
         pon,
