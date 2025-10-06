@@ -38,7 +38,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
     intervals_bed_gz_tbi_combined // channel: [mandatory] intervals/target regions in one file zipped
     mappability
-    msisensor2_scan               // channel: [optional]  msisensor2_scan
+    msisensor2_models             // channel: [optional]  msisensor2_models
     msisensorpro_scan             // channel: [optional]  msisensorpro_scan
     panel_of_normals              // channel: [optional]  panel_of_normals
     panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
@@ -195,15 +195,12 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // MSISENSOR2
     if (tools && tools.split(',').contains('msisensor2')) {
-        // no need for models in tumor normal mode
-        def models = []
-
-        MSISENSOR2_MSI(bam.combine(intervals_bed_combined), msisensor2_scan, models)
+    
+        MSISENSOR2_MSI(bam.map{ meta_, _normalbam, _normalbai, _tumor_bam, tumor_bai -> [meta_, _tumor_bam, tumor_bai]}, msisensor2_models)
 
         versions = versions.mix(MSISENSOR2_MSI.out.versions)
         out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.distribution)
         out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.somatic)
-        out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.germline)
     }
 
     // MSISENSORPRO

@@ -114,16 +114,13 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
     // MSISENSOR
     if (tools && tools.split(',').contains('msisensor2')) {
-        // no need for scan in tumor only mode
-        def msisensor2_scan = []
 
         // no intervals either as it seems to crash when we use it
-        MSISENSOR2_MSI(bam.map { meta, bam, bai -> [meta, bam, bai, [], [], []] }, msisensor2_scan, msisensor2_models)
+        MSISENSOR2_MSI(bam, msisensor2_models)
 
         versions = versions.mix(MSISENSOR2_MSI.out.versions)
         out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.distribution)
         out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.somatic)
-        out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.germline)
     }
 
     // MUTECT2
