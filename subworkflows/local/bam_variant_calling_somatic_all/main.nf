@@ -221,7 +221,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             bam.map { meta, _normal_bam, _normal_bai, tumor_bam, tumor_bai -> [meta, tumor_bam, tumor_bai] },
             fasta,
             dbsnp,
-            dbsnp_tbi,
         )
 
         vcf_muse = BAM_VARIANT_CALLING_SOMATIC_MUSE.out.vcf
