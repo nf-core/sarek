@@ -18,7 +18,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
     main:
     versions = Channel.empty()
 
-    TABIX_MUSE(dbsnp)
+    TABIX_MUSE(dbsnp.map { vcf -> [ [id: 'dbsnp'], vcf] })
     dbsnp_tbi = TABIX_MUSE.out.tbi
     versions = versions.mix(TABIX_MUSE.out.versions)
 
