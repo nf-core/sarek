@@ -34,7 +34,7 @@
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "tabix": 1.21
                 },
-                "TABIX_DBSNP": {
+                "TABIX_MUSE": {
                     "tabix": 1.21
                 },
                 "VCFTOOLS_TSTV_COUNT": {
@@ -60,7 +60,6 @@
                 "preprocessing/converted/cram_to_bam/sample4/sample4.bam",
                 "preprocessing/converted/cram_to_bam/sample4/sample4.bam.bai",
                 "reference",
-                "reference/dbsnp",
                 "reference/dict",
                 "reports",
                 "reports/bcftools",
@@ -213,7 +212,7 @@
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "tabix": 1.21
                 },
-                "TABIX_DBSNP": {
+                "TABIX_MUSE": {
                     "tabix": 1.21
                 },
                 "VCFTOOLS_TSTV_COUNT": {
@@ -282,7 +281,6 @@
                 "preprocessing/converted/cram_to_bam/sample4/sample4.bam",
                 "preprocessing/converted/cram_to_bam/sample4/sample4.bam.bai",
                 "reference",
-                "reference/dbsnp",
                 "reference/dict",
                 "reports",
                 "reports/bcftools",
