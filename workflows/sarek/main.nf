@@ -295,12 +295,28 @@ workflow SAREK {
 
         // reads will be sorted
         sort_bam = true
-        FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON(reads_for_alignment, index_alignment, sort_bam, fasta, fasta_fai)
+        
+        // CONDITIONAL ALIGNMENT BASED ON ALIGNER
+        if (params.aligner == 'minimap2') {
+            BAM_ALIGN_MINIMAP2(reads_for_alignment, index_alignment, sort_bam, fasta, fasta_fai)
+            
+            bam_mapped = BAM_ALIGN_MINIMAP2.out.bam
+            bai_mapped = BAM_ALIGN_MINIMAP2.out.bai
+            
+            versions = versions.mix(BAM_ALIGN_MINIMAP2.out.versions)
+        } else {
+            FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON(reads_for_alignment, index_alignment, sort_bam, fasta, fasta_fai)
+            
+            bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bam
+            bai_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bai
+            
+            versions = versions.mix(FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.versions)
+        }
 
         // Grouping the bams from the same samples not to stall the workflow
         // Use groupKey to make sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all reads from all channels are mapped
-        bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bam
+        bam_mapped = bam_mapped
             .combine(reads_grouping_key) // Creates a tuple of [ meta, bam, reads_grouping_key ]
             .filter { meta1, bam, meta2 -> meta1.sample == meta2.sample }
             // Add n_fastq and other variables to meta
@@ -318,7 +334,7 @@ workflow SAREK {
             // Group
             .groupTuple()
 
-        bai_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bai
+        bai_mapped = bai_mapped
             .combine(reads_grouping_key) // Creates a tuple of [ meta, bai, reads_grouping_key ]
             .filter { meta1, bai, meta2 -> meta1.sample == meta2.sample }
             // Add n_fastq and other variables to meta
@@ -361,7 +377,7 @@ workflow SAREK {
 
         // Gather used softwares versions
         versions = versions.mix(CONVERT_FASTQ_INPUT.out.versions)
-        versions = versions.mix(FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.versions)
+        //versions = versions.mix(FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.versions)
     }
 
     if (params.step in ['mapping', 'markduplicates']) {

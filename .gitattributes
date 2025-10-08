@@ -2,3 +2,6 @@
 *.nf.test linguist-language=nextflow
 modules/nf-core/** linguist-generated
 subworkflows/nf-core/** linguist-generated
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
