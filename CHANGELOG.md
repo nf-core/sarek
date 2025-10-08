@@ -199,6 +199,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1998](https://github.com/nf-core/sarek/pull/1998) - Adjust VEP versions in snap files with corrected module
 - [2002](https://github.com/nf-core/sarek/pull/2002) - Update strelka to specific build to fix error in somatic mode
 - [2013](https://github.com/nf-core/sarek/pull/2013) - Fix snaps after MultiQC update
+- [2019](https://github.com/nf-core/sarek/pull/2019) - Allow other cloud buckets than `s3://annotation-cache/` for the VEP and snpEff cache
 
 #### Removed
 
