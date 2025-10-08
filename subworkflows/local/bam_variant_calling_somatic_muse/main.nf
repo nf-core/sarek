@@ -18,6 +18,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
     main:
     versions = Channel.empty()
 
+    // MuSE requires the dbsnp index to be newer than the file itself, this ensures that we tabix directly before
     TABIX_MUSE(dbsnp.map { vcf -> [ [id: 'dbsnp'], vcf] })
     dbsnp_tbi = TABIX_MUSE.out.tbi
     versions = versions.mix(TABIX_MUSE.out.versions)
