@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1940](https://github.com/nf-core/sarek/pull/1940) - Add varlociraptor for variant calling
 - [1953](https://github.com/nf-core/sarek/pull/1953) - Update freebayes and add QUAL filtering
 - [1965](https://github.com/nf-core/sarek/pull/1965) - Add msisensor2
+- [2021](https://github.com/nf-core/sarek/pull/2021),[1983](https://github.com/nf-core/sarek/pull/1983) - Add BBsplit
 
 ### Changed
 
