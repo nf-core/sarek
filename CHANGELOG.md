@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1939](https://github.com/nf-core/sarek/pull/1939) - Modify config to add readgroups to fq2bam
 - [1940](https://github.com/nf-core/sarek/pull/1940) - Add varlociraptor for variant calling
 - [1953](https://github.com/nf-core/sarek/pull/1953) - Update freebayes and add QUAL filtering
-- [1965](https://github.com/nf-core/sarek/pull/1965) - Add msisensor2
+- [1965](https://github.com/nf-core/sarek/pull/1965),[2017](https://github.com/nf-core/sarek/pull/2017) - Add msisensor2
 
 ### Changed
 
