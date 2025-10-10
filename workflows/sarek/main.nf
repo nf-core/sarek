@@ -479,7 +479,6 @@ workflow SAREK {
             intervals_bed_combined,
             intervals_bed_gz_tbi_combined,
             mappability,
-            msisensor2_models,
             msisensorpro_scan,
             pon,
             pon_tbi,
