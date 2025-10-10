@@ -1,0 +1,106 @@
+{
+    "homo_sapiens tumor_only - bam - models": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test:md5,a3290f7539dbbf83777e8590156c0e28"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test_dis:md5,85205504ea8652ebdee46ac07ee1a8f6"
+                ]
+            ],
+            "test_somatic",
+            [
+                "versions.yml:md5,480c67c1e3dbe85f05032337a19e9383"
+            ],
+            {
+                "MSISENSOR2_MSI": {
+                    "msisensor2": 0.1
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-10-10T12:21:27.277789"
+    },
+    "homo_sapiens tumor_only - bam - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_dis:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_somatic:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,480c67c1e3dbe85f05032337a19e9383"
+                ],
+                "distribution": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_dis:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "msi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "somatic": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_somatic:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,480c67c1e3dbe85f05032337a19e9383"
+                ]
+            },
+            {
+                "MSISENSOR2_MSI": {
+                    "msisensor2": 0.1
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-10-10T12:21:31.692084"
+    }
+}

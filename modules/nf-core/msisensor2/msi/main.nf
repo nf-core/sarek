@@ -3,13 +3,13 @@ process MSISENSOR2_MSI {
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://depot.galaxyproject.org/singularity/msisensor2:0.1--hd03093a_0'
-        : 'biocontainers/msisensor2:0.1--hd03093a_0'}"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ? 
+            'https://depot.galaxyproject.org/singularity/msisensor2:0.1--hd03093a_0' :
+            'biocontainers/msisensor2:0.1--hd03093a_0'}"
 
     input:
     tuple val(meta), path(tumor_bam), path(tumor_bam_index)
-    path models
+    tuple val(meta2), path(models)
 
     output:
     tuple val(meta), path("${prefix}"),          emit: msi
@@ -23,14 +23,12 @@ process MSISENSOR2_MSI {
     script:
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
-    def model_cmd      = models     ? "-M ${models}"     : ""
-    def tumor_bam_cmd  = tumor_bam  ? "-t ${tumor_bam}"  : ""
     """
     msisensor2 msi \\
         -b ${task.cpus} \\
         ${args} \\
-        ${model_cmd} \\
-        ${tumor_bam_cmd} \\
+        -M ${models} \\
+        -t ${tumor_bam} \\
         -o ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
