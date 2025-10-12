@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1953](https://github.com/nf-core/sarek/pull/1953) - Update freebayes and add QUAL filtering
 - [1965](https://github.com/nf-core/sarek/pull/1965) - Add msisensor2
 - [1973](https://github.com/nf-core/sarek/pull/1973) - Update bcftools/annotate to pick up columns file input
+- [2021](https://github.com/nf-core/sarek/pull/2021),[1983](https://github.com/nf-core/sarek/pull/1983) - Add BBsplit
 
 ### Changed
 
@@ -200,6 +201,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1998](https://github.com/nf-core/sarek/pull/1998) - Adjust VEP versions in snap files with corrected module
 - [2002](https://github.com/nf-core/sarek/pull/2002) - Update strelka to specific build to fix error in somatic mode
 - [2013](https://github.com/nf-core/sarek/pull/2013) - Fix snaps after MultiQC update
+- [2019](https://github.com/nf-core/sarek/pull/2019) - Allow other cloud buckets than `s3://annotation-cache/` for the VEP and snpEff cache
 
 #### Removed
 
