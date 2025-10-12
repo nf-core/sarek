@@ -680,6 +680,11 @@
                     "fa_icon": "fas fa-file",
                     "description": "Index file for `bcftools_annotations`"
                 },
+                "bcftools_columns": {
+                    "type": "string",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Optional text file with list of columns to use from `bcftools_annotations`, one name per row"
+                },
                 "bcftools_header_lines": {
                     "type": "string",
                     "fa_icon": "fas fa-align-center",
