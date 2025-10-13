@@ -64,7 +64,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `MSIsensor-pro`
   - `MuSE`
   - `Sentieon Haplotyper`
-  - `Strelka2`
+  - `Strelka`
   - `TIDDIT`
 - Post-variant calling options:
   - `BCFtools concat` for germline vcfs

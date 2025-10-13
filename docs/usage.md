@@ -169,9 +169,8 @@ patient1,XX,1,relapse_sample,lane_1,test3_L001.bam
 
 #### Using GPU accelerated alignment (parabricks)
 
-:::info
-This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
-:::
+> [!NOTE]
+> This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
 
 To use the GPU based `parabricks/fq2bam` as an alternative to the CPU bsed GATK implementation add `--aligner parabricks --profile <docker/singularity>,gpu` to your run command. The parabricks implementation does not support the use of this pipeline with `--profile conda`.
 

@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev
+## [3.6.0](https://github.com/nf-core/sarek/releases/tag/3.6.0) - Kvikkjokk
+
+Kvikkjokk is a village where many trails start that lead through sarek.
 
 ### Added
 
@@ -178,6 +180,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [2001](https://github.com/nf-core/sarek/pull/2001) - Remove lofreq VCF MD5sum - use summary
 - [2007](https://github.com/nf-core/sarek/pull/2007) - Sort tools in test_full configs and add msisensor2
 - [2008](https://github.com/nf-core/sarek/pull/2008), [2010](https://github.com/nf-core/sarek/pull/2010) - Skip conda tests that cannot be run due to lacking dependencies
+- [2014](https://github.com/nf-core/sarek/pull/2014) - Prepare release and address comments
 
 #### Fixed
 
