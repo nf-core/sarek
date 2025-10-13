@@ -73,8 +73,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools && tools.split(',').contains('controlfreec')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC(
             BAM_VARIANT_CALLING_MPILEUP.out.mpileup.map { meta, pileup_tumor -> [meta, [], pileup_tumor, [], [], [], []] },
-            fasta.map { meta, fasta -> [fasta] },
-            cf_chrom_len ?: fasta_fai.map { meta, fasta_fai -> [fasta_fai] },
+            fasta.map { _meta, fasta_ -> [fasta_] },
+            cf_chrom_len ?: fasta_fai.map { _meta, fasta_fai_ -> [fasta_fai_] },
             dbsnp,
             dbsnp_tbi,
             chr_files,
@@ -88,7 +88,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     // CNVKIT
     if (tools && tools.split(',').contains('cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT(
-            bam.map { meta, bam, bai -> [meta, bam, []] },
+            bam.map { meta_, bam_, _bai -> [meta_, bam_, []] },
             fasta,
             fasta_fai,
             [[id: "null"], []],
@@ -101,7 +101,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     // FREEBAYES
     if (tools && tools.split(',').contains('freebayes')) {
         BAM_VARIANT_CALLING_FREEBAYES(
-            cram.map { meta, cram, crai -> [meta, cram, crai, [], []] },
+            cram.map { meta_, cram_, crai_ -> [meta_, cram_, crai_, [], []] },
             dict,
             fasta,
             fasta_fai,
@@ -114,25 +114,21 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
     // MSISENSOR
     if (tools && tools.split(',').contains('msisensor2')) {
-        // no need for scan in tumor only mode
-        def msisensor2_scan = []
 
-        // no intervals either as it seems to crash when we use it
-        MSISENSOR2_MSI(bam.map { meta, bam, bai -> [meta, bam, bai, [], [], []] }, msisensor2_scan, msisensor2_models)
+        MSISENSOR2_MSI(bam, msisensor2_models)
 
         versions = versions.mix(MSISENSOR2_MSI.out.versions)
         out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.distribution)
         out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.somatic)
-        out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.germline)
     }
 
     // MUTECT2
     if (tools && tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
-            cram.map { meta, cram, crai ->
+            cram.map { meta_, cram_, crai_ ->
                 joint_mutect2
-                    ? [meta - meta.subMap('data_type', 'status') + [id: meta.patient], cram, crai]
-                    : [meta - meta.subMap('data_type', 'status'), cram, crai]
+                    ? [meta_ - meta_.subMap('data_type', 'status') + [id: meta_.patient], cram_, crai_]
+                    : [meta_ - meta_.subMap('data_type', 'status'), cram_, crai_]
             },
             fasta,
             fasta_fai,

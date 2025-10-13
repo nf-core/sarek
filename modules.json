@@ -363,12 +363,7 @@
                     },
                     "msisensor2/msi": {
                         "branch": "master",
-                        "git_sha": "3dd258af3d271de7477016619e68f497456911f1",
-                        "installed_by": ["modules"]
-                    },
-                    "msisensor2/scan": {
-                        "branch": "master",
-                        "git_sha": "4906b6ccc403a1ed972013e31608d233067b1cca",
+                        "git_sha": "d96d6f176de5729d21c3b33a610b486f7ef7eac9",
                         "installed_by": ["modules"]
                     },
                     "msisensorpro/msisomatic": {

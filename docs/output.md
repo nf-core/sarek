@@ -930,24 +930,10 @@ An altered distribution of microsatellite length is associated with a missed rep
 
 #### MSIsensor2
 
-[MSIsensor2](https://github.com/niu-lab/msisensor2) is a tool to detect the MSI status for tumor only sequencing data, including Cell-Free DNA (cfDNA), Formalin-Fixed Paraffin-Embedded(FFPE) and other sample types.
+[MSIsensor2](https://github.com/niu-lab/msisensor2) is a tool to detect the MSI status for tumor-only sequencing data, including Cell-Free DNA (cfDNA), Formalin-Fixed Paraffin-Embedded(FFPE) and other sample types.
 
 <details markdown="1">
-<summary>Output files for tumor/normal paired samples</summary>
 
-**Output directory: `{outdir}/variantcalling/msisensor/<tumorsample_vs_normalsample>/`**
-
-- `<tumorsample_vs_normalsample>`
-  - MSI score output, contains information about the number of somatic sites.
-- `<tumorsample_vs_normalsample>_dis`
-  - The normal and tumor length distribution for each microsatellite position.
-- `<tumorsample_vs_normalsample>_germline`
-  - Germline sites detected.
-- `<tumorsample_vs_normalsample>_somatic`
-  - Somatic sites detected.
-  </details>
-
-<details markdown="1">
 <summary>Output files for tumor only samples</summary>
 
 **Output directory: `{outdir}/variantcalling/msisensor2/<tumorsample>/`**
