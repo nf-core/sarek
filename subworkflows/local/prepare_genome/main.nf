@@ -126,13 +126,13 @@ workflow PREPARE_GENOME {
 
     // msisensor2 models
     if (!msisensor2_models) {
-        msisensor2_models_folder = Channel.value([])
+        msisensor2_models_folder = Channel.value([[:],[]])
     } else if (msisensor2_models.endsWith(".tar.gz")) {
         UNTAR_MSISENSOR2_MODELS(Channel.fromPath(file(msisensor2_models)).collect().map { it -> [[id: it[0].simpleName], it] })
-        msisensor2_models_folder = UNTAR_MSISENSOR2_MODELS.out.untar.map { it[1] }
+        msisensor2_models_folder = UNTAR_MSISENSOR2_MODELS.out.untar
         versions = versions.mix(UNTAR_MSISENSOR2_MODELS.out.versions)
     } else {
-        msisensor2_models_folder = Channel.fromPath(msisensor2_models).collect()
+        msisensor2_models_folder = Channel.fromPath(msisensor2_models).collect().map { it -> [[id: it[0].simpleName], it] }
     }
 
     if (msisensorpro_scan) {
