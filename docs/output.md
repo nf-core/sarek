@@ -188,6 +188,8 @@ sarscov2,/path/to/sarscov2.fa
 
 You can save the index by using the [`--save_reference`](https://nf-co.re/sarek/parameters#save_reference) parameter and then provide it via [`--bbsplit_index`](https://nf-co.re/sarek/parameters#bbsplit_index) for future runs. To enable the tool add `--tools bbsplit` to the run parameters. As described in the `Output files` dropdown box above the FastQ files relative to the main reference genome will always be called `*primary*.fastq.gz`.
 
+By default, the following parameters are used for BBSplit `ambiguous2=best maxindel=150000`. To overwrite these parameters, use a custom config, as described [here](https://nf-co.re/docs/usage/getting_started/configuration#customising-tool-arguments).
+
 <details markdown="1">
 <summary>Output files</summary>
 

@@ -95,7 +95,8 @@ workflow NFCORE_SAREK {
 
     // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
     bcftools_annotations    = params.bcftools_annotations    ? Channel.fromPath(params.bcftools_annotations).collect()    : Channel.empty()
-    bcftools_header_lines   = params.bcftools_header_lines   ? Channel.fromPath(params.bcftools_header_lines).collect()   : Channel.empty()
+    bcftools_columns        = params.bcftools_columns        ? Channel.fromPath(params.bcftools_columns).collect()        : Channel.value([])
+    bcftools_header_lines   = params.bcftools_header_lines   ? Channel.fromPath(params.bcftools_header_lines).collect()   : Channel.value([])
     cf_chrom_len            = params.cf_chrom_len            ? Channel.fromPath(params.cf_chrom_len).collect()            : []
     dbsnp                   = params.dbsnp                   ? Channel.fromPath(params.dbsnp).collect()                   : Channel.value([])
     fasta_fai               = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()               : Channel.empty()
@@ -285,6 +286,7 @@ workflow NFCORE_SAREK {
         aligner,
         bcftools_annotations,
         bcftools_annotations_tbi,
+        bcftools_columns,
         bcftools_header_lines,
         cf_chrom_len,
         PREPARE_GENOME.out.chr_files,

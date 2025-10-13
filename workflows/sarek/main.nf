@@ -68,6 +68,7 @@ workflow SAREK {
     aligner
     bcftools_annotations
     bcftools_annotations_tbi
+    bcftools_columns
     bcftools_header_lines
     cf_chrom_len
     chr_files
@@ -568,6 +569,7 @@ workflow SAREK {
                 vep_extra_files,
                 bcftools_annotations,
                 bcftools_annotations_tbi,
+                bcftools_columns,
                 bcftools_header_lines,
             )
 

@@ -9,6 +9,7 @@ process BCFTOOLS_ANNOTATE {
 
     input:
     tuple val(meta), path(input), path(index), path(annotations), path(annotations_index)
+    path columns
     path header_lines
     path rename_chrs
 
@@ -24,8 +25,9 @@ process BCFTOOLS_ANNOTATE {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def header_file = header_lines ? "--header-lines ${header_lines}" : ''
     def annotations_file = annotations ? "--annotations ${annotations}" : ''
+    def columns_file = columns ? "--columns-file ${columns}" : ''
+    def header_file = header_lines ? "--header-lines ${header_lines}" : ''
     def rename_chrs_file = rename_chrs ? "--rename-chrs ${rename_chrs}" : ''
     def extension = args.contains("--output-type b") || args.contains("-Ob") ? "bcf.gz" :
                     args.contains("--output-type u") || args.contains("-Ou") ? "bcf" :
@@ -43,8 +45,9 @@ process BCFTOOLS_ANNOTATE {
         annotate \\
         ${args} \\
         ${annotations_file} \\
-        ${rename_chrs_file} \\
+        ${columns_file} \\
         ${header_file} \\
+        ${rename_chrs_file} \\
         --output ${prefix}.${extension} \\
         --threads ${task.cpus} \\
         ${input}
