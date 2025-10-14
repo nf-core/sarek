@@ -97,6 +97,8 @@ workflow NFCORE_SAREK {
         params.ascat_loci,
         params.ascat_loci_gc,
         params.ascat_loci_rt,
+        params.bbsplit_fasta_list,
+        params.bbsplit_index,
         params.bcftools_annotations,
         params.bcftools_annotations_tbi,
         params.bbsplit_index,
