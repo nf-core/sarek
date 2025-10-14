@@ -1,2 +1,0 @@
-svdb/merge:
-  - modules/nf-core/svdb/merge/**

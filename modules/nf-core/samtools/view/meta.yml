@@ -43,6 +43,10 @@ input:
         type: file
         description: Optional file with read names to output only select alignments
         pattern: "*.{txt,list}"
+  - - index_format:
+        type: string
+        description: Index format, used together with ext.args = '--write-index'
+        pattern: "bai|csi|crai"
 output:
   - bam:
       - meta:
@@ -120,10 +124,10 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - ${prefix}.unselected.${file_type}.{bai,csi,crsi}:
+      - ${prefix}.unselected.${file_type}.{csi,crai}:
           type: file
           description: index for the "unselected" file
-          pattern: "*.unselected.{bai,csi,crai}"
+          pattern: "*.unselected.{csi,crai}"
   - versions:
       - versions.yml:
           type: file

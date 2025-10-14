@@ -24,15 +24,18 @@ input:
         description: |
           gVCF(.gz) file
         pattern: "*.{vcf,vcf.gz}"
+        ontologies: []
     - tbis:
         type: file
         description: |
           index of gvcf file
         pattern: "*.tbi"
+        ontologies: []
     - intervals:
         type: file
         description: Interval file with the genomic regions included in the library
           (optional)
+        ontologies: []
   - - meta1:
         type: map
         description: |
@@ -42,6 +45,7 @@ input:
         type: file
         description: Reference fasta file
         pattern: "*.fasta"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -51,6 +55,7 @@ input:
         type: file
         description: Reference fasta index file
         pattern: "*.fai"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -60,6 +65,8 @@ input:
         type: file
         description: dbSNP VCF file
         pattern: "*.vcf.gz"
+        ontologies:
+          - edam: http://edamontology.org/format_3989 # GZIP format
   - - meta4:
         type: map
         description: |
@@ -69,9 +76,10 @@ input:
         type: file
         description: dbSNP VCF index file
         pattern: "*.tbi"
+        ontologies: []
 output:
-  - vcf_gz:
-      - meta:
+  vcf_gz:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -80,8 +88,10 @@ output:
           type: file
           description: VCF file
           pattern: "*.vcf.gz"
-  - vcf_gz_tbi:
-      - meta:
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  vcf_gz_tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -90,11 +100,14 @@ output:
           type: file
           description: VCF index file
           pattern: "*.vcf.gz.tbi"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@asp8200"
 maintainers:

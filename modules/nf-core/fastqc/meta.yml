@@ -11,6 +11,7 @@ tools:
         FastQC gives general quality metrics about your reads.
         It provides information about the quality score distribution
         across your reads, the per base sequence content (%A/C/G/T).
+
         You get information about adapter contamination and other
         overrepresented sequences.
       homepage: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
@@ -28,9 +29,10 @@ input:
         description: |
           List of input FastQ files of size 1 and 2 for single-end and paired-end data,
           respectively.
+        ontologies: []
 output:
-  - html:
-      - meta:
+  html:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -39,8 +41,9 @@ output:
           type: file
           description: FastQC report
           pattern: "*_{fastqc.html}"
-  - zip:
-      - meta:
+          ontologies: []
+  zip:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -49,11 +52,14 @@ output:
           type: file
           description: FastQC report archive
           pattern: "*_{fastqc.zip}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@drpatelh"
   - "@grst"

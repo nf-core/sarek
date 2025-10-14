@@ -42,17 +42,16 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
             ]
         }
 
-
     emit_mode_items = sentieon_haplotyper_emit_mode.split(',').each{ it -> it.toLowerCase().trim() }
     lst = emit_mode_items - 'gvcf'
     emit_vcf = lst.size() > 0 ? lst[0] : ''
 
     SENTIEON_HAPLOTYPER(
-        cram_intervals_for_sentieon.map{ meta, cram, crai, intervals, num_intervals -> [ meta, cram, crai, intervals, [] ]},
+        cram_intervals_for_sentieon.map{ meta, cram, crai, intervals -> [ meta, cram, crai, intervals, [] ]},
         fasta,
         fasta_fai,
-        dbsnp,
-        dbsnp_tbi,
+        dbsnp.map{file -> [[id:'dbsnp'], file]},
+        dbsnp_tbi.map{file -> [[id:'dbsnp'], file]},
         emit_vcf,
         emit_mode_items.any{ it.equals('gvcf') })
 

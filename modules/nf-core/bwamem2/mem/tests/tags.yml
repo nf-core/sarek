@@ -1,2 +1,0 @@
-bwamem2/mem:
-  - "modules/nf-core/bwamem2/mem/**"

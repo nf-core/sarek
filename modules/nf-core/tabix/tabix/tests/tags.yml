@@ -1,2 +1,0 @@
-tabix/tabix:
-  - "modules/nf-core/tabix/tabix/**"

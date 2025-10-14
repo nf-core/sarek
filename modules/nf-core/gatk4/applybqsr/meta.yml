@@ -27,54 +27,76 @@ input:
         type: file
         description: BAM/CRAM file from alignment
         pattern: "*.{bam,cram}"
+        ontologies: []
     - input_index:
         type: file
         description: BAI/CRAI file from alignment
         pattern: "*.{bai,crai}"
+        ontologies: []
     - bqsr_table:
         type: file
         description: Recalibration table from gatk4_baserecalibrator
+        ontologies: []
     - intervals:
         type: file
         description: Bed file with the genomic regions included in the library (optional)
-  - - fasta:
-        type: file
-        description: The reference fasta file
-        pattern: "*.fasta"
-  - - fai:
-        type: file
-        description: Index of reference fasta file
-        pattern: "*.fasta.fai"
-  - - dict:
-        type: file
-        description: GATK sequence dictionary
-        pattern: "*.dict"
+        ontologies: []
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+      ontologies: []
+  - fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "*.fasta.fai"
+      ontologies: []
+  - dict:
+      type: file
+      description: GATK sequence dictionary
+      pattern: "*.dict"
+      ontologies: []
 output:
-  - bam:
-      - meta:
+  bam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.bam":
+      - ${prefix}.bam:
           type: file
           description: Recalibrated BAM file
-          pattern: "*.{bam}"
-  - cram:
-      - meta:
+          pattern: "${prefix}.bam"
+          ontologies: []
+  bai:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.cram":
+      - ${prefix}*bai:
+          type: file
+          description: Recalibrated BAM index file
+          pattern: "${prefix}*bai"
+          ontologies: []
+  cram:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.cram:
           type: file
           description: Recalibrated CRAM file
-          pattern: "*.{cram}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          pattern: "${prefix}.cram"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@yocra3"
   - "@FriederikeHanssen"

@@ -1,2 +1,0 @@
-bcftools/concat:
-  - "modules/nf-core/bcftools/concat/**"

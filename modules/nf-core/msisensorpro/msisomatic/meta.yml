@@ -27,33 +27,45 @@ input:
         type: file
         description: BAM/CRAM/SAM file
         pattern: "*.{bam,cram,sam}"
+        ontologies: []
     - normal_index:
         type: file
         description: BAM/CRAM/SAM index file
         pattern: "*.{bai,crai,sai}"
+        ontologies: []
     - tumor:
         type: file
         description: BAM/CRAM/SAM file
         pattern: "*.{bam,cram,sam}"
+        ontologies: []
     - tumor_index:
         type: file
         description: BAM/CRAM/SAM index file
         pattern: "*.{bai,crai,sai}"
+        ontologies: []
     - intervals:
         type: file
         description: bed file containing interval information, optional
         pattern: "*.{bed}"
-  - - fasta:
+        ontologies: []
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing genome information
+          e.g. [ id:'genome' ]
+    - fasta:
         type: file
         description: Reference genome
         pattern: "*.{fasta}"
-  - - msisensor_scan:
-        type: file
-        description: Output from msisensor-pro/scan, containing list of msi regions
-        pattern: "*.list"
+        ontologies: []
+  - msisensor_scan:
+      type: file
+      description: Output from msisensor-pro/scan, containing list of msi regions
+      pattern: "*.list"
+      ontologies: []
 output:
-  - output_report:
-      - meta:
+  output_report:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -62,8 +74,9 @@ output:
           type: file
           description: File containing final report with all detected microsatellites,
             unstable somatic microsatellites, msi score
-  - output_dis:
-      - meta:
+          ontologies: []
+  output_dis:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -71,8 +84,9 @@ output:
       - ${prefix}_dis:
           type: file
           description: File containing distribution results
-  - output_germline:
-      - meta:
+          ontologies: []
+  output_germline:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -80,8 +94,9 @@ output:
       - ${prefix}_germline:
           type: file
           description: File containing germline results
-  - output_somatic:
-      - meta:
+          ontologies: []
+  output_somatic:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -89,11 +104,14 @@ output:
       - ${prefix}_somatic:
           type: file
           description: File containing somatic results
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@FriederikeHanssen"
 maintainers:

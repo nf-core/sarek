@@ -4,8 +4,8 @@ process BWA_MEM {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-fe8faa35dbf6dc65a0f7f5d4ea12e31a79f73e40:1bd8542a8a0b42e0981337910954371d0230828e-0' :
-        'biocontainers/mulled-v2-fe8faa35dbf6dc65a0f7f5d4ea12e31a79f73e40:1bd8542a8a0b42e0981337910954371d0230828e-0' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/bf/bf7890f8d4e38a7586581cb7fa13401b7af1582f21d94eef969df4cea852b6da/data' :
+        'community.wave.seqera.io/library/bwa_htslib_samtools:56c9f8d5201889a4' }"
 
     input:
     tuple val(meta) , path(reads)
@@ -53,10 +53,8 @@ process BWA_MEM {
     """
 
     stub:
-    def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def samtools_command = sort_bam ? 'sort' : 'view'
     def extension = args2.contains("--output-fmt sam")   ? "sam" :
                     args2.contains("--output-fmt cram")  ? "cram":
                     sort_bam && args2.contains("-O cram")? "cram":

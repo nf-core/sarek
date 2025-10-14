@@ -1,5 +1,8 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/environment-schema.json
 channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::snpeff=5.1
+  # renovate: datasource=conda depName=bioconda/snpeff
+  - bioconda::snpeff=5.3.0a

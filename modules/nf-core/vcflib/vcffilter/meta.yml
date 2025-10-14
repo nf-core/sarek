@@ -1,0 +1,55 @@
+name: "vcflib_vcffilter"
+description: Command line tools for parsing and manipulating VCF files.
+keywords:
+  - filter
+  - variant
+  - vcf
+  - quality
+tools:
+  - "vcflib":
+      description: "Command line tools for parsing and manipulating VCF files."
+      homepage: "https://github.com/vcflib/vcflib"
+      documentation: "https://github.com/vcflib/vcflib"
+      tool_dev_url: "https://github.com/vcflib/vcflib"
+      doi: "10.1371/journal.pcbi.1009123"
+      licence: ["MIT"]
+      identifier: biotools:vcflib
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test_sample_1' ]
+    - vcf:
+        type: file
+        description: VCF file
+        pattern: "*.{vcf,vcf.gz}"
+        ontologies: []
+    - tbi:
+        type: file
+        description: Index file
+        pattern: "*.{tbi}"
+        ontologies: []
+output:
+  vcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test' ]
+      - "*.vcf.gz":
+          type: file
+          description: Filtered VCF file
+          pattern: "*.{vcf.gz}"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@zachary-foster"
+maintainers:
+  - "@zachary-foster"

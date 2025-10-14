@@ -98,6 +98,8 @@
 
   > Brent S Pedersen, Aaron R Quinlan, Mosdepth: quick coverage calculation for genomes and exomes, Bioinformatics, Volume 34, Issue 5, 01 March 2018, Pages 867–868. doi: 10.1093/bioinformatics/btx699. PubMed PMID: 29096012. PubMed Central PMCID: PMC6030888.
 
+- [MSIsensor2](https://github.com/niu-lab/msisensor2)
+
 - [MSISensorPro](https://www.sciencedirect.com/science/article/pii/S1672022920300218)
 
   > Peng Jia, Xiaofei Yang, Li Guo, Bowen Liu, Jiadong Lin, Hao Liang, et al. MSIsensor-pro: fast, accurate, and matched-normal-sample-free detection of microsatellite instability. Genomics Proteomics Bioinformatics 2020,18(1). doi: 10.1016/j.gpb.2020.02.001. PubMed PMID: 32171661. PubMed Central PMCID: PMC7393535.
@@ -106,13 +108,13 @@
 
   > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
 
+- [NVIDIA Clara Parabricks](https://docs.nvidia.com/clara/parabricks/latest/index.html)
+
+  > NVIDIA (2025). Clara Parabricks (v.4.4.0-1 and above). <https://www.nvidia.com/en-us/clara/genomics/>
+
 - [PIGZ](https://zlib.net/pigz/)
 
 - [P7Zip](http://p7zip.sourceforge.net/)
-
-- [Samblaster](https://academic.oup.com/bioinformatics/article/30/17/2503/2748175)
-
-  > Gregory G. Faust, Ira M. Hall, SAMBLASTER: fast duplicate marking and structural variant read extraction, Bioinformatics, Volume 30, Issue 17, 1 September 2014, Pages 2503–2505. doi: 10.1093/bioinformatics/btu314. PubMed PMID: 24812344. PubMed Central PMCID: PMC4147885.
 
 - [SAMtools](https://pubmed.ncbi.nlm.nih.gov/19505943/)
 
@@ -142,6 +144,10 @@
 
   > Eisfeldt J, Vezzi F, Olason P, et al.: TIDDIT, an efficient and comprehensive structural variant caller for massive parallel sequencing data. F1000Res. 2017 May 10;6:664. doi: 10.12688/f1000research.11168.2. eCollection 2017. PubMed PMID: 28781756; PubMed Central PMCID: PMC5521161.
 
+- [Varlociraptor](https://pubmed.ncbi.nlm.nih.gov/32345333/)
+
+  > Köster, J., Dijkstra, L.J., Marschall, T. et al. Varlociraptor: enhancing sensitivity and controlling false discovery rate in somatic indel discovery. Genome Biol 21, 98 (2020). https://doi.org/10.1186/s13059-020-01993-6
+
 - [VCFTools](https://pubmed.ncbi.nlm.nih.gov/21653522/)
 
   > Danecek P, Auton A, Abecasis G, et al.: The variant call format and VCFtools. Bioinformatics. 2011 Aug 1;27(15):2156-8. doi: 10.1093/bioinformatics/btr330. Epub 2011 Jun 7. PubMed PMID: 21653522; PubMed Central PMCID: PMC3137218.
@@ -149,6 +155,10 @@
 - [Lofreq](https://pubmed.ncbi.nlm.nih.gov/23066108/)
 
   > Wilm et al. LoFreq: A sequence-quality aware, ultra-sensitive variant caller for uncovering cell-population heterogeneity from high-throughput sequencing datasets. Nucleic Acids Res. 2012; 40(22):11189-201.
+
+- [MuSE](https://pubmed.ncbi.nlm.nih.gov/38589250/)
+
+  > Ji S, Zhu T, Sethia A, Wang W. Accelerated somatic mutation calling for whole-genome and whole-exome sequencing data from heterogenous tumor samples. Genome Res. 2024 May 15;34(4):633-641. doi: 10.1101/gr.278456.123. PMID: 38589250; PMCID: PMC11146589.
 
 ## R packages
 

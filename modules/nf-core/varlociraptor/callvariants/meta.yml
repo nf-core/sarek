@@ -1,0 +1,65 @@
+name: "varlociraptor_callvariants"
+description: Call variants for a given scenario specified with the varlociraptor calling
+  grammar, preprocessed by varlociraptor preprocessing
+keywords:
+  - observations
+  - variants
+  - calling
+tools:
+  - "varlociraptor":
+      description: "Flexible, uncertainty-aware variant calling with parameter free
+        filtration via FDR control."
+      homepage: "https://varlociraptor.github.io/docs/estimating/"
+      documentation: "https://varlociraptor.github.io/docs/calling/"
+      tool_dev_url: "https://github.com/varlociraptor/varlociraptor"
+      doi: "10.1186/s13059-020-01993-6"
+      licence: ["GPL v3"]
+      identifier: biotools:varlociraptor
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - vcfs:
+        type: file
+        description: Sorted VCF/BCF file containing sample observations, Can also be
+          a list of files
+        pattern: "*.{vcf,bcf,vcf.gz}"
+        ontologies:
+          - edam: http://edamontology.org/format_3016 # VCF
+          - edam: http://edamontology.org/format_3020 # BCF
+  - scenario:
+      type: file
+      description: Yaml file containing scenario information (optional)
+      pattern: "*.{yml,yaml}"
+      ontologies:
+        - edam: http://edamontology.org/format_3750 # YAML
+  - scenario_aliases:
+      type: list
+      description: List of aliases for the scenario (optional)
+output:
+  bcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bcf":
+          type: file
+          description: BCF file containing sample observations
+          pattern: "*.bcf"
+          ontologies:
+            - edam: http://edamontology.org/format_3020 # BCF
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@FriederikeHanssen"
+maintainers:
+  - "@FriederikeHanssen"
+  - "@famosab"

@@ -1,18 +1,20 @@
 process BWA_INDEX {
     tag "$fasta"
-    label 'process_single'
+    // NOTE requires 5.37N memory where N is the size of the database
+    // source: https://bio-bwa.sourceforge.net/bwa.shtml#8
+    memory { 6.B * fasta.size() }
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bwa:0.7.18--he4a0461_0' :
-        'biocontainers/bwa:0.7.18--he4a0461_0' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/bf/bf7890f8d4e38a7586581cb7fa13401b7af1582f21d94eef969df4cea852b6da/data' :
+        'community.wave.seqera.io/library/bwa_htslib_samtools:56c9f8d5201889a4' }"
 
     input:
     tuple val(meta), path(fasta)
 
     output:
-    tuple val(meta), path(bwa) , emit: index
-    path "versions.yml"        , emit: versions
+    tuple val(meta), path("bwa")  , emit: index
+    path "versions.yml"             , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

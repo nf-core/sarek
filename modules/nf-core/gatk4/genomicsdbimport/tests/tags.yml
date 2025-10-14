@@ -1,3 +1,0 @@
-gatk4/genomicsdbimport:
-  - "modules/nf-core/gatk4/genomicsdbimport/**"
-  - "modules/nf-core/untar/**"

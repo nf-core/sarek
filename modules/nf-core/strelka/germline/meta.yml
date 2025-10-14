@@ -27,29 +27,35 @@ input:
         type: file
         description: BAM/CRAM file
         pattern: "*.{bam,cram}"
+        ontologies: []
     - input_index:
         type: file
         description: BAM/CRAI index file
         pattern: "*.{bai,crai}"
+        ontologies: []
     - target_bed:
         type: file
         description: BED file containing target regions for variant calling
         pattern: "*.{bed}"
+        ontologies: []
     - target_bed_index:
         type: file
         description: Index for BED file containing target regions for variant calling
         pattern: "*.{bed.tbi}"
-  - - fasta:
-        type: file
-        description: Genome reference FASTA file
-        pattern: "*.{fa,fasta}"
-  - - fai:
-        type: file
-        description: Genome reference FASTA index file
-        pattern: "*.{fa.fai,fasta.fai}"
+        ontologies: []
+  - fasta:
+      type: file
+      description: Genome reference FASTA file
+      pattern: "*.{fa,fasta}"
+      ontologies: []
+  - fai:
+      type: file
+      description: Genome reference FASTA index file
+      pattern: "*.{fa.fai,fasta.fai}"
+      ontologies: []
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -58,8 +64,9 @@ output:
           type: file
           description: gzipped germline variant file
           pattern: "*.{vcf.gz}"
-  - vcf_tbi:
-      - meta:
+          ontologies: []
+  vcf_tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -68,8 +75,9 @@ output:
           type: file
           description: index file for the vcf file
           pattern: "*.vcf.gz.tbi"
-  - genome_vcf:
-      - meta:
+          ontologies: []
+  genome_vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -78,8 +86,10 @@ output:
           type: file
           description: variant records and compressed non-variant blocks
           pattern: "*_genome.vcf.gz"
-  - genome_vcf_tbi:
-      - meta:
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  genome_vcf_tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -88,11 +98,14 @@ output:
           type: file
           description: index file for the genome_vcf file
           pattern: "*_genome.vcf.gz.tbi"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@arontommi"
 maintainers:

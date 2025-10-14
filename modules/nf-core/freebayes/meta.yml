@@ -27,24 +27,29 @@ input:
         type: file
         description: BAM/CRAM/SAM file
         pattern: "*.{bam,cram,sam}"
+        ontologies: []
     - input_1_index:
         type: file
         description: BAM/CRAM/SAM index file
         pattern: "*.{bai,crai}"
+        ontologies: []
     - input_2:
         type: file
         description: BAM/CRAM/SAM file
         pattern: "*.{bam,cram,sam}"
+        ontologies: []
     - input_2_index:
         type: file
         description: BAM/CRAM/SAM index file
         pattern: "*.{bai,crai}"
+        ontologies: []
     - target_bed:
         type: file
         description: Optional - Limit analysis to targets listed in this BED-format
           FILE.
         pattern: "*.bed"
-  - - ref_meta:
+        ontologies: []
+  - - meta2:
         type: map
         description: |
           Groovy Map containing reference information.
@@ -53,7 +58,8 @@ input:
         type: file
         description: reference fasta file
         pattern: ".{fa,fa.gz,fasta,fasta.gz}"
-  - - ref_idx_meta:
+        ontologies: []
+  - - meta3:
         type: map
         description: |
           Groovy Map containing reference information.
@@ -62,7 +68,8 @@ input:
         type: file
         description: reference fasta file index
         pattern: "*.{fa,fasta}.fai"
-  - - samples_meta:
+        ontologies: []
+  - - meta4:
         type: map
         description: |
           Groovy Map containing meta information for the samples file.
@@ -72,7 +79,8 @@ input:
         description: Optional - Limit analysis to samples listed (one per line) in the
           FILE.
         pattern: "*.txt"
-  - - populations_meta:
+        ontologies: []
+  - - meta5:
         type: map
         description: |
           Groovy Map containing meta information for the populations file.
@@ -82,7 +90,8 @@ input:
         description: Optional - Each line of FILE should list a sample and a population
           which it is part of.
         pattern: "*.txt"
-  - - cnv_meta:
+        ontologies: []
+  - - meta6:
         type: map
         description: |
           Groovy Map containing meta information for the cnv file.
@@ -95,9 +104,10 @@ input:
           or a region-specific format:
           seq_name start end sample_name copy_number
         pattern: "*.bed"
+        ontologies: []
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -106,11 +116,15 @@ output:
           type: file
           description: Compressed VCF file
           pattern: "*.vcf.gz"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software version
-          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software version
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@maxibor"
   - "@FriederikeHanssen"

@@ -1,2 +1,0 @@
-samtools/bam2fq:
-  - "modules/nf-core/samtools/bam2fq/**"

@@ -38,7 +38,7 @@ input:
         pattern: "*.interval_list"
     - interval_value:
         type: string
-        description: if an intervals file has not been spcified, the value enetered
+        description: if an intervals file has not been specified, the value entered
           here will be used as an interval via the "-L" argument
         pattern: "example: chr1:1000-10000"
     - wspace:
