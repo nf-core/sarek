@@ -45,7 +45,6 @@ workflow PREPARE_GENOME {
     known_snps_in               // params.known_snps
     known_snps_tbi_in           // params.known_snps_tbi
     msisensor2_models_in        // channel: [optional]  msisensor2_models
-    msisensor2_scan_in          // channel: [optional]  msisensor2_scan
     msisensorpro_scan_in        // channel: [optional]  msisensorpro_scan
     pon_in                      // params.pon
     pon_tbi_in                  // params.pon_tbi
@@ -223,18 +222,6 @@ workflow PREPARE_GENOME {
         msisensor2_models = Channel.value([])
     }
 
-    if (msisensor2_scan_in) {
-        msisensor2_scan = Channel.fromPath(msisensor2_scan_in)
-    }
-    else if (tools.split(',').contains('msisensor2')) {
-        MSISENSOR2_SCAN(fasta)
-        msisensor2_scan = MSISENSOR2_SCAN.out.scan.map { _meta, list -> [list] }.collect()
-        versions = versions.mix(MSISENSOR2_SCAN.out.versions)
-    }
-    else {
-        msisensor2_scan = Channel.value([])
-    }
-
     if (msisensorpro_scan_in) {
         msisensorpro_scan = Channel.fromPath(msisensorpro_scan_in)
     }
@@ -334,7 +321,6 @@ workflow PREPARE_GENOME {
     known_snps               // Channel: [known_snps]
     known_snps_tbi           // Channel: [known_snps_tbi]
     msisensor2_models        // Channel: [models/]
-    msisensor2_scan          // Channel: [genome_msi.list]
     msisensorpro_scan        // Channel: [genome_msi.list]
     pon                      // Channel: [pon]
     pon_tbi                  // Channel: [pon_tbi]

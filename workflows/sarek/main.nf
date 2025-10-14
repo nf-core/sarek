@@ -63,11 +63,15 @@ include { MULTIQC                                           } from '../../module
 workflow SAREK {
     take:
     input_sample
+    aligner
+    skip_tools
+    step
+    tools
     ascat_alleles
     ascat_loci
     ascat_loci_gc
     ascat_loci_rt
-    aligner
+    bbsplit_index
     bcftools_annotations
     bcftools_annotations_tbi
     bcftools_columns
@@ -111,7 +115,6 @@ workflow SAREK {
     vep_fasta
     vep_genome
     vep_species
-    bbsplit_index
     versions
 
     main:
@@ -128,7 +131,7 @@ workflow SAREK {
     */
 
     // PREPROCESSING
-    if (params.step == 'mapping') {
+    if (step == 'mapping') {
         // Figure out if input is bam, fastq, or spring
         input_sample_type = input_sample.branch {
             bam: it[0].data_type == "bam"
@@ -189,7 +192,7 @@ workflow SAREK {
 
         // QC
         // `--skip_tools fastqc` to skip fastqc
-        if (!(params.skip_tools && params.skip_tools.split(',').contains('fastqc'))) {
+        if (!(skip_tools.split(',').contains('fastqc'))) {
             FASTQC(input_fastq)
 
             reports = reports.mix(FASTQC.out.zip.collect { _meta, logs -> logs })
@@ -200,7 +203,7 @@ workflow SAREK {
         input_fastq = Channel.empty().mix(input_sample)
     }
 
-    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
+    if (step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
 
         if (aligner == 'parabricks') {
             // PREPROCESSING WITH PARABRICKS
@@ -247,12 +250,12 @@ workflow SAREK {
         }
     }
 
-    if (params.step == 'variant_calling') {
+    if (step == 'variant_calling') {
 
         cram_variant_calling = Channel.empty().mix(input_sample)
     }
 
-    if (params.step == 'annotate') {
+    if (step == 'annotate') {
 
         cram_variant_calling = Channel.empty()
     }
@@ -262,19 +265,19 @@ workflow SAREK {
         cram_variant_calling,
         ngscheckmate_bed,
         fasta,
-        params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
+        skip_tools.split(',').contains('baserecalibrator'),
         intervals_for_preprocessing,
     )
 
     reports = reports.mix(CRAM_SAMPLEQC.out.reports)
     versions = versions.mix(CRAM_SAMPLEQC.out.versions)
 
-    if (params.tools) {
+    if (tools) {
 
         bam_variant_calling = Channel.empty()
 
         //  For cnvkit, msisensor2 and muse we need to use bam input and not cram
-        if (params.tools.split(',').contains('cnvkit') || params.tools.split(',').contains('msisensor2') || params.tools.split(',').contains('muse')) {
+        if (tools.split(',').contains('cnvkit') || tools.split(',').contains('msisensor2') || tools.split(',').contains('muse')) {
 
             // Differentiate between bam and cram files
             cram_variant_calling_status_tmp = cram_variant_calling.branch { meta, file, index ->
@@ -392,10 +395,10 @@ workflow SAREK {
         //     intervals_bed_combined: [] if no_intervals, else interval_bed_combined
         //     intervals_bed_gz_tbi_combined, [] if no_intervals, else interval_bed_combined_gz_tbi
         //     intervals_bed_combined_for_variant_calling, no_intervals.bed if no intervals, else interval_bed_combined.bed
-        //   params.skip_tools && params.skip_tools.split(',').contains('haplotypecaller_filter') is true if filtering should be skipped
+        //   skip_tools.split(',').contains('haplotypecaller_filter') is true if filtering should be skipped
         BAM_VARIANT_CALLING_GERMLINE_ALL(
-            params.tools,
-            params.skip_tools,
+            tools,
+            skip_tools,
             bam_variant_calling_status_normal,
             cram_variant_calling_status_normal,
             [[id: 'bwa'], []],
@@ -418,7 +421,7 @@ workflow SAREK {
             known_sites_snps_tbi,
             known_snps_vqsr,
             params.joint_germline,
-            params.skip_tools && params.skip_tools.split(',').contains('haplotypecaller_filter'),
+            skip_tools.split(',').contains('haplotypecaller_filter'),
             params.sentieon_haplotyper_emit_mode,
             params.sentieon_dnascope_emit_mode,
             params.sentieon_dnascope_pcr_indel_model,
@@ -431,7 +434,7 @@ workflow SAREK {
         //     intervals_bed_combined: [] if no_intervals, else interval_bed_combined
         //     intervals_bed_gz_tbi_combined, [] if no_intervals, else interval_bed_combined_gz_tbi
         BAM_VARIANT_CALLING_TUMOR_ONLY_ALL(
-            params.tools,
+            tools,
             bam_variant_calling_tumor_only,
             cram_variant_calling_tumor_only,
             [[id: 'bwa'], []],
@@ -463,7 +466,7 @@ workflow SAREK {
         //     intervals_bed_combined: [] if no_intervals, else interval_bed_combined
         //     intervals_bed_gz_tbi_combined, [] if no_intervals, else interval_bed_combined_gz_tbi
         BAM_VARIANT_CALLING_SOMATIC_ALL(
-            params.tools,
+            tools,
             bam_variant_calling_pair,
             cram_variant_calling_pair,
             [[id: 'bwa'], []],
@@ -494,7 +497,7 @@ workflow SAREK {
 
         // POST VARIANTCALLING
         POST_VARIANTCALLING(
-            params.tools,
+            tools,
             cram_variant_calling_status_normal,
             BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
             cram_variant_calling_tumor_only,
@@ -550,18 +553,18 @@ workflow SAREK {
         versions = versions.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.versions)
 
         // ANNOTATE
-        if (params.step == 'annotate') {
+        if (step == 'annotate') {
             vcf_to_annotate = input_sample
         }
 
-        if (params.tools.split(',').contains('merge') || params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('vep') || params.tools.split(',').contains('bcfann')) {
+        if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff') || tools.split(',').contains('vep') || tools.split(',').contains('bcfann')) {
 
             vep_fasta = params.vep_include_fasta ? fasta : [[id: 'null'], []]
 
             VCF_ANNOTATE_ALL(
                 vcf_to_annotate.map { meta, vcf -> [meta + [file_name: vcf.baseName], vcf] },
                 vep_fasta,
-                params.tools,
+                tools,
                 snpeff_db,
                 snpeff_cache,
                 vep_genome,
@@ -585,14 +588,14 @@ workflow SAREK {
     // Collate and save software versions
     //
     version_yaml = Channel.empty()
-    if (!(params.skip_tools && params.skip_tools.split(',').contains('versions'))) {
+    if (!(skip_tools.split(',').contains('versions'))) {
         version_yaml = softwareVersionsToYAML(versions).collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_' + 'sarek_software_' + 'mqc_' + 'versions.yml', sort: true, newLine: true)
     }
 
     //
     // MODULE: MultiQC
     //
-    if (!(params.skip_tools && params.skip_tools.split(',').contains('multiqc'))) {
+    if (!(skip_tools.split(',').contains('multiqc'))) {
         ch_multiqc_config = Channel.fromPath("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)
         ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
         ch_multiqc_logo = params.multiqc_logo ? Channel.fromPath(params.multiqc_logo, checkIfExists: true) : Channel.empty()

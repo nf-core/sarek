@@ -101,7 +101,6 @@ workflow NFCORE_SAREK {
         params.bbsplit_index,
         params.bcftools_annotations,
         params.bcftools_annotations_tbi,
-        params.bbsplit_index,
         params.bwa,
         params.bwamem2,
         params.chr_dir,
@@ -225,7 +224,9 @@ workflow NFCORE_SAREK {
     SAREK(
         samplesheet,
         params.aligner,
-        params.tools ?: "no_tools",
+        params.skip_tools ?: 'no_tools',
+        params.step,
+        params.tools ?: 'no_tools',
         PREPARE_GENOME.out.ascat_alleles,
         PREPARE_GENOME.out.ascat_loci,
         PREPARE_GENOME.out.ascat_loci_gc,
