@@ -43,7 +43,7 @@ nextflow_workflow {
                 input[23] = 'ILLUMINA' // seq_platform
                 input[24] = 'baserecalibrator' // skip_tools
                 input[25] = [] // snpeff_cache
-                input[26] = 'WBcel235.105' // snpeff_db
+                input[26] = 'WBcel235.99' // snpeff_db
                 input[27] = 'mapping' // step
                 input[28] = 'strelka' // tools
                 input[29] = [] // umi_read_structure

@@ -4,8 +4,9 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { MUSE_CALL } from '../../../modules/nf-core/muse/call'
-include { MUSE_SUMP } from '../../../modules/nf-core/muse/sump'
+include { MUSE_CALL                 } from '../../../modules/nf-core/muse/call'
+include { MUSE_SUMP                 } from '../../../modules/nf-core/muse/sump'
+include { TABIX_TABIX as TABIX_MUSE } from '../../../modules/nf-core/tabix/tabix'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
     take:
@@ -13,12 +14,16 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
     bam_tumor  // channel: [mandatory] [ meta, tumor_bam, tumor_bai]
     fasta      // channel: [mandatory] [ meta, fasta ]
     dbsnp      // channel: [mandatory] [ dbsnp ]
-    dbsnp_tbi  // channel: [mandatory] [ dbsnp_tbi ]
 
     main:
     versions = Channel.empty()
 
-    def ch_dbsnp_with_tbi = dbsnp.combine(dbsnp_tbi).map { vcf, tbi -> [[id: 'dbsnp'], vcf, tbi] }.collect()
+    // MuSE requires the dbsnp index to be newer than the file itself, this ensures that we tabix directly before
+    TABIX_MUSE(dbsnp.map { vcf -> [ [id: 'dbsnp'], vcf] })
+    dbsnp_tbi = TABIX_MUSE.out.tbi
+    versions = versions.mix(TABIX_MUSE.out.versions)
+
+    def ch_dbsnp_with_tbi = dbsnp.combine(dbsnp_tbi.map { _meta, tbi -> tbi }).map { vcf, tbi -> [[id: 'dbsnp'], vcf, tbi] }.collect()
 
     // Combine normal and tumor data
     ch_bam = bam_tumor.join(bam_normal, by: [0])

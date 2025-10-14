@@ -52,7 +52,6 @@ params.known_snps_tbi          = getGenomeAttribute('known_snps_tbi')
 params.known_snps_vqsr         = getGenomeAttribute('known_snps_vqsr')
 params.mappability             = getGenomeAttribute('mappability')
 params.msisensor2_models       = getGenomeAttribute('msisensor2_models')
-params.msisensor2_scan         = getGenomeAttribute('msisensor2_scan')
 params.msisensorpro_scan       = getGenomeAttribute('msisensorpro_scan')
 params.ngscheckmate_bed        = getGenomeAttribute('ngscheckmate_bed')
 params.pon                     = getGenomeAttribute('pon')
@@ -100,6 +99,7 @@ workflow NFCORE_SAREK {
         params.ascat_loci_rt,
         params.bcftools_annotations,
         params.bcftools_annotations_tbi,
+        params.bbsplit_index,
         params.bwa,
         params.bwamem2,
         params.chr_dir,
@@ -116,7 +116,6 @@ workflow NFCORE_SAREK {
         params.known_snps,
         params.known_snps_tbi,
         params.msisensor2_models,
-        params.msisensor2_scan,
         params.msisensorpro_scan,
         params.pon,
         params.pon_tbi,
@@ -161,8 +160,7 @@ workflow NFCORE_SAREK {
             cnvkit_reference = PREPARE_REFERENCE_CNVKIT.out.cnvkit_reference
             versions = versions.mix(PREPARE_REFERENCE_CNVKIT.out.versions)
         }
-    }
-    else {
+    } else {
         cnvkit_reference = Channel.value([])
     }
     // Gather used softwares versions
@@ -179,8 +177,7 @@ workflow NFCORE_SAREK {
         vep_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.ensemblvep_cache.map { _meta, cache -> [cache] }
 
         versions = versions.mix(DOWNLOAD_CACHE_SNPEFF_VEP.out.versions)
-    }
-    else {
+    } else {
         // Looks for cache information either locally or on the cloud
         ANNOTATION_CACHE_INITIALISATION(
             (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
@@ -223,11 +220,13 @@ workflow NFCORE_SAREK {
     //
     SAREK(
         samplesheet,
+        params.aligner,
+        params.tools?:"no_tools",
         PREPARE_GENOME.out.ascat_alleles,
         PREPARE_GENOME.out.ascat_loci,
         PREPARE_GENOME.out.ascat_loci_gc,
         PREPARE_GENOME.out.ascat_loci_rt,
-        params.aligner,
+        PREPARE_GENOME.out.bbsplit_index
         PREPARE_GENOME.out.bcftools_annotations,
         PREPARE_GENOME.out.bcftools_annotations_tbi,
         params.bcftools_header_lines ? Channel.fromPath(params.bcftools_header_lines).collect() : Channel.empty(),
@@ -257,7 +256,6 @@ workflow NFCORE_SAREK {
         params.known_snps_vqsr ? Channel.value(params.known_snps_vqsr) : Channel.empty(),
         params.mappability ? Channel.fromPath(params.mappability).collect() : Channel.value([]),
         PREPARE_GENOME.out.msisensor2_models,
-        PREPARE_GENOME.out.msisensor2_scan,
         PREPARE_GENOME.out.msisensorpro_scan,
         params.ngscheckmate_bed ? Channel.value(params.ngscheckmate_bed) : Channel.empty(),
         PREPARE_GENOME.out.pon,

@@ -12,6 +12,9 @@
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
+                "NGSCHECKMATE_NCM": {
+                    "ngscheckmate": "1.0.1"
+                },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
@@ -107,10 +110,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-07-11T10:30:53.073758168"
+        "timestamp": "2025-09-30T19:38:59.74710121"
     },
     "-profile test --tools ngscheckmate": {
         "content": [
@@ -142,7 +145,6 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
@@ -150,6 +152,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
@@ -271,9 +274,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-07-11T12:19:18.022351369"
+        "timestamp": "2025-09-30T21:27:36.837652254"
     }
 }

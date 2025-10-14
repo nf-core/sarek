@@ -1,9 +1,9 @@
-include { BWA_INDEX as BWAMEM1_INDEX                } from '../../../modules/nf-core/bwa/index'
+include { BBMAP_BBSPLIT                             } from '../../../modules/nf-core/bbmap/bbsplit'
 include { BWAMEM2_INDEX                             } from '../../../modules/nf-core/bwamem2/index'
+include { BWA_INDEX as BWAMEM1_INDEX                } from '../../../modules/nf-core/bwa/index'
 include { DRAGMAP_HASHTABLE                         } from '../../../modules/nf-core/dragmap/hashtable'
 include { GATK4_CREATESEQUENCEDICTIONARY            } from '../../../modules/nf-core/gatk4/createsequencedictionary'
 include { MSISENSORPRO_SCAN                         } from '../../../modules/nf-core/msisensorpro/scan'
-include { MSISENSOR2_SCAN                           } from '../../../modules/nf-core/msisensor2/scan'
 include { SAMTOOLS_FAIDX                            } from '../../../modules/nf-core/samtools/faidx'
 include { TABIX_TABIX as TABIX_BCFTOOLS_ANNOTATIONS } from '../../../modules/nf-core/tabix/tabix'
 include { TABIX_TABIX as TABIX_DBSNP                } from '../../../modules/nf-core/tabix/tabix'
@@ -11,6 +11,7 @@ include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE    } from '../../../modules/nf-
 include { TABIX_TABIX as TABIX_KNOWN_INDELS         } from '../../../modules/nf-core/tabix/tabix'
 include { TABIX_TABIX as TABIX_KNOWN_SNPS           } from '../../../modules/nf-core/tabix/tabix'
 include { TABIX_TABIX as TABIX_PON                  } from '../../../modules/nf-core/tabix/tabix'
+include { UNTAR as UNTAR_BBSPLIT_INDEX              } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_CHR_DIR                    } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_MSISENSOR2_MODELS          } from '../../../modules/nf-core/untar'
 include { UNZIP as UNZIP_ALLELES                    } from '../../../modules/nf-core/unzip'
@@ -24,6 +25,8 @@ workflow PREPARE_GENOME {
     ascat_loci_in               // params.ascat_loci
     ascat_loci_gc_in            // params.ascat_loci_gc
     ascat_loci_rt_in            // params.ascat_loci_rt
+    bbsplit_fasta_list_in       // params.bbsplit_fasta_list
+    bbsplit_index_in            // params.bbsplit_index
     bcftools_annotations_in     // params.bcftools_annotations
     bcftools_annotations_tbi_in // params.bcftools_annotations
     bwa_in                      // params.bwa
@@ -110,6 +113,40 @@ workflow PREPARE_GENOME {
     }
     else {
         fasta_fai = Channel.empty()
+    }
+
+    // Prepare genome for BBSplit contamination filtering
+    bbsplit_index = Channel.empty()
+    if (tools && tools.split(',').contains('bbsplit')) {
+        if (bbsplit_index_in) {
+            // Use user-provided bbsplit index
+            if (bbsplit_index_in.endsWith('.tar.gz')) {
+                bbsplit_index = UNTAR_BBSPLIT_INDEX([[id: 'bbsplit_index'], file(bbsplit_index_in, checkIfExists: true)]).untar.map { _meta, index -> index }
+                versions = versions.mix(UNTAR_BBSPLIT_INDEX.out.versions)
+            }
+            else {
+                bbsplit_index = Channel.value(file(bbsplit_index_in, checkIfExists: true))
+            }
+        }
+        else if (bbsplit_fasta_list_in) {
+            // Build it from scratch if we have FASTA
+            Channel.from(file(bbsplit_fasta_list_in, checkIfExists: true))
+                .splitCsv(header: false, sep: ',')
+                .flatMap { id, fafile -> [['id', id], ['fasta', file(fafile, checkIfExists: true)]] }
+                .groupTuple()
+                .map { it -> it[1] }
+                .collect { [it] }
+                .set { ch_bbsplit_fasta_list }
+
+            bbsplit_index = BBMAP_BBSPLIT(
+                [[id: "build_index"], []],
+                [],
+                fasta.map { _meta, fasta_ -> fasta_ },
+                ch_bbsplit_fasta_list,
+                true,
+            ).index
+            versions = versions.mix(BBMAP_BBSPLIT.out.versions)
+        }
     }
 
     bcftools_annotations = bcftools_annotations_in ? Channel.fromPath(bcftools_annotations_in).collect() : Channel.value([])
@@ -276,6 +313,7 @@ workflow PREPARE_GENOME {
     ascat_loci               // Channel: [ascat_loci]
     ascat_loci_gc            // Channel: [ascat_loci_gc]
     ascat_loci_rt            // Channel: [ascat_loci_rt]
+    bbsplit_index            // Channel: [bbsplit/index/]
     bcftools_annotations     // Channel: [bcftools_annotations]
     bcftools_annotations_tbi // Channel: [bcftools_annotations_tbi]
     chr_dir                  // Channel: [chr_dir/]
@@ -301,5 +339,5 @@ workflow PREPARE_GENOME {
     pon                      // Channel: [pon]
     pon_tbi                  // Channel: [pon_tbi]
     vep_fasta                // Channel: [meta, vep_fasta]
-    versions                 // channel: [versions.yml]
+    versions                 // Channel: [versions.yml]
 }

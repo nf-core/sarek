@@ -36,6 +36,10 @@ input:
         type: file
         description: Index of the annotations file
         ontologies: []
+  - columns:
+      type: file
+      description: List of columns in the annotations file, one name per row
+      ontologies: []
   - header_lines:
       type: file
       description: Contains lines to append to the output VCF header

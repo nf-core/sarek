@@ -109,9 +109,9 @@
                 "tools": {
                     "type": "string",
                     "fa_icon": "fas fa-toolbox",
-                    "description": "Tools to use for duplicate marking, variant calling and/or for annotation.",
+                    "description": "Tools to use for contamination removal, duplicate marking, variant calling and/or for annotation.",
                     "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper \n- Structural Variants: indexcov, Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Lofreq, mpileup, Mutect2, Sentieon TNScope, Strelka\n- Structural Variants: Manta, Sentieon TNScope, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Sentieon TNScope, Strelka2 \n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC, Sentieon TNScope \n- Microsatellite Instability: MSIsensor2, MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively), and bcftools annotate (needs `--bcftools_annotation`).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
-                    "pattern": "^((ascat|bcfann|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|indexcov|lofreq|manta|merge|mpileup|msisensor2|msisensorpro|muse|mutect2|ngscheckmate|sentieon_dedup|sentieon_dnascope|sentieon_haplotyper|sentieon_tnscope|snpeff|strelka|tiddit|vep)?,?)*(?<!,)$"
+                    "pattern": "^((ascat|bbsplit|bcfann|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|indexcov|lofreq|manta|merge|mpileup|msisensor2|msisensorpro|muse|mutect2|ngscheckmate|sentieon_dedup|sentieon_dnascope|sentieon_haplotyper|sentieon_tnscope|snpeff|strelka|tiddit|vep|varlociraptor)?,?)*(?<!,)$"
                 },
                 "skip_tools": {
                     "type": "string",
@@ -220,7 +220,6 @@
                 },
                 "umi_location": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-tape",
                     "description": "Location of the UMI(s) to be extracted with fastp.",
                     "help_text": "Use if UMIs are not present in the read header, but in a specific location within the reads/fastq header index. This will be used to extract UMIs from reads or index in the fastq header and store them in the RX tag.",
@@ -245,6 +244,28 @@
                     "fa_icon": "fas fa-tape",
                     "description": "Tag detailing where UMIs are present inside the bam/cram file (e.g. RX).",
                     "help_text": "If UMIs are already present in the cram/bam file, this details the tag which will be used in GATK MarkDuplicates and Sentieon dedup. This should be set to RX if restarting from bam files where the UMIs have been extracted by the umi_in_read_header or umi_length options. Note this is not compatible with MarkDuplicates Spark."
+                },
+                "bbsplit_fasta_list": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/plain",
+                    "fa_icon": "fas fa-list-alt",
+                    "description": "Path to comma-separated file containing a list of reference genomes to filter reads against with BBSplit. You have to also explicitly set `--tools bbsplit` if you want to use BBSplit.",
+                    "help_text": "The file should contain 2 columns: short name and full path to reference genome(s) e.g. \n```\nmm10,/path/to/mm10.fa\necoli,/path/to/ecoli.fa\n```"
+                },
+                "bbsplit_index": {
+                    "type": "string",
+                    "format": "path",
+                    "exists": true,
+                    "fa_icon": "fas fa-bezier-curve",
+                    "description": "Path to directory or tar.gz archive for pre-built BBSplit index.",
+                    "help_text": "The BBSplit index will have to be built at least once with this pipeline (see `--save_reference` to save index). It can then be provided via `--bbsplit_index` for future runs."
+                },
+                "save_bbsplit_reads": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-save",
+                    "description": "If this option is specified, FastQ files split by reference will be saved in the results directory."
                 }
             }
         },
@@ -412,7 +433,7 @@
                 },
                 "freebayes_filter": {
                     "type": "string",
-                    "default": 30,
+                    "default": "30",
                     "description": "Filtering expression for vcflib/vcffilter",
                     "help_text": "Freebayes offers a QUAL score for each called variant. The QUAL estimate provides the phred-scaled probability that the locus is not polymorphic provided the data and the model. This is reasonably-well calibrated, so you can specify that you want things where we expect error rates of no more than 1/100 (QUAL > 20) or 1/1000 (QUAL > 30). Where the default setting for sarek is QUAL > 30."
                 },
@@ -491,6 +512,24 @@
                     "fa_icon": "fas fa-tape",
                     "description": "Option for normalization of vcf-files.",
                     "help_text": "Normalization of all vcf-files from each applied variant-caller using bfctools norm."
+                },
+                "varlociraptor_chunk_size": {
+                    "type": "integer",
+                    "default": 15,
+                    "description": "Number of chunks to split the vcf-files for varlociraptor",
+                    "hidden": true
+                },
+                "varlociraptor_scenario_germline": {
+                    "type": "string",
+                    "description": "Yte compatible scenario file for germline samples. Defaults to assets/varlociraptor_germline.yte.yaml"
+                },
+                "varlociraptor_scenario_somatic": {
+                    "type": "string",
+                    "description": "Yte compatible scenario file for somatic samples. Defaults to assets/varlociraptor_somatic.yte.yaml"
+                },
+                "varlociraptor_scenario_tumor_only": {
+                    "type": "string",
+                    "description": "Yte compatible scenario file for tumor only samples. Defaults to assets/varlociraptor_tumor_only.yte.yaml"
                 }
             }
         },
@@ -640,6 +679,11 @@
                     "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Index file for `bcftools_annotations`"
+                },
+                "bcftools_columns": {
+                    "type": "string",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Optional text file with list of columns to use from `bcftools_annotations`, one name per row"
                 },
                 "bcftools_header_lines": {
                     "type": "string",

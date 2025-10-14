@@ -17,6 +17,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [Trim adapters](#trim-adapters)
     - [Split FastQ files](#split-fastq-files)
     - [UMI consensus](#umi-consensus)
+    - [BBSplit contamination removal](#bbsplit-contamination-removal)
   - [Map to Reference](#map-to-reference)
     - [BWA](#bwa)
     - [BWA-mem2](#bwa-mem2)
@@ -58,6 +59,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Microsatellite instability (MSI)](#microsatellite-instability-msi)
     - [MSIsensor2](#msisensor2)
     - [MSIsensorPro](#msisensorpro)
+  - [Varlociraptor](#varlociraptor)
   - [Concatenation](#concatenation)
   - [Normalization](#normalization)
 - [Variant annotation](#variant-annotation)
@@ -167,6 +169,33 @@ These files are intermediate and by default not placed in the output-folder kept
 **Output directory: `{outdir}/reports/umi/`**
 
 - `<sample_lane_{1,2}_umi_histogram.txt>`
+
+</details>
+
+#### BBSplit contamination removal
+
+[BBSplit](http://seqanswers.com/forums/showthread.php?t=41288) is a tool that bins reads by mapping to multiple references simultaneously, using BBMap. The reads go to the bin of the reference they map to best. There are also disambiguation options, such that reads that map to multiple references can be binned with all of them, none of them, one of them, or put in a special "ambiguous" file for each of them.
+
+This functionality would be especially useful, for example, if you have [mouse PDX](https://en.wikipedia.org/wiki/Patient_derived_xenograft) samples that contain a mixture of human and mouse genomic DNA/RNA and you would like to filter out any mouse derived reads.
+
+The BBSplit index will have to be built at least once with this pipeline by providing [`--bbsplit_fasta_list`](https://nf-co.re/sarek/parameters#bbsplit_fasta_list) which has to be a file containing 2 columns: short name and full path to reference genome(s):
+
+```bash
+mm10,/path/to/mm10.fa
+ecoli,/path/to/ecoli.fa
+sarscov2,/path/to/sarscov2.fa
+```
+
+You can save the index by using the [`--save_reference`](https://nf-co.re/sarek/parameters#save_reference) parameter and then provide it via [`--bbsplit_index`](https://nf-co.re/sarek/parameters#bbsplit_index) for future runs. To enable the tool add `--tools bbsplit` to the run parameters. As described in the `Output files` dropdown box above the FastQ files relative to the main reference genome will always be called `*primary*.fastq.gz`.
+
+By default, the following parameters are used for BBSplit `ambiguous2=best maxindel=150000`. To overwrite these parameters, use a custom config, as described [here](https://nf-co.re/docs/usage/getting_started/configuration#customising-tool-arguments).
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `preprocessing/bbsplit/`
+  - `*.fastq.gz`: If `--save_bbsplit_reads` is specified FastQ files split by reference will be saved to the results directory. Reads from the main reference genome will be named "_primary_.fastq.gz". Reads from contaminating genomes will be named "_<SHORT_NAME>_.fastq.gz" where `<SHORT_NAME>` is the first column in `--bbsplit_fasta_list` that needs to be provided to initially build the index.
+  - `*.txt`: File containing statistics on how many reads were assigned to each reference.
 
 </details>
 
@@ -295,9 +324,8 @@ The resulting recalibrated CRAM files are delivered to the user. Recalibrated CR
 
 ### Parabricks FQ2BAM
 
-:::info
-This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
-:::
+> [!NOTE]
+> This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
 
 [Parabricks FQ2BAM](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html) runs as alternative to GATK preprocessing, enables by `--aligner parabricks --profile <docker/singularity>,gpu`.
 
@@ -901,24 +929,10 @@ An altered distribution of microsatellite length is associated with a missed rep
 
 #### MSIsensor2
 
-[MSIsensor2](https://github.com/niu-lab/msisensor2) is a tool to detect the MSI status for tumor only sequencing data, including Cell-Free DNA (cfDNA), Formalin-Fixed Paraffin-Embedded(FFPE) and other sample types.
+[MSIsensor2](https://github.com/niu-lab/msisensor2) is a tool to detect the MSI status for tumor-only sequencing data, including Cell-Free DNA (cfDNA), Formalin-Fixed Paraffin-Embedded(FFPE) and other sample types.
 
 <details markdown="1">
-<summary>Output files for tumor/normal paired samples</summary>
 
-**Output directory: `{outdir}/variantcalling/msisensor/<tumorsample_vs_normalsample>/`**
-
-- `<tumorsample_vs_normalsample>`
-  - MSI score output, contains information about the number of somatic sites.
-- `<tumorsample_vs_normalsample>_dis`
-  - The normal and tumor length distribution for each microsatellite position.
-- `<tumorsample_vs_normalsample>_germline`
-  - Germline sites detected.
-- `<tumorsample_vs_normalsample>_somatic`
-  - Somatic sites detected.
-  </details>
-
-<details markdown="1">
 <summary>Output files for tumor only samples</summary>
 
 **Output directory: `{outdir}/variantcalling/msisensor2/<tumorsample>/`**
@@ -949,6 +963,53 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
   - Germline sites detected.
 - `<tumorsample_vs_normalsample>_somatic`
   - Somatic sites detected.
+  </details>
+
+### Varlociraptor
+
+As varlociraptor requires to provide a set of candidate variants to consider it can be run in combination with any variant caller.
+
+<details markdown="1">
+<summary>Output files for germline samples</summary>
+
+**Output directory: `{outdir}/variantcalling/varlociraptor/{sample}`**
+
+- `<sample>.<variantcaller>.germline.varlociraptor.vcf.gz` and `<sample>.<variantcaller>.germline.varlociraptor.vcf.gz.tbi`
+  - Final VCF with tabix index
+- `<sample>/<sample>.scenario.varlociraptor.yaml`
+  - YAML file containing scenario for varlociraptor calling
+- `<sample>/<sample>.alignment-properties.json`
+  - JSON file containing alignment properties for normal sample cram
+  </details>
+
+<details markdown="1">
+<summary>Postprocessed VCF files for tumor-normal calling</summary>
+
+**Output directory: `{outdir}/variantcalling/varlociraptor/{tumorsample_vs_normalsample}`**
+
+- `<normal_id>_vs_.<tumor_id>.<variantcaller>.somatic.varlociraptor.vcf.gz` and `<normal_id>_vs_.<tumor_id>.<variantcaller>.somatic.varlociraptor.vcf.gz.tbi`
+  - Final VCF with tabix index
+- `<normal_id>_vs_.<tumor_id>/<normal_id>_vs_.<tumor_id>.scenario.varlociraptor.yaml`
+  - YAML file containing scenario for varlociraptor calling (somatic calling)
+- `<normal_id>_vs_.<tumor_id>/<normal_id>.alignment-properties.json`
+  - JSON file containing alignment properties for normal sample cram
+- `<normal_id>_vs_.<tumor_id>/<tumor_id>.tumor.alignment-properties.json`
+  - JSON file containing alignment properties for tumor sample cram
+- `<sample>.<variantcaller>.merged.vcf.gz`
+  - VCF containing both somatic and germline variants
+  </details>
+
+<details markdown="1">
+<summary>Output files for tumor only samples</summary>
+
+**Output directory: `{outdir}/variantcalling/varlociraptor/{sample}`**
+
+- `<sample>.<variantcaller>.tumor_only.varlociraptor.vcf.gz` and `<sample>.<variantcaller>.tumor_only.varlociraptor.vcf.gz.tbi`
+  - Final VCF with tabix index
+- `<sample>/<sample>.scenario.varlociraptor.yaml`
+  - YAML file containing scenario for varlociraptor calling
+- `<sample>/<sample>.alignment-properties.json`
+  - JSON file containing alignment properties for tumor_only sample cram
   </details>
 
 ### Concatenation

@@ -70,6 +70,7 @@ workflow SAREK {
     aligner
     bcftools_annotations
     bcftools_annotations_tbi
+    bcftools_columns
     bcftools_header_lines
     cf_chrom_len
     chr_files
@@ -97,7 +98,6 @@ workflow SAREK {
     known_snps_vqsr
     mappability
     msisensor2_models
-    msisensor2_scan
     msisensorpro_scan
     ngscheckmate_bed
     pon
@@ -111,20 +111,28 @@ workflow SAREK {
     vep_fasta
     vep_genome
     vep_species
+    bbsplit_index
     versions
 
     main:
 
     // To gather all QC reports for MultiQC
     ch_multiqc_files = Channel.empty()
-    multiqc_report   = Channel.empty()
-    reports          = Channel.empty()
+    multiqc_report = Channel.empty()
+    reports = Channel.empty()
 
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        VALIDATE INPUTS
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
+
+    // PREPROCESSING
     if (params.step == 'mapping') {
         // Figure out if input is bam, fastq, or spring
         input_sample_type = input_sample.branch {
-            bam:                 it[0].data_type == "bam"
-            fastq_gz:            it[0].data_type == "fastq_gz"
+            bam: it[0].data_type == "bam"
+            fastq_gz: it[0].data_type == "fastq_gz"
             one_fastq_gz_spring: it[0].data_type == "one_fastq_gz_spring"
             two_fastq_gz_spring: it[0].data_type == "two_fastq_gz_spring"
         }
@@ -226,6 +234,7 @@ workflow SAREK {
                 intervals_for_preprocessing,
                 known_sites_indels,
                 known_sites_indels_tbi,
+                bbsplit_index,
             )
 
             // Gather preprocessing output
@@ -277,10 +286,11 @@ workflow SAREK {
             CRAM_TO_BAM(cram_variant_calling_status_tmp.cram, fasta, fasta_fai)
 
             // gather all bam files
-            bam_variant_calling = CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, by: [0])
+            bam_variant_calling = CRAM_TO_BAM.out.bam
+                .join(CRAM_TO_BAM.out.bai, by: [0])
                 .mix(cram_variant_calling_status_tmp.bam)
-                .map{ meta, bam, bai ->
-                    [ meta + [data_type:'bam'], bam, bai]
+                .map { meta, bam, bai ->
+                    [meta + [data_type: 'bam'], bam, bai]
                 }
 
             versions = versions.mix(CRAM_TO_BAM.out.versions)
@@ -353,11 +363,12 @@ workflow SAREK {
             .map { normal, tumor ->
                 def meta = [:]
 
-                meta.id        = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
+                meta.id = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
                 meta.normal_id = normal[1].sample
-                meta.patient   = normal[0]
-                meta.sex       = normal[1].sex
-                meta.tumor_id  = tumor[1].sample
+                meta.patient = normal[0]
+                meta.sex = normal[1].sex
+                meta.tumor_id = tumor[1].sample
+                meta.contamination = tumor[1].contamination
 
                 [meta, normal[2], normal[3], tumor[2], tumor[3]]
             }
@@ -366,11 +377,11 @@ workflow SAREK {
             .map { normal, tumor ->
                 def meta = [:]
 
-                meta.id        = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
+                meta.id = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
                 meta.normal_id = normal[1].sample
-                meta.patient   = normal[0]
-                meta.sex       = normal[1].sex
-                meta.tumor_id  = tumor[1].sample
+                meta.patient = normal[0]
+                meta.sex = normal[1].sex
+                meta.tumor_id = tumor[1].sample
 
                 [meta, normal[2], normal[3], tumor[2], tumor[3]]
             }
@@ -470,7 +481,6 @@ workflow SAREK {
             intervals_bed_combined,
             intervals_bed_gz_tbi_combined,
             mappability,
-            msisensor2_scan,
             msisensorpro_scan,
             pon,
             pon_tbi,
@@ -484,12 +494,18 @@ workflow SAREK {
 
         // POST VARIANTCALLING
         POST_VARIANTCALLING(
+            params.tools,
+            cram_variant_calling_status_normal,
             BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
+            cram_variant_calling_tumor_only,
             BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all,
+            cram_variant_calling_pair,
             BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all,
             fasta,
+            fasta_fai,
             params.concatenate_vcfs,
             params.normalize_vcfs,
+            params.varlociraptor_chunk_size,
         )
 
         // Gather vcf files for annotation and QC
@@ -555,6 +571,7 @@ workflow SAREK {
                 vep_extra_files,
                 bcftools_annotations,
                 bcftools_annotations_tbi,
+                bcftools_columns,
                 bcftools_header_lines,
             )
 

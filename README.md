@@ -43,6 +43,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
 
 - Form consensus reads from UMI sequences (`fgbio`)
 - Sequencing quality control and trimming (enabled by `--trim_fastq`) (`FastQC`, `fastp`)
+- Contamination removal (`BBSplit`, enabled by `--tools bbsplit`)
 - Map Reads to Reference (`BWA-mem`, `BWA-mem2`, `dragmap` or `Sentieon BWA-mem`)
 - Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator` and `GATK ApplyBQSR` or `Sentieon LocusCollector` and `Sentieon Dedup`)
 - _Experimental Feature_: Use GPU-accelerated parabricks implementation as alternative to "Map Reads to Reference" + "Process BAM file" (`--aligner parabricks`)
@@ -63,11 +64,12 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `MSIsensor-pro`
   - `MuSE`
   - `Sentieon Haplotyper`
-  - `Strelka2`
+  - `Strelka`
   - `TIDDIT`
 - Post-variant calling options:
   - `BCFtools concat` for germline vcfs
   - _Experimental Feature_ `BCFtools norm` for all vcfs
+  - `Varlociraptor` for all vcfs
 - Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`)
 - Summarise and represent QC (`MultiQC`)
 

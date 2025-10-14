@@ -4,4 +4,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::msisensor2=0.1
+  # renovate: datasource=conda depName=bioconda/varlociraptor
+  - bioconda::varlociraptor=8.7.4
