@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Added
 
 #### Changed
-Back to dev
+- [2026](https://github.com/nf-core/sarek/pull/2026) - Back to dev
 
 #### Fixed
 
