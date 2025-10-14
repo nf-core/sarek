@@ -160,7 +160,8 @@ workflow NFCORE_SAREK {
             cnvkit_reference = PREPARE_REFERENCE_CNVKIT.out.cnvkit_reference
             versions = versions.mix(PREPARE_REFERENCE_CNVKIT.out.versions)
         }
-    } else {
+    }
+    else {
         cnvkit_reference = Channel.value([])
     }
     // Gather used softwares versions
@@ -177,7 +178,8 @@ workflow NFCORE_SAREK {
         vep_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.ensemblvep_cache.map { _meta, cache -> [cache] }
 
         versions = versions.mix(DOWNLOAD_CACHE_SNPEFF_VEP.out.versions)
-    } else {
+    }
+    else {
         // Looks for cache information either locally or on the cloud
         ANNOTATION_CACHE_INITIALISATION(
             (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
@@ -221,14 +223,15 @@ workflow NFCORE_SAREK {
     SAREK(
         samplesheet,
         params.aligner,
-        params.tools?:"no_tools",
+        params.tools ?: "no_tools",
         PREPARE_GENOME.out.ascat_alleles,
         PREPARE_GENOME.out.ascat_loci,
         PREPARE_GENOME.out.ascat_loci_gc,
         PREPARE_GENOME.out.ascat_loci_rt,
-        PREPARE_GENOME.out.bbsplit_index
+        PREPARE_GENOME.out.bbsplit_index,
         PREPARE_GENOME.out.bcftools_annotations,
         PREPARE_GENOME.out.bcftools_annotations_tbi,
+        params.bcftools_columns ? Channel.fromPath(params.bcftools_columns).collect() : Channel.empty(),
         params.bcftools_header_lines ? Channel.fromPath(params.bcftools_header_lines).collect() : Channel.empty(),
         params.cf_chrom_len ? Channel.fromPath(params.cf_chrom_len).collect() : [],
         PREPARE_GENOME.out.chr_dir,
