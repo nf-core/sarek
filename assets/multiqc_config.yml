@@ -21,49 +21,49 @@ disable_version_detection: true
 
 # Run only these modules
 run_modules:
-- custom_content
-- fastqc
-- fastp
-- picard
-- samtools
-- mosdepth
-- gatk
-- bcftools
-- vcftools
-- snpeff
-- vep
+  - custom_content
+  - fastqc
+  - fastp
+  - picard
+  - samtools
+  - mosdepth
+  - gatk
+  - bcftools
+  - vcftools
+  - snpeff
+  - vep
 
 module_order:
-- fastqc:
-    name: "FastQC (raw)"
-    path_filters_exclude:
-    - "*_val_*.zip"
-- fastp:
-    name: "FastP (Read preprocessing)"
-- picard:
-    name: "GATK4 MarkDuplicates"
-    info: " metrics generated either by GATK4 MarkDuplicates or EstimateLibraryComplexity
-      (with --use_gatk_spark)."
-- samtools:
-    name: "Samtools Flagstat"
-- mosdepth:
-    name: "Mosdepth"
-- gatk:
-    name: "GATK4 BQSR"
-- bcftools:
-    name: "Bcftools"
-- vcftools:
-    name: "Vcftools"
-- snpeff:
-    name: "SNPeff"
-- vep:
-    name: "VEP"
+  - fastqc:
+      name: "FastQC (raw)"
+      path_filters_exclude:
+        - "*_val_*.zip"
+  - fastp:
+      name: "FastP (Read preprocessing)"
+  - picard:
+      name: "GATK4 MarkDuplicates"
+      info: " metrics generated either by GATK4 MarkDuplicates or EstimateLibraryComplexity
+        (with --use_gatk_spark)."
+  - samtools:
+      name: "Samtools Flagstat"
+  - mosdepth:
+      name: "Mosdepth"
+  - gatk:
+      name: "GATK4 BQSR"
+  - bcftools:
+      name: "Bcftools"
+  - vcftools:
+      name: "Vcftools"
+  - snpeff:
+      name: "SNPeff"
+  - vep:
+      name: "VEP"
 
 extra_fn_clean_exts:
-- "_val"
-- type: regex_keep
-  pattern: "^.*.(md|recal).mosdepth.(global|region).dist"
-  module: mosdepth
+  - "_val"
+  - type: regex_keep
+    pattern: "^.*.(md|recal).mosdepth.(global|region).dist"
+    module: mosdepth
 
 sample_names_replace_regex: true
 sample_names_replace:

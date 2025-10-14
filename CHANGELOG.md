@@ -17,19 +17,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
-| Dependency                             | Old version | New version |
-| -------------------------------------- | ----------- | ----------- |
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
 
 ### Parameters
 
-| Params                                | status |
-| ------------------------------------- | ------ |
+| Params | status |
+| ------ | ------ |
 
 ### Developer section
 
 #### Added
 
 #### Changed
+
 - [2026](https://github.com/nf-core/sarek/pull/2026) - Back to dev
 
 #### Fixed
