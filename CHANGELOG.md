@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.7.0dev
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+### Dependencies
+
+| Dependency                             | Old version | New version |
+| -------------------------------------- | ----------- | ----------- |
+
+### Parameters
+
+| Params                                | status |
+| ------------------------------------- | ------ |
+
+### Developer section
+
+#### Added
+
+#### Changed
+Back to dev
+
+#### Fixed
+
+#### Removed
+
 ## [3.6.0](https://github.com/nf-core/sarek/releases/tag/3.6.0) - Kvikkjokk
 
 Kvikkjokk is a village where many trails start that lead through sarek.
@@ -102,7 +133,6 @@ Kvikkjokk is a village where many trails start that lead through sarek.
 | ------------------------------------- | ------ |
 | `--freebayes_filter`                  | New    |
 | `--msisensor2_models`                 | New    |
-| `--msisensor2_scan`                   | New    |
 | `--msisensorpro_scan`                 | New    |
 | `--sentieon_consensus`                | New    |
 | `--umi_base_skip`                     | New    |
