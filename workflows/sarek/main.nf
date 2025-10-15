@@ -120,8 +120,8 @@ workflow SAREK {
     main:
     // To gather all QC reports for MultiQC
     ch_multiqc_files = Channel.empty()
-    multiqc_report = Channel.empty()
-    reports = Channel.empty()
+    multiqc_report   = Channel.empty()
+    reports          = Channel.empty()
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -133,8 +133,8 @@ workflow SAREK {
     if (step == 'mapping') {
         // Figure out if input is bam, fastq, or spring
         input_sample_type = input_sample.branch {
-            bam: it[0].data_type == "bam"
-            fastq_gz: it[0].data_type == "fastq_gz"
+            bam:                 it[0].data_type == "bam"
+            fastq_gz:            it[0].data_type == "fastq_gz"
             one_fastq_gz_spring: it[0].data_type == "one_fastq_gz_spring"
             two_fastq_gz_spring: it[0].data_type == "two_fastq_gz_spring"
         }
@@ -365,11 +365,11 @@ workflow SAREK {
             .map { normal, tumor ->
                 def meta = [:]
 
-                meta.id = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
-                meta.normal_id = normal[1].sample
-                meta.patient = normal[0]
-                meta.sex = normal[1].sex
-                meta.tumor_id = tumor[1].sample
+                meta.id            = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
+                meta.normal_id     = normal[1].sample
+                meta.patient       = normal[0]
+                meta.sex           = normal[1].sex
+                meta.tumor_id      = tumor[1].sample
                 meta.contamination = tumor[1].contamination
 
                 [meta, normal[2], normal[3], tumor[2], tumor[3]]
@@ -379,11 +379,11 @@ workflow SAREK {
             .map { normal, tumor ->
                 def meta = [:]
 
-                meta.id = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
+                meta.id        = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
                 meta.normal_id = normal[1].sample
-                meta.patient = normal[0]
-                meta.sex = normal[1].sex
-                meta.tumor_id = tumor[1].sample
+                meta.patient   = normal[0]
+                meta.sex       = normal[1].sex
+                meta.tumor_id  = tumor[1].sample
 
                 [meta, normal[2], normal[3], tumor[2], tumor[3]]
             }

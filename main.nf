@@ -24,7 +24,6 @@
     GENOME PARAMETER VALUES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
 params.ascat_alleles           = getGenomeAttribute('ascat_alleles')
 params.ascat_genome            = getGenomeAttribute('ascat_genome')
 params.ascat_loci              = getGenomeAttribute('ascat_loci')
