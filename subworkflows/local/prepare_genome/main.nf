@@ -212,11 +212,11 @@ workflow PREPARE_GENOME {
     // MSI
     if (msisensor2_models_in && msisensor2_models_in.endsWith(".tar.gz") && tools.split(',').contains('msisensor2')) {
         UNTAR_MSISENSOR2_MODELS(Channel.fromPath(file(msisensor2_models_in)).map { archive -> [[id: archive.baseName], archive] })
-        msisensor2_models = UNTAR_MSISENSOR2_MODELS.out.untar.map { _meta, extracted_archive -> extracted_archive }.collect()
+        msisensor2_models = UNTAR_MSISENSOR2_MODELS.out.untar.collect()
         versions = versions.mix(UNTAR_MSISENSOR2_MODELS.out.versions)
     }
     else if (msisensor2_models_in && tools.split(',').contains('msisensor2')) {
-        msisensor2_models = Channel.fromPath(msisensor2_models_in).collect()
+        msisensor2_models = Channel.fromPath(msisensor2_models_in).map { model -> [[id:model.baseName], model] }.collect()
     }
     else {
         msisensor2_models = Channel.value([])
