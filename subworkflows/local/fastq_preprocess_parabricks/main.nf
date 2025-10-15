@@ -7,7 +7,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     ch_reads                        // channel: [mandatory] meta, reads
     ch_fasta                        // channel: [mandatory] meta, fasta
     ch_index                        // channel: [mandatory] meta, index - bwa index
-    ch_interval_file                // channel: [optional]  meta, intervals_bed_combined
+    ch_interval_file                // channel: [optional]  intervals_bed_combined
     ch_known_sites                  // channel: [optional]  known_sites_indels
     val_output_fmt                  // either bam or cram
 
@@ -31,9 +31,11 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     }
 
     // Adjust ch_interval_file
-    ch_interval_file = ch_interval_file.collect().map { file, num ->
-        [['id': 'interval_file', 'num':num], file]
-    }
+    // ch_interval_file = ch_interval_file.collect().map { file, num ->
+    //     [['id': 'interval_file', 'num':num], file]
+    // }
+
+    ch_interval_file.view()
 
     // Adjust ch_known_sites
     ch_known_sites= ch_known_sites.collect().map { files ->
@@ -44,7 +46,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
         ch_reads,           // channel: [ val(meta), reads ]
         ch_fasta,           // channel: [ val(meta), fasta ]
         ch_index,           // channel: [ val(meta), index ]
-        ch_interval_file,   // channel: [ val(meta), interval_file ]
+        ch_interval_file.map{ it -> [ [id: 'intervals'], it] },   // channel: [ val(meta), interval_file ]
         ch_known_sites,     // channel: [ val(meta), known_sites ]
         val_output_fmt      // either bam or cram
     )

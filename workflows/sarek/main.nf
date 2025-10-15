@@ -208,7 +208,7 @@ workflow SAREK {
                 input_fastq,
                 fasta,
                 index_alignment,
-                intervals_and_num_intervals,
+                intervals_bed_combined,
                 known_sites_indels,
                 Channel.value("cram"),
             )
