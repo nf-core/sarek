@@ -118,7 +118,6 @@ workflow SAREK {
     versions
 
     main:
-
     // To gather all QC reports for MultiQC
     ch_multiqc_files = Channel.empty()
     multiqc_report = Channel.empty()
