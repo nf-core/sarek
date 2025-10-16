@@ -186,14 +186,17 @@ You can supply more command-line arguments to the `fq2bam` process depending on 
 process {
     withName: 'PARABRICKS_FQ2BAM' {
         ext.args   = { [
-                "--read-group-id-prefix ${meta.sample_lane_id}",
-                "--read-group-sm ${meta.patient}_${meta.sample}",
-                "--read-group-lb ${meta.sample}",
-                "--read-group-pl ${params.seq_platform}",
-                "--gpuwrite",
-                "--gpusort",
-                "--bwa-nstreams 2",
-            ].join(' ').trim() }
+            // Using specific read group tags for mutect compability
+            "--read-group-id-prefix ${meta.sample_lane_id}",
+            "--read-group-sm ${meta.patient}_${meta.sample}",
+            "--read-group-lb ${meta.sample}",
+            "--read-group-pl ${params.seq_platform}",
+            // Using -B 3 for tumor samples
+            meta.status == 1 ? "--bwa-options='-K 100000000 -Y -B 3'" : "--bwa-options='-K 100000000 -Y'",
+            "--gpuwrite",
+            "--gpusort",
+            "--bwa-nstreams 2",
+        ].join(' ').trim() }
     }
 }
 ```
