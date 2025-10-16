@@ -55,6 +55,7 @@ workflow POST_VARIANTCALLING {
         versions = versions.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.versions)
 
         // SOMATIC
+        // TODO: use branching to avoid running this if no somatic VCFs are present
         varlociraptor_scenario_somatic = params.varlociraptor_scenario_somatic
             ? Channel.fromPath(params.varlociraptor_scenario_somatic).map { it -> [[id: it.baseName - '.yte'], it] }.collect()
             : Channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect()
