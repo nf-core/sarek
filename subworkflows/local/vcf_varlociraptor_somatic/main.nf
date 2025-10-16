@@ -105,8 +105,6 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     germline_with_key.dump(tag: "germline_with_key")
 
-    germline_with_key = germline_with_key.ifEmpty { [[id: null, variantcaller: null], null, null, null] }
-
     def branched = somatic_with_key
         .join(germline_with_key, by: 0, remainder: true)
         .branch {
