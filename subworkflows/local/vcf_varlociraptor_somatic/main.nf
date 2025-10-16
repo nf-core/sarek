@@ -97,17 +97,17 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         [[id: meta.normal_id, variantcaller: meta.variantcaller], meta, vcf, tbi]
     }
 
-    somatic_with_key.dump{tag: "somatic_with_key"}
+    somatic_with_key.dump(tag: "somatic_with_key")
 
     def germline_with_key = ch_germline_vcf_tbi.map { meta, vcf, tbi ->
         [[id: meta.id, variantcaller: meta.variantcaller], meta, vcf, tbi]
     }
 
-    germline_with_key.dump{tag: "germline_with_key"}
+    germline_with_key.dump(tag: "germline_with_key")
 
     def matching_pairs = somatic_with_key.join(germline_with_key, failOnMismatch: false)
 
-    matching_pairs.dump{tag: "matching_pairs"}
+    matching_pairs.dump(tag: "matching_pairs")
 
     // Branch based on whether a matching germline VCF was found
     def branched = matching_pairs.branch {
@@ -115,8 +115,8 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         unmatched: it.size() == 4
     }
 
-    branched.matched.dump{tag: "branched.matched"}
-    branched.unmatched.dump{tag: "branched.unmatched"}
+    branched.matched.dump(tag: "branched.matched")
+    branched.unmatched.dump(tag: "branched.unmatched")
 
     MERGE_GERMLINE_SOMATIC_VCFS(
         branched.matched.map { _key, meta_somatic, somatic_vcf, somatic_tbi, _meta_germline, germline_vcf, germline_tbi ->
