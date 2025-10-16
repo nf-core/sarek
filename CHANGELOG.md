@@ -13,12 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [2029](https://github.com/nf-core/sarek/pull/2029) - Correct intervals channel for parabricks
+
 ### Removed
 
 ### Dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
+| Dependency   | Old version | New version |
+| ------------ | ----------- | ----------- |
+| `parabricks` | 4.5.1-1     | 4.6.0-1     |
 
 ### Parameters
 
