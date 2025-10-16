@@ -131,6 +131,8 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         branched.unmatched.map { _key, meta, vcf, _tbi, _no_germline -> [meta, vcf] }
     )
 
+    ch_vcf.dump(tag: "ch_vcf")
+
     //
     // CHUNK VCF FILES
     //
