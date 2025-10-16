@@ -167,7 +167,7 @@ patient1,XX,1,tumor_sample,lane_2,test2_L002.bam
 patient1,XX,1,relapse_sample,lane_1,test3_L001.bam
 ```
 
-#### Using GPU accelerated alignment (parabricks)
+#### Using GPU accelerated alignment (`--aligner parabricks`)
 
 > [!NOTE]
 > This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
@@ -192,7 +192,7 @@ process {
                 "--read-group-pl ${params.seq_platform}",
                 "--gpuwrite",
                 "--gpusort",
-                "--bwa-nstreams 2", 
+                "--bwa-nstreams 2",
             ].join(' ').trim() }
     }
 }
