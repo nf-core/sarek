@@ -105,22 +105,14 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     germline_with_key.dump(tag: "germline_with_key")
 
-    def matching_pairs = germline_with_key.ifEmpty { [[id: "empty", variantcaller: "empty"], [:], [], []] }
-        .join(somatic_with_key, failOnMismatch: false, remainder: true)
-        .filter { it[0].id != "empty" }
-        .mix(
-            somatic_with_key.filter { key, meta, vcf, tbi ->
-                !germline_with_key.map { it[0] }.toList().contains(key)
-            }
-        )
+    germline_with_key = germline_with_key.ifEmpty { [[id: null, variantcaller: null], null, null, null] }
 
-    matching_pairs.dump(tag: "matching_pairs")
-
-    // Branch based on whether a matching germline VCF was found
-    def branched = matching_pairs.branch {
-        matched: it.size() == 7
-        unmatched: it.size() == 4
-    }
+    def branched = somatic_with_key
+        .join(germline_with_key, by: 0, remainder: true)
+        .branch {
+            matched: it.size() == 7 && it[5] != null  // has both somatic and germline
+            unmatched: it.size() == 4 || it[5] == null  // only somatic or germline is null
+        }
 
     branched.matched.dump(tag: "branched.matched")
     branched.unmatched.dump(tag: "branched.unmatched")
