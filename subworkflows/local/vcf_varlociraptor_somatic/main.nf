@@ -105,7 +105,14 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     germline_with_key.dump(tag: "germline_with_key")
 
-    def matching_pairs = somatic_with_key.join(germline_with_key, failOnMismatch: false)
+    def matching_pairs = germline_with_key.ifEmpty { [[id: "empty", variantcaller: "empty"], [:], [], []] }
+        .join(somatic_with_key, failOnMismatch: false, remainder: true)
+        .filter { it[0].id != "empty" }
+        .mix(
+            somatic_with_key.filter { key, meta, vcf, tbi ->
+                !germline_with_key.map { it[0] }.toList().contains(key)
+            }
+        )
 
     matching_pairs.dump(tag: "matching_pairs")
 
