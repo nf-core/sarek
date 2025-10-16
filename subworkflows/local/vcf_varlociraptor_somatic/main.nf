@@ -86,6 +86,8 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         .join(CONCAT_SOMATIC_STRELKA.out.tbi, by: [0])
         .mix(ch_somatic_branched.other)
 
+    ch_somatic_vcf_conc.view()
+    ch_germline_vcf.view()
 
     //
     // MERGE GERMLINE AND SOMATIC VCFs
