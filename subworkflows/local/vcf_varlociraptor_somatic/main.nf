@@ -104,6 +104,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     def matching_pairs = somatic_with_key.join(germline_with_key, failOnMismatch: false)
 
+    matching_pairs.view()
     // Branch based on whether a matching germline VCF was found
     def branched = matching_pairs.branch {
         matched: it.size() == 7
