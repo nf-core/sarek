@@ -298,6 +298,11 @@ workflow SAREK {
         
         // CONDITIONAL ALIGNMENT BASED ON ALIGNER
         if (params.aligner == 'minimap2') {
+            // DEBUG: Print what we're passing to minimap2
+            index_alignment.view { "DEBUG index_alignment: $it" }
+            fasta.view { "DEBUG fasta: $it" }
+            fasta_fai.view { "DEBUG fasta_fai: $it" }
+            reads_for_alignment.view { "DEBUG reads_for_alignment: $it" }
             BAM_ALIGN_MINIMAP2(reads_for_alignment, index_alignment, sort_bam, fasta, fasta_fai)
             
             bam_mapped = BAM_ALIGN_MINIMAP2.out.bam
