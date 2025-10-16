@@ -5,7 +5,16 @@
     "remoteUser": "root",
     "privileged": true,
 
-    // Mount full current path to make mounting into docker-outside-of-docker work
-    "workspaceMount": "source=${localWorkspaceFolder},target=${localWorkspaceFolder},type=bind",
-    "workspaceFolder": "${localWorkspaceFolder}"
+    "remoteEnv": {
+        // Workspace path on the host for mounting with docker-outside-of-docker
+        "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+    },
+
+    "onCreateCommand": "./.devcontainer/setup.sh",
+
+    "hostRequirements": {
+        "cpus": 4,
+        "memory": "16gb",
+        "storage": "32gb"
+    }
 }

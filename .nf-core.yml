@@ -13,7 +13,7 @@ lint:
   nf_test_content: false
   schema_params: false
   template_strings: false
-nf_core_version: 3.4.0
+nf_core_version: 3.4.1
 repository_type: pipeline
 template:
   author: Maxime Garcia, Szilveszter Juhos, Friederike Hanssen
