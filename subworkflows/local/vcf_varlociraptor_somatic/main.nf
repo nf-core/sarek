@@ -108,8 +108,8 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     def branched = somatic_with_key
         .join(germline_with_key, by: 0, remainder: true)
         .branch {
-            matched: it.size() == 7 && it[5] != null  // has both somatic and germline
-            unmatched: it.size() == 4 || it[5] == null  // only somatic or germline is null
+            matched:   it[5] != null  // has both somatic and germline
+            unmatched: it[5] == null  // only somatic == germline is null
         }
 
     branched.matched.dump(tag: "branched.matched")
@@ -128,7 +128,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     // Combine merged VCFs with unmatched somatic VCFs
     ch_vcf = MERGE_GERMLINE_SOMATIC_VCFS.out.vcf.mix(
-        branched.unmatched.map { _key, meta, vcf, _tbi -> [meta, vcf] }
+        branched.unmatched.map { _key, meta, vcf, _tbi, _no_germline -> [meta, vcf] }
     )
 
     //
