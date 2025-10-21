@@ -43,7 +43,7 @@ process PARABRICKS_FQ2BAM {
     def interval_file_command  = interval_file ? (interval_file instanceof List ? interval_file.collect { "--interval-file ${it}" }.join(' ') : "--interval-file ${interval_file}") : ""
 
     def num_gpus   = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
-    def low_memory = task.accelerator && task.accelerator.request > 1 ? '--low-memory' : ''
+    def low_memory = task.accelerator && task.accelerator.request < 2 ? '--low-memory' : ''
     """
     # The section below creates a symlink to the reference fasta file in the index directory
     # It is a Parabricks requirement that these files be in the same place
