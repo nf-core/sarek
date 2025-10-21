@@ -45,6 +45,7 @@ process PARABRICKS_FQ2BAM {
     def interval_file_command = interval_file ? (interval_file instanceof List ? interval_file.collect { "--interval-file ${it}" }.join(' ') : "--interval-file ${interval_file}") : ""
 
     def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
+    def low_memory = task.accelerator && task.accelerator.request > 1 ? '--low-memory' : ''
     """
     INDEX=`find -L ./ -name "*.amb" | sed 's/\\.amb\$//'`
     cp ${fasta} \$INDEX
@@ -58,6 +59,9 @@ process PARABRICKS_FQ2BAM {
         ${known_sites_output_cmd} \\
         ${interval_file_command} \\
         ${num_gpus} \\
+        --bwa-cpu-thread-pool ${task.cpus} \\
+        --monitor-usage \\
+        ${low_memory} \\
         ${args}
 
     cat <<-END_VERSIONS > versions.yml
