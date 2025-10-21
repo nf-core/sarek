@@ -54,7 +54,7 @@ process PARABRICKS_FQ2BAM {
     pbrun \\
         fq2bam \\
         --preserve-file-symlinks \\
-        --ref ${index}/\$fasta_basename \\
+        --ref ${index}/${fasta} \\
         ${in_fq_command} \\
         --out-bam ${prefix}.${extension} \\
         ${known_sites_command} \\
