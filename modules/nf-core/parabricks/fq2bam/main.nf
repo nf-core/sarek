@@ -2,8 +2,6 @@ process PARABRICKS_FQ2BAM {
     tag "${meta.id}"
     label 'process_high'
     label 'process_gpu'
-    // needed by the module to work properly can be removed when fixed upstream - see: https://github.com/nf-core/modules/issues/7226
-    stageInMode 'copy'
 
     container "nvcr.io/nvidia/clara/clara-parabricks:4.6.0-1"
 
@@ -23,7 +21,7 @@ process PARABRICKS_FQ2BAM {
     tuple val(meta), path("*.table"),                 emit: bqsr_table,          optional:true
     tuple val(meta), path("*_qc_metrics"),            emit: qc_metrics,          optional:true
     tuple val(meta), path("*.duplicate-metrics.txt"), emit: duplicate_metrics,   optional:true
-    path "compatible_versions.yml",                   emit: compatible_versions, optional: true
+    path "compatible_versions.yml",                   emit: compatible_versions, optional:true
     path "versions.yml",                              emit: versions
 
     when:
@@ -34,30 +32,41 @@ process PARABRICKS_FQ2BAM {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error("Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
-    def args = task.ext.args ?: ''
+    def args   = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     def in_fq_command = meta.single_end ? "--in-se-fq ${reads}" : "--in-fq ${reads}"
-    def extension = "${output_fmt}"
+    def extension     = "${output_fmt}"
 
-    def known_sites_command = known_sites ? (known_sites instanceof List ? known_sites.collect { "--knownSites ${it}" }.join(' ') : "--knownSites ${known_sites}") : ""
-    def known_sites_output_cmd = known_sites ? "--out-recal-file ${prefix}.table" : ""
-    def interval_file_command = interval_file ? (interval_file instanceof List ? interval_file.collect { "--interval-file ${it}" }.join(' ') : "--interval-file ${interval_file}") : ""
+    def known_sites_command    = known_sites   ? (known_sites instanceof List ? known_sites.collect { "--knownSites ${it}" }.join(' ') : "--knownSites ${known_sites}") : ""
+    def known_sites_output_cmd = known_sites   ? "--out-recal-file ${prefix}.table" : ""
+    def interval_file_command  = interval_file ? (interval_file instanceof List ? interval_file.collect { "--interval-file ${it}" }.join(' ') : "--interval-file ${interval_file}") : ""
 
-    def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
+    def num_gpus   = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
+    def low_memory = task.accelerator && task.accelerator.request > 1 ? '--low-memory' : ''
     """
-    INDEX=`find -L ./ -name "*.amb" | sed 's/\\.amb\$//'`
-    cp ${fasta} \$INDEX
+    # The section below creates a symlink to the reference fasta file in the index directory
+    # It is a Parabricks requirement that these files be in the same place
+    # As of Parabricks version 4.6 the symlink is sufficient and we no longer need to copy the file
+
+    fasta_basename=\$(basename ${fasta})
+    cd ${index} && \
+        ln -s ../\$fasta_basename \$fasta_basename && \
+        cd -
 
     pbrun \\
         fq2bam \\
-        --ref \$INDEX \\
+        --preserve-file-symlinks \\
+        --ref ${index}/\$fasta_basename \\
         ${in_fq_command} \\
         --out-bam ${prefix}.${extension} \\
         ${known_sites_command} \\
         ${known_sites_output_cmd} \\
         ${interval_file_command} \\
         ${num_gpus} \\
+        --bwa-cpu-thread-pool ${task.cpus} \\
+        --monitor-usage \\
+        ${low_memory} \\
         ${args}
 
     cat <<-END_VERSIONS > versions.yml
