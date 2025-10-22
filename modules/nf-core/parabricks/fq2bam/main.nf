@@ -49,12 +49,12 @@ process PARABRICKS_FQ2BAM {
     # It is a Parabricks requirement that these files be in the same place
     # As of Parabricks version 4.6 the symlink is sufficient and we no longer need to copy the file
 
-    cd ${index} && cp ../${fasta} ${fasta} && cd ..
+    INDEX=`find -L ./ -name "*.amb" | sed 's/\\.amb\$//'`
+    cp ${fasta} \$INDEX
 
     pbrun \\
         fq2bam \\
-        --preserve-file-symlinks \\
-        --ref ${index}/${fasta} \\
+        --ref \$INDEX \\
         ${in_fq_command} \\
         --out-bam ${prefix}.${extension} \\
         ${known_sites_command} \\
