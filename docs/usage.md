@@ -184,18 +184,22 @@ You can supply more command-line arguments to the `fq2bam` process depending on 
 
 You will need to add the accelerator directive to your local config in order to make use of the GPUs correctly if you do not use a cluster setup with a dedicated GPU queue. The accelerator diretive is added automatically for the executors `'awsbatch','google-batch','hq','k8s'`. See [Nextflow executors](https://www.nextflow.io/docs/latest/executor.html) for more infos.
 
-```
+If you need to adapt parabricks to your hardware, please copy and adapt the `custom-parabricks.config` provided below. More info on custom configs can be found [here](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
+
+```groovy title="custom-parabricks.config"
 process {
     withName: 'PARABRICKS_FQ2BAM' {
-        accelerator = 4
-        ext.args   = { [
-            // Using specific read group tags for mutect compability
+        // Remove an executor if you do not want it to set the accelerator directive or change the number
+        accelerator = { task.executor in ['awsbatch','google-batch','hq','k8s'] ? 4 : null }
+        ext.args    = { [
+            // Using specific read group tags for mutect compability (keep if using mutect)
             "--read-group-id-prefix ${meta.sample_lane_id}",
             "--read-group-sm ${meta.patient}_${meta.sample}",
             "--read-group-lb ${meta.sample}",
             "--read-group-pl ${params.seq_platform}",
-            // Using -B 3 for tumor samples
+            // Using -B 3 for tumor samples (keep for bwamem compability)
             meta.status == 1 ? "--bwa-options='-K 100000000 -Y -B 3'" : "--bwa-options='-K 100000000 -Y'",
+            // You can change the flags below
             "--gpuwrite",
             "--gpusort",
             "--bwa-nstreams 2",
