@@ -182,9 +182,12 @@ The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if `--save
 
 You can supply more command-line arguments to the `fq2bam` process depending on your local setup. The performance depends on the type of GPU and the amount of CPU RAM that parabricks is able to utilize. The `--read-group-*` arguments are used by mutect2 and need to be added to your local config. Lowering `--bwa-nstreams` from 4 (standard) to 2 can help with memory issues. As well as `--gpuwrite` and `--gpusort`. For a more in-depth description of the available arguments please read the [parabricks fq2bam documentation](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html).
 
+You will need to add the accelerator directive to your local config in order to make use of the GPUs correctly if you do not use a cluster setup with a dedicated GPU queue.
+
 ```
 process {
     withName: 'PARABRICKS_FQ2BAM' {
+        accelerator = 4
         ext.args   = { [
             // Using specific read group tags for mutect compability
             "--read-group-id-prefix ${meta.sample_lane_id}",

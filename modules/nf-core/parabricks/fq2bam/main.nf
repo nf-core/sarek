@@ -2,6 +2,7 @@ process PARABRICKS_FQ2BAM {
     tag "${meta.id}"
     label 'process_high'
     label 'process_gpu'
+    // needed by the module to run on a cluster because we need to copy the fasta reference, see https://github.com/nf-core/modules/issues/9230
     stageInMode 'copy'
 
     container "nvcr.io/nvidia/clara/clara-parabricks:4.6.0-1"
@@ -45,10 +46,6 @@ process PARABRICKS_FQ2BAM {
 
     def num_gpus   = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
     """
-    # The section below creates a symlink to the reference fasta file in the index directory
-    # It is a Parabricks requirement that these files be in the same place
-    # As of Parabricks version 4.6 the symlink is sufficient and we no longer need to copy the file
-
     INDEX=`find -L ./ -name "*.amb" | sed 's/\\.amb\$//'`
     cp ${fasta} \$INDEX
 
