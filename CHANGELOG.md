@@ -37,6 +37,7 @@ Sjnjierák is a popular stopover cabin on the way into the park.
 #### Changed
 
 - [2026](https://github.com/nf-core/sarek/pull/2026) - Back to dev
+- [2038](https://github.com/nf-core/sarek/pull/2038) - Improve customising parabricks parameters docs
 
 #### Fixed
 
