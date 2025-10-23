@@ -167,7 +167,7 @@ patient1,XX,1,tumor_sample,lane_2,test2_L002.bam
 patient1,XX,1,relapse_sample,lane_1,test3_L001.bam
 ```
 
-#### Using GPU accelerated alignment (parabricks)
+#### Using GPU accelerated alignment (`--aligner parabricks`)
 
 > [!NOTE]
 > This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
@@ -177,6 +177,32 @@ To use the GPU based `parabricks/fq2bam` as an alternative to the CPU bsed GATK 
 At the moment the implementation supports running the complete fq2bam module which does bwa-mem based alignment, coordinate sorting, duplicate marking and base quality score recalibration. We are working on making these individual components skippable (comparable to the GATK implementation) see [Issue #1853](https://github.com/nf-core/sarek/issues/1853) for more details on the ongoing work.
 
 The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if `--save_mapped` is set.
+
+**Hints for custom configuration based on your local hardware setup:**
+
+You can supply more command-line arguments to the `fq2bam` process depending on your local setup. The performance depends on the type of GPU and the amount of CPU RAM that parabricks is able to utilize. The `--read-group-*` arguments are used by mutect2 and need to be added to your local config. Lowering `--bwa-nstreams` from 4 (standard) to 2 can help with memory issues. As well as `--gpuwrite` and `--gpusort`. For a more in-depth description of the available arguments please read the [parabricks fq2bam documentation](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html).
+
+You will need to add the accelerator directive to your local config in order to make use of the GPUs correctly if you do not use a cluster setup with a dedicated GPU queue. The accelerator diretive is added automatically for the executors `'awsbatch','google-batch','hq','k8s'`. See [Nextflow executors](https://www.nextflow.io/docs/latest/executor.html) for more infos.
+
+```
+process {
+    withName: 'PARABRICKS_FQ2BAM' {
+        accelerator = 4
+        ext.args   = { [
+            // Using specific read group tags for mutect compability
+            "--read-group-id-prefix ${meta.sample_lane_id}",
+            "--read-group-sm ${meta.patient}_${meta.sample}",
+            "--read-group-lb ${meta.sample}",
+            "--read-group-pl ${params.seq_platform}",
+            // Using -B 3 for tumor samples
+            meta.status == 1 ? "--bwa-options='-K 100000000 -Y -B 3'" : "--bwa-options='-K 100000000 -Y'",
+            "--gpuwrite",
+            "--gpusort",
+            "--bwa-nstreams 2",
+        ].join(' ').trim() }
+    }
+}
+```
 
 ### Start with duplicate marking (`--step markduplicates`)
 
