@@ -2,10 +2,10 @@ process PARABRICKS_FQ2BAM {
     tag "${meta.id}"
     label 'process_high'
     label 'process_gpu'
-    // needed by the module to work properly can be removed when fixed upstream - see: https://github.com/nf-core/modules/issues/7226
+    // needed by the module to run on a cluster because we need to copy the fasta reference, see https://github.com/nf-core/modules/issues/9230
     stageInMode 'copy'
 
-    container "nvcr.io/nvidia/clara/clara-parabricks:4.5.1-1"
+    container "nvcr.io/nvidia/clara/clara-parabricks:4.6.0-1"
 
     input:
     tuple val(meta), path(reads)
@@ -23,7 +23,7 @@ process PARABRICKS_FQ2BAM {
     tuple val(meta), path("*.table"),                 emit: bqsr_table,          optional:true
     tuple val(meta), path("*_qc_metrics"),            emit: qc_metrics,          optional:true
     tuple val(meta), path("*.duplicate-metrics.txt"), emit: duplicate_metrics,   optional:true
-    path "compatible_versions.yml",                   emit: compatible_versions, optional: true
+    path "compatible_versions.yml",                   emit: compatible_versions, optional:true
     path "versions.yml",                              emit: versions
 
     when:
@@ -34,17 +34,17 @@ process PARABRICKS_FQ2BAM {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error("Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
-    def args = task.ext.args ?: ''
+    def args   = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     def in_fq_command = meta.single_end ? "--in-se-fq ${reads}" : "--in-fq ${reads}"
-    def extension = "${output_fmt}"
+    def extension     = "${output_fmt}"
 
-    def known_sites_command = known_sites ? (known_sites instanceof List ? known_sites.collect { "--knownSites ${it}" }.join(' ') : "--knownSites ${known_sites}") : ""
-    def known_sites_output_cmd = known_sites ? "--out-recal-file ${prefix}.table" : ""
-    def interval_file_command = interval_file ? (interval_file instanceof List ? interval_file.collect { "--interval-file ${it}" }.join(' ') : "--interval-file ${interval_file}") : ""
+    def known_sites_command    = known_sites   ? (known_sites instanceof List ? known_sites.collect { "--knownSites ${it}" }.join(' ') : "--knownSites ${known_sites}") : ""
+    def known_sites_output_cmd = known_sites   ? "--out-recal-file ${prefix}.table" : ""
+    def interval_file_command  = interval_file ? (interval_file instanceof List ? interval_file.collect { "--interval-file ${it}" }.join(' ') : "--interval-file ${interval_file}") : ""
 
-    def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
+    def num_gpus   = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
     """
     INDEX=`find -L ./ -name "*.amb" | sed 's/\\.amb\$//'`
     cp ${fasta} \$INDEX
@@ -58,6 +58,8 @@ process PARABRICKS_FQ2BAM {
         ${known_sites_output_cmd} \\
         ${interval_file_command} \\
         ${num_gpus} \\
+        --bwa-cpu-thread-pool ${task.cpus} \\
+        --monitor-usage \\
         ${args}
 
     cat <<-END_VERSIONS > versions.yml
