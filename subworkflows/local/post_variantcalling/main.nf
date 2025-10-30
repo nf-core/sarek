@@ -93,6 +93,9 @@ workflow POST_VARIANTCALLING {
             tbis = tbis.mix(CONCATENATE_GERMLINE_VCFS.out.tbis)
             versions = versions.mix(CONCATENATE_GERMLINE_VCFS.out.versions)
         }
+    } else {
+        // No post-processing requested, pass through original VCFs
+        vcfs = vcfs.mix(germline_vcfs,tumor_only_vcfs, somatic_vcfs)
     }
 
     emit:
