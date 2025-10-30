@@ -1,0 +1,232 @@
+{
+    "POST_VARIANTCALLING - concatenation only": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-30T13:17:52.494173"
+    },
+    "POST_VARIANTCALLING - normalization and concatenation": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-30T13:18:01.406429"
+    },
+    "POST_VARIANTCALLING - concatenation only - stub": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-30T13:18:25.228407"
+    },
+    "POST_VARIANTCALLING - varlociraptor tumor-only": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,2944a0f9af0e3918bb9833c87df1ebb6",
+                "versions.yml:md5,29f73f6b28ae158785ebea38843af786",
+                "versions.yml:md5,5d2a1f6080254676bff1ef3b27ab641f",
+                "versions.yml:md5,c35cd6c1892a24d29169bc79e7623bd9",
+                "versions.yml:md5,dc55a53ff7729dc648ac35db31ec5656",
+                "versions.yml:md5,faeabb0df6266c84e0fcd7f39d60b759"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-30T13:22:26.135598"
+    },
+    "POST_VARIANTCALLING - varlociraptor somatic": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,106dcb110a6d3d094298500f4030ef8f",
+                "versions.yml:md5,1b666f0fbac8556cef352a3a4fa60dbe",
+                "versions.yml:md5,1bca8763ec1f55aa5987e4f4301ed8cf",
+                "versions.yml:md5,65c36101acc269f90fcc762f4c515073",
+                "versions.yml:md5,d28b191a8b7e7f1db9f269fc372d950e",
+                "versions.yml:md5,e75820d6c821e7da2cd08f5e42c9139e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-30T13:25:23.003574"
+    },
+    "POST_VARIANTCALLING - normalization only": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-30T13:17:44.076626"
+    },
+    "POST_VARIANTCALLING - varlociraptor germline - stub": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,1bca8763ec1f55aa5987e4f4301ed8cf",
+                "versions.yml:md5,25260e5ecf0e3f964c7e68c7eaa01d52",
+                "versions.yml:md5,45997f1ffe1a1c5fceda0f00b670faa8",
+                "versions.yml:md5,5a1892540eb326a685a22f9bc6f6a6b6",
+                "versions.yml:md5,9185ef5a5fa1849e93823a668c488c5c",
+                "versions.yml:md5,97327c4f942c0205e15b8cb4e363825b",
+                "versions.yml:md5,d28b191a8b7e7f1db9f269fc372d950e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-30T13:20:04.934136"
+    },
+    "POST_VARIANTCALLING - varlociraptor somatic - stub": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,106dcb110a6d3d094298500f4030ef8f",
+                "versions.yml:md5,1b666f0fbac8556cef352a3a4fa60dbe",
+                "versions.yml:md5,1bca8763ec1f55aa5987e4f4301ed8cf",
+                "versions.yml:md5,65c36101acc269f90fcc762f4c515073",
+                "versions.yml:md5,d28b191a8b7e7f1db9f269fc372d950e",
+                "versions.yml:md5,e75820d6c821e7da2cd08f5e42c9139e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-30T13:26:42.117257"
+    },
+    "POST_VARIANTCALLING - varlociraptor germline": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,1bca8763ec1f55aa5987e4f4301ed8cf",
+                "versions.yml:md5,25260e5ecf0e3f964c7e68c7eaa01d52",
+                "versions.yml:md5,45997f1ffe1a1c5fceda0f00b670faa8",
+                "versions.yml:md5,5a1892540eb326a685a22f9bc6f6a6b6",
+                "versions.yml:md5,9185ef5a5fa1849e93823a668c488c5c",
+                "versions.yml:md5,97327c4f942c0205e15b8cb4e363825b",
+                "versions.yml:md5,d28b191a8b7e7f1db9f269fc372d950e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-30T13:19:47.55605"
+    },
+    "POST_VARIANTCALLING - normalization only - stub": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-30T13:18:17.400187"
+    },
+    "POST_VARIANTCALLING - varlociraptor tumor-only - stub": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,2944a0f9af0e3918bb9833c87df1ebb6",
+                "versions.yml:md5,29f73f6b28ae158785ebea38843af786",
+                "versions.yml:md5,5d2a1f6080254676bff1ef3b27ab641f",
+                "versions.yml:md5,c35cd6c1892a24d29169bc79e7623bd9",
+                "versions.yml:md5,dc55a53ff7729dc648ac35db31ec5656",
+                "versions.yml:md5,faeabb0df6266c84e0fcd7f39d60b759"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-30T13:22:43.569445"
+    }
+}
