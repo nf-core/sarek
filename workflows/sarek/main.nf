@@ -492,7 +492,8 @@ workflow SAREK {
         )
 
         // POST VARIANTCALLING
-        POST_VARIANTCALLING(params.tools,
+        POST_VARIANTCALLING(
+                params.tools,
                 cram_variant_calling_status_normal,
                 BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
                 cram_variant_calling_tumor_only,
@@ -504,29 +505,28 @@ workflow SAREK {
                 params.concatenate_vcfs,
                 params.normalize_vcfs,
                 params.varlociraptor_chunk_size,
-            )
+                params.varlociraptor_scenario_germline ? Channel.fromPath(params.varlociraptor_scenario_germline).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect(),
+                params.varlociraptor_scenario_somatic ? Channel.fromPath(params.varlociraptor_scenario_somatic).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : Channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect(),
+                params.varlociraptor_scenario_tumor_only ? Channel.fromPath(params.varlociraptor_scenario_tumor_only).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : Channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect()
+        )
 
-        // Gather vcf files for annotation and QC
-        vcf_to_annotate = Channel.empty()
+        // Gather existing VCFs
+        vcf_from_variant_calling = Channel.empty()
+            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_deepvariant)
+            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_freebayes)
+            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_haplotypecaller)
+            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_manta)
+            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_dnascope)
+            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_haplotyper)
+            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_strelka)
+            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_tiddit)
+            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_mpileup)
+            .mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
+            .mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all)
 
-        // Check if normalization is requested
-        if (params.normalize_vcfs) {
-            vcf_to_annotate = vcf_to_annotate.mix(POST_VARIANTCALLING.out.vcfs)
-        }
-        else {
-            // If not normalized, gather existing VCFs
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_deepvariant)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_freebayes)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_haplotypecaller)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_manta)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_dnascope)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_haplotyper)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_strelka)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_tiddit)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_mpileup)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all)
-        }
+        // Gather vcf files for annotation and QC. Will be either POSTVARIANTCALLING processed vcfs or original ones
+        vcf_to_annotate = POST_VARIANTCALLING.out.vcfs
+                            .ifEmpty(vcf_from_variant_calling)
 
         // QC
         VCF_QC_BCFTOOLS_VCFTOOLS(vcf_to_annotate, intervals_bed_combined)
