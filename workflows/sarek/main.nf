@@ -513,23 +513,9 @@ workflow SAREK {
                 varlociraptor_scenario_tumor_only,
         )
 
-        // Gather existing VCFs
-        vcf_from_variant_calling = Channel.empty()
-            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_deepvariant)
-            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_freebayes)
-            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_haplotypecaller)
-            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_manta)
-            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_dnascope)
-            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_haplotyper)
-            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_strelka)
-            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_tiddit)
-            .mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_mpileup)
-            .mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
-            .mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all)
-
-        // Gather vcf files for annotation and QC. Will be either POSTVARIANTCALLING processed vcfs or original ones
+        // Gather vcf files for annotation and QC
+        // POST_VARIANTCALLING always outputs VCFs - either processed or pass-through originals
         vcf_to_annotate = POST_VARIANTCALLING.out.vcfs
-                            .ifEmpty(vcf_from_variant_calling)
 
         // QC
         VCF_QC_BCFTOOLS_VCFTOOLS(vcf_to_annotate, intervals_bed_combined)
