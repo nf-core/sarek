@@ -115,17 +115,10 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
         .groupTuple(size: val_num_chunks)
 
     CONCAT_CALLED_CHUNKS(ch_vcf_tbi_chunks)
-
-    ch_final_vcf = CONCAT_CALLED_CHUNKS.out.vcf
-        .map { meta, vcf -> [meta.id + meta.variantcaller, meta, vcf] }
-        .join(
-            CONCAT_CALLED_CHUNKS.out.tbi.map { meta, tbi -> [meta.id + meta.variantcaller, meta, tbi] }
-        )
-        .map { _id, meta_vcf, vcf, _meta_tbi, tbi -> [meta_vcf, vcf, tbi] }
-
     ch_versions = ch_versions.mix(CONCAT_CALLED_CHUNKS.out.versions)
 
     emit:
-    vcf      = ch_final_vcf
+    vcf      = CONCAT_CALLED_CHUNKS.out.vcf
+    tbi      = CONCAT_CALLED_CHUNKS.out.tbi
     versions = ch_versions
 }

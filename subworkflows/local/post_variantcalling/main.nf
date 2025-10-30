@@ -22,57 +22,61 @@ workflow POST_VARIANTCALLING {
     concatenate_vcfs
     normalize_vcfs
     varlociraptor_chunk_size // integer: [mandatory] [default: 15] number of chunks to split BCF files when preprocessing and calling variants
+    varlociraptor_scenario_germline
+    varlociraptor_scenario_somatic
+    varlociraptor_scenario_tumor_only
 
     main:
     versions = Channel.empty()
     vcfs = Channel.empty()
-
-    if (concatenate_vcfs) {
-        CONCATENATE_GERMLINE_VCFS(germline_vcfs)
-
-        vcfs = vcfs.mix(CONCATENATE_GERMLINE_VCFS.out.vcfs)
-        versions = versions.mix(CONCATENATE_GERMLINE_VCFS.out.versions)
-    }
-
-    if (normalize_vcfs) {
-        NORMALIZE_VCFS(germline_vcfs, tumor_only_vcfs, somatic_vcfs, fasta)
-
-        vcfs = vcfs.mix(NORMALIZE_VCFS.out.vcfs)
-
-        versions = versions.mix(NORMALIZE_VCFS.out.versions)
-    }
+    tbis = Channel.empty()
 
     //
     // VARLOCIRAPTOR
     //
     if (tools.split(',').contains('varlociraptor')) {
         // GERMLINE
-        varlociraptor_scenario_germline = params.varlociraptor_scenario_germline
-            ? Channel.fromPath(params.varlociraptor_scenario_germline).map { it -> [[id: it.baseName - '.yte'], it] }.collect()
-            : Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
         VCF_VARLOCIRAPTOR_GERMLINE(cram_germline, fasta, fai, varlociraptor_scenario_germline, germline_vcfs, varlociraptor_chunk_size, 'normal')
+
         vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.vcf)
+        tbis = tbis.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.tbi)
         versions = versions.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.versions)
 
         // SOMATIC
-        varlociraptor_scenario_somatic = params.varlociraptor_scenario_somatic
-            ? Channel.fromPath(params.varlociraptor_scenario_somatic).map { it -> [[id: it.baseName - '.yte'], it] }.collect()
-            : Channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect()
-
         VCF_VARLOCIRAPTOR_SOMATIC(cram_somatic, fasta, fai, varlociraptor_scenario_somatic, somatic_vcfs, germline_vcfs, varlociraptor_chunk_size)
+
         vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.vcf)
+        tbis = tbis.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.tbi)
         versions = versions.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.versions)
 
         // TUMOR ONLY
-        varlociraptor_scenario_tumor_only = params.varlociraptor_scenario_tumor_only
-            ? Channel.fromPath(params.varlociraptor_scenario_tumor_only).map { it -> [[id: it.baseName - '.yte'], it] }.collect()
-            : Channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect()
         VCF_VARLOCIRAPTOR_TUMOR_ONLY(cram_tumor_only, fasta, fai, varlociraptor_scenario_tumor_only, tumor_only_vcfs, varlociraptor_chunk_size, 'tumor')
+
         vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.vcf)
+        tbis = tbis.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.tbi)
         versions = versions.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.versions)
+
+    } else if (concatenate_vcfs || normalize_vcfs) {
+
+        if (normalize_vcfs) {
+            NORMALIZE_VCFS(germline_vcfs, tumor_only_vcfs, somatic_vcfs, fasta)
+
+            vcfs = vcfs.mix(NORMALIZE_VCFS.out.vcfs) // [meta, vcf]
+            tbis = tbis.mix(NORMALIZE_VCFS.out.tbis) // [meta, tbi]
+            versions = versions.mix(NORMALIZE_VCFS.out.versions)
+        }
+
+        if (concatenate_vcfs) {
+            CONCATENATE_GERMLINE_VCFS(germline_vcfs)
+
+            vcfs = vcfs.mix(CONCATENATE_GERMLINE_VCFS.out.vcfs)
+            tbis = tbis.mix(CONCATENATE_GERMLINE_VCFS.out.tbis)
+            versions = versions.mix(CONCATENATE_GERMLINE_VCFS.out.versions)
+        }
     }
 
     emit:
-    vcfs     // post processed vcfs
+    vcfs     // post processed vcfs [meta, vcf]
+    tbis     // post processed tbis [meta, tbi]
     versions // channel: [ versions.yml ]
 }

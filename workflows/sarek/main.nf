@@ -104,6 +104,9 @@ workflow SAREK {
     pon_tbi
     rt_file
     sentieon_dnascope_model
+    varlociraptor_scenario_germline
+    varlociraptor_scenario_somatic
+    varlociraptor_scenario_tumor_only
     snpeff_cache
     vep_cache
     vep_cache_version
@@ -505,9 +508,9 @@ workflow SAREK {
                 params.concatenate_vcfs,
                 params.normalize_vcfs,
                 params.varlociraptor_chunk_size,
-                params.varlociraptor_scenario_germline ? Channel.fromPath(params.varlociraptor_scenario_germline).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect(),
-                params.varlociraptor_scenario_somatic ? Channel.fromPath(params.varlociraptor_scenario_somatic).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : Channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect(),
-                params.varlociraptor_scenario_tumor_only ? Channel.fromPath(params.varlociraptor_scenario_tumor_only).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : Channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect()
+                varlociraptor_scenario_germline,
+                varlociraptor_scenario_somatic,
+                varlociraptor_scenario_tumor_only,
         )
 
         // Gather existing VCFs

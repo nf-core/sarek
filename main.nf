@@ -246,6 +246,11 @@ workflow NFCORE_SAREK {
     versions = versions.mix(PREPARE_GENOME.out.versions)
     versions = versions.mix(PREPARE_INTERVALS.out.versions)
 
+    // Set Varlociraptor reference files
+    varlociraptor_scenario_germline   = params.varlociraptor_scenario_germline   ? Channel.fromPath(params.varlociraptor_scenario_germline).map { it -> [[id: it.baseName - '.yte'], it] }.collect()    : Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
+    varlociraptor_scenario_somatic    = params.varlociraptor_scenario_somatic    ? Channel.fromPath(params.varlociraptor_scenario_somatic).map { it -> [[id: it.baseName - '.yte'], it] }.collect()     : Channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect()
+    varlociraptor_scenario_tumor_only = params.varlociraptor_scenario_tumor_only ? Channel.fromPath(params.varlociraptor_scenario_tumor_only).map { it -> [[id: it.baseName - '.yte'], it] }.collect()  : Channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect()
+
     vep_fasta = params.vep_include_fasta ? fasta.map { file -> [[id: file.baseName], file] } : [[id: 'null'], []]
 
     // Download cache
@@ -322,6 +327,9 @@ workflow NFCORE_SAREK {
         pon_tbi,
         PREPARE_GENOME.out.rt_file,
         sentieon_dnascope_model,
+        varlociraptor_scenario_germline,
+        varlociraptor_scenario_somatic,
+        varlociraptor_scenario_tumor_only,
         snpeff_cache,
         vep_cache,
         vep_cache_version,
