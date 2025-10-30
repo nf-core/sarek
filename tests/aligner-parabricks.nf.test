@@ -1,4 +1,5 @@
 def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
 
 nextflow_pipeline {
 
@@ -28,6 +29,18 @@ nextflow_pipeline {
                 save_reference: true,
                 tools: 'mutect2',
                 wes : true,
+            ],
+            gpu: true,
+            no_conda: true
+        ],
+        [
+            name: "-profile test --aligner parabricks --wes --intervals",
+            params: [
+                aligner: 'parabricks',
+                save_reference: true,
+                tools: '',
+                wes : true,
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
             ],
             gpu: true,
             no_conda: true

@@ -31,7 +31,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Changed
 
+- [2041](https://github.com/nf-core/sarek/pull/2041) - Back to dev
+
+#### Fixed
+
+#### Removed
+
+## [3.6.1](https://github.com/nf-core/sarek/releases/tag/3.6.1) - Sjnjierák
+
+Sjnjierák is a popular stopover cabin on the way into the park.
+
+This patch release includes a bump to Nextflow 25.04.8.
+
+### Added
+
+### Changed
+
+### Fixed
+
+- [2029](https://github.com/nf-core/sarek/pull/2029) - Correct intervals channel for parabricks
+
+### Removed
+
+### Dependencies
+
+| Dependency   | Old version | New version |
+| ------------ | ----------- | ----------- |
+| `parabricks` | 4.5.1-1     | 4.6.0-1     |
+
+### Parameters
+
+| Params | status |
+| ------ | ------ |
+
+### Developer section
+
+#### Added
+
+#### Changed
+
 - [2026](https://github.com/nf-core/sarek/pull/2026) - Back to dev
+- [2038](https://github.com/nf-core/sarek/pull/2038) - Improve customising parabricks parameters docs
 
 #### Fixed
 
