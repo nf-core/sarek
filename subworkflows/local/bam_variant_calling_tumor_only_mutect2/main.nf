@@ -153,6 +153,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, vcf -> [ meta + [ variantcaller:'mutect2' ], vcf ] }
 
+    tbi_mutect2 = FILTERMUTECTCALLS.out.tbi
+        .map{ meta, tbi -> [ meta + [ variantcaller:'mutect2' ], tbi ] }
+
     versions = versions.mix(MERGE_MUTECT2.out.versions)
     versions = versions.mix(CALCULATECONTAMINATION.out.versions)
     versions = versions.mix(FILTERMUTECTCALLS.out.versions)
@@ -167,8 +170,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     stats // channel: [ meta, stats ]
 
     vcf_filtered                                 // channel: [ meta, vcf ]
-    index_filtered = FILTERMUTECTCALLS.out.tbi   // channel: [ meta, tbi ]
-    stats_filtered = FILTERMUTECTCALLS.out.stats // channel: [ meta, stats ]
+    tbi                = tbi_mutect2             // channel: [ meta, tbi ]
+    index_filtered     = FILTERMUTECTCALLS.out.tbi   // channel: [ meta, tbi ]
+    stats_filtered     = FILTERMUTECTCALLS.out.stats // channel: [ meta, stats ]
 
     artifact_priors = LEARNREADORIENTATIONMODEL.out.artifactprior    // channel: [ meta, artifactprior ]
 

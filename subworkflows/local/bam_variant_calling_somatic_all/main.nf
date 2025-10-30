@@ -64,6 +64,13 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_strelka      = Channel.empty()
     vcf_tiddit       = Channel.empty()
     vcf_tnscope      = Channel.empty()
+    tbi_freebayes    = Channel.empty()
+    tbi_manta        = Channel.empty()
+    tbi_muse         = Channel.empty()
+    tbi_mutect2      = Channel.empty()
+    tbi_strelka      = Channel.empty()
+    tbi_tiddit       = Channel.empty()
+    tbi_tnscope      = Channel.empty()
 
     if (tools && tools.split(',').contains('ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
@@ -142,6 +149,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         )
 
         vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
+        tbi_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
@@ -155,6 +163,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         )
 
         vcf_manta = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.vcf
+        tbi_manta = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.versions)
     }
 
@@ -188,6 +197,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         )
 
         vcf_strelka = BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.vcf
+        tbi_strelka = BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.versions)
     }
 
@@ -209,6 +219,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         )
 
         vcf_muse = BAM_VARIANT_CALLING_SOMATIC_MUSE.out.vcf
+        tbi_muse = BAM_VARIANT_CALLING_SOMATIC_MUSE.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUSE.out.versions)
     }
 
@@ -234,6 +245,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         )
 
         vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.vcf_filtered
+        tbi_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.index_filtered
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
     }
 
@@ -255,6 +267,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         )
 
         vcf_tnscope = BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.vcf
+        tbi_tnscope = BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.index
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.versions)
     }
 
@@ -268,6 +281,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         )
 
         vcf_tiddit = BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.vcf
+        tbi_tiddit = BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.versions)
     }
 
@@ -282,6 +296,17 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             vcf_tnscope,
         )
 
+    tbi_all = Channel.empty()
+        .mix(
+            tbi_freebayes,
+            tbi_manta,
+            tbi_muse,
+            tbi_mutect2,
+            tbi_strelka,
+            tbi_tiddit,
+            tbi_tnscope,
+        )
+
     emit:
     out_indexcov
     out_msisensorpro
@@ -293,5 +318,13 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_strelka
     vcf_tiddit
     vcf_tnscope
+    tbi_all
+    tbi_freebayes
+    tbi_manta
+    tbi_muse
+    tbi_mutect2
+    tbi_strelka
+    tbi_tiddit
+    tbi_tnscope
     versions
 }

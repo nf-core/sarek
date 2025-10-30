@@ -1,0 +1,287 @@
+nextflow_process {
+
+    name "Test Process BCFTOOLS_FILTER"
+    script "../main.nf"
+    process "BCFTOOLS_FILTER"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "bcftools"
+    tag "bcftools/filter"
+
+    test("sarscov2 - vcf") {
+
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"vcf_test"],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true),
+                    []
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match("vcf") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - vcf_gz_index") {
+
+        config "./vcf_gz_index.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"vcf_test"],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true),
+                    []
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.vcf,
+                    process.out.csi.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                    process.out.tbi.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                    process.out.versions
+                ).match() },
+                { assert process.out.csi[0][1].endsWith(".csi") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - vcf_gz_index_csi") {
+
+        config "./vcf_gz_index_csi.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"vcf_test"],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true),
+                    []
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.vcf,
+                    process.out.csi.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                    process.out.tbi.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                    process.out.versions
+                ).match() },
+                { assert process.out.csi[0][1].endsWith(".csi") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - vcf_gz_index_tbi") {
+
+        config "./vcf_gz_index_tbi.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"vcf_test"],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true),
+                    []
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.vcf,
+                    process.out.csi.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                    process.out.tbi.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                    process.out.versions
+                ).match() },
+                { assert process.out.tbi[0][1].endsWith(".tbi") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - vcf - bcf output") {
+
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"bcf_test"],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true),
+                    []
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match("bcf output") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - vcf.gz, tbi - region filter") {
+
+        config "./region_filter.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"bcf_test"],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match("region filter") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - vcf - stub") {
+
+        config "./nextflow.config"
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"vcf_test"],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true),
+                    []
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match("vcf - stub") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - vcf_gz_index - stub") {
+
+        config "./vcf_gz_index.config"
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"vcf_test"],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true),
+                    []
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert process.out.csi[0][1].endsWith(".csi") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - vcf_gz_index_csi - stub") {
+
+        config "./vcf_gz_index_csi.config"
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"vcf_test"],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true),
+                    []
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert process.out.csi[0][1].endsWith(".csi") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - vcf_gz_index_tbi - stub") {
+
+        config "./vcf_gz_index_tbi.config"
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id:"vcf_test"],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true),
+                    []
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert process.out.tbi[0][1].endsWith(".tbi") }
+            )
+        }
+
+    }
+
+}
