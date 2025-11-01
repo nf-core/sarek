@@ -52,6 +52,7 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     ch_versions = ch_versions.mix(RBT_VCFSPLIT.out.versions)
 
     ch_chunked_tumor_vcfs = RBT_VCFSPLIT.out.bcfchunks
+        .map { meta, bcf_list -> [meta, bcf_list.sort { it.name }] }
         .transpose(by: 1)
         .map { meta, vcf_chunked ->
             def new_meta = meta + [chunk: vcf_chunked.name.split(/\./)[-2]]

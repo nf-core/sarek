@@ -140,6 +140,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     // PREPROCESS VCF WITH TUMOR CRAM
     //
     ch_chunked_tumor_vcfs = RBT_VCFSPLIT.out.bcfchunks
+        .map { meta, bcf_list -> [meta, bcf_list.sort { it.name }] }
         .transpose(by: 1)
         .map { meta, vcf_chunked ->
             def new_meta = meta + [chunk: vcf_chunked.name.split(/\./)[-2]]
@@ -176,6 +177,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     // PREPROCESS VCF WITH NORMAL CRAM
     //
     ch_chunked_normal_vcfs = RBT_VCFSPLIT.out.bcfchunks
+        .map { meta, bcf_list -> [meta, bcf_list.sort { it.name }] }
         .transpose(by: 1)
         .map { meta, vcf_chunked ->
             def new_meta = meta + [chunk: vcf_chunked.name.split(/\./)[-2]]
