@@ -494,6 +494,19 @@ workflow SAREK {
             params.wes,
         )
 
+        // QC on raw variant calls
+        VCF_QC_BCFTOOLS_VCFTOOLS(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all
+                                .mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
+                                .mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all),
+                                intervals_bed_combined)
+
+        reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.bcftools_stats.collect { _meta, stats -> [stats] })
+        reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_counts.collect { _meta, counts -> [counts] })
+        reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_qual.collect { _meta, qual -> [qual] })
+        reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary.collect { _meta, summary -> [summary] })
+        reports = reports.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.out_indexcov.collect { _meta, indexcov -> indexcov.flatten() })
+        reports = reports.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.out_indexcov.collect { _meta, indexcov -> indexcov.flatten() })
+
         // POST VARIANTCALLING
         POST_VARIANTCALLING(
                 params.tools,
@@ -517,24 +530,14 @@ workflow SAREK {
         // POST_VARIANTCALLING always outputs VCFs - either processed or pass-through originals
         vcf_to_annotate = POST_VARIANTCALLING.out.vcfs
 
-        // QC
-        VCF_QC_BCFTOOLS_VCFTOOLS(vcf_to_annotate, intervals_bed_combined)
-
-        reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.bcftools_stats.collect { _meta, stats -> [stats] })
-        reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_counts.collect { _meta, counts -> [counts] })
-        reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_qual.collect { _meta, qual -> [qual] })
-        reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary.collect { _meta, summary -> [summary] })
-        reports = reports.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.out_indexcov.collect { _meta, indexcov -> indexcov.flatten() })
-        reports = reports.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.out_indexcov.collect { _meta, indexcov -> indexcov.flatten() })
-
         CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate, params.outdir)
 
         // Gather used variant calling softwares versions
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.versions)
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.versions)
-        versions = versions.mix(POST_VARIANTCALLING.out.versions)
         versions = versions.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.versions)
+        versions = versions.mix(POST_VARIANTCALLING.out.versions)
 
         // ANNOTATE
         if (params.step == 'annotate') {
