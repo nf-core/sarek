@@ -39,9 +39,6 @@
                 "TABIX_EXT_VCF": {
                     "tabix": 1.21
                 },
-                "TABIX_VCFS_NORM_SORT": {
-                    "tabix": 1.21
-                },
                 "TABIX_VC_FREEBAYES": {
                     "tabix": 1.21
                 },

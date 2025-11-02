@@ -51,9 +51,6 @@
                 "TABIX_GERMLINE_VCFS_CONCAT_SORT": {
                     "tabix": 1.21
                 },
-                "TABIX_VCFS_NORM_SORT": {
-                    "tabix": 1.21
-                },
                 "TABIX_VC_FREEBAYES": {
                     "tabix": 1.21
                 },
@@ -368,9 +365,6 @@
                     "tabix": 1.21
                 },
                 "TABIX_GERMLINE_VCFS_CONCAT_SORT": {
-                    "tabix": 1.21
-                },
-                "TABIX_VCFS_NORM_SORT": {
                     "tabix": 1.21
                 },
                 "TABIX_VC_FREEBAYES": {
