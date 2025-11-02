@@ -69,11 +69,11 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
         .map { meta, vcf -> [meta.id, meta, vcf] }
         .combine(ch_cram_alignment, by: 0)
         .map { _id, meta_vcf, vcf, meta_cram, cram, crai, alignment_json ->
-            def new_meta = meta_cram + [
+            def new_meta = (meta_cram + [
                 variantcaller: meta_vcf.variantcaller,
                 postprocess: 'varlociraptor',
                 chunk: meta_vcf.chunk,
-            ]
+            ]).sort()
             [new_meta, cram, crai, vcf, alignment_json]
         }
 

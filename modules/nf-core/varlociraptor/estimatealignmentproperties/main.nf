@@ -5,7 +5,7 @@ process VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES {
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/d2/d2431fb9ebb3f21e639fb2e902619752eb6cea81e577b1694ba280704ecc08b0/data':
-        'community.wave.seqera.io/library/varlociraptor:8.7.4--1d51725b87d202f0' }"
+        'community.wave.seqera.io/library/jq_varlociraptor:461280876147e22b' }"
 
     input:
     tuple val(meta), path(bam), path(bai)
@@ -27,7 +27,7 @@ process VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES {
         ${fasta} \\
         --bams ${bam} \\
         ${args} \\
-        > ${prefix}.alignment-properties.json
+        | jq -S '.' > ${prefix}.alignment-properties.json
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
