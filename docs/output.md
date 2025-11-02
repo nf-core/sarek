@@ -59,8 +59,10 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Microsatellite instability (MSI)](#microsatellite-instability-msi)
     - [MSIsensor2](#msisensor2)
     - [MSIsensorPro](#msisensorpro)
+- [Post variant calling](#post-variant-calling)
   - [Varlociraptor](#varlociraptor)
   - [Concatenation](#concatenation)
+  - [Filtering](#filtering)
   - [Normalization](#normalization)
 - [Variant annotation](#variant-annotation)
   - [snpEff](#snpeff)
@@ -965,6 +967,10 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
   - Somatic sites detected.
   </details>
 
+## Post Variant Calling
+
+Optional steps to further filter or fine tune variant calling results. There are two branch: `Varlociraptor` or `bcftools` (filtering, normalisation, and concatenation).
+
 ### Varlociraptor
 
 As varlociraptor requires to provide a set of candidate variants to consider it can be run in combination with any variant caller.
@@ -1012,6 +1018,34 @@ As varlociraptor requires to provide a set of candidate variants to consider it 
   - JSON file containing alignment properties for tumor_only sample cram
   </details>
 
+### Filtering
+
+VCFs from all variantcallers can be filtered using `bcftools view`. Filtering is enabled by setting `--filter_vcfs` parameter. By default, variants are filtered to include only those with `PASS` in the FILTER field. Custom filtering criteria can be specified using the `--bcftools_filtering` parameter (see [bcftools view documentation](https://samtools.github.io/bcftools/bcftools.html#view) for filter syntax).
+
+<details markdown="1">
+<summary>Filtered VCF-files for normal and tumor samples</summary>
+
+**Output directory: `{outdir}/variantcalling/filtered/<sample>/`**
+
+- `<sample>.<variantcaller>.filtered.vcf.gz` and `<sample>.<variantcaller>.filtered.vcf.gz.tbi`
+  - VCF with tabix index containing filtered variants
+
+</details>
+
+### Normalization
+
+All VCFs are normalized with `bcftools norm`. The field `SOURCE` is added to the VCF header to report the variant caller.
+
+<details markdown="1">
+<summary>Normalized VCF-files for normal and tumor samples</summary>
+
+**Output directory: `{outdir}/variantcalling/normalized/<sample>/`**
+
+- `<sample>.<variantcaller>.norm.vcf.gz` and `<sample>.<variantcaller>.norm.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
 ### Concatenation
 
 Germline VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, `Manta`, `bcftools mpileup`, `Strelka`, or `Tiddit` are concatenated with `bcftools concat`. The field `SOURCE` is added to the VCF header to report the variant caller.
@@ -1022,21 +1056,6 @@ Germline VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, 
 **Output directory: `{outdir}/variantcalling/concat/<sample>/`**
 
 - `<sample>.germline.vcf.gz` and `<sample>.germline.vcf.gz.tbi`
-  - VCF with tabix index
-
-</details>
-
-### Normalization
-
-_Experimental Feature_ All VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, `Manta`, `bcftools mpileup`, `Strelka`, or `Tiddit` are normalized with `bcftools norm`. The field `SOURCE` is added to the VCF header to report the variant caller.
-The concatenized VCFs are not normalized at the moment.
-
-<details markdown="1">
-<summary>Normalized VCF-files for normal and tumor samples</summary>
-
-**Output directory: `{outdir}/variantcalling/normalized/<sample>/`**
-
-- `<sample>.<variantcaller>.norm.vcf.gz` and `<sample>.<variantcaller>.norm.vcf.gz.tbi`
   - VCF with tabix index
 
 </details>
