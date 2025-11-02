@@ -1,4 +1,326 @@
 {
+    "-profile test --filter_vcfs --normalize_vcfs --concatenate_vcfs --tools freebayes,strelka": {
+        "content": [
+            81,
+            {
+                "ADD_INFO_TO_VCF": {
+                    "gawk": "5.3.0"
+                },
+                "BCFTOOLS_SORT": {
+                    "bcftools": 1.21
+                },
+                "BCFTOOLS_STATS": {
+                    "bcftools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "FILTER_VCFS": {
+                    "bcftools": 1.22
+                },
+                "FREEBAYES": {
+                    "freebayes": "1.3.10"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
+                "GERMLINE_VCFS_CONCAT": {
+                    "bcftools": 1.21
+                },
+                "GERMLINE_VCFS_CONCAT_SORT": {
+                    "bcftools": 1.21
+                },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "STRELKA_SINGLE": {
+                    "strelka": "2.9.10"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                },
+                "TABIX_EXT_VCF": {
+                    "tabix": 1.21
+                },
+                "TABIX_GERMLINE_VCFS_CONCAT_SORT": {
+                    "tabix": 1.21
+                },
+                "TABIX_VCFS_NORM_SORT": {
+                    "tabix": 1.21
+                },
+                "TABIX_VC_FREEBAYES": {
+                    "tabix": 1.21
+                },
+                "TABIX_VC_FREEBAYES_FILT": {
+                    "tabix": 1.21
+                },
+                "VCFLIB_VCFFILTER": {
+                    "vcflib": "1.0.14"
+                },
+                "VCFS_NORM": {
+                    "bcftools": 1.21
+                },
+                "VCFS_NORM_SORT": {
+                    "bcftools": 1.21
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
+                }
+            },
+            [
+                "csv",
+                "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
+                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/bcftools_stats_variant_depths.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_SNP.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transitions.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transversions.txt",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-pct.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_variant_depths.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-pct.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_variant_depths.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-pct.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_variant_depths.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/bcftools",
+                "reports/bcftools/freebayes",
+                "reports/bcftools/freebayes/testN",
+                "reports/bcftools/freebayes/testN/testN.freebayes.filtered.bcftools_stats.txt",
+                "reports/bcftools/freebayes/testT",
+                "reports/bcftools/freebayes/testT/testT.freebayes.filtered.bcftools_stats.txt",
+                "reports/bcftools/strelka",
+                "reports/bcftools/strelka/testN",
+                "reports/bcftools/strelka/testN/testN.strelka.variants.bcftools_stats.txt",
+                "reports/bcftools/strelka/testT",
+                "reports/bcftools/strelka/testT/testT.strelka.variants.bcftools_stats.txt",
+                "reports/mosdepth",
+                "reports/mosdepth/testN",
+                "reports/mosdepth/testN/testN.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/testN/testN.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/testN/testN.recal.mosdepth.summary.txt",
+                "reports/mosdepth/testN/testN.recal.regions.bed.gz",
+                "reports/mosdepth/testN/testN.recal.regions.bed.gz.csi",
+                "reports/mosdepth/testT",
+                "reports/mosdepth/testT/testT.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/testT/testT.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/testT/testT.recal.mosdepth.summary.txt",
+                "reports/mosdepth/testT/testT.recal.regions.bed.gz",
+                "reports/mosdepth/testT/testT.recal.regions.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/testN",
+                "reports/samtools/testN/testN.recal.cram.stats",
+                "reports/samtools/testT",
+                "reports/samtools/testT/testT.recal.cram.stats",
+                "reports/vcftools",
+                "reports/vcftools/freebayes",
+                "reports/vcftools/freebayes/testN",
+                "reports/vcftools/freebayes/testN/testN.freebayes.filtered.FILTER.summary",
+                "reports/vcftools/freebayes/testN/testN.freebayes.filtered.TsTv.count",
+                "reports/vcftools/freebayes/testN/testN.freebayes.filtered.TsTv.qual",
+                "reports/vcftools/freebayes/testT",
+                "reports/vcftools/freebayes/testT/testT.freebayes.filtered.FILTER.summary",
+                "reports/vcftools/freebayes/testT/testT.freebayes.filtered.TsTv.count",
+                "reports/vcftools/freebayes/testT/testT.freebayes.filtered.TsTv.qual",
+                "reports/vcftools/strelka",
+                "reports/vcftools/strelka/testN",
+                "reports/vcftools/strelka/testN/testN.strelka.variants.FILTER.summary",
+                "reports/vcftools/strelka/testN/testN.strelka.variants.TsTv.count",
+                "reports/vcftools/strelka/testN/testN.strelka.variants.TsTv.qual",
+                "reports/vcftools/strelka/testT",
+                "reports/vcftools/strelka/testT/testT.strelka.variants.FILTER.summary",
+                "reports/vcftools/strelka/testT/testT.strelka.variants.TsTv.count",
+                "reports/vcftools/strelka/testT/testT.strelka.variants.TsTv.qual",
+                "tabix",
+                "tabix/testN.freebayes.filtered.vcf.gz.tbi",
+                "tabix/testT.freebayes.filtered.vcf.gz.tbi",
+                "variant_calling",
+                "variant_calling/concat",
+                "variant_calling/concat/testN",
+                "variant_calling/concat/testN/testN.germline.vcf.gz",
+                "variant_calling/concat/testN/testN.germline.vcf.gz.tbi",
+                "variant_calling/concat/testT",
+                "variant_calling/concat/testT/testT.germline.vcf.gz",
+                "variant_calling/concat/testT/testT.germline.vcf.gz.tbi",
+                "variant_calling/filtered",
+                "variant_calling/filtered/testN",
+                "variant_calling/filtered/testT",
+                "variant_calling/freebayes",
+                "variant_calling/freebayes/testN",
+                "variant_calling/freebayes/testN/testN.freebayes.filtered.vcf.gz",
+                "variant_calling/freebayes/testN/testN.freebayes.vcf.gz",
+                "variant_calling/freebayes/testN/testN.freebayes.vcf.gz.tbi",
+                "variant_calling/freebayes/testT",
+                "variant_calling/freebayes/testT/testT.freebayes.filtered.vcf.gz",
+                "variant_calling/freebayes/testT/testT.freebayes.vcf.gz",
+                "variant_calling/freebayes/testT/testT.freebayes.vcf.gz.tbi",
+                "variant_calling/normalized",
+                "variant_calling/normalized/testN",
+                "variant_calling/normalized/testN/testN.freebayes.norm.vcf.gz",
+                "variant_calling/normalized/testN/testN.freebayes.norm.vcf.gz.tbi",
+                "variant_calling/normalized/testN/testN.strelka.norm.vcf.gz",
+                "variant_calling/normalized/testN/testN.strelka.norm.vcf.gz.tbi",
+                "variant_calling/normalized/testT",
+                "variant_calling/normalized/testT/testT.freebayes.norm.vcf.gz",
+                "variant_calling/normalized/testT/testT.freebayes.norm.vcf.gz.tbi",
+                "variant_calling/normalized/testT/testT.strelka.norm.vcf.gz",
+                "variant_calling/normalized/testT/testT.strelka.norm.vcf.gz.tbi",
+                "variant_calling/strelka",
+                "variant_calling/strelka/testN",
+                "variant_calling/strelka/testN/testN.strelka.genome.vcf.gz",
+                "variant_calling/strelka/testN/testN.strelka.genome.vcf.gz.tbi",
+                "variant_calling/strelka/testN/testN.strelka.variants.vcf.gz",
+                "variant_calling/strelka/testN/testN.strelka.variants.vcf.gz.tbi",
+                "variant_calling/strelka/testT",
+                "variant_calling/strelka/testT/testT.strelka.genome.vcf.gz",
+                "variant_calling/strelka/testT/testT.strelka.genome.vcf.gz.tbi",
+                "variant_calling/strelka/testT/testT.strelka.variants.vcf.gz",
+                "variant_calling/strelka/testT/testT.strelka.variants.vcf.gz.tbi"
+            ],
+            [
+                "mosdepth-coverage-per-contig-single.txt:md5,9cfd38310d4da59c7242b2a7ae6bd651",
+                "mosdepth-cumcoverage-dist-id.txt:md5,f0177ed551b6ec930854d0d221904ec0",
+                "mosdepth_perchrom.txt:md5,9cfd38310d4da59c7242b2a7ae6bd651",
+                "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
+                "samtools-stats-dp.txt:md5,a0c101497a0566f60b9e8388207944ab",
+                "samtools_alignment_plot.txt:md5,563784066de81f3bc8ccf5fbbe82b3d5",
+                "testN.freebayes.filtered.bcftools_stats.txt:md5,96c5e6b9e55f1bb67fca7886fb322b67",
+                "testT.freebayes.filtered.bcftools_stats.txt:md5,ce8b7afaace836b6a00bd8ccdc980500",
+                "testN.strelka.variants.bcftools_stats.txt:md5,f11c9e5e9820868809b5465970c7cc06",
+                "testT.strelka.variants.bcftools_stats.txt:md5,ac070b6cf4de7540a227265971244b31",
+                "testN.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
+                "testN.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
+                "testN.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
+                "testN.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
+                "testN.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "testT.recal.mosdepth.global.dist.txt:md5,3106c114529adc4231badeb3bb38b6d1",
+                "testT.recal.mosdepth.region.dist.txt:md5,ccf646922b05cb4759c4f89072be2b69",
+                "testT.recal.mosdepth.summary.txt:md5,024649a659caff330dfbef4ac3560542",
+                "testT.recal.regions.bed.gz:md5,14b36a2cf428840aab471f95cfbe399f",
+                "testT.recal.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917",
+                "testN.freebayes.filtered.FILTER.summary:md5,e2f8e86fb18631c0bf6ccd7d9d4039c8",
+                "testN.freebayes.filtered.TsTv.count:md5,89562fef808b5c3db629682d36fd86fc",
+                "testT.freebayes.filtered.FILTER.summary:md5,4b25443c427fd27761017e4f3a556b29",
+                "testT.freebayes.filtered.TsTv.count:md5,803d74e40f7716202bae2a3a81c1ddfc",
+                "testN.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
+                "testN.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff",
+                "testT.strelka.variants.FILTER.summary:md5,ad4c8982a91cef84d0c1ff827a0ffcf3",
+                "testT.strelka.variants.TsTv.count:md5,a32d1781bd32b81ec18c6e0a191c0efe",
+                "testN.freebayes.filtered.vcf.gz.tbi:md5,bd6a7d244fc18df7878c3923b571014d",
+                "testT.freebayes.filtered.vcf.gz.tbi:md5,c4aba9a20a278b1e2dd9bf4fa4c7e0e0"
+            ],
+            "No BAM files",
+            "No CRAM files",
+            [
+                [
+                    "testN.freebayes.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=7, phased=false, phasedAutodetect=false]"
+                ],
+                [
+                    "testT.freebayes.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=10, phased=false, phasedAutodetect=false]"
+                ]
+            ],
+            [
+                "testN.freebayes.filtered.vcf.gz:md5,7a08d55c866e45d635cf378825ddba74",
+                "testT.freebayes.filtered.vcf.gz:md5,dc1b49ffa2401b2a5193a0527bf8cd0a",
+                "testN.freebayes.norm.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "testN.strelka.norm.vcf.gz:md5,d38ca73b3eb3c382cc66c761471684dc",
+                "testT.freebayes.norm.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "testT.strelka.norm.vcf.gz:md5,f723030dccd4fd5da0d9dd518c757302",
+                "testN.strelka.genome.vcf.gz:md5,325ea84ccf1ec1cf7a6c5c4aae1c0d1",
+                "testN.strelka.variants.vcf.gz:md5,3a3b3e67614ec91f4f0b88999dff454b",
+                "testT.strelka.genome.vcf.gz:md5,ece653410947a3ace10296c2cc5ff095",
+                "testT.strelka.variants.vcf.gz:md5,b1cf29a73f6b423cf26ab1a71847c9b"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-02T17:36:05.641262"
+    },
     "-profile test --normalize_vcfs --concatenate_vcfs --tools freebayes,strelka": {
         "content": [
             75,
