@@ -4,7 +4,6 @@
 
 include { SNPEFF_SNPEFF    } from '../../../modules/nf-core/snpeff/snpeff'
 include { TABIX_BGZIPTABIX } from '../../../modules/nf-core/tabix/bgziptabix'
-
 workflow VCF_ANNOTATE_SNPEFF {
     take:
     ch_vcf          // channel: [ val(meta), path(vcf) ]

@@ -10,15 +10,11 @@ include { TABIX_TABIX as TABIX_VCFS_NORM_SORT } from '../../../modules/nf-core/t
 // Workflow to normalize, compress, and index VCF files
 workflow NORMALIZE_VCFS {
     take:
-    germline_vcfs
-    tumor_only_vcfs
-    somatic_vcfs
+    vcfs
     fasta
 
     main:
     versions = Channel.empty()
-
-    vcfs = germline_vcfs.mix(tumor_only_vcfs, somatic_vcfs)
 
     // Add additional information to VCF files
     ADD_INFO_TO_VCF(vcfs)
