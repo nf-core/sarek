@@ -13,6 +13,7 @@ report_section_order:
     order: -1002
 
 export_plots: true
+export_plots_timeout: 660
 
 disable_version_detection: true
 
