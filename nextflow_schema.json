@@ -515,7 +515,7 @@
                     "fa_icon": "fas fa-filter",
                     "description": "Enable filtering of VCFs with bcftools view"
                 },
-                "bcftools_filtering": {
+                "bcftools_filter_criteria": {
                     "type": "string",
                     "default": "-f PASS",
                     "fa_icon": "fas fa-question",
