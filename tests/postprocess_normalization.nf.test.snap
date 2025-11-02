@@ -213,15 +213,11 @@
                 "variant_calling/normalized/testN/testN.freebayes.norm.vcf.gz.tbi",
                 "variant_calling/normalized/testN/testN.strelka.norm.vcf.gz",
                 "variant_calling/normalized/testN/testN.strelka.norm.vcf.gz.tbi",
-                "variant_calling/normalized/testN/testN.vcf.gz",
-                "variant_calling/normalized/testN/versions.yml",
                 "variant_calling/normalized/testT",
                 "variant_calling/normalized/testT/testT.freebayes.norm.vcf.gz",
                 "variant_calling/normalized/testT/testT.freebayes.norm.vcf.gz.tbi",
                 "variant_calling/normalized/testT/testT.strelka.norm.vcf.gz",
                 "variant_calling/normalized/testT/testT.strelka.norm.vcf.gz.tbi",
-                "variant_calling/normalized/testT/testT.vcf.gz",
-                "variant_calling/normalized/testT/versions.yml",
                 "variant_calling/strelka",
                 "variant_calling/strelka/testN",
                 "variant_calling/strelka/testN/testN.strelka.genome.vcf.gz",
@@ -262,9 +258,7 @@
                 "testN.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
                 "testN.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff",
                 "testT.strelka.variants.FILTER.summary:md5,ad4c8982a91cef84d0c1ff827a0ffcf3",
-                "testT.strelka.variants.TsTv.count:md5,a32d1781bd32b81ec18c6e0a191c0efe",
-                "versions.yml:md5,98a0b3d9237221abf06d1cf567bdd741",
-                "versions.yml:md5,98a0b3d9237221abf06d1cf567bdd741"
+                "testT.strelka.variants.TsTv.count:md5,a32d1781bd32b81ec18c6e0a191c0efe"
             ],
             "No BAM files",
             "No CRAM files",
@@ -283,10 +277,8 @@
                 "testT.freebayes.filtered.vcf.gz:md5,dc1b49ffa2401b2a5193a0527bf8cd0a",
                 "testN.freebayes.norm.vcf.gz:md5,18992a755b06d72374bb072cc8af86f9",
                 "testN.strelka.norm.vcf.gz:md5,ba9aabddec39a8bcbdb38c46f7a26515",
-                "testN.vcf.gz:md5,18992a755b06d72374bb072cc8af86f9",
                 "testT.freebayes.norm.vcf.gz:md5,574d3d9e73986d07839d5e720c3ea929",
                 "testT.strelka.norm.vcf.gz:md5,2dd9f7f6dac9c10afcf01f148a486799",
-                "testT.vcf.gz:md5,574d3d9e73986d07839d5e720c3ea929",
                 "testN.strelka.genome.vcf.gz:md5,325ea84ccf1ec1cf7a6c5c4aae1c0d1",
                 "testN.strelka.variants.vcf.gz:md5,3a3b3e67614ec91f4f0b88999dff454b",
                 "testT.strelka.genome.vcf.gz:md5,ece653410947a3ace10296c2cc5ff095",
@@ -297,6 +289,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-01T22:15:32.014332"
+        "timestamp": "2025-11-02T13:53:49.66037"
     }
 }
