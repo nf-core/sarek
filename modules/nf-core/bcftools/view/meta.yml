@@ -1,13 +1,15 @@
-name: bcftools_filter
-description: Filters VCF files
+name: bcftools_view
+description: View, subset and filter VCF or BCF files by position and filtering expression.
+  Convert between VCF and BCF
 keywords:
   - variant calling
-  - filtering
+  - view
+  - bcftools
   - VCF
 tools:
-  - filter:
+  - view:
       description: |
-        Apply fixed-threshold filters to VCF files.
+        View, subset and filter VCF or BCF files by position and filtering expression. Convert between VCF and BCF
       homepage: http://samtools.github.io/bcftools/bcftools.html
       documentation: http://www.htslib.org/doc/bcftools.html
       doi: 10.1093/bioinformatics/btp352
@@ -21,14 +23,34 @@ input:
           e.g. [ id:'test', single_end:false ]
     - vcf:
         type: file
-        description: VCF input file
-        pattern: "*.{vcf,bcf,vcf.gz,bcf.gz}"
+        description: |
+          The vcf file to be inspected.
+          e.g. 'file.vcf'
         ontologies: []
-    - tbi:
+    - index:
         type: file
-        description: VCF index file
-        pattern: "*.tbi"
+        description: |
+          The tab index for the VCF file to be inspected.
+          e.g. 'file.tbi'
         ontologies: []
+  - regions:
+      type: file
+      description: |
+        Optionally, restrict the operation to regions listed in this file.
+        e.g. 'file.vcf'
+      ontologies: []
+  - targets:
+      type: file
+      description: |
+        Optionally, restrict the operation to regions listed in this file (doesn't rely upon index files)
+        e.g. 'file.vcf'
+      ontologies: []
+  - samples:
+      type: file
+      description: |
+        Optional, file of sample names to be included or excluded.
+        e.g. 'file.tsv'
+      ontologies: []
 output:
   vcf:
     - - meta:
@@ -36,10 +58,10 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.${extension}":
+      - "*.{vcf,vcf.gz,bcf,bcf.gz}":
           type: file
-          description: VCF filtered output file
-          pattern: "*.{vcf,bcf,vcf.gz,bcf.gz}"
+          description: VCF normalized output file
+          pattern: "*.{vcf,vcf.gz,bcf,bcf.gz}"
           ontologies: []
   tbi:
     - - meta:
@@ -71,8 +93,6 @@ output:
         ontologies:
           - edam: http://edamontology.org/format_3750 # YAML
 authors:
-  - "@joseespinosa"
-  - "@drpatelh"
+  - "@abhi18av"
 maintainers:
-  - "@joseespinosa"
-  - "@drpatelh"
+  - "@abhi18av"
