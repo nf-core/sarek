@@ -368,7 +368,7 @@ See the [`input`](usage#input-sample-sheet-configurations) section in the usage 
 
 ## Variant Calling
 
-The results regarding variant calling are collected in `{outdir}/variantcalling/`.
+The results regarding variant calling are collected in `{outdir}/variant_calling/`.
 If some results from a variant caller do not appear here, please check out the `--tools` section in the parameter [documentation](https://nf-co.re/sarek/latest/parameters).
 
 (Recalibrated) CRAM files can used as an input to start the variant calling.
@@ -385,7 +385,7 @@ For further reading and documentation see the [bcftools manual](https://samtools
 <details markdown="1">
 <summary>Output files for all samples</summary>
 
-**Output directory: `{outdir}/variantcalling/bcftools/<sample>/`**
+**Output directory: `{outdir}/variant_calling/bcftools/<sample>/`**
 
 - `<sample>.bcftools.vcf.gz` and `<sample>.bcftools.vcf.gz.tbi`
   - VCF with tabix index
@@ -399,7 +399,7 @@ For further reading and documentation see the [bcftools manual](https://samtools
 <details markdown="1">
 <summary>Output files for normal samples</summary>
 
-**Output directory: `{outdir}/variantcalling/deepvariant/<sample>/`**
+**Output directory: `{outdir}/variant_calling/deepvariant/<sample>/`**
 
 - `<sample>.deepvariant.vcf.gz` and `<sample>.deepvariant.vcf.gz.tbi`
   - VCF with tabix index
@@ -414,7 +414,7 @@ For further reading and documentation see the [bcftools manual](https://samtools
 <details markdown="1">
 <summary>Output files for all samples</summary>
 
-**Output directory: `{outdir}/variantcalling/freebayes/{sample,normalsample_vs_tumorsample}/`**
+**Output directory: `{outdir}/variant_calling/freebayes/{sample,normalsample_vs_tumorsample}/`**
 
 - `<sample>.freebayes.vcf.gz` and `<sample>.freebayes.vcf.gz.tbi`
   - VCF with tabix index
@@ -428,7 +428,7 @@ For further reading and documentation see the [bcftools manual](https://samtools
 <details markdown="1">
 <summary>Output files for normal samples</summary>
 
-**Output directory: `{outdir}/variantcalling/haplotypecaller/<sample>/`**
+**Output directory: `{outdir}/variant_calling/haplotypecaller/<sample>/`**
 
 - `<sample>.haplotypecaller.vcf.gz` and `<sample>.haplotypecaller.vcf.gz.tbi`
   - VCF with tabix index
@@ -445,7 +445,7 @@ If the haplotype-called VCF files are not filtered, then Sarek should be run wit
 <details markdown="1">
 <summary>Output files for normal samples</summary>
 
-**Output directory: `{outdir}/variantcalling/haplotypecaller/<sample>/`**
+**Output directory: `{outdir}/variant_calling/haplotypecaller/<sample>/`**
 
 - `<sample>.haplotypecaller.filtered.vcf.gz` and `<sample>.haplotypecaller.filtered.vcf.gz.tbi`
   - VCF with tabix index
@@ -459,12 +459,12 @@ If the haplotype-called VCF files are not filtered, then Sarek should be run wit
 <details markdown="1">
 <summary>Output files from joint germline variant calling</summary>
 
-**Output directory: `{outdir}/variantcalling/haplotypecaller/<sample>/`**
+**Output directory: `{outdir}/variant_calling/haplotypecaller/<sample>/`**
 
 - `<sample>.haplotypecaller.g.vcf.gz` and `<sample>.haplotypecaller.g.vcf.gz.tbi`
   - gVCF with tabix index
 
-**Output directory: `{outdir}/variantcalling/haplotypecaller/joint_variant_calling/`**
+**Output directory: `{outdir}/variant_calling/haplotypecaller/joint_variant_calling/`**
 
 - `joint_germline.vcf.gz` and `joint_germline.vcf.gz.tbi`
   - VCF with tabix index
@@ -483,7 +483,7 @@ It is not required, but recommended to have a [panel of normals (PON)](https://g
 <details markdown="1">
 <summary>Output files for tumor-only and tumor/normal paired samples</summary>
 
-**Output directory: `{outdir}/variantcalling/mutect2/{sample,tumorsample_vs_normalsample,patient}/`**
+**Output directory: `{outdir}/variant_calling/mutect2/{sample,tumorsample_vs_normalsample,patient}/`**
 
 Files created:
 
@@ -543,7 +543,7 @@ Files created:
 <details markdown="1">
 <summary>Unfiltered VCF-files for normal samples</summary>
 
-**Output directory: `{outdir}/variantcalling/sentieon_dnascope/<sample>/`**
+**Output directory: `{outdir}/variant_calling/sentieon_dnascope/<sample>/`**
 
 - `<sample>.dnascope.unfiltered.vcf.gz` and `<sample>.dnascope.unfiltered.vcf.gz.tbi`
   - VCF with tabix index
@@ -557,7 +557,7 @@ Unless `dnascope_filter` is listed under `--skip_tools` in the nextflow command,
 <details markdown="1">
 <summary>Filtered VCF-files for normal samples</summary>
 
-**Output directory: `{outdir}/variantcalling/sentieon_dnascope/<sample>/`**
+**Output directory: `{outdir}/variant_calling/sentieon_dnascope/<sample>/`**
 
 - `<sample>.dnascope.filtered.vcf.gz` and `<sample>.dnascope.filtered.vcf.gz.tbi`
   - VCF with tabix index
@@ -571,12 +571,12 @@ In Sentieon's package DNAscope, joint germline variant calling is done by first 
 <details markdown="1">
 <summary>Output files from joint germline variant calling</summary>
 
-**Output directory: `{outdir}/variantcalling/sentieon_dnascope/<sample>/`**
+**Output directory: `{outdir}/variant_calling/sentieon_dnascope/<sample>/`**
 
 - `<sample>.dnascope.g.vcf.gz` and `<sample>.dnascope.g.vcf.gz.tbi`
   - VCF with tabix index
 
-**Output directory: `{outdir}/variantcalling/sentieon_dnascope/joint_variant_calling/`**
+**Output directory: `{outdir}/variant_calling/sentieon_dnascope/joint_variant_calling/`**
 
 - `joint_germline.vcf.gz` and `joint_germline.vcf.gz.tbi`
   - VCF with tabix index
@@ -590,7 +590,7 @@ In Sentieon's package DNAscope, joint germline variant calling is done by first 
 <details markdown="1">
 <summary>Unfiltered VCF-files for normal samples</summary>
 
-**Output directory: `{outdir}/variantcalling/sentieon_haplotyper/<sample>/`**
+**Output directory: `{outdir}/variant_calling/sentieon_haplotyper/<sample>/`**
 
 - `<sample>.haplotyper.unfiltered.vcf.gz` and `<sample>.haplotyper.unfiltered.vcf.gz.tbi`
   - VCF with tabix index
@@ -604,7 +604,7 @@ Unless `haplotyper_filter` is listed under `--skip_tools` in the nextflow comman
 <details markdown="1">
 <summary>Filtered VCF-files for normal samples</summary>
 
-**Output directory: `{outdir}/variantcalling/sentieon_haplotyper/<sample>/`**
+**Output directory: `{outdir}/variant_calling/sentieon_haplotyper/<sample>/`**
 
 - `<sample>.haplotyper.filtered.vcf.gz` and `<sample>.haplotyper.filtered.vcf.gz.tbi`
   - VCF with tabix index
@@ -618,12 +618,12 @@ In Sentieon's package DNAseq, joint germline variant calling is done by first ru
 <details markdown="1">
 <summary>Output files from joint germline variant calling</summary>
 
-**Output directory: `{outdir}/variantcalling/sentieon_haplotyper/<sample>/`**
+**Output directory: `{outdir}/variant_calling/sentieon_haplotyper/<sample>/`**
 
 - `<sample>.haplotyper.g.vcf.gz` and `<sample>.haplotyper.g.vcf.gz.tbi`
   - VCF with tabix index
 
-**Output directory: `{outdir}/variantcalling/sentieon_haplotyper/joint_variant_calling/`**
+**Output directory: `{outdir}/variant_calling/sentieon_haplotyper/joint_variant_calling/`**
 
 - `joint_germline.vcf.gz` and `joint_germline.vcf.gz.tbi`
   - VCF with tabix index
@@ -639,7 +639,7 @@ In Sentieon's package DNAseq, joint germline variant calling is done by first ru
 <details markdown="1">
 <summary>VCF-files for tumor-only and tumor/normal samples</summary>
 
-**Output directory: `{outdir}/variantcalling/sentieon_tnscope/<sample>/`**
+**Output directory: `{outdir}/variant_calling/sentieon_tnscope/<sample>/`**
 
 - `<sample>.tnscope.vcf.gz` and `<sample>.tnscope.vcf.gz.tbi`
   - VCF with tabix index
@@ -654,7 +654,7 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
 <details markdown="1">
 <summary>Output files for single samples (normal)</summary>
 
-**Output directory: `{outdir}/variantcalling/strelka/<sample>/`**
+**Output directory: `{outdir}/variant_calling/strelka/<sample>/`**
 
 - `<sample>.strelka.genome.vcf.gz` and `<sample>.strelka.genome.vcf.gz.tbi`
   - genome VCF with tabix index
@@ -665,7 +665,7 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
 <details markdown="1">
 <summary>Output files for tumor/normal paired samples</summary>
 
-**Output directory: `{outdir}/variantcalling/strelka/<tumorsample_vs_normalsample>/`**
+**Output directory: `{outdir}/variant_calling/strelka/<tumorsample_vs_normalsample>/`**
 
 - `<tumorsample_vs_normalsample>.strelka.somatic_indels.vcf.gz` and `<tumorsample_vs_normalsample>.strelka.somatic_indels.vcf.gz.tbi`
   - VCF with tabix index with all somatic indels inferred in the tumor sample.
@@ -682,7 +682,7 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
 A bam index has 16KB resolution and it is used as a coverage estimate .
 The output is scaled to around 1. So a long stretch with values of 1.5 would be a heterozygous duplication. This is useful as a quick QC to get coverage values across the genome.
 
-**Output directory: `{outdir}/variantcalling/indexcov/`**
+**Output directory: `{outdir}/variant_calling/indexcov/`**
 
 In addition to the interactive HTML files, `indexcov` outputs a number of text files:
 
@@ -709,7 +709,7 @@ It is optimized for analysis of germline variation in small sets of individuals 
 <details markdown="1">
 <summary>Output files for normal samples</summary>
 
-**Output directory: `{outdir}/variantcalling/manta/<sample>/`**
+**Output directory: `{outdir}/variant_calling/manta/<sample>/`**
 
 - `<sample>.manta.diploid_sv.vcf.gz` and `<sample>.manta.diploid_sv.vcf.gz.tbi`
   - VCF with tabix index containing SVs and indels scored and genotyped under a diploid model for the sample.
@@ -718,7 +718,7 @@ It is optimized for analysis of germline variation in small sets of individuals 
 <details markdown="1">
 <summary>Output files for tumor-only samples</summary>
 
-**Output directory: `{outdir}/variantcalling/manta/<sample>/`**
+**Output directory: `{outdir}/variant_calling/manta/<sample>/`**
 
 - `<sample>.manta.tumor_sv.vcf.gz` and `<sample>.manta.tumor_sv.vcf.gz.tbi`
   - VCF with tabix index containing a subset of the candidateSV.vcf.gz file after removing redundant candidates and small indels less than the minimum scored variant size (50 by default). The SVs are not scored, but include additional details: (1) paired and split read supporting evidence counts for each allele (2) a subset of the filters from the scored tumor-normal model are applied to the single tumor case to improve precision.
@@ -727,7 +727,7 @@ It is optimized for analysis of germline variation in small sets of individuals 
 <details markdown="1">
 <summary>Output files for tumor/normal paired samples</summary>
 
-**Output directory: `{outdir}/variantcalling/manta/<tumorsample_vs_normalsample>/`**
+**Output directory: `{outdir}/variant_calling/manta/<tumorsample_vs_normalsample>/`**
 
 - `<tumorsample_vs_normalsample>.manta.diploid_sv.vcf.gz` and `<tumorsample_vs_normalsample>.manta.diploid_sv.vcf.gz.tbi`
   - VCF with tabix index containing SVs and indels scored and genotyped under a diploid model for the sample. In the case of a tumor/normal subtraction, the scores in this file do not reflect any information from the tumor sample.
@@ -742,7 +742,7 @@ It is optimized for analysis of germline variation in small sets of individuals 
 <details markdown="1">
 <summary>Output files for normal and tumor-only samples</summary>
 
-**Output directory: `{outdir}/variantcalling/tiddit/<sample>/`**
+**Output directory: `{outdir}/variant_calling/tiddit/<sample>/`**
 
 - `<sample>.tiddit.vcf.gz` and `<sample>.tiddit.vcf.gz.tbi`
   - VCF with tabix index containing SV calls
@@ -754,7 +754,7 @@ It is optimized for analysis of germline variation in small sets of individuals 
 <details markdown="1">
 <summary>Output files for tumor/normal paired samples</summary>
 
-**Output directory: `{outdir}/variantcalling/tiddit/<tumorsample_vs_normalsample>/`**
+**Output directory: `{outdir}/variant_calling/tiddit/<tumorsample_vs_normalsample>/`**
 
 - `<tumorsample_vs_normalsample>.tiddit.normal.vcf.gz` and `<tumorsample_vs_normalsample>.tiddit.normal.vcf.gz.tbi`
   - VCF with tabix index containing SV calls
@@ -780,7 +780,7 @@ This is done internally using the software [AlleleCount](https://github.com/canc
 <details markdown="1">
 <summary>Output files for tumor/normal paired samples</summary>
 
-**Output directory: `{outdir}/variantcalling/ascat/<tumorsample_vs_normalsample>/`**
+**Output directory: `{outdir}/variant_calling/ascat/<tumorsample_vs_normalsample>/`**
 
 - `<tumorsample_vs_normalsample>.tumour.ASCATprofile.png`
   - image with information about allele-specific copy number profile
@@ -829,7 +829,7 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
 <details markdown="1">
 <summary>Output files for normal and tumor-only samples</summary>
 
-**Output directory: `{outdir}/variantcalling/cnvkit/<sample>/`**
+**Output directory: `{outdir}/variant_calling/cnvkit/<sample>/`**
 
 - `<sample>.antitargetcoverage.cnn`
   - file containing coverage information
@@ -854,7 +854,7 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
 <details markdown="1">
 <summary>Output files for tumor/normal samples</summary>
 
-**Output directory: `{outdir}/variantcalling/cnvkit/<tumorsample_vs_normalsample>/`**
+**Output directory: `{outdir}/variant_calling/cnvkit/<tumorsample_vs_normalsample>/`**
 
 - `<normalsample>.antitargetcoverage.cnn`
   - file containing coverage information
@@ -889,7 +889,7 @@ It also detects subclonal gains and losses and evaluates the most likely average
 <details markdown="1">
 <summary>Output files for tumor-only and tumor/normal paired samples</summary>
 
-**Output directory: `{outdir}/variantcalling/controlfreec/{tumorsample,tumorsample_vs_normalsample}/`**
+**Output directory: `{outdir}/variant_calling/controlfreec/{tumorsample,tumorsample_vs_normalsample}/`**
 
 - `config.txt`
   - Configuration file used to run Control-FREEC
@@ -937,7 +937,7 @@ An altered distribution of microsatellite length is associated with a missed rep
 
 <summary>Output files for tumor only samples</summary>
 
-**Output directory: `{outdir}/variantcalling/msisensor2/<tumorsample>/`**
+**Output directory: `{outdir}/variant_calling/msisensor2/<tumorsample>/`**
 
 - `<tumorsample>`
   - MSI score output, contains information about the number of somatic sites.
@@ -955,7 +955,7 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
 <details markdown="1">
 <summary>Output files for tumor/normal paired samples</summary>
 
-**Output directory: `{outdir}/variantcalling/msisensor/<tumorsample_vs_normalsample>/`**
+**Output directory: `{outdir}/variant_calling/msisensor/<tumorsample_vs_normalsample>/`**
 
 - `<tumorsample_vs_normalsample>`
   - MSI score output, contains information about the number of somatic sites.
@@ -978,7 +978,7 @@ As varlociraptor requires to provide a set of candidate variants to consider it 
 <details markdown="1">
 <summary>Output files for germline samples</summary>
 
-**Output directory: `{outdir}/variantcalling/varlociraptor/{sample}`**
+**Output directory: `{outdir}/variant_calling/varlociraptor/{sample}`**
 
 - `<sample>.<variantcaller>.germline.varlociraptor.vcf.gz` and `<sample>.<variantcaller>.germline.varlociraptor.vcf.gz.tbi`
   - Final VCF with tabix index
@@ -991,7 +991,7 @@ As varlociraptor requires to provide a set of candidate variants to consider it 
 <details markdown="1">
 <summary>Postprocessed VCF files for tumor-normal calling</summary>
 
-**Output directory: `{outdir}/variantcalling/varlociraptor/{tumorsample_vs_normalsample}`**
+**Output directory: `{outdir}/variant_calling/varlociraptor/{tumorsample_vs_normalsample}`**
 
 - `<normal_id>_vs_.<tumor_id>.<variantcaller>.somatic.varlociraptor.vcf.gz` and `<normal_id>_vs_.<tumor_id>.<variantcaller>.somatic.varlociraptor.vcf.gz.tbi`
   - Final VCF with tabix index
@@ -1008,7 +1008,7 @@ As varlociraptor requires to provide a set of candidate variants to consider it 
 <details markdown="1">
 <summary>Output files for tumor only samples</summary>
 
-**Output directory: `{outdir}/variantcalling/varlociraptor/{sample}`**
+**Output directory: `{outdir}/variant_calling/varlociraptor/{sample}`**
 
 - `<sample>.<variantcaller>.tumor_only.varlociraptor.vcf.gz` and `<sample>.<variantcaller>.tumor_only.varlociraptor.vcf.gz.tbi`
   - Final VCF with tabix index
@@ -1025,9 +1025,9 @@ VCFs from all variantcallers can be filtered using `bcftools view`. Filtering is
 <details markdown="1">
 <summary>Filtered VCF-files for normal and tumor samples</summary>
 
-**Output directory: `{outdir}/variantcalling/filtered/<sample>/`**
+**Output directory: `{outdir}/variant_calling/filtered/<sample>/`**
 
-- `<sample>.<variantcaller>.filtered.vcf.gz` and `<sample>.<variantcaller>.filtered.vcf.gz.tbi`
+- `<sample>.<variantcaller>.bcftools_filtered.vcf.gz` and `<sample>.<variantcaller>.bcftools_filtered.vcf.gz.tbi`
   - VCF with tabix index containing filtered variants
 
 </details>
@@ -1039,10 +1039,10 @@ All VCFs are normalized with `bcftools norm`. The field `SOURCE` is added to the
 <details markdown="1">
 <summary>Normalized VCF-files for normal and tumor samples</summary>
 
-**Output directory: `{outdir}/variantcalling/normalized/<sample>/`**
+**Output directory: `{outdir}/variant_calling/normalized/<sample>/`**
 
-- `<sample>.<variantcaller>.norm.vcf.gz` and `<sample>.<variantcaller>.norm.vcf.gz.tbi`
-  - VCF with tabix index
+- `<sample>.<variantcaller>.norm.sorted.vcf.gz` and `<sample>.<variantcaller>.norm.sorted.vcf.gz.tbi`
+  - VCF with tabix index containing normalized variants
 
 </details>
 
@@ -1053,10 +1053,10 @@ Germline VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, 
 <details markdown="1">
 <summary>Concatenated VCF-files for normal samples</summary>
 
-**Output directory: `{outdir}/variantcalling/concat/<sample>/`**
+**Output directory: `{outdir}/variant_calling/concat/<sample>/`**
 
 - `<sample>.germline.vcf.gz` and `<sample>.germline.vcf.gz.tbi`
-  - VCF with tabix index
+  - VCF with tabix index containing concatenated germline variants
 
 </details>
 
