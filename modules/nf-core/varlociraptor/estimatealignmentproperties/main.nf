@@ -27,7 +27,7 @@ process VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES {
         ${fasta} \\
         --bams ${bam} \\
         ${args} \\
-        | jq -S '.' > ${prefix}.alignment-properties.json
+        > ${prefix}.alignment-properties.json
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
