@@ -59,6 +59,7 @@ workflow POST_VARIANTCALLING {
     } else if (concatenate_vcfs || normalize_vcfs) {
 
         if (normalize_vcfs) {
+
             NORMALIZE_VCFS(germline_vcfs, tumor_only_vcfs, somatic_vcfs, fasta)
 
             vcfs = vcfs.mix(NORMALIZE_VCFS.out.vcfs) // [meta, vcf]
