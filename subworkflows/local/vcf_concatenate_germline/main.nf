@@ -25,14 +25,12 @@ workflow CONCATENATE_GERMLINE_VCFS {
 
     GERMLINE_VCFS_CONCAT(germline_vcfs_with_tbis)
     GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT.out.vcf)
-    TABIX_GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT_SORT.out.vcf)
 
     // Gather versions of all tools used
     versions = versions.mix(ADD_INFO_TO_VCF.out.versions)
     versions = versions.mix(TABIX_EXT_VCF.out.versions)
     versions = versions.mix(GERMLINE_VCFS_CONCAT.out.versions)
     versions = versions.mix(GERMLINE_VCFS_CONCAT_SORT.out.versions)
-    versions = versions.mix(TABIX_GERMLINE_VCFS_CONCAT_SORT.out.versions)
 
     emit:
     vcfs = GERMLINE_VCFS_CONCAT_SORT.out.vcf // concatenated vcfs
