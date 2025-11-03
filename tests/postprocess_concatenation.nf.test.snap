@@ -1,7 +1,7 @@
 {
     "-profile test --concatenate_vcfs --tools freebayes,strelka": {
         "content": [
-            55,
+            53,
             {
                 "ADD_INFO_TO_VCF": {
                     "gawk": "5.3.0"
@@ -45,10 +45,10 @@
                 "TABIX_EXT_VCF": {
                     "tabix": 1.21
                 },
-                "TABIX_GERMLINE_VCFS_CONCAT_SORT": {
+                "TABIX_VC_FREEBAYES": {
                     "tabix": 1.21
                 },
-                "TABIX_VC_FREEBAYES": {
+                "TABIX_VC_FREEBAYES_FILT": {
                     "tabix": 1.21
                 },
                 "VCFLIB_VCFFILTER": {
@@ -208,10 +208,12 @@
                 "variant_calling/freebayes",
                 "variant_calling/freebayes/testN",
                 "variant_calling/freebayes/testN/testN.freebayes.filtered.vcf.gz",
+                "variant_calling/freebayes/testN/testN.freebayes.filtered.vcf.gz.tbi",
                 "variant_calling/freebayes/testN/testN.freebayes.vcf.gz",
                 "variant_calling/freebayes/testN/testN.freebayes.vcf.gz.tbi",
                 "variant_calling/freebayes/testT",
                 "variant_calling/freebayes/testT/testT.freebayes.filtered.vcf.gz",
+                "variant_calling/freebayes/testT/testT.freebayes.filtered.vcf.gz.tbi",
                 "variant_calling/freebayes/testT/testT.freebayes.vcf.gz",
                 "variant_calling/freebayes/testT/testT.freebayes.vcf.gz.tbi",
                 "variant_calling/strelka",
@@ -281,6 +283,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-11-01T22:02:32.575016"
+        "timestamp": "2025-11-03T11:06:26.54547"
     }
 }
