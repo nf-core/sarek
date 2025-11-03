@@ -6,4 +6,3 @@ channels:
 dependencies:
   # renovate: datasource=conda depName=bioconda/varlociraptor
   - bioconda::varlociraptor=8.7.4
-  - bioconda::jq=1.5
