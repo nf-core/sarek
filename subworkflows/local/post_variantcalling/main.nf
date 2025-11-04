@@ -70,9 +70,6 @@ workflow POST_VARIANTCALLING {
         // 3. Aggregate variants (Union, intersection, or n-1)
         if(filter_vcfs) {
 
-            //TODO account for multivcfs from various variantcallers like strelka
-
-
             // Join VCFs with their corresponding TBIs before filtering
             FILTER_VCFS( all_vcfs.join(all_tbis, failOnDuplicate: true, failOnMismatch: true), [], [], [])
 
