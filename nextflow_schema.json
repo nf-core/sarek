@@ -536,7 +536,8 @@
                 "varlociraptor_chunk_size": {
                     "type": "integer",
                     "default": 15,
-                    "description": "Number of chunks to split the vcf-files for varlociraptor",
+                    "minimum": 1,
+                    "description": "Number of chunks to split the vcf-files for varlociraptor. Minimum 1, indicates no splitting",
                     "hidden": true
                 },
                 "varlociraptor_scenario_tumor_only": {

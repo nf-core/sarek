@@ -153,7 +153,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         )
 
         vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.vcf_filtered
-        tbi_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.tbi
+        tbi_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.index_filtered
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
     }
 

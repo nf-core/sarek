@@ -19,9 +19,7 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     main:
     ch_versions = Channel.empty()
 
-    meta_map = ch_cram.map { meta, _cram, _crai -> meta + [sex_string: (meta.sex == "XX" ? "female" : "male")] }
-
-    // meta_map.dump(pretty:true, tag: "meta_map")
+    meta_map = ch_cram.map { meta, _cram, _crai -> meta +  [sex_string: (meta.sex == "XX" ? "female" : "male")] }
 
     //TODO this seems suspicious but not the cause for the current resume issues as I am only testing with one sample
     FILL_SCENARIO_FILE(
@@ -51,8 +49,7 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     ch_versions = ch_versions.mix(RBT_VCFSPLIT.out.versions)
 
     ch_chunked_vcfs = RBT_VCFSPLIT.out.bcfchunks
-        .map { meta, bcf_list -> [meta, bcf_list.sort { it.name }] }
-        .transpose(by: 1)
+        .transpose()
         .map { meta, vcf_chunked ->
             [   meta + [chunk: vcf_chunked.name.split(/\./)[-2]],
                 vcf_chunked
@@ -61,20 +58,19 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
 
     // Join each alignment file with its properties
     ch_cram_alignment = ch_cram.join(VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES.out.alignment_properties_json, failOnMismatch:true, failOnDuplicate:true)
-                                .map{meta, cram, crai, json -> [meta.id, meta, cram,crai,json]}
+                                .map{meta, cram, crai, json -> [meta.id, meta, cram, crai, json]}
 
-    // TODO appears resuming breaks ni this block somewhere
     // Now combine the each chunked VCFs with the alignment data
     ch_input_preprocess_chunked = ch_chunked_vcfs
         .map { meta, vcf -> [meta.id, meta, vcf] }
         .combine(ch_cram_alignment, by: 0)
         .map { _id, meta_vcf, vcf, meta_cram, cram, crai, alignment_json ->
-            def new_meta = meta_cram + [
+            [ meta_cram + [
                 variantcaller: meta_vcf.variantcaller,
                 postprocess: 'varlociraptor',
-                chunk: meta_vcf.chunk,
+                chunk: meta_vcf.chunk],
+                cram, crai, vcf, alignment_json
             ]
-            [new_meta, cram, crai, vcf, alignment_json]
         }
 
     ch_input_preprocess_chunked.dump(pretty:true, tag: "cram_alignment")
@@ -104,18 +100,31 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     )
     ch_versions = ch_versions.mix(SORT_CALLED_CHUNKS.out.versions)
 
-    ch_vcf_tbi_chunks = SORT_CALLED_CHUNKS.out.vcf
-        .join(SORT_CALLED_CHUNKS.out.tbi, failOnMismatch: true, failOnDuplicate: true)
+    ch_sort_called_chunks_vcf = SORT_CALLED_CHUNKS.out.vcf
+            .branch {
+                single: val_num_chunks <= 1
+                multiple: val_num_chunks > 1
+            }
+
+    ch_sort_called_chunks_tbi = SORT_CALLED_CHUNKS.out.tbi
+            .branch {
+                single: val_num_chunks <= 1
+                multiple: val_num_chunks > 1
+            }
+
+    ch_vcf_tbi_chunks = ch_sort_called_chunks_vcf.multiple
+        .join(ch_sort_called_chunks_tbi.multiple, failOnMismatch: true, failOnDuplicate: true)
         .map { meta, vcf, tbi ->
             [meta - meta.subMap("chunk"), vcf, tbi]
         }
-        .groupTuple(size: val_num_chunks, sort: true)
+        .groupTuple(size: val_num_chunks)
 
     CONCAT_CALLED_CHUNKS(ch_vcf_tbi_chunks)
+
     ch_versions = ch_versions.mix(CONCAT_CALLED_CHUNKS.out.versions)
 
     emit:
-    vcf      = CONCAT_CALLED_CHUNKS.out.vcf
-    tbi      = CONCAT_CALLED_CHUNKS.out.tbi
+    vcf      = ch_sort_called_chunks_vcf.single.mix(CONCAT_CALLED_CHUNKS.out.vcf)
+    tbi      = ch_sort_called_chunks_tbi.single.mix(CONCAT_CALLED_CHUNKS.out.tbi)
     versions = ch_versions
 }
