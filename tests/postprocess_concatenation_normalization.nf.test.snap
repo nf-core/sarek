@@ -19,7 +19,7 @@
                     "freebayes": "1.3.10"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "Using"
+                    "gatk4": "4.6.1.0"
                 },
                 "GERMLINE_VCFS_CONCAT": {
                     "bcftools": 1.21
