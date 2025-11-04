@@ -76,6 +76,8 @@ nextflow_pipeline {
                 pon: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz',
                 pon_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz.tbi',
                 ngscheckmate_bed: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/SNP_GRCh38_hg38_wChr.bed',
+                bcftools_annotations_tbi: null,
+                bcftools_annotations: null,
                 nucleotides_per_second: 20,
                 step: 'variant_calling',
                 tools: 'mutect2,varlociraptor',
