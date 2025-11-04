@@ -266,6 +266,10 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.pon,
         PREPARE_GENOME.out.pon_tbi,
         params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect() : Channel.value([]),
+         // Set Varlociraptor reference files
+        params.varlociraptor_scenario_germline   ? Channel.fromPath(params.varlociraptor_scenario_germline).map { it -> [[id: it.baseName - '.yte'], it] }.collect()    : Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect(),
+        params.varlociraptor_scenario_somatic    ? Channel.fromPath(params.varlociraptor_scenario_somatic).map { it -> [[id: it.baseName - '.yte'], it] }.collect()     : Channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect(),
+        params.varlociraptor_scenario_tumor_only ? Channel.fromPath(params.varlociraptor_scenario_tumor_only).map { it -> [[id: it.baseName - '.yte'], it] }.collect()  : Channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect(),
         snpeff_cache,
         params.snpeff_db,
         vep_cache,

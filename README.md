@@ -66,9 +66,8 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `Sentieon Haplotyper`
   - `Strelka`
   - `TIDDIT`
-- Post-variant calling options:
-  - `BCFtools concat` for germline vcfs
-  - _Experimental Feature_ `BCFtools norm` for all vcfs
+- Post-variant calling options, one of:
+  - `BCFtools concat` for germline vcfs and/or `BCFtools norm` for all vcfs (_experimental Feature_)
   - `Varlociraptor` for all vcfs
 - Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`)
 - Summarise and represent QC (`MultiQC`)

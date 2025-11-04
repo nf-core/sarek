@@ -107,6 +107,9 @@ workflow SAREK {
     pon
     pon_tbi
     sentieon_dnascope_model
+    varlociraptor_scenario_germline
+    varlociraptor_scenario_somatic
+    varlociraptor_scenario_tumor_only
     snpeff_cache
     snpeff_db
     vep_cache
@@ -494,46 +497,11 @@ workflow SAREK {
             params.wes,
         )
 
-        // POST VARIANTCALLING
-        POST_VARIANTCALLING(
-            tools,
-            cram_variant_calling_status_normal,
-            BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
-            cram_variant_calling_tumor_only,
-            BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all,
-            cram_variant_calling_pair,
-            BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all,
-            fasta,
-            fasta_fai,
-            params.concatenate_vcfs,
-            params.normalize_vcfs,
-            params.varlociraptor_chunk_size,
-        )
-
-        // Gather vcf files for annotation and QC
-        vcf_to_annotate = Channel.empty()
-
-        // Check if normalization is requested
-        if (params.normalize_vcfs) {
-            vcf_to_annotate = vcf_to_annotate.mix(POST_VARIANTCALLING.out.vcfs)
-        }
-        else {
-            // If not normalized, gather existing VCFs
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_deepvariant)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_freebayes)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_haplotypecaller)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_manta)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_dnascope)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_haplotyper)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_strelka)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_tiddit)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_mpileup)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all)
-        }
-
-        // QC
-        VCF_QC_BCFTOOLS_VCFTOOLS(vcf_to_annotate, intervals_bed_combined)
+        // QC on raw variant calls
+        VCF_QC_BCFTOOLS_VCFTOOLS(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all
+                                .mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
+                                .mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all),
+                                intervals_bed_combined)
 
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.bcftools_stats.collect { _meta, stats -> [stats] })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_counts.collect { _meta, counts -> [counts] })
@@ -542,14 +510,37 @@ workflow SAREK {
         reports = reports.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.out_indexcov.collect { _meta, indexcov -> indexcov.flatten() })
         reports = reports.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.out_indexcov.collect { _meta, indexcov -> indexcov.flatten() })
 
+        // POST VARIANTCALLING
+        POST_VARIANTCALLING(
+                tools,
+                cram_variant_calling_status_normal,
+                BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
+                cram_variant_calling_tumor_only,
+                BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all,
+                cram_variant_calling_pair,
+                BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all,
+                fasta,
+                fasta_fai,
+                params.concatenate_vcfs,
+                params.normalize_vcfs,
+                params.varlociraptor_chunk_size,
+                varlociraptor_scenario_germline,
+                varlociraptor_scenario_somatic,
+                varlociraptor_scenario_tumor_only,
+        )
+
+        // Gather vcf files for annotation and QC
+        // POST_VARIANTCALLING always outputs VCFs - either processed or pass-through originals
+        vcf_to_annotate = POST_VARIANTCALLING.out.vcfs
+
         CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate, params.outdir)
 
         // Gather used variant calling softwares versions
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.versions)
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.versions)
-        versions = versions.mix(POST_VARIANTCALLING.out.versions)
         versions = versions.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.versions)
+        versions = versions.mix(POST_VARIANTCALLING.out.versions)
 
         // ANNOTATE
         if (step == 'annotate') {

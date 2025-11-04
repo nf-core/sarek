@@ -36,6 +36,6 @@ workflow CONCATENATE_GERMLINE_VCFS {
 
     emit:
     vcfs = GERMLINE_VCFS_CONCAT_SORT.out.vcf // concatenated vcfs
-
+    tbis = TABIX_GERMLINE_VCFS_CONCAT_SORT.out.tbi // matching tbis
     versions // channel: [ versions.yml ]
 }
