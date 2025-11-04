@@ -3,6 +3,7 @@
 //
 include { BCFTOOLS_VIEW as FILTER_VCFS                             } from '../../../modules/nf-core/bcftools/view'
 include { CONCATENATE_GERMLINE_VCFS                                } from '../vcf_concatenate_germline'
+include { INTERSECTION                                             } from '../vcf_intersection'
 include { NORMALIZE_VCFS                                           } from '../vcf_normalization'
 include { VCF_VARLOCIRAPTOR_SINGLE as VCF_VARLOCIRAPTOR_GERMLINE   } from '../vcf_varlociraptor_single'
 include { VCF_VARLOCIRAPTOR_SOMATIC                                } from '../vcf_varlociraptor_somatic'
@@ -24,6 +25,7 @@ workflow POST_VARIANTCALLING {
     fai
     concatenate_vcfs
     filter_vcfs
+    intersect_vcfs
     normalize_vcfs
     varlociraptor_chunk_size // integer: [mandatory] [default: 15] number of chunks to split BCF files when preprocessing and calling variants
     varlociraptor_scenario_germline
@@ -80,13 +82,19 @@ workflow POST_VARIANTCALLING {
 
         if (normalize_vcfs) {
 
-            all_vcfs.dump(pretty: true)
-
             NORMALIZE_VCFS(all_vcfs, fasta)
 
             all_vcfs = NORMALIZE_VCFS.out.vcfs // [meta, vcf]
             all_tbis = NORMALIZE_VCFS.out.tbis // [meta, tbi]
             versions = versions.mix(NORMALIZE_VCFS.out.versions)
+        }
+
+        if (normalize_vcfs && intersect_vcfs){
+
+            INTERSECTION(all_vcfs.join(all_tbis))
+
+            // TODO returns a directory
+            versions = versions.mix(INTERSECTION.out.versions)
         }
 
         if (concatenate_vcfs) {

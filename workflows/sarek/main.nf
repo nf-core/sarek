@@ -526,6 +526,7 @@ workflow SAREK {
                 fasta_fai,
                 params.concatenate_vcfs,
                 params.filter_vcfs,
+                params.intersect_vcfs,
                 params.normalize_vcfs,
                 params.varlociraptor_chunk_size,
                 varlociraptor_scenario_germline,
