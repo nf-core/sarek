@@ -1825,6 +1825,7 @@
                 "variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi",
                 "variant_calling/freebayes/test2_vs_test",
                 "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.vcf.gz",
+                "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.vcf.gz.tbi",
                 "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz",
                 "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi"
             ],

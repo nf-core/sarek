@@ -49,7 +49,7 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
     MERGE_DEEPVARIANT_VCF(vcf_to_merge, dict)
 
     // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_out = DEEPVARIANT_RUNDEEPVARIANT.out.vcf_tbi.branch{
+    tbi_out = DEEPVARIANT_RUNDEEPVARIANT.out.vcf_index.branch{
         // Use meta.num_intervals to asses number of intervals
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
