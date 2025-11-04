@@ -5,20 +5,15 @@ include { ADD_INFO_TO_VCF                     } from '../../../modules/local/add
 include { BCFTOOLS_NORM as VCFS_NORM          } from '../../../modules/nf-core/bcftools/norm'
 include { BCFTOOLS_SORT as VCFS_NORM_SORT     } from '../../../modules/nf-core/bcftools/sort'
 include { TABIX_BGZIPTABIX as TABIX_EXT_VCF   } from '../../../modules/nf-core/tabix/bgziptabix'
-include { TABIX_TABIX as TABIX_VCFS_NORM_SORT } from '../../../modules/nf-core/tabix/tabix'
 
 // Workflow to normalize, compress, and index VCF files
 workflow NORMALIZE_VCFS {
     take:
-    germline_vcfs
-    tumor_only_vcfs
-    somatic_vcfs
+    vcfs
     fasta
 
     main:
     versions = Channel.empty()
-
-    vcfs = germline_vcfs.mix(tumor_only_vcfs, somatic_vcfs)
 
     // Add additional information to VCF files
     ADD_INFO_TO_VCF(vcfs)
@@ -32,18 +27,14 @@ workflow NORMALIZE_VCFS {
     // Sort the normalized VCF files
     VCFS_NORM_SORT(VCFS_NORM.out.vcf)
 
-    // Index the sorted normalized VCF files
-    TABIX_VCFS_NORM_SORT(VCFS_NORM_SORT.out.vcf)
-
     // Gather versions of all tools used
     versions = versions.mix(ADD_INFO_TO_VCF.out.versions)
     versions = versions.mix(TABIX_EXT_VCF.out.versions)
-    versions = versions.mix(TABIX_VCFS_NORM_SORT.out.versions)
     versions = versions.mix(VCFS_NORM.out.versions)
     versions = versions.mix(VCFS_NORM_SORT.out.versions)
 
     emit:
     vcfs     = VCFS_NORM_SORT.out.vcf // normalized vcfs
-    tbis     = TABIX_VCFS_NORM_SORT.out.tbi // matching tbis
+    tbis     = VCFS_NORM_SORT.out.tbi // matching tbis
     versions // Channel: [versions.yml]
 }

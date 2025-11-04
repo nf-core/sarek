@@ -47,10 +47,28 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
     MERGE_STRELKA_INDELS(vcf_indels_to_merge, dict)
     MERGE_STRELKA_SNVS(vcf_snvs_to_merge, dict)
 
+    // Figuring out if there is one or more tbi(s) from the same sample
+    tbi_indels = STRELKA_SOMATIC.out.vcf_indels_tbi.branch{
+        // Use meta.num_intervals to asses number of intervals
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
+
+    // Figuring out if there is one or more tbi(s) from the same sample
+    tbi_snvs = STRELKA_SOMATIC.out.vcf_snvs_tbi.branch{
+        // Use meta.num_intervals to asses number of intervals
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
+
     // Mix intervals and no_intervals channels together
     vcf = Channel.empty().mix(MERGE_STRELKA_INDELS.out.vcf, MERGE_STRELKA_SNVS.out.vcf, vcf_indels.no_intervals, vcf_snvs.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], vcf ] }
+
+    tbi = Channel.empty().mix(MERGE_STRELKA_INDELS.out.tbi, MERGE_STRELKA_SNVS.out.tbi, tbi_indels.no_intervals, tbi_snvs.no_intervals)
+        // add variantcaller to meta map and remove no longer necessary field: num_intervals
+        .map{ meta, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], tbi ] }
 
     versions = versions.mix(MERGE_STRELKA_SNVS.out.versions)
     versions = versions.mix(MERGE_STRELKA_INDELS.out.versions)
@@ -58,6 +76,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
 
     emit:
     vcf
+    tbi
 
     versions
 }

@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [2044](https://github.com/nf-core/sarek/pull/2044) - Add filtering with `bcftools view -f PASS` following variantcalling step
+
 ### Changed
 
 ### Fixed
@@ -64,8 +66,10 @@ This patch release includes a bump to Nextflow 25.04.8.
 
 ### Parameters
 
-| Params | status |
-| ------ | ------ |
+| Params                       | status |
+| ---------------------------- | ------ |
+| `--filter_vcfs`              | New    |
+| `--bcftools_filter_criteria` | New    |
 
 ### Developer section
 

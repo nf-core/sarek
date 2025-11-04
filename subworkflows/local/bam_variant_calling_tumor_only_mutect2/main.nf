@@ -149,6 +149,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
 
     vcf_filtered = FILTERMUTECTCALLS.out.vcf.map { meta, vcf_ -> [meta + [variantcaller: 'mutect2'], vcf_] }
 
+    tbi_mutect2 = FILTERMUTECTCALLS.out.tbi
+        .map{ meta, tbi -> [ meta + [ variantcaller:'mutect2' ], tbi ] }
+
     versions = versions.mix(MERGE_MUTECT2.out.versions)
     versions = versions.mix(CALCULATECONTAMINATION.out.versions)
     versions = versions.mix(FILTERMUTECTCALLS.out.versions)
@@ -159,14 +162,19 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     versions = versions.mix(MUTECT2.out.versions)
 
     emit:
-    vcf                 // channel: [ meta, vcf ]
-    stats               // channel: [ meta, stats ]
-    vcf_filtered        // channel: [ meta, vcf ]
-    index_filtered      = FILTERMUTECTCALLS.out.tbi // channel: [ meta, tbi ]
-    stats_filtered      = FILTERMUTECTCALLS.out.stats // channel: [ meta, stats ]
-    artifact_priors     = LEARNREADORIENTATIONMODEL.out.artifactprior // channel: [ meta, artifactprior ]
-    pileup_table        // channel: [ meta, table ]
-    contamination_table = calculatecontamination_out_cont // channel: [ meta, contamination ]
-    segmentation_table  = calculatecontamination_out_seg // channel: [ meta, segmentation ]
-    versions            // channel: [ versions.yml ]
+    vcf   // channel: [ meta, vcf ]
+    stats // channel: [ meta, stats ]
+
+    vcf_filtered                                 // channel: [ meta, vcf ]
+    index_filtered     = tbi_mutect2   // channel: [ meta, tbi ]
+    stats_filtered     = FILTERMUTECTCALLS.out.stats // channel: [ meta, stats ]
+
+    artifact_priors = LEARNREADORIENTATIONMODEL.out.artifactprior    // channel: [ meta, artifactprior ]
+
+    pileup_table  // channel: [ meta, table ]
+
+    contamination_table = calculatecontamination_out_cont  // channel: [ meta, contamination ]
+    segmentation_table  = calculatecontamination_out_seg   // channel: [ meta, segmentation ]
+
+    versions // channel: [ versions.yml ]
 }
