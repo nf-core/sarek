@@ -528,6 +528,19 @@
                     "description": "Option for normalization of vcf-files.",
                     "help_text": "Normalization of all vcf-files from each applied variant-caller using bfctools norm."
                 },
+                "intersect_vcfs": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-code-branch",
+                    "description": "Enable intersection of multiple VCF files from one sample",
+                    "help_text": "Intersects multiple VCF files from one sample using `bcftools isec`. As intersection criterium `-n+${params.intersection_min_count}` is used, meaning a variant is found in this many or more files. For details, visit: https://samtools.github.io/bcftools/bcftools.html#isec"
+                },
+                "intersection_min_count": {
+                    "type": "integer",
+                    "default": 2,
+                    "fa_icon": "fab fa-deezer",
+                    "description": "Minimum number of variant callers calling a variant for intersection results",
+                    "help_text": "Determines the minimum number of variant callers, a variant must be called in to be included in the intersection results. As intersection criterium `-n+${params.intersection_min_count}` is used, meaning a variant is found in this many or more files. For details, visit: https://samtools.github.io/bcftools/bcftools.html#isec"
+                },
                 "concatenate_vcfs": {
                     "type": "boolean",
                     "fa_icon": "fas fa-tape",

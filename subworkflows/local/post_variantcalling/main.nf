@@ -93,7 +93,8 @@ workflow POST_VARIANTCALLING {
 
             INTERSECTION(all_vcfs.join(all_tbis))
 
-            // TODO returns a directory
+            all_vcfs = INTERSECTION.out.vcfs // [meta, vcfs]
+            all_tbis = INTERSECTION.out.tbis // [meta, tbis]
             versions = versions.mix(INTERSECTION.out.versions)
         }
 
