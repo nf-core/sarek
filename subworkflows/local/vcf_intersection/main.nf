@@ -27,12 +27,16 @@ workflow INTERSECTION {
                         .map { meta, vcf, tbi ->
                                     [meta - meta.subMap('variantcaller'), vcf, tbi]
                         }
-                        .groupTuple() //TODO blocking operation unless we learn how many variantcallers were specified
+                        //TODO blocking operation unless we learn how many variantcallers were
+                        // specified also this depends on whether this n,t, or nt on how many
+                        //variantcallers are actually executed
+                        .groupTuple()
                         .map { meta, vcf, tbi ->
                             // Sorting the VCF files to ensure the intersection is done in a predictable manner
                             def vcf_sorted = (vcf instanceof List) ? vcf.sort() : vcf
                             [meta, vcf_sorted, tbi]
                         }
+
     BCFTOOLS_ISEC(ch_intersect_in)
     versions = versions.mix(BCFTOOLS_ISEC.out.versions)
 

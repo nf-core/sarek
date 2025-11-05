@@ -63,6 +63,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Varlociraptor](#varlociraptor)
   - [Filtering](#filtering)
   - [Normalization](#normalization)
+  - [Intersection](#intersection)
   - [Concatenation](#concatenation)
 - [Variant annotation](#variant-annotation)
   - [snpEff](#snpeff)
@@ -1043,6 +1044,28 @@ All VCFs are normalized with `bcftools norm`. The field `SOURCE` is added to the
 
 - `<sample>.<variantcaller>.norm.sorted.vcf.gz` and `<sample>.<variantcaller>.norm.sorted.vcf.gz.tbi`
   - VCF with tabix index containing normalized variants
+
+</details>
+
+### Intersection
+
+VCF files from multiple variant callers can be intersected using `bcftools isec` to identify variants that are called by multiple tools.
+
+Strelka somatic calling results produces separate VCF files for SNPs and indels that are concatenated before intersection. The workflow then groups VCF files by sample and performs intersection across all specified variant callers.
+
+By default, `bcftools isec` identifies variants present in at least input VCF files. This can be customized with `--intersection_min_count`. Only the intersected VCF is annotated, if annotation is enabled.
+
+<details markdown="1">
+<summary>Intersected VCF files for all samples</summary>
+
+**Output directory: `{outdir}/variant_calling/intersect/<sample>/`**
+
+- `0000.vcf.gz` and `0000.vcf.gz.tbi`
+  - VCF with tabix index containing variants present in the intersection of input variant callers
+- `README.txt`
+  - Text file describing the intersection results and which files correspond to which variant callers
+- `sites.txt`
+  - Text file listing genomic positions and their presence/absence across all input VCF files
 
 </details>
 
