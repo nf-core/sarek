@@ -513,11 +513,12 @@
                 "filter_vcfs": {
                     "type": "boolean",
                     "fa_icon": "fas fa-filter",
-                    "description": "Enable filtering of VCFs with bcftools view"
+                    "description": "Enable filtering of VCFs with bcftools view",
+                    "help_text": "Filtering of all vcf-files from each applied variant-caller using bfctools filter and applying filtering criteria specified in --bcftools_filter_criteria."
                 },
                 "bcftools_filter_criteria": {
                     "type": "string",
-                    "default": "-f PASS",
+                    "default": "-f PASS,.",
                     "fa_icon": "fas fa-question",
                     "description": "Filter criteria. Uses bcftools view filter options. To customize, follow instructions here: https://samtools.github.io/bcftools/bcftools.html#view "
                 },
