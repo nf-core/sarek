@@ -731,4 +731,225 @@ nextflow_workflow {
             )
         }
     }
+
+    test("POST_VARIANTCALLING - normalization and intersection") {
+
+        when {
+            workflow {
+                """
+                // Input setup for intersection - requires multiple VCFs with different variantcallers
+                tools                             = ''
+                cram_germline                     = Channel.empty()
+                germline_vcfs                     = Channel.of(
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'freebayes'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)],
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'strelka'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
+                )
+                germline_tbis                     = Channel.of(
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'freebayes'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true)],
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'strelka'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true)]
+                )
+                cram_tumor_only                   = Channel.empty()
+                tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = Channel.empty()
+                somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
+                fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
+                fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
+                concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                intersect_vcfs                    = true
+                normalize_vcfs                    = true
+                varlociraptor_chunk_size          = 15
+                varlociraptor_scenario_germline   = []
+                varlociraptor_scenario_somatic    = []
+                varlociraptor_scenario_tumor_only = []
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = intersect_vcfs
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.vcfs,
+                    workflow.out.tbis,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("POST_VARIANTCALLING - filter, normalization and intersection") {
+
+        when {
+            workflow {
+                """
+                // Input setup for full post-processing pipeline
+                tools                             = ''
+                cram_germline                     = Channel.empty()
+                germline_vcfs                     = Channel.of(
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'freebayes'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)],
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'haplotypecaller'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
+                )
+                germline_tbis                     = Channel.of(
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'freebayes'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true)],
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'haplotypecaller'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true)]
+                )
+                cram_tumor_only                   = Channel.empty()
+                tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = Channel.empty()
+                somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
+                fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
+                fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
+                concatenate_vcfs                  = false
+                filter_vcfs                       = true
+                intersect_vcfs                    = true
+                normalize_vcfs                    = true
+                varlociraptor_chunk_size          = 15
+                varlociraptor_scenario_germline   = []
+                varlociraptor_scenario_somatic    = []
+                varlociraptor_scenario_tumor_only = []
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = intersect_vcfs
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.vcfs,
+                    workflow.out.tbis,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("POST_VARIANTCALLING - normalization and intersection - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                // Input setup for intersection stub test
+                tools                             = ''
+                cram_germline                     = Channel.empty()
+                germline_vcfs                     = Channel.of(
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'freebayes'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)],
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'strelka'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
+                )
+                germline_tbis                     = Channel.of(
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'freebayes'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true)],
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'strelka'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true)]
+                )
+                cram_tumor_only                   = Channel.empty()
+                tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = Channel.empty()
+                somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
+                fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
+                fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
+                concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                intersect_vcfs                    = true
+                normalize_vcfs                    = true
+                varlociraptor_chunk_size          = 15
+                varlociraptor_scenario_germline   = []
+                varlociraptor_scenario_somatic    = []
+                varlociraptor_scenario_tumor_only = []
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = intersect_vcfs
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.vcfs,
+                    workflow.out.tbis,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
 }
