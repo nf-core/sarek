@@ -10,10 +10,13 @@ workflow INTERSECTION {
     vcfs     // TODO ensure the input vcfs are sorted, should be of format vcf ,tbi
 
     main:
-    versions = Channel.empty
+
+    versions = Channel.empty()
+
+    vcfs.view()
 
     ch_vcfs = vcfs
-        .branch{ meta, vcf ->
+        .branch{ meta, vcf, tbi ->
             strelka_somatic: meta.variantcaller == 'strelka' && meta.status == '1'
             other: true
         }
@@ -30,7 +33,7 @@ workflow INTERSECTION {
                                 }.groupTuple() //blocking operation unless we learn how many variantcallers were specified
 
     BCFTOOLS_ISEC(ch_intersect_in)
-    versions = versions.mix(BCFTOOLS_ISEC.versions)
+    versions = versions.mix(BCFTOOLS_ISEC.out.versions)
 
     //TODO maybe add QC (bcftool stats)
 
