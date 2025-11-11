@@ -1,0 +1,105 @@
+name: snpeff_snpeff
+description: Genetic variant annotation and functional effect prediction toolbox
+keywords:
+  - annotation
+  - effect prediction
+  - snpeff
+  - variant
+  - vcf
+tools:
+  - snpeff:
+      description: |
+        SnpEff is a variant annotation and effect prediction tool.
+        It annotates and predicts the effects of genetic variants on genes and proteins (such as amino acid changes).
+      homepage: https://pcingola.github.io/SnpEff/
+      documentation: https://pcingola.github.io/SnpEff/se_introduction/
+      licence: ["MIT"]
+      identifier: biotools:snpeff
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - vcf:
+        type: file
+        description: |
+          vcf to annotate
+        ontologies: []
+  - db:
+      type: string
+      description: |
+        which db to annotate with
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - cache:
+        type: file
+        description: |
+          path to snpEff cache (optional)
+        ontologies: []
+output:
+  vcf:
+    - - meta:
+          type: file
+          description: |
+            annotated vcf
+          pattern: "*.ann.vcf"
+          ontologies: []
+      - "*.ann.vcf":
+          type: file
+          description: |
+            annotated vcf
+          pattern: "*.ann.vcf"
+          ontologies: []
+  report:
+    - - meta:
+          type: file
+          description: |
+            annotated vcf
+          pattern: "*.ann.vcf"
+          ontologies: []
+      - "*.csv":
+          type: file
+          description: snpEff report csv file
+          pattern: "*.csv"
+          ontologies:
+            - edam: http://edamontology.org/format_3752 # CSV
+  summary_html:
+    - - meta:
+          type: file
+          description: |
+            annotated vcf
+          pattern: "*.ann.vcf"
+          ontologies: []
+      - "*.html":
+          type: file
+          description: snpEff summary statistics in html file
+          pattern: "*.html"
+          ontologies: []
+  genes_txt:
+    - - meta:
+          type: file
+          description: |
+            annotated vcf
+          pattern: "*.ann.vcf"
+          ontologies: []
+      - "*.genes.txt":
+          type: file
+          description: txt (tab separated) file having counts of the number of variants
+            affecting each transcript and gene
+          pattern: "*.genes.txt"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@maxulysse"
+maintainers:
+  - "@maxulysse"

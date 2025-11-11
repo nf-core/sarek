@@ -1,0 +1,104 @@
+name: samtools_merge
+description: Merge BAM or CRAM file
+keywords:
+  - merge
+  - bam
+  - sam
+  - cram
+tools:
+  - samtools:
+      description: |
+        SAMtools is a set of utilities for interacting with and post-processing
+        short DNA sequence read alignments in the SAM, BAM and CRAM formats, written by Heng Li.
+        These files are generated as output by short read aligners like BWA.
+      homepage: http://www.htslib.org/
+      documentation: http://www.htslib.org/doc/samtools.html
+      doi: 10.1093/bioinformatics/btp352
+      licence: ["MIT"]
+      identifier: biotools:samtools
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input_files:
+        type: file
+        description: BAM/CRAM file
+        pattern: "*.{bam,cram,sam}"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - fasta:
+        type: file
+        description: Reference file the CRAM was created with (optional)
+        pattern: "*.{fasta,fa}"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - fai:
+        type: file
+        description: Index of the reference file the CRAM was created with (optional)
+        pattern: "*.fai"
+output:
+  - bam:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.bam:
+          type: file
+          description: BAM file
+          pattern: "*.{bam}"
+  - cram:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.cram:
+          type: file
+          description: CRAM file
+          pattern: "*.{cram}"
+  - csi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.csi":
+          type: file
+          description: BAM index file (optional)
+          pattern: "*.csi"
+  - crai:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.crai":
+          type: file
+          description: CRAM index file (optional)
+          pattern: "*.crai"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@drpatelh"
+  - "@yuukiiwa "
+  - "@maxulysse"
+  - "@FriederikeHanssen"
+  - "@ramprasadn"
+maintainers:
+  - "@drpatelh"
+  - "@yuukiiwa "
+  - "@maxulysse"
+  - "@FriederikeHanssen"
+  - "@ramprasadn"

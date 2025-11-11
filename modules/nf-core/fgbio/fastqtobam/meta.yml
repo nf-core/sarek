@@ -1,0 +1,60 @@
+name: fgbio_fastqtobam
+description: |
+  Using the fgbio tools, converts FASTQ files sequenced into unaligned BAM or CRAM files possibly moving the UMI barcode into the RX field of the reads
+keywords:
+  - unaligned
+  - bam
+  - cram
+tools:
+  - fgbio:
+      description: A set of tools for working with genomic and high throughput sequencing
+        data, including UMIs
+      homepage: http://fulcrumgenomics.github.io/fgbio/
+      documentation: http://fulcrumgenomics.github.io/fgbio/tools/latest/
+      tool_dev_url: https://github.com/fulcrumgenomics/fgbio
+      licence: ["MIT"]
+      identifier: biotools:fgbio
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: pair of reads to be converted into BAM file
+        pattern: "*.{fastq.gz}"
+output:
+  - bam:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bam":
+          type: file
+          description: Unaligned, unsorted BAM file
+          pattern: "*.{bam}"
+  - cram:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.cram":
+          type: file
+          description: Unaligned, unsorted CRAM file
+          pattern: "*.{cram}"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@lescai"
+  - "@matthdsm"
+  - "@nvnieuwk"
+maintainers:
+  - "@lescai"
+  - "@matthdsm"
+  - "@nvnieuwk"

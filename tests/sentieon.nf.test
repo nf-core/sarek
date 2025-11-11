@@ -1,0 +1,24 @@
+nextflow_pipeline {
+
+    name "Test sentieon"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    tag "sentieon"
+
+    def test_scenario = [
+        [
+            name: "-profile test --aligner sentieon-bwamem --tools null -stub",
+            params: [
+                aligner: "sentieon-bwamem",
+                tools: ''
+            ],
+            stub: true
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}

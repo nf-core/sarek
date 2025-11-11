@@ -1,0 +1,26 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+
+    def test_scenario = [
+        [
+            name: "-profile test --input bam_for_remapping.csv --save_mapped --save_output_as_bam",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/bam_for_remapping.csv",
+                tools: '',
+                save_mapped: true,
+                save_output_as_bam: true
+            ]
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}

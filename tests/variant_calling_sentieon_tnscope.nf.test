@@ -1,0 +1,53 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+
+    def test_scenario = [
+        [
+            name: "-profile test --input fastq_pair.csv --tools sentieon_tnscope",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                aligner: 'sentieon-bwamem',
+                tools: "sentieon_dedup,sentieon_tnscope",
+                skip_tools : 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools,bcftools'
+            ]
+        ],
+        [
+            name: "-profile test --input fastq_pair.csv --tools sentieon_tnscope --no_intervals",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                aligner: 'sentieon-bwamem',
+                tools: "sentieon_dedup,sentieon_tnscope",
+                skip_tools : 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools,bcftools',
+                no_intervals: true
+            ]
+        ],
+        [
+            name: "-profile test --input fastq_tumor_only.csv --tools sentieon_tnscope",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_tumor_only.csv",
+                aligner: 'sentieon-bwamem',
+                tools: "sentieon_dedup,sentieon_tnscope",
+                skip_tools : 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools,bcftools'
+            ]
+        ],
+        [
+            name: "-profile test --input fastq_triple_two_tumor.csv --tools sentieon_tnscope",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_triple_two_tumor.csv",
+                aligner: 'sentieon-bwamem',
+                tools: "sentieon_dedup,sentieon_tnscope",
+                skip_tools : 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools,bcftools'
+            ]
+        ]
+    ]
+
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}

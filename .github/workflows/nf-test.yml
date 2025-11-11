@@ -18,12 +18,19 @@ concurrency:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+<<<<<<< HEAD
   NFT_VER: "0.9.3"
+=======
+  NFT_VER: "0.9.2"
+>>>>>>> dev
   NFT_WORKDIR: "~"
   NXF_ANSI_LOG: false
   NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
   NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
+<<<<<<< HEAD
 
+=======
+>>>>>>> dev
 jobs:
   nf-test-changes:
     name: nf-test-changes
@@ -40,17 +47,28 @@ jobs:
           rm -rf ./* || true
           rm -rf ./.??* || true
           ls -la ./
+<<<<<<< HEAD
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
 
+=======
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+>>>>>>> dev
       - name: get number of shards
         id: set-shards
         uses: ./.github/actions/get-shards
         env:
           NFT_VER: ${{ env.NFT_VER }}
         with:
+<<<<<<< HEAD
           max_shards: 7
+=======
+          tags: "cpu,cpu_conda"
+          max_shards: 15
+>>>>>>> dev
 
       - name: debug
         run: |
@@ -64,6 +82,10 @@ jobs:
     runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-nf-test
       - runner=4cpu-linux-x64
+<<<<<<< HEAD
+=======
+      - volume=80gb
+>>>>>>> dev
     strategy:
       fail-fast: false
       matrix:
@@ -78,14 +100,22 @@ jobs:
           - isMain: false
             profile: "singularity"
         NXF_VER:
+<<<<<<< HEAD
           - "25.04.0"
+=======
+          - "25.04.8"
+>>>>>>> dev
           - "latest-everything"
     env:
       NXF_ANSI_LOG: false
       TOTAL_SHARDS: ${{ needs.nf-test-changes.outputs.total_shards }}
 
     steps:
+<<<<<<< HEAD
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+=======
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+>>>>>>> dev
         with:
           fetch-depth: 0
 
@@ -95,12 +125,23 @@ jobs:
         continue-on-error: ${{ matrix.NXF_VER == 'latest-everything' }}
         env:
           NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
+<<<<<<< HEAD
           NXF_VERSION: ${{ matrix.NXF_VER }}
+=======
+          SENTIEON_AUTH_MECH: "GitHub Actions - token"
+          SENTIEON_ENCRYPTION_KEY: ${{ secrets.SENTIEON_ENCRYPTION_KEY }}
+          SENTIEON_LICENSE_MESSAGE: ${{ secrets.SENTIEON_LICENSE_MESSAGE }}
+          SENTIEON_LICSRVR_IP: ${{ secrets.SENTIEON_LICSRVR_IP }}
+>>>>>>> dev
         with:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
+<<<<<<< HEAD
 
+=======
+          tags: ${{ matrix.profile == 'conda' && 'cpu_conda' || 'cpu,cpu_conda' }}
+>>>>>>> dev
       - name: Report test status
         if: ${{ always() }}
         run: |
@@ -115,7 +156,10 @@ jobs:
               exit 1
             fi
           fi
+<<<<<<< HEAD
 
+=======
+>>>>>>> dev
   confirm-pass:
     needs: [nf-test]
     if: always()

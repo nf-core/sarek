@@ -1,0 +1,54 @@
+def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    profile "test,gpu"
+
+    def test_scenario = [
+        [
+            name: "-profile test --aligner parabricks --wes",
+            params: [
+                aligner: 'parabricks',
+                save_reference: true,
+                tools: '',
+                wes : true,
+            ],
+            gpu: true,
+            no_conda: true
+        ],
+        [
+            name: "-profile test --aligner parabricks --tools mutect2 --wes --input fastq_pair.csv",
+            params: [
+                input : "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                aligner: 'parabricks',
+                save_reference: true,
+                tools: 'mutect2',
+                wes : true,
+            ],
+            gpu: true,
+            no_conda: true
+        ],
+        [
+            name: "-profile test --aligner parabricks --wes --intervals",
+            params: [
+                aligner: 'parabricks',
+                save_reference: true,
+                tools: '',
+                wes : true,
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+            ],
+            gpu: true,
+            no_conda: true
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}
