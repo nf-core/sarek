@@ -4,7 +4,7 @@
             5,
             {
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "DRAGMAP_HASHTABLE": {
                     "dragmap": "1.2.1"
@@ -68,7 +68,7 @@
                     "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "DRAGMAP_ALIGN": {
                     "dragmap": "1.2.1",

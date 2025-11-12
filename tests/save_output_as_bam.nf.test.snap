@@ -14,7 +14,7 @@
                     "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
@@ -53,8 +53,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-06-13T13:07:35.316241586"
+        "timestamp": "2025-08-27T17:54:54.828650789"
     }
 }

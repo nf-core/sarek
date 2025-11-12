@@ -48,7 +48,7 @@ jobs:
         env:
           NFT_VER: ${{ env.NFT_VER }}
         with:
-          tags: "cpu"
+          tags: "cpu,cpu_conda"
           max_shards: 15
 
       - name: debug
@@ -63,7 +63,7 @@ jobs:
     runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-nf-test
       - runner=4cpu-linux-x64
-      - disk=large
+      - volume=80gb
     strategy:
       fail-fast: false
       matrix:
@@ -78,7 +78,7 @@ jobs:
           - isMain: false
             profile: "singularity"
         NXF_VER:
-          - "24.10.5"
+          - "25.04.8"
           - "latest-everything"
     env:
       NXF_ANSI_LOG: false
@@ -103,7 +103,7 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
-          tags: "cpu"
+          tags: ${{ matrix.profile == 'conda' && 'cpu_conda' || 'cpu,cpu_conda' }}
       - name: Report test status
         if: ${{ always() }}
         run: |

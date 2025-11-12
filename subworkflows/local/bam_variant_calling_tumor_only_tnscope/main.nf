@@ -70,6 +70,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE {
 
     emit:
     vcf      // channel: [ meta, vcf ]
+    tbi = index // channel: [ meta, tbi ]
     index    // channel: [ meta, index ]
     versions // channel: [ versions.yml ]
 }

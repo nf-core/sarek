@@ -11,7 +11,7 @@
                     "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -57,7 +57,6 @@
                 "csv/recalibrated.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/fastqc-status-check-heatmap.txt",
                 "multiqc/multiqc_data/fastqc_adapter_content_plot.txt",
                 "multiqc/multiqc_data/fastqc_per_base_n_content_plot.txt",
@@ -79,6 +78,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_fastqc.txt",
@@ -249,7 +249,7 @@
                     "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "GATK4SPARK_APPLYBQSR": {
                     "gatk4": "4.6.1.0"

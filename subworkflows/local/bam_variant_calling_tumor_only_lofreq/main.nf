@@ -40,12 +40,14 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ {
 
     // Mix intervals and no_intervals channels together
     // Remove unnecessary metadata
-    vcf   = Channel.empty().mix(MERGE_LOFREQ.out.vcf, vcf_branch.no_intervals).map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'lofreq' ], vcf ] }
+    vcf = Channel.empty().mix(MERGE_LOFREQ.out.vcf, vcf_branch.no_intervals).map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'lofreq' ], vcf ] }
+    tbi = Channel.empty().mix(MERGE_LOFREQ.out.tbi, tbi_branch.no_intervals).map{ meta, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'lofreq' ], tbi ] }
 
     versions = versions.mix(MERGE_LOFREQ.out.versions)
     versions = versions.mix(LOFREQ.out.versions)
 
     emit:
     vcf
+    tbi
     versions
 }

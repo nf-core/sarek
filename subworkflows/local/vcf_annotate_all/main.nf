@@ -21,6 +21,7 @@ workflow VCF_ANNOTATE_ALL {
     vep_extra_files
     bcftools_annotations
     bcftools_annotations_index
+    bcftools_columns
     bcftools_header_lines
 
     main:
@@ -33,6 +34,7 @@ workflow VCF_ANNOTATE_ALL {
     if (tools.split(',').contains('bcfann')) {
         BCFTOOLS_ANNOTATE(
             vcf.map { meta, vcf_ -> [meta, vcf_, []] }.combine(bcftools_annotations).combine(bcftools_annotations_index),
+            bcftools_columns,
             bcftools_header_lines,
             [],
         )

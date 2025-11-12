@@ -7,7 +7,7 @@
                     "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
@@ -36,7 +36,6 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
                 "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
                 "multiqc/multiqc_data/bcftools_stats_variant_depths.txt",
@@ -51,6 +50,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
@@ -184,7 +184,7 @@
                     "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
@@ -216,7 +216,6 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
                 "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
                 "multiqc/multiqc_data/bcftools_stats_variant_depths.txt",
@@ -231,6 +230,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
@@ -367,7 +367,7 @@
                     "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
@@ -399,7 +399,6 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
                 "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
                 "multiqc/multiqc_data/bcftools_stats_variant_depths.txt",
@@ -414,6 +413,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",

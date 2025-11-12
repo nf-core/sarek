@@ -26,7 +26,6 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
@@ -34,6 +33,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
@@ -110,10 +110,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-06-16T15:55:04.414273335"
+        "timestamp": "2025-09-30T23:33:58.821896398"
     },
     "-profile test --tools mutect2 tumoronly force_call_alleles_tbi": {
         "content": [
@@ -255,7 +255,7 @@
             11,
             {
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
@@ -283,7 +283,6 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
@@ -291,6 +290,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
@@ -388,9 +388,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-06-16T15:38:03.016906695"
+        "timestamp": "2025-10-02T10:47:57.267224384"
     },
     "-profile test --tools mutect2 somatic force_call_alleles": {
         "content": [
@@ -561,7 +561,6 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
@@ -569,6 +568,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
@@ -657,9 +657,9 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-06-16T15:44:03.597739391"
+        "timestamp": "2025-10-02T10:51:21.465588018"
     },
     "-profile test --tools mutect2 tumoronly": {
         "content": [
@@ -669,7 +669,7 @@
                     "gawk": "5.3.0"
                 },
                 "CREATE_INTERVALS_BED": {
-                    "gawk": "5.1.0"
+                    "gawk": "5.3.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
@@ -699,7 +699,6 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
-                "multiqc/multiqc_data/BETA-multiqc.parquet",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
@@ -707,6 +706,7 @@
                 "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
                 "multiqc/multiqc_data/mosdepth_perchrom.txt",
                 "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
                 "multiqc/multiqc_data/multiqc_citations.txt",
                 "multiqc/multiqc_data/multiqc_data.json",
                 "multiqc/multiqc_data/multiqc_general_stats.txt",
@@ -787,9 +787,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.3"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-06-16T15:49:37.526945696"
+        "timestamp": "2025-09-30T23:29:10.265970098"
     }
 }

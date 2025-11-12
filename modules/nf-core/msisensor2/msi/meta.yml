@@ -34,31 +34,17 @@ input:
         description: BAM/CRAM/SAM index file
         pattern: "*.{bai,crai}"
         ontologies: []
-    - normal_bam:
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - models:
         type: file
-        description: BAM/CRAM/SAM file
-        pattern: "*.{bam,cram,sam}"
+        description: Folder of MSISensor2 models (available from Github or as a
+          product of msisensor2/scan)
+        pattern: "*/*"
         ontologies: []
-    - normal_bam_index:
-        type: file
-        description: BAM/CRAM/SAM index file
-        pattern: "*.{bai,crai}"
-        ontologies: []
-    - intervals:
-        type: file
-        description: BED
-        pattern: "*.bed"
-        ontologies: []
-  - scan:
-      type: file
-      description: Input scan file from MSIsensor2 scan module
-      ontologies: []
-  - models:
-      type: file
-      description: Folder of MSISensor2 models (available from Github or as a product
-        of msisensor2/scan)
-      pattern: "*/*"
-      ontologies: []
 output:
   msi:
     - - meta:
@@ -89,16 +75,6 @@ output:
       - ${prefix}_somatic:
           type: file
           description: Somatic MSI regions detected.
-          ontologies: []
-  germline:
-    - - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-      - ${prefix}_germline:
-          type: file
-          description: Germline MSI regions detected.
           ontologies: []
   versions:
     - versions.yml:
