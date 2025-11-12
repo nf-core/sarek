@@ -321,7 +321,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             if (!(skip_tools && skip_tools.split(',').contains('haplotyper_filter'))) {
 
                 SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK(
-                    vcf_sentieon_haplotyper.join(vcf_tbi_sentieon_haplotyper, failOnDuplicate: true, failOnMismatch: true),
+                    vcf_sentieon_haplotyper.join(tbi_sentieon_haplotyper, failOnDuplicate: true, failOnMismatch: true),
                     fasta.map{ meta, it -> [ it ] },
                     fasta_fai.map{ meta, it -> [ it ] },
                     dict.map{ meta, dict -> [ dict ] },
