@@ -1135,8 +1135,8 @@ Which can then be used this way in Sarek:
 ```bash
 nextflow run nf-core/sarek \
     --igenomes_base s3://my-reference-data/igenomes/ \
-    --snpeff_cache s3://my-reference-data/cache/ensemblvep/ \
-    --vep_cache s3://my-reference-data/cache/snpeff/ \
+    --snpeff_cache s3://my-reference-data/cache/snpeff/ \
+    --vep_cache s3://my-reference-data/cache/ensemblvep/ \
     ...
 ```
 
