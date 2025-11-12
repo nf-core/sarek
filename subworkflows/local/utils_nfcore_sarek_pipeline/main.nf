@@ -36,7 +36,7 @@ workflow PIPELINE_INITIALISATION {
 
     main:
 
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Print version and exit if required and dump pipeline parameters to JSON file
     UTILS_NEXTFLOW_PIPELINE(
@@ -48,7 +48,7 @@ workflow PIPELINE_INITIALISATION {
 
     // Validate parameters and generate parameter summary to stdout
     //
-    beforeText = """
+    def before_text = """
 -\033[2m----------------------------------------------------\033[0m-
                                         \033[0;32m,--.\033[0;30m/\033[0;32m,-.\033[0m
 \033[0;34m        ___     __   __   __   ___     \033[0;32m/,-._.--~\'\033[0m
@@ -65,7 +65,7 @@ workflow PIPELINE_INITIALISATION {
 \033[0;35m  nf-core/sarek ${workflow.manifest.version}\033[0m
 -\033[2m----------------------------------------------------\033[0m-
 """
-    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { "    https://doi.org/${it.trim().replace('https://doi.org/', '')}" }.join("\n")}${workflow.manifest.doi ? "\n" : ""}
+    def after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { "    https://doi.org/${it.trim().replace('https://doi.org/', '')}" }.join("\n")}${workflow.manifest.doi ? "\n" : ""}
 * The nf-core framework
     https://doi.org/10.1038/s41587-020-0439-x
 
@@ -146,10 +146,10 @@ workflow PIPELINE_INITIALISATION {
     params.input_restart = retrieveInput((!params.build_only_index && !input), params.step, params.outdir)
 
     ch_from_samplesheet = params.build_only_index
-        ? Channel.empty()
+        ? channel.empty()
         : input
-            ? Channel.fromList(samplesheetToList(input, "${projectDir}/assets/schema_input.json"))
-            : Channel.fromList(samplesheetToList(params.input_restart, "${projectDir}/assets/schema_input.json"))
+            ? channel.fromList(samplesheetToList(input, "${projectDir}/assets/schema_input.json"))
+            : channel.fromList(samplesheetToList(params.input_restart, "${projectDir}/assets/schema_input.json"))
 
     SAMPLESHEET_TO_CHANNEL(
         ch_from_samplesheet,
