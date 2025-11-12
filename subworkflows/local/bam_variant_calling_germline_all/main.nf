@@ -262,7 +262,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             if (!(skip_tools && skip_tools.split(',').contains('dnascope_filter'))) {
 
                 SENTIEON_DNAMODELAPPLY(
-                    vcf_sentieon_dnascope.join(vcf_tbi_sentieon_dnascope, failOnDuplicate: true, failOnMismatch: true),
+                    vcf_sentieon_dnascope.join(tbi_sentieon_dnascope, failOnDuplicate: true, failOnMismatch: true),
                     fasta,
                     fasta_fai,
                     sentieon_dnascope_model.map{ model -> [ [ id:model.baseName ], model ] })
