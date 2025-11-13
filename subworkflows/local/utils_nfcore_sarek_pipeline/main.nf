@@ -136,7 +136,6 @@ workflow PIPELINE_INITIALISATION {
         params.joint_mutect2,
         params.known_indels,
         params.known_snps,
-        params.mutect2_force_call,
         params.no_intervals,
         params.pon,
         params.sentieon_dnascope_emit_mode,

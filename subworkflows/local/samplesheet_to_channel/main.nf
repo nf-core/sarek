@@ -21,7 +21,6 @@ workflow SAMPLESHEET_TO_CHANNEL {
     joint_mutect2                 // Boolean: joint_mutect2
     known_indels                  // Path: known indels
     known_snps                    // Path: known snps
-    mutect2_force_call            // Path: mutect2 force call
     no_intervals                  // Boolean: no intervals
     pon                           // Path: pon
     sentieon_dnascope_emit_mode   // String: sentieon dnascope emit mode
