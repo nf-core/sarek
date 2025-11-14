@@ -1,7 +1,7 @@
 {
     "-profile test --tools strelka,varlociraptor --input recalibrated_somatic.csv": {
         "content": [
-            149,
+            150,
             {
                 "ALIGNMENTPROPERTIES_NORMAL": {
                     "varlociraptor": "8.7.4"
@@ -55,6 +55,9 @@
                     "samtools": 1.21
                 },
                 "SORT_CALLED_CHUNKS": {
+                    "bcftools": 1.21
+                },
+                "SORT_FINAL_VCF": {
                     "bcftools": 1.21
                 },
                 "STRELKA_SINGLE": {
@@ -306,7 +309,7 @@
     },
     "-profile test --tools mutect2,varlociraptor --input recalibrated_tumoronly.csv": {
         "content": [
-            71,
+            72,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
@@ -357,6 +360,9 @@
                     "samtools": 1.21
                 },
                 "SORT_CALLED_CHUNKS": {
+                    "bcftools": 1.21
+                },
+                "SORT_FINAL_VCF": {
                     "bcftools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
@@ -551,7 +557,7 @@
     },
     "-profile test --tools strelka,varlociraptor --input recalibrated_germline.csv": {
         "content": [
-            66,
+            67,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
@@ -584,6 +590,9 @@
                     "samtools": 1.21
                 },
                 "SORT_CALLED_CHUNKS": {
+                    "bcftools": 1.21
+                },
+                "SORT_FINAL_VCF": {
                     "bcftools": 1.21
                 },
                 "STRELKA_SINGLE": {
