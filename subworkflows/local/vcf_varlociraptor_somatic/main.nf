@@ -2,6 +2,7 @@ include { BCFTOOLS_CONCAT as CONCAT_CALLED_CHUNKS                               
 include { BCFTOOLS_CONCAT as CONCAT_SOMATIC_STRELKA                               } from '../../../modules/nf-core/bcftools/concat'
 include { BCFTOOLS_MERGE as MERGE_GERMLINE_SOMATIC_VCFS                           } from '../../../modules/nf-core/bcftools/merge'
 include { BCFTOOLS_SORT as SORT_CALLED_CHUNKS                                     } from '../../../modules/nf-core/bcftools/sort'
+include { BCFTOOLS_SORT as SORT_FINAL_VCF                                         } from '../../../modules/nf-core/bcftools/sort'
 include { TABIX_TABIX as TABIX_GERMLINE                                           } from '../../../modules/nf-core/tabix/tabix'
 include { TABIX_TABIX as TABIX_SOMATIC                                            } from '../../../modules/nf-core/tabix/tabix'
 include { RBT_VCFSPLIT                                                            } from '../../../modules/nf-core/rbt/vcfsplit'
@@ -249,8 +250,14 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     ch_versions = ch_versions.mix(CONCAT_CALLED_CHUNKS.out.versions)
 
+    ch_final_vcf = ch_sort_called_chunks_vcf.single.mix(CONCAT_CALLED_CHUNKS.out.vcf)
+
+    SORT_FINAL_VCF(ch_final_vcf)
+
+    ch_versions = ch_versions.mix(SORT_FINAL_VCF.out.versions)
+
     emit:
-    vcf      = ch_sort_called_chunks_vcf.single.mix(CONCAT_CALLED_CHUNKS.out.vcf)
-    tbi      = ch_sort_called_chunks_tbi.single.mix(CONCAT_CALLED_CHUNKS.out.tbi)
+    vcf      = SORT_FINAL_VCF.out.vcf
+    tbi      = SORT_FINAL_VCF.out.tbi
     versions = ch_versions
 }
