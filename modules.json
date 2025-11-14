@@ -558,17 +558,17 @@
                     },
                     "varlociraptor/callvariants": {
                         "branch": "master",
-                        "git_sha": "36cf856b511b7623a2d90788c9afa2a655fe6d43",
+                        "git_sha": "5ef2a21d108d7ce2a2508a54accae55b5c66facf",
                         "installed_by": ["modules"]
                     },
                     "varlociraptor/estimatealignmentproperties": {
                         "branch": "master",
-                        "git_sha": "36cf856b511b7623a2d90788c9afa2a655fe6d43",
+                        "git_sha": "5ef2a21d108d7ce2a2508a54accae55b5c66facf",
                         "installed_by": ["modules"]
                     },
                     "varlociraptor/preprocess": {
                         "branch": "master",
-                        "git_sha": "36cf856b511b7623a2d90788c9afa2a655fe6d43",
+                        "git_sha": "5ef2a21d108d7ce2a2508a54accae55b5c66facf",
                         "installed_by": ["modules"]
                     },
                     "vcflib/vcffilter": {

@@ -34,22 +34,12 @@ input:
         pattern: "*.{bai,crai,sai}"
         ontologies:
           - edam: http://edamontology.org/format_3327 # BAI
-  - - meta2:
-        type: map
-        description: |
-          Groovy Map containing reference information
-          e.g. [ id:'test', single_end:false ]
     - fasta:
         type: file
         description: Reference fasta file
         pattern: "*.{fasta}"
         ontologies:
           - edam: http://edamontology.org/format_1929 # FASTA
-  - - meta3:
-        type: map
-        description: |
-          Groovy Map containing reference index information
-          e.g. [ id:'test', single_end:false ]
     - fai:
         type: file
         description: Index for reference fasta file (must be with samtools index)

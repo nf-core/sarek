@@ -1,13 +1,13 @@
 {
     "-profile test --tools strelka,varlociraptor --input recalibrated_somatic.csv": {
         "content": [
-            150,
+            151,
             {
                 "ALIGNMENTPROPERTIES_NORMAL": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.0"
                 },
                 "ALIGNMENTPROPERTIES_TUMOR": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.0"
                 },
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
@@ -43,10 +43,10 @@
                     "mosdepth": "0.3.10"
                 },
                 "PREPROCESS_NORMAL": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.0"
                 },
                 "PREPROCESS_TUMOR": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.0"
                 },
                 "RBT_VCFSPLIT": {
                     "Rust-Bio-Tools": "0.42.2"
@@ -79,13 +79,13 @@
                     "tabix": 1.21
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.0"
                 },
                 "VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.0"
                 },
                 "VARLOCIRAPTOR_PREPROCESS": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.0"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -372,13 +372,13 @@
                     "tabix": 1.21
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.0"
                 },
                 "VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.0"
                 },
                 "VARLOCIRAPTOR_PREPROCESS": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.0"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -608,13 +608,13 @@
                     "tabix": 1.21
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.0"
                 },
                 "VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.0"
                 },
                 "VARLOCIRAPTOR_PREPROCESS": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.0"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"

@@ -34,9 +34,9 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
 
     // Estimate alignment properties
     VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES(
-        ch_cram,
-        ch_fasta,
-        ch_fasta_fai,
+        ch_cram.concat(ch_fasta).concat(ch_fasta_fai).collect().map { meta_cram, cram, crai, _meta_fasta, fasta, _meta_fai, fai ->
+            [ meta_cram, cram, crai, fasta, fai ]
+        }
     )
     ch_versions = ch_versions.mix(VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES.out.versions)
 
@@ -65,31 +65,34 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     ch_input_preprocess_chunked = ch_chunked_vcfs
         .map { meta, vcf -> [meta.id, meta, vcf] }
         .combine(ch_cram_alignment, by: 0)
-        .map { _id, meta_vcf, vcf, meta_cram, cram, crai, alignment_json ->
+        .concat(ch_fasta).concat(ch_fasta_fai)
+        .map { _id, meta_vcf, vcf, meta_cram, cram, crai, alignment_json, _meta_fasta, fasta, _meta_fai, fasta_fai ->
             [ meta_cram + [
                 variantcaller: meta_vcf.variantcaller,
                 postprocess: 'varlociraptor',
                 chunk: meta_vcf.chunk],
-                cram, crai, vcf, alignment_json
+                cram, crai, vcf, alignment_json, fasta, fasta_fai
             ]
         }
 
     ch_input_preprocess_chunked.dump(pretty:true, tag: "cram_alignment")
 
     VARLOCIRAPTOR_PREPROCESS(
-        ch_input_preprocess_chunked,
-        ch_fasta,
-        ch_fasta_fai,
+        ch_input_preprocess_chunked
     )
     ch_versions = ch_versions.mix(VARLOCIRAPTOR_PREPROCESS.out.versions)
 
     //
     // CALL VARIANTS WITH VARLOCIRAPTOR
     //
+    ch_vcfs_for_callvariants = VARLOCIRAPTOR_PREPROCESS.out.bcf
+        .concat(ch_scenario_file).concat(channel.value([val_sampletype]))
+        .map { _id, meta_normal, normal_bcf, _meta_bcf, bcf, _meta_scenario, scenario_file, sampletype ->
+            [meta_normal, [normal_bcf, bcf], scenario_file, sampletype]
+        }
+
     VARLOCIRAPTOR_CALLVARIANTS(
-        VARLOCIRAPTOR_PREPROCESS.out.bcf,
-        ch_scenario_file.map { it -> it[1] }.collect(),
-        val_sampletype,
+        ch_vcfs_for_callvariants
     )
     ch_versions = ch_versions.mix(VARLOCIRAPTOR_CALLVARIANTS.out.versions)
 

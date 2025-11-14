@@ -29,15 +29,15 @@ input:
         ontologies:
           - edam: http://edamontology.org/format_3016 # VCF
           - edam: http://edamontology.org/format_3020 # BCF
-  - scenario:
-      type: file
-      description: Yaml file containing scenario information (optional)
-      pattern: "*.{yml,yaml}"
-      ontologies:
-        - edam: http://edamontology.org/format_3750 # YAML
-  - scenario_aliases:
-      type: list
-      description: List of aliases for the scenario (optional)
+    - scenario:
+        type: file
+        description: Yaml file containing scenario information (optional)
+        pattern: "*.{yml,yaml}"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+    - scenario_aliases:
+        type: list
+        description: List of aliases for the scenario (optional)
 output:
   bcf:
     - - meta:
