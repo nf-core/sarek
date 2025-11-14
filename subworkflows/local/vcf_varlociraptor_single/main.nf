@@ -20,7 +20,7 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     main:
     ch_versions = Channel.empty()
 
-    meta_map = ch_cram.map { meta, _cram, _crai -> meta +  [sex_string: (meta.sex == "XX" ? "female" : "male")] }
+    meta_map = ch_cram.map { meta, _cram, _crai -> meta + [sex_string: (meta.sex == "XX" ? "female" : "male")] }
 
     //TODO this seems suspicious but not the cause for the current resume issues as I am only testing with one sample
     FILL_SCENARIO_FILE(
@@ -31,11 +31,13 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     ch_scenario_file = FILL_SCENARIO_FILE.out.rendered
     ch_versions = ch_versions.mix(FILL_SCENARIO_FILE.out.versions)
 
+    ch_fasta_file = ch_fasta.map { _meta, fasta -> fasta }
+    ch_fasta_fai_file = ch_fasta_fai.map { _meta, fai -> fai }
 
     // Estimate alignment properties
     VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES(
-        ch_cram.concat(ch_fasta).concat(ch_fasta_fai).collect().map { meta_cram, cram, crai, _meta_fasta, fasta, _meta_fai, fai ->
-            [ meta_cram, cram, crai, fasta, fai ]
+        ch_cram.combine(ch_fasta_file).combine(ch_fasta_fai_file).map { meta_cram, cram, crai, fasta, fai ->
+            [meta_cram, cram, crai, fasta, fai]
         }
     )
     ch_versions = ch_versions.mix(VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES.out.versions)
@@ -52,30 +54,40 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     ch_chunked_vcfs = RBT_VCFSPLIT.out.bcfchunks
         .transpose()
         .map { meta, vcf_chunked ->
-            [   meta + [chunk: vcf_chunked.name.split(/\./)[-2]],
-                vcf_chunked
+            [
+                meta + [chunk: vcf_chunked.name.split(/\./)[-2]],
+                vcf_chunked,
             ]
         }
 
     // Join each alignment file with its properties
-    ch_cram_alignment = ch_cram.join(VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES.out.alignment_properties_json, failOnMismatch:true, failOnDuplicate:true)
-                                .map{meta, cram, crai, json -> [meta.id, meta, cram, crai, json]}
+    ch_cram_alignment = ch_cram
+        .join(VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES.out.alignment_properties_json, failOnMismatch: true, failOnDuplicate: true)
+        .map { meta, cram, crai, json -> [meta.id, meta, cram, crai, json] }
 
     // Now combine the each chunked VCFs with the alignment data
     ch_input_preprocess_chunked = ch_chunked_vcfs
         .map { meta, vcf -> [meta.id, meta, vcf] }
         .combine(ch_cram_alignment, by: 0)
-        .concat(ch_fasta).concat(ch_fasta_fai).collect()
-        .map { _id, meta_vcf, vcf, meta_cram, cram, crai, alignment_json, _meta_fasta, fasta, _meta_fai, fasta_fai ->
-            [ meta_cram + [
-                variantcaller: meta_vcf.variantcaller,
-                postprocess: 'varlociraptor',
-                chunk: meta_vcf.chunk],
-                cram, crai, vcf, alignment_json, fasta, fasta_fai
+        .combine(ch_fasta_file)
+        .combine(ch_fasta_fai_file)
+        .map { _id, meta_vcf, vcf, meta_cram, cram, crai, alignment_json, fasta, fasta_fai ->
+            [
+                meta_cram + [
+                    variantcaller: meta_vcf.variantcaller,
+                    postprocess: 'varlociraptor',
+                    chunk: meta_vcf.chunk,
+                ],
+                cram,
+                crai,
+                vcf,
+                alignment_json,
+                fasta,
+                fasta_fai,
             ]
         }
 
-    ch_input_preprocess_chunked.dump(pretty:true, tag: "cram_alignment")
+    ch_input_preprocess_chunked.dump(pretty: true, tag: "cram_alignment")
 
     VARLOCIRAPTOR_PREPROCESS(
         ch_input_preprocess_chunked
@@ -85,10 +97,12 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     //
     // CALL VARIANTS WITH VARLOCIRAPTOR
     //
+    ch_scenario_file_only = ch_scenario_file.map { _meta, file -> file }
+
     ch_vcfs_for_callvariants = VARLOCIRAPTOR_PREPROCESS.out.bcf
-        .concat(ch_scenario_file).concat(channel.value([val_sampletype])).collect()
-        .map { _id, meta_normal, normal_bcf, _meta_bcf, bcf, _meta_scenario, scenario_file, sampletype ->
-            [meta_normal, [normal_bcf, bcf], scenario_file, sampletype]
+        .combine(ch_scenario_file_only)
+        .map { meta_normal, normal_bcf, scenario_file ->
+            [meta_normal, [normal_bcf], scenario_file, [val_sampletype]]
         }
 
     VARLOCIRAPTOR_CALLVARIANTS(
@@ -104,17 +118,15 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     )
     ch_versions = ch_versions.mix(SORT_CALLED_CHUNKS.out.versions)
 
-    ch_sort_called_chunks_vcf = SORT_CALLED_CHUNKS.out.vcf
-            .branch {
-                single: val_num_chunks <= 1
-                multiple: val_num_chunks > 1
-            }
+    ch_sort_called_chunks_vcf = SORT_CALLED_CHUNKS.out.vcf.branch {
+        single: val_num_chunks <= 1
+        multiple: val_num_chunks > 1
+    }
 
-    ch_sort_called_chunks_tbi = SORT_CALLED_CHUNKS.out.tbi
-            .branch {
-                single: val_num_chunks <= 1
-                multiple: val_num_chunks > 1
-            }
+    ch_sort_called_chunks_tbi = SORT_CALLED_CHUNKS.out.tbi.branch {
+        single: val_num_chunks <= 1
+        multiple: val_num_chunks > 1
+    }
 
     ch_vcf_tbi_chunks = ch_sort_called_chunks_vcf.multiple
         .join(ch_sort_called_chunks_tbi.multiple, failOnMismatch: true, failOnDuplicate: true)
