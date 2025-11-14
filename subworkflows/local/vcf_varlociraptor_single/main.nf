@@ -31,12 +31,9 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     ch_scenario_file = FILL_SCENARIO_FILE.out.rendered
     ch_versions = ch_versions.mix(FILL_SCENARIO_FILE.out.versions)
 
-    ch_fasta_file = ch_fasta.map { _meta, fasta -> fasta }
-    ch_fasta_fai_file = ch_fasta_fai.map { _meta, fai -> fai }
-
     // Estimate alignment properties
     VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES(
-        ch_cram.combine(ch_fasta_file).combine(ch_fasta_fai_file).map { meta_cram, cram, crai, fasta, fai ->
+        ch_cram.combine(ch_fasta).combine(ch_fasta_fai).map { meta_cram, cram, crai, _meta_fasta, fasta, _meta_fai, fai ->
             [meta_cram, cram, crai, fasta, fai]
         }
     )
@@ -69,9 +66,9 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     ch_input_preprocess_chunked = ch_chunked_vcfs
         .map { meta, vcf -> [meta.id, meta, vcf] }
         .combine(ch_cram_alignment, by: 0)
-        .combine(ch_fasta_file)
-        .combine(ch_fasta_fai_file)
-        .map { _id, meta_vcf, vcf, meta_cram, cram, crai, alignment_json, fasta, fasta_fai ->
+        .combine(ch_fasta)
+        .combine(ch_fasta_fai)
+        .map { _id, meta_vcf, vcf, meta_cram, cram, crai, alignment_json, _meta_fasta, fasta, _meta_fai, fasta_fai ->
             [
                 meta_cram + [
                     variantcaller: meta_vcf.variantcaller,
@@ -97,11 +94,9 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     //
     // CALL VARIANTS WITH VARLOCIRAPTOR
     //
-    ch_scenario_file_only = ch_scenario_file.map { _meta, file -> file }
-
     ch_vcfs_for_callvariants = VARLOCIRAPTOR_PREPROCESS.out.bcf
-        .combine(ch_scenario_file_only)
-        .map { meta_normal, normal_bcf, scenario_file ->
+        .combine(ch_scenario_file)
+        .map { meta_normal, normal_bcf, _meta_scenario, scenario_file ->
             [meta_normal, [normal_bcf], scenario_file, [val_sampletype]]
         }
 

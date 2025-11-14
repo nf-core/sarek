@@ -44,13 +44,13 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     // Estimate alignment properties
     ALIGNMENTPROPERTIES_TUMOR(
-        cram_normal.concat(ch_fasta).concat(ch_fasta_fai).collect().map { meta_cram, cram, crai, _meta_fasta, fasta, _meta_fai, fai ->
+        cram_normal.combine(ch_fasta).combine(ch_fasta_fai).map { meta_cram, cram, crai, _meta_fasta, fasta, _meta_fai, fai ->
             [meta_cram, cram, crai, fasta, fai]
         }
     )
 
     ALIGNMENTPROPERTIES_NORMAL(
-        cram_tumor.concat(ch_fasta).concat(ch_fasta_fai).collect().map { meta_cram, cram, crai, _meta_fasta, fasta, _meta_fai, fai ->
+        cram_tumor.combine(ch_fasta).combine(ch_fasta_fai).map { meta_cram, cram, crai, _meta_fasta, fasta, _meta_fai, fai ->
             [meta_cram, cram, crai, fasta, fai]
         }
     )
@@ -151,15 +151,12 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         .join(ALIGNMENTPROPERTIES_TUMOR.out.alignment_properties_json, failOnMismatch: true, failOnDuplicate: true)
         .map { meta, cram, crai, json -> [meta.id, meta, cram, crai, json] }
 
-    ch_fasta_file = ch_fasta.map { _meta, fasta -> fasta }
-    ch_fasta_fai_file = ch_fasta_fai.map { _meta, fai -> fai }
-
     ch_input_tumor_preprocess_chunked = ch_chunked_tumor_vcfs
         .map { meta, vcf -> [meta.id, meta, vcf] }
         .combine(ch_cram_tumor, by: 0)
-        .combine(ch_fasta_file)
-        .combine(ch_fasta_fai_file)
-        .map { _id, meta_vcf, vcf, meta_cram, tumor_cram, tumor_crai, alignment_json, fasta, fai ->
+        .combine(ch_fasta)
+        .combine(ch_fasta_fai)
+        .map { _id, meta_vcf, vcf, meta_cram, tumor_cram, tumor_crai, alignment_json, _meta_fasta, fasta, _meta_fai, fai ->
             [
                 meta_cram + [
                     variantcaller: meta_vcf.variantcaller,
@@ -197,9 +194,9 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_input_normal_preprocess_chunked = ch_chunked_normal_vcfs
         .map { meta, vcf -> [meta.id, meta, vcf] }
         .combine(ch_cram_alignment, by: 0)
-        .combine(ch_fasta_file)
-        .combine(ch_fasta_fai_file)
-        .map { _id, meta_vcf, vcf, meta_cram, normal_cram, normal_crai, alignment_json, fasta, fai ->
+        .combine(ch_fasta)
+        .combine(ch_fasta_fai)
+        .map { _id, meta_vcf, vcf, meta_cram, normal_cram, normal_crai, alignment_json, _meta_fasta, fasta, _meta_fai, fai ->
             [
                 meta_cram + [
                     variantcaller: meta_vcf.variantcaller,
@@ -223,15 +220,13 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     //
     // CALL VARIANTS WITH VARLOCIRAPTOR
     //
-    ch_scenario_file_only = ch_scenario_file.map { _meta, file -> file }
-
     ch_vcf_for_callvariants = PREPROCESS_NORMAL.out.bcf
         .map { meta, normal_bcf -> [meta.id + meta.chunk + meta.variantcaller, meta, normal_bcf] }
         .join(
             PREPROCESS_TUMOR.out.bcf.map { meta, tumor_bcf -> [meta.id + meta.chunk + meta.variantcaller, meta, tumor_bcf] }
         )
-        .combine(ch_scenario_file_only)
-        .map { _id, meta_normal, normal_bcf, _meta_tumor, tumor_bcf, scenario_file ->
+        .combine(ch_scenario_file)
+        .map { _id, meta_normal, normal_bcf, _meta_tumor, tumor_bcf, _meta_scenario, scenario_file ->
             [meta_normal, [normal_bcf, tumor_bcf], scenario_file, ["normal", "tumor"]]
         }
 
