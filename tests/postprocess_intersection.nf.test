@@ -1,0 +1,42 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+
+    def test_scenario = [
+        [
+            name: "-profile test --intersect_vcfs --normalize_vcfs --tools freebayes,strelka (germline + somatic)",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/recalibrated.csv",
+                step: 'variant_calling',
+                normalize_vcfs: true,
+                intersect_vcfs: true,
+                tools: 'freebayes,strelka'
+            ],
+            include_freebayes_unfiltered: true,
+            no_conda: true
+        ],
+        [
+            name: "-profile test --filter_vcfs --intersect_vcfs --normalize_vcfs --tools freebayes,strelka (germline + somatic)",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/recalibrated.csv",
+                step: 'variant_calling',
+                filter_vcfs: true,
+                normalize_vcfs: true,
+                intersect_vcfs: true,
+                tools: 'freebayes,strelka'
+            ],
+            include_freebayes_unfiltered: true,
+            no_conda: true
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}

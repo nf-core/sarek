@@ -19,16 +19,21 @@ nextflow_workflow {
                 cram_germline                     = [[:],[]]
                 germline_vcfs                     = channel.of([[id: 'test_normal'],
                                                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)])
+                germline_tbis                     = Channel.empty()
                 cram_tumor_only                   = [[:],[]]
                 tumor_only_vcfs                   = channel.of([[id: 'test_tumor'],
                                                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)])
+                tumor_only_tbis                   = Channel.empty()
                 cram_somatic                      = [[:],[]]
                 somatic_vcfs                      = channel.of([[id: 'test_somatic'],
                                                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)])
+                somatic_tbis                      = Channel.empty()
                 fasta                             = channel.of([[id: 'fasta'],
                                                         file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
                 fai                               = [[:],[]]
                 concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                intersect_vcfs                    = false
                 normalize_vcfs                    = true
                 varlociraptor_chunk_size          = 15
                 varlociraptor_scenario_germline   = []
@@ -38,18 +43,23 @@ nextflow_workflow {
                 input[0]  = tools
                 input[1]  = cram_germline
                 input[2]  = germline_vcfs
-                input[3]  = cram_tumor_only
-                input[4]  = tumor_only_vcfs
-                input[5]  = cram_somatic
-                input[6]  = somatic_vcfs
-                input[7]  = fasta
-                input[8]  = fai
-                input[9]  = concatenate_vcfs
-                input[10] = normalize_vcfs
-                input[11] = varlociraptor_chunk_size
-                input[12] = varlociraptor_scenario_germline
-                input[13] = varlociraptor_scenario_somatic
-                input[14] = varlociraptor_scenario_tumor_only
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = intersect_vcfs
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
                 """
             }
         }
@@ -79,13 +89,18 @@ nextflow_workflow {
                     [[id: 'test_sample', num: '1'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)],
                     [[id: 'test_sample', num: '2'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
                 )
+                germline_tbis                     = Channel.empty()
                 cram_tumor_only                   = Channel.empty()
                 tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
                 cram_somatic                      = Channel.empty()
                 somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
                 fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = true
+                filter_vcfs                       = false
+                intersect_vcfs                    = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = 15
                 varlociraptor_scenario_germline   = []
@@ -95,18 +110,23 @@ nextflow_workflow {
                 input[0]  = tools
                 input[1]  = cram_germline
                 input[2]  = germline_vcfs
-                input[3]  = cram_tumor_only
-                input[4]  = tumor_only_vcfs
-                input[5]  = cram_somatic
-                input[6]  = somatic_vcfs
-                input[7]  = fasta
-                input[8]  = fai
-                input[9]  = concatenate_vcfs
-                input[10] = normalize_vcfs
-                input[11] = varlociraptor_chunk_size
-                input[12] = varlociraptor_scenario_germline
-                input[13] = varlociraptor_scenario_somatic
-                input[14] = varlociraptor_scenario_tumor_only
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = intersect_vcfs
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
                 """
             }
         }
@@ -136,13 +156,18 @@ nextflow_workflow {
                     [[id: 'test_sample', num: '1'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)],
                     [[id: 'test_sample', num: '2'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
                 )
+                germline_tbis                     = Channel.empty()
                 cram_tumor_only                   = Channel.empty()
                 tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
                 cram_somatic                      = Channel.empty()
                 somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
                 fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = true
+                filter_vcfs                       = false
+                intersect_vcfs                    = false
                 normalize_vcfs                    = true
                 varlociraptor_chunk_size          = 15
                 varlociraptor_scenario_germline   = []
@@ -152,18 +177,23 @@ nextflow_workflow {
                 input[0]  = tools
                 input[1]  = cram_germline
                 input[2]  = germline_vcfs
-                input[3]  = cram_tumor_only
-                input[4]  = tumor_only_vcfs
-                input[5]  = cram_somatic
-                input[6]  = somatic_vcfs
-                input[7]  = fasta
-                input[8]  = fai
-                input[9]  = concatenate_vcfs
-                input[10] = normalize_vcfs
-                input[11] = varlociraptor_chunk_size
-                input[12] = varlociraptor_scenario_germline
-                input[13] = varlociraptor_scenario_somatic
-                input[14] = varlociraptor_scenario_tumor_only
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = intersect_vcfs
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
                 """
             }
         }
@@ -192,13 +222,18 @@ nextflow_workflow {
                 germline_vcfs                     = Channel.of(
                     [[id: 'test_sample'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
                 )
+                germline_tbis                     = Channel.empty()
                 cram_tumor_only                   = Channel.empty()
                 tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
                 cram_somatic                      = Channel.empty()
                 somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
                 fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                intersect_vcfs                    = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = 15
                 varlociraptor_scenario_germline   = []
@@ -208,18 +243,23 @@ nextflow_workflow {
                 input[0]  = tools
                 input[1]  = cram_germline
                 input[2]  = germline_vcfs
-                input[3]  = cram_tumor_only
-                input[4]  = tumor_only_vcfs
-                input[5]  = cram_somatic
-                input[6]  = somatic_vcfs
-                input[7]  = fasta
-                input[8]  = fai
-                input[9]  = concatenate_vcfs
-                input[10] = normalize_vcfs
-                input[11] = varlociraptor_chunk_size
-                input[12] = varlociraptor_scenario_germline
-                input[13] = varlociraptor_scenario_somatic
-                input[14] = varlociraptor_scenario_tumor_only
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = intersect_vcfs
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
                 """
             }
         }
@@ -247,13 +287,18 @@ nextflow_workflow {
                 germline_vcfs                     = Channel.of(
                     [[id: 'test_sample'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
                 )
+                germline_tbis                     = Channel.empty()
                 cram_tumor_only                   = Channel.empty()
                 tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
                 cram_somatic                      = Channel.empty()
                 somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
                 fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                intersect_vcfs                    = false
                 normalize_vcfs                    = true
                 varlociraptor_chunk_size          = 15
                 varlociraptor_scenario_germline   = []
@@ -263,18 +308,23 @@ nextflow_workflow {
                 input[0]  = tools
                 input[1]  = cram_germline
                 input[2]  = germline_vcfs
-                input[3]  = cram_tumor_only
-                input[4]  = tumor_only_vcfs
-                input[5]  = cram_somatic
-                input[6]  = somatic_vcfs
-                input[7]  = fasta
-                input[8]  = fai
-                input[9]  = concatenate_vcfs
-                input[10] = normalize_vcfs
-                input[11] = varlociraptor_chunk_size
-                input[12] = varlociraptor_scenario_germline
-                input[13] = varlociraptor_scenario_somatic
-                input[14] = varlociraptor_scenario_tumor_only
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = intersect_vcfs
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
                 """
             }
         }
@@ -305,13 +355,18 @@ nextflow_workflow {
                 germline_vcfs                     = Channel.of(
                     [[id: 'test_sample'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
                 )
+                germline_tbis                     = Channel.empty()
                 cram_tumor_only                   = Channel.empty()
                 tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
                 cram_somatic                      = Channel.empty()
                 somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
                 fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = true
+                filter_vcfs                       = false
+                intersect_vcfs                    = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = 15
                 varlociraptor_scenario_germline   = []
@@ -321,18 +376,23 @@ nextflow_workflow {
                 input[0]  = tools
                 input[1]  = cram_germline
                 input[2]  = germline_vcfs
-                input[3]  = cram_tumor_only
-                input[4]  = tumor_only_vcfs
-                input[5]  = cram_somatic
-                input[6]  = somatic_vcfs
-                input[7]  = fasta
-                input[8]  = fai
-                input[9]  = concatenate_vcfs
-                input[10] = normalize_vcfs
-                input[11] = varlociraptor_chunk_size
-                input[12] = varlociraptor_scenario_germline
-                input[13] = varlociraptor_scenario_somatic
-                input[14] = varlociraptor_scenario_tumor_only
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = intersect_vcfs
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
                 """
             }
         }
@@ -367,13 +427,18 @@ nextflow_workflow {
                 germline_vcfs                     = Channel.of(
                     [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'strelka'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
                 )
+                germline_tbis                     = Channel.empty()
                 cram_tumor_only                   = Channel.empty()
                 tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
                 cram_somatic                      = Channel.empty()
                 somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
                 fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                intersect_vcfs                    = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = params.varlociraptor_chunk_size
                 varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
@@ -383,18 +448,23 @@ nextflow_workflow {
                 input[0]  = tools
                 input[1]  = cram_germline
                 input[2]  = germline_vcfs
-                input[3]  = cram_tumor_only
-                input[4]  = tumor_only_vcfs
-                input[5]  = cram_somatic
-                input[6]  = somatic_vcfs
-                input[7]  = fasta
-                input[8]  = fai
-                input[9]  = concatenate_vcfs
-                input[10] = normalize_vcfs
-                input[11] = varlociraptor_chunk_size
-                input[12] = varlociraptor_scenario_germline
-                input[13] = varlociraptor_scenario_somatic
-                input[14] = varlociraptor_scenario_tumor_only
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = intersect_vcfs
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
                 """
             }
         }
@@ -428,13 +498,18 @@ nextflow_workflow {
                 germline_vcfs                     = Channel.of(
                     [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'strelka'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
                 )
+                germline_tbis                     = Channel.empty()
                 cram_tumor_only                   = Channel.empty()
                 tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
                 cram_somatic                      = Channel.empty()
                 somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
                 fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                intersect_vcfs                    = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = 2
                 varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
@@ -444,18 +519,23 @@ nextflow_workflow {
                 input[0]  = tools
                 input[1]  = cram_germline
                 input[2]  = germline_vcfs
-                input[3]  = cram_tumor_only
-                input[4]  = tumor_only_vcfs
-                input[5]  = cram_somatic
-                input[6]  = somatic_vcfs
-                input[7]  = fasta
-                input[8]  = fai
-                input[9]  = concatenate_vcfs
-                input[10] = normalize_vcfs
-                input[11] = varlociraptor_chunk_size
-                input[12] = varlociraptor_scenario_germline
-                input[13] = varlociraptor_scenario_somatic
-                input[14] = varlociraptor_scenario_tumor_only
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = intersect_vcfs
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
                 """
             }
         }
@@ -486,17 +566,22 @@ nextflow_workflow {
                 tools                             = 'varlociraptor'
                 cram_germline                     = Channel.empty()
                 germline_vcfs                     = Channel.empty()
+                germline_tbis                     = Channel.empty()
                 cram_tumor_only                   = Channel.of(
                     [[id: 'tumor_sample', patient: 'test', sample: 'tumor', sex: 'XY', status: 1, contamination: 0.0], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists:true), file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists:true)]
                 )
                 tumor_only_vcfs                   = Channel.of(
                     [[id: 'tumor_sample', patient: 'test', sample: 'tumor', sex: 'XY', status: 1, variantcaller: 'strelka'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
                 )
+                tumor_only_tbis                   = Channel.empty()
                 cram_somatic                      = Channel.empty()
                 somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
                 fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                intersect_vcfs                    = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = params.varlociraptor_chunk_size
                 varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
@@ -506,18 +591,23 @@ nextflow_workflow {
                 input[0]  = tools
                 input[1]  = cram_germline
                 input[2]  = germline_vcfs
-                input[3]  = cram_tumor_only
-                input[4]  = tumor_only_vcfs
-                input[5]  = cram_somatic
-                input[6]  = somatic_vcfs
-                input[7]  = fasta
-                input[8]  = fai
-                input[9]  = concatenate_vcfs
-                input[10] = normalize_vcfs
-                input[11] = varlociraptor_chunk_size
-                input[12] = varlociraptor_scenario_germline
-                input[13] = varlociraptor_scenario_somatic
-                input[14] = varlociraptor_scenario_tumor_only
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = intersect_vcfs
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
                 """
             }
         }
@@ -546,17 +636,22 @@ nextflow_workflow {
                 tools                             = 'varlociraptor'
                 cram_germline                     = Channel.empty()
                 germline_vcfs                     = Channel.empty()
+                germline_tbis                     = Channel.empty()
                 cram_tumor_only                   = Channel.of(
                     [[id: 'tumor_sample', patient: 'test', sample: 'tumor', sex: 'XY', status: 1, contamination: 0.0], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists:true), file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists:true)]
                 )
                 tumor_only_vcfs                   = Channel.of(
                     [[id: 'tumor_sample', patient: 'test', sample: 'tumor', sex: 'XY', status: 1, variantcaller: 'strelka'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
                 )
+                tumor_only_tbis                   = Channel.empty()
                 cram_somatic                      = Channel.empty()
                 somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
                 fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                intersect_vcfs                    = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = 2
                 varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
@@ -566,18 +661,23 @@ nextflow_workflow {
                 input[0]  = tools
                 input[1]  = cram_germline
                 input[2]  = germline_vcfs
-                input[3]  = cram_tumor_only
-                input[4]  = tumor_only_vcfs
-                input[5]  = cram_somatic
-                input[6]  = somatic_vcfs
-                input[7]  = fasta
-                input[8]  = fai
-                input[9]  = concatenate_vcfs
-                input[10] = normalize_vcfs
-                input[11] = varlociraptor_chunk_size
-                input[12] = varlociraptor_scenario_germline
-                input[13] = varlociraptor_scenario_somatic
-                input[14] = varlociraptor_scenario_tumor_only
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = intersect_vcfs
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
                 """
             }
         }
@@ -610,8 +710,10 @@ nextflow_workflow {
                 germline_vcfs                     = Channel.of(
                     [[id: 'normal_sample', patient: 'test', sample: 'normal', sex: 'XX', status: 0, variantcaller: 'strelka'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/haplotypecaller_calls/test2_haplotc.vcf.gz', checkIfExists: true)]
                 )
+                germline_tbis                     = Channel.empty()
                 cram_tumor_only                   = Channel.empty()
                 tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
                 cram_somatic                      = Channel.of(
 
                     [[id: 'tumor_sample', patient: 'test', sample: 'tumor', sex: 'XX', status: 1, normal_id: 'normal_sample', contamination: 0.0],
@@ -624,9 +726,12 @@ nextflow_workflow {
                     [[id: 'tumor_sample', patient: 'test', sample: 'tumor', sex: 'XX', status: 1, normal_id: 'normal_sample', variantcaller: 'strelka'],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/paired_mutect2_calls/test_test2_paired_filtered_mutect2_calls.vcf.gz', checkIfExists: true)]
                 )
+                somatic_tbis                      = Channel.empty()
                 fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)])
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                intersect_vcfs                    = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = params.varlociraptor_chunk_size
                 varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
@@ -636,18 +741,23 @@ nextflow_workflow {
                 input[0]  = tools
                 input[1]  = cram_germline
                 input[2]  = germline_vcfs
-                input[3]  = cram_tumor_only
-                input[4]  = tumor_only_vcfs
-                input[5]  = cram_somatic
-                input[6]  = somatic_vcfs
-                input[7]  = fasta
-                input[8]  = fai
-                input[9]  = concatenate_vcfs
-                input[10] = normalize_vcfs
-                input[11] = varlociraptor_chunk_size
-                input[12] = varlociraptor_scenario_germline
-                input[13] = varlociraptor_scenario_somatic
-                input[14] = varlociraptor_scenario_tumor_only
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = intersect_vcfs
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
                 """
             }
         }
@@ -680,8 +790,10 @@ nextflow_workflow {
                 germline_vcfs                     = Channel.of(
                     [[id: 'normal_sample', patient: 'test', sample: 'normal', sex: 'XX', status: 0, variantcaller: 'strelka'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/haplotypecaller_calls/test2_haplotc.vcf.gz', checkIfExists: true)]
                 )
+                germline_tbis                     = Channel.empty()
                 cram_tumor_only                   = Channel.empty()
                 tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
                 cram_somatic                      = Channel.of(
                     [[id: 'tumor_sample', patient: 'test', sample: 'tumor', sex: 'XX', status: 1, normal_id: 'normal_sample', contamination: 0.0],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam', checkIfExists:true),
@@ -692,9 +804,12 @@ nextflow_workflow {
                 somatic_vcfs                      = Channel.of(
                     [[id: 'tumor_sample', patient: 'test', sample: 'tumor', sex: 'XX', status: 1, normal_id: 'normal_sample', variantcaller: 'strelka'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/paired_mutect2_calls/test_test2_paired_filtered_mutect2_calls.vcf.gz', checkIfExists: true)]
                 )
+                somatic_tbis                      = Channel.empty()
                 fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                intersect_vcfs                    = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = 2
                 varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
@@ -704,18 +819,23 @@ nextflow_workflow {
                 input[0]  = tools
                 input[1]  = cram_germline
                 input[2]  = germline_vcfs
-                input[3]  = cram_tumor_only
-                input[4]  = tumor_only_vcfs
-                input[5]  = cram_somatic
-                input[6]  = somatic_vcfs
-                input[7]  = fasta
-                input[8]  = fai
-                input[9]  = concatenate_vcfs
-                input[10] = normalize_vcfs
-                input[11] = varlociraptor_chunk_size
-                input[12] = varlociraptor_scenario_germline
-                input[13] = varlociraptor_scenario_somatic
-                input[14] = varlociraptor_scenario_tumor_only
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = intersect_vcfs
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
                 """
             }
         }
