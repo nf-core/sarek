@@ -79,38 +79,42 @@ workflow POST_VARIANTCALLING {
                                     other: true
                                 }
 
+        // Needs to be reassigned to enable pass through reassignment below
+        small_variant_vcfs = all_vcfs.small
+        small_variant_tbis = all_tbis.small
+
         // 1. Filter by PASS and custom fields
         // 2. Normalize
         // 3. Aggregate variants (Union, intersection, or n-1)
         if(filter_vcfs) {
 
             // Join VCFs with their corresponding TBIs before filtering
-            FILTER_VCFS( all_vcfs.small.join(all_tbis.small, failOnDuplicate: true, failOnMismatch: true), [], [], [])
+            FILTER_VCFS( small_variant_vcfs.join(small_variant_tbis, failOnDuplicate: true, failOnMismatch: true), [], [], [])
 
-            all_vcfs.small = FILTER_VCFS.out.vcf
-            all_tbis.small = FILTER_VCFS.out.tbi
+            small_variant_vcfs = FILTER_VCFS.out.vcf
+            small_variant_tbis = FILTER_VCFS.out.tbi
             versions = versions.mix(FILTER_VCFS.out.versions)
         }
 
         if (normalize_vcfs) {
 
-            NORMALIZE_VCFS(all_vcfs.small, fasta)
+            NORMALIZE_VCFS(small_variant_vcfs, fasta)
 
-            all_vcfs.small = NORMALIZE_VCFS.out.vcfs // [meta, vcf]
-            all_tbis.small = NORMALIZE_VCFS.out.tbis // [meta, tbi]
+            small_variant_vcfs = NORMALIZE_VCFS.out.vcfs // [meta, vcf]
+            small_variant_tbis = NORMALIZE_VCFS.out.tbis // [meta, tbi]
             versions = versions.mix(NORMALIZE_VCFS.out.versions)
         }
 
         if (normalize_vcfs && intersect_vcfs){
 
-            INTERSECTION(all_vcfs.small.join(all_tbis.small))
+            INTERSECTION(small_variant_vcfs.join(small_variant_tbis))
 
-            all_vcfs.small = INTERSECTION.out.vcfs.map { meta, vcfs_ ->
+            small_variant_vcfs = INTERSECTION.out.vcfs.map { meta, vcfs_ ->
                                         meta.variantcaller = 'intersect'
                                         [meta, vcfs_]
                                     } // [meta, vcfs]
 
-            all_tbis.small = INTERSECTION.out.tbis.map { meta, tbis_ ->
+            small_variant_tbis = INTERSECTION.out.tbis.map { meta, tbis_ ->
                                         meta.variantcaller = 'intersect'
                                         [meta, tbis_]
                                     } // [meta, tbis]
@@ -118,8 +122,8 @@ workflow POST_VARIANTCALLING {
             versions = versions.mix(INTERSECTION.out.versions)
         }
 
-        vcfs = all_vcfs.small.mix(all_vcfs.other)
-        tbis = all_tbis.small.mix(all_tbis.other)
+        vcfs = small_variant_vcfs.mix(all_vcfs.other)
+        tbis = small_variant_tbis.mix(all_tbis.other)
 
         if (concatenate_vcfs) {
             CONCATENATE_GERMLINE_VCFS(germline_vcfs)
