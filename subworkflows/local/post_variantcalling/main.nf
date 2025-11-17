@@ -64,8 +64,17 @@ workflow POST_VARIANTCALLING {
 
     } else if (filter_vcfs || normalize_vcfs || concatenate_vcfs ) {
 
+        def small_variantcallers = ['deepvariant', 'freebayes', 'haplotypecaller', 'haplotyper', 'dnascope', 'tnscope', 'muse', 'mutect2', 'strelka' ]
         all_vcfs = Channel.empty().mix(germline_vcfs, tumor_only_vcfs, somatic_vcfs)
+                                .branch{ meta, vcf ->
+                                    small: small_variantcallers.contains(meta.variantcaller)
+                                    other: true
+                                }
         all_tbis = Channel.empty().mix(germline_tbis, tumor_only_tbis, somatic_tbis)
+                                .branch{ meta, tbi ->
+                                    small: small_variantcallers.contains(meta.variantcaller)
+                                    other: true
+                                }
 
         // 1. Filter by PASS and custom fields
         // 2. Normalize
@@ -73,30 +82,33 @@ workflow POST_VARIANTCALLING {
         if(filter_vcfs) {
 
             // Join VCFs with their corresponding TBIs before filtering
-            FILTER_VCFS( all_vcfs.join(all_tbis, failOnDuplicate: true, failOnMismatch: true), [], [], [])
+            FILTER_VCFS( all_vcfs.small.join(all_tbis.small, failOnDuplicate: true, failOnMismatch: true), [], [], [])
 
-            all_vcfs = FILTER_VCFS.out.vcf
-            all_tbis = FILTER_VCFS.out.tbi
+            all_vcfs.small = FILTER_VCFS.out.vcf
+            all_tbis.small = FILTER_VCFS.out.tbi
             versions = versions.mix(FILTER_VCFS.out.versions)
         }
 
         if (normalize_vcfs) {
 
-            NORMALIZE_VCFS(all_vcfs, fasta)
+            NORMALIZE_VCFS(all_vcfs.small, fasta)
 
-            all_vcfs = NORMALIZE_VCFS.out.vcfs // [meta, vcf]
-            all_tbis = NORMALIZE_VCFS.out.tbis // [meta, tbi]
+            all_vcfs.small = NORMALIZE_VCFS.out.vcfs // [meta, vcf]
+            all_tbis.small = NORMALIZE_VCFS.out.tbis // [meta, tbi]
             versions = versions.mix(NORMALIZE_VCFS.out.versions)
         }
 
         if (normalize_vcfs && intersect_vcfs){
 
-            INTERSECTION(all_vcfs.join(all_tbis))
+            INTERSECTION(all_vcfs.small.join(all_tbis.small))
 
-            all_vcfs = INTERSECTION.out.vcfs // [meta, vcfs]
-            all_tbis = INTERSECTION.out.tbis // [meta, tbis]
+            all_vcfs.small = INTERSECTION.out.vcfs // [meta, vcfs]
+            all_tbis.small = INTERSECTION.out.tbis // [meta, tbis]
             versions = versions.mix(INTERSECTION.out.versions)
         }
+
+        vcfs = all_vcfs.small.mix(all_vcfs.other)
+        tbis = all_tbis.small.mix(all_tbis.other)
 
         if (concatenate_vcfs) {
             CONCATENATE_GERMLINE_VCFS(germline_vcfs)
@@ -107,6 +119,8 @@ workflow POST_VARIANTCALLING {
             vcfs.view{"post vc results $it"}
             versions = versions.mix(CONCATENATE_GERMLINE_VCFS.out.versions)
         }
+
+
     } else {
         // No post-processing requested, pass through original VCFs
         vcfs = vcfs.mix(germline_vcfs,tumor_only_vcfs, somatic_vcfs)
