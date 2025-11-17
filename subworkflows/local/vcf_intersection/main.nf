@@ -28,15 +28,21 @@ workflow INTERSECTION {
                         .map { meta, vcf, tbi ->
                                     [meta - meta.subMap('variantcaller'), vcf, tbi]
                         }
+                        .view{"pre grouping: $it"}
+
+                        // Group samples based on sample ID and status.
                         //TODO blocking operation unless we learn how many variantcallers were
                         // specified also this depends on whether this n,t, or nt on how many
                         //variantcallers are actually executed
                         .groupTuple()
+                        .view{"post grouping: $it"}
                         .map { meta, vcf, tbi ->
                             // Sorting the VCF files to ensure the intersection is done in a predictable manner
                             def vcf_sorted = (vcf instanceof List) ? vcf.sort() : vcf
                             [meta, vcf_sorted, tbi]
                         }
+                        .view{"post mapping: $it"}
+
 
     BCFTOOLS_ISEC(ch_intersect_in)
     versions = versions.mix(BCFTOOLS_ISEC.out.versions)
@@ -52,7 +58,7 @@ workflow INTERSECTION {
 
     //TODO maybe add QC (bcftool stats)
 
-    ch_intersect_results.dump()
+    ch_intersect_results.view{"intersect results: $it"}
 
     emit:
     versions

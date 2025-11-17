@@ -103,6 +103,8 @@ workflow POST_VARIANTCALLING {
 
             vcfs = vcfs.mix(CONCATENATE_GERMLINE_VCFS.out.vcfs)
             tbis = tbis.mix(CONCATENATE_GERMLINE_VCFS.out.tbis)
+
+            vcfs.view{"post vc results $it"}
             versions = versions.mix(CONCATENATE_GERMLINE_VCFS.out.versions)
         }
     } else {
