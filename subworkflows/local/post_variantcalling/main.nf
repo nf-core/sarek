@@ -64,12 +64,15 @@ workflow POST_VARIANTCALLING {
 
     } else if (filter_vcfs || normalize_vcfs || concatenate_vcfs ) {
 
-        def small_variantcallers = ['deepvariant', 'freebayes', 'haplotypecaller', 'haplotyper', 'dnascope', 'tnscope', 'muse', 'mutect2', 'strelka' ]
+        def small_variantcallers = ['deepvariant', 'freebayes', 'haplotypecaller', 'haplotyper',
+                                    'dnascope', 'tnscope', 'muse', 'mutect2', 'strelka' ]
+
         all_vcfs = Channel.empty().mix(germline_vcfs, tumor_only_vcfs, somatic_vcfs)
                                 .branch{ meta, vcf ->
                                     small: small_variantcallers.contains(meta.variantcaller)
                                     other: true
                                 }
+
         all_tbis = Channel.empty().mix(germline_tbis, tumor_only_tbis, somatic_tbis)
                                 .branch{ meta, tbi ->
                                     small: small_variantcallers.contains(meta.variantcaller)
@@ -102,8 +105,16 @@ workflow POST_VARIANTCALLING {
 
             INTERSECTION(all_vcfs.small.join(all_tbis.small))
 
-            all_vcfs.small = INTERSECTION.out.vcfs // [meta, vcfs]
-            all_tbis.small = INTERSECTION.out.tbis // [meta, tbis]
+            all_vcfs.small = INTERSECTION.out.vcfs.map { meta, vcfs_ ->
+                                        meta.variantcaller = 'intersect'
+                                        [meta, vcfs_]
+                                    } // [meta, vcfs]
+
+            all_tbis.small = INTERSECTION.out.tbis.map { meta, tbis_ ->
+                                        meta.variantcaller = 'intersect'
+                                        [meta, tbis_]
+                                    } // [meta, tbis]
+
             versions = versions.mix(INTERSECTION.out.versions)
         }
 
