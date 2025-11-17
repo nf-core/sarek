@@ -58,5 +58,4 @@ workflow INTERSECTION {
     vcfs = ch_intersect_results.map{ meta, vcf_, _tbi -> [meta, vcf_]}
     tbis = ch_intersect_results.map{ meta, _vcf, tbi_ -> [meta, tbi_]}
 
-
 }
