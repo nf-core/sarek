@@ -227,7 +227,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     vcf                 // channel: [ meta, vcf ]
     stats               // channel: [ meta, stats ]
     vcf_filtered        // channel: [ meta, vcf ]
-    index_filtered      = FILTERMUTECTCALLS.out.tbi.map { meta, tbi_ -> [meta + [variantcaller: 'mutect2'], tbi] } // channel: [ meta, tbi ]
+    index_filtered      = FILTERMUTECTCALLS.out.tbi.map { meta, tbi_ -> [meta + [variantcaller: 'mutect2'], tbi_] } // channel: [ meta, tbi ]
     stats_filtered      = FILTERMUTECTCALLS.out.stats // channel: [ meta, stats ]
     artifact_priors     = LEARNREADORIENTATIONMODEL.out.artifactprior // channel: [ meta, artifactprior ]
     pileup_table_normal // channel: [ meta, table_normal ]

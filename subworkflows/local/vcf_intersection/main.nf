@@ -4,6 +4,7 @@
 
 include { BCFTOOLS_ISEC } from '../../../modules/nf-core/bcftools/isec'
 include { BCFTOOLS_CONCAT } from '../../../modules/nf-core/bcftools/concat'
+
 workflow INTERSECTION {
 
     take:
@@ -51,7 +52,7 @@ workflow INTERSECTION {
 
     //TODO maybe add QC (bcftool stats)
 
-    ch_intersect_results.view()
+    ch_intersect_results.dump()
 
     emit:
     versions
