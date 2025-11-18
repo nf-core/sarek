@@ -80,8 +80,8 @@ workflow POST_VARIANTCALLING {
                                 }
 
         // Needs to be reassigned to enable pass through reassignment below
-        small_variant_vcfs = all_vcfs.small
-        small_variant_tbis = all_tbis.small
+        small_variant_vcfs = all_vcfs.small.map{ meta, vcfs_ -> [meta + [filename: vcfs_.name], vcfs_]}
+        small_variant_tbis = all_tbis.small.map{ meta, tbis_ -> [meta + [filename: tbis_.baseName], tbis_]}
 
         // 1. Filter by PASS and custom fields
         // 2. Normalize
@@ -98,6 +98,7 @@ workflow POST_VARIANTCALLING {
 
         if (normalize_vcfs) {
 
+            // TODO: Double check out put naming to account for indels for snvs
             NORMALIZE_VCFS(small_variant_vcfs, fasta)
 
             small_variant_vcfs = NORMALIZE_VCFS.out.vcfs // [meta, vcf]
@@ -107,7 +108,7 @@ workflow POST_VARIANTCALLING {
 
         if (normalize_vcfs && intersect_vcfs){
 
-            INTERSECTION(small_variant_vcfs.join(small_variant_tbis))
+            INTERSECTION(small_variant_vcfs.join(small_variant_tbis, failOnDuplicate: true, failOnMismatch: true))
 
             small_variant_vcfs = INTERSECTION.out.vcfs.map { meta, vcfs_ ->
                                         meta.variantcaller = 'intersect'
