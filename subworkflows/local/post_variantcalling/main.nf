@@ -80,6 +80,7 @@ workflow POST_VARIANTCALLING {
                                 }
 
         // Needs to be reassigned to enable pass through reassignment below
+        // Due to strelka having multiple outputs, we are adding the file name (vcf.gz) for both here to make sure the right files are joined below
         small_variant_vcfs = all_vcfs.small.map{ meta, vcfs_ -> [meta + [filename: vcfs_.name], vcfs_]}
         small_variant_tbis = all_tbis.small.map{ meta, tbis_ -> [meta + [filename: tbis_.baseName], tbis_]}
 
@@ -98,7 +99,6 @@ workflow POST_VARIANTCALLING {
 
         if (normalize_vcfs) {
 
-            // TODO: Double check out put naming to account for indels for snvs
             NORMALIZE_VCFS(small_variant_vcfs, fasta)
 
             small_variant_vcfs = NORMALIZE_VCFS.out.vcfs // [meta, vcf]

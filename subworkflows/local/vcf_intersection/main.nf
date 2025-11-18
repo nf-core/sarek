@@ -26,7 +26,7 @@ workflow INTERSECTION {
     ch_intersect_in = ch_vcfs.other
                         .mix(BCFTOOLS_CONCAT.out.vcf.join(BCFTOOLS_CONCAT.out.tbi))
                         .map { meta, vcf, tbi ->
-                                    [meta.id, meta - meta.subMap('variantcaller', 'contamination',), vcf, tbi]
+                                    [meta - meta.subMap('variantcaller', 'contamination', 'filename'), vcf, tbi]
                         }
                         .view{"pre grouping: $it"}
                         //TODO blocking operation unless we learn how many variantcallers were
@@ -34,7 +34,7 @@ workflow INTERSECTION {
                         //variantcallers are actually executed
                         .groupTuple()
                         .view{"post grouping: $it"}
-                        .map { _id, meta, vcf, tbi ->
+                        .map {meta, vcf, tbi ->
                             // Sorting the VCF files to ensure the intersection is done in a predictable manner
                             def vcf_sorted = (vcf instanceof List) ? vcf.sort() : vcf
                             [meta, vcf_sorted, tbi]
