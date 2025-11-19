@@ -88,6 +88,8 @@ workflow PIPELINE_INITIALISATION {
         params.known_snps_tbi,
         params.mappability,
         params.multiqc_config,
+        params.mutect2_force_call,
+        params.mutect2_force_call_tbi,
         params.ngscheckmate_bed,
         params.pon,
         params.pon_tbi,

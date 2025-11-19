@@ -19,6 +19,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     fasta                 // channel: /path/to/reference/fasta
     fai                   // channel: /path/to/reference/fasta/index
     dict                  // channel: /path/to/reference/fasta/dictionary
+    alleles               // channel: /path/to/alleles
+    alleles_tbi           // channel: /path/to/alleles/index
     germline_resource     // channel: /path/to/germline/resource
     germline_resource_tbi // channel: /path/to/germline/index
     panel_of_normals      // channel: /path/to/panel/of/normals
@@ -50,11 +52,11 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
         input_joint_intervals = input_joint
             .combine(intervals)
             .map { meta, cram, crai, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], cram, crai, intervals_] }
-        MUTECT2(input_joint_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
+        MUTECT2(input_joint_intervals, fasta, fai, dict, alleles, alleles_tbi, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
     }
     else {
         // Perform variant calling using mutect2 module in tumor single mode
-        MUTECT2(input_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
+        MUTECT2(input_intervals, fasta, fai, dict, alleles, alleles_tbi, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample

@@ -103,6 +103,8 @@ workflow SAREK {
     mappability
     msisensor2_models
     msisensorpro_scan
+    mutect2_force_call
+    mutect2_force_call_tbi
     ngscheckmate_bed
     pon
     pon_tbi
@@ -456,6 +458,8 @@ workflow SAREK {
             intervals_bed_gz_tbi_combined,
             mappability,
             msisensor2_models,
+            mutect2_force_call,
+            mutect2_force_call_tbi,
             pon,
             pon_tbi,
             params.joint_mutect2,
@@ -487,6 +491,8 @@ workflow SAREK {
             intervals_bed_gz_tbi_combined,
             mappability,
             msisensorpro_scan,
+            mutect2_force_call,
+            mutect2_force_call_tbi,
             pon,
             pon_tbi,
             ascat_alleles,

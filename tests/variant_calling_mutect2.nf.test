@@ -44,6 +44,24 @@ nextflow_pipeline {
             ]
         ],
         [
+            name: "-profile test --tools mutect2 somatic force_call_alleles",
+            params: [
+                genome: null,
+                igenomes_ignore: true,
+                dbsnp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+                dbsnp_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                mutect2_force_call: modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/axiom_exome_plus.genotypes.all_populations.poly.hg38.vcf.gz',
+                mutect2_force_call_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/axiom_exome_plus.genotypes.all_populations.poly.hg38.vcf.gz.tbi',
+                step: "variant_calling",
+                tools: 'mutect2',
+                wes: true
+            ]
+        ],
+        [
             name: "-profile test --tools mutect2 tumoronly",
             params: [
                 genome: null,
@@ -69,6 +87,23 @@ nextflow_pipeline {
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
                 no_intervals: true,
+                step: "variant_calling",
+                tools: 'mutect2',
+                wes: true
+            ]
+        ],
+        [
+            name: "-profile test --tools mutect2 tumoronly force_call_alleles_tabix",
+            params: [
+                genome: null,
+                igenomes_ignore: true,
+                dbsnp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+                dbsnp_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
+                mutect2_force_call: modules_testdata_base_path + '/genomics/homo_sapiens/genome/chr21/germlineresources/axiom_exome_plus.genotypes.all_populations.poly.hg38.vcf.gz',
+                mutect2_force_call_tbi: null,
                 step: "variant_calling",
                 tools: 'mutect2',
                 wes: true

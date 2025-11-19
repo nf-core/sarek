@@ -52,6 +52,8 @@ params.known_snps_vqsr         = getGenomeAttribute('known_snps_vqsr')
 params.mappability             = getGenomeAttribute('mappability')
 params.msisensor2_models       = getGenomeAttribute('msisensor2_models')
 params.msisensorpro_scan       = getGenomeAttribute('msisensorpro_scan')
+params.mutect2_force_call      = getGenomeAttribute('mutect2_force_call')
+params.mutect2_force_call_tbi  = getGenomeAttribute('mutect2_force_call_tbi')
 params.ngscheckmate_bed        = getGenomeAttribute('ngscheckmate_bed')
 params.pon                     = getGenomeAttribute('pon')
 params.pon_tbi                 = getGenomeAttribute('pon_tbi')
@@ -117,6 +119,8 @@ workflow NFCORE_SAREK {
         params.known_snps_tbi,
         params.msisensor2_models,
         params.msisensorpro_scan,
+        params.mutect2_force_call,
+        params.mutect2_force_call_tbi,
         params.pon,
         params.pon_tbi,
         params.aligner,
@@ -262,6 +266,8 @@ workflow NFCORE_SAREK {
         params.mappability ? Channel.fromPath(params.mappability).collect() : Channel.value([]),
         PREPARE_GENOME.out.msisensor2_models,
         PREPARE_GENOME.out.msisensorpro_scan,
+        PREPARE_GENOME.out.mutect2_force_call,
+        PREPARE_GENOME.out.mutect2_force_call_tbi,
         params.ngscheckmate_bed ? Channel.value(params.ngscheckmate_bed) : Channel.empty(),
         PREPARE_GENOME.out.pon,
         PREPARE_GENOME.out.pon_tbi,
