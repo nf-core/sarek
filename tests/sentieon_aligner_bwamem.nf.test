@@ -1,0 +1,50 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+    tag "sentieon"
+
+    def test_scenario = [
+        [
+            name: "-profile test --aligner sentieon-bwamem --save_reference skip QC/recal/md",
+            params: [
+                aligner: 'sentieon-bwamem',
+                save_reference: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: ''
+            ]
+        ],
+        [
+            name: "-profile test --aligner sentieon-bwamem --save_reference --build_only_index",
+            params: [
+                aligner: 'sentieon-bwamem',
+                build_only_index: true,
+                input: false,
+                save_reference: true,
+                skip_tools: 'multiqc',
+                tools: ''
+            ]
+        ],
+        [
+            name: "-profile test --input fastq_umi.csv --aligner sentieon-bwamem --umi_location read2 --umi_length 7 --umi_base_skip 1 --tools sentieon_dedup",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_umi.csv",
+                aligner: 'sentieon-bwamem',
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: 'sentieon_dedup',
+                umi_length: 7,
+                umi_base_skip: 1,
+                umi_location: 'read2'
+            ]
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}

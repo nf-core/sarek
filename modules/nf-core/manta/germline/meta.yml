@@ -1,0 +1,154 @@
+name: manta_germline
+description: Manta calls structural variants (SVs) and indels from mapped paired-end
+  sequencing reads. It is optimized for analysis of germline variation in small sets
+  of individuals and somatic variation in tumor/normal sample pairs.
+keywords:
+  - somatic
+  - wgs
+  - wxs
+  - panel
+  - vcf
+  - structural variants
+  - small indels
+tools:
+  - manta:
+      description: Structural variant and indel caller for mapped sequencing data
+      homepage: https://github.com/Illumina/manta
+      documentation: https://github.com/Illumina/manta/blob/v1.6.0/docs/userGuide/README.md
+      tool_dev_url: https://github.com/Illumina/manta
+      doi: "10.1093/bioinformatics/btv710"
+      licence: ["GPL v3"]
+      identifier: biotools:manta_sv
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input:
+        type: file
+        description: BAM/CRAM/SAM file. For joint calling use a list of files.
+        pattern: "*.{bam,cram,sam}"
+        ontologies: []
+    - index:
+        type: file
+        description: BAM/CRAM/SAM index file. For joint calling use a list of files.
+        pattern: "*.{bai,crai,sai}"
+        ontologies: []
+    - target_bed:
+        type: file
+        description: BED file containing target regions for variant calling
+        pattern: "*.{bed}"
+        ontologies: []
+    - target_bed_tbi:
+        type: file
+        description: Index for BED file containing target regions for variant calling
+        pattern: "*.{bed.tbi}"
+        ontologies: []
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - fasta:
+        type: file
+        description: Genome reference FASTA file
+        pattern: "*.{fa,fasta}"
+        ontologies: []
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - fai:
+        type: file
+        description: Genome reference FASTA index file
+        pattern: "*.{fa.fai,fasta.fai}"
+        ontologies: []
+  - config:
+      type: file
+      description: Manta configuration file
+      pattern: "*.{ini,conf,config}"
+      ontologies: []
+output:
+  candidate_small_indels_vcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*candidate_small_indels.vcf.gz":
+          type: file
+          description: Gzipped VCF file containing variants
+          pattern: "*.{vcf.gz}"
+          ontologies: []
+  candidate_small_indels_vcf_tbi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*candidate_small_indels.vcf.gz.tbi":
+          type: file
+          description: Index for gzipped VCF file containing variants
+          pattern: "*.{vcf.gz.tbi}"
+          ontologies: []
+  candidate_sv_vcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*candidate_sv.vcf.gz":
+          type: file
+          description: Gzipped VCF file containing variants
+          pattern: "*.{vcf.gz}"
+          ontologies: []
+  candidate_sv_vcf_tbi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*candidate_sv.vcf.gz.tbi":
+          type: file
+          description: Index for gzipped VCF file containing variants
+          pattern: "*.{vcf.gz.tbi}"
+          ontologies: []
+  diploid_sv_vcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*diploid_sv.vcf.gz":
+          type: file
+          description: Gzipped VCF file containing variants
+          pattern: "*.{vcf.gz}"
+          ontologies: []
+  diploid_sv_vcf_tbi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*diploid_sv.vcf.gz.tbi":
+          type: file
+          description: Index for gzipped VCF file containing variants
+          pattern: "*.{vcf.gz.tbi}"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@maxulysse"
+  - "@ramprasadn"
+  - "@nvnieuwk"
+maintainers:
+  - "@maxulysse"
+  - "@ramprasadn"
+  - "@nvnieuwk"

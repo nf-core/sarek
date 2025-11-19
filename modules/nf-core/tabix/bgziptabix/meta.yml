@@ -1,0 +1,74 @@
+name: tabix_bgziptabix
+description: bgzip a sorted tab-delimited genome file and then create tabix index
+keywords:
+  - bgzip
+  - compress
+  - index
+  - tabix
+  - vcf
+tools:
+  - tabix:
+      description: Generic indexer for TAB-delimited genome position files.
+      homepage: https://www.htslib.org/doc/tabix.html
+      documentation: https://www.htslib.org/doc/tabix.1.html
+      doi: 10.1093/bioinformatics/btq671
+      licence: ["MIT"]
+      identifier: biotools:tabix
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input:
+        type: file
+        description: Sorted tab-delimited genome file
+        ontologies: []
+output:
+  gz_tbi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.gz":
+          type: file
+          description: bgzipped tab-delimited genome file
+          pattern: "*.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+      - "*.tbi":
+          type: file
+          description: tabix index file
+          pattern: "*.tbi"
+          ontologies: []
+  gz_csi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.gz":
+          type: file
+          description: bgzipped tab-delimited genome file
+          pattern: "*.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+      - "*.csi":
+          type: file
+          description: csi index file
+          pattern: "*.csi"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@maxulysse"
+  - "@DLBPointon"
+maintainers:
+  - "@maxulysse"
+  - "@DLBPointon"

@@ -1,0 +1,33 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+
+    def test_scenario = [
+        [
+            name: "-profile test --input tests/csv/3.0/bam_umi_header.csv --umi_in_read_header --tools markduplicates --step mapping",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/bam_umi_header.csv",
+                umi_in_read_header: true,
+                step: "mapping"
+            ]
+        ],
+        [
+            name: "-profile test --input tests/csv/3.0/bam_umi_header.csv --umi_in_read_header --tools markduplicates --step markduplicates",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/bam_umi_header.csv",
+                umi_in_read_header: true,
+                step: "markduplicates"
+            ]
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.get_test(scenario))
+    }
+}
