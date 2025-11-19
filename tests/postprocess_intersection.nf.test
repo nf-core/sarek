@@ -17,6 +17,7 @@ nextflow_pipeline {
                 fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                dict: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict',
                 normalize_vcfs: true,
                 intersect_vcfs: true,
                 tools: 'mutect2,strelka'
@@ -31,6 +32,7 @@ nextflow_pipeline {
                 fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                dict: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict',
                 step: 'variant_calling',
                 filter_vcfs: true,
                 normalize_vcfs: true,
