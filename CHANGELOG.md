@@ -75,9 +75,8 @@ This patch release includes a bump to Nextflow 25.04.8.
 
 ### Parameters
 
-| Params                       | status |
-| ---------------------------- | ------ |
-
+| Params | status |
+| ------ | ------ |
 
 ### Developer section
 
