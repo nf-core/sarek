@@ -63,7 +63,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Varlociraptor](#varlociraptor)
   - [Filtering](#filtering)
   - [Normalization](#normalization)
-  - [Intersection](#intersection)
+  - [Consensus calling](#consensus-calling)
   - [Concatenation](#concatenation)
 - [Variant annotation](#variant-annotation)
   - [snpEff](#snpeff)
@@ -1047,23 +1047,23 @@ All VCFs are normalized with `bcftools norm`. The field `SOURCE` is added to the
 
 </details>
 
-### Intersection
+### Consensus calling
 
-VCF files from multiple variant callers can be intersected using `bcftools isec` to identify variants that are called by multiple tools.
+The consensus call set of multiple VCF files be obtained by using `bcftools isec` to identify variants that are called by multiple tools.
 
-Strelka somatic calling results produces separate VCF files for SNPs and indels that are concatenated before intersection. The workflow then groups VCF files by sample and performs intersection across all specified variant callers.
+Strelka somatic calling results produces separate VCF files for SNPs and indels that are concatenated before consensus calling. The workflow then groups VCF files by sample and performs consensus calling across all specified variant callers.
 
-By default, `bcftools isec` identifies variants present in at least a minimum number of input VCF files. This can be customized with `--intersection_min_count`. Only the intersected VCF is annotated, if annotation is enabled.
+By default, `bcftools isec` identifies variants present in at least a minimum number of input VCF files. This can be customized with `--consensus_min_count`. Only the consensus VCF is annotated, if annotation is enabled.
 
 <details markdown="1">
-<summary>Intersected VCF files for all samples</summary>
+<summary>Consensus called VCF files for all samples</summary>
 
-**Output directory: `{outdir}/variant_calling/intersect/<sample>/`**
+**Output directory: `{outdir}/variant_calling/consenus/<sample>/`**
 
 - `0000.vcf.gz` and `0000.vcf.gz.tbi`
-  - VCF with tabix index containing variants present in the intersection of input variant callers
+  - VCF with tabix index containing variants present in the consensus set of input variant callers
 - `README.txt`
-  - Text file describing the intersection results and which files correspond to which variant callers
+  - Text file describing the consensus results and which files correspond to which variant callers
 - `sites.txt`
   - Text file listing genomic positions and their presence/absence across all input VCF files
 

@@ -168,9 +168,9 @@ workflow NFCORE_SAREK {
     versions = versions.mix(PREPARE_GENOME.out.versions)
     versions = versions.mix(PREPARE_INTERVALS.out.versions)
 
-    // Fails when intersection is specified without normalization
-    if (params.intersect_vcfs && !params.normalize_vcfs){
-        error("Intersection was specified without normalization. Set --normalize_vcfs in addition. See: https://www.biostars.org/p/307035/")
+    // Fails when consensus calling is specified without normalization
+    if (params.snv_consensus_calling && !params.normalize_vcfs){
+        error("Consensus calling was specified without normalization. Set --normalize_vcfs in addition. See: https://www.biostars.org/p/307035/")
     }
 
 

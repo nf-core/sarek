@@ -33,7 +33,7 @@ nextflow_workflow {
                 fai                               = [[:],[]]
                 concatenate_vcfs                  = false
                 filter_vcfs                       = false
-                intersect_vcfs                    = false
+                snv_consensus_calling             = false
                 normalize_vcfs                    = true
                 varlociraptor_chunk_size          = 15
                 varlociraptor_scenario_germline   = []
@@ -54,7 +54,7 @@ nextflow_workflow {
                 input[11] = fai
                 input[12] = concatenate_vcfs
                 input[13] = filter_vcfs
-                input[14] = intersect_vcfs
+                input[14] = snv_consensus_calling
                 input[15] = normalize_vcfs
                 input[16] = varlociraptor_chunk_size
                 input[17] = varlociraptor_scenario_germline
@@ -100,7 +100,7 @@ nextflow_workflow {
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = true
                 filter_vcfs                       = false
-                intersect_vcfs                    = false
+                snv_consensus_calling             = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = 15
                 varlociraptor_scenario_germline   = []
@@ -121,7 +121,7 @@ nextflow_workflow {
                 input[11] = fai
                 input[12] = concatenate_vcfs
                 input[13] = filter_vcfs
-                input[14] = intersect_vcfs
+                input[14] = snv_consensus_calling
                 input[15] = normalize_vcfs
                 input[16] = varlociraptor_chunk_size
                 input[17] = varlociraptor_scenario_germline
@@ -167,7 +167,7 @@ nextflow_workflow {
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = true
                 filter_vcfs                       = false
-                intersect_vcfs                    = false
+                snv_consensus_calling             = false
                 normalize_vcfs                    = true
                 varlociraptor_chunk_size          = 15
                 varlociraptor_scenario_germline   = []
@@ -188,7 +188,7 @@ nextflow_workflow {
                 input[11] = fai
                 input[12] = concatenate_vcfs
                 input[13] = filter_vcfs
-                input[14] = intersect_vcfs
+                input[14] = snv_consensus_calling
                 input[15] = normalize_vcfs
                 input[16] = varlociraptor_chunk_size
                 input[17] = varlociraptor_scenario_germline
@@ -233,7 +233,7 @@ nextflow_workflow {
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
                 filter_vcfs                       = false
-                intersect_vcfs                    = false
+                snv_consensus_calling             = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = 15
                 varlociraptor_scenario_germline   = []
@@ -254,7 +254,7 @@ nextflow_workflow {
                 input[11] = fai
                 input[12] = concatenate_vcfs
                 input[13] = filter_vcfs
-                input[14] = intersect_vcfs
+                input[14] = snv_consensus_calling
                 input[15] = normalize_vcfs
                 input[16] = varlociraptor_chunk_size
                 input[17] = varlociraptor_scenario_germline
@@ -298,7 +298,7 @@ nextflow_workflow {
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
                 filter_vcfs                       = false
-                intersect_vcfs                    = false
+                snv_consensus_calling             = false
                 normalize_vcfs                    = true
                 varlociraptor_chunk_size          = 15
                 varlociraptor_scenario_germline   = []
@@ -319,7 +319,7 @@ nextflow_workflow {
                 input[11] = fai
                 input[12] = concatenate_vcfs
                 input[13] = filter_vcfs
-                input[14] = intersect_vcfs
+                input[14] = snv_consensus_calling
                 input[15] = normalize_vcfs
                 input[16] = varlociraptor_chunk_size
                 input[17] = varlociraptor_scenario_germline
@@ -366,7 +366,7 @@ nextflow_workflow {
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = true
                 filter_vcfs                       = false
-                intersect_vcfs                    = false
+                snv_consensus_calling             = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = 15
                 varlociraptor_scenario_germline   = []
@@ -387,7 +387,7 @@ nextflow_workflow {
                 input[11] = fai
                 input[12] = concatenate_vcfs
                 input[13] = filter_vcfs
-                input[14] = intersect_vcfs
+                input[14] = snv_consensus_calling
                 input[15] = normalize_vcfs
                 input[16] = varlociraptor_chunk_size
                 input[17] = varlociraptor_scenario_germline
@@ -438,7 +438,7 @@ nextflow_workflow {
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
                 filter_vcfs                       = false
-                intersect_vcfs                    = false
+                snv_consensus_calling             = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = params.varlociraptor_chunk_size
                 varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
@@ -459,7 +459,7 @@ nextflow_workflow {
                 input[11] = fai
                 input[12] = concatenate_vcfs
                 input[13] = filter_vcfs
-                input[14] = intersect_vcfs
+                input[14] = snv_consensus_calling
                 input[15] = normalize_vcfs
                 input[16] = varlociraptor_chunk_size
                 input[17] = varlociraptor_scenario_germline
@@ -509,7 +509,7 @@ nextflow_workflow {
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
                 filter_vcfs                       = false
-                intersect_vcfs                    = false
+                snv_consensus_calling             = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = 2
                 varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
@@ -530,7 +530,7 @@ nextflow_workflow {
                 input[11] = fai
                 input[12] = concatenate_vcfs
                 input[13] = filter_vcfs
-                input[14] = intersect_vcfs
+                input[14] = snv_consensus_calling
                 input[15] = normalize_vcfs
                 input[16] = varlociraptor_chunk_size
                 input[17] = varlociraptor_scenario_germline
@@ -581,7 +581,7 @@ nextflow_workflow {
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
                 filter_vcfs                       = false
-                intersect_vcfs                    = false
+                snv_consensus_calling             = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = params.varlociraptor_chunk_size
                 varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
@@ -602,7 +602,7 @@ nextflow_workflow {
                 input[11] = fai
                 input[12] = concatenate_vcfs
                 input[13] = filter_vcfs
-                input[14] = intersect_vcfs
+                input[14] = snv_consensus_calling
                 input[15] = normalize_vcfs
                 input[16] = varlociraptor_chunk_size
                 input[17] = varlociraptor_scenario_germline
@@ -651,7 +651,7 @@ nextflow_workflow {
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
                 filter_vcfs                       = false
-                intersect_vcfs                    = false
+                snv_consensus_calling             = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = 2
                 varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
@@ -672,7 +672,7 @@ nextflow_workflow {
                 input[11] = fai
                 input[12] = concatenate_vcfs
                 input[13] = filter_vcfs
-                input[14] = intersect_vcfs
+                input[14] = snv_consensus_calling
                 input[15] = normalize_vcfs
                 input[16] = varlociraptor_chunk_size
                 input[17] = varlociraptor_scenario_germline
@@ -731,7 +731,7 @@ nextflow_workflow {
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
                 filter_vcfs                       = false
-                intersect_vcfs                    = false
+                snv_consensus_calling             = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = params.varlociraptor_chunk_size
                 varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
@@ -752,7 +752,7 @@ nextflow_workflow {
                 input[11] = fai
                 input[12] = concatenate_vcfs
                 input[13] = filter_vcfs
-                input[14] = intersect_vcfs
+                input[14] = snv_consensus_calling
                 input[15] = normalize_vcfs
                 input[16] = varlociraptor_chunk_size
                 input[17] = varlociraptor_scenario_germline
@@ -809,7 +809,7 @@ nextflow_workflow {
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
                 filter_vcfs                       = false
-                intersect_vcfs                    = false
+                snv_consensus_calling             = false
                 normalize_vcfs                    = false
                 varlociraptor_chunk_size          = 2
                 varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
@@ -830,7 +830,7 @@ nextflow_workflow {
                 input[11] = fai
                 input[12] = concatenate_vcfs
                 input[13] = filter_vcfs
-                input[14] = intersect_vcfs
+                input[14] = snv_consensus_calling
                 input[15] = normalize_vcfs
                 input[16] = varlociraptor_chunk_size
                 input[17] = varlociraptor_scenario_germline
@@ -852,12 +852,12 @@ nextflow_workflow {
         }
     }
 
-    test("POST_VARIANTCALLING - normalization and intersection") {
+    test("POST_VARIANTCALLING - normalization and consensus") {
 
         when {
             workflow {
                 """
-                // Input setup for intersection - requires multiple VCFs with different variantcallers
+                // Input setup for consensus calling - requires multiple VCFs with different variantcallers
                 tools                             = ''
                 cram_germline                     = Channel.empty()
                 germline_vcfs                     = Channel.of(
@@ -882,7 +882,7 @@ nextflow_workflow {
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
                 filter_vcfs                       = false
-                intersect_vcfs                    = true
+                snv_consensus_calling             = true
                 normalize_vcfs                    = true
                 varlociraptor_chunk_size          = 15
                 varlociraptor_scenario_germline   = []
@@ -903,7 +903,7 @@ nextflow_workflow {
                 input[11] = fai
                 input[12] = concatenate_vcfs
                 input[13] = filter_vcfs
-                input[14] = intersect_vcfs
+                input[14] = snv_consensus_calling
                 input[15] = normalize_vcfs
                 input[16] = varlociraptor_chunk_size
                 input[17] = varlociraptor_scenario_germline
@@ -925,7 +925,7 @@ nextflow_workflow {
         }
     }
 
-    test("POST_VARIANTCALLING - filter, normalization and intersection") {
+    test("POST_VARIANTCALLING - filter, normalization and consensus") {
 
         when {
             workflow {
@@ -955,7 +955,7 @@ nextflow_workflow {
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
                 filter_vcfs                       = true
-                intersect_vcfs                    = true
+                snv_consensus_calling             = true
                 normalize_vcfs                    = true
                 varlociraptor_chunk_size          = 15
                 varlociraptor_scenario_germline   = []
@@ -976,7 +976,7 @@ nextflow_workflow {
                 input[11] = fai
                 input[12] = concatenate_vcfs
                 input[13] = filter_vcfs
-                input[14] = intersect_vcfs
+                input[14] = snv_consensus_calling
                 input[15] = normalize_vcfs
                 input[16] = varlociraptor_chunk_size
                 input[17] = varlociraptor_scenario_germline
@@ -998,14 +998,14 @@ nextflow_workflow {
         }
     }
 
-    test("POST_VARIANTCALLING - normalization and intersection - stub") {
+    test("POST_VARIANTCALLING - normalization and consensus - stub") {
 
         options "-stub"
 
         when {
             workflow {
                 """
-                // Input setup for intersection stub test
+                // Input setup for consensus stub test
                 tools                             = ''
                 cram_germline                     = Channel.empty()
                 germline_vcfs                     = Channel.of(
@@ -1030,7 +1030,7 @@ nextflow_workflow {
                 fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
                 concatenate_vcfs                  = false
                 filter_vcfs                       = false
-                intersect_vcfs                    = true
+                snv_consensus_calling             = true
                 normalize_vcfs                    = true
                 varlociraptor_chunk_size          = 15
                 varlociraptor_scenario_germline   = []
@@ -1051,7 +1051,7 @@ nextflow_workflow {
                 input[11] = fai
                 input[12] = concatenate_vcfs
                 input[13] = filter_vcfs
-                input[14] = intersect_vcfs
+                input[14] = snv_consensus_calling
                 input[15] = normalize_vcfs
                 input[16] = varlociraptor_chunk_size
                 input[17] = varlociraptor_scenario_germline

@@ -3,7 +3,7 @@
 //
 include { BCFTOOLS_VIEW as FILTER_VCFS                             } from '../../../modules/nf-core/bcftools/view'
 include { CONCATENATE_GERMLINE_VCFS                                } from '../vcf_concatenate_germline'
-include { INTERSECTION                                             } from '../vcf_intersection'
+include { CONSENSUS                                                } from '../vcf_consensus'
 include { NORMALIZE_VCFS                                           } from '../vcf_normalization'
 include { VCF_VARLOCIRAPTOR_SINGLE as VCF_VARLOCIRAPTOR_GERMLINE   } from '../vcf_varlociraptor_single'
 include { VCF_VARLOCIRAPTOR_SOMATIC                                } from '../vcf_varlociraptor_somatic'
@@ -25,7 +25,7 @@ workflow POST_VARIANTCALLING {
     fai
     concatenate_vcfs
     filter_vcfs
-    intersect_vcfs
+    snv_consensus_calling
     normalize_vcfs
     varlociraptor_chunk_size // integer: [mandatory] [default: 15] number of chunks to split BCF files when preprocessing and calling variants
     varlociraptor_scenario_germline
@@ -106,21 +106,21 @@ workflow POST_VARIANTCALLING {
             versions = versions.mix(NORMALIZE_VCFS.out.versions)
         }
 
-        if (normalize_vcfs && intersect_vcfs){
+        if (normalize_vcfs && snv_consensus_calling){
 
-            INTERSECTION(small_variant_vcfs.join(small_variant_tbis, failOnDuplicate: true, failOnMismatch: true))
+            CONSENSUS(small_variant_vcfs.join(small_variant_tbis, failOnDuplicate: true, failOnMismatch: true))
 
-            small_variant_vcfs = INTERSECTION.out.vcfs.map { meta, vcfs_ ->
-                                        meta.variantcaller = 'intersect'
+            small_variant_vcfs = CONSENSUS.out.vcfs.map { meta, vcfs_ ->
+                                        meta.variantcaller = 'consensus'
                                         [meta, vcfs_]
                                     } // [meta, vcfs]
 
-            small_variant_tbis = INTERSECTION.out.tbis.map { meta, tbis_ ->
-                                        meta.variantcaller = 'intersect'
+            small_variant_tbis = CONSENSUS.out.tbis.map { meta, tbis_ ->
+                                        meta.variantcaller = 'consensus'
                                         [meta, tbis_]
                                     } // [meta, tbis]
 
-            versions = versions.mix(INTERSECTION.out.versions)
+            versions = versions.mix(CONSENSUS.out.versions)
         }
 
         vcfs = small_variant_vcfs.mix(all_vcfs.other)
