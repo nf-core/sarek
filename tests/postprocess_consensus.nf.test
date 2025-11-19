@@ -10,21 +10,22 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --snv_consensus_calling --normalize_vcfs --tools freebayes,strelka (germline + somatic)",
+            name: "-profile test --snv_consensus_calling --normalize_vcfs --tools mutect2,strelka (germline + somatic)",
             params: [
-                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-                step: 'variant_calling',
-                igenomes_ignore: true,
                 genome: null,
+                igenomes_ignore: true,
                 dbsnp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
                 dbsnp_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
                 fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
-                dict: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict',
+                step: "variant_calling",
+                tools: 'mutect2',
+                wes: true
                 normalize_vcfs: true,
                 snv_consensus_calling: true,
-                tools: 'freebayes,strelka'
+                tools: 'mutect2,strelka'
             ],
             include_freebayes_unfiltered: true,
             no_conda: true
@@ -32,20 +33,22 @@ nextflow_pipeline {
         [
             name: "-profile test --filter_vcfs --snv_consensus_calling --normalize_vcfs --tools freebayes,strelka (germline + somatic)",
             params: [
-                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-                igenomes_ignore: true,
                 genome: null,
+                igenomes_ignore: true,
                 dbsnp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
                 dbsnp_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
                 fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
-                dict: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict',
-                step: 'variant_calling',
-                filter_vcfs: true,
+                step: "variant_calling",
+                tools: 'mutect2',
+                wes: true
                 normalize_vcfs: true,
                 snv_consensus_calling: true,
-                tools: 'freebayes,strelka'
+                tools: 'mutect2,strelka'
+                filter_vcfs: true,
+                normalize_vcfs: true,
             ],
             include_freebayes_unfiltered: true,
             no_conda: true
