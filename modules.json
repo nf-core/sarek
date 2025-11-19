@@ -583,7 +583,7 @@
                     },
                     "yte": {
                         "branch": "master",
-                        "git_sha": "3179219c5360ba9e624f64a28b102efe0cfadc49",
+                        "git_sha": "b9947fd7a338e1087a5c386ac7192588d3059122",
                         "installed_by": ["modules"]
                     }
                 }
