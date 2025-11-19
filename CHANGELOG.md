@@ -29,8 +29,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params | status |
-| ------ | ------ |
+| Params                       | status |
+| ---------------------------- | ------ |
+| `--snv_consensus_calling`    | New    |
+| `--consensus_min_count`      | New    |
 
 ### Developer section
 
