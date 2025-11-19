@@ -12,7 +12,7 @@ nextflow_pipeline {
         [
             name: "-profile test --snv_consensus_calling --normalize_vcfs --tools mutect2,strelka (germline + somatic)",
             params: [
-                input: "${projectDir}/tests/csv/3.0/recalibrated.csv",
+                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
                 step: 'variant_calling',
                 igenomes_ignore: true,
                 genome: null,
@@ -32,7 +32,7 @@ nextflow_pipeline {
         [
             name: "-profile test --filter_vcfs --snv_consensus_calling --normalize_vcfs --tools mutect2,strelka (germline + somatic)",
             params: [
-                input: "${projectDir}/tests/csv/3.0/recalibrated.csv",
+                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
                 igenomes_ignore: true,
                 genome: null,
                 dbsnp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
