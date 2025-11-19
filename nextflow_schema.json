@@ -539,7 +539,7 @@
                     "default": 2,
                     "fa_icon": "fab fa-deezer",
                     "description": "Minimum number of variant callers calling a variant for intersection results",
-                    "help_text": "Determines the minimum number of variant callers, a variant must be called in to be included in the intersection results. As intersection criterium `-n+${params.intersection_min_count}` is used, meaning a variant is found in this many or more files. For details, visit: https://samtools.github.io/bcftools/bcftools.html#isec"
+                    "help_text": "Determines the minimum number of variant callers a variant must be called in to be included in the intersection results. As intersection criterium `-n+${params.intersection_min_count}` is used, meaning a variant is found in this many or more files. For details, visit: https://samtools.github.io/bcftools/bcftools.html#isec"
                 },
                 "concatenate_vcfs": {
                     "type": "boolean",
