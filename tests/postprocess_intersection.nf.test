@@ -14,6 +14,10 @@ nextflow_pipeline {
             params: [
                 input: "${projectDir}/tests/csv/3.0/recalibrated.csv",
                 step: 'variant_calling',
+                igenomes_ignore: true,
+                genome: null,
+                dbsnp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+                dbsnp_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
                 fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
@@ -29,6 +33,10 @@ nextflow_pipeline {
             name: "-profile test --filter_vcfs --intersect_vcfs --normalize_vcfs --tools mutect2,strelka (germline + somatic)",
             params: [
                 input: "${projectDir}/tests/csv/3.0/recalibrated.csv",
+                igenomes_ignore: true,
+                genome: null,
+                dbsnp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+                dbsnp_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
                 fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
