@@ -10,7 +10,7 @@ include { softwareVersionsToYAML                            } from '../../subwor
 include { methodsDescriptionText                            } from '../../subworkflows/local/utils_nfcore_sarek_pipeline'
 
 // Create samplesheets to restart from different steps
-include { cHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../../subworkflows/local/channel_variant_calling_create_csv'
+include { CHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../../subworkflows/local/channel_variant_calling_create_csv'
 
 // Convert BAM files to FASTQ files
 include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT       } from '../../subworkflows/local/bam_convert_samtools'
@@ -537,7 +537,7 @@ workflow SAREK {
         // POST_VARIANTCALLING always outputs VCFs - either processed or pass-through originals
         vcf_to_annotate = POST_VARIANTCALLING.out.vcfs
 
-        cHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate, params.outdir)
+        CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate, params.outdir)
 
         // Gather used variant calling softwares versions
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
