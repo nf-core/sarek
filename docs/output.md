@@ -1053,7 +1053,7 @@ VCF files from multiple variant callers can be intersected using `bcftools isec`
 
 Strelka somatic calling results produces separate VCF files for SNPs and indels that are concatenated before intersection. The workflow then groups VCF files by sample and performs intersection across all specified variant callers.
 
-By default, `bcftools isec` identifies variants present in at least input VCF files. This can be customized with `--intersection_min_count`. Only the intersected VCF is annotated, if annotation is enabled.
+By default, `bcftools isec` identifies variants present in at least a minimum number of input VCF files. This can be customized with `--intersection_min_count`. Only the intersected VCF is annotated, if annotation is enabled.
 
 <details markdown="1">
 <summary>Intersected VCF files for all samples</summary>
