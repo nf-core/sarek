@@ -34,7 +34,7 @@
                 "enum": [0, 1]
             },
             "lane": {
-                "type": "string",
+                "anyOf": [{ "type": "integer" }, { "type": "string" }],
                 "pattern": "^\\S+$",
                 "description": "Lane identifier used to distinguish between different sequencing runs of the same sample.",
                 "errorMessage": "Lane identifier cannot contain spaces",
