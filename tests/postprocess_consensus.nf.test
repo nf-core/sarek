@@ -22,7 +22,7 @@ nextflow_pipeline {
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 step: "variant_calling",
-                wes: true
+                wes: true,
                 normalize_vcfs: true,
                 snv_consensus_calling: true,
                 tools: 'mutect2,strelka'
@@ -42,12 +42,11 @@ nextflow_pipeline {
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 step: "variant_calling",
-                wes: true
+                wes: true,
                 normalize_vcfs: true,
                 snv_consensus_calling: true,
                 tools: 'mutect2,strelka'
                 filter_vcfs: true,
-                normalize_vcfs: true,
             ],
             include_freebayes_unfiltered: true,
             no_conda: true
