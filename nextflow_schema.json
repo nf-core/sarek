@@ -513,11 +513,12 @@
                 "filter_vcfs": {
                     "type": "boolean",
                     "fa_icon": "fas fa-filter",
-                    "description": "Enable filtering of VCFs with bcftools view"
+                    "description": "Enable filtering of VCFs with bcftools view",
+                    "help_text": "Filtering of all vcf-files from each applied variant-caller using bfctools filter and applying filtering criteria specified in --bcftools_filter_criteria."
                 },
                 "bcftools_filter_criteria": {
                     "type": "string",
-                    "default": "-f PASS",
+                    "default": "-f PASS,.",
                     "fa_icon": "fas fa-question",
                     "description": "Filter criteria. Uses bcftools view filter options. To customize, follow instructions here: https://samtools.github.io/bcftools/bcftools.html#view "
                 },
@@ -526,6 +527,19 @@
                     "fa_icon": "fas fa-angle-double-left",
                     "description": "Option for normalization of vcf-files.",
                     "help_text": "Normalization of all vcf-files from each applied variant-caller using bfctools norm."
+                },
+                "snv_consensus_calling": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-code-branch",
+                    "description": "Enable consensus calling of multiple VCF files from one sample",
+                    "help_text": "Intersects multiple VCF files from one sample using `bcftools isec`. As consensus criterium `-n+${params.snv_consensus_calling}` is used, meaning a variant is found in this many or more files. For details, visit: https://samtools.github.io/bcftools/bcftools.html#isec"
+                },
+                "consensus_min_count": {
+                    "type": "integer",
+                    "default": 2,
+                    "fa_icon": "fab fa-deezer",
+                    "description": "Minimum number of variant callers calling a variant for consensus results",
+                    "help_text": "Determines the minimum number of variant callers a variant must be called in to be included in the consensus results. As consensus criterium `-n+${params.consensus_min_count}` is used, meaning a variant is found in this many or more files. For details, visit: https://samtools.github.io/bcftools/bcftools.html#isec"
                 },
                 "concatenate_vcfs": {
                     "type": "boolean",

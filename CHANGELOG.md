@@ -10,10 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#2044](https://github.com/nf-core/sarek/pull/2044) - Add filtering with `bcftools view -f PASS,.` following variantcalling step
+- [#2049](https://github.com/nf-core/sarek/pull/2049) - Add consensus calling of small variant VCFs for variants called by x or more tools, with `x=2` as default
 
 ### Changed
-
-- [#2045](https://github.com/nf-core/sarek/pull/2045) - Propagate fastp shard naming if exists through BBSplit to ensure unique naming in Markduplicates
 
 ### Fixed
 
@@ -28,8 +27,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params | status |
-| ------ | ------ |
+| Params                       | status |
+| ---------------------------- | ------ |
+| `--filter_vcfs`              | New    |
+| `--bcftools_filter_criteria` | New    |
+| `--snv_consensus_calling`    | New    |
+| `--consensus_min_count`      | New    |
 
 ### Developer section
 
@@ -73,10 +76,8 @@ This patch release includes a bump to Nextflow 25.04.8.
 
 ### Parameters
 
-| Params                       | status |
-| ---------------------------- | ------ |
-| `--filter_vcfs`              | New    |
-| `--bcftools_filter_criteria` | New    |
+| Params | status |
+| ------ | ------ |
 
 ### Developer section
 
