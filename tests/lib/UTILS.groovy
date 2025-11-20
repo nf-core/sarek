@@ -37,7 +37,7 @@ class UTILS {
         def fasta_base = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
         def fasta = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
         // txt_files: MuSE txt files
-        def txt_files = getAllFilesFromDir(outdir, include: ['**/*.MuSE.txt', '**/*README.txt'])
+        def txt_files = getAllFilesFromDir(outdir, include: ['**/*.MuSE.txt'])
         // vcf_files: All vcf files
         def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: ['**/test{N,T}.germline.vcf{,.gz}', '**/*.{freebayes,freebayes.filtered.bcftools_filtered*}.vcf{,.gz}',  '**/*.varlociraptor.{vcf}{,.gz}'])
         // freebayes_unfiltered: vcf files from freebayes without quality filtering
