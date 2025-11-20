@@ -39,7 +39,7 @@ class UTILS {
         // txt_files: MuSE txt files
         def txt_files = getAllFilesFromDir(outdir, include: ['**/*.MuSE.txt'])
         // vcf_files: All vcf files
-        def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: ['**/test{N,T}.germline.vcf{,.gz}', '**/*.{freebayes,freebayes.filtered.bcftools_filtered*}.vcf{,.gz}',  '**/*.varlociraptor.{vcf}{,.gz}'])
+        def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: ['**/test{N,T}.germline.vcf{,.gz}', '**/*.{freebayes,freebayes.filtered.bcftools_filtered*}.vcf{,.gz}',  '**/*.varlociraptor.{vcf}{,.gz}', '**/*/README.txt'])
         // freebayes_unfiltered: vcf files from freebayes without quality filtering
         def freebayes_unfiltered = getAllFilesFromDir(outdir, include: ['**/*.freebayes.vcf.gz'])
         // varlociraptor vcf

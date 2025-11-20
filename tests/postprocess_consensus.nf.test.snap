@@ -272,9 +272,7 @@
                 "sample4_vs_sample3.strelka.somatic_indels.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,4fc17fa5625b4d1dcc5d791b1eb22d85",
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae",
-                "README.txt:md5,0c1ec57e2d165614ff1554188c2a8b9c",
                 "sites.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "README.txt:md5,585c7640244331377f7e2e66a43a384f",
                 "sites.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.mutect2.vcf.gz.stats:md5,bd657dd9abf6e2354224bb0d20ba181e"
             ],
@@ -564,9 +562,7 @@
                 "sample4_vs_sample3.strelka.somatic_indels.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,4fc17fa5625b4d1dcc5d791b1eb22d85",
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae",
-                "README.txt:md5,49ab2a122c10a09f422b9f612995aea3",
                 "sites.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "README.txt:md5,54ed3ac4929debbf921b04daf9f74729",
                 "sites.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.mutect2.vcf.gz.stats:md5,bd657dd9abf6e2354224bb0d20ba181e"
             ],
