@@ -41,7 +41,7 @@ reports/vcftools/**/*.TsTv.qual
 variant_calling/**/*.{bcf,vcf,vcf.gz,vcf.gz.tbi}
 variant_calling/ascat/*/*.metrics.txt
 variant_calling/**/*.{pdf,png}
-variant_calling/consensus/*/README.txt
+variant_calling/consensus/**/README.txt
 variant_calling/controlfreec/*/config.txt
 variant_calling/msisensor2/*/*_somatic
 variant_calling/muse/*/*.MuSE.txt
