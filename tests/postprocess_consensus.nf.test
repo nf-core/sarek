@@ -45,7 +45,7 @@ nextflow_pipeline {
                 wes: true,
                 normalize_vcfs: true,
                 snv_consensus_calling: true,
-                tools: 'mutect2,strelka'
+                tools: 'mutect2,strelka',
                 filter_vcfs: true,
             ],
             include_freebayes_unfiltered: true,
