@@ -3,6 +3,7 @@
 //
 include { BCFTOOLS_VIEW as FILTER_VCFS                             } from '../../../modules/nf-core/bcftools/view'
 include { CONCATENATE_GERMLINE_VCFS                                } from '../vcf_concatenate_germline'
+include { CONSENSUS                                                } from '../vcf_consensus'
 include { NORMALIZE_VCFS                                           } from '../vcf_normalization'
 include { VCF_VARLOCIRAPTOR_SINGLE as VCF_VARLOCIRAPTOR_GERMLINE   } from '../vcf_varlociraptor_single'
 include { VCF_VARLOCIRAPTOR_SOMATIC                                } from '../vcf_varlociraptor_somatic'
@@ -24,6 +25,7 @@ workflow POST_VARIANTCALLING {
     fai
     concatenate_vcfs
     filter_vcfs
+    snv_consensus_calling
     normalize_vcfs
     varlociraptor_chunk_size // integer: [mandatory] [default: 15] number of chunks to split BCF files when preprocessing and calling variants
     varlociraptor_scenario_germline
@@ -62,8 +64,25 @@ workflow POST_VARIANTCALLING {
 
     } else if (filter_vcfs || normalize_vcfs || concatenate_vcfs ) {
 
+        def small_variantcallers = ['deepvariant', 'freebayes', 'haplotypecaller', 'haplotyper',
+                                    'dnascope', 'tnscope', 'muse', 'mutect2', 'strelka' ]
+
         all_vcfs = Channel.empty().mix(germline_vcfs, tumor_only_vcfs, somatic_vcfs)
+                                .branch{ meta, vcf ->
+                                    small: small_variantcallers.contains(meta.variantcaller)
+                                    other: true
+                                }
+
         all_tbis = Channel.empty().mix(germline_tbis, tumor_only_tbis, somatic_tbis)
+                                .branch{ meta, tbi ->
+                                    small: small_variantcallers.contains(meta.variantcaller)
+                                    other: true
+                                }
+
+        // Needs to be reassigned to enable pass through reassignment below
+        // Due to strelka having multiple outputs, we are adding the file name (vcf.gz) for both here to make sure the right files are joined below
+        small_variant_vcfs = all_vcfs.small.map{ meta, vcfs_ -> [meta + [filename: vcfs_.name], vcfs_]}
+        small_variant_tbis = all_tbis.small.map{ meta, tbis_ -> [meta + [filename: tbis_.baseName], tbis_]}
 
         // 1. Filter by PASS and custom fields
         // 2. Normalize
@@ -71,31 +90,52 @@ workflow POST_VARIANTCALLING {
         if(filter_vcfs) {
 
             // Join VCFs with their corresponding TBIs before filtering
-            FILTER_VCFS( all_vcfs.join(all_tbis, failOnDuplicate: true, failOnMismatch: true), [], [], [])
+            FILTER_VCFS( small_variant_vcfs.join(small_variant_tbis, failOnDuplicate: true, failOnMismatch: true), [], [], [])
 
-            all_vcfs = FILTER_VCFS.out.vcf
-            all_tbis = FILTER_VCFS.out.tbi
+            small_variant_vcfs = FILTER_VCFS.out.vcf
+            small_variant_tbis = FILTER_VCFS.out.tbi
             versions = versions.mix(FILTER_VCFS.out.versions)
         }
 
         if (normalize_vcfs) {
 
-            all_vcfs.dump(pretty: true)
+            NORMALIZE_VCFS(small_variant_vcfs, fasta)
 
-            NORMALIZE_VCFS(all_vcfs, fasta)
-
-            all_vcfs = NORMALIZE_VCFS.out.vcfs // [meta, vcf]
-            all_tbis = NORMALIZE_VCFS.out.tbis // [meta, tbi]
+            small_variant_vcfs = NORMALIZE_VCFS.out.vcfs // [meta, vcf]
+            small_variant_tbis = NORMALIZE_VCFS.out.tbis // [meta, tbi]
             versions = versions.mix(NORMALIZE_VCFS.out.versions)
         }
+
+        if (normalize_vcfs && snv_consensus_calling){
+
+            CONSENSUS(small_variant_vcfs.join(small_variant_tbis, failOnDuplicate: true, failOnMismatch: true))
+
+            small_variant_vcfs = CONSENSUS.out.vcfs.map { meta, vcfs_ ->
+                                        meta.variantcaller = 'consensus'
+                                        [meta, vcfs_]
+                                    } // [meta, vcfs]
+
+            small_variant_tbis = CONSENSUS.out.tbis.map { meta, tbis_ ->
+                                        meta.variantcaller = 'consensus'
+                                        [meta, tbis_]
+                                    } // [meta, tbis]
+
+            versions = versions.mix(CONSENSUS.out.versions)
+        }
+
+        vcfs = small_variant_vcfs.mix(all_vcfs.other)
+        tbis = small_variant_tbis.mix(all_tbis.other)
 
         if (concatenate_vcfs) {
             CONCATENATE_GERMLINE_VCFS(germline_vcfs)
 
             vcfs = vcfs.mix(CONCATENATE_GERMLINE_VCFS.out.vcfs)
             tbis = tbis.mix(CONCATENATE_GERMLINE_VCFS.out.tbis)
+
             versions = versions.mix(CONCATENATE_GERMLINE_VCFS.out.versions)
         }
+
+
     } else {
         // No post-processing requested, pass through original VCFs
         vcfs = vcfs.mix(germline_vcfs,tumor_only_vcfs, somatic_vcfs)

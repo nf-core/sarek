@@ -25,6 +25,11 @@
                         "git_sha": "1503efe8f6450e71218097f93cf43e4b625018d4",
                         "installed_by": ["modules"]
                     },
+                    "bcftools/isec": {
+                        "branch": "master",
+                        "git_sha": "f17049e03697726ace7499d2fe342f892594f6f3",
+                        "installed_by": ["modules"]
+                    },
                     "bcftools/merge": {
                         "branch": "master",
                         "git_sha": "f17049e03697726ace7499d2fe342f892594f6f3",
@@ -583,7 +588,7 @@
                     },
                     "yte": {
                         "branch": "master",
-                        "git_sha": "3179219c5360ba9e624f64a28b102efe0cfadc49",
+                        "git_sha": "b9947fd7a338e1087a5c386ac7192588d3059122",
                         "installed_by": ["modules"]
                     }
                 }

@@ -150,7 +150,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     vcf_filtered = FILTERMUTECTCALLS.out.vcf.map { meta, vcf_ -> [meta + [variantcaller: 'mutect2'], vcf_] }
 
     tbi_mutect2 = FILTERMUTECTCALLS.out.tbi
-        .map{ meta, tbi -> [ meta + [ variantcaller:'mutect2' ], tbi ] }
+        .map{ meta, tbi_ -> [ meta + [ variantcaller:'mutect2' ], tbi_ ] }
 
     versions = versions.mix(MERGE_MUTECT2.out.versions)
     versions = versions.mix(CALCULATECONTAMINATION.out.versions)

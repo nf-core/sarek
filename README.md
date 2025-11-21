@@ -68,7 +68,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `Strelka`
   - `TIDDIT`
 - Post-variant calling options, one of:
-  - `BCFtools concat` for germline vcfs and/or `BCFtools view` (default: filter by `PASS`), `BCFtools norm` for all vcfs
+  - Filtering (`bcftools view` (default: filter by `PASS,.`)), normalisation (`bcftools norm`) and consensus calling (`bcftools isec`, default: called by at least 2 tools `-n+2`) on all vcfs and/or `bcftools concat` for germline vcfs
   - `Varlociraptor` for all vcfs
 - Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`)
 - Summarise and represent QC (`MultiQC`)
