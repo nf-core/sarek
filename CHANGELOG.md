@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
-| Dependency.   | Old version | New version |
+| Dependency    | Old version | New version |
 | ------------- | ----------- | ----------- |
 | varlociraptor | 8.7.4       | 8.9.0       |
 
