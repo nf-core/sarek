@@ -221,7 +221,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_vcf_for_callvariants = PREPROCESS_NORMAL.out.bcf
         .map { meta, normal_bcf -> [meta.id + meta.chunk + meta.variantcaller, meta, normal_bcf] }
         .join(
-            PREPROCESS_TUMOR.out.bcf.map { meta, tumor_bcf -> [meta.normal_id + meta.chunk + meta.variantcaller, meta, tumor_bcf] }
+            PREPROCESS_TUMOR.out.bcf.map { meta, tumor_bcf -> [meta.normal_id + meta.chunk + meta.variantcaller, meta, tumor_bcf] }, by: [0]
         )
         .combine(ch_scenario_file)
         .map { _id, meta_normal, normal_bcf, _meta_tumor, tumor_bcf, _meta_scenario, scenario_file ->
