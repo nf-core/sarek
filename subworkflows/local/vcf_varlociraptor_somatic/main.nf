@@ -42,13 +42,14 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     // Estimate alignment properties
     ALIGNMENTPROPERTIES_TUMOR(
-        cram_normal.combine(ch_fasta).combine(ch_fasta_fai).map { meta_cram, cram, crai, _meta_fasta, fasta, _meta_fai, fai ->
+        cram_tumor.combine(ch_fasta).combine(ch_fasta_fai).map { meta_cram, cram, crai, _meta_fasta, fasta, _meta_fai, fai ->
             [meta_cram, cram, crai, fasta, fai]
         }
+
     )
 
     ALIGNMENTPROPERTIES_NORMAL(
-        cram_tumor.combine(ch_fasta).combine(ch_fasta_fai).map { meta_cram, cram, crai, _meta_fasta, fasta, _meta_fai, fai ->
+        cram_normal.combine(ch_fasta).combine(ch_fasta_fai).map { meta_cram, cram, crai, _meta_fasta, fasta, _meta_fai, fai ->
             [meta_cram, cram, crai, fasta, fai]
         }
     )
