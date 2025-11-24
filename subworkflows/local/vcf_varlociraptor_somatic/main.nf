@@ -135,7 +135,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     //
     // SPLIT VCF CHUNKS - create chunked VCFs for both tumor and normal preprocessing
     //
-    ch_chunked_vcfs = RBT_VCFSPLIT.out.bcfchunks
+    ch_chunked_vcfs_tumor = RBT_VCFSPLIT.out.bcfchunks
         .transpose()
         .map { meta, vcf_chunked ->
             [
@@ -144,10 +144,20 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
             ]
         }
 
+    // Create chunked VCFs with normal metadata for normal preprocessing
+    ch_chunked_vcfs_normal = RBT_VCFSPLIT.out.bcfchunks
+        .transpose()
+        .map { meta, vcf_chunked ->
+            [
+                [id: meta.normal_id] + meta.subMap('patient', 'sex', 'status', 'n_fastq', 'data_type', 'variantcaller', 'postprocess', 'normal_id', 'tumor_id') + [chunk: vcf_chunked.name.split(/\./)[-2]],
+                vcf_chunked,
+            ]
+        }
+
     //
     // PREPROCESS VCF WITH TUMOR CRAM
     //
-    ch_chunked_tumor_vcfs = ch_chunked_vcfs
+    ch_chunked_tumor_vcfs = ch_chunked_vcfs_tumor
 
     // Create base channels for data that will be replicated for each chunk
     ch_cram_tumor = cram_tumor
@@ -183,7 +193,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     //
     // PREPROCESS VCF WITH NORMAL CRAM
     //
-    ch_chunked_normal_vcfs = ch_chunked_vcfs
+    ch_chunked_normal_vcfs = ch_chunked_vcfs_normal
 
     // Create base channels for data that will be replicated for each chunk
     ch_cram_alignment = cram_normal
@@ -223,7 +233,9 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         .map { meta, normal_bcf -> [meta.id + meta.chunk + meta.variantcaller, meta, normal_bcf] }
         .join(
             PREPROCESS_TUMOR.out.bcf.map { meta, tumor_bcf -> [meta.normal_id + meta.chunk + meta.variantcaller, meta, tumor_bcf] },
-            by: [0]
+            by: [0],
+            failOnMismatch: true,
+            failOnDuplicate: true,
         )
         .combine(ch_scenario_file)
         .map { _id, meta_normal, normal_bcf, _meta_tumor, tumor_bcf, _meta_scenario, scenario_file ->
