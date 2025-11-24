@@ -29,12 +29,9 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     ch_scenario_file = FILL_SCENARIO_FILE.out.rendered
     ch_versions = ch_versions.mix(FILL_SCENARIO_FILE.out.versions)
 
-    ch_fasta_singleton = ch_fasta.first()
-    ch_fasta_fai_singleton = ch_fasta_fai.first()
-
     // Estimate alignment properties
     VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES(
-        ch_cram.combine(ch_fasta_singleton).combine(ch_fasta_fai_singleton).map { meta_cram, cram, crai, _meta_fasta, fasta, _meta_fai, fai ->
+        ch_cram.combine(ch_fasta).combine(ch_fasta_fai).map { meta_cram, cram, crai, _meta_fasta, fasta, _meta_fai, fai ->
             [meta_cram, cram, crai, fasta, fai]
         }
     )
@@ -67,8 +64,8 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     ch_input_preprocess_chunked = ch_chunked_vcfs
         .map { meta, vcf -> [meta.id, meta, vcf] }
         .combine(ch_cram_alignment, by: 0)
-        .combine(ch_fasta_singleton)
-        .combine(ch_fasta_fai_singleton)
+        .combine(ch_fasta)
+        .combine(ch_fasta_fai)
         .map { _id, meta_vcf, vcf, meta_cram, cram, crai, alignment_json, _meta_fasta, fasta, _meta_fai, fasta_fai ->
             [
                 meta_cram + [
@@ -95,12 +92,10 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     //
     // CALL VARIANTS WITH VARLOCIRAPTOR
     //
-    ch_scenario_file_singleton = ch_scenario_file.first()
-
     ch_vcfs_for_callvariants = VARLOCIRAPTOR_PREPROCESS.out.bcf
-        .combine(ch_scenario_file_singleton)
+        .combine(ch_scenario_file)
         .map { meta_normal, normal_bcf, _meta_scenario, scenario_file ->
-            [meta_normal, [normal_bcf], scenario_file, [val_sampletype]]
+            [meta_normal, [normal_bcf], scenario_file, val_sampletype]
         }
 
     VARLOCIRAPTOR_CALLVARIANTS(
