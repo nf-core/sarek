@@ -45,7 +45,6 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         cram_tumor.combine(ch_fasta).combine(ch_fasta_fai).map { meta_cram, cram, crai, _meta_fasta, fasta, _meta_fai, fai ->
             [meta_cram, cram, crai, fasta, fai]
         }
-
     )
 
     ALIGNMENTPROPERTIES_NORMAL(
@@ -222,7 +221,8 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_vcf_for_callvariants = PREPROCESS_NORMAL.out.bcf
         .map { meta, normal_bcf -> [meta.id + meta.chunk + meta.variantcaller, meta, normal_bcf] }
         .join(
-            PREPROCESS_TUMOR.out.bcf.map { meta, tumor_bcf -> [meta.normal_id + meta.chunk + meta.variantcaller, meta, tumor_bcf] }, by: [0]
+            PREPROCESS_TUMOR.out.bcf.map { meta, tumor_bcf -> [meta.normal_id + meta.chunk + meta.variantcaller, meta, tumor_bcf] },
+            by: [0]
         )
         .combine(ch_scenario_file)
         .map { _id, meta_normal, normal_bcf, _meta_tumor, tumor_bcf, _meta_scenario, scenario_file ->
@@ -254,7 +254,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     }
 
     ch_vcf_tbi_chunks = ch_sort_called_chunks_vcf.multiple
-        .join(ch_sort_called_chunks_tbi.multiple, failOnMismatch: true, failOnDuplicate: true)
+        .join(ch_sort_called_chunks_tbi.multiple, by: 0, failOnMismatch: true, failOnDuplicate: true)
         .map { meta, vcf, tbi ->
             [meta - meta.subMap("chunk"), vcf, tbi]
         }
