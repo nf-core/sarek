@@ -168,6 +168,12 @@ workflow NFCORE_SAREK {
     versions = versions.mix(PREPARE_GENOME.out.versions)
     versions = versions.mix(PREPARE_INTERVALS.out.versions)
 
+    // Fails when consensus calling is specified without normalization
+    if (params.snv_consensus_calling && !params.normalize_vcfs){
+        error("Consensus calling was specified without normalization. Set --normalize_vcfs in addition. See: https://www.biostars.org/p/307035/")
+    }
+
+
     // Download cache
     if (params.download_cache) {
         // Assuming that even if the cache is provided, if the user specify download_cache, sarek will download the cache

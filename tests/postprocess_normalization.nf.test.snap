@@ -60,6 +60,7 @@
             },
             [
                 "csv",
+                "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
