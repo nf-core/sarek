@@ -133,9 +133,9 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_versions = ch_versions.mix(RBT_VCFSPLIT.out.versions)
 
     //
-    // PREPROCESS VCF WITH TUMOR CRAM
+    // SPLIT VCF CHUNKS - create chunked VCFs for both tumor and normal preprocessing
     //
-    ch_chunked_tumor_vcfs = RBT_VCFSPLIT.out.bcfchunks
+    ch_chunked_vcfs = RBT_VCFSPLIT.out.bcfchunks
         .transpose()
         .map { meta, vcf_chunked ->
             [
@@ -143,6 +143,11 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
                 vcf_chunked,
             ]
         }
+
+    //
+    // PREPROCESS VCF WITH TUMOR CRAM
+    //
+    ch_chunked_tumor_vcfs = ch_chunked_vcfs
 
     // Create base channels for data that will be replicated for each chunk
     ch_cram_tumor = cram_tumor
@@ -178,11 +183,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     //
     // PREPROCESS VCF WITH NORMAL CRAM
     //
-    ch_chunked_normal_vcfs = RBT_VCFSPLIT.out.bcfchunks
-        .transpose()
-        .map { meta, vcf_chunked ->
-            [meta + [chunk: vcf_chunked.name.split(/\./)[-2]], vcf_chunked]
-        }
+    ch_chunked_normal_vcfs = ch_chunked_vcfs
 
     // Create base channels for data that will be replicated for each chunk
     ch_cram_alignment = cram_normal
