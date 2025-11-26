@@ -228,10 +228,12 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     //
     // CALL VARIANTS WITH VARLOCIRAPTOR
     //
+    PREPROCESS_TUMOR.out.bcf.map { meta, tumor_bcf -> [[meta.patient, meta.normal_id, meta.chunk, meta.variantcaller], meta, tumor_bcf] }.dump(tag: 'TUMOR_KEY')
     ch_vcf_for_callvariants = PREPROCESS_NORMAL.out.bcf
-        .map { meta, normal_bcf -> [[meta.patient, meta.chunk, meta.variantcaller], meta, normal_bcf] }
+        .map { meta, normal_bcf -> [[meta.patient, meta.id, meta.chunk, meta.variantcaller], meta, normal_bcf] }
+        .dump(tag: 'NORMAL_KEY')
         .join(
-            PREPROCESS_TUMOR.out.bcf.map { meta, tumor_bcf -> [[meta.patient, meta.chunk, meta.variantcaller], meta, tumor_bcf] },
+            PREPROCESS_TUMOR.out.bcf.map { meta, tumor_bcf -> [[meta.patient, meta.normal_id, meta.chunk, meta.variantcaller], meta, tumor_bcf] }.dump(tag: 'TUMOR_KEY'),
             by: [0],
             failOnMismatch: true,
             failOnDuplicate: true,
