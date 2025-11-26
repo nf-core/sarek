@@ -72,8 +72,10 @@ workflow FASTQ_PREPROCESS_GATK {
     // Channels for workflow outputs (populated conditionally)
     cram_mapped_out           = Channel.empty()
     bam_mapped_out            = Channel.empty()
-    cram_markduplicates_out   = Channel.empty()
-    bam_markduplicates_out    = Channel.empty()
+    cram_markduplicates_out       = Channel.empty()
+    bam_markduplicates_out        = Channel.empty()
+    recal_table_out               = Channel.empty()
+    markduplicates_metrics_out    = Channel.empty()
 
     // PREPROCESSING
 
@@ -355,6 +357,9 @@ workflow FASTQ_PREPROCESS_GATK {
 
             cram_markduplicates_no_spark = BAM_MARKDUPLICATES.out.cram
 
+            // Capture markduplicates metrics for workflow output
+            markduplicates_metrics_out = markduplicates_metrics_out.mix(BAM_MARKDUPLICATES.out.metrics)
+
             // Gather QC reports
             reports = reports.mix(BAM_MARKDUPLICATES.out.reports.collect{ _meta, report -> [ report ] })
 
@@ -454,6 +459,9 @@ workflow FASTQ_PREPROCESS_GATK {
                 ch_table_bqsr_no_spark,
                 ch_table_bqsr_spark)
 
+            // Capture recal table for workflow output
+            recal_table_out = recal_table_out.mix(ch_table_bqsr)
+
             reports = reports.mix(ch_table_bqsr.collect{ _meta, table -> [ table ] })
 
             cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
@@ -539,6 +547,8 @@ workflow FASTQ_PREPROCESS_GATK {
     bam_mapped            = bam_mapped_out
     cram_markduplicates   = cram_markduplicates_out
     bam_markduplicates    = bam_markduplicates_out
+    recal_table           = recal_table_out           // channel: [ meta, table ]
+    markduplicates_metrics = markduplicates_metrics_out // channel: [ meta, metrics ]
     reports
     versions
 

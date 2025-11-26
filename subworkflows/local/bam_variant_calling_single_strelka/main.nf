@@ -64,6 +64,13 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], tbi ] }
 
+    // Genome VCF - strelka produces a separate genome-wide VCF
+    genome_vcf_out = Channel.empty().mix(MERGE_STRELKA_GENOME.out.vcf, genome_vcf.no_intervals)
+        .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], vcf ] }
+
+    genome_tbi_out = Channel.empty().mix(MERGE_STRELKA_GENOME.out.tbi, genome_vcf.no_intervals.map{ meta, _vcf -> [meta, []] })
+        .map{ meta, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], tbi ] }
+
     versions = versions.mix(MERGE_STRELKA.out.versions)
     versions = versions.mix(MERGE_STRELKA_GENOME.out.versions)
     versions = versions.mix(STRELKA_SINGLE.out.versions)
@@ -71,6 +78,8 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     emit:
     vcf
     tbi
+    genome_vcf = genome_vcf_out // channel: [ meta, vcf ]
+    genome_tbi = genome_tbi_out // channel: [ meta, tbi ]
 
     versions
 }

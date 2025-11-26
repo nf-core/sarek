@@ -13,6 +13,12 @@ workflow CRAM_SAMPLEQC {
 
     versions = Channel.empty()
     reports = Channel.empty()
+    samtools_stats = Channel.empty()
+    mosdepth_global = Channel.empty()
+    mosdepth_region = Channel.empty()
+    mosdepth_summary = Channel.empty()
+    mosdepth_regions_bed = Channel.empty()
+    mosdepth_regions_csi = Channel.empty()
 
     if (!skip_baserecalibration) {
 
@@ -24,6 +30,14 @@ workflow CRAM_SAMPLEQC {
 
         // Gather QC reports
         reports = CRAM_QC_RECAL.out.reports.collect { _meta, report -> report }
+
+        // Capture individual QC channels with meta
+        samtools_stats = CRAM_QC_RECAL.out.samtools_stats
+        mosdepth_global = CRAM_QC_RECAL.out.mosdepth_global
+        mosdepth_region = CRAM_QC_RECAL.out.mosdepth_region
+        mosdepth_summary = CRAM_QC_RECAL.out.mosdepth_summary
+        mosdepth_regions_bed = CRAM_QC_RECAL.out.mosdepth_regions_bed
+        mosdepth_regions_csi = CRAM_QC_RECAL.out.mosdepth_regions_csi
 
         // Gather used softwares versions
         versions = versions.mix(CRAM_QC_RECAL.out.versions)
@@ -39,5 +53,11 @@ workflow CRAM_SAMPLEQC {
     vcf         = BAM_NGSCHECKMATE.out.vcf // channel: [ meta, vcf ]
     pdf         = BAM_NGSCHECKMATE.out.pdf // channel: [ meta, pdf ]
     reports
+    samtools_stats                                 // channel: [ meta, stats ]
+    mosdepth_global                                // channel: [ meta, txt ]
+    mosdepth_region                                // channel: [ meta, txt ]
+    mosdepth_summary                               // channel: [ meta, txt ]
+    mosdepth_regions_bed                           // channel: [ meta, bed.gz ]
+    mosdepth_regions_csi                           // channel: [ meta, csi ]
     versions    // channel: [ versions.yml ]
 }

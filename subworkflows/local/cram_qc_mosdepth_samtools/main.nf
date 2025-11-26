@@ -33,5 +33,11 @@ workflow CRAM_QC_MOSDEPTH_SAMTOOLS {
 
     emit:
     reports
+    samtools_stats      = SAMTOOLS_STATS.out.stats     // channel: [ meta, stats ]
+    mosdepth_global     = MOSDEPTH.out.global_txt      // channel: [ meta, txt ]
+    mosdepth_region     = MOSDEPTH.out.regions_txt     // channel: [ meta, txt ]
+    mosdepth_summary    = MOSDEPTH.out.summary_txt     // channel: [ meta, txt ]
+    mosdepth_regions_bed = MOSDEPTH.out.regions_bed    // channel: [ meta, bed.gz ]
+    mosdepth_regions_csi = MOSDEPTH.out.regions_csi    // channel: [ meta, csi ]
     versions // channel: [ versions.yml ]
 }

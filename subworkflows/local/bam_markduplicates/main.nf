@@ -38,6 +38,7 @@ workflow BAM_MARKDUPLICATES {
     emit:
     cram
     reports
+    metrics     = GATK4_MARKDUPLICATES.out.metrics // channel: [ meta, metrics ]
 
     versions    // channel: [ versions.yml ]
 }

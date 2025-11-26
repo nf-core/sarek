@@ -289,18 +289,44 @@ workflow NFCORE_SAREK {
 
     emit:
     multiqc_report      = SAREK.out.multiqc_report      // channel: /path/to/multiqc_report.html
+    multiqc_data        = SAREK.out.multiqc_data        // channel: /path/to/multiqc_data
+    multiqc_plots       = SAREK.out.multiqc_plots       // channel: /path/to/multiqc_plots
+    versions            = SAREK.out.versions            // channel: [ path(versions.yml) ]
+    reports             = SAREK.out.reports             // channel: [ reports ] - aggregate QC reports
+    // Individual QC report channels with meta
+    fastqc_zip          = SAREK.out.fastqc_zip          // channel: [ meta, zip ]
+    fastqc_html         = SAREK.out.fastqc_html         // channel: [ meta, html ]
+    samtools_stats      = SAREK.out.samtools_stats      // channel: [ meta, stats ]
+    mosdepth_global     = SAREK.out.mosdepth_global     // channel: [ meta, txt ]
+    mosdepth_region     = SAREK.out.mosdepth_region     // channel: [ meta, txt ]
+    mosdepth_summary    = SAREK.out.mosdepth_summary    // channel: [ meta, txt ]
+    mosdepth_regions_bed = SAREK.out.mosdepth_regions_bed // channel: [ meta, bed.gz ]
+    mosdepth_regions_csi = SAREK.out.mosdepth_regions_csi // channel: [ meta, csi ]
+    bcftools_stats      = SAREK.out.bcftools_stats      // channel: [ meta, stats ]
+    vcftools_tstv_counts = SAREK.out.vcftools_tstv_counts // channel: [ meta, counts ]
+    vcftools_tstv_qual  = SAREK.out.vcftools_tstv_qual  // channel: [ meta, qual ]
+    vcftools_filter_summary = SAREK.out.vcftools_filter_summary // channel: [ meta, summary ]
     // Preprocessing outputs
     cram_mapped         = SAREK.out.cram_mapped         // channel: [ meta, cram, crai ]
     bam_mapped          = SAREK.out.bam_mapped          // channel: [ meta, bam, bai ]
     cram_markduplicates = SAREK.out.cram_markduplicates // channel: [ meta, cram, crai ]
     bam_markduplicates  = SAREK.out.bam_markduplicates  // channel: [ meta, bam, bai ]
     cram_recalibrated   = SAREK.out.cram_recalibrated   // channel: [ meta, cram, crai ]
-    // Variant calling outputs
-    vcf_germline        = SAREK.out.vcf_germline        // channel: [ meta, vcf, tbi ]
-    vcf_somatic         = SAREK.out.vcf_somatic         // channel: [ meta, vcf, tbi ]
-    vcf_tumor_only      = SAREK.out.vcf_tumor_only      // channel: [ meta, vcf, tbi ]
+    recal_table         = SAREK.out.recal_table         // channel: [ meta, table ]
+    markduplicates_metrics = SAREK.out.markduplicates_metrics // channel: [ meta, metrics ]
+    // Variant calling outputs - VCF
+    vcf_germline        = SAREK.out.vcf_germline        // channel: [ meta, vcf ]
+    vcf_somatic         = SAREK.out.vcf_somatic         // channel: [ meta, vcf ]
+    vcf_tumor_only      = SAREK.out.vcf_tumor_only      // channel: [ meta, vcf ]
+    // Variant calling outputs - TBI (separate)
+    tbi_germline        = SAREK.out.tbi_germline        // channel: [ meta, tbi ]
+    tbi_somatic         = SAREK.out.tbi_somatic         // channel: [ meta, tbi ]
+    tbi_tumor_only      = SAREK.out.tbi_tumor_only      // channel: [ meta, tbi ]
+    // Strelka genome VCF/TBI (separate from variant VCF)
+    vcf_strelka_genome  = SAREK.out.vcf_strelka_genome  // channel: [ meta, vcf ]
+    tbi_strelka_genome  = SAREK.out.tbi_strelka_genome  // channel: [ meta, tbi ]
     // Annotation outputs
-    vcf_annotated       = SAREK.out.vcf_annotated       // channel: [ meta, vcf, tbi ]
+    vcf_annotated       = SAREK.out.vcf_annotated       // channel: [ meta, vcf ]
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -339,18 +365,44 @@ workflow {
     )
 
     publish:
-    // QC Reports
+    // QC Reports - MultiQC
     multiqc_report = NFCORE_SAREK.out.multiqc_report
+    multiqc_data = NFCORE_SAREK.out.multiqc_data
+    multiqc_plots = NFCORE_SAREK.out.multiqc_plots
+    // Versions
+    versions = NFCORE_SAREK.out.versions
+    // Individual QC reports with meta
+    fastqc_zip = NFCORE_SAREK.out.fastqc_zip
+    fastqc_html = NFCORE_SAREK.out.fastqc_html
+    samtools_stats = NFCORE_SAREK.out.samtools_stats
+    mosdepth_global = NFCORE_SAREK.out.mosdepth_global
+    mosdepth_region = NFCORE_SAREK.out.mosdepth_region
+    mosdepth_summary = NFCORE_SAREK.out.mosdepth_summary
+    mosdepth_regions_bed = NFCORE_SAREK.out.mosdepth_regions_bed
+    mosdepth_regions_csi = NFCORE_SAREK.out.mosdepth_regions_csi
+    bcftools_stats = NFCORE_SAREK.out.bcftools_stats
+    vcftools_tstv_counts = NFCORE_SAREK.out.vcftools_tstv_counts
+    vcftools_tstv_qual = NFCORE_SAREK.out.vcftools_tstv_qual
+    vcftools_filter_summary = NFCORE_SAREK.out.vcftools_filter_summary
     // Preprocessing outputs
     cram_mapped = NFCORE_SAREK.out.cram_mapped
     bam_mapped = NFCORE_SAREK.out.bam_mapped
     cram_markduplicates = NFCORE_SAREK.out.cram_markduplicates
     bam_markduplicates = NFCORE_SAREK.out.bam_markduplicates
     cram_recalibrated = NFCORE_SAREK.out.cram_recalibrated
-    // Variant calling outputs
+    recal_table = NFCORE_SAREK.out.recal_table
+    markduplicates_metrics = NFCORE_SAREK.out.markduplicates_metrics
+    // Variant calling outputs - VCF
     vcf_germline = NFCORE_SAREK.out.vcf_germline
     vcf_somatic = NFCORE_SAREK.out.vcf_somatic
     vcf_tumor_only = NFCORE_SAREK.out.vcf_tumor_only
+    // Variant calling outputs - TBI (separate)
+    tbi_germline = NFCORE_SAREK.out.tbi_germline
+    tbi_somatic = NFCORE_SAREK.out.tbi_somatic
+    tbi_tumor_only = NFCORE_SAREK.out.tbi_tumor_only
+    // Strelka genome VCF/TBI (separate from variant VCF)
+    vcf_strelka_genome = NFCORE_SAREK.out.vcf_strelka_genome
+    tbi_strelka_genome = NFCORE_SAREK.out.tbi_strelka_genome
     // Annotation outputs
     vcf_annotated = NFCORE_SAREK.out.vcf_annotated
 }
@@ -362,9 +414,59 @@ workflow {
 */
 
 output {
-    // QC Reports
+    // QC Reports - MultiQC
     multiqc_report {
         path 'multiqc'
+    }
+    multiqc_data {
+        path 'multiqc'
+    }
+    multiqc_plots {
+        path 'multiqc'
+    }
+
+    // Versions
+    versions {
+        path 'pipeline_info'
+    }
+
+    // Individual QC Reports
+    fastqc_zip {
+        path { meta, zip -> "reports/fastqc/${meta.id}" }
+    }
+    fastqc_html {
+        path { meta, html -> "reports/fastqc/${meta.id}" }
+    }
+    samtools_stats {
+        path { meta, stats -> "reports/samtools/${meta.id}" }
+    }
+    mosdepth_global {
+        path { meta, txt -> "reports/mosdepth/${meta.id}" }
+    }
+    mosdepth_region {
+        path { meta, txt -> "reports/mosdepth/${meta.id}" }
+    }
+    mosdepth_summary {
+        path { meta, txt -> "reports/mosdepth/${meta.id}" }
+    }
+    mosdepth_regions_bed {
+        path { meta, bed -> "reports/mosdepth/${meta.id}" }
+    }
+    mosdepth_regions_csi {
+        path { meta, csi -> "reports/mosdepth/${meta.id}" }
+    }
+    // TODO: Migrate to reports/bcftools/${meta.variantcaller}/${meta.id} to match vcftools pattern
+    bcftools_stats {
+        path { meta, stats -> "reports/bcftools/${meta.id}" }
+    }
+    vcftools_tstv_counts {
+        path { meta, counts -> "reports/vcftools/${meta.variantcaller}/${meta.id}" }
+    }
+    vcftools_tstv_qual {
+        path { meta, qual -> "reports/vcftools/${meta.variantcaller}/${meta.id}" }
+    }
+    vcftools_filter_summary {
+        path { meta, summary -> "reports/vcftools/${meta.variantcaller}/${meta.id}" }
     }
 
     // Preprocessing - Mapped
@@ -388,20 +490,49 @@ output {
         path { meta, cram, crai -> "preprocessing/recalibrated/${meta.id}" }
     }
 
-    // Variant Calling
+    // Preprocessing - Recal Table
+    recal_table {
+        path { meta, table -> "preprocessing/recal_table/${meta.id}" }
+    }
+
+    // Preprocessing - Markduplicates Metrics
+    markduplicates_metrics {
+        path { meta, metrics -> "reports/markduplicates/${meta.id}" }
+    }
+
+    // Variant Calling - VCF
     vcf_germline {
-        path { meta, vcf, tbi -> "variant_calling/${meta.variantcaller}/${meta.id}" }
+        path { meta, vcf -> "variant_calling/${meta.variantcaller}/${meta.id}" }
     }
     vcf_somatic {
-        path { meta, vcf, tbi -> "variant_calling/${meta.variantcaller}/${meta.id}" }
+        path { meta, vcf -> "variant_calling/${meta.variantcaller}/${meta.id}" }
     }
     vcf_tumor_only {
-        path { meta, vcf, tbi -> "variant_calling/${meta.variantcaller}/${meta.id}" }
+        path { meta, vcf -> "variant_calling/${meta.variantcaller}/${meta.id}" }
+    }
+
+    // Variant Calling - TBI (published to same directory as VCF)
+    tbi_germline {
+        path { meta, tbi -> "variant_calling/${meta.variantcaller}/${meta.id}" }
+    }
+    tbi_somatic {
+        path { meta, tbi -> "variant_calling/${meta.variantcaller}/${meta.id}" }
+    }
+    tbi_tumor_only {
+        path { meta, tbi -> "variant_calling/${meta.variantcaller}/${meta.id}" }
+    }
+
+    // Strelka genome VCF/TBI (separate from variant VCF)
+    vcf_strelka_genome {
+        path { meta, vcf -> "variant_calling/${meta.variantcaller}/${meta.id}" }
+    }
+    tbi_strelka_genome {
+        path { meta, tbi -> "variant_calling/${meta.variantcaller}/${meta.id}" }
     }
 
     // Annotation
     vcf_annotated {
-        path { meta, vcf, tbi -> "annotation/${meta.variantcaller}/${meta.id}" }
+        path { meta, vcf -> "annotation/${meta.variantcaller}/${meta.id}" }
     }
 }
 

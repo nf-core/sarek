@@ -124,6 +124,8 @@ workflow SAREK {
     // To gather all QC reports for MultiQC
     ch_multiqc_files = Channel.empty()
     multiqc_report   = Channel.empty()
+    multiqc_data     = Channel.empty()
+    multiqc_plots    = Channel.empty()
     reports          = Channel.empty()
 
     // Channels for workflow outputs
@@ -136,6 +138,27 @@ workflow SAREK {
     vcf_somatic_out          = Channel.empty()
     vcf_tumor_only_out       = Channel.empty()
     vcf_annotated_out        = Channel.empty()
+    vcf_strelka_genome_out   = Channel.empty()
+    tbi_germline_out         = Channel.empty()
+    tbi_somatic_out          = Channel.empty()
+    tbi_tumor_only_out       = Channel.empty()
+    tbi_strelka_genome_out   = Channel.empty()
+
+    // Individual QC report channels with meta for proper path routing
+    fastqc_zip_out           = Channel.empty()
+    fastqc_html_out          = Channel.empty()
+    samtools_stats_out       = Channel.empty()
+    mosdepth_global_out      = Channel.empty()
+    mosdepth_region_out      = Channel.empty()
+    mosdepth_summary_out     = Channel.empty()
+    mosdepth_regions_bed_out = Channel.empty()
+    mosdepth_regions_csi_out = Channel.empty()
+    bcftools_stats_out       = Channel.empty()
+    vcftools_tstv_counts_out = Channel.empty()
+    vcftools_tstv_qual_out   = Channel.empty()
+    vcftools_filter_summary_out = Channel.empty()
+    recal_table_out          = Channel.empty()
+    markduplicates_metrics_out = Channel.empty()
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -209,6 +232,8 @@ workflow SAREK {
             FASTQC(input_fastq)
 
             reports = reports.mix(FASTQC.out.zip.collect { _meta, logs -> logs })
+            fastqc_zip_out = fastqc_zip_out.mix(FASTQC.out.zip)
+            fastqc_html_out = fastqc_html_out.mix(FASTQC.out.html)
             versions = versions.mix(FASTQC.out.versions)
         }
     }
@@ -263,6 +288,8 @@ workflow SAREK {
             cram_markduplicates_out = cram_markduplicates_out.mix(FASTQ_PREPROCESS_GATK.out.cram_markduplicates)
             bam_markduplicates_out = bam_markduplicates_out.mix(FASTQ_PREPROCESS_GATK.out.bam_markduplicates)
             cram_recalibrated_out = cram_recalibrated_out.mix(FASTQ_PREPROCESS_GATK.out.cram_variant_calling)
+            recal_table_out = recal_table_out.mix(FASTQ_PREPROCESS_GATK.out.recal_table)
+            markduplicates_metrics_out = markduplicates_metrics_out.mix(FASTQ_PREPROCESS_GATK.out.markduplicates_metrics)
 
             // Gather used softwares versions
             reports = reports.mix(FASTQ_PREPROCESS_GATK.out.reports)
@@ -290,6 +317,12 @@ workflow SAREK {
     )
 
     reports = reports.mix(CRAM_SAMPLEQC.out.reports)
+    samtools_stats_out = samtools_stats_out.mix(CRAM_SAMPLEQC.out.samtools_stats)
+    mosdepth_global_out = mosdepth_global_out.mix(CRAM_SAMPLEQC.out.mosdepth_global)
+    mosdepth_region_out = mosdepth_region_out.mix(CRAM_SAMPLEQC.out.mosdepth_region)
+    mosdepth_summary_out = mosdepth_summary_out.mix(CRAM_SAMPLEQC.out.mosdepth_summary)
+    mosdepth_regions_bed_out = mosdepth_regions_bed_out.mix(CRAM_SAMPLEQC.out.mosdepth_regions_bed)
+    mosdepth_regions_csi_out = mosdepth_regions_csi_out.mix(CRAM_SAMPLEQC.out.mosdepth_regions_csi)
     versions = versions.mix(CRAM_SAMPLEQC.out.versions)
 
     if (tools) {
@@ -525,6 +558,12 @@ workflow SAREK {
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_counts.collect { _meta, counts -> [counts] })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_qual.collect { _meta, qual -> [qual] })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary.collect { _meta, summary -> [summary] })
+
+        // Capture individual QC channels with meta for workflow outputs
+        bcftools_stats_out = bcftools_stats_out.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.bcftools_stats)
+        vcftools_tstv_counts_out = vcftools_tstv_counts_out.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_counts)
+        vcftools_tstv_qual_out = vcftools_tstv_qual_out.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_qual)
+        vcftools_filter_summary_out = vcftools_filter_summary_out.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary)
         reports = reports.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.out_indexcov.collect { _meta, indexcov -> indexcov.flatten() })
         reports = reports.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.out_indexcov.collect { _meta, indexcov -> indexcov.flatten() })
 
@@ -562,6 +601,15 @@ workflow SAREK {
         vcf_germline_out = vcf_germline_out.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all)
         vcf_somatic_out = vcf_somatic_out.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all)
         vcf_tumor_only_out = vcf_tumor_only_out.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
+
+        // Capture TBI outputs separately
+        tbi_germline_out = tbi_germline_out.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.tbi_all)
+        tbi_somatic_out = tbi_somatic_out.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.tbi_all)
+        tbi_tumor_only_out = tbi_tumor_only_out.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.tbi_all)
+
+        // Capture strelka genome VCF/TBI (separate from variant VCF)
+        vcf_strelka_genome_out = vcf_strelka_genome_out.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_strelka_genome)
+        tbi_strelka_genome_out = tbi_strelka_genome_out.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.tbi_strelka_genome)
 
         // Gather used variant calling softwares versions
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
@@ -640,23 +688,50 @@ workflow SAREK {
             [],
         )
         multiqc_report = MULTIQC.out.report.toList()
+        multiqc_data = MULTIQC.out.data.toList()
+        multiqc_plots = MULTIQC.out.plots.toList()
     }
 
     emit:
     multiqc_report                                    // channel: /path/to/multiqc_report.html
+    multiqc_data                                      // channel: /path/to/multiqc_data
+    multiqc_plots                                     // channel: /path/to/multiqc_plots
     versions                                          // channel: [ path(versions.yml) ]
+    reports                                           // channel: [ reports ] - aggregate QC reports
+    // Individual QC report channels with meta
+    fastqc_zip          = fastqc_zip_out              // channel: [ meta, zip ]
+    fastqc_html         = fastqc_html_out             // channel: [ meta, html ]
+    samtools_stats      = samtools_stats_out          // channel: [ meta, stats ]
+    mosdepth_global     = mosdepth_global_out         // channel: [ meta, txt ]
+    mosdepth_region     = mosdepth_region_out         // channel: [ meta, txt ]
+    mosdepth_summary    = mosdepth_summary_out        // channel: [ meta, txt ]
+    mosdepth_regions_bed = mosdepth_regions_bed_out   // channel: [ meta, bed.gz ]
+    mosdepth_regions_csi = mosdepth_regions_csi_out   // channel: [ meta, csi ]
+    bcftools_stats      = bcftools_stats_out          // channel: [ meta, stats ]
+    vcftools_tstv_counts = vcftools_tstv_counts_out   // channel: [ meta, counts ]
+    vcftools_tstv_qual  = vcftools_tstv_qual_out      // channel: [ meta, qual ]
+    vcftools_filter_summary = vcftools_filter_summary_out // channel: [ meta, summary ]
     // Preprocessing outputs
     cram_mapped         = cram_mapped_out             // channel: [ meta, cram, crai ]
     bam_mapped          = bam_mapped_out              // channel: [ meta, bam, bai ]
     cram_markduplicates = cram_markduplicates_out     // channel: [ meta, cram, crai ]
     bam_markduplicates  = bam_markduplicates_out      // channel: [ meta, bam, bai ]
     cram_recalibrated   = cram_recalibrated_out       // channel: [ meta, cram, crai ]
-    // Variant calling outputs
-    vcf_germline        = vcf_germline_out            // channel: [ meta, vcf, tbi ]
-    vcf_somatic         = vcf_somatic_out             // channel: [ meta, vcf, tbi ]
-    vcf_tumor_only      = vcf_tumor_only_out          // channel: [ meta, vcf, tbi ]
+    recal_table         = recal_table_out            // channel: [ meta, table ]
+    markduplicates_metrics = markduplicates_metrics_out // channel: [ meta, metrics ]
+    // Variant calling outputs - VCF
+    vcf_germline        = vcf_germline_out            // channel: [ meta, vcf ]
+    vcf_somatic         = vcf_somatic_out             // channel: [ meta, vcf ]
+    vcf_tumor_only      = vcf_tumor_only_out          // channel: [ meta, vcf ]
+    // Variant calling outputs - TBI (separate)
+    tbi_germline        = tbi_germline_out            // channel: [ meta, tbi ]
+    tbi_somatic         = tbi_somatic_out             // channel: [ meta, tbi ]
+    tbi_tumor_only      = tbi_tumor_only_out          // channel: [ meta, tbi ]
+    // Strelka genome VCF/TBI (separate from variant VCF)
+    vcf_strelka_genome  = vcf_strelka_genome_out      // channel: [ meta, vcf ]
+    tbi_strelka_genome  = tbi_strelka_genome_out      // channel: [ meta, tbi ]
     // Annotation outputs
-    vcf_annotated       = vcf_annotated_out           // channel: [ meta, vcf, tbi ]
+    vcf_annotated       = vcf_annotated_out           // channel: [ meta, vcf ]
 }
 
 /*

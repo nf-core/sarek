@@ -67,6 +67,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_sentieon_dnascope    = Channel.empty()
     vcf_sentieon_haplotyper  = Channel.empty()
     vcf_strelka              = Channel.empty()
+    vcf_strelka_genome       = Channel.empty()
     vcf_tiddit               = Channel.empty()
     tbi_deepvariant          = Channel.empty()
     tbi_freebayes            = Channel.empty()
@@ -75,6 +76,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     tbi_sentieon_dnascope    = Channel.empty()
     tbi_sentieon_haplotyper  = Channel.empty()
     tbi_strelka              = Channel.empty()
+    tbi_strelka_genome       = Channel.empty()
     tbi_tiddit               = Channel.empty()
 
     // BCFTOOLS MPILEUP
@@ -350,6 +352,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         vcf_strelka = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.vcf
         tbi_strelka = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.tbi
+        vcf_strelka_genome = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.genome_vcf
+        tbi_strelka_genome = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.genome_tbi
         versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
     }
 
@@ -401,6 +405,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_manta
     vcf_mpileup
     vcf_strelka
+    vcf_strelka_genome
     vcf_sentieon_dnascope
     vcf_sentieon_haplotyper
     vcf_tiddit
@@ -412,6 +417,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     tbi_sentieon_dnascope
     tbi_sentieon_haplotyper
     tbi_strelka
+    tbi_strelka_genome
     tbi_tiddit
 
     versions
