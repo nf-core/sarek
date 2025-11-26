@@ -198,7 +198,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     // Create base channels for data that will be replicated for each chunk
     ch_cram_alignment = cram_normal
         .join(ALIGNMENTPROPERTIES_NORMAL.out.alignment_properties_json, failOnMismatch: true, failOnDuplicate: true)
-        .map { meta, cram, crai, json -> [meta.id, meta, cram, crai, json] }
+        .map { meta, cram, crai, json -> [meta.match_id, meta, cram, crai, json] }
 
     ch_input_normal_preprocess_chunked = ch_chunked_normal_vcfs
         .map { meta, vcf -> [meta.match_id, meta, vcf] }
@@ -207,10 +207,9 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         .combine(ch_fasta_fai)
         .map { _id, meta_vcf, vcf, meta_cram, normal_cram, normal_crai, alignment_json, _meta_fasta, fasta, _meta_fai, fai ->
             [
-                meta_cram + [
-                    variantcaller: meta_vcf.variantcaller,
+                meta_vcf + [
+                    id: meta_cram.id,
                     postprocess: 'varlociraptor',
-                    chunk: meta_vcf.chunk,
                 ],
                 normal_cram,
                 normal_crai,
