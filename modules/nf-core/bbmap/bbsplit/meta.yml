@@ -46,10 +46,10 @@ input:
       description: true = only build index; false = mapping
 output:
   index:
-    - bbsplit:
+    - bbsplit_index:
         type: directory
         description: Directory with index files
-        pattern: "bbsplit"
+        pattern: "bbsplit_index"
   primary_fastq:
     - - meta:
           type: map
@@ -106,6 +106,8 @@ output:
 authors:
   - "@joseespinosa"
   - "@drpatelh"
+  - "@pinin4fjords"
 maintainers:
   - "@joseespinosa"
   - "@drpatelh"
+  - "@pinin4fjords"
