@@ -37,8 +37,8 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_scenario_file = FILL_SCENARIO_FILE.out.rendered
     ch_versions = ch_versions.mix(FILL_SCENARIO_FILE.out.versions)
 
-    cram_normal = ch_cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] }
-    cram_tumor = ch_cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
+    cram_normal = ch_cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta + [match_id: meta.normal_id], normal_cram, normal_crai] }
+    cram_tumor = ch_cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta + [match_id: meta.normal_id], tumor_cram, tumor_crai] }
 
     // Estimate alignment properties
     ALIGNMENTPROPERTIES_TUMOR(
@@ -201,7 +201,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         .map { meta, cram, crai, json -> [meta.id, meta, cram, crai, json] }
 
     ch_input_normal_preprocess_chunked = ch_chunked_normal_vcfs
-        .map { meta, vcf -> [meta.id, meta, vcf] }
+        .map { meta, vcf -> [meta.match_id, meta, vcf] }
         .combine(ch_cram_alignment, by: 0)
         .combine(ch_fasta)
         .combine(ch_fasta_fai)
