@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#2045](https://github.com/nf-core/sarek/pull/2045) - Propagate fastp shard naming if exists through BBSplit to ensure unique naming in Markduplicates
+- [#2060](https://github.com/nf-core/sarek/pull/2060) - Update bbmap/bbsplit module to fix bbsplit index staging by using symlinks instead of full copy
 
 ### Removed
 
