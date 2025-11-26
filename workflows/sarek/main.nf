@@ -126,6 +126,17 @@ workflow SAREK {
     multiqc_report   = Channel.empty()
     reports          = Channel.empty()
 
+    // Channels for workflow outputs
+    cram_mapped_out          = Channel.empty()
+    bam_mapped_out           = Channel.empty()
+    cram_markduplicates_out  = Channel.empty()
+    bam_markduplicates_out   = Channel.empty()
+    cram_recalibrated_out    = Channel.empty()
+    vcf_germline_out         = Channel.empty()
+    vcf_somatic_out          = Channel.empty()
+    vcf_tumor_only_out       = Channel.empty()
+    vcf_annotated_out        = Channel.empty()
+
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         VALIDATE INPUTS
@@ -245,6 +256,13 @@ workflow SAREK {
             // Gather preprocessing output
             cram_variant_calling = Channel.empty()
             cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_GATK.out.cram_variant_calling)
+
+            // Capture preprocessing outputs for workflow outputs
+            cram_mapped_out = cram_mapped_out.mix(FASTQ_PREPROCESS_GATK.out.cram_mapped)
+            bam_mapped_out = bam_mapped_out.mix(FASTQ_PREPROCESS_GATK.out.bam_mapped)
+            cram_markduplicates_out = cram_markduplicates_out.mix(FASTQ_PREPROCESS_GATK.out.cram_markduplicates)
+            bam_markduplicates_out = bam_markduplicates_out.mix(FASTQ_PREPROCESS_GATK.out.bam_markduplicates)
+            cram_recalibrated_out = cram_recalibrated_out.mix(FASTQ_PREPROCESS_GATK.out.cram_variant_calling)
 
             // Gather used softwares versions
             reports = reports.mix(FASTQ_PREPROCESS_GATK.out.reports)
@@ -540,6 +558,11 @@ workflow SAREK {
 
         CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate, params.outdir)
 
+        // Capture variant calling outputs for workflow outputs
+        vcf_germline_out = vcf_germline_out.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all)
+        vcf_somatic_out = vcf_somatic_out.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all)
+        vcf_tumor_only_out = vcf_tumor_only_out.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
+
         // Gather used variant calling softwares versions
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.versions)
@@ -572,6 +595,9 @@ workflow SAREK {
                 bcftools_columns,
                 bcftools_header_lines,
             )
+
+            // Capture annotated VCFs for workflow outputs
+            vcf_annotated_out = vcf_annotated_out.mix(VCF_ANNOTATE_ALL.out.vcf_ann)
 
             // Gather used softwares versions
             versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)
@@ -617,8 +643,20 @@ workflow SAREK {
     }
 
     emit:
-    multiqc_report // channel: /path/to/multiqc_report.html
-    versions       // channel: [ path(versions.yml) ]
+    multiqc_report                                    // channel: /path/to/multiqc_report.html
+    versions                                          // channel: [ path(versions.yml) ]
+    // Preprocessing outputs
+    cram_mapped         = cram_mapped_out             // channel: [ meta, cram, crai ]
+    bam_mapped          = bam_mapped_out              // channel: [ meta, bam, bai ]
+    cram_markduplicates = cram_markduplicates_out     // channel: [ meta, cram, crai ]
+    bam_markduplicates  = bam_markduplicates_out      // channel: [ meta, bam, bai ]
+    cram_recalibrated   = cram_recalibrated_out       // channel: [ meta, cram, crai ]
+    // Variant calling outputs
+    vcf_germline        = vcf_germline_out            // channel: [ meta, vcf, tbi ]
+    vcf_somatic         = vcf_somatic_out             // channel: [ meta, vcf, tbi ]
+    vcf_tumor_only      = vcf_tumor_only_out          // channel: [ meta, vcf, tbi ]
+    // Annotation outputs
+    vcf_annotated       = vcf_annotated_out           // channel: [ meta, vcf, tbi ]
 }
 
 /*

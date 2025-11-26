@@ -69,6 +69,12 @@ workflow FASTQ_PREPROCESS_GATK {
     reports          = Channel.empty()
     versions         = Channel.empty()
 
+    // Channels for workflow outputs (populated conditionally)
+    cram_mapped_out           = Channel.empty()
+    bam_mapped_out            = Channel.empty()
+    cram_markduplicates_out   = Channel.empty()
+    bam_markduplicates_out    = Channel.empty()
+
     // PREPROCESSING
 
     if (params.step == 'mapping') {
@@ -250,6 +256,10 @@ workflow FASTQ_PREPROCESS_GATK {
             if (params.save_output_as_bam) CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, params.outdir, params.save_output_as_bam)
             else CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true), params.outdir, params.save_output_as_bam)
 
+            // Capture mapped outputs for workflow outputs
+            cram_mapped_out = cram_mapped_out.mix(BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true))
+            bam_mapped_out = bam_mapped_out.mix(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai)
+
             // Gather used softwares versions
             versions = versions.mix(BAM_MERGE_INDEX_SAMTOOLS.out.versions)
             versions = versions.mix(BAM_TO_CRAM_MAPPING.out.versions)
@@ -371,6 +381,10 @@ workflow FASTQ_PREPROCESS_GATK {
 
         if (params.save_output_as_bam) CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true), csv_subfolder, params.outdir, params.save_output_as_bam)
         else CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir, params.save_output_as_bam)
+
+        // Capture markduplicates outputs for workflow outputs
+        cram_markduplicates_out = cram_markduplicates_out.mix(ch_md_cram_for_restart)
+        bam_markduplicates_out = bam_markduplicates_out.mix(CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true))
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
@@ -521,6 +535,10 @@ workflow FASTQ_PREPROCESS_GATK {
 
     emit:
     cram_variant_calling
+    cram_mapped           = cram_mapped_out
+    bam_mapped            = bam_mapped_out
+    cram_markduplicates   = cram_markduplicates_out
+    bam_markduplicates    = bam_markduplicates_out
     reports
     versions
 

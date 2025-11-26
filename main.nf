@@ -288,7 +288,19 @@ workflow NFCORE_SAREK {
     )
 
     emit:
-    multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
+    multiqc_report      = SAREK.out.multiqc_report      // channel: /path/to/multiqc_report.html
+    // Preprocessing outputs
+    cram_mapped         = SAREK.out.cram_mapped         // channel: [ meta, cram, crai ]
+    bam_mapped          = SAREK.out.bam_mapped          // channel: [ meta, bam, bai ]
+    cram_markduplicates = SAREK.out.cram_markduplicates // channel: [ meta, cram, crai ]
+    bam_markduplicates  = SAREK.out.bam_markduplicates  // channel: [ meta, bam, bai ]
+    cram_recalibrated   = SAREK.out.cram_recalibrated   // channel: [ meta, cram, crai ]
+    // Variant calling outputs
+    vcf_germline        = SAREK.out.vcf_germline        // channel: [ meta, vcf, tbi ]
+    vcf_somatic         = SAREK.out.vcf_somatic         // channel: [ meta, vcf, tbi ]
+    vcf_tumor_only      = SAREK.out.vcf_tumor_only      // channel: [ meta, vcf, tbi ]
+    // Annotation outputs
+    vcf_annotated       = SAREK.out.vcf_annotated       // channel: [ meta, vcf, tbi ]
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -325,6 +337,72 @@ workflow {
         params.hook_url,
         NFCORE_SAREK.out.multiqc_report,
     )
+
+    publish:
+    // QC Reports
+    multiqc_report = NFCORE_SAREK.out.multiqc_report
+    // Preprocessing outputs
+    cram_mapped = NFCORE_SAREK.out.cram_mapped
+    bam_mapped = NFCORE_SAREK.out.bam_mapped
+    cram_markduplicates = NFCORE_SAREK.out.cram_markduplicates
+    bam_markduplicates = NFCORE_SAREK.out.bam_markduplicates
+    cram_recalibrated = NFCORE_SAREK.out.cram_recalibrated
+    // Variant calling outputs
+    vcf_germline = NFCORE_SAREK.out.vcf_germline
+    vcf_somatic = NFCORE_SAREK.out.vcf_somatic
+    vcf_tumor_only = NFCORE_SAREK.out.vcf_tumor_only
+    // Annotation outputs
+    vcf_annotated = NFCORE_SAREK.out.vcf_annotated
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    WORKFLOW OUTPUTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+output {
+    // QC Reports
+    multiqc_report {
+        path 'multiqc'
+    }
+
+    // Preprocessing - Mapped
+    cram_mapped {
+        path { meta, cram, crai -> "preprocessing/mapped/${meta.id}" }
+    }
+    bam_mapped {
+        path { meta, bam, bai -> "preprocessing/mapped/${meta.id}" }
+    }
+
+    // Preprocessing - Markduplicates
+    cram_markduplicates {
+        path { meta, cram, crai -> "preprocessing/markduplicates/${meta.id}" }
+    }
+    bam_markduplicates {
+        path { meta, bam, bai -> "preprocessing/markduplicates/${meta.id}" }
+    }
+
+    // Preprocessing - Recalibrated
+    cram_recalibrated {
+        path { meta, cram, crai -> "preprocessing/recalibrated/${meta.id}" }
+    }
+
+    // Variant Calling
+    vcf_germline {
+        path { meta, vcf, tbi -> "variant_calling/${meta.variantcaller}/${meta.id}" }
+    }
+    vcf_somatic {
+        path { meta, vcf, tbi -> "variant_calling/${meta.variantcaller}/${meta.id}" }
+    }
+    vcf_tumor_only {
+        path { meta, vcf, tbi -> "variant_calling/${meta.variantcaller}/${meta.id}" }
+    }
+
+    // Annotation
+    vcf_annotated {
+        path { meta, vcf, tbi -> "annotation/${meta.variantcaller}/${meta.id}" }
+    }
 }
 
 /*
