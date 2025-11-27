@@ -47,6 +47,13 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
         no_intervals: it[0].num_intervals <= 1
     }
 
+    // Figuring out if there is one or more genome tbi(s) from the same sample
+    genome_tbi = STRELKA_SINGLE.out.genome_vcf_tbi.branch{
+        // Use meta.num_intervals to asses number of intervals
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
+
     // Only when using intervals
     genome_vcf_to_merge = genome_vcf.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}.groupTuple()
     vcf_to_merge        = vcf_out.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}.groupTuple()
@@ -68,7 +75,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     genome_vcf_out = Channel.empty().mix(MERGE_STRELKA_GENOME.out.vcf, genome_vcf.no_intervals)
         .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], vcf ] }
 
-    genome_tbi_out = Channel.empty().mix(MERGE_STRELKA_GENOME.out.tbi, genome_vcf.no_intervals.map{ meta, _vcf -> [meta, []] })
+    genome_tbi_out = Channel.empty().mix(MERGE_STRELKA_GENOME.out.tbi, genome_tbi.no_intervals)
         .map{ meta, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], tbi ] }
 
     versions = versions.mix(MERGE_STRELKA.out.versions)

@@ -49,6 +49,12 @@ workflow BAM_MARKDUPLICATES_SPARK {
     emit:
     cram
     reports
+    samtools_stats       = CRAM_QC_MOSDEPTH_SAMTOOLS.out.samtools_stats     // channel: [ meta, stats ]
+    mosdepth_global      = CRAM_QC_MOSDEPTH_SAMTOOLS.out.mosdepth_global    // channel: [ meta, txt ]
+    mosdepth_region      = CRAM_QC_MOSDEPTH_SAMTOOLS.out.mosdepth_region    // channel: [ meta, txt ]
+    mosdepth_summary     = CRAM_QC_MOSDEPTH_SAMTOOLS.out.mosdepth_summary   // channel: [ meta, txt ]
+    mosdepth_regions_bed = CRAM_QC_MOSDEPTH_SAMTOOLS.out.mosdepth_regions_bed // channel: [ meta, bed.gz ]
+    mosdepth_regions_csi = CRAM_QC_MOSDEPTH_SAMTOOLS.out.mosdepth_regions_csi // channel: [ meta, csi ]
 
     versions // channel: [ versions.yml ]
 }

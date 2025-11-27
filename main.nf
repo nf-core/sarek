@@ -302,6 +302,13 @@ workflow NFCORE_SAREK {
     mosdepth_summary    = SAREK.out.mosdepth_summary    // channel: [ meta, txt ]
     mosdepth_regions_bed = SAREK.out.mosdepth_regions_bed // channel: [ meta, bed.gz ]
     mosdepth_regions_csi = SAREK.out.mosdepth_regions_csi // channel: [ meta, csi ]
+    // Markduplicates-stage QC channels
+    md_samtools_stats      = SAREK.out.md_samtools_stats      // channel: [ meta, stats ]
+    md_mosdepth_global     = SAREK.out.md_mosdepth_global     // channel: [ meta, txt ]
+    md_mosdepth_region     = SAREK.out.md_mosdepth_region     // channel: [ meta, txt ]
+    md_mosdepth_summary    = SAREK.out.md_mosdepth_summary    // channel: [ meta, txt ]
+    md_mosdepth_regions_bed = SAREK.out.md_mosdepth_regions_bed // channel: [ meta, bed.gz ]
+    md_mosdepth_regions_csi = SAREK.out.md_mosdepth_regions_csi // channel: [ meta, csi ]
     bcftools_stats      = SAREK.out.bcftools_stats      // channel: [ meta, stats ]
     vcftools_tstv_counts = SAREK.out.vcftools_tstv_counts // channel: [ meta, counts ]
     vcftools_tstv_qual  = SAREK.out.vcftools_tstv_qual  // channel: [ meta, qual ]
@@ -380,6 +387,13 @@ workflow {
     mosdepth_summary = NFCORE_SAREK.out.mosdepth_summary
     mosdepth_regions_bed = NFCORE_SAREK.out.mosdepth_regions_bed
     mosdepth_regions_csi = NFCORE_SAREK.out.mosdepth_regions_csi
+    // Markduplicates-stage QC
+    md_samtools_stats = NFCORE_SAREK.out.md_samtools_stats
+    md_mosdepth_global = NFCORE_SAREK.out.md_mosdepth_global
+    md_mosdepth_region = NFCORE_SAREK.out.md_mosdepth_region
+    md_mosdepth_summary = NFCORE_SAREK.out.md_mosdepth_summary
+    md_mosdepth_regions_bed = NFCORE_SAREK.out.md_mosdepth_regions_bed
+    md_mosdepth_regions_csi = NFCORE_SAREK.out.md_mosdepth_regions_csi
     bcftools_stats = NFCORE_SAREK.out.bcftools_stats
     vcftools_tstv_counts = NFCORE_SAREK.out.vcftools_tstv_counts
     vcftools_tstv_qual = NFCORE_SAREK.out.vcftools_tstv_qual
@@ -455,6 +469,27 @@ output {
     mosdepth_regions_csi {
         path { meta, csi -> "reports/mosdepth/${meta.id}" }
     }
+
+    // Markduplicates-stage QC Reports
+    md_samtools_stats {
+        path { meta, stats -> "reports/samtools/${meta.id}" }
+    }
+    md_mosdepth_global {
+        path { meta, txt -> "reports/mosdepth/${meta.id}" }
+    }
+    md_mosdepth_region {
+        path { meta, txt -> "reports/mosdepth/${meta.id}" }
+    }
+    md_mosdepth_summary {
+        path { meta, txt -> "reports/mosdepth/${meta.id}" }
+    }
+    md_mosdepth_regions_bed {
+        path { meta, bed -> "reports/mosdepth/${meta.id}" }
+    }
+    md_mosdepth_regions_csi {
+        path { meta, csi -> "reports/mosdepth/${meta.id}" }
+    }
+
     // TODO: Migrate to reports/bcftools/${meta.variantcaller}/${meta.id} to match vcftools pattern
     bcftools_stats {
         path { meta, stats -> "reports/bcftools/${meta.id}" }

@@ -153,6 +153,13 @@ workflow SAREK {
     mosdepth_summary_out     = Channel.empty()
     mosdepth_regions_bed_out = Channel.empty()
     mosdepth_regions_csi_out = Channel.empty()
+    // Markduplicates-stage QC channels
+    md_samtools_stats_out       = Channel.empty()
+    md_mosdepth_global_out      = Channel.empty()
+    md_mosdepth_region_out      = Channel.empty()
+    md_mosdepth_summary_out     = Channel.empty()
+    md_mosdepth_regions_bed_out = Channel.empty()
+    md_mosdepth_regions_csi_out = Channel.empty()
     bcftools_stats_out       = Channel.empty()
     vcftools_tstv_counts_out = Channel.empty()
     vcftools_tstv_qual_out   = Channel.empty()
@@ -290,6 +297,14 @@ workflow SAREK {
             cram_recalibrated_out = cram_recalibrated_out.mix(FASTQ_PREPROCESS_GATK.out.cram_variant_calling)
             recal_table_out = recal_table_out.mix(FASTQ_PREPROCESS_GATK.out.recal_table)
             markduplicates_metrics_out = markduplicates_metrics_out.mix(FASTQ_PREPROCESS_GATK.out.markduplicates_metrics)
+
+            // Capture markduplicates-stage QC outputs
+            md_samtools_stats_out = md_samtools_stats_out.mix(FASTQ_PREPROCESS_GATK.out.md_samtools_stats)
+            md_mosdepth_global_out = md_mosdepth_global_out.mix(FASTQ_PREPROCESS_GATK.out.md_mosdepth_global)
+            md_mosdepth_region_out = md_mosdepth_region_out.mix(FASTQ_PREPROCESS_GATK.out.md_mosdepth_region)
+            md_mosdepth_summary_out = md_mosdepth_summary_out.mix(FASTQ_PREPROCESS_GATK.out.md_mosdepth_summary)
+            md_mosdepth_regions_bed_out = md_mosdepth_regions_bed_out.mix(FASTQ_PREPROCESS_GATK.out.md_mosdepth_regions_bed)
+            md_mosdepth_regions_csi_out = md_mosdepth_regions_csi_out.mix(FASTQ_PREPROCESS_GATK.out.md_mosdepth_regions_csi)
 
             // Gather used softwares versions
             reports = reports.mix(FASTQ_PREPROCESS_GATK.out.reports)
@@ -698,7 +713,7 @@ workflow SAREK {
     multiqc_plots                                     // channel: /path/to/multiqc_plots
     versions                                          // channel: [ path(versions.yml) ]
     reports                                           // channel: [ reports ] - aggregate QC reports
-    // Individual QC report channels with meta
+    // Individual QC report channels with meta (recalibrated stage)
     fastqc_zip          = fastqc_zip_out              // channel: [ meta, zip ]
     fastqc_html         = fastqc_html_out             // channel: [ meta, html ]
     samtools_stats      = samtools_stats_out          // channel: [ meta, stats ]
@@ -707,6 +722,13 @@ workflow SAREK {
     mosdepth_summary    = mosdepth_summary_out        // channel: [ meta, txt ]
     mosdepth_regions_bed = mosdepth_regions_bed_out   // channel: [ meta, bed.gz ]
     mosdepth_regions_csi = mosdepth_regions_csi_out   // channel: [ meta, csi ]
+    // Markduplicates-stage QC channels
+    md_samtools_stats      = md_samtools_stats_out       // channel: [ meta, stats ]
+    md_mosdepth_global     = md_mosdepth_global_out      // channel: [ meta, txt ]
+    md_mosdepth_region     = md_mosdepth_region_out      // channel: [ meta, txt ]
+    md_mosdepth_summary    = md_mosdepth_summary_out     // channel: [ meta, txt ]
+    md_mosdepth_regions_bed = md_mosdepth_regions_bed_out // channel: [ meta, bed.gz ]
+    md_mosdepth_regions_csi = md_mosdepth_regions_csi_out // channel: [ meta, csi ]
     bcftools_stats      = bcftools_stats_out          // channel: [ meta, stats ]
     vcftools_tstv_counts = vcftools_tstv_counts_out   // channel: [ meta, counts ]
     vcftools_tstv_qual  = vcftools_tstv_qual_out      // channel: [ meta, qual ]

@@ -59,9 +59,9 @@ process MOSDEPTH {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}.global.dist.txt
-    touch ${prefix}.region.dist.txt
-    touch ${prefix}.summary.txt
+    touch ${prefix}.mosdepth.global.dist.txt
+    touch ${prefix}.mosdepth.region.dist.txt
+    touch ${prefix}.mosdepth.summary.txt
     touch ${prefix}.per-base.d4
     echo "" | gzip > ${prefix}.per-base.bed.gz
     touch ${prefix}.per-base.bed.gz.csi

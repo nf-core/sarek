@@ -76,6 +76,13 @@ workflow FASTQ_PREPROCESS_GATK {
     bam_markduplicates_out        = Channel.empty()
     recal_table_out               = Channel.empty()
     markduplicates_metrics_out    = Channel.empty()
+    // QC channels for markduplicates stage
+    md_samtools_stats_out         = Channel.empty()
+    md_mosdepth_global_out        = Channel.empty()
+    md_mosdepth_region_out        = Channel.empty()
+    md_mosdepth_summary_out       = Channel.empty()
+    md_mosdepth_regions_bed_out   = Channel.empty()
+    md_mosdepth_regions_csi_out   = Channel.empty()
 
     // PREPROCESSING
 
@@ -360,6 +367,14 @@ workflow FASTQ_PREPROCESS_GATK {
             // Capture markduplicates metrics for workflow output
             markduplicates_metrics_out = markduplicates_metrics_out.mix(BAM_MARKDUPLICATES.out.metrics)
 
+            // Capture markduplicates QC outputs for workflow output
+            md_samtools_stats_out = md_samtools_stats_out.mix(BAM_MARKDUPLICATES.out.samtools_stats)
+            md_mosdepth_global_out = md_mosdepth_global_out.mix(BAM_MARKDUPLICATES.out.mosdepth_global)
+            md_mosdepth_region_out = md_mosdepth_region_out.mix(BAM_MARKDUPLICATES.out.mosdepth_region)
+            md_mosdepth_summary_out = md_mosdepth_summary_out.mix(BAM_MARKDUPLICATES.out.mosdepth_summary)
+            md_mosdepth_regions_bed_out = md_mosdepth_regions_bed_out.mix(BAM_MARKDUPLICATES.out.mosdepth_regions_bed)
+            md_mosdepth_regions_csi_out = md_mosdepth_regions_csi_out.mix(BAM_MARKDUPLICATES.out.mosdepth_regions_csi)
+
             // Gather QC reports
             reports = reports.mix(BAM_MARKDUPLICATES.out.reports.collect{ _meta, report -> [ report ] })
 
@@ -549,6 +564,13 @@ workflow FASTQ_PREPROCESS_GATK {
     bam_markduplicates    = bam_markduplicates_out
     recal_table           = recal_table_out           // channel: [ meta, table ]
     markduplicates_metrics = markduplicates_metrics_out // channel: [ meta, metrics ]
+    // Markduplicates-stage QC outputs
+    md_samtools_stats     = md_samtools_stats_out       // channel: [ meta, stats ]
+    md_mosdepth_global    = md_mosdepth_global_out      // channel: [ meta, txt ]
+    md_mosdepth_region    = md_mosdepth_region_out      // channel: [ meta, txt ]
+    md_mosdepth_summary   = md_mosdepth_summary_out     // channel: [ meta, txt ]
+    md_mosdepth_regions_bed = md_mosdepth_regions_bed_out // channel: [ meta, bed.gz ]
+    md_mosdepth_regions_csi = md_mosdepth_regions_csi_out // channel: [ meta, csi ]
     reports
     versions
 
