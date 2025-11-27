@@ -106,9 +106,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     GETPILEUPSUMMARIES(pileup_input, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
 
     // Figuring out if there is one or more table(s) from the same sample
-    pileup_table_branch = GETPILEUPSUMMARIES.out.table.branch {
-        intervals: it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+    pileup_table_branch = GETPILEUPSUMMARIES.out.table.branch { meta, _table ->
+        intervals: meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Only when using intervals
@@ -162,14 +162,14 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     versions = versions.mix(MUTECT2.out.versions)
 
     emit:
-    vcf // channel: [ meta, vcf ]
-    stats // channel: [ meta, stats ]
-    vcf_filtered // channel: [ meta, vcf ]
-    index_filtered      = tbi_mutect2 // channel: [ meta, tbi ]
-    stats_filtered      = FILTERMUTECTCALLS.out.stats // channel: [ meta, stats ]
     artifact_priors     = LEARNREADORIENTATIONMODEL.out.artifactprior // channel: [ meta, artifactprior ]
-    pileup_table // channel: [ meta, table ]
     contamination_table = calculatecontamination_out_cont // channel: [ meta, contamination ]
+    index_filtered      = tbi_mutect2 // channel: [ meta, tbi ]
+    pileup_table // channel: [ meta, table ]
     segmentation_table  = calculatecontamination_out_seg // channel: [ meta, segmentation ]
+    stats // channel: [ meta, stats ]
+    stats_filtered      = FILTERMUTECTCALLS.out.stats // channel: [ meta, stats ]
+    vcf // channel: [ meta, vcf ]
+    vcf_filtered // channel: [ meta, vcf ]
     versions // channel: [ versions.yml ]
 }
