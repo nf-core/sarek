@@ -91,19 +91,19 @@ jobs:
         uses: seqeralabs/action-tower-launch@v2
         with:
           run_name: sarek_${{ matrix.profile }}
-          workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
+          workspace_id: ${{ vars.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute_env: ${{ secrets[matrix.compute_env] }}
+          compute_env: ${{ vars[matrix.compute_env] }}
           revision: ${{ steps.revision.outputs.revision }}
-          workdir: ${{ secrets[matrix.workdir] }}/work/sarek/work-${{ steps.revision.outputs.revision }}/${{ matrix.profile }}
+          workdir: ${{ vars[matrix.workdir] }}/work/sarek/work-${{ steps.revision.outputs.revision }}/${{ matrix.profile }}
           parameters: |
             {
               "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
-              "outdir": "${{ secrets[matrix.workdir] }}/sarek/results-${{ steps.revision.outputs.revision }}/${{ matrix.profile }}/"
+              "outdir": "${{ vars[matrix.workdir] }}/sarek/results-${{ steps.revision.outputs.revision }}/${{ matrix.profile }}/"
             }
           profiles: ${{ matrix.profile }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: Seqera Platform debug log file
           path: |

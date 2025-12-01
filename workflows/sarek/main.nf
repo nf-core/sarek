@@ -122,9 +122,9 @@ workflow SAREK {
 
     main:
     // To gather all QC reports for MultiQC
-    ch_multiqc_files = Channel.empty()
-    multiqc_report   = Channel.empty()
-    reports          = Channel.empty()
+    ch_multiqc_files = channel.empty()
+    multiqc_report = channel.empty()
+    reports = channel.empty()
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -136,8 +136,8 @@ workflow SAREK {
     if (step == 'mapping') {
         // Figure out if input is bam, fastq, or spring
         input_sample_type = input_sample.branch {
-            bam:                 it[0].data_type == "bam"
-            fastq_gz:            it[0].data_type == "fastq_gz"
+            bam: it[0].data_type == "bam"
+            fastq_gz: it[0].data_type == "fastq_gz"
             one_fastq_gz_spring: it[0].data_type == "one_fastq_gz_spring"
             two_fastq_gz_spring: it[0].data_type == "two_fastq_gz_spring"
         }
@@ -202,7 +202,7 @@ workflow SAREK {
         }
     }
     else {
-        input_fastq = Channel.empty().mix(input_sample)
+        input_fastq = channel.empty().mix(input_sample)
     }
 
     if (step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
@@ -215,11 +215,11 @@ workflow SAREK {
                 index_alignment,
                 intervals_bed_combined,
                 known_sites_indels,
-                Channel.value("cram"),
+                channel.value("cram"),
             )
 
             // Gather preprocessing output
-            cram_variant_calling = Channel.empty()
+            cram_variant_calling = channel.empty()
             cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_PARABRICKS.out.cram)
 
             // Gather used softwares versions
@@ -243,7 +243,7 @@ workflow SAREK {
             )
 
             // Gather preprocessing output
-            cram_variant_calling = Channel.empty()
+            cram_variant_calling = channel.empty()
             cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_GATK.out.cram_variant_calling)
 
             // Gather used softwares versions
@@ -254,12 +254,12 @@ workflow SAREK {
 
     if (step == 'variant_calling') {
 
-        cram_variant_calling = Channel.empty().mix(input_sample)
+        cram_variant_calling = channel.empty().mix(input_sample)
     }
 
     if (step == 'annotate') {
 
-        cram_variant_calling = Channel.empty()
+        cram_variant_calling = channel.empty()
     }
 
     // RUN CRAM QC on the recalibrated CRAM files or when starting from step variant calling. NGSCheckmate should be run also on non-recalibrated CRAM files
@@ -276,7 +276,7 @@ workflow SAREK {
 
     if (tools) {
 
-        bam_variant_calling = Channel.empty()
+        bam_variant_calling = channel.empty()
 
         //  For cnvkit, msisensor2 and muse we need to use bam input and not cram
         if (tools.split(',').contains('cnvkit') || tools.split(',').contains('msisensor2') || tools.split(',').contains('muse')) {
@@ -368,11 +368,11 @@ workflow SAREK {
             .map { normal, tumor ->
                 def meta = [:]
 
-                meta.id            = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
-                meta.normal_id     = normal[1].sample
-                meta.patient       = normal[0]
-                meta.sex           = normal[1].sex
-                meta.tumor_id      = tumor[1].sample
+                meta.id = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
+                meta.normal_id = normal[1].sample
+                meta.patient = normal[0]
+                meta.sex = normal[1].sex
+                meta.tumor_id = tumor[1].sample
                 meta.contamination = tumor[1].contamination
 
                 [meta, normal[2], normal[3], tumor[2], tumor[3]]
@@ -382,11 +382,11 @@ workflow SAREK {
             .map { normal, tumor ->
                 def meta = [:]
 
-                meta.id        = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
+                meta.id = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
                 meta.normal_id = normal[1].sample
-                meta.patient   = normal[0]
-                meta.sex       = normal[1].sex
-                meta.tumor_id  = tumor[1].sample
+                meta.patient = normal[0]
+                meta.sex = normal[1].sex
+                meta.tumor_id = tumor[1].sample
 
                 [meta, normal[2], normal[3], tumor[2], tumor[3]]
             }
@@ -498,10 +498,10 @@ workflow SAREK {
         )
 
         // QC on raw variant calls
-        VCF_QC_BCFTOOLS_VCFTOOLS(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all
-                                .mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
-                                .mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all),
-                                intervals_bed_combined)
+        VCF_QC_BCFTOOLS_VCFTOOLS(
+            BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all).mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all),
+            intervals_bed_combined,
+        )
 
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.bcftools_stats.collect { _meta, stats -> [stats] })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_counts.collect { _meta, counts -> [counts] })
@@ -526,6 +526,7 @@ workflow SAREK {
                 fasta_fai,
                 params.concatenate_vcfs,
                 params.filter_vcfs,
+                params.snv_consensus_calling,
                 params.normalize_vcfs,
                 params.varlociraptor_chunk_size,
                 varlociraptor_scenario_germline,
@@ -581,7 +582,7 @@ workflow SAREK {
     //
     // Collate and save software versions
     //
-    version_yaml = Channel.empty()
+    version_yaml = channel.empty()
     if (!(skip_tools.split(',').contains('versions'))) {
         version_yaml = softwareVersionsToYAML(versions).collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_' + 'sarek_software_' + 'mqc_' + 'versions.yml', sort: true, newLine: true)
     }
@@ -590,15 +591,15 @@ workflow SAREK {
     // MODULE: MultiQC
     //
     if (!(skip_tools.split(',').contains('multiqc'))) {
-        ch_multiqc_config = Channel.fromPath("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)
-        ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
-        ch_multiqc_logo = params.multiqc_logo ? Channel.fromPath(params.multiqc_logo, checkIfExists: true) : Channel.empty()
+        ch_multiqc_config = channel.fromPath("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)
+        ch_multiqc_custom_config = params.multiqc_config ? channel.fromPath(params.multiqc_config, checkIfExists: true) : channel.empty()
+        ch_multiqc_logo = params.multiqc_logo ? channel.fromPath(params.multiqc_logo, checkIfExists: true) : channel.empty()
 
         summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
-        ch_workflow_summary = Channel.value(paramsSummaryMultiqc(summary_params))
+        ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
-        ch_methods_description = Channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
+        ch_methods_description = channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
 
         ch_multiqc_files = ch_multiqc_files.mix(version_yaml)
         ch_multiqc_files = ch_multiqc_files.mix(reports)
@@ -617,7 +618,7 @@ workflow SAREK {
 
     emit:
     multiqc_report // channel: /path/to/multiqc_report.html
-    versions       // channel: [ path(versions.yml) ]
+    versions // channel: [ path(versions.yml) ]
 }
 
 /*

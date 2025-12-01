@@ -51,6 +51,7 @@
             },
             [
                 "csv",
+                "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
@@ -265,9 +266,7 @@
                 ]
             ],
             [
-                "testN.freebayes.filtered.bcftools_filtered.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "testN.strelka.variants.bcftools_filtered.vcf.gz:md5,35a541d45222013a9887bbe1678f9444",
-                "testT.freebayes.filtered.bcftools_filtered.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "testT.strelka.variants.bcftools_filtered.vcf.gz:md5,46757c1dd7a5c1f62b39d91281016521",
                 "testN.freebayes.filtered.vcf.gz:md5,7a08d55c866e45d635cf378825ddba74",
                 "testT.freebayes.filtered.vcf.gz:md5,dc1b49ffa2401b2a5193a0527bf8cd0a",

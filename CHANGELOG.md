@@ -9,13 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- [2044](https://github.com/nf-core/sarek/pull/2044) - Add filtering with `bcftools view -f PASS` following variantcalling step
+- [#2044](https://github.com/nf-core/sarek/pull/2044) - Add filtering with `bcftools view -f PASS,.` following variantcalling step
+- [#2049](https://github.com/nf-core/sarek/pull/2049) - Add consensus calling of small variant VCFs for variants called by x or more tools, with `x=2` as default
 
 ### Changed
 
 ### Fixed
 
-[#2045](https://github.com/nf-core/sarek/pull/2045) - Propagate fastp shard naming if exists through BBSplit to ensure unique naming in Markduplicates
+- [#2045](https://github.com/nf-core/sarek/pull/2045) - Propagate fastp shard naming if exists through BBSplit to ensure unique naming in Markduplicates
+- [#2060](https://github.com/nf-core/sarek/pull/2060) - Update bbmap/bbsplit module to fix bbsplit index staging by using symlinks instead of full copy
 
 ### Removed
 
@@ -23,11 +25,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+| `multiqc`  | 1.31        | 1.32        |
 
 ### Parameters
 
-| Params | status |
-| ------ | ------ |
+| Params                       | status |
+| ---------------------------- | ------ |
+| `--filter_vcfs`              | New    |
+| `--bcftools_filter_criteria` | New    |
+| `--snv_consensus_calling`    | New    |
+| `--consensus_min_count`      | New    |
 
 ### Developer section
 
@@ -35,10 +42,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Changed
 
-- [2041](https://github.com/nf-core/sarek/pull/2041) - Back to dev
-- [2043](https://github.com/nf-core/sarek/pull/2043) - Refactor postvariantcalling and split out varlociraptor from other options
+- [#1979](https://github.com/nf-core/sarek/pull/1979) - Update prepare_genome subworkflow to adhere to language server
+- [#2041](https://github.com/nf-core/sarek/pull/2041) - Back to dev
+- [#2043](https://github.com/nf-core/sarek/pull/2043) - Refactor postvariantcalling and split out varlociraptor from other options
+- [#2048](https://github.com/nf-core/sarek/pull/2048) - No null value for snpeff_cache and vep_cache in tests
+- [#2058](https://github.com/nf-core/sarek/pull/2058) - Template update for nf-core/tools v3.5.1
 
 #### Fixed
+
+- [#2053](https://github.com/nf-core/sarek/pull/2053) - Change yte input to one channel to disambiguate scenario file rendering
+- [#2054](https://github.com/nf-core/sarek/pull/2054) - Fix typo on tbi_sentieon_dnascope channel
 
 #### Removed
 
@@ -66,10 +79,8 @@ This patch release includes a bump to Nextflow 25.04.8.
 
 ### Parameters
 
-| Params                       | status |
-| ---------------------------- | ------ |
-| `--filter_vcfs`              | New    |
-| `--bcftools_filter_criteria` | New    |
+| Params | status |
+| ------ | ------ |
 
 ### Developer section
 
@@ -253,7 +264,6 @@ Kvikkjokk is a village where many trails start that lead through sarek.
 - [1970](https://github.com/nf-core/sarek/pull/1970) - Update controlfreec modules to adhere to language server
 - [1975](https://github.com/nf-core/sarek/pull/1975) - Now fails when no dbnsfp_tbi is provided when dbnsfp is
 - [1977](https://github.com/nf-core/sarek/pull/1977) - Update sentieon modules to adhere to language server
-- [1979](https://github.com/nf-core/sarek/pull/1979) - Update prepare_genome subworkflow to adhere to language server
 - [1985](https://github.com/nf-core/sarek/pull/1985) - Update subway maps and workflow pictures to include msisensor2 following [1965](https://github.com/nf-core/sarek/pull/1965)
 - [1990](https://github.com/nf-core/sarek/pull/1990) - Update parabricks/fq2bam to 4.5.1-1
 - [2001](https://github.com/nf-core/sarek/pull/2001) - Remove lofreq VCF MD5sum - use summary

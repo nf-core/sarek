@@ -12,7 +12,7 @@
                     },
                     "bbmap/bbsplit": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "6da7216c83d9d885bdeb7aef1bcb9b51a90f370b",
                         "installed_by": ["modules"]
                     },
                     "bcftools/annotate": {
@@ -23,6 +23,11 @@
                     "bcftools/concat": {
                         "branch": "master",
                         "git_sha": "1503efe8f6450e71218097f93cf43e4b625018d4",
+                        "installed_by": ["modules"]
+                    },
+                    "bcftools/isec": {
+                        "branch": "master",
+                        "git_sha": "f17049e03697726ace7499d2fe342f892594f6f3",
                         "installed_by": ["modules"]
                     },
                     "bcftools/merge": {
@@ -583,7 +588,7 @@
                     },
                     "yte": {
                         "branch": "master",
-                        "git_sha": "3179219c5360ba9e624f64a28b102efe0cfadc49",
+                        "git_sha": "b9947fd7a338e1087a5c386ac7192588d3059122",
                         "installed_by": ["modules"]
                     }
                 }
@@ -597,17 +602,17 @@
                     },
                     "utils_nextflow_pipeline": {
                         "branch": "master",
-                        "git_sha": "c2b22d85f30a706a3073387f30380704fcae013b",
+                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfcore_pipeline": {
                         "branch": "master",
-                        "git_sha": "51ae5406a030d4da1e49e4dab49756844fdd6c7a",
+                        "git_sha": "271e7fc14eb1320364416d996fb077421f3faed2",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfschema_plugin": {
                         "branch": "master",
-                        "git_sha": "2fd2cd6d0e7b273747f32e465fdc6bcc3ae0814e",
+                        "git_sha": "4b406a74dc0449c0401ed87d5bfff4252fd277fd",
                         "installed_by": ["subworkflows"]
                     },
                     "vcf_annotate_ensemblvep": {
