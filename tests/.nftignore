@@ -8,7 +8,6 @@ multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibratio
 multiqc/multiqc_data/gatk-base-recalibrator-reported-empirical-plot.txt
 multiqc/multiqc_data/gatk_base_recalibrator.txt
 multiqc/multiqc_data/llms-full.txt
-multiqc/multiqc_data/llms-full.txt
 multiqc/multiqc_data/mosdepth_cov_dist.txt
 multiqc/multiqc_data/mosdepth_cumcov_dist.txt
 multiqc/multiqc_data/multiqc.log
