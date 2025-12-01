@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+| `multiqc`  | 1.31        | 1.32        |
 
 ### Parameters
 
@@ -45,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2041](https://github.com/nf-core/sarek/pull/2041) - Back to dev
 - [#2043](https://github.com/nf-core/sarek/pull/2043) - Refactor postvariantcalling and split out varlociraptor from other options
 - [#2048](https://github.com/nf-core/sarek/pull/2048) - No null value for snpeff_cache and vep_cache in tests
+- [#2058](https://github.com/nf-core/sarek/pull/2058) - Template update for nf-core/tools v3.5.1
 
 #### Fixed
 

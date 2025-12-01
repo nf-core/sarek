@@ -18,7 +18,7 @@ concurrency:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  NFT_VER: "0.9.2"
+  NFT_VER: "0.9.3"
   NFT_WORKDIR: "~"
   NXF_ANSI_LOG: false
   NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
@@ -39,9 +39,10 @@ jobs:
           rm -rf ./* || true
           rm -rf ./.??* || true
           ls -la ./
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
+
       - name: get number of shards
         id: set-shards
         uses: ./.github/actions/get-shards
@@ -70,19 +71,21 @@ jobs:
         profile: [docker, singularity]
         isMain:
           - ${{ github.base_ref == 'master' || github.base_ref == 'main' }}
-        # Exclude singularity on dev
+        # Exclude conda and singularity on dev
         exclude:
+          - isMain: false
+            profile: "conda"
           - isMain: false
             profile: "singularity"
         NXF_VER:
-          - "24.10.5"
+          - "25.04.8"
           - "latest-everything"
     env:
       NXF_ANSI_LOG: false
       TOTAL_SHARDS: ${{ needs.nf-test-gpu-changes.outputs.total_shards }}
 
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
 
@@ -96,6 +99,7 @@ jobs:
         continue-on-error: ${{ matrix.NXF_VER == 'latest-everything' }}
         env:
           NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
+          NXF_VERSION: ${{ matrix.NXF_VER }}
           SENTIEON_AUTH_MECH: "GitHub Actions - token"
           SENTIEON_ENCRYPTION_KEY: ${{ secrets.SENTIEON_ENCRYPTION_KEY }}
           SENTIEON_LICENSE_MESSAGE: ${{ secrets.SENTIEON_LICENSE_MESSAGE }}
