@@ -1021,7 +1021,7 @@ As varlociraptor requires to provide a set of candidate variants to consider it 
 
 ### Filtering
 
-VCFs from all variantcallers can be filtered using `bcftools view`. Filtering is enabled by setting `--filter_vcfs` parameter. By default, variants are filtered to include only those with `PASS` in the FILTER field. Custom filtering criteria can be specified using the `--bcftools_filtering` parameter (see [bcftools view documentation](https://samtools.github.io/bcftools/bcftools.html#view) for filter syntax).
+VCFs from all variantcallers can be filtered using `bcftools view`. Filtering is enabled by setting `--filter_vcfs` parameter. By default, variants are filtered to include only those with `PASS` in the FILTER field. Custom filtering criteria can be specified using the `--bcftools_filter_criteria` parameter (see [bcftools view documentation](https://samtools.github.io/bcftools/bcftools.html#view) for filter syntax).
 
 <details markdown="1">
 <summary>Filtered VCF-files for normal and tumor samples</summary>
@@ -1058,7 +1058,7 @@ By default, `bcftools isec` identifies variants present in at least a minimum nu
 <details markdown="1">
 <summary>Consensus called VCF files for all samples</summary>
 
-**Output directory: `{outdir}/variant_calling/consenus/<sample>/`**
+**Output directory: `{outdir}/variant_calling/consensus/<sample>/`**
 
 - `0000.vcf.gz` and `0000.vcf.gz.tbi`
   - VCF with tabix index containing variants present in the consensus set of input variant callers
