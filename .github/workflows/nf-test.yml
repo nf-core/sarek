@@ -9,7 +9,7 @@ on:
       - "**/*.svg"
   release:
     types: [published]
-  workflow_dispatch:
+  workflow_dispatch: null
 
 # Cancel if a newer run is started
 concurrency:
@@ -79,8 +79,8 @@ jobs:
           - isMain: false
             profile: "singularity"
         NXF_VER:
-          - "25.04.8"
-          - "latest-everything"
+          - 25.10.2
+          - latest-everything
     env:
       NXF_ANSI_LOG: false
       TOTAL_SHARDS: ${{ needs.nf-test-changes.outputs.total_shards }}
