@@ -9,7 +9,7 @@ on:
       - "**/*.svg"
   release:
     types: [published]
-  workflow_dispatch: null
+  workflow_dispatch:
 
 # Cancel if a newer run is started
 concurrency:
