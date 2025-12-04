@@ -1,0 +1,1075 @@
+nextflow_workflow {
+
+    name "Test Subworkflow POST_VARIANTCALLING"
+    script "../main.nf"
+    workflow "POST_VARIANTCALLING"
+    config "./nextflow.config"
+
+    tag "subworkflows"
+    tag "subworkflows_local"
+    tag "post_variantcalling"
+
+    test("POST_VARIANTCALLING - normalization only") {
+
+        when {
+            workflow {
+                """
+                // Input setup
+                tools                             = ''
+                cram_germline                     = [[:],[]]
+                germline_vcfs                     = channel.of([[id: 'test_normal'],
+                                                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)])
+                germline_tbis                     = Channel.empty()
+                cram_tumor_only                   = [[:],[]]
+                tumor_only_vcfs                   = channel.of([[id: 'test_tumor'],
+                                                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)])
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = [[:],[]]
+                somatic_vcfs                      = channel.of([[id: 'test_somatic'],
+                                                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)])
+                somatic_tbis                      = Channel.empty()
+                fasta                             = channel.of([[id: 'fasta'],
+                                                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
+                fai                               = [[:],[]]
+                concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                snv_consensus_calling             = false
+                normalize_vcfs                    = true
+                varlociraptor_chunk_size          = 15
+                varlociraptor_scenario_germline   = []
+                varlociraptor_scenario_somatic    = []
+                varlociraptor_scenario_tumor_only = []
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = snv_consensus_calling
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.vcfs,
+                    workflow.out.tbis,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("POST_VARIANTCALLING - concatenation only") {
+
+        when {
+
+            workflow {
+                """
+                // Input setup
+                tools                             = ''
+                cram_germline                     = Channel.empty()
+                germline_vcfs                     = Channel.of(
+                    [[id: 'test_sample', num: '1'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)],
+                    [[id: 'test_sample', num: '2'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
+                )
+                germline_tbis                     = Channel.empty()
+                cram_tumor_only                   = Channel.empty()
+                tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = Channel.empty()
+                somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
+                fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
+                fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
+                concatenate_vcfs                  = true
+                filter_vcfs                       = false
+                snv_consensus_calling             = false
+                normalize_vcfs                    = false
+                varlociraptor_chunk_size          = 15
+                varlociraptor_scenario_germline   = []
+                varlociraptor_scenario_somatic    = []
+                varlociraptor_scenario_tumor_only = []
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = snv_consensus_calling
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.vcfs,
+                    workflow.out.tbis,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("POST_VARIANTCALLING - normalization and concatenation") {
+
+        when {
+
+            workflow {
+                """
+                // Input setup
+                tools                             = ''
+                cram_germline                     = Channel.empty()
+                germline_vcfs                     = Channel.of(
+                    [[id: 'test_sample', num: '1'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)],
+                    [[id: 'test_sample', num: '2'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
+                )
+                germline_tbis                     = Channel.empty()
+                cram_tumor_only                   = Channel.empty()
+                tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = Channel.empty()
+                somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
+                fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
+                fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
+                concatenate_vcfs                  = true
+                filter_vcfs                       = false
+                snv_consensus_calling             = false
+                normalize_vcfs                    = true
+                varlociraptor_chunk_size          = 15
+                varlociraptor_scenario_germline   = []
+                varlociraptor_scenario_somatic    = []
+                varlociraptor_scenario_tumor_only = []
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = snv_consensus_calling
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.vcfs,
+                    workflow.out.tbis,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("POST_VARIANTCALLING - no processing") {
+
+        when {
+
+            workflow {
+                """
+                // Input setup
+                tools                             = 'strelka'
+                cram_germline                     = Channel.empty()
+                germline_vcfs                     = Channel.of(
+                    [[id: 'test_sample'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
+                )
+                germline_tbis                     = Channel.empty()
+                cram_tumor_only                   = Channel.empty()
+                tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = Channel.empty()
+                somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
+                fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
+                fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
+                concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                snv_consensus_calling             = false
+                normalize_vcfs                    = false
+                varlociraptor_chunk_size          = 15
+                varlociraptor_scenario_germline   = []
+                varlociraptor_scenario_somatic    = []
+                varlociraptor_scenario_tumor_only = []
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = snv_consensus_calling
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.vcfs.size() == 0 },
+                { assert workflow.out.tbis.size() == 0 }
+            )
+        }
+    }
+
+    test("POST_VARIANTCALLING - normalization only - stub") {
+
+        options "-stub"
+
+        when {
+
+            workflow {
+                """
+                // Input setup
+                tools                             = 'strelka'
+                cram_germline                     = Channel.empty()
+                germline_vcfs                     = Channel.of(
+                    [[id: 'test_sample'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
+                )
+                germline_tbis                     = Channel.empty()
+                cram_tumor_only                   = Channel.empty()
+                tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = Channel.empty()
+                somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
+                fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
+                fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
+                concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                snv_consensus_calling             = false
+                normalize_vcfs                    = true
+                varlociraptor_chunk_size          = 15
+                varlociraptor_scenario_germline   = []
+                varlociraptor_scenario_somatic    = []
+                varlociraptor_scenario_tumor_only = []
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = snv_consensus_calling
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.vcfs,
+                    workflow.out.tbis,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("POST_VARIANTCALLING - concatenation only - stub") {
+
+        options "-stub"
+
+        when {
+
+            workflow {
+                """
+                // Input setup
+                tools                             = 'haplotypecaller,strelka'
+                cram_germline                     = Channel.empty()
+                germline_vcfs                     = Channel.of(
+                    [[id: 'test_sample'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
+                )
+                germline_tbis                     = Channel.empty()
+                cram_tumor_only                   = Channel.empty()
+                tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = Channel.empty()
+                somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
+                fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
+                fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
+                concatenate_vcfs                  = true
+                filter_vcfs                       = false
+                snv_consensus_calling             = false
+                normalize_vcfs                    = false
+                varlociraptor_chunk_size          = 15
+                varlociraptor_scenario_germline   = []
+                varlociraptor_scenario_somatic    = []
+                varlociraptor_scenario_tumor_only = []
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = snv_consensus_calling
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.vcfs,
+                    workflow.out.tbis,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("POST_VARIANTCALLING - varlociraptor germline") {
+
+        tag "varlociraptor"
+
+        when {
+            params{
+                varlociraptor_chunk_size = 1
+            }
+            workflow {
+                """
+                // Input setup with real test data
+                tools                             = 'varlociraptor'
+                cram_germline                     = Channel.of(
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists:true), file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists:true)]
+                )
+                germline_vcfs                     = Channel.of(
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'strelka'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
+                )
+                germline_tbis                     = Channel.empty()
+                cram_tumor_only                   = Channel.empty()
+                tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = Channel.empty()
+                somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
+                fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
+                fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
+                concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                snv_consensus_calling             = false
+                normalize_vcfs                    = false
+                varlociraptor_chunk_size          = params.varlociraptor_chunk_size
+                varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
+                varlociraptor_scenario_somatic    = Channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect()
+                varlociraptor_scenario_tumor_only = Channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect()
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = snv_consensus_calling
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.vcfs,
+                    workflow.out.tbis,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("POST_VARIANTCALLING - varlociraptor germline - stub") {
+
+        options "-stub"
+
+        tag "varlociraptor"
+
+        when {
+            workflow {
+                """
+                // Input setup
+                tools                             = 'varlociraptor'
+                cram_germline                     = Channel.of(
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists:true), file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists:true)]
+                )
+                germline_vcfs                     = Channel.of(
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'strelka'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
+                )
+                germline_tbis                     = Channel.empty()
+                cram_tumor_only                   = Channel.empty()
+                tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = Channel.empty()
+                somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
+                fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
+                fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
+                concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                snv_consensus_calling             = false
+                normalize_vcfs                    = false
+                varlociraptor_chunk_size          = 2
+                varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
+                varlociraptor_scenario_somatic    = Channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect()
+                varlociraptor_scenario_tumor_only = Channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect()
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = snv_consensus_calling
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.vcfs,
+                    workflow.out.tbis,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("POST_VARIANTCALLING - varlociraptor tumor-only") {
+
+        tag "varlociraptor"
+
+        when {
+            params{
+                varlociraptor_chunk_size = 1
+            }
+            workflow {
+                """
+                // Input setup with real test data
+                tools                             = 'varlociraptor'
+                cram_germline                     = Channel.empty()
+                germline_vcfs                     = Channel.empty()
+                germline_tbis                     = Channel.empty()
+                cram_tumor_only                   = Channel.of(
+                    [[id: 'tumor_sample', patient: 'test', sample: 'tumor', sex: 'XY', status: 1, contamination: 0.0], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists:true), file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists:true)]
+                )
+                tumor_only_vcfs                   = Channel.of(
+                    [[id: 'tumor_sample', patient: 'test', sample: 'tumor', sex: 'XY', status: 1, variantcaller: 'strelka'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
+                )
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = Channel.empty()
+                somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
+                fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
+                fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
+                concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                snv_consensus_calling             = false
+                normalize_vcfs                    = false
+                varlociraptor_chunk_size          = params.varlociraptor_chunk_size
+                varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
+                varlociraptor_scenario_somatic    = Channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect()
+                varlociraptor_scenario_tumor_only = Channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect()
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = snv_consensus_calling
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.vcfs,
+                    workflow.out.tbis,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("POST_VARIANTCALLING - varlociraptor tumor-only - stub") {
+
+        options "-stub"
+        tag "varlociraptor"
+
+        when {
+            workflow {
+                """
+                // Input setup
+                tools                             = 'varlociraptor'
+                cram_germline                     = Channel.empty()
+                germline_vcfs                     = Channel.empty()
+                germline_tbis                     = Channel.empty()
+                cram_tumor_only                   = Channel.of(
+                    [[id: 'tumor_sample', patient: 'test', sample: 'tumor', sex: 'XY', status: 1, contamination: 0.0], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists:true), file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists:true)]
+                )
+                tumor_only_vcfs                   = Channel.of(
+                    [[id: 'tumor_sample', patient: 'test', sample: 'tumor', sex: 'XY', status: 1, variantcaller: 'strelka'], file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
+                )
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = Channel.empty()
+                somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
+                fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
+                fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
+                concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                snv_consensus_calling             = false
+                normalize_vcfs                    = false
+                varlociraptor_chunk_size          = 2
+                varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
+                varlociraptor_scenario_somatic    = Channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect()
+                varlociraptor_scenario_tumor_only = Channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect()
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = snv_consensus_calling
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.vcfs,
+                    workflow.out.tbis,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("POST_VARIANTCALLING - varlociraptor somatic") {
+
+        tag "varlociraptor"
+
+        when {
+            params{
+                varlociraptor_chunk_size = 1
+            }
+            workflow {
+                """
+                // Input setup with real test data
+                tools                             = 'varlociraptor'
+                cram_germline                     = Channel.empty()
+                germline_vcfs                     = Channel.of(
+                    [[id: 'normal_sample', patient: 'test', sample: 'normal', sex: 'XX', status: 0, variantcaller: 'strelka'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/haplotypecaller_calls/test2_haplotc.vcf.gz', checkIfExists: true)]
+                )
+                germline_tbis                     = Channel.empty()
+                cram_tumor_only                   = Channel.empty()
+                tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = Channel.of(
+
+                    [[id: 'tumor_sample', patient: 'test', sample: 'tumor', sex: 'XX', status: 1, normal_id: 'normal_sample', contamination: 0.0],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.recalibrated.sorted.cram', checkIfExists:true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.recalibrated.sorted.cram.crai', checkIfExists:true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.recalibrated.sorted.cram', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.recalibrated.sorted.cram.crai', checkIfExists: true)]
+                )
+                somatic_vcfs                      = Channel.of(
+                    [[id: 'tumor_sample', patient: 'test', sample: 'tumor', sex: 'XX', status: 1, normal_id: 'normal_sample', variantcaller: 'strelka'],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/paired_mutect2_calls/test_test2_paired_filtered_mutect2_calls.vcf.gz', checkIfExists: true)]
+                )
+                somatic_tbis                      = Channel.empty()
+                fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)])
+                fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)])
+                concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                snv_consensus_calling             = false
+                normalize_vcfs                    = false
+                varlociraptor_chunk_size          = params.varlociraptor_chunk_size
+                varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
+                varlociraptor_scenario_somatic    = Channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect()
+                varlociraptor_scenario_tumor_only = Channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect()
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = snv_consensus_calling
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.vcfs,
+                    workflow.out.tbis,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("POST_VARIANTCALLING - varlociraptor somatic - stub") {
+
+        options "-stub"
+
+        tag "varlociraptor"
+
+        when {
+
+            workflow {
+                """
+                // Input setup
+                tools                             = 'varlociraptor'
+                cram_germline                     = Channel.empty()
+                germline_vcfs                     = Channel.of(
+                    [[id: 'normal_sample', patient: 'test', sample: 'normal', sex: 'XX', status: 0, variantcaller: 'strelka'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/haplotypecaller_calls/test2_haplotc.vcf.gz', checkIfExists: true)]
+                )
+                germline_tbis                     = Channel.empty()
+                cram_tumor_only                   = Channel.empty()
+                tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = Channel.of(
+                    [[id: 'tumor_sample', patient: 'test', sample: 'tumor', sex: 'XX', status: 1, normal_id: 'normal_sample', contamination: 0.0],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam', checkIfExists:true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam.bai', checkIfExists:true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true)]
+                )
+                somatic_vcfs                      = Channel.of(
+                    [[id: 'tumor_sample', patient: 'test', sample: 'tumor', sex: 'XX', status: 1, normal_id: 'normal_sample', variantcaller: 'strelka'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/paired_mutect2_calls/test_test2_paired_filtered_mutect2_calls.vcf.gz', checkIfExists: true)]
+                )
+                somatic_tbis                      = Channel.empty()
+                fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
+                fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)])
+                concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                snv_consensus_calling             = false
+                normalize_vcfs                    = false
+                varlociraptor_chunk_size          = 2
+                varlociraptor_scenario_germline   = Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect()
+                varlociraptor_scenario_somatic    = Channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect()
+                varlociraptor_scenario_tumor_only = Channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect()
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = snv_consensus_calling
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.vcfs,
+                    workflow.out.tbis,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("POST_VARIANTCALLING - normalization and consensus") {
+
+        when {
+            workflow {
+                """
+                // Input setup for consensus calling - requires multiple VCFs with different variantcallers
+                tools                             = ''
+                cram_germline                     = Channel.empty()
+                germline_vcfs                     = Channel.of(
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'freebayes'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)],
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'strelka'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
+                )
+                germline_tbis                     = Channel.of(
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'freebayes'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true)],
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'strelka'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true)]
+                )
+                cram_tumor_only                   = Channel.empty()
+                tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = Channel.empty()
+                somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
+                fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
+                fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
+                concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                snv_consensus_calling             = true
+                normalize_vcfs                    = true
+                varlociraptor_chunk_size          = 15
+                varlociraptor_scenario_germline   = []
+                varlociraptor_scenario_somatic    = []
+                varlociraptor_scenario_tumor_only = []
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = snv_consensus_calling
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.vcfs,
+                    workflow.out.tbis,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("POST_VARIANTCALLING - filter, normalization and consensus") {
+
+        when {
+            workflow {
+                """
+                // Input setup for full post-processing pipeline
+                tools                             = ''
+                cram_germline                     = Channel.empty()
+                germline_vcfs                     = Channel.of(
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'freebayes'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)],
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'haplotypecaller'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
+                )
+                germline_tbis                     = Channel.of(
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'freebayes'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true)],
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'haplotypecaller'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true)]
+                )
+                cram_tumor_only                   = Channel.empty()
+                tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = Channel.empty()
+                somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
+                fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
+                fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
+                concatenate_vcfs                  = false
+                filter_vcfs                       = true
+                snv_consensus_calling             = true
+                normalize_vcfs                    = true
+                varlociraptor_chunk_size          = 15
+                varlociraptor_scenario_germline   = []
+                varlociraptor_scenario_somatic    = []
+                varlociraptor_scenario_tumor_only = []
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = snv_consensus_calling
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.vcfs,
+                    workflow.out.tbis,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("POST_VARIANTCALLING - normalization and consensus - stub") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                // Input setup for consensus stub test
+                tools                             = ''
+                cram_germline                     = Channel.empty()
+                germline_vcfs                     = Channel.of(
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'freebayes'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)],
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'strelka'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true)]
+                )
+                germline_tbis                     = Channel.of(
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'freebayes'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true)],
+                    [[id: 'test_sample', patient: 'test', sample: 'test', sex: 'XX', status: 0, variantcaller: 'strelka'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz.tbi', checkIfExists: true)]
+                )
+                cram_tumor_only                   = Channel.empty()
+                tumor_only_vcfs                   = Channel.empty()
+                tumor_only_tbis                   = Channel.empty()
+                cram_somatic                      = Channel.empty()
+                somatic_vcfs                      = Channel.empty()
+                somatic_tbis                      = Channel.empty()
+                fasta                             = Channel.of([[id: 'fasta'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])
+                fai                               = Channel.of([[id: 'fai'], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)])
+                concatenate_vcfs                  = false
+                filter_vcfs                       = false
+                snv_consensus_calling             = true
+                normalize_vcfs                    = true
+                varlociraptor_chunk_size          = 15
+                varlociraptor_scenario_germline   = []
+                varlociraptor_scenario_somatic    = []
+                varlociraptor_scenario_tumor_only = []
+
+                input[0]  = tools
+                input[1]  = cram_germline
+                input[2]  = germline_vcfs
+                input[3]  = germline_tbis
+                input[4]  = cram_tumor_only
+                input[5]  = tumor_only_vcfs
+                input[6]  = tumor_only_tbis
+                input[7]  = cram_somatic
+                input[8]  = somatic_vcfs
+                input[9]  = somatic_tbis
+                input[10] = fasta
+                input[11] = fai
+                input[12] = concatenate_vcfs
+                input[13] = filter_vcfs
+                input[14] = snv_consensus_calling
+                input[15] = normalize_vcfs
+                input[16] = varlociraptor_chunk_size
+                input[17] = varlociraptor_scenario_germline
+                input[18] = varlociraptor_scenario_somatic
+                input[19] = varlociraptor_scenario_tumor_only
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out.vcfs,
+                    workflow.out.tbis,
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+}

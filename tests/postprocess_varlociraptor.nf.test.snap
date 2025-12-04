@@ -299,10 +299,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-09-30T21:21:23.873041722"
+        "timestamp": "2025-11-02T16:48:49.54626"
     },
     "-profile test --tools mutect2,varlociraptor --input recalibrated_tumoronly.csv": {
         "content": [
@@ -544,10 +544,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-09-30T21:26:33.986844853"
+        "timestamp": "2025-11-04T11:46:27.501146"
     },
     "-profile test --tools strelka,varlociraptor --input recalibrated_germline.csv": {
         "content": [
@@ -765,9 +765,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-09-30T21:16:47.3360895"
+        "timestamp": "2025-11-01T23:04:58.277878"
     }
 }

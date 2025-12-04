@@ -1,396 +1,7 @@
 {
-    "-profile test --tools freebayes --no_intervals --wes --input fastq_pair.csv": {
-        "content": [
-            39,
-            {
-                "BCFTOOLS_SORT": {
-                    "bcftools": 1.21
-                },
-                "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
-                },
-                "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
-                },
-                "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
-                },
-                "FASTQC": {
-                    "fastqc": "0.12.1"
-                },
-                "FREEBAYES": {
-                    "freebayes": "1.3.10"
-                },
-                "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
-                },
-                "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
-                },
-                "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
-                },
-                "INDEX_CRAM": {
-                    "samtools": 1.21
-                },
-                "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
-                },
-                "SAMTOOLS_STATS": {
-                    "samtools": 1.21
-                },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
-                },
-                "TABIX_VC_FREEBAYES": {
-                    "tabix": 1.21
-                },
-                "VCFLIB_VCFFILTER": {
-                    "vcflib": "1.0.14"
-                },
-                "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
-                }
-            },
-            [
-                "csv",
-                "csv/markduplicates.csv",
-                "csv/markduplicates_no_table.csv",
-                "csv/recalibrated.csv",
-                "csv/variantcalled.csv",
-                "multiqc",
-                "multiqc/multiqc_data",
-                "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
-                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
-                "multiqc/multiqc_data/bcftools_stats_variant_depths.txt",
-                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
-                "multiqc/multiqc_data/bcftools_stats_vqc_Count_SNP.txt",
-                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transitions.txt",
-                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transversions.txt",
-                "multiqc/multiqc_data/fastqc-status-check-heatmap.txt",
-                "multiqc/multiqc_data/fastqc_adapter_content_plot.txt",
-                "multiqc/multiqc_data/fastqc_per_base_n_content_plot.txt",
-                "multiqc/multiqc_data/fastqc_per_base_sequence_quality_plot.txt",
-                "multiqc/multiqc_data/fastqc_per_sequence_gc_content_plot_Counts.txt",
-                "multiqc/multiqc_data/fastqc_per_sequence_gc_content_plot_Percentages.txt",
-                "multiqc/multiqc_data/fastqc_per_sequence_quality_scores_plot.txt",
-                "multiqc/multiqc_data/fastqc_sequence_counts_plot.txt",
-                "multiqc/multiqc_data/fastqc_sequence_duplication_levels_plot.txt",
-                "multiqc/multiqc_data/fastqc_sequence_length_distribution_plot.txt",
-                "multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt",
-                "multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt",
-                "multiqc/multiqc_data/gatk-base-recalibrator-reported-empirical-plot.txt",
-                "multiqc/multiqc_data/gatk_base_recalibrator.txt",
-                "multiqc/multiqc_data/llms-full.txt",
-                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
-                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
-                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
-                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
-                "multiqc/multiqc_data/mosdepth_perchrom.txt",
-                "multiqc/multiqc_data/multiqc.log",
-                "multiqc/multiqc_data/multiqc.parquet",
-                "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
-                "multiqc/multiqc_data/multiqc_citations.txt",
-                "multiqc/multiqc_data/multiqc_data.json",
-                "multiqc/multiqc_data/multiqc_fastqc.txt",
-                "multiqc/multiqc_data/multiqc_general_stats.txt",
-                "multiqc/multiqc_data/multiqc_picard_dups.txt",
-                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
-                "multiqc/multiqc_data/multiqc_software_versions.txt",
-                "multiqc/multiqc_data/multiqc_sources.txt",
-                "multiqc/multiqc_data/picard_MarkIlluminaAdapters_histogram.txt",
-                "multiqc/multiqc_data/picard_MeanQualityByCycle_histogram.txt",
-                "multiqc/multiqc_data/picard_MeanQualityByCycle_histogram_1.txt",
-                "multiqc/multiqc_data/picard_QualityScoreDistribution_histogram.txt",
-                "multiqc/multiqc_data/picard_deduplication.txt",
-                "multiqc/multiqc_data/samtools-stats-dp.txt",
-                "multiqc/multiqc_data/samtools_alignment_plot.txt",
-                "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
-                "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
-                "multiqc/multiqc_plots",
-                "multiqc/multiqc_plots/pdf",
-                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-pct.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_variant_depths.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
-                "multiqc/multiqc_plots/pdf/fastqc-status-check-heatmap.pdf",
-                "multiqc/multiqc_plots/pdf/fastqc_adapter_content_plot.pdf",
-                "multiqc/multiqc_plots/pdf/fastqc_per_base_n_content_plot.pdf",
-                "multiqc/multiqc_plots/pdf/fastqc_per_base_sequence_quality_plot.pdf",
-                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Counts.pdf",
-                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Percentages.pdf",
-                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_quality_scores_plot.pdf",
-                "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-pct.pdf",
-                "multiqc/multiqc_plots/pdf/fastqc_sequence_duplication_levels_plot.pdf",
-                "multiqc/multiqc_plots/pdf/fastqc_sequence_length_distribution_plot.pdf",
-                "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.pdf",
-                "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.pdf",
-                "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-reported-empirical-plot.pdf",
-                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
-                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
-                "multiqc/multiqc_plots/pdf/picard_deduplication-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/picard_deduplication-pct.pdf",
-                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
-                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
-                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
-                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
-                "multiqc/multiqc_plots/png",
-                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
-                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-pct.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_variant_depths.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
-                "multiqc/multiqc_plots/png/fastqc-status-check-heatmap.png",
-                "multiqc/multiqc_plots/png/fastqc_adapter_content_plot.png",
-                "multiqc/multiqc_plots/png/fastqc_per_base_n_content_plot.png",
-                "multiqc/multiqc_plots/png/fastqc_per_base_sequence_quality_plot.png",
-                "multiqc/multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Counts.png",
-                "multiqc/multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Percentages.png",
-                "multiqc/multiqc_plots/png/fastqc_per_sequence_quality_scores_plot.png",
-                "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-cnt.png",
-                "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-pct.png",
-                "multiqc/multiqc_plots/png/fastqc_sequence_duplication_levels_plot.png",
-                "multiqc/multiqc_plots/png/fastqc_sequence_length_distribution_plot.png",
-                "multiqc/multiqc_plots/png/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.png",
-                "multiqc/multiqc_plots/png/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.png",
-                "multiqc/multiqc_plots/png/gatk-base-recalibrator-reported-empirical-plot.png",
-                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
-                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
-                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
-                "multiqc/multiqc_plots/png/picard_deduplication-cnt.png",
-                "multiqc/multiqc_plots/png/picard_deduplication-pct.png",
-                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
-                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
-                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
-                "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
-                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
-                "multiqc/multiqc_plots/svg",
-                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
-                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-pct.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_variant_depths.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
-                "multiqc/multiqc_plots/svg/fastqc-status-check-heatmap.svg",
-                "multiqc/multiqc_plots/svg/fastqc_adapter_content_plot.svg",
-                "multiqc/multiqc_plots/svg/fastqc_per_base_n_content_plot.svg",
-                "multiqc/multiqc_plots/svg/fastqc_per_base_sequence_quality_plot.svg",
-                "multiqc/multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Counts.svg",
-                "multiqc/multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Percentages.svg",
-                "multiqc/multiqc_plots/svg/fastqc_per_sequence_quality_scores_plot.svg",
-                "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-cnt.svg",
-                "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-pct.svg",
-                "multiqc/multiqc_plots/svg/fastqc_sequence_duplication_levels_plot.svg",
-                "multiqc/multiqc_plots/svg/fastqc_sequence_length_distribution_plot.svg",
-                "multiqc/multiqc_plots/svg/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.svg",
-                "multiqc/multiqc_plots/svg/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.svg",
-                "multiqc/multiqc_plots/svg/gatk-base-recalibrator-reported-empirical-plot.svg",
-                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
-                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
-                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
-                "multiqc/multiqc_plots/svg/picard_deduplication-cnt.svg",
-                "multiqc/multiqc_plots/svg/picard_deduplication-pct.svg",
-                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
-                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
-                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
-                "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
-                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
-                "multiqc/multiqc_report.html",
-                "no_intervals.bed",
-                "no_intervals.bed.gz",
-                "no_intervals.bed.gz.tbi",
-                "pipeline_info",
-                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "preprocessing",
-                "preprocessing/markduplicates",
-                "preprocessing/markduplicates/test",
-                "preprocessing/markduplicates/test/test.md.cram",
-                "preprocessing/markduplicates/test/test.md.cram.crai",
-                "preprocessing/markduplicates/test2",
-                "preprocessing/markduplicates/test2/test2.md.cram",
-                "preprocessing/markduplicates/test2/test2.md.cram.crai",
-                "preprocessing/recal_table",
-                "preprocessing/recal_table/test",
-                "preprocessing/recal_table/test/test.recal.table",
-                "preprocessing/recal_table/test2",
-                "preprocessing/recal_table/test2/test2.recal.table",
-                "preprocessing/recalibrated",
-                "preprocessing/recalibrated/test",
-                "preprocessing/recalibrated/test/test.recal.cram",
-                "preprocessing/recalibrated/test/test.recal.cram.crai",
-                "preprocessing/recalibrated/test2",
-                "preprocessing/recalibrated/test2/test2.recal.cram",
-                "preprocessing/recalibrated/test2/test2.recal.cram.crai",
-                "reference",
-                "reports",
-                "reports/bcftools",
-                "reports/bcftools/freebayes",
-                "reports/bcftools/freebayes/test",
-                "reports/bcftools/freebayes/test/test.freebayes.filtered.bcftools_stats.txt",
-                "reports/bcftools/freebayes/test2_vs_test",
-                "reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.bcftools_stats.txt",
-                "reports/fastqc",
-                "reports/fastqc/test-test_L1",
-                "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.html",
-                "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.zip",
-                "reports/fastqc/test-test_L1/test-test_L1_2_fastqc.html",
-                "reports/fastqc/test-test_L1/test-test_L1_2_fastqc.zip",
-                "reports/fastqc/test2-test_L1",
-                "reports/fastqc/test2-test_L1/test2-test_L1_1_fastqc.html",
-                "reports/fastqc/test2-test_L1/test2-test_L1_1_fastqc.zip",
-                "reports/fastqc/test2-test_L1/test2-test_L1_2_fastqc.html",
-                "reports/fastqc/test2-test_L1/test2-test_L1_2_fastqc.zip",
-                "reports/markduplicates",
-                "reports/markduplicates/test",
-                "reports/markduplicates/test/test.md.cram.metrics",
-                "reports/markduplicates/test2",
-                "reports/markduplicates/test2/test2.md.cram.metrics",
-                "reports/mosdepth",
-                "reports/mosdepth/test",
-                "reports/mosdepth/test/test.md.mosdepth.global.dist.txt",
-                "reports/mosdepth/test/test.md.mosdepth.summary.txt",
-                "reports/mosdepth/test/test.md.per-base.bed.gz",
-                "reports/mosdepth/test/test.md.per-base.bed.gz.csi",
-                "reports/mosdepth/test/test.recal.mosdepth.global.dist.txt",
-                "reports/mosdepth/test/test.recal.mosdepth.summary.txt",
-                "reports/mosdepth/test/test.recal.per-base.bed.gz",
-                "reports/mosdepth/test/test.recal.per-base.bed.gz.csi",
-                "reports/mosdepth/test2",
-                "reports/mosdepth/test2/test2.md.mosdepth.global.dist.txt",
-                "reports/mosdepth/test2/test2.md.mosdepth.summary.txt",
-                "reports/mosdepth/test2/test2.md.per-base.bed.gz",
-                "reports/mosdepth/test2/test2.md.per-base.bed.gz.csi",
-                "reports/mosdepth/test2/test2.recal.mosdepth.global.dist.txt",
-                "reports/mosdepth/test2/test2.recal.mosdepth.summary.txt",
-                "reports/mosdepth/test2/test2.recal.per-base.bed.gz",
-                "reports/mosdepth/test2/test2.recal.per-base.bed.gz.csi",
-                "reports/samtools",
-                "reports/samtools/test",
-                "reports/samtools/test/test.md.cram.stats",
-                "reports/samtools/test/test.recal.cram.stats",
-                "reports/samtools/test2",
-                "reports/samtools/test2/test2.md.cram.stats",
-                "reports/samtools/test2/test2.recal.cram.stats",
-                "reports/vcftools",
-                "reports/vcftools/freebayes",
-                "reports/vcftools/freebayes/test",
-                "reports/vcftools/freebayes/test/test.freebayes.filtered.FILTER.summary",
-                "reports/vcftools/freebayes/test/test.freebayes.filtered.TsTv.count",
-                "reports/vcftools/freebayes/test/test.freebayes.filtered.TsTv.qual",
-                "reports/vcftools/freebayes/test2_vs_test",
-                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.FILTER.summary",
-                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.TsTv.count",
-                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.TsTv.qual",
-                "variant_calling",
-                "variant_calling/freebayes",
-                "variant_calling/freebayes/test",
-                "variant_calling/freebayes/test/test.freebayes.filtered.vcf.gz",
-                "variant_calling/freebayes/test/test.freebayes.vcf.gz",
-                "variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi",
-                "variant_calling/freebayes/test2_vs_test",
-                "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.vcf.gz",
-                "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz",
-                "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi"
-            ],
-            [
-                "fastqc-status-check-heatmap.txt:md5,eeb4e7e7a45f4223c86bfe3aea81f90b",
-                "fastqc_adapter_content_plot.txt:md5,cc7a809f9f001c10646ee4199ccdb40f",
-                "fastqc_per_base_n_content_plot.txt:md5,1eba855ae0fa5b5ed4a1f90d1c97f759",
-                "fastqc_per_base_sequence_quality_plot.txt:md5,cbb2743dfb2ec74e72b578c83ec28ee8",
-                "fastqc_per_sequence_gc_content_plot_Counts.txt:md5,73c884822eba0bafcdf34b90fe81aec5",
-                "fastqc_per_sequence_gc_content_plot_Percentages.txt:md5,24eeb00e5e2b11c7ab90a3223d429d15",
-                "fastqc_per_sequence_quality_scores_plot.txt:md5,6f048594f02effb93608665be29bd35a",
-                "fastqc_sequence_counts_plot.txt:md5,fca7ee9ef3382e2837a302d8c5d33769",
-                "fastqc_sequence_duplication_levels_plot.txt:md5,2aa0c6f33e4cffbb29cdabe2c28bb097",
-                "fastqc_sequence_length_distribution_plot.txt:md5,61b1fe978a2c73b86c30c27ee4bc60ae",
-                "mosdepth-coverage-per-contig-single.txt:md5,5e1e538631fd3e6e45158f9edf33ee8d",
-                "mosdepth-cumcoverage-dist-id.txt:md5,34725df04f598cc54a81ec32f8c7ae41",
-                "mosdepth_perchrom.txt:md5,5e1e538631fd3e6e45158f9edf33ee8d",
-                "multiqc_citations.txt:md5,ace4ca89138a5f1e2be289c157c00bd9",
-                "multiqc_fastqc.txt:md5,2fd25e8c81f962594b801d5a9df3cd87",
-                "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,7a0481b59cdd57cc0b8bc9b5641614c6",
-                "samtools_alignment_plot.txt:md5,8e6178a26fe2a4fc4f45fac3175ba6c6",
-                "test.freebayes.filtered.bcftools_stats.txt:md5,dde124ceaf6f109cd274b837b950096b",
-                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,6f942caec2f4f02c69e1216226fa44a9",
-                "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
-                "test.md.mosdepth.summary.txt:md5,0010c2396a3173c7cf4983abe2eb6a4c",
-                "test.md.per-base.bed.gz:md5,34dfe443c0a0767562dd65272e3310ef",
-                "test.md.per-base.bed.gz.csi:md5,b0ab630c3241fbd7581b7a38d944ff8b",
-                "test.recal.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
-                "test.recal.mosdepth.summary.txt:md5,0010c2396a3173c7cf4983abe2eb6a4c",
-                "test.recal.per-base.bed.gz:md5,34dfe443c0a0767562dd65272e3310ef",
-                "test.recal.per-base.bed.gz.csi:md5,b0ab630c3241fbd7581b7a38d944ff8b",
-                "test2.md.mosdepth.global.dist.txt:md5,f25166c3a0051bb4d8c11a210278de6c",
-                "test2.md.mosdepth.summary.txt:md5,d5e4084de2ea2a0a7b60b2d71c804d4b",
-                "test2.md.per-base.bed.gz:md5,e1c6d60621d8f64aaf28fa1c1ddda921",
-                "test2.md.per-base.bed.gz.csi:md5,4205a09ede17cdbdaad45e3553f73105",
-                "test2.recal.mosdepth.global.dist.txt:md5,f25166c3a0051bb4d8c11a210278de6c",
-                "test2.recal.mosdepth.summary.txt:md5,d5e4084de2ea2a0a7b60b2d71c804d4b",
-                "test2.recal.per-base.bed.gz:md5,e1c6d60621d8f64aaf28fa1c1ddda921",
-                "test2.recal.per-base.bed.gz.csi:md5,4205a09ede17cdbdaad45e3553f73105",
-                "test.freebayes.filtered.FILTER.summary:md5,87e753ba2ad969475fb55661852f75e0",
-                "test.freebayes.filtered.TsTv.count:md5,845f64e5bb4224af98f3a47294cd5483",
-                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,126e83dcd37b82420f7c5d7b235479f1",
-                "test2_vs_test.freebayes.filtered.TsTv.count:md5,28919c7d29c998681391d2027af3e0f9"
-            ],
-            "No BAM files",
-            [
-                "test.md.cram:md5,59ecc5c82c7af1283eea7507c590c831",
-                "test2.md.cram:md5,bac87cf9290577fd9a4def63e046031f",
-                "test.recal.cram:md5,59ecc5c82c7af1283eea7507c590c831",
-                "test2.recal.cram:md5,bac87cf9290577fd9a4def63e046031f"
-            ],
-            [
-                [
-                    "test.freebayes.vcf.gz",
-                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=732, phased=false, phasedAutodetect=false]"
-                ],
-                [
-                    "test2_vs_test.freebayes.vcf.gz",
-                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=1447, phased=false, phasedAutodetect=false]"
-                ]
-            ],
-            [
-                [
-                    "test.freebayes.filtered.vcf.gz",
-                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=107, phased=false, phasedAutodetect=false]"
-                ],
-                [
-                    "test2_vs_test.freebayes.filtered.vcf.gz",
-                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=137, phased=false, phasedAutodetect=false]"
-                ]
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T22:48:44.433126443"
-    },
     "-profile test,tools_tumoronly --tools freebayes --input recalibrated_tumoronly.csv": {
         "content": [
-            18,
+            19,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": 1.21
@@ -420,6 +31,9 @@
                     "tabix": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                },
+                "TABIX_VC_FREEBAYES_FILT": {
                     "tabix": 1.21
                 },
                 "VCFLIB_VCFFILTER": {
@@ -547,6 +161,7 @@
                 "variant_calling/freebayes",
                 "variant_calling/freebayes/sample2",
                 "variant_calling/freebayes/sample2/sample2.freebayes.filtered.vcf.gz",
+                "variant_calling/freebayes/sample2/sample2.freebayes.filtered.vcf.gz.tbi",
                 "variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz",
                 "variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi"
             ],
@@ -581,14 +196,14 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-09-30T22:50:24.463341446"
+        "timestamp": "2025-11-04T12:14:50.842752"
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20": {
         "content": [
-            32,
+            33,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": 1.21
@@ -644,6 +259,9 @@
                     "tabix": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                },
+                "TABIX_VC_FREEBAYES_FILT": {
                     "tabix": 1.21
                 },
                 "VCFLIB_VCFFILTER": {
@@ -876,6 +494,7 @@
                 "variant_calling/freebayes",
                 "variant_calling/freebayes/test",
                 "variant_calling/freebayes/test/test.freebayes.filtered.vcf.gz",
+                "variant_calling/freebayes/test/test.freebayes.filtered.vcf.gz.tbi",
                 "variant_calling/freebayes/test/test.freebayes.vcf.gz",
                 "variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi"
             ],
@@ -935,14 +554,207 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-09-30T22:41:07.450629772"
+        "timestamp": "2025-11-04T11:54:42.53531"
+    },
+    "-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv": {
+        "content": [
+            14,
+            {
+                "BCFTOOLS_SORT": {
+                    "bcftools": 1.21
+                },
+                "BCFTOOLS_STATS": {
+                    "bcftools": 1.21
+                },
+                "FREEBAYES": {
+                    "freebayes": "1.3.10"
+                },
+                "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.6.1.0"
+                },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_VC_FREEBAYES": {
+                    "tabix": 1.21
+                },
+                "TABIX_VC_FREEBAYES_FILT": {
+                    "tabix": 1.21
+                },
+                "VCFLIB_VCFFILTER": {
+                    "vcflib": "1.0.14"
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
+                }
+            },
+            [
+                "csv",
+                "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
+                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/bcftools_stats_variant_depths.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_SNP.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transitions.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transversions.txt",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-pct.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_variant_depths.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-pct.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_variant_depths.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-pct.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_variant_depths.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
+                "multiqc/multiqc_report.html",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/dict",
+                "reports",
+                "reports/bcftools",
+                "reports/bcftools/freebayes",
+                "reports/bcftools/freebayes/sample2",
+                "reports/bcftools/freebayes/sample2/sample2.freebayes.filtered.bcftools_stats.txt",
+                "reports/mosdepth",
+                "reports/mosdepth/sample2",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample2",
+                "reports/samtools/sample2/sample2.recal.cram.stats",
+                "reports/vcftools",
+                "reports/vcftools/freebayes",
+                "reports/vcftools/freebayes/sample2",
+                "reports/vcftools/freebayes/sample2/sample2.freebayes.filtered.FILTER.summary",
+                "reports/vcftools/freebayes/sample2/sample2.freebayes.filtered.TsTv.count",
+                "reports/vcftools/freebayes/sample2/sample2.freebayes.filtered.TsTv.qual",
+                "variant_calling",
+                "variant_calling/freebayes",
+                "variant_calling/freebayes/sample2",
+                "variant_calling/freebayes/sample2/sample2.freebayes.filtered.vcf.gz",
+                "variant_calling/freebayes/sample2/sample2.freebayes.filtered.vcf.gz.tbi",
+                "variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz",
+                "variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi"
+            ],
+            [
+                "mosdepth-coverage-per-contig-single.txt:md5,a0266cd06dd6f7f5463f09e3cb8af71d",
+                "mosdepth-cumcoverage-dist-id.txt:md5,88b94dd2dcc423983da65125ece7651e",
+                "mosdepth_perchrom.txt:md5,a0266cd06dd6f7f5463f09e3cb8af71d",
+                "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
+                "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
+                "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
+                "sample2.freebayes.filtered.bcftools_stats.txt:md5,b83440f3699a3258015d0ce60eea0d46",
+                "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
+                "sample2.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
+                "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
+                "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample2.freebayes.filtered.FILTER.summary:md5,fac42829b9b347413acbfc9c0a17fef0",
+                "sample2.freebayes.filtered.TsTv.count:md5,f864a8b1d6bab1d5f877b60dde36863f"
+            ],
+            "No BAM files",
+            "No CRAM files",
+            [
+                [
+                    "sample2.freebayes.vcf.gz",
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=15485, phased=false, phasedAutodetect=false]"
+                ]
+            ],
+            [
+                "sample2.freebayes.filtered.vcf.gz:md5,e68ce412428016fcc1f09735a91cdef"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-04T12:22:29.186457"
     },
     "-profile test --tools freebayes --no_intervals": {
         "content": [
-            23,
+            24,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": 1.21
@@ -986,6 +798,9 @@
                     "tabix": 1.21
                 },
                 "TABIX_VC_FREEBAYES": {
+                    "tabix": 1.21
+                },
+                "TABIX_VC_FREEBAYES_FILT": {
                     "tabix": 1.21
                 },
                 "VCFLIB_VCFFILTER": {
@@ -1217,6 +1032,7 @@
                 "variant_calling/freebayes",
                 "variant_calling/freebayes/test",
                 "variant_calling/freebayes/test/test.freebayes.filtered.vcf.gz",
+                "variant_calling/freebayes/test/test.freebayes.filtered.vcf.gz.tbi",
                 "variant_calling/freebayes/test/test.freebayes.vcf.gz",
                 "variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi"
             ],
@@ -1277,198 +1093,9 @@
         },
         "timestamp": "2025-09-30T22:43:46.993750433"
     },
-    "-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv": {
+     "-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv": {
         "content": [
-            13,
-            {
-                "BCFTOOLS_SORT": {
-                    "bcftools": 1.21
-                },
-                "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
-                },
-                "FREEBAYES": {
-                    "freebayes": "1.3.10"
-                },
-                "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.1.0"
-                },
-                "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
-                },
-                "SAMTOOLS_STATS": {
-                    "samtools": 1.21
-                },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
-                },
-                "TABIX_VC_FREEBAYES": {
-                    "tabix": 1.21
-                },
-                "VCFLIB_VCFFILTER": {
-                    "vcflib": "1.0.14"
-                },
-                "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
-                }
-            },
-            [
-                "csv",
-                "csv/variantcalled.csv",
-                "multiqc",
-                "multiqc/multiqc_data",
-                "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
-                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
-                "multiqc/multiqc_data/bcftools_stats_variant_depths.txt",
-                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
-                "multiqc/multiqc_data/bcftools_stats_vqc_Count_SNP.txt",
-                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transitions.txt",
-                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transversions.txt",
-                "multiqc/multiqc_data/llms-full.txt",
-                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
-                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
-                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
-                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
-                "multiqc/multiqc_data/mosdepth_perchrom.txt",
-                "multiqc/multiqc_data/multiqc.log",
-                "multiqc/multiqc_data/multiqc.parquet",
-                "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
-                "multiqc/multiqc_data/multiqc_citations.txt",
-                "multiqc/multiqc_data/multiqc_data.json",
-                "multiqc/multiqc_data/multiqc_general_stats.txt",
-                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
-                "multiqc/multiqc_data/multiqc_software_versions.txt",
-                "multiqc/multiqc_data/multiqc_sources.txt",
-                "multiqc/multiqc_data/samtools-stats-dp.txt",
-                "multiqc/multiqc_data/samtools_alignment_plot.txt",
-                "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
-                "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
-                "multiqc/multiqc_plots",
-                "multiqc/multiqc_plots/pdf",
-                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-pct.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_variant_depths.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
-                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
-                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
-                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
-                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
-                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
-                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
-                "multiqc/multiqc_plots/png",
-                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
-                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-pct.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_variant_depths.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
-                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
-                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
-                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
-                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
-                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
-                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
-                "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
-                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
-                "multiqc/multiqc_plots/svg",
-                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
-                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-pct.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_variant_depths.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
-                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
-                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
-                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
-                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
-                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
-                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
-                "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
-                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
-                "multiqc/multiqc_report.html",
-                "no_intervals.bed",
-                "no_intervals.bed.gz",
-                "no_intervals.bed.gz.tbi",
-                "pipeline_info",
-                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "reference",
-                "reference/dict",
-                "reports",
-                "reports/bcftools",
-                "reports/bcftools/freebayes",
-                "reports/bcftools/freebayes/sample2",
-                "reports/bcftools/freebayes/sample2/sample2.freebayes.filtered.bcftools_stats.txt",
-                "reports/mosdepth",
-                "reports/mosdepth/sample2",
-                "reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt",
-                "reports/mosdepth/sample2/sample2.recal.mosdepth.summary.txt",
-                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz",
-                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz.csi",
-                "reports/samtools",
-                "reports/samtools/sample2",
-                "reports/samtools/sample2/sample2.recal.cram.stats",
-                "reports/vcftools",
-                "reports/vcftools/freebayes",
-                "reports/vcftools/freebayes/sample2",
-                "reports/vcftools/freebayes/sample2/sample2.freebayes.filtered.FILTER.summary",
-                "reports/vcftools/freebayes/sample2/sample2.freebayes.filtered.TsTv.count",
-                "reports/vcftools/freebayes/sample2/sample2.freebayes.filtered.TsTv.qual",
-                "variant_calling",
-                "variant_calling/freebayes",
-                "variant_calling/freebayes/sample2",
-                "variant_calling/freebayes/sample2/sample2.freebayes.filtered.vcf.gz",
-                "variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz",
-                "variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi"
-            ],
-            [
-                "mosdepth-coverage-per-contig-single.txt:md5,a0266cd06dd6f7f5463f09e3cb8af71d",
-                "mosdepth-cumcoverage-dist-id.txt:md5,88b94dd2dcc423983da65125ece7651e",
-                "mosdepth_perchrom.txt:md5,a0266cd06dd6f7f5463f09e3cb8af71d",
-                "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
-                "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
-                "sample2.freebayes.filtered.bcftools_stats.txt:md5,b83440f3699a3258015d0ce60eea0d46",
-                "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
-                "sample2.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
-                "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
-                "sample2.freebayes.filtered.FILTER.summary:md5,fac42829b9b347413acbfc9c0a17fef0",
-                "sample2.freebayes.filtered.TsTv.count:md5,f864a8b1d6bab1d5f877b60dde36863f"
-            ],
-            "No BAM files",
-            "No CRAM files",
-            [
-                [
-                    "sample2.freebayes.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=15485, phased=false, phasedAutodetect=false]"
-                ]
-            ],
-            [
-                "sample2.freebayes.filtered.vcf.gz:md5,e68ce412428016fcc1f09735a91cdef"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T22:52:03.48645421"
-    },
-    "-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv": {
-        "content": [
-            54,
+            56,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": 1.21
@@ -1524,6 +1151,9 @@
                     "tabix": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                },
+                "TABIX_VC_FREEBAYES_FILT": {
                     "tabix": 1.21
                 },
                 "VCFLIB_VCFFILTER": {
@@ -1790,10 +1420,12 @@
                 "variant_calling/freebayes",
                 "variant_calling/freebayes/test",
                 "variant_calling/freebayes/test/test.freebayes.filtered.vcf.gz",
+                "variant_calling/freebayes/test/test.freebayes.filtered.vcf.gz.tbi",
                 "variant_calling/freebayes/test/test.freebayes.vcf.gz",
                 "variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi",
                 "variant_calling/freebayes/test2_vs_test",
                 "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.vcf.gz",
+                "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.vcf.gz.tbi",
                 "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz",
                 "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi"
             ],
@@ -1881,5 +1513,399 @@
             "nextflow": "25.04.7"
         },
         "timestamp": "2025-09-30T22:46:09.786733451"
+    },
+    "-profile test --tools freebayes --no_intervals --wes --input fastq_pair.csv": {
+        "content": [
+            41,
+            {
+                "BCFTOOLS_SORT": {
+                    "bcftools": 1.21
+                },
+                "BCFTOOLS_STATS": {
+                    "bcftools": 1.21
+                },
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
+                "BWAMEM1_MEM": {
+                    "bwa": "0.7.18-r1243-dirty",
+                    "samtools": 1.21
+                },
+                "FASTQC": {
+                    "fastqc": "0.12.1"
+                },
+                "FREEBAYES": {
+                    "freebayes": "1.3.10"
+                },
+                "GATK4_APPLYBQSR": {
+                    "gatk4": "4.6.1.0"
+                },
+                "GATK4_BASERECALIBRATOR": {
+                    "gatk4": "4.6.1.0"
+                },
+                "GATK4_MARKDUPLICATES": {
+                    "gatk4": "4.6.1.0",
+                    "samtools": 1.21
+                },
+                "INDEX_CRAM": {
+                    "samtools": 1.21
+                },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_VC_FREEBAYES": {
+                    "tabix": 1.21
+                },
+                "TABIX_VC_FREEBAYES_FILT": {
+                    "tabix": 1.21
+                },
+                "VCFLIB_VCFFILTER": {
+                    "vcflib": "1.0.14"
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
+                }
+            },
+            [
+                "csv",
+                "csv/markduplicates.csv",
+                "csv/markduplicates_no_table.csv",
+                "csv/recalibrated.csv",
+                "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
+                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/bcftools_stats_variant_depths.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_SNP.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transitions.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transversions.txt",
+                "multiqc/multiqc_data/fastqc-status-check-heatmap.txt",
+                "multiqc/multiqc_data/fastqc_adapter_content_plot.txt",
+                "multiqc/multiqc_data/fastqc_per_base_n_content_plot.txt",
+                "multiqc/multiqc_data/fastqc_per_base_sequence_quality_plot.txt",
+                "multiqc/multiqc_data/fastqc_per_sequence_gc_content_plot_Counts.txt",
+                "multiqc/multiqc_data/fastqc_per_sequence_gc_content_plot_Percentages.txt",
+                "multiqc/multiqc_data/fastqc_per_sequence_quality_scores_plot.txt",
+                "multiqc/multiqc_data/fastqc_sequence_counts_plot.txt",
+                "multiqc/multiqc_data/fastqc_sequence_duplication_levels_plot.txt",
+                "multiqc/multiqc_data/fastqc_sequence_length_distribution_plot.txt",
+                "multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt",
+                "multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt",
+                "multiqc/multiqc_data/gatk-base-recalibrator-reported-empirical-plot.txt",
+                "multiqc/multiqc_data/gatk_base_recalibrator.txt",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_fastqc.txt",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_picard_dups.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/picard_MarkIlluminaAdapters_histogram.txt",
+                "multiqc/multiqc_data/picard_MeanQualityByCycle_histogram.txt",
+                "multiqc/multiqc_data/picard_MeanQualityByCycle_histogram_1.txt",
+                "multiqc/multiqc_data/picard_QualityScoreDistribution_histogram.txt",
+                "multiqc/multiqc_data/picard_deduplication.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-pct.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_variant_depths.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-status-check-heatmap.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_adapter_content_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_base_n_content_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_base_sequence_quality_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Counts.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Percentages.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_quality_scores_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_duplication_levels_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_length_distribution_plot.pdf",
+                "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.pdf",
+                "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.pdf",
+                "multiqc/multiqc_plots/pdf/gatk-base-recalibrator-reported-empirical-plot.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/picard_deduplication-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/picard_deduplication-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-pct.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_variant_depths.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
+                "multiqc/multiqc_plots/png/fastqc-status-check-heatmap.png",
+                "multiqc/multiqc_plots/png/fastqc_adapter_content_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_per_base_n_content_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_per_base_sequence_quality_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Counts.png",
+                "multiqc/multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Percentages.png",
+                "multiqc/multiqc_plots/png/fastqc_per_sequence_quality_scores_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-cnt.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-pct.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_duplication_levels_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_length_distribution_plot.png",
+                "multiqc/multiqc_plots/png/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.png",
+                "multiqc/multiqc_plots/png/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.png",
+                "multiqc/multiqc_plots/png/gatk-base-recalibrator-reported-empirical-plot.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/picard_deduplication-cnt.png",
+                "multiqc/multiqc_plots/png/picard_deduplication-pct.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-pct.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_variant_depths.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
+                "multiqc/multiqc_plots/svg/fastqc-status-check-heatmap.svg",
+                "multiqc/multiqc_plots/svg/fastqc_adapter_content_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_base_n_content_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_base_sequence_quality_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Counts.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Percentages.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_sequence_quality_scores_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_duplication_levels_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_length_distribution_plot.svg",
+                "multiqc/multiqc_plots/svg/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.svg",
+                "multiqc/multiqc_plots/svg/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.svg",
+                "multiqc/multiqc_plots/svg/gatk-base-recalibrator-reported-empirical-plot.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/picard_deduplication-cnt.svg",
+                "multiqc/multiqc_plots/svg/picard_deduplication-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
+                "multiqc/multiqc_report.html",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/markduplicates",
+                "preprocessing/markduplicates/test",
+                "preprocessing/markduplicates/test/test.md.cram",
+                "preprocessing/markduplicates/test/test.md.cram.crai",
+                "preprocessing/markduplicates/test2",
+                "preprocessing/markduplicates/test2/test2.md.cram",
+                "preprocessing/markduplicates/test2/test2.md.cram.crai",
+                "preprocessing/recal_table",
+                "preprocessing/recal_table/test",
+                "preprocessing/recal_table/test/test.recal.table",
+                "preprocessing/recal_table/test2",
+                "preprocessing/recal_table/test2/test2.recal.table",
+                "preprocessing/recalibrated",
+                "preprocessing/recalibrated/test",
+                "preprocessing/recalibrated/test/test.recal.cram",
+                "preprocessing/recalibrated/test/test.recal.cram.crai",
+                "preprocessing/recalibrated/test2",
+                "preprocessing/recalibrated/test2/test2.recal.cram",
+                "preprocessing/recalibrated/test2/test2.recal.cram.crai",
+                "reference",
+                "reports",
+                "reports/bcftools",
+                "reports/bcftools/freebayes",
+                "reports/bcftools/freebayes/test",
+                "reports/bcftools/freebayes/test/test.freebayes.filtered.bcftools_stats.txt",
+                "reports/bcftools/freebayes/test2_vs_test",
+                "reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.bcftools_stats.txt",
+                "reports/fastqc",
+                "reports/fastqc/test-test_L1",
+                "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.html",
+                "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.zip",
+                "reports/fastqc/test-test_L1/test-test_L1_2_fastqc.html",
+                "reports/fastqc/test-test_L1/test-test_L1_2_fastqc.zip",
+                "reports/fastqc/test2-test_L1",
+                "reports/fastqc/test2-test_L1/test2-test_L1_1_fastqc.html",
+                "reports/fastqc/test2-test_L1/test2-test_L1_1_fastqc.zip",
+                "reports/fastqc/test2-test_L1/test2-test_L1_2_fastqc.html",
+                "reports/fastqc/test2-test_L1/test2-test_L1_2_fastqc.zip",
+                "reports/markduplicates",
+                "reports/markduplicates/test",
+                "reports/markduplicates/test/test.md.cram.metrics",
+                "reports/markduplicates/test2",
+                "reports/markduplicates/test2/test2.md.cram.metrics",
+                "reports/mosdepth",
+                "reports/mosdepth/test",
+                "reports/mosdepth/test/test.md.mosdepth.global.dist.txt",
+                "reports/mosdepth/test/test.md.mosdepth.summary.txt",
+                "reports/mosdepth/test/test.md.per-base.bed.gz",
+                "reports/mosdepth/test/test.md.per-base.bed.gz.csi",
+                "reports/mosdepth/test/test.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/test/test.recal.mosdepth.summary.txt",
+                "reports/mosdepth/test/test.recal.per-base.bed.gz",
+                "reports/mosdepth/test/test.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/test2",
+                "reports/mosdepth/test2/test2.md.mosdepth.global.dist.txt",
+                "reports/mosdepth/test2/test2.md.mosdepth.summary.txt",
+                "reports/mosdepth/test2/test2.md.per-base.bed.gz",
+                "reports/mosdepth/test2/test2.md.per-base.bed.gz.csi",
+                "reports/mosdepth/test2/test2.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/test2/test2.recal.mosdepth.summary.txt",
+                "reports/mosdepth/test2/test2.recal.per-base.bed.gz",
+                "reports/mosdepth/test2/test2.recal.per-base.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/test",
+                "reports/samtools/test/test.md.cram.stats",
+                "reports/samtools/test/test.recal.cram.stats",
+                "reports/samtools/test2",
+                "reports/samtools/test2/test2.md.cram.stats",
+                "reports/samtools/test2/test2.recal.cram.stats",
+                "reports/vcftools",
+                "reports/vcftools/freebayes",
+                "reports/vcftools/freebayes/test",
+                "reports/vcftools/freebayes/test/test.freebayes.filtered.FILTER.summary",
+                "reports/vcftools/freebayes/test/test.freebayes.filtered.TsTv.count",
+                "reports/vcftools/freebayes/test/test.freebayes.filtered.TsTv.qual",
+                "reports/vcftools/freebayes/test2_vs_test",
+                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.FILTER.summary",
+                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.TsTv.count",
+                "reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.TsTv.qual",
+                "variant_calling",
+                "variant_calling/freebayes",
+                "variant_calling/freebayes/test",
+                "variant_calling/freebayes/test/test.freebayes.filtered.vcf.gz",
+                "variant_calling/freebayes/test/test.freebayes.filtered.vcf.gz.tbi",
+                "variant_calling/freebayes/test/test.freebayes.vcf.gz",
+                "variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi",
+                "variant_calling/freebayes/test2_vs_test",
+                "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.vcf.gz",
+                "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.filtered.vcf.gz.tbi",
+                "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz",
+                "variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi"
+            ],
+            [
+                "fastqc-status-check-heatmap.txt:md5,eeb4e7e7a45f4223c86bfe3aea81f90b",
+                "fastqc_adapter_content_plot.txt:md5,cc7a809f9f001c10646ee4199ccdb40f",
+                "fastqc_per_base_n_content_plot.txt:md5,1eba855ae0fa5b5ed4a1f90d1c97f759",
+                "fastqc_per_base_sequence_quality_plot.txt:md5,cbb2743dfb2ec74e72b578c83ec28ee8",
+                "fastqc_per_sequence_gc_content_plot_Counts.txt:md5,73c884822eba0bafcdf34b90fe81aec5",
+                "fastqc_per_sequence_gc_content_plot_Percentages.txt:md5,24eeb00e5e2b11c7ab90a3223d429d15",
+                "fastqc_per_sequence_quality_scores_plot.txt:md5,6f048594f02effb93608665be29bd35a",
+                "fastqc_sequence_counts_plot.txt:md5,fca7ee9ef3382e2837a302d8c5d33769",
+                "fastqc_sequence_duplication_levels_plot.txt:md5,2aa0c6f33e4cffbb29cdabe2c28bb097",
+                "fastqc_sequence_length_distribution_plot.txt:md5,61b1fe978a2c73b86c30c27ee4bc60ae",
+                "mosdepth-coverage-per-contig-single.txt:md5,5e1e538631fd3e6e45158f9edf33ee8d",
+                "mosdepth-cumcoverage-dist-id.txt:md5,34725df04f598cc54a81ec32f8c7ae41",
+                "mosdepth_perchrom.txt:md5,5e1e538631fd3e6e45158f9edf33ee8d",
+                "multiqc_citations.txt:md5,ace4ca89138a5f1e2be289c157c00bd9",
+                "multiqc_fastqc.txt:md5,2fd25e8c81f962594b801d5a9df3cd87",
+                "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "samtools-stats-dp.txt:md5,7a0481b59cdd57cc0b8bc9b5641614c6",
+                "samtools_alignment_plot.txt:md5,8e6178a26fe2a4fc4f45fac3175ba6c6",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,dde124ceaf6f109cd274b837b950096b",
+                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,6f942caec2f4f02c69e1216226fa44a9",
+                "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
+                "test.md.mosdepth.summary.txt:md5,0010c2396a3173c7cf4983abe2eb6a4c",
+                "test.md.per-base.bed.gz:md5,34dfe443c0a0767562dd65272e3310ef",
+                "test.md.per-base.bed.gz.csi:md5,b0ab630c3241fbd7581b7a38d944ff8b",
+                "test.recal.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
+                "test.recal.mosdepth.summary.txt:md5,0010c2396a3173c7cf4983abe2eb6a4c",
+                "test.recal.per-base.bed.gz:md5,34dfe443c0a0767562dd65272e3310ef",
+                "test.recal.per-base.bed.gz.csi:md5,b0ab630c3241fbd7581b7a38d944ff8b",
+                "test2.md.mosdepth.global.dist.txt:md5,f25166c3a0051bb4d8c11a210278de6c",
+                "test2.md.mosdepth.summary.txt:md5,d5e4084de2ea2a0a7b60b2d71c804d4b",
+                "test2.md.per-base.bed.gz:md5,e1c6d60621d8f64aaf28fa1c1ddda921",
+                "test2.md.per-base.bed.gz.csi:md5,4205a09ede17cdbdaad45e3553f73105",
+                "test2.recal.mosdepth.global.dist.txt:md5,f25166c3a0051bb4d8c11a210278de6c",
+                "test2.recal.mosdepth.summary.txt:md5,d5e4084de2ea2a0a7b60b2d71c804d4b",
+                "test2.recal.per-base.bed.gz:md5,e1c6d60621d8f64aaf28fa1c1ddda921",
+                "test2.recal.per-base.bed.gz.csi:md5,4205a09ede17cdbdaad45e3553f73105",
+                "test.freebayes.filtered.FILTER.summary:md5,87e753ba2ad969475fb55661852f75e0",
+                "test.freebayes.filtered.TsTv.count:md5,845f64e5bb4224af98f3a47294cd5483",
+                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,126e83dcd37b82420f7c5d7b235479f1",
+                "test2_vs_test.freebayes.filtered.TsTv.count:md5,28919c7d29c998681391d2027af3e0f9"
+            ],
+            "No BAM files",
+            [
+                "test.md.cram:md5,59ecc5c82c7af1283eea7507c590c831",
+                "test2.md.cram:md5,bac87cf9290577fd9a4def63e046031f",
+                "test.recal.cram:md5,59ecc5c82c7af1283eea7507c590c831",
+                "test2.recal.cram:md5,bac87cf9290577fd9a4def63e046031f"
+            ],
+            [
+                [
+                    "test.freebayes.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=732, phased=false, phasedAutodetect=false]"
+                ],
+                [
+                    "test2_vs_test.freebayes.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=1447, phased=false, phasedAutodetect=false]"
+                ]
+            ],
+            [
+                [
+                    "test.freebayes.filtered.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=107, phased=false, phasedAutodetect=false]"
+                ],
+                [
+                    "test2_vs_test.freebayes.filtered.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=137, phased=false, phasedAutodetect=false]"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-30T22:48:44.433126443"
     }
 }

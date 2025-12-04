@@ -9,13 +9,26 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --normalize_vcfs --concatenate_vcfs --tools freebayes,haplotypecaller",
+            name: "-profile test --normalize_vcfs --concatenate_vcfs --tools freebayes,strelka",
             params: [
                 input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
                 step: 'variant_calling',
                 normalize_vcfs: true,
                 concatenate_vcfs: true,
-                tools: 'freebayes,haplotypecaller'
+                tools: 'freebayes,strelka'
+            ],
+            include_freebayes_unfiltered: true,
+            no_conda: true
+        ],
+        [
+            name: "-profile test --filter_vcfs --normalize_vcfs --concatenate_vcfs --tools freebayes,strelka",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
+                step: 'variant_calling',
+                normalize_vcfs: true,
+                concatenate_vcfs: true,
+                filter_vcfs: true,
+                tools: 'freebayes,strelka'
             ],
             include_freebayes_unfiltered: true,
             no_conda: true

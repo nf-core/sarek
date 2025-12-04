@@ -57,6 +57,15 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_tiddit     = Channel.empty()
     vcf_tnscope    = Channel.empty()
 
+    // Initialize empty TBI channels
+    tbi_freebayes  = Channel.empty()
+    tbi_lofreq     = Channel.empty()
+    tbi_manta      = Channel.empty()
+    tbi_mpileup    = Channel.empty()
+    tbi_mutect2    = Channel.empty()
+    tbi_tiddit     = Channel.empty()
+    tbi_tnscope    = Channel.empty()
+
     // MPILEUP
     if (tools && tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')) {
         BAM_VARIANT_CALLING_MPILEUP(
@@ -66,6 +75,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             intervals,
         )
         vcf_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.vcf
+        tbi_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
     }
 
@@ -109,6 +119,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         )
 
         vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
+        tbi_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
@@ -142,6 +153,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         )
 
         vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.vcf_filtered
+        tbi_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.index_filtered
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
     }
 
@@ -155,6 +167,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             dict,
         )
         vcf_lofreq = BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.vcf
+        tbi_lofreq = BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.versions)
     }
 
@@ -168,6 +181,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         )
 
         vcf_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.vcf
+        tbi_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.versions)
     }
 
@@ -180,6 +194,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         )
 
         vcf_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.vcf
+        tbi_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
     }
 
@@ -198,6 +213,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         )
 
         vcf_tnscope = BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE.out.vcf
+        tbi_tnscope = BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE.out.versions)
     }
 
@@ -212,9 +228,21 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             vcf_tnscope,
         )
 
+    tbi_all = Channel.empty()
+        .mix(
+            tbi_freebayes,
+            tbi_lofreq,
+            tbi_manta,
+            tbi_mutect2,
+            tbi_mpileup,
+            tbi_tiddit,
+            tbi_tnscope,
+        )
+
     emit:
     out_msisensor2
     vcf_all
+    tbi_all
     vcf_freebayes
     vcf_lofreq
     vcf_manta
@@ -222,5 +250,12 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_mutect2
     vcf_tiddit
     vcf_tnscope
+    tbi_freebayes
+    tbi_lofreq
+    tbi_manta
+    tbi_mpileup
+    tbi_mutect2
+    tbi_tiddit
+    tbi_tnscope
     versions
 }

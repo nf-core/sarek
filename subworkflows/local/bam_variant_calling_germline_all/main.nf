@@ -68,6 +68,14 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_sentieon_haplotyper  = Channel.empty()
     vcf_strelka              = Channel.empty()
     vcf_tiddit               = Channel.empty()
+    tbi_deepvariant          = Channel.empty()
+    tbi_freebayes            = Channel.empty()
+    tbi_haplotypecaller      = Channel.empty()
+    tbi_manta                = Channel.empty()
+    tbi_sentieon_dnascope    = Channel.empty()
+    tbi_sentieon_haplotyper  = Channel.empty()
+    tbi_strelka              = Channel.empty()
+    tbi_tiddit               = Channel.empty()
 
     // BCFTOOLS MPILEUP
     if (tools && tools.split(',').contains('mpileup')) {
@@ -105,6 +113,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         )
 
         vcf_deepvariant = BAM_VARIANT_CALLING_DEEPVARIANT.out.vcf
+        tbi_deepvariant = BAM_VARIANT_CALLING_DEEPVARIANT.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.versions)
     }
 
@@ -121,6 +130,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         )
 
         vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
+        tbi_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
@@ -189,6 +199,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         )
 
         vcf_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.vcf
+        tbi_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
     }
 
@@ -223,7 +234,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.versions)
 
         vcf_sentieon_dnascope      = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.vcf
-        vcf_tbi_sentieon_dnascope  = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.vcf_tbi
+        tbi_sentieon_dnascope      = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.vcf_tbi
         gvcf_sentieon_dnascope     = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.gvcf
         gvcf_tbi_sentieon_dnascope = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.gvcf_tbi
 
@@ -251,7 +262,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             if (!(skip_tools && skip_tools.split(',').contains('dnascope_filter'))) {
 
                 SENTIEON_DNAMODELAPPLY(
-                    vcf_sentieon_dnascope.join(vcf_tbi_sentieon_dnascope, failOnDuplicate: true, failOnMismatch: true),
+                    vcf_sentieon_dnascope.join(tbi_sentieon_dnascope, failOnDuplicate: true, failOnMismatch: true),
                     fasta,
                     fasta_fai,
                     sentieon_dnascope_model.map{ model -> [ [ id:model.baseName ], model ] })
@@ -281,7 +292,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.versions)
 
         vcf_sentieon_haplotyper      = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf
-        vcf_tbi_sentieon_haplotyper  = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf_tbi
+        tbi_sentieon_haplotyper      = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf_tbi
         gvcf_sentieon_haplotyper     = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.gvcf
         gvcf_tbi_sentieon_haplotyper = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.gvcf_tbi
 
@@ -310,7 +321,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             if (!(skip_tools && skip_tools.split(',').contains('haplotyper_filter'))) {
 
                 SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK(
-                    vcf_sentieon_haplotyper.join(vcf_tbi_sentieon_haplotyper, failOnDuplicate: true, failOnMismatch: true),
+                    vcf_sentieon_haplotyper.join(tbi_sentieon_haplotyper, failOnDuplicate: true, failOnMismatch: true),
                     fasta.map{ meta, it -> [ it ] },
                     fasta_fai.map{ meta, it -> [ it ] },
                     dict.map{ meta, dict -> [ dict ] },
@@ -338,6 +349,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         )
 
         vcf_strelka = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.vcf
+        tbi_strelka = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
     }
 
@@ -351,6 +363,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         )
 
         vcf_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.vcf
+        tbi_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
     }
 
@@ -364,6 +377,17 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         vcf_sentieon_haplotyper,
         vcf_strelka,
         vcf_tiddit
+    )
+
+    tbi_all = Channel.empty().mix(
+        tbi_deepvariant,
+        tbi_freebayes,
+        tbi_sentieon_dnascope,
+        tbi_haplotypecaller,
+        tbi_manta,
+        tbi_sentieon_haplotyper,
+        tbi_strelka,
+        tbi_tiddit
     )
 
     emit:
@@ -380,6 +404,15 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_sentieon_dnascope
     vcf_sentieon_haplotyper
     vcf_tiddit
+    tbi_all
+    tbi_deepvariant
+    tbi_freebayes
+    tbi_haplotypecaller
+    tbi_manta
+    tbi_sentieon_dnascope
+    tbi_sentieon_haplotyper
+    tbi_strelka
+    tbi_tiddit
 
     versions
 }

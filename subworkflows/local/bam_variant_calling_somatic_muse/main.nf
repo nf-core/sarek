@@ -40,11 +40,13 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
 
     // add variantcaller to meta map
     vcf = MUSE_SUMP.out.vcf.map { meta, vcf -> [meta + [variantcaller: 'muse'], vcf] }
+    tbi = MUSE_SUMP.out.tbi.map { meta, tbi -> [meta + [variantcaller: 'muse'], tbi] }
 
     versions = versions.mix(MUSE_CALL.out.versions)
     versions = versions.mix(MUSE_SUMP.out.versions)
 
     emit:
     vcf
+    tbi
     versions
 }

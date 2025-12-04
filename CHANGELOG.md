@@ -5,6 +5,59 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.7.0
+
+### Added
+
+- [#2044](https://github.com/nf-core/sarek/pull/2044) - Add filtering with `bcftools view -f PASS,.` following variantcalling step
+- [#2049](https://github.com/nf-core/sarek/pull/2049) - Add consensus calling of small variant VCFs for variants called by x or more tools, with `x=2` as default
+
+### Changed
+
+- [#2065](https://github.com/nf-core/sarek/pull/2065) - Bump minimal Nextflow version to 25.10.2
+
+### Fixed
+
+- [#2045](https://github.com/nf-core/sarek/pull/2045) - Propagate fastp shard naming if exists through BBSplit to ensure unique naming in Markduplicates
+- [#2060](https://github.com/nf-core/sarek/pull/2060) - Update bbmap/bbsplit module to fix bbsplit index staging by using symlinks instead of full copy
+
+### Removed
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| nf-schema  | 2.4.2       | 2.6.1       |
+
+### Parameters
+
+| Params                       | status |
+| ---------------------------- | ------ |
+| `--filter_vcfs`              | New    |
+| `--bcftools_filter_criteria` | New    |
+| `--snv_consensus_calling`    | New    |
+| `--consensus_min_count`      | New    |
+
+### Developer section
+
+#### Added
+
+#### Changed
+
+- [#1979](https://github.com/nf-core/sarek/pull/1979) - Update prepare_genome subworkflow to adhere to language server
+- [#2041](https://github.com/nf-core/sarek/pull/2041) - Back to dev
+- [#2043](https://github.com/nf-core/sarek/pull/2043) - Refactor postvariantcalling and split out varlociraptor from other options
+- [#2048](https://github.com/nf-core/sarek/pull/2048) - No null value for snpeff_cache and vep_cache in tests
+- [#2058](https://github.com/nf-core/sarek/pull/2058) - Template update for nf-core/tools v3.5.1
+
+#### Fixed
+
+- [#2053](https://github.com/nf-core/sarek/pull/2053) - Change yte input to one channel to disambiguate scenario file rendering
+- [#2054](https://github.com/nf-core/sarek/pull/2054) - Fix typo on tbi_sentieon_dnascope channel
+- [#2065](https://github.com/nf-core/sarek/pull/2065) - Bump nf-schema to 2.6.1, due to [nf-schema#181](https://github.com/nextflow-io/nf-schema/issues/181)
+
+#### Removed
+
 ## [3.6.1](https://github.com/nf-core/sarek/releases/tag/3.6.1) - Sjnjierák
 
 Sjnjierák is a popular stopover cabin on the way into the park.

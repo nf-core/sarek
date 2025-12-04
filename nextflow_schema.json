@@ -353,7 +353,7 @@
                 },
                 "ascat_ploidy": {
                     "type": "number",
-                    "minimum": 0.0,
+                    "minimum": 0,
                     "fa_icon": "fas fa-bacon",
                     "help_text": "ASCAT: optional argument to override ASCAT optimization and supply psi parameter (expert parameter, do not adapt unless you know what you are doing). See [here](https://raw.githubusercontent.com/VanLoo-lab/ascat/master/man/ASCAT-manual.pdf)",
                     "description": "Overwrite ASCAT ploidy."
@@ -500,36 +500,71 @@
                     "type": "string",
                     "default": "CONSERVATIVE",
                     "help_text": "Option for selecting the PCR indel model used by GATK HaplotypeCaller."
+                }
+            }
+        },
+        "post_variant_calling": {
+            "title": "Post variant calling",
+            "type": "object",
+            "description": "Options for tools that run between variant calling and annotation",
+            "default": "",
+            "fa_icon": "fas fa-filter",
+            "properties": {
+                "filter_vcfs": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-filter",
+                    "description": "Enable filtering of VCFs with bcftools view",
+                    "help_text": "Filtering of all vcf-files from each applied variant-caller using bfctools filter and applying filtering criteria specified in --bcftools_filter_criteria."
+                },
+                "bcftools_filter_criteria": {
+                    "type": "string",
+                    "default": "-f PASS,.",
+                    "fa_icon": "fas fa-question",
+                    "description": "Filter criteria. Uses bcftools view filter options. To customize, follow instructions here: https://samtools.github.io/bcftools/bcftools.html#view "
+                },
+                "normalize_vcfs": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-angle-double-left",
+                    "description": "Option for normalization of vcf-files.",
+                    "help_text": "Normalization of all vcf-files from each applied variant-caller using bfctools norm."
+                },
+                "snv_consensus_calling": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-code-branch",
+                    "description": "Enable consensus calling of multiple VCF files from one sample",
+                    "help_text": "Intersects multiple VCF files from one sample using `bcftools isec`. As consensus criterium `-n+${params.snv_consensus_calling}` is used, meaning a variant is found in this many or more files. For details, visit: https://samtools.github.io/bcftools/bcftools.html#isec"
+                },
+                "consensus_min_count": {
+                    "type": "integer",
+                    "default": 2,
+                    "fa_icon": "fab fa-deezer",
+                    "description": "Minimum number of variant callers calling a variant for consensus results",
+                    "help_text": "Determines the minimum number of variant callers a variant must be called in to be included in the consensus results. As consensus criterium `-n+${params.consensus_min_count}` is used, meaning a variant is found in this many or more files. For details, visit: https://samtools.github.io/bcftools/bcftools.html#isec"
                 },
                 "concatenate_vcfs": {
                     "type": "boolean",
                     "fa_icon": "fas fa-tape",
                     "description": "Option for concatenating germline vcf-files.",
-                    "help_text": "Concatenating the germline vcf-files from each applied variant-caller into one vcf-file using bfctools concat."
-                },
-                "normalize_vcfs": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-tape",
-                    "description": "Option for normalization of vcf-files.",
-                    "help_text": "Normalization of all vcf-files from each applied variant-caller using bfctools norm."
+                    "help_text": "Enable concatenation of germline vcf-files from each applied variant-caller into one vcf-file using bfctools concat."
                 },
                 "varlociraptor_chunk_size": {
                     "type": "integer",
                     "default": 15,
-                    "description": "Number of chunks to split the vcf-files for varlociraptor",
+                    "minimum": 1,
+                    "description": "Number of chunks to split the vcf-files for varlociraptor. Minimum 1, indicates no splitting",
                     "hidden": true
                 },
-                "varlociraptor_scenario_germline": {
+                "varlociraptor_scenario_tumor_only": {
                     "type": "string",
-                    "description": "Yte compatible scenario file for germline samples. Defaults to assets/varlociraptor_germline.yte.yaml"
+                    "description": "Yte compatible scenario file for tumor only samples. Defaults to assets/varlociraptor_tumor_only.yte.yaml"
                 },
                 "varlociraptor_scenario_somatic": {
                     "type": "string",
                     "description": "Yte compatible scenario file for somatic samples. Defaults to assets/varlociraptor_somatic.yte.yaml"
                 },
-                "varlociraptor_scenario_tumor_only": {
+                "varlociraptor_scenario_germline": {
                     "type": "string",
-                    "description": "Yte compatible scenario file for tumor only samples. Defaults to assets/varlociraptor_tumor_only.yte.yaml"
+                    "description": "Yte compatible scenario file for germline samples. Defaults to assets/varlociraptor_germline.yte.yaml"
                 }
             }
         },
@@ -1212,6 +1247,18 @@
                     "fa_icon": "far calendar",
                     "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
                     "hidden": true
+                },
+                "help": {
+                    "type": ["boolean", "string"],
+                    "description": "Display the help message."
+                },
+                "help_full": {
+                    "type": "boolean",
+                    "description": "Display the full detailed help message."
+                },
+                "show_hidden": {
+                    "type": "boolean",
+                    "description": "Display hidden parameters in the help message (only works when --help or --help_full are provided)."
                 }
             }
         }
@@ -1234,6 +1281,9 @@
         },
         {
             "$ref": "#/$defs/variant_calling"
+        },
+        {
+            "$ref": "#/$defs/post_variant_calling"
         },
         {
             "$ref": "#/$defs/annotation"

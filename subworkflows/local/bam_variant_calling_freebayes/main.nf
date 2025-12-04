@@ -4,11 +4,12 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { BCFTOOLS_SORT                         } from '../../../modules/nf-core/bcftools/sort'
-include { FREEBAYES                             } from '../../../modules/nf-core/freebayes'
-include { GATK4_MERGEVCFS as MERGE_FREEBAYES    } from '../../../modules/nf-core/gatk4/mergevcfs'
-include { TABIX_TABIX     as TABIX_VC_FREEBAYES } from '../../../modules/nf-core/tabix/tabix'
-include { VCFLIB_VCFFILTER                      } from '../../../modules/nf-core/vcflib/vcffilter'
+include { BCFTOOLS_SORT                              } from '../../../modules/nf-core/bcftools/sort'
+include { FREEBAYES                                  } from '../../../modules/nf-core/freebayes'
+include { GATK4_MERGEVCFS as MERGE_FREEBAYES         } from '../../../modules/nf-core/gatk4/mergevcfs'
+include { TABIX_TABIX     as TABIX_VC_FREEBAYES      } from '../../../modules/nf-core/tabix/tabix'
+include { TABIX_TABIX     as TABIX_VC_FREEBAYES_FILT } from '../../../modules/nf-core/tabix/tabix'
+include { VCFLIB_VCFFILTER                           } from '../../../modules/nf-core/vcflib/vcffilter'
 
 workflow BAM_VARIANT_CALLING_FREEBAYES {
     take:
@@ -60,16 +61,21 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
 
     vcf_filtered = VCFLIB_VCFFILTER.out.vcf
 
+    // Index the filtered VCFs
+    TABIX_VC_FREEBAYES_FILT(vcf_filtered)
+
     versions = versions.mix(BCFTOOLS_SORT.out.versions)
     versions = versions.mix(FREEBAYES.out.versions)
     versions = versions.mix(MERGE_FREEBAYES.out.versions)
     versions = versions.mix(TABIX_VC_FREEBAYES.out.versions)
+    versions = versions.mix(TABIX_VC_FREEBAYES_FILT.out.versions)
     versions = versions.mix(VCFLIB_VCFFILTER.out.versions)
 
     emit:
     vcf_unfiltered = ch_vcf // channel: [ meta, vcf, tbi ]
 
     // Use the QUAL filtered vcfs for the next steps
-    vcf = vcf_filtered      // channel: [ meta, vcf ]
+    vcf = vcf_filtered                         // channel: [ meta, vcf ]
+    tbi = TABIX_VC_FREEBAYES_FILT.out.tbi      // channel: [ meta, tbi ]
     versions
 }

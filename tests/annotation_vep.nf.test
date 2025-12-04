@@ -14,7 +14,6 @@ nextflow_pipeline {
             params: [
                 input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
                 step: 'annotate',
-                vep_cache: 's3://annotation-cache/vep_cache/',
                 vep_cache_version: 1,
                 input: false,
                 build_only_index: true,
@@ -28,7 +27,6 @@ nextflow_pipeline {
             params: [
                 input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
                 step: 'annotate',
-                vep_cache: 's3://annotation-cache/vep_cache/',
                 dbnsfp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
                 tools: 'vep'
             ],

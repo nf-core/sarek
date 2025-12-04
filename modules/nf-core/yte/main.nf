@@ -10,9 +10,7 @@ process YTE {
         'community.wave.seqera.io/library/pip_yte:93491093a59d72ba' }"
 
     input:
-    tuple val(meta), path(template)
-    path(map_file)
-    val(map)
+    tuple val(meta), path(template), path(map_file), val(map)
 
     output:
     tuple val(meta), path("*.yaml"), emit: rendered
