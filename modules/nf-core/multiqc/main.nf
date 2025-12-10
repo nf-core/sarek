@@ -3,8 +3,8 @@ process MULTIQC {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/8c/8c6c120d559d7ee04c7442b61ad7cf5a9e8970be5feefb37d68eeaa60c1034eb/data' :
-        'community.wave.seqera.io/library/multiqc:1.32--d58f60e4deb769bf' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/34/34e733a9ae16a27e80fe00f863ea1479c96416017f24a907996126283e7ecd4d/data' :
+        'community.wave.seqera.io/library/multiqc:1.33--ee7739d47738383b' }"
 
     input:
     path multiqc_files, stageAs: "?/*"
@@ -18,7 +18,8 @@ process MULTIQC {
     path "*.html"      , emit: report
     path "*_data"      , emit: data
     path "*_plots"     , optional:true, emit: plots
-    tuple val("${task.process}"), val('multiqc'), eval('multiqc --version | sed "s/.* //g"'), topic: versions, emit: versions_multiqc
+    tuple val("${task.process}"), val('multiqc'), eval('multiqc --version | sed "s/.* //g"'), emit: versions
+    // MultiQC should not push its versions to the `versions` topic. Its input depends on the versions topic to be resolved thus outputting to the topic will let the pipeline hang forever
 
     when:
     task.ext.when == null || task.ext.when
@@ -50,6 +51,5 @@ process MULTIQC {
     touch multiqc_data/.stub
     mkdir multiqc_plots
     touch multiqc_report.html
-
     """
 }

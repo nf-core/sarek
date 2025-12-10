@@ -2,20 +2,20 @@
     "sarscov2 single-end [fastqc]": {
         "content": [
             {
-                "versions_multiqc": [
+                "versions": [
                     [
                         "MULTIQC",
                         "multiqc",
-                        "1.32"
+                        "1.33"
                     ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-10-28T15:27:59.813370216"
+        "timestamp": "2025-12-09T10:10:43.020315838"
     },
     "sarscov2 single-end [fastqc] - stub": {
         "content": [
@@ -24,38 +24,38 @@
                 "multiqc_data",
                 "multiqc_plots",
                 {
-                    "versions_multiqc": [
+                    "versions": [
                         [
                             "MULTIQC",
                             "multiqc",
-                            "1.32"
+                            "1.33"
                         ]
                     ]
                 }
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-10-28T15:30:48.963962021"
+        "timestamp": "2025-12-09T10:11:14.131950776"
     },
     "sarscov2 single-end [fastqc] [config]": {
         "content": [
             {
-                "versions_multiqc": [
+                "versions": [
                     [
                         "MULTIQC",
                         "multiqc",
-                        "1.32"
+                        "1.33"
                     ]
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-10-28T15:29:30.664969334"
+        "timestamp": "2025-12-09T10:11:07.15692209"
     }
 }

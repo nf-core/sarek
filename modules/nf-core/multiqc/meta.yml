@@ -1,6 +1,6 @@
 name: multiqc
-description: Aggregate results from bioinformatics analyses across many samples
-  into a single report
+description: Aggregate results from bioinformatics analyses across many samples into
+  a single report
 keywords:
   - QC
   - bioinformatics tools
@@ -28,8 +28,8 @@ input:
         - edam: http://edamontology.org/format_3750 # YAML
   - extra_multiqc_config:
       type: file
-      description: Second optional config yml for MultiQC. Will override common
-        sections in multiqc_config.
+      description: Second optional config yml for MultiQC. Will override common sections
+        in multiqc_config.
       pattern: "*.{yml,yaml}"
       ontologies:
         - edam: http://edamontology.org/format_3750 # YAML
@@ -73,18 +73,6 @@ output:
         description: Plots created by MultiQC
         pattern: "*_data"
         ontologies: []
-  versions_multiqc:
-    - - ${task.process}:
-          type: string
-          description: The process the versions were collected from
-      - multiqc:
-          type: string
-          description: The tool name
-      - multiqc --version | sed "s/.* //g":
-          type: eval
-          description: The expression to obtain the version of the tool
-
-topics:
   versions:
     - - ${task.process}:
           type: string
