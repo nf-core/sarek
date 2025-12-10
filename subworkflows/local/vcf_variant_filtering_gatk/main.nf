@@ -27,11 +27,16 @@ workflow VCF_VARIANT_FILTERING_GATK {
         // remove no longer necessary field: num_intervals
         .map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ] }
 
+    filtered_tbi = FILTERVARIANTTRANCHES.out.tbi
+        // remove no longer necessary field: num_intervals
+        .map{ meta, tbi -> [ meta - meta.subMap('num_intervals'), tbi ] }
+
     versions = versions.mix(CNNSCOREVARIANTS.out.versions)
     versions = versions.mix(FILTERVARIANTTRANCHES.out.versions)
 
     emit:
     filtered_vcf
+    filtered_tbi
 
     versions
 }
