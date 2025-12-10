@@ -13,7 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [2073](https://github.com/nf-core/sarek/pull/2073) - Update MultiQC to version 1.33
 
-
 ### Fixed
 
 - [2073](https://github.com/nf-core/sarek/pull/2073) - Apply fix for BBSplit error: `unterminated s' command`
