@@ -22,8 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params                       | status |
-| ---------------------------- | ------ |
+| Params | status |
+| ------ | ------ |
 
 ### Developer section
 
@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Changed
 
-- [#2067](https://github.com/nf-core/sarek/pull/2067) -  Back to Dev
+- [#2067](https://github.com/nf-core/sarek/pull/2067) - Back to Dev
 
 #### Fixed
 
