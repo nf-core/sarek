@@ -22,6 +22,7 @@ run_modules:
   - custom_content
   - fastqc
   - fastp
+  - bbsplit
   - picard
   - samtools
   - mosdepth
@@ -38,6 +39,8 @@ module_order:
         - "*_val_*.zip"
   - fastp:
       name: "FastP (Read preprocessing)"
+  - bbsplit:
+      name: "BBsplit (Reference genome binning)"
   - picard:
       name: "GATK4 MarkDuplicates"
       info: " metrics generated either by GATK4 MarkDuplicates or EstimateLibraryComplexity (with --use_gatk_spark)."
