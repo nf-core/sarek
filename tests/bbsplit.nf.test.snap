@@ -269,9 +269,6 @@
                 "variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi"
             ],
             [
-                "bbmap-bbsplit_plot.txt:md5,b00ef378185367e9561876c2e4a90374",
-                "bbmap.txt:md5,41495090ca4b279ae375f7abac60e2f6",
-                "bbsplit_stats_table.txt:md5,4a405c539c02e9b4e6acf16b66902143",
                 "fastqc-status-check-heatmap.txt:md5,a020b9689ddeb4abec16b4854fe452f1",
                 "fastqc_adapter_content_plot.txt:md5,2e1b72be741319e7fadbbb39d7e5b37d",
                 "fastqc_per_base_n_content_plot.txt:md5,ad3b971a6bb4e8ba6c844c8a03584eb8",

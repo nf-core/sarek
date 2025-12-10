@@ -2,6 +2,8 @@
 annotation/**/*.vcf.{gz,gz.tbi}
 csv/*.csv
 multiqc/multiqc_data/bcftools*.txt
+multiqc/multiqc_data/bbmap*.txt
+multiqc/multiqc_data/bbsplit_stats_table.txt
 multiqc/multiqc_data/fastqc_top_overrepresented_sequences_table.txt
 multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt
 multiqc/multiqc_data/gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt
