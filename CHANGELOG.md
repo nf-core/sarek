@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [dev]
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
+| Params | status |
+| ------ | ------ |
+
+### Developer section
+
+#### Added
+
+#### Changed
+
+- [#2076](https://github.com/nf-core/sarek/pull/2076) - Back to Dev
+
+#### Fixed
+
+#### Removed
+
+
 ## [3.7.1](https://github.com/nf-core/sarek/releases/tag/3.7.1) - Buollámtjåhkka
 
 Buollámtjåhkka is the closest mountain to Saltoluokta and an easy peak to climb.
