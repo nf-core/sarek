@@ -167,6 +167,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 known_snps_vqsr)
 
             vcf_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_vcf
+            tbi_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_index
             versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_GATK.out.versions)
         } else {
 
@@ -183,6 +184,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                     known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
 
                 vcf_haplotypecaller = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
+                tbi_haplotypecaller = VCF_VARIANT_FILTERING_GATK.out.filtered_tbi
 
                 versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
             }
@@ -256,6 +258,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 'sentieon_dnascope')
 
             vcf_sentieon_dnascope = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
+            tbi_sentieon_dnascope = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_index
             versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.versions)
         } else {
             // If single sample track, check if filtering should be done
@@ -268,6 +271,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                     sentieon_dnascope_model.map{ model -> [ [ id:model.baseName ], model ] })
 
                 vcf_sentieon_dnascope = SENTIEON_DNAMODELAPPLY.out.vcf
+                tbi_sentieon_dnascope = SENTIEON_DNAMODELAPPLY.out.tbi
                 versions = versions.mix(SENTIEON_DNAMODELAPPLY.out.versions)
 
             }
@@ -314,6 +318,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 'sentieon_haplotyper')
 
             vcf_sentieon_haplotyper = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
+            tbi_sentieon_haplotyper = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_index
             versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.versions)
         } else {
 
@@ -330,6 +335,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                     known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
 
                 vcf_sentieon_haplotyper = SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
+                tbi_sentieon_haplotyper = SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK.out.filtered_tbi
 
                 versions = versions.mix(SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK.out.versions)
             }
