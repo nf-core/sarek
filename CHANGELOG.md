@@ -13,12 +13,12 @@ Buollámtjåhkka is the closest mountain to Saltoluokta and an easy peak to clim
 
 ### Changed
 
-- [2073](https://github.com/nf-core/sarek/pull/2073) - Update MultiQC to version 1.33
+- [#2073](https://github.com/nf-core/sarek/pull/2073) - Update MultiQC to version 1.33
 
 ### Fixed
 
-- [2069](https://github.com/nf-core/sarek/pull/2069) - Propagate tbi indices for HaplotypeCaller and Haplotyper to fix bug with merging vcfs and tbis.
-- [2073](https://github.com/nf-core/sarek/pull/2073) - Apply fix for BBSplit error: `unterminated s' command`
+- [#2069](https://github.com/nf-core/sarek/pull/2069) - Propagate tbi indices for HaplotypeCaller and Haplotyper to fix bug with merging vcfs and tbis.
+- [#2073](https://github.com/nf-core/sarek/pull/2073) - Apply fix for BBSplit error: `unterminated s' command`
 - [#2071](https://github.com/nf-core/sarek/pull/2071) - Updated parameter validation to support the use of umi_read_structure along with umi_in_read_headers
 
 ### Removed

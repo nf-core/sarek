@@ -308,7 +308,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
 
     if (step == 'mapping' && umi_read_structure && umi_in_read_header) {
         // If UMIs are in read header, then we cannot use umi_read_structure separately, and instead the UMIs will be taken directly from the header
-        // This requires us to set umi_read_structure to "+T +T " to indicate that UMIs are in the read header
+        // This requires us to set umi_read_structure to "+T +T" to indicate that UMIs are in the read header
         if( umi_read_structure != "+T +T" ) {
             error("UMI extraction from read headers (`umi_in_read_header`) will override  `umi_read_structure` when using fgbio consensus generation. Please set `umi_read_structure` to '+T +T'.")
         }
