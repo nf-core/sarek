@@ -60,7 +60,7 @@ Buollámtjåhkka is the closest mountain to Saltoluokta and an easy peak to clim
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
-| multiqc    | 1.31        | 1.32        |
+| multiqc    | 1.31        | 1.33        |
 
 ### Parameters
 
@@ -81,7 +81,7 @@ Buollámtjåhkka is the closest mountain to Saltoluokta and an easy peak to clim
 
 ## [3.7.0](https://github.com/nf-core/sarek/releases/tag/3.7.0) - Saltoluokta
 
-Saltoluokta is a a mountain lodge located in northern Sweden and a popular starting point into the Sarek Nationalpark.
+Saltoluokta is a mountain lodge located in northern Sweden and a popular starting point into the Sarek Nationalpark.
 
 This release includes a bump to Nextflow 25.10.2.
 
