@@ -37,7 +37,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Removed
 
-
 ## [3.7.1](https://github.com/nf-core/sarek/releases/tag/3.7.1) - Buollámtjåhkka
 
 Buollámtjåhkka is the closest mountain to Saltoluokta and an easy peak to climb.
