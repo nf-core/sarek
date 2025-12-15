@@ -108,13 +108,15 @@
                 "reports/samtools/sample4",
                 "reports/samtools/sample4/sample4.recal.cram.stats"
             ],
-            "No warnings"
+            [
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T19:38:59.74710121"
+        "timestamp": "2025-12-15T21:22:15.656139037"
     },
     "-profile test --tools ngscheckmate": {
         "content": [

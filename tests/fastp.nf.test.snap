@@ -344,13 +344,15 @@
                 "test.recal.cram:md5,6730f24d62a7bc9aa1e9fb0f89ae9cde"
             ],
             "No VCF files",
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T20:23:25.839989568"
+        "timestamp": "2025-12-15T19:47:31.871293074"
     },
     "-profile test,split_fastq": {
         "content": [
@@ -721,12 +723,14 @@
                 "test.recal.cram:md5,f89c35bd0e96b2254e36b4e3660b1269"
             ],
             "No VCF files",
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T20:25:28.92404744"
+        "timestamp": "2025-12-15T19:49:50.158972554"
     }
 }

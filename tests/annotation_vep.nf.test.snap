@@ -8,16 +8,16 @@
             "No BAM files",
             "No CRAM files",
             "No VCF files",
+            "No warnings",
             [
                 "Execution halted due to dbnsfp inconsistency."
-            ],
-            "No warnings"
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T16:03:01.435066364"
+        "timestamp": "2025-12-15T19:15:20.088754202"
     },
     "Fails with profile test --tools vep --vep_cache_version 1 --build_only_index": {
         "content": [
@@ -28,16 +28,16 @@
             "No BAM files",
             "No CRAM files",
             "No VCF files",
+            "No warnings",
             [
                 "This path is not available within annotation-cache.",
                 "Please check https://annotation-cache.github.io/ to create a request for it."
-            ],
-            "No warnings"
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T16:02:14.745906434"
+        "timestamp": "2025-12-15T19:14:33.737947216"
     }
 }

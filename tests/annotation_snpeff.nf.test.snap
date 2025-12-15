@@ -8,16 +8,16 @@
             "No BAM files",
             "No CRAM files",
             "No VCF files",
+            "No warnings",
             [
                 "This path is not available within annotation-cache.",
                 "Please check https://annotation-cache.github.io/ to create a request for it."
-            ],
-            "No warnings"
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T16:01:34.87038947"
+        "timestamp": "2025-12-15T19:13:50.126681673"
     }
 }

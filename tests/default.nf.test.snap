@@ -286,6 +286,9 @@
                 "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565"
             ],
             [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ],
+            [
                 "N E X T F L O W  ~  version [VERSION]",
                 "Launching `[PATH]/tests/../main.nf` [RUN_NAME] DSL2 - revision: [REVISION]",
                 "------------------------------------------------------",
@@ -385,14 +388,13 @@
                 "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:VCF_QC_BCFTOOLS_VCFTOOLS:VCFTOOLS_SUMMARY (test)",
                 "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:VCF_QC_BCFTOOLS_VCFTOOLS:VCFTOOLS_TSTV_COUNT (test)",
                 "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:VCF_QC_BCFTOOLS_VCFTOOLS:VCFTOOLS_TSTV_QUAL (test)"
-            ],
-            "No warnings"
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T16:05:06.630076168"
+        "timestamp": "2025-12-15T19:44:11.568889909"
     },
     "-profile test -stub": {
         "content": [

@@ -204,13 +204,15 @@
                 "testN.haplotypecaller.g.vcf.gz:md5,44590f25a9ed621929879cefc601f95a",
                 "testT.haplotypecaller.g.vcf.gz:md5,e37d210dda0bfe2716502353328b1103"
             ],
-            "No warnings"
+            [
+                "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T20:33:01.734143695"
+        "timestamp": "2025-12-15T19:58:09.342469278"
     },
     "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 100": {
         "content": [
@@ -414,12 +416,14 @@
                 "testN.haplotypecaller.g.vcf.gz:md5,44590f25a9ed621929879cefc601f95a",
                 "testT.haplotypecaller.g.vcf.gz:md5,e37d210dda0bfe2716502353328b1103"
             ],
-            "No warnings"
+            [
+                "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T20:34:31.249415131"
+        "timestamp": "2025-12-15T19:59:28.831246669"
     }
 }
