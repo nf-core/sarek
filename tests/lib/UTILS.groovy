@@ -67,7 +67,7 @@ class UTILS {
         }
 
         // Always capture stdout and stderr for any WARN message
-        assertion.add(filterNextflowOutput(workflow.stdout + workflow.stderr, include: ["WARN"] ) ?: "No warnings")
+        assertion.add(filterNextflowOutput(workflow.stderr + workflow.stdout, include: ["WARN"] ) ?: "No warnings")
 
         // Capture std for snapshot
         // Allow to capture either stderr, stdout or both
