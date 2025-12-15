@@ -19,7 +19,9 @@ nextflow_pipeline {
                 tools: 'snpeff'
             ],
             failure: true,
-            stdout: "This path is not available within annotation-cache"
+            snapshot: 'stdout',
+            snapshot_ignore: 'Downloading plugin',
+            snapshot_include: 'annotation-cache'
         ]
     ]
 

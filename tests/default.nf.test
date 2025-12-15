@@ -8,7 +8,9 @@ nextflow_pipeline {
     def test_scenario = [
         [
             name: "-profile test",
-            params: []
+            params: [],
+            snapshot: 'stderr,stdout',
+            snapshot_ignore: 'Downloading plugin',
         ],
         [
             name: "-profile test -stub",
