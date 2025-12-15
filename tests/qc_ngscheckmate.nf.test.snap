@@ -107,7 +107,8 @@
                 "reports/samtools/sample3/sample3.recal.cram.stats",
                 "reports/samtools/sample4",
                 "reports/samtools/sample4/sample4.recal.cram.stats"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -271,7 +272,8 @@
                 "sample2.ngscheckmate.vcf.gz:md5,17c1253ed56084291e919586ecf9dca",
                 "sample3.ngscheckmate.vcf.gz:md5,5cffc2b460469247b346b2399dc016fd",
                 "sample4.ngscheckmate.vcf.gz:md5,17c1253ed56084291e919586ecf9dca"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",

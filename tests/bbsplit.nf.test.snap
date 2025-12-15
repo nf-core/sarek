@@ -285,7 +285,8 @@
             [
                 "test.strelka.genome.vcf.gz:md5,2396656fa8d478e5fd76cda3a1c91cbb",
                 "test.strelka.variants.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -500,7 +501,8 @@
                 "variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi",
                 "variant_calling/strelka/test/test.strelka.variants.vcf.gz",
                 "variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.2",

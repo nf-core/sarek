@@ -346,7 +346,8 @@
                 "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565",
                 "test2_vs_test.strelka.somatic_indels.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2_vs_test.strelka.somatic_snvs.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",

@@ -193,7 +193,8 @@
             ],
             [
                 "sample2.freebayes.filtered.vcf.gz:md5,7ceeddfa65d53e50e6faeb39fd4f8133"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -551,7 +552,8 @@
             ],
             [
                 "test.freebayes.filtered.vcf.gz:md5,2062214d7062a3cf37ea4c1d123c1a43"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -744,7 +746,8 @@
             ],
             [
                 "sample2.freebayes.filtered.vcf.gz:md5,e68ce412428016fcc1f09735a91cdef"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -1085,7 +1088,8 @@
             ],
             [
                 "test.freebayes.filtered.vcf.gz:md5,bf085c88aa26191a55fbd23bff6a498f"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -1506,7 +1510,8 @@
             [
                 "test.freebayes.filtered.vcf.gz:md5,c4793897a38d6781dc512a52d9046be5",
                 "test2_vs_test.freebayes.filtered.vcf.gz:md5,d1d0916fc56a666bd7637792047b82f8"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -1900,7 +1905,8 @@
                     "test2_vs_test.freebayes.filtered.vcf.gz",
                     "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=137, phased=false, phasedAutodetect=false]"
                 ]
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",

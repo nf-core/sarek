@@ -39,7 +39,8 @@ class UTILS {
             assertion.add(removeFromYamlMap("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"))
         }
 
-        assertion.add(stable_name) // At least always pipeline_info/ is created and stable
+        // At least always pipeline_info/ is created and stable
+        assertion.add(stable_name)
 
         if (!scenario.stub) {
             assertion.add(stable_content.isEmpty() ? 'No stable content' : stable_content)
@@ -64,6 +65,9 @@ class UTILS {
                 }
             }
         }
+
+        // Always capture stdout and stderr for any WARN message
+        assertion.add(filterNextflowOutput(workflow.stdout + workflow.stderr, include: ["WARN"] ) ?: "No warnings")
 
         // Capture std for snapshot
         // Allow to capture either stderr, stdout or both

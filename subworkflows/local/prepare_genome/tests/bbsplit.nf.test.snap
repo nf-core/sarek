@@ -27,7 +27,8 @@
             [
                 "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,de3dcee7a7d0e6a6913520a1c6e37372"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -44,7 +45,8 @@
             ],
             [
                 "versions.yml:md5,de3dcee7a7d0e6a6913520a1c6e37372"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -62,7 +64,8 @@
             [
                 "versions.yml:md5,1f674a661ce65c9163f467cc49a064c1",
                 "versions.yml:md5,de3dcee7a7d0e6a6913520a1c6e37372"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -80,7 +83,8 @@
             [
                 "versions.yml:md5,cc5444e21efd35d6322702dbef835fb5",
                 "versions.yml:md5,de3dcee7a7d0e6a6913520a1c6e37372"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.2",

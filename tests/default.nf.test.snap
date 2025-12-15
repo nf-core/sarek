@@ -385,7 +385,8 @@
                 "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:VCF_QC_BCFTOOLS_VCFTOOLS:VCFTOOLS_SUMMARY (test)",
                 "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:VCF_QC_BCFTOOLS_VCFTOOLS:VCFTOOLS_TSTV_COUNT (test)",
                 "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:VCF_QC_BCFTOOLS_VCFTOOLS:VCFTOOLS_TSTV_QUAL (test)"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -590,7 +591,8 @@
                 "variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi",
                 "variant_calling/strelka/test/test.strelka.variants.vcf.gz",
                 "variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.2",

@@ -10,7 +10,8 @@
             "No VCF files",
             [
                 "Execution halted due to dbnsfp inconsistency."
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -30,7 +31,8 @@
             [
                 "This path is not available within annotation-cache.",
                 "Please check https://annotation-cache.github.io/ to create a request for it."
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",

@@ -293,7 +293,8 @@
                 "sample3.strelka.variants.vcf.gz:md5,5bc0beaaa04d75a72193339b0494ed5f",
                 "sample4_vs_sample3.strelka.somatic_indels.vcf.gz:md5,a500521b4aa64e8f247d57fcb3195b39",
                 "sample4_vs_sample3.strelka.somatic_snvs.vcf.gz:md5,17d4e21e50940b4e75cca144af09ce66"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -580,7 +581,8 @@
                 "sample3.strelka.variants.vcf.gz:md5,5bc0beaaa04d75a72193339b0494ed5f",
                 "sample4_vs_sample3.strelka.somatic_indels.vcf.gz:md5,a500521b4aa64e8f247d57fcb3195b39",
                 "sample4_vs_sample3.strelka.somatic_snvs.vcf.gz:md5,17d4e21e50940b4e75cca144af09ce66"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
