@@ -19,7 +19,8 @@ nextflow_pipeline {
                 modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
                 igenomes_base: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
                 genome: 'testdata.nf-core.sarek'
-            ]
+            ],
+            ignoreFiles: 'multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt,multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt,multiqc/multiqc_data/mosdepth_perchrom.txt,multiqc/multiqc_data/samtools*.txt,preprocessing/**/*.cram,reports/mosdepth/*/*'
         ],
         [
             name: "-profile test --tools bbsplit,strelka --bbsplit_fasta_list -stub",

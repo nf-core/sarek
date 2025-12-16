@@ -33,6 +33,7 @@ nextflow_pipeline {
                 tools: 'strelka,varlociraptor',
                 wes: true
             ],
+            ignoreFiles: '**/*.varlociraptor.{vcf}{,.gz}'
             include_varlociraptor_vcf: true
         ],
         [
@@ -57,6 +58,7 @@ nextflow_pipeline {
                 tools: 'strelka,varlociraptor',
                 wes: true
             ],
+            ignoreFiles: '**/*.varlociraptor.{vcf}{,.gz}'
             include_varlociraptor_vcf: true
         ],
         [
@@ -83,6 +85,7 @@ nextflow_pipeline {
                 tools: 'mutect2,varlociraptor',
                 wes: true
             ],
+            ignoreFiles: '**/*.varlociraptor.{vcf}{,.gz}'
             include_varlociraptor_vcf: true
         ]
     ]
