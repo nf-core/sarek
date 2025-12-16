@@ -15,18 +15,18 @@ class UTILS {
         // stable_name: All files + folders in ${outdir}/ with a stable name
         def stable_name = getAllFilesFromDir(outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
         // stable_content: All files in ${outdir}/ with stable content
-        def stable_content = getAllFilesFromDir(outdir, ignoreFile: 'tests/.nftignore', ignore: ["{" + scenario.ignoreFiles + "}"])
+        def stable_content = getAllFilesFromDir(outdir, ignoreFile: 'tests/.nftignore', ignore: [scenario.ignoreFiles ])
         // bam_files: All bam files
-        def bam_files = getAllFilesFromDir(outdir, include: ['**/*.bam'], ignore: ["{" + scenario.ignoreFiles + "}"])
+        def bam_files = getAllFilesFromDir(outdir, include: ['**/*.bam'], ignore: [scenario.ignoreFiles ])
         // cram_files: All cram files
-        def cram_files = getAllFilesFromDir(outdir, include: ['**/*.cram'], ignore: ["{" + scenario.ignoreFiles + "}"])
+        def cram_files = getAllFilesFromDir(outdir, include: ['**/*.cram'], ignore: [scenario.ignoreFiles ])
         // Fasta file for cram verification with nft-bam
         def fasta_base = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
         def fasta = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
         // txt_files: MuSE txt files
         def txt_files = getAllFilesFromDir(outdir, include: ['**/*.MuSE.txt'])
         // vcf_files: All vcf files
-        def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: ["{" + scenario.ignoreFiles + "}"])
+        def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: [scenario.ignoreFiles ])
         // freebayes_unfiltered: vcf files from freebayes without quality filtering
         def freebayes_unfiltered = getAllFilesFromDir(outdir, include: ['**/*.freebayes.vcf.gz'])
         // varlociraptor vcf
