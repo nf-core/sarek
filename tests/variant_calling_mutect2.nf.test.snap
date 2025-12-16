@@ -108,13 +108,16 @@
             [
                 "sample2.mutect2.vcf.gz:md5,4a803cf2687fc368a8c4eef5e2fc8c9c"
             ],
-            "No warnings"
+            [
+                "WARN: If Mutect2 is specified without a germline resource, no filtering will be done.",
+                "WARN: No Panel-of-normal was specified for Mutect2."
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T23:33:58.821896398"
+        "timestamp": "2025-12-15T23:34:19.18363343"
     },
     "-profile test --tools mutect2 somatic": {
         "content": [
@@ -251,13 +254,16 @@
             [
                 "sample4_vs_sample3.mutect2.vcf.gz:md5,f2c46d0dae1b1a59180c0b9e595993d2"
             ],
-            "No warnings"
+            [
+                "WARN: If Mutect2 is specified without a germline resource, no filtering will be done.",
+                "WARN: No Panel-of-normal was specified for Mutect2."
+            ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-10-02T10:47:57.267224384"
+        "timestamp": "2025-12-15T23:23:51.624986383"
     },
     "-profile test --tools mutect2 somatic --no_intervals": {
         "content": [
@@ -379,13 +385,16 @@
             [
                 "sample4_vs_sample3.mutect2.vcf.gz:md5,f2c46d0dae1b1a59180c0b9e595993d2"
             ],
-            "No warnings"
+            [
+                "WARN: If Mutect2 is specified without a germline resource, no filtering will be done.",
+                "WARN: No Panel-of-normal was specified for Mutect2."
+            ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-10-02T10:51:21.465588018"
+        "timestamp": "2025-12-15T23:27:38.999681674"
     },
     "-profile test --tools mutect2 tumoronly": {
         "content": [
@@ -511,12 +520,15 @@
             [
                 "sample2.mutect2.vcf.gz:md5,4a803cf2687fc368a8c4eef5e2fc8c9c"
             ],
-            "No warnings"
+            [
+                "WARN: If Mutect2 is specified without a germline resource, no filtering will be done.",
+                "WARN: No Panel-of-normal was specified for Mutect2."
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T23:29:10.265970098"
+        "timestamp": "2025-12-15T23:30:58.725141411"
     }
 }
