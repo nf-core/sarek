@@ -363,7 +363,6 @@
                 "* Software dependencies",
                 "    https://github.com/nf-core/sarek/blob/master/CITATIONS.md",
                 "-[nf-core/sarek] Pipeline completed successfully-",
-                "Staging foreign file: https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz",
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
                 "[NXF_HASH] Submitted process > NFCORE_SAREK:PREPARE_GENOME:BWAMEM1_INDEX (genome.fasta)",
                 "[NXF_HASH] Submitted process > NFCORE_SAREK:PREPARE_INTERVALS:CREATE_INTERVALS_BED (genome.interval_list)",

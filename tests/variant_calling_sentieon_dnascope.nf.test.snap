@@ -538,7 +538,9 @@
                 "joint_germline.vcf.gz:md5,ef572f2d4597e009fb10037b736b6b5b",
                 "test.dnascope.g.vcf.gz:md5,2eec090f63df75523e2c0ecbc369a755"
             ],
-            "No warnings"
+            [
+                "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
+            ]
         ],
         "meta": {
             "nf-test": "0.9.2",
