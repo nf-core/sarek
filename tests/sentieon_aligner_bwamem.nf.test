@@ -4,11 +4,11 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
+    tag 'sentieon'
 
     def test_scenario = [
         [
             name: "-profile test --aligner sentieon-bwamem --save_reference skip QC/recal/md",
-            tag: 'sentieon',
             params: [
                 aligner: 'sentieon-bwamem',
                 save_reference: true,
@@ -18,7 +18,6 @@ nextflow_pipeline {
         ],
         [
             name: "-profile test --aligner sentieon-bwamem --save_reference --build_only_index",
-            tag: 'sentieon',
             params: [
                 aligner: 'sentieon-bwamem',
                 build_only_index: true,
@@ -30,7 +29,6 @@ nextflow_pipeline {
         ],
         [
             name: "-profile test --input fastq_umi.csv --aligner sentieon-bwamem --umi_location read2 --umi_length 7 --umi_base_skip 1 --tools sentieon_dedup",
-            tag: 'sentieon',
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_umi.csv",
                 aligner: 'sentieon-bwamem',
