@@ -2,7 +2,7 @@
 
 class UTILS {
 
-    public static def get_assertion = { Map args ->
+    public static def getAssertions = { Map args ->
         // Mandatory, as we always need an outdir
         def outdir = args.outdir
 
@@ -156,7 +156,7 @@ class UTILS {
                 assertAll(
                     { assert snapshot(
                         // All assertions based on the scenario
-                        *UTILS.getAssertion(
+                        *UTILS.getAssertions(
                             outdir: params.outdir,
                             scenario: scenario,
                             workflow: workflow
