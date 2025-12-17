@@ -5,11 +5,11 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
+    profile "test,mutect"
 
     def test_scenario = [
         [
             name: "-profile test --tools mutect2 somatic",
-            profile: "test,mutect",
             params: [
                 genome: null,
                 igenomes_ignore: true,
@@ -26,7 +26,6 @@ nextflow_pipeline {
         ],
         [
             name: "-profile test --tools mutect2 somatic --no_intervals",
-            profile: "test,mutect",
             params: [
                 genome: null,
                 igenomes_ignore: true,
@@ -44,7 +43,6 @@ nextflow_pipeline {
         ],
         [
             name: "-profile test --tools mutect2 tumoronly",
-            profile: "test,mutect",
             params: [
                 genome: null,
                 igenomes_ignore: true,
@@ -60,7 +58,6 @@ nextflow_pipeline {
         ],
         [
             name: "-profile test --tools mutect2 --no_intervals tumoronly",
-            profile: "test,mutect",
             params: [
                 genome: null,
                 igenomes_ignore: true,

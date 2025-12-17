@@ -93,7 +93,7 @@ class UTILS {
         return assertion
     }
 
-    public static def get_test = { scenario ->
+    public static def getTest = { scenario ->
         // This function returns a closure that will be used to run the test and the assertion
         // It will create tags or options based on the scenario
 
@@ -117,10 +117,6 @@ class UTILS {
 
             tag "pipeline"
             tag "pipeline_sarek"
-
-            if (scenario.profile) {
-                profile scenario.profile
-            }
 
             if (scenario.stub) {
                 options "-stub"
@@ -160,7 +156,7 @@ class UTILS {
                 assertAll(
                     { assert snapshot(
                         // All assertions based on the scenario
-                        *UTILS.get_assertion(
+                        *UTILS.getAssertion(
                             outdir: params.outdir,
                             scenario: scenario,
                             workflow: workflow
