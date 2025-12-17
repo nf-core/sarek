@@ -28,6 +28,8 @@ multiqc/multiqc_report.html
 no_intervals.{bed,bed.gz,bed.gz.tbi}
 pipeline_info/*.{html,json,txt,yml}
 preprocessing/**/*.{bam,bam.bai,cram,cram.crai,table}
+preprocessing/bbsplit/*/*.fastq.gz
+preprocessing/bbsplit/*/*.stats.txt
 reference/dragmap/hash_table.{cfg,cfg.bin}
 reference/dragmap/hash_table_stats.txt
 reports/**/*.cram.metrics{,.multiqc.tsv}

@@ -167,7 +167,8 @@
                     "sample2.lofreq.vcf.gz",
                     "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=69, phased=true, phasedAutodetect=true]"
                 ]
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -334,7 +335,8 @@
                     "sample2.lofreq.vcf.gz",
                     "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=70, phased=true, phasedAutodetect=true]"
                 ]
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",

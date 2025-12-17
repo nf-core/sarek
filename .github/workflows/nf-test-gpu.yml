@@ -19,7 +19,7 @@ concurrency:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   NFT_VER: "0.9.3"
-  NFT_WORKDIR: "~"
+  # NFT_WORKDIR: "~"
   NXF_ANSI_LOG: false
   NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
   NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
@@ -92,6 +92,9 @@ jobs:
       - name: Test CUDA
         run: |
           nvidia-smi -L
+
+      - name: Set NFT_WORKDIR dynamically
+        run: echo "NFT_WORKDIR=$HOME" >> $GITHUB_ENV
 
       - name: Run nf-test on GPU
         id: run_nf_test_gpu

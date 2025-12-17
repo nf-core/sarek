@@ -128,6 +128,7 @@ This release includes a bump to Nextflow 25.10.2.
 - [#2043](https://github.com/nf-core/sarek/pull/2043) - Refactor postvariantcalling and split out varlociraptor from other options
 - [#2048](https://github.com/nf-core/sarek/pull/2048) - No null value for snpeff_cache and vep_cache in tests
 - [#2058](https://github.com/nf-core/sarek/pull/2058) - Template update for nf-core/tools v3.5.1
+- [#2080](https://github.com/nf-core/sarek/pull/2080) - Improve test suite and capture stdout/err logs more efficiently
 
 #### Fixed
 

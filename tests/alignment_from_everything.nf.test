@@ -15,7 +15,8 @@ nextflow_pipeline {
                 tools: '',
                 save_mapped: true,
                 save_output_as_bam: true
-            ]
+            ],
+            snapshot_ignoreWarning: 'runner'
         ]
     ]
 
