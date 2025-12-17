@@ -383,9 +383,7 @@
             "No CRAM files",
             "No VCF files",
             [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
-                "WARN: FASTQ file([PATH]/tests/[NFT_HASH]/work/a2/[NFT_HASH]/test_R1_R2_R1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
-                "WARN: FASTQ file([PATH]/tests/[NFT_HASH]/work/d8/[NFT_HASH]/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
         "meta": {
