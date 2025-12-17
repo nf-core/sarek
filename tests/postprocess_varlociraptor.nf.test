@@ -8,7 +8,7 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    profile "test,mutect"
+    profile "test"
 
     def test_scenario = [
         [
