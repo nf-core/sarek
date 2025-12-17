@@ -4,8 +4,6 @@ nextflow_pipeline {
 
     name "Test pipeline - BBSplit contamination removal"
     script "../main.nf"
-    tag "pipeline"
-    tag "pipeline_sarek"
     tag "bbsplit"
 
     def test_scenario = [

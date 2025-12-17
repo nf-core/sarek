@@ -5,13 +5,11 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
-    tag "pipeline"
-    tag "pipeline_sarek"
-    profile "test,mutect"
 
     def test_scenario = [
         [
             name: "-profile test --input tests/csv/3.0/recalibrated_somatic_joint.csv --tools mutect2 --joint_mutect2",
+            profile: 'test,mutect',
             params: [
                 genome: null,
                 igenomes_ignore: true,
@@ -29,6 +27,7 @@ nextflow_pipeline {
         ],
         [
             name: "-profile test --input tests/csv/3.0/recalibrated_tumoronly_joint.csv --tools mutect2 --joint_mutect2",
+            profile: 'test,mutect',
             params: [
                 genome: null,
                 igenomes_ignore: true,

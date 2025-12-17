@@ -4,13 +4,11 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
-    tag "pipeline"
-    tag "pipeline_sarek"
-    profile "test,spark"
 
     def test_scenario = [
         [
             name: "-profile test,spark --input tests/csv/3.0/fastq_tumor_only.csv --use_gatk_spark baserecalibrator,markduplicates",
+            profile: 'test,spark',
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_tumor_only.csv",
                 tools: null,
@@ -19,6 +17,7 @@ nextflow_pipeline {
         ],
         [
             name: "-profile test,spark --input tests/csv/3.0/fastq_tumor_only.csv --use_gatk_spark baserecalibrator,markduplicates --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools",
+            profile: 'test,spark',
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_tumor_only.csv",
                 tools: null,

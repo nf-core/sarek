@@ -4,13 +4,11 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
-    tag "pipeline"
-    tag "pipeline_sarek"
-    tag "sentieon"
 
     def test_scenario = [
         [
             name: "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/mapped_single_bam.csv",
+            tag: 'sentieon',
             params: [
                 input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
                 step: 'markduplicates',
@@ -19,6 +17,7 @@ nextflow_pipeline {
         ],
         [
             name: "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/mapped_single_cram.csv",
+            tag: 'sentieon',
             params: [
                 input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
                 step: 'markduplicates',
@@ -27,6 +26,7 @@ nextflow_pipeline {
         ],
         [
             name: "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/mapped_single_cram.csv --sentieon_consensus",
+            tag: 'sentieon',
             params: [
                 input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv",
                 step: 'markduplicates',
@@ -36,6 +36,7 @@ nextflow_pipeline {
         ],
         [
             name: "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/bam_umi_header.csv --umi_in_read_header",
+            tag: 'sentieon',
             params: [
                 input: "${projectDir}/tests/csv/3.0/bam_umi_header.csv",
                 step: 'markduplicates',
@@ -45,6 +46,7 @@ nextflow_pipeline {
         ],
         [
             name: "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/bam_umi_header.csv --sentieon_consensus --umi_in_read_header",
+            tag: 'sentieon',
             params: [
                 input: "${projectDir}/tests/csv/3.0/bam_umi_header.csv",
                 step: 'markduplicates',

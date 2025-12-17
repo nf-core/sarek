@@ -2,13 +2,11 @@ nextflow_pipeline {
 
     name "Test sentieon"
     script "../main.nf"
-    tag "pipeline"
-    tag "pipeline_sarek"
-    tag "sentieon"
 
     def test_scenario = [
         [
             name: "-profile test --aligner sentieon-bwamem --tools null -stub",
+            tag: 'sentieon',
             params: [
                 aligner: "sentieon-bwamem",
                 tools: ''

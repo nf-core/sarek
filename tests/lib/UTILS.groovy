@@ -96,6 +96,13 @@ class UTILS {
             // gpu_conda_stub (this should never happen)
             // cpu_conda_stub
 
+            tag "pipeline"
+            tag "pipeline_sarek"
+
+            if (scenario.profile) {
+                profile scenario.profile
+            }
+
             if (scenario.stub) {
                 options "-stub"
             }

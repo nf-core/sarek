@@ -1,14 +1,11 @@
 def projectDir = new File('.').absolutePath
 def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-// NOTE: needs to be run with --profile test,mutect,singularity
+// NOTE: needs to be run with --profile=+singularity or --profile=+docker because of the need for the mutect profile in the last test
 
 nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
-    tag "pipeline"
-    tag "pipeline_sarek"
-    profile "test"
 
     def test_scenario = [
         [
@@ -61,6 +58,7 @@ nextflow_pipeline {
         ],
         [
             name: "-profile test --tools mutect2,varlociraptor --input recalibrated_tumoronly.csv",
+            profile: 'test,mutect',
             params: [
                 input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
                 genome: null,

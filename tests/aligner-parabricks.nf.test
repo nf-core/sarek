@@ -5,13 +5,11 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
-    tag "pipeline"
-    tag "pipeline_sarek"
-    profile "test,gpu"
 
     def test_scenario = [
         [
             name: "-profile test --aligner parabricks --wes",
+            profile: 'test,gpu',
             params: [
                 aligner: 'parabricks',
                 save_reference: true,
@@ -23,6 +21,7 @@ nextflow_pipeline {
         ],
         [
             name: "-profile test --aligner parabricks --tools mutect2 --wes --input fastq_pair.csv",
+            profile: 'test,gpu',
             params: [
                 input : "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 aligner: 'parabricks',
@@ -35,6 +34,7 @@ nextflow_pipeline {
         ],
         [
             name: "-profile test --aligner parabricks --wes --intervals",
+            profile: 'test,gpu',
             params: [
                 aligner: 'parabricks',
                 save_reference: true,

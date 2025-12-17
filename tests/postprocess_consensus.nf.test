@@ -5,13 +5,11 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
-    tag "pipeline"
-    tag "pipeline_sarek"
-    profile "test,mutect"
 
     def test_scenario = [
         [
             name: "-profile test --snv_consensus_calling --normalize_vcfs --tools mutect2,strelka (germline + somatic)",
+            profile: 'test,mutect',
             params: [
                 genome: null,
                 igenomes_ignore: true,
@@ -32,6 +30,7 @@ nextflow_pipeline {
         ],
         [
             name: "-profile test --filter_vcfs --snv_consensus_calling --normalize_vcfs --tools mutect2,strelka (germline + somatic)",
+            profile: 'test,mutect',
             params: [
                 genome: null,
                 igenomes_ignore: true,
