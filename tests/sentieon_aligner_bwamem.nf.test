@@ -4,7 +4,7 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
-    tag 'sentieon'
+    tag "sentieon"
 
     def test_scenario = [
         [
