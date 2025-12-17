@@ -17,7 +17,7 @@ nextflow_pipeline {
                 tools: 'freebayes,strelka'
             ],
             include_freebayes_unfiltered: true,
-            ignoreFiles: '**/{testN.germline,testT.germline,*}.{freebayes,freebayes.filtered.bcftools_filtered*,}.vcf{,.gz}',
+            ignoreFiles: '**/{testN.germline,testT.germline,*freebayes,*freebayes.filtered.bcftools_filtered*}.vcf{,.gz}',
             no_conda: true
         ]
     ]
