@@ -150,13 +150,17 @@
             "No CRAM files",
             [
                 "test.mutect2.vcf.gz:md5,593f6a3b49d8a4e44b1e2696883116c0"
+            ],
+            [
+                "WARN: If Mutect2 is specified without a germline resource, no filtering will be done.",
+                "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-10-02T10:58:02.848849993"
+        "timestamp": "2025-12-15T20:17:32.428293264"
     },
     "-profile test --input tests/csv/3.0/recalibrated_tumoronly_joint.csv --tools mutect2 --joint_mutect2": {
         "content": [
@@ -298,12 +302,16 @@
             "No CRAM files",
             [
                 "test.mutect2.vcf.gz:md5,e064ce0953bb07416f3bc8a60c761238"
+            ],
+            [
+                "WARN: If Mutect2 is specified without a germline resource, no filtering will be done.",
+                "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T21:07:52.189445971"
+        "timestamp": "2025-12-15T20:42:22.769087844"
     }
 }

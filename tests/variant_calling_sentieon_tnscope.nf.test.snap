@@ -71,6 +71,9 @@
             ],
             [
                 "test2.tnscope.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1"
             ]
         ],
         "meta": {
@@ -175,6 +178,11 @@
             [
                 "test2_vs_test.tnscope.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test3_vs_test.tnscope.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test.umi_1.fastq.gz): Cannot extract flowcell ID from @922332/1",
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
         "meta": {
@@ -256,6 +264,10 @@
             ],
             [
                 "test2_vs_test.tnscope.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
         "meta": {
@@ -343,6 +355,10 @@
             ],
             [
                 "test2_vs_test.tnscope.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
         "meta": {

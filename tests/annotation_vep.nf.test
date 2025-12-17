@@ -18,7 +18,9 @@ nextflow_pipeline {
                 tools: 'vep'
             ],
             failure: true,
-            stdout: "This path is not available within annotation-cache"
+            snapshot: 'stdout',
+            snapshot_ignore: 'Downloading plugin',
+            snapshot_include: 'annotation-cache'
         ],
         [
             name: "Fails with profile test --dbnsfp and no dbnsfp_tbi",
@@ -29,7 +31,9 @@ nextflow_pipeline {
                 tools: 'vep'
             ],
             failure: true,
-            stdout: "Execution halted due to dbnsfp inconsistency"
+            snapshot: 'stdout',
+            snapshot_ignore: 'Downloading plugin',
+            snapshot_include: 'dbnsfp inconsistency'
         ]
     ]
 

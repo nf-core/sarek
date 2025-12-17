@@ -293,13 +293,17 @@
                 "sample3.strelka.variants.vcf.gz:md5,5bc0beaaa04d75a72193339b0494ed5f",
                 "sample4_vs_sample3.strelka.somatic_indels.vcf.gz:md5,a500521b4aa64e8f247d57fcb3195b39",
                 "sample4_vs_sample3.strelka.somatic_snvs.vcf.gz:md5,17d4e21e50940b4e75cca144af09ce66"
+            ],
+            [
+                "WARN: If Mutect2 is specified without a germline resource, no filtering will be done.",
+                "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-20T13:11:30.021978694"
+        "timestamp": "2025-12-15T20:56:17.622974599"
     },
     "-profile test --snv_consensus_calling --normalize_vcfs --tools mutect2,strelka (germline + somatic)": {
         "content": [
@@ -580,12 +584,16 @@
                 "sample3.strelka.variants.vcf.gz:md5,5bc0beaaa04d75a72193339b0494ed5f",
                 "sample4_vs_sample3.strelka.somatic_indels.vcf.gz:md5,a500521b4aa64e8f247d57fcb3195b39",
                 "sample4_vs_sample3.strelka.somatic_snvs.vcf.gz:md5,17d4e21e50940b4e75cca144af09ce66"
+            ],
+            [
+                "WARN: If Mutect2 is specified without a germline resource, no filtering will be done.",
+                "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-20T13:07:11.388539941"
+        "timestamp": "2025-12-15T20:52:18.763478729"
     }
 }

@@ -1025,7 +1025,6 @@
                 "snpeff_cache": {
                     "type": "string",
                     "format": "directory-path",
-                    "exists": true,
                     "fa_icon": "fas fa-cloud-download-alt",
                     "default": "s3://annotation-cache/snpeff_cache/",
                     "description": "Path to snpEff cache.",
@@ -1040,7 +1039,6 @@
                 "vep_cache": {
                     "type": "string",
                     "format": "directory-path",
-                    "exists": true,
                     "fa_icon": "fas fa-cloud-download-alt",
                     "default": "s3://annotation-cache/vep_cache/",
                     "description": "Path to VEP cache.",

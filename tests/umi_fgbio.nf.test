@@ -15,14 +15,16 @@ nextflow_pipeline {
             ]
         ],
         [
-            name: "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null",
+            name: "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '12+T S' --tools null",
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_umi.csv",
                 tools: null,
                 umi_read_structure: '12+T S'
             ],
             failure: true,
-            stdout: "Please check the input UMI Read structure"
+            snapshot: 'stdout',
+            snapshot_ignore: 'Downloading plugin',
+            snapshot_include: 'input UMI Read structure'
         ],
         [
             name: "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null --aligner sentieon-bwamem",
@@ -33,7 +35,9 @@ nextflow_pipeline {
                 aligner: 'sentieon-bwamem'
             ],
             failure: true,
-            stdout: "sentieon-bwamem is currently not compatible with FGBio UMI handling. Please choose a different aligner."
+            snapshot: 'stdout',
+            snapshot_ignore: 'Downloading plugin',
+            snapshot_include: 'currently not compatible'
         ],
         [
             name: "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null --aligner parabricks",
@@ -44,7 +48,9 @@ nextflow_pipeline {
                 aligner: 'parabricks'
             ],
             failure: true,
-            stdout: "parabricks is currently not compatible with FGBio UMI handling. Please choose a different aligner."
+            snapshot: 'stdout',
+            snapshot_ignore: 'Downloading plugin',
+            snapshot_include: 'currently not compatible'
         ]
     ]
 

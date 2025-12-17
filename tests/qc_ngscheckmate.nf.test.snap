@@ -107,13 +107,16 @@
                 "reports/samtools/sample3/sample3.recal.cram.stats",
                 "reports/samtools/sample4",
                 "reports/samtools/sample4/sample4.recal.cram.stats"
+            ],
+            [
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T19:38:59.74710121"
+        "timestamp": "2025-12-15T21:22:15.656139037"
     },
     "-profile test --tools ngscheckmate": {
         "content": [
@@ -271,7 +274,8 @@
                 "sample2.ngscheckmate.vcf.gz:md5,17c1253ed56084291e919586ecf9dca",
                 "sample3.ngscheckmate.vcf.gz:md5,5cffc2b460469247b346b2399dc016fd",
                 "sample4.ngscheckmate.vcf.gz:md5,17c1253ed56084291e919586ecf9dca"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",

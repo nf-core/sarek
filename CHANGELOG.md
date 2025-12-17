@@ -5,7 +5,87 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 3.7.0
+## [dev]
+
+### Added
+
+### Changed
+
+### Fixed
+
+- [#2077](https://github.com/nf-core/sarek/pull/2077) - Remove re-indexed bam from `indexcov` from publishing into top level `outdir` directory
+- [#2083](https://github.com/nf-core/sarek/pull/2083) - Remove `exists` validation from `snpeff_cache` and `vep_cache` parameters to fix workflow launch failures when annotation tools are not used
+
+### Removed
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
+| Params | status |
+| ------ | ------ |
+
+### Developer section
+
+#### Added
+
+#### Changed
+
+- [#2076](https://github.com/nf-core/sarek/pull/2076) - Back to Dev
+
+#### Fixed
+
+#### Removed
+
+## [3.7.1](https://github.com/nf-core/sarek/releases/tag/3.7.1) - Buollámtjåhkka
+
+Buollámtjåhkka is the closest mountain to Saltoluokta and an easy peak to climb.
+
+### Added
+
+### Changed
+
+- [#2073](https://github.com/nf-core/sarek/pull/2073) - Update MultiQC to version 1.33
+
+### Fixed
+
+- [#2069](https://github.com/nf-core/sarek/pull/2069) - Propagate tbi indices for HaplotypeCaller and Haplotyper to fix bug with merging vcfs and tbis.
+- [#2073](https://github.com/nf-core/sarek/pull/2073) - Apply fix for BBSplit error: `unterminated s' command`
+- [#2071](https://github.com/nf-core/sarek/pull/2071) - Updated parameter validation to support the use of umi_read_structure along with umi_in_read_headers
+
+### Removed
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| multiqc    | 1.31        | 1.33        |
+
+### Parameters
+
+| Params | status |
+| ------ | ------ |
+
+### Developer section
+
+#### Added
+
+#### Changed
+
+- [#2067](https://github.com/nf-core/sarek/pull/2067) - Back to Dev
+
+#### Fixed
+
+#### Removed
+
+## [3.7.0](https://github.com/nf-core/sarek/releases/tag/3.7.0) - Saltoluokta
+
+Saltoluokta is a mountain lodge located in northern Sweden and a popular starting point into the Sarek Nationalpark.
+
+This release includes a bump to Nextflow 25.10.2.
 
 ### Added
 
@@ -49,6 +129,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2043](https://github.com/nf-core/sarek/pull/2043) - Refactor postvariantcalling and split out varlociraptor from other options
 - [#2048](https://github.com/nf-core/sarek/pull/2048) - No null value for snpeff_cache and vep_cache in tests
 - [#2058](https://github.com/nf-core/sarek/pull/2058) - Template update for nf-core/tools v3.5.1
+- [#2080](https://github.com/nf-core/sarek/pull/2080) - Improve test suite and capture stdout/err logs more efficiently
 
 #### Fixed
 

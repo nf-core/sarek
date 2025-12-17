@@ -200,7 +200,8 @@
             [
                 "sample3.cnvcall.vcf:md5,6f8c517f62715c47674c79ffd1e9babb",
                 "sample4_vs_sample3.cnvcall.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -468,7 +469,8 @@
                 "sample1.cnvcall.vcf:md5,6f8c517f62715c47674c79ffd1e9babb",
                 "sample2.cnvcall.vcf:md5,35662b51f071469c6227be15114eb824",
                 "sample4_vs_sample3.cnvcall.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -629,7 +631,8 @@
             "No CRAM files",
             [
                 "sample1.cnvcall.vcf:md5,6f8c517f62715c47674c79ffd1e9babb"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -787,7 +790,8 @@
             "No CRAM files",
             [
                 "sample2.cnvcall.vcf:md5,35662b51f071469c6227be15114eb824"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -896,7 +900,8 @@
                 "sample2.bam:md5,36856b3e6dd1bc0f10688b9d8c02faa8"
             ],
             "No CRAM files",
-            "No VCF files"
+            "No VCF files",
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -1100,7 +1105,8 @@
             [
                 "sample3.cnvcall.vcf:md5,172e25057fc6cab0a0b325c55bfacc2a",
                 "sample4_vs_sample3.cnvcall.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
