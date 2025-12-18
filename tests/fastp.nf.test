@@ -4,12 +4,10 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
-    tag "pipeline"
-    tag "pipeline_sarek"
 
     def test_scenario = [
         [
-            name: "-profile test,trimming --save_trimmed",
+            name: "-profile test --save_trimmed",
             params: [
                 clip_r1: 1,
                 clip_r2: 1,
@@ -24,7 +22,7 @@ nextflow_pipeline {
             ]
         ],
         [
-            name: "-profile test,split_fastq",
+            name: "-profile test --split_fastq 150000",
             params: [
                 save_split_fastqs: true,
                 split_fastq: 150000,
@@ -39,6 +37,6 @@ nextflow_pipeline {
 
     // Generate tests for each scenario
     test_scenario.each { scenario ->
-        test(scenario.name, UTILS.get_test(scenario))
+        test(scenario.name, UTILS.getTest(scenario))
     }
 }
