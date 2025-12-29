@@ -212,6 +212,7 @@ workflow SAREK {
             FASTQ_PREPROCESS_PARABRICKS(
                 input_fastq,
                 fasta,
+                fasta_fai,
                 index_alignment,
                 intervals_bed_combined,
                 known_sites_indels,
