@@ -15,6 +15,7 @@ nextflow_pipeline {
             params: [
                 aligner: 'parabricks',
                 save_reference: true,
+                save_output_as_bam: true,
                 tools: '',
                 wes : true,
             ],
@@ -27,6 +28,7 @@ nextflow_pipeline {
                 input : "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 aligner: 'parabricks',
                 save_reference: true,
+                save_mapped: true,
                 tools: 'mutect2',
                 wes : true,
             ],
@@ -38,6 +40,7 @@ nextflow_pipeline {
             params: [
                 aligner: 'parabricks',
                 save_reference: true,
+                save_mapped: true,
                 tools: '',
                 wes : true,
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',

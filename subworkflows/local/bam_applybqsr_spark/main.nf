@@ -17,9 +17,9 @@ workflow BAM_APPLYBQSR_SPARK {
     intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
-    versions = Channel.empty()
-    bam_applybqsr_single = Channel.empty()
-    bam_to_merge = Channel.empty()
+    versions = channel.empty()
+    bam_applybqsr_single = channel.empty()
+    bam_to_merge = channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     // Move num_intervals to meta map
@@ -40,9 +40,9 @@ workflow BAM_APPLYBQSR_SPARK {
 
         bam_applybqsr_out = GATK4SPARK_APPLYBQSR.out.bam
             .join(GATK4SPARK_APPLYBQSR.out.bai, failOnDuplicate: true, failOnMismatch: true)
-            .branch {
-                single: it[0].num_intervals == 1
-                multiple: it[0].num_intervals > 1
+            .branch { files ->
+                single: files[0].num_intervals == 1
+                multiple: files[0].num_intervals > 1
             }
 
         bam_applybqsr_single = bam_applybqsr_out.single
@@ -69,8 +69,8 @@ workflow BAM_APPLYBQSR_SPARK {
     // Merge and index the recalibrated cram files
     CRAM_MERGE_INDEX_SAMTOOLS(
         cram_to_merge,
-        fasta.map { _meta, fasta_ -> [fasta_] },
-        fasta_fai.map { _meta, fasta_fai_ -> [fasta_fai_] },
+        fasta,
+        fasta_fai,
     )
 
     // Remove no longer necessary field: num_intervals
