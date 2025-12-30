@@ -14,8 +14,9 @@ nextflow_pipeline {
             name: "-profile test --aligner parabricks --wes",
             params: [
                 aligner: 'parabricks',
-                save_mapped: true,
                 save_reference: true,
+                save_mapped: true,
+                save_output_as_bam: true,
                 tools: '',
                 wes : true,
             ],
