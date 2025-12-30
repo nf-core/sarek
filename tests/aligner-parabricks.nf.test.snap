@@ -91,11 +91,7 @@
                 "preprocessing",
                 "preprocessing/parabricks",
                 "preprocessing/parabricks/test-test_L1",
-                "preprocessing/parabricks/test-test_L1/test-test_L1.cram",
-                "preprocessing/parabricks/test-test_L1/test-test_L1.cram.crai",
                 "preprocessing/parabricks/test-test_L2",
-                "preprocessing/parabricks/test-test_L2/test-test_L2.cram",
-                "preprocessing/parabricks/test-test_L2/test-test_L2.cram.crai",
                 "reference",
                 "reference/bwa",
                 "reference/bwa/genome.fasta.amb",
@@ -145,10 +141,7 @@
                 "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
             ],
             "No BAM files",
-            [
-                "test-test_L1.cram:md5,4673edaace5f12d28b6904c40640d7bd",
-                "test-test_L2.cram:md5,4673edaace5f12d28b6904c40640d7bd"
-            ],
+            "No CRAM files",
             "No VCF files",
             "No warnings"
         ],
@@ -156,7 +149,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-30T12:52:09.03558681"
+        "timestamp": "2025-12-30T13:10:00.015971446"
     },
     "-profile test --aligner parabricks --tools mutect2 --wes --input fastq_pair.csv": {
         "content": [
