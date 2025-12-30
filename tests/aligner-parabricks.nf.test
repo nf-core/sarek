@@ -15,7 +15,6 @@ nextflow_pipeline {
             params: [
                 aligner: 'parabricks',
                 save_reference: true,
-                save_mapped: true,
                 save_output_as_bam: true,
                 tools: '',
                 wes : true,
