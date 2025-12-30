@@ -77,6 +77,8 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     // crams are merged (when multiple lanes from the same sample) and indexed
     CRAM_MERGE_INDEX_SAMTOOLS(cram_mapped, ch_fasta, ch_fasta_fai)
 
+    ch_versions = ch_versions.mix(CRAM_MERGE_INDEX_SAMTOOLS.out.versions)
+
     cram_variant_calling = CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai
         .map { meta, cram, crai ->
                     [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size', 'sample_lane_id') + [ data_type: 'cram', id: meta.sample ], cram, crai ]
@@ -85,6 +87,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     if (params.save_mapped || params.save_output_as_bam) {
         // If params.save_output_as_bam, then convert CRAM files to BAM
         CRAM_TO_BAM(cram_variant_calling, ch_fasta, ch_fasta_fai)
+        ch_versions = ch_versions.mix(CRAM_TO_BAM.out.versions)
 
         if (params.save_output_as_bam) CHANNEL_ALIGN_CREATE_CSV(CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true), params.outdir, params.save_output_as_bam)
         else CHANNEL_ALIGN_CREATE_CSV(cram_variant_calling, params.outdir, params.save_output_as_bam)
