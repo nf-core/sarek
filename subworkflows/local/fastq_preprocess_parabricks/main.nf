@@ -8,11 +8,14 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     take:
     ch_reads                        // channel: [mandatory] meta, reads
     ch_fasta                        // channel: [mandatory] meta, fasta
-    ch_fasta_fai                    // channel: [mandatory] meta, fasta.fai
+    ch_fasta_fai                    // channel: [mandatory] meta, fasta_fai
     ch_index                        // channel: [mandatory] meta, index - bwa index
     ch_interval_file                // channel: [optional]  intervals_bed_combined
     ch_known_sites                  // channel: [optional]  known_sites_indels
     val_output_fmt                  // either bam or cram
+    val_save_mapped                 // boolean
+    val_save_output_as_bam          // boolean
+    val_outdir                      // output directory for saving mapped files
 
     main:
     ch_versions = channel.empty()
@@ -84,13 +87,13 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
                     [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size', 'sample_lane_id') + [ data_type: 'cram', id: meta.sample ], cram, crai ]
                 }
 
-    if (params.save_mapped || params.save_output_as_bam) {
-        // If params.save_output_as_bam, then convert CRAM files to BAM
+    if (val_save_mapped || val_save_output_as_bam) {
+        // If val_save_output_as_bam, then convert CRAM files to BAM
         CRAM_TO_BAM(cram_variant_calling, ch_fasta, ch_fasta_fai)
         ch_versions = ch_versions.mix(CRAM_TO_BAM.out.versions)
 
-        if (params.save_output_as_bam) CHANNEL_ALIGN_CREATE_CSV(CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true), params.outdir, params.save_output_as_bam)
-        else CHANNEL_ALIGN_CREATE_CSV(cram_variant_calling, params.outdir, params.save_output_as_bam)
+        if (val_save_output_as_bam) CHANNEL_ALIGN_CREATE_CSV(CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true), val_outdir, val_save_output_as_bam)
+        else CHANNEL_ALIGN_CREATE_CSV(cram_variant_calling, val_outdir, val_save_output_as_bam)
     }
 
     emit:
