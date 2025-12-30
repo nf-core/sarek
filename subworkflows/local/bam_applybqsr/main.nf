@@ -11,9 +11,9 @@ include { GATK4_APPLYBQSR           } from '../../../modules/nf-core/gatk4/apply
 workflow BAM_APPLYBQSR {
     take:
     cram      // channel: [mandatory] [ meta, cram, crai, recal ]
-    dict      // channel: [mandatory] [ dict ]
-    fasta     // channel: [mandatory] [ fasta ]
-    fasta_fai // channel: [mandatory] [ fasta_fai ]
+    dict      // channel: [mandatory] [ meta, dict ]
+    fasta     // channel: [mandatory] [ meta, fasta ]
+    fasta_fai // channel: [mandatory] [ meta, fasta_fai ]
     intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
