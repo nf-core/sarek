@@ -87,13 +87,13 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
                     [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size', 'sample_lane_id') + [ data_type: 'cram', id: meta.sample ], cram, crai ]
                 }
 
-    if (val_save_mapped || val_save_output_as_bam) {
-        // If val_save_output_as_bam, then convert CRAM files to BAM
+    if (val_save_output_as_bam) {
+        // Convert CRAM files to BAM
         CRAM_TO_BAM(cram_variant_calling, ch_fasta, ch_fasta_fai)
         ch_versions = ch_versions.mix(CRAM_TO_BAM.out.versions)
-
-        if (val_save_output_as_bam) CHANNEL_ALIGN_CREATE_CSV(CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true), val_outdir, val_save_output_as_bam)
-        else CHANNEL_ALIGN_CREATE_CSV(cram_variant_calling, val_outdir, val_save_output_as_bam)
+        CHANNEL_ALIGN_CREATE_CSV(CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true), val_outdir, val_save_output_as_bam)
+    } else if (val_save_mapped) {
+        CHANNEL_ALIGN_CREATE_CSV(cram_variant_calling, val_outdir, val_save_output_as_bam)
     }
 
     emit:
