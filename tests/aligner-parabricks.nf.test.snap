@@ -182,6 +182,9 @@
                 "GETPILEUPSUMMARIES_TUMOR": {
                     "gatk4": "4.6.1.0"
                 },
+                "INDEX_CRAM": {
+                    "samtools": 1.21
+                },
                 "LEARNREADORIENTATIONMODEL": {
                     "gatk4": "4.6.1.0"
                 },
@@ -451,7 +454,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-30T12:54:18.853098865"
+        "timestamp": "2025-12-30T13:32:40.97607962"
     },
     "-profile test --aligner parabricks --wes --intervals": {
         "content": [
