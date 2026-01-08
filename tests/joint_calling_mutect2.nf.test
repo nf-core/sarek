@@ -5,7 +5,6 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
-    profile "test,mutect"
 
     def test_scenario = [
         [
