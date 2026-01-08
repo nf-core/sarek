@@ -18,14 +18,18 @@ nextflow_pipeline {
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 tools: "cnvkit,deepvariant,freebayes,mpileup,msisensorpro,strelka,tiddit"
-            ]
+            ],
+            include_freebayes_unfiltered: true,
+            ignoreFiles: '**/*.{freebayes,freebayes.filtered.bcftools_filtered*}.vcf{,.gz}'
         ],
         [
             name: "-profile test --input tests/csv/3.0/fastq_single.csv --tools cnvkit,deepvariant,freebayes,mpileup,strelka,tiddit",
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
                 tools: "cnvkit,deepvariant,freebayes,mpileup,strelka,tiddit"
-            ]
+            ],
+            include_freebayes_unfiltered: true,
+            ignoreFiles: '**/*.{freebayes,freebayes.filtered.bcftools_filtered*}.vcf{,.gz}'
         ]
     ]
 

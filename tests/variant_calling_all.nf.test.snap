@@ -608,15 +608,23 @@
                 "test2.recal.cram:md5,f4205ab086600ba2927e1468dc732976"
             ],
             [
+                [
+                    "test.freebayes.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=732, phased=false, phasedAutodetect=false]"
+                ],
+                [
+                    "test2_vs_test.freebayes.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=1447, phased=false, phasedAutodetect=false]"
+                ]
+            ],
+            [
                 "test.bcftools.vcf.gz:md5,f627b06200401f34e124810ec89fde7c",
                 "test.cnvcall.vcf:md5,fa78210d08001ce5cecb67d8d1f1c9a0",
                 "test2_vs_test.cnvcall.vcf:md5,b65c037ec53243a3038b6c2e9c4a1b4b",
                 "test.deepvariant.g.vcf.gz:md5,c29fb457bb32ab95580d45e20048fc25",
                 "test.deepvariant.vcf.gz:md5,e6f8bbd0bc7a977f3af578e347f2cce6",
                 "test.freebayes.filtered.vcf.gz:md5,db819caa671c7c433c8b8943c51cab2d",
-                "test.freebayes.vcf.gz:md5,d054c9cbe3d7763e2124aa9d1a47d7c2",
-                "test2_vs_test.freebayes.filtered.vcf.gz:md5,17c9c587fd3582e1a92c6cae2dbcfc24",
-                "test2_vs_test.freebayes.vcf.gz:md5,dad82b43adcdc545b5de9783001e5933",
+                "test2_vs_test.freebayes.filtered.vcf.gz:md5,e944f289486fce1084de49f539252df0",
                 "test.strelka.genome.vcf.gz:md5,16437a040679d88b7d84a9276f793d6c",
                 "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565",
                 "test2_vs_test.strelka.somatic_indels.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -635,7 +643,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-08T11:44:25.622618262"
+        "timestamp": "2026-01-08T14:36:44.84647528"
     },
     "-profile test --input tests/csv/3.0/fastq_single.csv --tools cnvkit,deepvariant,freebayes,mpileup,strelka,tiddit": {
         "content": [
@@ -1105,12 +1113,17 @@
                 "test.recal.cram:md5,dbd6f40b1e6d72501dc034e62e9d54eb"
             ],
             [
+                [
+                    "test.freebayes.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=738, phased=false, phasedAutodetect=false]"
+                ]
+            ],
+            [
                 "test.bcftools.vcf.gz:md5,f627b06200401f34e124810ec89fde7c",
                 "test.cnvcall.vcf:md5,ad603307280549c2053c2e3b57141c0a",
                 "test.deepvariant.g.vcf.gz:md5,c29fb457bb32ab95580d45e20048fc25",
                 "test.deepvariant.vcf.gz:md5,e6f8bbd0bc7a977f3af578e347f2cce6",
                 "test.freebayes.filtered.vcf.gz:md5,bf085c88aa26191a55fbd23bff6a498f",
-                "test.freebayes.vcf.gz:md5,936eb0eac244472a3fa35de6348dd7ce",
                 "test.strelka.genome.vcf.gz:md5,16437a040679d88b7d84a9276f793d6c",
                 "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565",
                 "test.tiddit.vcf.gz:md5,ac44cc2f44ebec84f5377e3274131876"
@@ -1123,7 +1136,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-08T11:47:30.988840782"
+        "timestamp": "2026-01-08T12:49:19.475669979"
     },
     "-profile test --input tests/csv/3.0/fastq_tumor_only.csv --tools cnvkit,freebayes,mpileup,mutect2,tiddit": {
         "content": [
@@ -1580,6 +1593,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-08T11:41:14.260075645"
+        "timestamp": "2026-01-08T14:32:16.644778218"
     }
 }
