@@ -1,0 +1,36 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+
+    def test_scenario = [
+        [
+            name: "-profile test --input tests/csv/3.0/fastq_tumor_only.csv --tools cnvkit,freebayes,mpileup,mutect2,tiddit",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_tumor_only.csv",
+                tools: "cnvkit,freebayes,mpileup,mutect2,tiddit"
+            ]
+        ],
+        [
+            name: "-profile test --input tests/csv/3.0/fastq_pair.csv --tools cnvkit,deepvariant,freebayes,mpileup,msisensorpro,strelka,tiddit",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                tools: "cnvkit,deepvariant,freebayes,mpileup,msisensorpro,strelka,tiddit"
+            ]
+        ],
+        [
+            name: "-profile test --input tests/csv/3.0/fastq_single.csv --tools cnvkit,deepvariant,freebayes,mpileup,strelka,tiddit",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
+                tools: "cnvkit,deepvariant,freebayes,mpileup,strelka,tiddit"
+            ]
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}
