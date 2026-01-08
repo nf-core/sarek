@@ -20,7 +20,7 @@ nextflow_pipeline {
                 tools: "cnvkit,deepvariant,freebayes,mpileup,msisensorpro,strelka,tiddit"
             ],
             include_freebayes_unfiltered: true,
-            ignoreFiles: '**/*.freebayes.vcf{,.gz}'
+            ignoreFiles: '**/*.freebayes{.filtered,}.vcf{,.gz}'
         ],
         [
             name: "-profile test --input tests/csv/3.0/fastq_single.csv --tools cnvkit,deepvariant,freebayes,mpileup,strelka,tiddit",

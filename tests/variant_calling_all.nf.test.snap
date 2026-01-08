@@ -623,8 +623,6 @@
                 "test2_vs_test.cnvcall.vcf:md5,b65c037ec53243a3038b6c2e9c4a1b4b",
                 "test.deepvariant.g.vcf.gz:md5,c29fb457bb32ab95580d45e20048fc25",
                 "test.deepvariant.vcf.gz:md5,e6f8bbd0bc7a977f3af578e347f2cce6",
-                "test.freebayes.filtered.vcf.gz:md5,db819caa671c7c433c8b8943c51cab2d",
-                "test2_vs_test.freebayes.filtered.vcf.gz:md5,e944f289486fce1084de49f539252df0",
                 "test.strelka.genome.vcf.gz:md5,16437a040679d88b7d84a9276f793d6c",
                 "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565",
                 "test2_vs_test.strelka.somatic_indels.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -643,7 +641,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-08T14:36:44.84647528"
+        "timestamp": "2026-01-08T16:27:17.419740053"
     },
     "-profile test --input tests/csv/3.0/fastq_single.csv --tools cnvkit,deepvariant,freebayes,mpileup,strelka,tiddit": {
         "content": [
