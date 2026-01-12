@@ -1267,6 +1267,17 @@ The plugin retrieves citation counts from the Mastermind Genomic Search Engine f
 
 For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#mastermind).
 
+#### Phenotypes
+
+Enable with `--vep_phenotypes`. The following parameters are optional:
+
+- `--phenotypes_file`, to specify the path to the phenotype annotation GFF/GVF file. If not specified, the plugin will automatically download phenotype data on first run.
+- `--phenotypes_include_types`, comma-separated list of feature types to include (e.g., 'Gene,Variation'). Options: Gene, Variation, QTL, StructuralVariation.
+
+The plugin retrieves overlapping phenotype information from Ensembl's phenotype annotation databases, mapping phenotype data to genomic features including genes, variants, and QTLs.
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#phenotypes).
+
 #### SpliceAi
 
 Enable with `--vep_spliceai`. The following parameters are mandatory:

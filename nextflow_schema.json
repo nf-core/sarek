@@ -673,6 +673,26 @@
                     "description": "Mastermind plugin url parameter.",
                     "help_text": "Set to 1 to return the built Mastermind URL (default: 0). To be used with `--vep_mastermind`."
                 },
+                "vep_phenotypes": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-database",
+                    "description": "Enable the use of the VEP Phenotypes plugin.",
+                    "help_text": "Retrieves overlapping phenotype information from Ensembl's phenotype annotation databases. For details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#phenotypes)."
+                },
+                "phenotypes_file": {
+                    "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.(gff|gvf)(\\.gz)?$",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to phenotype annotation GFF/GVF file.",
+                    "help_text": "Optional parameter for `--vep_phenotypes`. If not specified, the plugin automatically downloads phenotype data files on first run."
+                },
+                "phenotypes_include_types": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database",
+                    "description": "Phenotypes plugin feature types to include.",
+                    "help_text": "Comma-separated list of feature types to include (e.g., 'Gene,Variation'). Options: Gene, Variation, QTL, StructuralVariation. To be used with `--vep_phenotypes`."
+                },
                 "vep_spliceai": {
                     "type": "boolean",
                     "fa_icon": "fas fa-database",
