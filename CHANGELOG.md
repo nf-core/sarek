@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#XXXX](https://github.com/nf-core/sarek/pull/XXXX) - Add support for VEP Condel plugin to calculate Consensus Deleteriousness scores for missense mutations
+
 ### Changed
 
 ### Fixed
@@ -25,8 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params | status |
-| ------ | ------ |
+| Params           | status |
+| ---------------- | ------ |
+| `--vep_condel`   | added  |
+| `--condel_config`| added  |
 
 ### Developer section
 
