@@ -28,12 +28,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params             | status |
-| ------------------ | ------ |
-| `--vep_condel`     | added  |
-| `--condel_config`  | added  |
-| `--vep_mastermind` | added  |
-| `--mastermind_file`| added  |
+| Params                   | status |
+| ------------------------ | ------ |
+| `--vep_condel`           | added  |
+| `--condel_config`        | added  |
+| `--vep_mastermind`       | added  |
+| `--mastermind_file`      | added  |
+| `--mastermind_mutations` | added  |
+| `--mastermind_var_iden`  | added  |
+| `--mastermind_url`       | added  |
 
 ### Developer section
 
