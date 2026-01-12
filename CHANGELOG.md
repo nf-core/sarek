@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#2092](https://github.com/nf-core/sarek/pull/2092) - Add support for VEP Condel plugin to calculate Consensus Deleteriousness scores for missense mutations
+- [#2093](https://github.com/nf-core/sarek/pull/2093) - Add support for VEP Mastermind plugin to retrieve citation counts from Mastermind Genomic Search Engine
 
 ### Changed
 
@@ -27,10 +28,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params            | status |
-| ----------------- | ------ |
-| `--vep_condel`    | added  |
-| `--condel_config` | added  |
+| Params             | status |
+| ------------------ | ------ |
+| `--vep_condel`     | added  |
+| `--condel_config`  | added  |
+| `--vep_mastermind` | added  |
+| `--mastermind_file`| added  |
 
 ### Developer section
 
