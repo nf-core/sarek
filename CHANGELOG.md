@@ -27,10 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params           | status |
-| ---------------- | ------ |
-| `--vep_condel`   | added  |
-| `--condel_config`| added  |
+| Params            | status |
+| ----------------- | ------ |
+| `--vep_condel`    | added  |
+| `--condel_config` | added  |
 
 ### Developer section
 
