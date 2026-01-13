@@ -102,9 +102,7 @@
                 "test_snpEff.ann.vcf.gz:md5,fd266e623365c7d1837bc9eb088fe70c",
                 "test_snpEff_VEP.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
-            [
-                "WARN: Access to undefined parameter `consensus_vcfs` -- Initialise it to a default value eg. `params.consensus_vcfs = some_value`"
-            ]
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -204,9 +202,7 @@
             [
                 "test_snpEff_VEP.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
-            [
-                "WARN: Access to undefined parameter `consensus_vcfs` -- Initialise it to a default value eg. `params.consensus_vcfs = some_value`"
-            ]
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
