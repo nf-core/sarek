@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2092](https://github.com/nf-core/sarek/pull/2092) - Add support for VEP Condel plugin to calculate Consensus Deleteriousness scores for missense mutations
 - [#2093](https://github.com/nf-core/sarek/pull/2093) - Add support for VEP Mastermind plugin to retrieve citation counts from Mastermind Genomic Search Engine
+- [#2094](https://github.com/nf-core/sarek/pull/2094) - Add support for VEP Phenotypes plugin to retrieve overlapping phenotype information from Ensembl databases
 
 ### Changed
 
@@ -29,15 +30,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params                   | status |
-| ------------------------ | ------ |
-| `--vep_condel`           | added  |
-| `--condel_config`        | added  |
-| `--vep_mastermind`       | added  |
-| `--mastermind_file`      | added  |
-| `--mastermind_mutations` | added  |
-| `--mastermind_var_iden`  | added  |
-| `--mastermind_url`       | added  |
+| Params                       | status |
+| ---------------------------- | ------ |
+| `--vep_condel`               | added  |
+| `--condel_config`            | added  |
+| `--vep_mastermind`           | added  |
+| `--mastermind_file`          | added  |
+| `--mastermind_mutations`     | added  |
+| `--mastermind_var_iden`      | added  |
+| `--mastermind_url`           | added  |
+| `--vep_phenotypes`           | added  |
+| `--phenotypes_file`          | added  |
+| `--phenotypes_include_types` | added  |
 
 ### Developer section
 
