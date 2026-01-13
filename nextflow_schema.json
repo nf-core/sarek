@@ -580,6 +580,20 @@
                     "description": "Allow usage of fasta file for annotation with VEP",
                     "help_text": "By pointing VEP to a FASTA file, it is possible to retrieve reference sequence locally. This enables VEP to retrieve HGVS notations (--hgvs), check the reference sequence given in input data, and construct transcript models from a GFF or GTF file without accessing a database.\n\nFor details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_cache.html#fasta)."
                 },
+                "vep_condel": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-database",
+                    "description": "Enable the use of the VEP Condel plugin.",
+                    "help_text": "Calculates the Consensus Deleteriousness score for missense mutations using SIFT and PolyPhen-2 predictions. For details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#condel)."
+                },
+                "condel_config": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "exists": true,
+                    "fa_icon": "fas fa-folder",
+                    "description": "Path to Condel config directory.",
+                    "help_text": "To be used with `--vep_condel`. The directory should contain cutoffs and distribution files for the Condel plugin."
+                },
                 "vep_dbnsfp": {
                     "type": "boolean",
                     "fa_icon": "fas fa-database",

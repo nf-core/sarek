@@ -1235,6 +1235,16 @@ The following parameters are optional:
 
 For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#dbnsfp).
 
+#### Condel
+
+Enable with `--vep_condel`. The following parameters are mandatory:
+
+- `--condel_config`, to specify the path to the Condel config directory containing cutoffs and distribution files.
+
+The plugin calculates the Consensus Deleteriousness score for missense mutations using SIFT and PolyPhen-2 predictions from the Ensembl API.
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#condel).
+
 #### LOFTEE
 
 Enable with `--vep_loftee`.
