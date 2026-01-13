@@ -33,6 +33,13 @@
                 "default": 0,
                 "enum": [0, 1]
             },
+            "ploidy": {
+                "type": "integer",
+                "errorMessage": "Ploidy must be a positive integer. Defaults to 2 if none is supplied.",
+                "meta": ["ploidy"],
+                "default": 2,
+                "minimum": 1
+            },
             "lane": {
                 "anyOf": [{ "type": "integer" }, { "type": "string" }],
                 "pattern": "^\\S+$",
