@@ -64,8 +64,9 @@ workflow POST_VARIANTCALLING {
 
     } else if (filter_vcfs || normalize_vcfs || concatenate_vcfs ) {
 
-        def small_variantcallers = ['deepvariant', 'freebayes', 'haplotypecaller', 'haplotyper',
-                                    'dnascope', 'tnscope', 'muse', 'mutect2', 'strelka' ]
+        def small_variantcallers = ['bcftools', 'deepvariant', 'freebayes', 'haplotypecaller',
+                                    'lofreq', 'muse', 'mutect2', 'sentieon_dnascope',
+                                    'sentieon_haplotyper', 'sentieon_tnscope', 'strelka' ]
 
         all_vcfs = Channel.empty().mix(germline_vcfs, tumor_only_vcfs, somatic_vcfs)
                                 .branch{ meta, vcf ->
