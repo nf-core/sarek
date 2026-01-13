@@ -1136,6 +1136,33 @@ plus any additional filed selected via the plugins: [dbNSFP](https://sites.googl
 
 </details>
 
+### SnpSift
+
+[SnpSift](https://pcingola.github.io/SnpEff/ss_introduction/) is a toolbox that allows you to annotate VCF files with information from external databases such as dbSNP, COSMIC, gnomAD, ExAC, and 1000 Genomes. Unlike SnpEff and VEP which predict functional effects, SnpSift adds database-level annotations including:
+
+- Population allele frequencies (gnomAD, ExAC, 1000 Genomes)
+- Clinical significance (ClinVar)
+- Known variants (dbSNP RS IDs)
+- Cancer mutations (COSMIC)
+- Pathogenicity predictions (MutationAssessor)
+
+SnpSift annotations are added to the INFO field of the VCF file. Each database can be configured to:
+- Annotate specific INFO fields only
+- Add prefixes to avoid field name conflicts (e.g., `ExAC_AF`, `COSMIC_AA`)
+- Use the `-id` flag to add RS IDs from dbSNP
+
+For further reading and documentation see the [SnpSift manual](https://pcingola.github.io/SnpEff/ss_introduction/).
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+**Output directory: `{outdir}/annotation/{sample,tumorsample_vs_normalsample}`**
+
+- `{sample,tumorsample_vs_normalsample}.<variantcaller>_snpsift.vcf.gz` and `{sample,tumorsample_vs_normalsample}.<variantcaller>_snpsift.vcf.gz.tbi`
+  - VCF with tabix index containing annotations from all configured databases
+
+</details>
+
 ### BCFtools annotate
 
 [BCFtools annotate](https://samtools.github.io/bcftools/bcftools.html#annotate) is used to add annotations to VCF files. The annotations are added to the INFO column of the VCF file. The annotations are added to the VCF header and the VCF header is updated with the new annotations. For further reading and documentation see the [BCFtools annotate manual](https://samtools.github.io/bcftools/bcftools.html#annotate).

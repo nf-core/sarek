@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2092](https://github.com/nf-core/sarek/pull/2092) - Add support for VEP Condel plugin to calculate Consensus Deleteriousness scores for missense mutations
 - [#2093](https://github.com/nf-core/sarek/pull/2093) - Add support for VEP Mastermind plugin to retrieve citation counts from Mastermind Genomic Search Engine
+- Add SnpSift annotation support for adding database annotations (dbSNP, COSMIC, gnomAD, etc.) to VCF files with the `--tools snpsift` option
 
 ### Changed
 
@@ -38,6 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `--mastermind_mutations` | added  |
 | `--mastermind_var_iden`  | added  |
 | `--mastermind_url`       | added  |
+| `--snpsift_db_set`       | added  |
+| `--snpsift_dbs`          | added  |
 
 ### Developer section
 

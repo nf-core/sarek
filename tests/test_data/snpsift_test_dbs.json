@@ -1,0 +1,10 @@
+[
+  {
+    "name": "test_db",
+    "file": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz",
+    "file_tbi": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz.tbi",
+    "id": false,
+    "fields": "AF",
+    "prefix": "GNOMAD_"
+  }
+]

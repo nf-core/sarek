@@ -1038,7 +1038,7 @@ For GATK.GRCh38 the links for each reference file and the corresponding processe
 | pon                   | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 | pon_tbi               | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 
-## How to customise SnpEff and VEP annotation
+## How to customise SnpEff, VEP, and SnpSift annotation
 
 SNPeff and VEP both require a large resource of files known as a cache.
 These are folders composed of multiple gigabytes of files which need to be available for the software to properly function.
@@ -1144,6 +1144,80 @@ These params can be specified in a config file or in a profile using the params 
 
 Note: we recommend storing each annotation cache in a separate directory so each cache version is handled differently.
 This may mean you have many similar directories but will dramatically reduce the storage burden on machines running the SnpEff or VEP process.
+
+### How to use SnpSift for database annotation
+
+SnpSift can be used to add annotations from external databases (such as dbSNP, COSMIC, gnomAD, ExAC, etc.) to your VCF files. Unlike SnpEff and VEP which predict functional effects, SnpSift adds population frequencies, clinical significance, and other database-level annotations.
+
+To enable SnpSift annotation, add `snpsift` to the `--tools` parameter:
+
+```bash
+nextflow run nf-core/sarek \
+    --input samplesheet.csv \
+    --tools vep,snpsift \
+    --snpsift_db_set GRCh37_minimal
+```
+
+#### Pre-configured database sets
+
+Sarek provides pre-configured database sets in `conf/snpsift_db.config`. Available sets include:
+
+- **GRCh37_minimal**: dbSNP only (uses iGenomes path)
+- **GRCh38_minimal**: dbSNP only (uses iGenomes path)
+
+Additional database sets can be defined in `conf/snpsift_db.config` for your institution's specific needs.
+
+Example usage:
+
+```bash
+nextflow run nf-core/sarek \
+    --genome GRCh37 \
+    --tools snpsift \
+    --snpsift_db_set GRCh37_minimal
+```
+
+#### Custom database configuration
+
+For custom databases, create a JSON file with your database configurations:
+
+```json
+[
+  {
+    "name": "dbsnp",
+    "file": "/path/to/dbsnp.vcf.gz",
+    "file_tbi": "/path/to/dbsnp.vcf.gz.tbi",
+    "id": true,
+    "fields": "",
+    "prefix": ""
+  },
+  {
+    "name": "cosmic",
+    "file": "/path/to/cosmic.vcf.gz",
+    "file_tbi": "/path/to/cosmic.vcf.gz.tbi",
+    "id": false,
+    "fields": "AA,CDS,CNT,GENE",
+    "prefix": "COSMIC_"
+  }
+]
+```
+
+Then use it with:
+
+```bash
+nextflow run nf-core/sarek \
+    --tools snpsift \
+    --snpsift_dbs /path/to/custom_databases.json
+```
+
+**Configuration parameters:**
+- `name`: Database identifier (used in process names)
+- `file`: Path to annotation database VCF file (must be bgzipped)
+- `file_tbi`: Path to tabix index file
+- `id`: Set to `true` to use `-id` flag (adds RS IDs from dbSNP)
+- `fields`: Comma-separated list of INFO fields to annotate (empty = all fields)
+- `prefix`: Prefix to add to annotation field names (prevents field name conflicts)
+
+**Note:** All database VCF files must be bgzipped and indexed with tabix. SnpSift will annotate databases sequentially in the order specified.
 
 ### Use annotation-cache for SnpEff and VEP
 

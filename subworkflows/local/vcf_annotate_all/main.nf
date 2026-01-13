@@ -6,6 +6,7 @@ include { BCFTOOLS_ANNOTATE                             } from '../../../modules
 include { VCF_ANNOTATE_ENSEMBLVEP                       } from '../../nf-core/vcf_annotate_ensemblvep'
 include { VCF_ANNOTATE_ENSEMBLVEP as VCF_ANNOTATE_MERGE } from '../../nf-core/vcf_annotate_ensemblvep'
 include { VCF_ANNOTATE_SNPEFF                           } from '../../nf-core/vcf_annotate_snpeff'
+include { VCF_ANNOTATE_SNPSIFT                          } from '../vcf_annotate_snpsift/main'
 
 workflow VCF_ANNOTATE_ALL {
     take:
@@ -23,6 +24,7 @@ workflow VCF_ANNOTATE_ALL {
     bcftools_annotations_index
     bcftools_columns
     bcftools_header_lines
+    snpsift_dbs                // List of SnpSift database configurations
 
     main:
     reports = Channel.empty()
@@ -70,6 +72,13 @@ workflow VCF_ANNOTATE_ALL {
         tab_ann = tab_ann.mix(VCF_ANNOTATE_ENSEMBLVEP.out.tab)
         json_ann = json_ann.mix(VCF_ANNOTATE_ENSEMBLVEP.out.json)
         versions = versions.mix(VCF_ANNOTATE_ENSEMBLVEP.out.versions)
+    }
+
+    if (tools.split(',').contains('snpsift') && snpsift_dbs) {
+        VCF_ANNOTATE_SNPSIFT(vcf_ann, snpsift_dbs)
+
+        vcf_ann = VCF_ANNOTATE_SNPSIFT.out.vcf_tbi
+        versions = versions.mix(VCF_ANNOTATE_SNPSIFT.out.versions)
     }
 
     emit:

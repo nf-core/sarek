@@ -223,6 +223,15 @@ workflow NFCORE_SAREK {
         vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
     }
 
+    // Parse SnpSift databases
+    snpsift_dbs = []
+    if (params.snpsift_db_set && params.snpsift_db_sets && params.snpsift_db_sets.containsKey(params.snpsift_db_set)) {
+        snpsift_dbs = params.snpsift_db_sets[params.snpsift_db_set].databases
+    } else if (params.snpsift_dbs) {
+        def json_content = new File(params.snpsift_dbs).text
+        snpsift_dbs = new groovy.json.JsonSlurper().parseText(json_content)
+    }
+
     //
     // WORKFLOW: Run pipeline
     //
@@ -283,6 +292,7 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.vep_fasta,
         params.vep_genome,
         params.vep_species,
+        snpsift_dbs,
         versions,
     )
 

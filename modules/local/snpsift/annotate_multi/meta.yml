@@ -1,0 +1,74 @@
+---
+name: "snpsift_annotate_multi"
+description: Annotate a VCF file with multiple annotation databases sequentially
+keywords:
+  - variant calling
+  - annotate
+  - snpsift
+  - cancer genomics
+  - multiple databases
+tools:
+  - snpsift:
+      description: SnpSift is a toolbox that allows you to filter and manipulate annotated files
+      homepage: https://pcingola.github.io/SnpEff/ss_introduction/
+      documentation: https://pcingola.github.io/SnpEff/ss_introduction/
+      tool_dev_url: https://github.com/pcingola/SnpEff
+      doi: "10.3389/fgene.2012.00035"
+      licence: ["MIT"]
+      identifier: biotools:snpsift
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - vcf:
+        type: file
+        description: VCF file
+        pattern: "*.{vcf,vcf.gz}"
+    - vcf_tbi:
+        type: file
+        description: Tabix index file for compressed VCF
+        pattern: "*.{tbi}"
+  - db_list:
+      type: list
+      description: |
+        List of database configuration maps. Each map should contain:
+        - name: Database name (string)
+        - file: Database VCF filename (string, will be staged)
+        - fields: Comma-separated INFO fields to annotate (string, optional)
+        - id: Whether to use -id flag for RS ID annotation (boolean, default false)
+        - prefix: Prefix to add to annotation fields (string, optional)
+        Example: [[name: 'dbsnp', file: 'dbsnp.vcf.gz', id: true], [name: 'cosmic', file: 'cosmic.vcf.gz', fields: 'AA,CDS', prefix: 'COSMIC_']]
+  - databases:
+      type: file
+      description: List of annotation database VCF files (staged in work directory)
+      pattern: "*.{vcf,vcf.gz}"
+  - dbs_tbis:
+      type: file
+      description: List of corresponding tabix index files for databases
+      pattern: "*.{tbi}"
+output:
+  - vcf:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.vcf.gz":
+          type: file
+          description: Compressed annotated VCF file
+          pattern: "*.{vcf.gz}"
+      - "*.vcf.gz.tbi":
+          type: file
+          description: Tabix index for compressed annotated VCF
+          pattern: "*.{vcf.gz.tbi}"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@friederike-hanssen"
+maintainers:
+  - "@friederike-hanssen"

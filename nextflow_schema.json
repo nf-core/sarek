@@ -111,7 +111,7 @@
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for contamination removal, duplicate marking, variant calling and/or for annotation.",
                     "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper \n- Structural Variants: indexcov, Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Lofreq, mpileup, Mutect2, Sentieon TNScope, Strelka\n- Structural Variants: Manta, Sentieon TNScope, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Sentieon TNScope, Strelka2 \n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC, Sentieon TNScope \n- Microsatellite Instability: MSIsensor2, MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively), and bcftools annotate (needs `--bcftools_annotation`).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
-                    "pattern": "^((ascat|bbsplit|bcfann|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|indexcov|lofreq|manta|merge|mpileup|msisensor2|msisensorpro|muse|mutect2|ngscheckmate|sentieon_dedup|sentieon_dnascope|sentieon_haplotyper|sentieon_tnscope|snpeff|strelka|tiddit|vep|varlociraptor)?,?)*(?<!,)$"
+                    "pattern": "^((ascat|bbsplit|bcfann|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|indexcov|lofreq|manta|merge|mpileup|msisensor2|msisensorpro|muse|mutect2|ngscheckmate|sentieon_dedup|sentieon_dnascope|sentieon_haplotyper|sentieon_tnscope|snpeff|snpsift|strelka|tiddit|vep|varlociraptor)?,?)*(?<!,)$"
                 },
                 "skip_tools": {
                     "type": "string",
@@ -727,6 +727,19 @@
                     "fa_icon": "fas fa-toolbox",
                     "description": "Add an extra custom argument to VEP.",
                     "help_text": "Using this params you can add custom args to VEP."
+                },
+                "snpsift_db_set": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database",
+                    "description": "Pre-configured SnpSift database set to use for annotation.",
+                    "help_text": "Select a pre-configured set of SnpSift annotation databases. Available sets are defined in conf/snpsift_db.config and typically include reference-specific database collections (e.g., GRCh37 or GRCh38 with databases like dbSNP, COSMIC, gnomAD). This parameter simplifies annotation by using predefined database sets."
+                },
+                "snpsift_dbs": {
+                    "type": "string",
+                    "format": "file-path",
+                    "fa_icon": "fas fa-file-code",
+                    "description": "Custom SnpSift database configuration JSON file.",
+                    "help_text": "Path to a JSON file containing custom SnpSift database configurations. This overrides --snpsift_db_set if both are provided. The JSON should contain an array of database configurations, each with 'name', 'file', 'file_tbi', and optionally 'fields', 'prefix', and 'id' keys. Example: [{\"name\":\"dbsnp\",\"file\":\"dbsnp.vcf.gz\",\"file_tbi\":\"dbsnp.vcf.gz.tbi\",\"id\":true}]"
                 },
                 "vep_version": {
                     "type": "string",
