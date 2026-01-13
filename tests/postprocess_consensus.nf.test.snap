@@ -305,7 +305,7 @@
         },
         "timestamp": "2025-12-15T20:56:17.622974599"
     },
-    "-profile test --snv_consensus_calling --normalize_vcfs --tools mutect2,strelka (germline + somatic)": {
+    "-profile test --snv_consensus_calling --normalize_vcfs --tools lofreq,mpileup,mutect2,strelka (germline + somatic)": {
         "content": [
             39,
             {
