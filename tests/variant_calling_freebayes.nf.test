@@ -5,8 +5,6 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
-    tag "pipeline"
-    tag "pipeline_sarek"
 
     def test_scenario = [
         [
@@ -18,7 +16,7 @@ nextflow_pipeline {
                 nucleotides_per_second : 20
             ],
             include_freebayes_unfiltered: true,
-            ignoreFiles: '**/*.{freebayes,freebayes.filtered.bcftools_filtered*}.vcf{,.gz}'
+            ignoreFiles: '**/*.freebayes.vcf{,.gz}'
         ],
         [
             name: "-profile test --tools freebayes --no_intervals",
@@ -27,7 +25,7 @@ nextflow_pipeline {
                 no_intervals : true
             ],
             include_freebayes_unfiltered: true,
-            ignoreFiles: '**/*.{freebayes,freebayes.filtered.bcftools_filtered*}.vcf{,.gz}'
+            ignoreFiles: '**/*.freebayes.vcf{,.gz}'
         ],
         [
             name: "-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv",
@@ -39,7 +37,7 @@ nextflow_pipeline {
                 nucleotides_per_second : 20
             ],
             include_freebayes_unfiltered: true,
-            ignoreFiles: '**/*.{freebayes,freebayes.filtered.bcftools_filtered*}.vcf{,.gz}'
+            ignoreFiles: '**/*.freebayes.vcf{,.gz}'
         ],
         [
             name: "-profile test --tools freebayes --no_intervals --wes --input fastq_pair.csv",
@@ -50,7 +48,7 @@ nextflow_pipeline {
                 wes : true
             ],
             include_freebayes_unfiltered: true,
-            ignoreFiles: '**/*.{freebayes,freebayes.filtered.bcftools_filtered*}.vcf{,.gz}',
+            ignoreFiles: '**/*.freebayes.vcf{,.gz}',
             // instability in QUAL and genotype scores
             no_vcf_md5sum: true,
         ],
@@ -69,7 +67,7 @@ nextflow_pipeline {
                 igenomes_ignore : true
             ],
             include_freebayes_unfiltered: true,
-            ignoreFiles: '**/*.{freebayes,freebayes.filtered.bcftools_filtered*}.vcf{,.gz}'
+            ignoreFiles: '**/*.freebayes.vcf{,.gz}'
         ],
         [
             name: "-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv",
@@ -86,11 +84,11 @@ nextflow_pipeline {
                 no_intervals : true
             ],
             include_freebayes_unfiltered: true,
-            ignoreFiles: '**/*.{freebayes,freebayes.filtered.bcftools_filtered*}.vcf{,.gz}'
+            ignoreFiles: '**/*.freebayes.vcf{,.gz}'
         ]
     ]
 
     test_scenario.each { scenario ->
-        test(scenario.name, UTILS.get_test(scenario))
+        test(scenario.name, UTILS.getTest(scenario))
     }
 }
