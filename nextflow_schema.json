@@ -637,6 +637,42 @@
                     "description": "Enable the use of the VEP LOFTEE plugin.",
                     "help_text": "For details, see [here](https://github.com/konradjk/loftee)."
                 },
+                "vep_mastermind": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-database",
+                    "description": "Enable the use of the VEP Mastermind plugin.",
+                    "help_text": "Retrieves Mastermind Genomic Search Engine citation counts for variants. For details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#mastermind)."
+                },
+                "mastermind_file": {
+                    "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.vcf\\.gz$",
+                    "exists": true,
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to Mastermind cited variants VCF file.",
+                    "help_text": "To be used with `--vep_mastermind`. Download from https://www.genomenon.com/cvr/. File must be bgzipped and tabix indexed."
+                },
+                "mastermind_mutations": {
+                    "type": "integer",
+                    "fa_icon": "fas fa-database",
+                    "enum": [0, 1],
+                    "description": "Mastermind plugin mutations parameter.",
+                    "help_text": "Set to 1 to return citations for all mutations/transcripts (default: 0, matches specific mutation). To be used with `--vep_mastermind`."
+                },
+                "mastermind_var_iden": {
+                    "type": "integer",
+                    "fa_icon": "fas fa-database",
+                    "enum": [0, 1],
+                    "description": "Mastermind plugin var_iden parameter.",
+                    "help_text": "Set to 1 to return only Mastermind variant identifiers as gene:key format (default: 0). To be used with `--vep_mastermind`."
+                },
+                "mastermind_url": {
+                    "type": "integer",
+                    "fa_icon": "fas fa-database",
+                    "enum": [0, 1],
+                    "description": "Mastermind plugin url parameter.",
+                    "help_text": "Set to 1 to return the built Mastermind URL (default: 0). To be used with `--vep_mastermind`."
+                },
                 "vep_spliceai": {
                     "type": "boolean",
                     "fa_icon": "fas fa-database",

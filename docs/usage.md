@@ -1251,6 +1251,22 @@ Enable with `--vep_loftee`.
 
 For more details, see [here](https://github.com/konradjk/loftee).
 
+#### Mastermind
+
+Enable with `--vep_mastermind`. The following parameters are mandatory:
+
+- `--mastermind_file`, to specify the path to the Mastermind cited variants VCF file (must be bgzipped and tabix indexed).
+
+The following parameters are optional:
+
+- `--mastermind_mutations`, set to 1 to return citations for all mutations/transcripts (default: 0).
+- `--mastermind_var_iden`, set to 1 to return only Mastermind variant identifiers as gene:key format (default: 0).
+- `--mastermind_url`, set to 1 to return the built Mastermind URL (default: 0).
+
+The plugin retrieves citation counts from the Mastermind Genomic Search Engine for variants. Download the Mastermind file from [https://www.genomenon.com/cvr/](https://www.genomenon.com/cvr/) (free registration required).
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#mastermind).
+
 #### SpliceAi
 
 Enable with `--vep_spliceai`. The following parameters are mandatory:
