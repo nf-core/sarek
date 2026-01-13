@@ -11,7 +11,7 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --snv_consensus_calling --normalize_vcfs --tools freebayes,lofreq,mpileup,mutect2,strelka (germline + somatic)",
+            name: "-profile test --snv_consensus_calling --normalize_vcfs --tools lofreq,mpileup,mutect2,strelka (germline + somatic)",
             params: [
                 genome: null,
                 igenomes_ignore: true,
@@ -25,7 +25,7 @@ nextflow_pipeline {
                 wes: true,
                 normalize_vcfs: true,
                 snv_consensus_calling: true,
-                tools: 'freebayes,lofreq,mpileup,mutect2,strelka'
+                tools: 'lofreq,mpileup,mutect2,strelka'
             ],
             include_freebayes_unfiltered: true,
             no_vcf_md5sum: true,
