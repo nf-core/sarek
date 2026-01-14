@@ -237,15 +237,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     versions = versions.mix(MUTECT2_PAIRED.out.versions)
 
     emit:
-    vcf                 // channel: [ meta, vcf ]
-    tbi                 // channel: [ meta, tbi ]
-    stats               // channel: [ meta, stats ]
+    vcf = vcf_mutect2   // channel: [ meta, vcf ] - filtered if germline_resource provided, otherwise unfiltered
+    tbi = tbi_mutect2   // channel: [ meta, tbi ] - filtered if germline_resource provided, otherwise unfiltered
 
-    vcf_mutect2         // channel: [ meta, vcf ] - filtered if germline_resource provided, otherwise unfiltered
-    tbi_mutect2         // channel: [ meta, tbi ] - filtered if germline_resource provided, otherwise unfiltered
-
-    vcf_filtered        = FILTERMUTECTCALLS.out.vcf.map { meta, vcf_ -> [meta + [variantcaller: 'mutect2'], vcf_] } // channel: [ meta, vcf ] - only when filtering occurred
-    index_filtered      = FILTERMUTECTCALLS.out.tbi.map { meta, tbi_ -> [meta + [variantcaller: 'mutect2'], tbi_] } // channel: [ meta, tbi ] - only when filtering occurred
     stats_filtered      = FILTERMUTECTCALLS.out.stats // channel: [ meta, stats ]
     artifact_priors     = LEARNREADORIENTATIONMODEL.out.artifactprior // channel: [ meta, artifactprior ]
     pileup_table_normal // channel: [ meta, table_normal ]
