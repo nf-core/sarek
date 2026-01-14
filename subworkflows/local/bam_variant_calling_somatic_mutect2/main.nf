@@ -216,13 +216,13 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     // - If filtering didn't happen: use unfiltered results with variantcaller metadata
     // This ensures downstream processes always have mutect2 calls available for consensus calling
     vcf_mutect2 = FILTERMUTECTCALLS.out.vcf
-        .map { meta, vcf_ -> [meta + [variantcaller: 'mutect2'], vcf_] }
-        .mix(vcf.map { meta, vcf_ -> [meta + [variantcaller: 'mutect2'], vcf_] })
+        .map { meta, vcf_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], vcf_] }
+        .mix(vcf.map { meta, vcf_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], vcf_] })
         .unique { it[0] }  // Keep only one entry per meta key (filtered takes precedence if both exist)
 
     tbi_mutect2 = FILTERMUTECTCALLS.out.tbi
-        .map { meta, tbi_ -> [meta + [variantcaller: 'mutect2'], tbi_] }
-        .mix(tbi.map { meta, tbi_ -> [meta + [variantcaller: 'mutect2'], tbi_] })
+        .map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] }
+        .mix(tbi.map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] })
         .unique { it[0] }  // Keep only one entry per meta key (filtered takes precedence if both exist)
 
     versions = versions.mix(MERGE_MUTECT2.out.versions)
