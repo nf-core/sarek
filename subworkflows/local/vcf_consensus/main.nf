@@ -15,11 +15,20 @@ workflow CONSENSUS {
 
     ch_vcfs = vcfs
         .branch{ meta, vcf, tbi ->
-            strelka_somatic: meta.variantcaller == 'strelka' && meta.status == '1'
+            strelka_somatic: meta.variantcaller == 'strelka' && meta.tumor_id
             other: true
         }
 
-    BCFTOOLS_CONCAT(ch_vcfs.strelka_somatic.groupTuple(size: 2))// somatic strelkas have two vcf files: SNPs and indels
+    // Group somatic Strelka SNVs and INDELs by sample for concatenation
+    // Remove filename from grouping key since SNVs and INDELs have different filenames but should be grouped together
+    ch_strelka_grouped = ch_vcfs.strelka_somatic
+        .map { meta, vcf, tbi ->
+            def key = meta - meta.subMap('filename')
+            [key, vcf, tbi]
+        }
+        .groupTuple(size: 2)
+
+    BCFTOOLS_CONCAT(ch_strelka_grouped)// somatic strelkas have two vcf files: SNPs and indels
     ch_versions = ch_versions.mix(BCFTOOLS_CONCAT.out.versions)
 
     //Combine concat strelka with remaining VCFs

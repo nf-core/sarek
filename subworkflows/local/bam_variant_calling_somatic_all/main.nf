@@ -244,8 +244,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             joint_mutect2,
         )
 
-        vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.vcf_filtered
-        tbi_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.index_filtered
+        // vcf_mutect2 and tbi_mutect2 always contain usable output (filtered if available, otherwise unfiltered)
+        vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.vcf_mutect2
+        tbi_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.tbi_mutect2
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
     }
 
