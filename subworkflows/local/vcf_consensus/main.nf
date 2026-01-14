@@ -35,7 +35,7 @@ workflow CONSENSUS {
     ch_consensus_in = ch_vcfs.other
                         .mix(BCFTOOLS_CONCAT.out.vcf.join(BCFTOOLS_CONCAT.out.tbi))
                         .map { meta, vcf, tbi ->
-                                    [meta - meta.subMap('variantcaller', 'contamination', 'filename'), vcf, tbi]
+                                    [meta - meta.subMap('variantcaller', 'contamination', 'filename', 'data_type', 'num_intervals'), vcf, tbi]
                         }
                         //TODO blocking operation unless we learn how many variantcallers were
                         // specified also this depends on whether this n,t, or nt on how many
