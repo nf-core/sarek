@@ -296,6 +296,237 @@
         },
         "timestamp": "2026-01-14T23:57:14.126598"
     },
+    "-profile test --snv_consensus_calling --normalize_vcfs --tools lofreq,mpileup,mutect2 (tumor-only)": {
+        "content": [
+            35,
+            {
+                "ADD_INFO_TO_VCF": {
+                    "gawk": "5.3.0"
+                },
+                "BCFTOOLS_ISEC": {
+                    "bcftools": 1.22
+                },
+                "BCFTOOLS_MPILEUP": {
+                    "bcftools": 1.21
+                },
+                "BCFTOOLS_STATS": {
+                    "bcftools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.6.1.0"
+                },
+                "LEARNREADORIENTATIONMODEL": {
+                    "gatk4": "4.6.1.0"
+                },
+                "LOFREQ": {
+                    "lofreq": "2.1.5"
+                },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.10"
+                },
+                "MUTECT2": {
+                    "gatk4": "4.6.1.0"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "tabix": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "tabix": 1.21
+                },
+                "TABIX_EXT_VCF": {
+                    "tabix": 1.21
+                },
+                "VCFS_NORM": {
+                    "bcftools": 1.21
+                },
+                "VCFS_NORM_SORT": {
+                    "bcftools": 1.21
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
+                }
+            },
+            [
+                "csv",
+                "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
+                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/bcftools_stats_variant_depths.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_SNP.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transitions.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transversions.txt",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/dict",
+                "reports",
+                "reports/bcftools",
+                "reports/bcftools/bcftools",
+                "reports/bcftools/bcftools/sample2",
+                "reports/bcftools/bcftools/sample2/sample2.bcftools.bcftools_stats.txt",
+                "reports/bcftools/lofreq",
+                "reports/bcftools/lofreq/sample2",
+                "reports/bcftools/lofreq/sample2/sample2.lofreq.bcftools_stats.txt",
+                "reports/bcftools/mutect2",
+                "reports/bcftools/mutect2/sample2",
+                "reports/bcftools/mutect2/sample2/sample2.mutect2.bcftools_stats.txt",
+                "reports/mosdepth",
+                "reports/mosdepth/sample2",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample2/sample2.recal.regions.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.regions.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample2",
+                "reports/samtools/sample2/sample2.recal.cram.stats",
+                "reports/vcftools",
+                "reports/vcftools/bcftools",
+                "reports/vcftools/bcftools/sample2",
+                "reports/vcftools/bcftools/sample2/sample2.bcftools.FILTER.summary",
+                "reports/vcftools/bcftools/sample2/sample2.bcftools.TsTv.count",
+                "reports/vcftools/bcftools/sample2/sample2.bcftools.TsTv.qual",
+                "reports/vcftools/lofreq",
+                "reports/vcftools/lofreq/sample2",
+                "reports/vcftools/lofreq/sample2/sample2.lofreq.FILTER.summary",
+                "reports/vcftools/lofreq/sample2/sample2.lofreq.TsTv.qual",
+                "reports/vcftools/mutect2",
+                "reports/vcftools/mutect2/sample2",
+                "reports/vcftools/mutect2/sample2/sample2.mutect2.FILTER.summary",
+                "reports/vcftools/mutect2/sample2/sample2.mutect2.TsTv.count",
+                "reports/vcftools/mutect2/sample2/sample2.mutect2.TsTv.qual",
+                "variant_calling",
+                "variant_calling/bcftools",
+                "variant_calling/bcftools/sample2",
+                "variant_calling/bcftools/sample2/sample2.bcftools.vcf.gz",
+                "variant_calling/bcftools/sample2/sample2.bcftools.vcf.gz.tbi",
+                "variant_calling/consensus",
+                "variant_calling/consensus/sample2",
+                "variant_calling/consensus/sample2/sample2_consensus",
+                "variant_calling/consensus/sample2/sample2_consensus/0000.vcf.gz",
+                "variant_calling/consensus/sample2/sample2_consensus/0000.vcf.gz.tbi",
+                "variant_calling/consensus/sample2/sample2_consensus/README.txt",
+                "variant_calling/consensus/sample2/sample2_consensus/sites.txt",
+                "variant_calling/lofreq",
+                "variant_calling/lofreq/sample2",
+                "variant_calling/lofreq/sample2/sample2.lofreq.vcf.gz",
+                "variant_calling/lofreq/sample2/sample2.lofreq.vcf.gz.tbi",
+                "variant_calling/mutect2",
+                "variant_calling/mutect2/sample2",
+                "variant_calling/mutect2/sample2/sample2.mutect2.artifactprior.tar.gz",
+                "variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz",
+                "variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.stats",
+                "variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.tbi",
+                "variant_calling/normalized",
+                "variant_calling/normalized/sample2",
+                "variant_calling/normalized/sample2/sample2.bcftools.norm.sorted.vcf.gz",
+                "variant_calling/normalized/sample2/sample2.bcftools.norm.sorted.vcf.gz.tbi",
+                "variant_calling/normalized/sample2/sample2.lofreq.norm.sorted.vcf.gz",
+                "variant_calling/normalized/sample2/sample2.lofreq.norm.sorted.vcf.gz.tbi",
+                "variant_calling/normalized/sample2/sample2.mutect2.norm.sorted.vcf.gz",
+                "variant_calling/normalized/sample2/sample2.mutect2.norm.sorted.vcf.gz.tbi"
+            ],
+            [
+                "mosdepth-coverage-per-contig-single.txt:md5,1f24f2f40467234c410a8bda544a8aae",
+                "mosdepth-cumcoverage-dist-id.txt:md5,1036ea76acae803f591fd99838a8eded",
+                "mosdepth_perchrom.txt:md5,1f24f2f40467234c410a8bda544a8aae",
+                "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
+                "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
+                "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
+                "sample2.bcftools.bcftools_stats.txt:md5,3299f97352e32c873c95e43922c79147",
+                "sample2.lofreq.bcftools_stats.txt:md5,a8a850fdd11644fa4b770971dfe37194",
+                "sample2.mutect2.bcftools_stats.txt:md5,846b97f3763c5316f2b7e76962d80be9",
+                "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
+                "sample2.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
+                "sample2.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
+                "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
+                "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample2.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
+                "sample2.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
+                "sample2.bcftools.FILTER.summary:md5,8766995f3e4119ef30dfdaa9fb3752ce",
+                "sample2.bcftools.TsTv.count:md5,01df95fcb4df593f7e1b214d90ebdb59",
+                "sample2.lofreq.FILTER.summary:md5,8dd8a0c91d5c4a260b462e04f615e502",
+                "sample2.mutect2.FILTER.summary:md5,5ca4eee02bc653debd0b37883cdf13c3",
+                "sample2.mutect2.TsTv.count:md5,09032284e4ad37fd933302235f857f7d",
+                "sites.txt:md5,c0bd8e0ba900c8d1f74d18e898a904cc",
+                "sample2.mutect2.vcf.gz.stats:md5,38e93a2641469e6401a1e5727d9ab0d2"
+            ],
+            "No BAM files",
+            "No CRAM files",
+            "No Freebayes unfiltered VCF files",
+            [
+                [
+                    "sample2.bcftools.vcf.gz",
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=132, phased=false, phasedAutodetect=false]"
+                ],
+                [
+                    "0000.vcf.gz",
+                    "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=67, phased=true, phasedAutodetect=true]"
+                ],
+                [
+                    "sample2.lofreq.vcf.gz",
+                    "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=69, phased=true, phasedAutodetect=true]"
+                ],
+                [
+                    "sample2.mutect2.vcf.gz",
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=1261, phased=false, phasedAutodetect=false]"
+                ],
+                [
+                    "sample2.bcftools.norm.sorted.vcf.gz",
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=132, phased=false, phasedAutodetect=false]"
+                ],
+                [
+                    "sample2.lofreq.norm.sorted.vcf.gz",
+                    "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=69, phased=true, phasedAutodetect=true]"
+                ],
+                [
+                    "sample2.mutect2.norm.sorted.vcf.gz",
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=1261, phased=false, phasedAutodetect=false]"
+                ]
+            ],
+            "No warnings"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-15T10:11:37.690986"
+    },
     "-profile test --snv_consensus_calling --normalize_vcfs --tools mpileup,mutect2,strelka (germline + somatic)": {
         "content": [
             61,
