@@ -215,14 +215,17 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     // - If filtering happened (germline_resource provided): use filtered results
     // - If filtering didn't happen: use unfiltered results with variantcaller metadata
     // This ensures downstream processes always have mutect2 calls available for consensus calling
-    // Using ifEmpty() ensures filtered output takes precedence deterministically
+    // Using concat() + unique() ensures filtered output takes precedence deterministically
+    // concat() preserves order (filtered first), unique() keeps first occurrence of each meta key
     vcf_mutect2 = FILTERMUTECTCALLS.out.vcf
         .map { meta, vcf_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], vcf_] }
-        .ifEmpty(vcf.map { meta, vcf_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], vcf_] })
+        .concat(vcf.map { meta, vcf_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], vcf_] })
+        .unique { it[0] }
 
     tbi_mutect2 = FILTERMUTECTCALLS.out.tbi
         .map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] }
-        .ifEmpty(tbi.map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] })
+        .concat(tbi.map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] })
+        .unique { it[0] }
 
     versions = versions.mix(MERGE_MUTECT2.out.versions)
     versions = versions.mix(CALCULATECONTAMINATION.out.versions)

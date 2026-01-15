@@ -96,7 +96,7 @@ workflow POST_VARIANTCALLING {
         // Validate that we're not silently excluding unknown variant callers
         all_vcfs.other.subscribe { meta, vcf ->
             if (!excluded_variantcallers.contains(meta.variantcaller)) {
-                log.warn "Variant caller '${meta.variantcaller}' is not in the small_variantcallers list and will be excluded from normalization/filtering/consensus. If this is a new SNV caller, please add it to the list in subworkflows/local/post_variantcalling/main.nf"
+                error("Variant caller '${meta.variantcaller}' is not in the small_variantcallers list and will be excluded from normalization/filtering/consensus. If this is a new SNV caller, please add it to the list in subworkflows/local/post_variantcalling/main.nf:78-80")
             }
         }
 
