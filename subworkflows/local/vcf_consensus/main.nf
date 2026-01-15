@@ -43,7 +43,8 @@ workflow CONSENSUS {
                                     // - filename: differs for strelka SNVs vs INDELs
                                     // - data_type: may differ between germline/somatic workflows
                                     // - num_intervals: internal tracking field not needed for consensus
-                                    [meta - meta.subMap('variantcaller', 'contamination', 'filename', 'data_type', 'num_intervals'), vcf, tbi]
+                                    // - status: tumor-only samples may have inconsistent status fields
+                                    [meta - meta.subMap('variantcaller', 'contamination', 'filename', 'data_type', 'num_intervals', 'status'), vcf, tbi]
                         }
                         //TODO blocking operation unless we learn how many variantcallers were
                         // specified also this depends on whether this n,t, or nt on how many
