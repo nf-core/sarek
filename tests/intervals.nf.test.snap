@@ -33,8 +33,6 @@
                 }
             },
             [
-                "build",
-                "build/fai.bed",
                 "csv",
                 "csv/mapped.csv",
                 "pipeline_info",
@@ -57,7 +55,6 @@
                 "reference/intervals/fai.bed.gz"
             ],
             [
-                "fai.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "genome.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
                 "genome.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
                 "genome.bwt:md5,815eded87e4cb6b0f1daab5c4d6e30af",
@@ -279,8 +276,6 @@
                 }
             },
             [
-                "build",
-                "build/fai.bed",
                 "csv",
                 "csv/mapped.csv",
                 "pipeline_info",
