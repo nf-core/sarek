@@ -578,8 +578,11 @@
     },
     "-profile test --tools mutect2 tumoronly": {
         "content": [
-            12,
+            14,
             {
+                "BCFTOOLS_STATS": {
+                    "bcftools": 1.21
+                },
                 "BUILD_INTERVALS": {
                     "gawk": "5.3.0"
                 },
@@ -606,9 +609,6 @@
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "tabix": 1.21
-                },
-                "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -751,8 +751,8 @@
                 "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
                 "sample2.recal.regions.bed.gz:md5,fb0efeba20ea272b7b709cf65246689e",
                 "sample2.recal.regions.bed.gz.csi:md5,e8452848671e9e5c147ff4cceee944af",
-                "sample2.mutect2.FILTER.summary:md5,cac64448be577632a614af62a23af34a",
-                "sample2.mutect2.TsTv.count:md5,3739f24da2d2019cc4bc2821e30658eb",
+                "sample2.mutect2.FILTER.summary:md5,08f06620a8dcc70115bdde9137a91008",
+                "sample2.mutect2.TsTv.count:md5,0d59dcbdb127be60909111958ff7b5f5",
                 "sample2.mutect2.vcf.gz.stats:md5,76f749c53212d72e98801f6030fbf8a6"
             ],
             "No BAM files",

@@ -1,7 +1,7 @@
 {
     "-profile test --input tests/csv/3.0/recalibrated_somatic_joint.csv --tools mutect2 --joint_mutect2": {
         "content": [
-            15,
+            17,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
