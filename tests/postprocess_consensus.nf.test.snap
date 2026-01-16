@@ -312,8 +312,6 @@
                 "sample4_vs_sample3.strelka.somatic_indels.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,4fc17fa5625b4d1dcc5d791b1eb22d85",
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae",
-                "sites.txt:md5,7d61d429f3bc1b7bffb54d9320ad7b8b",
-                "sites.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample4_vs_sample3.mutect2.vcf.gz.stats:md5,bd657dd9abf6e2354224bb0d20ba181e"
             ],
             "No BAM files",
@@ -321,7 +319,6 @@
             "No Freebayes unfiltered VCF files",
             [
                 "sample3.bcftools.vcf.gz:md5,c55cf36bc05b6a7b4a98bb3ba925fc0a",
-                "0000.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample3.bcftools.bcftools_filtered.vcf.gz:md5,c55cf36bc05b6a7b4a98bb3ba925fc0a",
                 "sample3.strelka.variants.bcftools_filtered.vcf.gz:md5,bdd5d76d3f2cc6a873ba829b91155562",
                 "sample4_vs_sample3.mutect2.bcftools_filtered.vcf.gz:md5,6714999f8c31fa73d82272d99b34a3a1",
@@ -947,8 +944,6 @@
                 "sample4_vs_sample3.strelka.somatic_indels.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,4fc17fa5625b4d1dcc5d791b1eb22d85",
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae",
-                "sites.txt:md5,79d3c3303c5ab2c86ef53fe76ea815ed",
-                "sites.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "sample3.mutect2.pileups.table:md5,29388a37ebae6c6c5f868bdb7b341d26",
                 "sample4.mutect2.pileups.table:md5,df85ceff89be6f9a13707d9cda29dd6e",
                 "sample4_vs_sample3.mutect2.contamination.table:md5,46c708c943b453da89a3da08acfdb2a7",
@@ -963,14 +958,6 @@
                 [
                     "sample3.bcftools.vcf.gz",
                     "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=123, phased=false, phasedAutodetect=false]"
-                ],
-                [
-                    "0000.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=70, phased=false, phasedAutodetect=false]"
-                ],
-                [
-                    "0000.vcf.gz",
-                    "VcfFile [chromosomes=[], sampleCount=2, variantCount=0, phased=true, phasedAutodetect=true]"
                 ],
                 [
                     "sample4_vs_sample3.mutect2.filtered.vcf.gz",
