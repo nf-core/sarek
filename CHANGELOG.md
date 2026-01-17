@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2077](https://github.com/nf-core/sarek/pull/2077) - Remove re-indexed bam from `indexcov` from publishing into top level `outdir` directory
 - [#2083](https://github.com/nf-core/sarek/pull/2083) - Remove `exists` validation from `snpeff_cache` and `vep_cache` parameters to fix workflow launch failures when annotation tools are not used
 - [#2095](https://github.com/nf-core/sarek/pull/2095) - Fix typo in consensus calling parameter reference (used non-existent `params.consensus_vcfs` instead of `params.snv_consensus_calling`)
+- [#2099](https://github.com/nf-core/sarek/pull/2099) - Remove deprecated `msisensor2_scan` parameter from schema and igenomes config to fix `nf-core pipelines schema build` validation error
 
 ### Removed
 
@@ -30,18 +31,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params                       | status |
-| ---------------------------- | ------ |
-| `--vep_condel`               | added  |
-| `--condel_config`            | added  |
-| `--vep_mastermind`           | added  |
-| `--mastermind_file`          | added  |
-| `--mastermind_mutations`     | added  |
-| `--mastermind_var_iden`      | added  |
-| `--mastermind_url`           | added  |
-| `--vep_phenotypes`           | added  |
-| `--phenotypes_file`          | added  |
-| `--phenotypes_include_types` | added  |
+| Params                       | status  |
+| ---------------------------- | ------- |
+| `--vep_condel`               | added   |
+| `--condel_config`            | added   |
+| `--vep_mastermind`           | added   |
+| `--mastermind_file`          | added   |
+| `--mastermind_mutations`     | added   |
+| `--mastermind_var_iden`      | added   |
+| `--mastermind_url`           | added   |
+| `--vep_phenotypes`           | added   |
+| `--phenotypes_file`          | added   |
+| `--phenotypes_include_types` | added   |
+| `--msisensor2_scan`          | removed |
 
 ### Developer section
 
@@ -53,6 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2098](https://github.com/nf-core/sarek/pull/2098) - Starting workflow output migration with multiqc
 
 #### Fixed
+
+- Fix `bbsplit.nf.test` input cardinality to match current PREPARE_GENOME subworkflow signature (31 parameters)
 
 #### Removed
 
