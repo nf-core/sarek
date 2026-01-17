@@ -654,24 +654,44 @@
                 },
                 "mastermind_mutations": {
                     "type": "integer",
-                    "fa_icon": "fas fa-database",
+                    "fa_icon": "fas fa-align-center",
                     "enum": [0, 1],
                     "description": "Mastermind plugin mutations parameter.",
                     "help_text": "Set to 1 to return citations for all mutations/transcripts (default: 0, matches specific mutation). To be used with `--vep_mastermind`."
                 },
                 "mastermind_var_iden": {
                     "type": "integer",
-                    "fa_icon": "fas fa-database",
+                    "fa_icon": "far fa-address-card",
                     "enum": [0, 1],
                     "description": "Mastermind plugin var_iden parameter.",
                     "help_text": "Set to 1 to return only Mastermind variant identifiers as gene:key format (default: 0). To be used with `--vep_mastermind`."
                 },
                 "mastermind_url": {
                     "type": "integer",
-                    "fa_icon": "fas fa-database",
+                    "fa_icon": "fas fa-external-link-alt",
                     "enum": [0, 1],
                     "description": "Mastermind plugin url parameter.",
                     "help_text": "Set to 1 to return the built Mastermind URL (default: 0). To be used with `--vep_mastermind`."
+                },
+                "vep_phenotypes": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-database",
+                    "description": "Enable the use of the VEP Phenotypes plugin.",
+                    "help_text": "Retrieves overlapping phenotype information from Ensembl's phenotype annotation databases. For details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#phenotypes)."
+                },
+                "phenotypes_file": {
+                    "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.(gff|gvf)(\\.gz)?$",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to phenotype annotation GFF/GVF file.",
+                    "help_text": "Optional parameter for `--vep_phenotypes`. If not specified, the plugin automatically downloads phenotype data files on first run."
+                },
+                "phenotypes_include_types": {
+                    "type": "string",
+                    "fa_icon": "far fa-check-circle",
+                    "description": "Phenotypes plugin feature types to include.",
+                    "help_text": "Comma-separated list of feature types to include (e.g., 'Gene,Variation'). Options: Gene, Variation, QTL, StructuralVariation. To be used with `--vep_phenotypes`."
                 },
                 "vep_spliceai": {
                     "type": "boolean",
@@ -1036,14 +1056,6 @@
                     "exists": true,
                     "fa_icon": "fas fa-folder-open",
                     "description": "Path to models folder used with MSIsensor2.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
-                },
-                "msisensor2_scan": {
-                    "type": "string",
-                    "format": "path",
-                    "exists": true,
-                    "fa_icon": "fas fa-folder-open",
-                    "description": "Path to scan file used with MSIsensor2.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "msisensorpro_scan": {

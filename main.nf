@@ -169,7 +169,7 @@ workflow NFCORE_SAREK {
     versions = versions.mix(PREPARE_INTERVALS.out.versions)
 
     // Fails when consensus calling is specified without normalization
-    if (params.snv_consensus_calling && !params.normalize_vcfs){
+    if (params.snv_consensus_calling && !params.normalize_vcfs) {
         error("Consensus calling was specified without normalization. Set --normalize_vcfs in addition. See: https://www.biostars.org/p/307035/")
     }
 
@@ -287,7 +287,8 @@ workflow NFCORE_SAREK {
     )
 
     emit:
-    multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
+    multiqc_publish = SAREK.out.multiqc_publish
+    multiqc_report  = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -296,6 +297,8 @@ workflow NFCORE_SAREK {
 */
 
 workflow {
+
+    main:
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
@@ -327,6 +330,15 @@ workflow {
         params.hook_url,
         NFCORE_SAREK.out.multiqc_report,
     )
+
+    publish:
+    multiqc = NFCORE_SAREK.out.multiqc_publish
+}
+
+output {
+    multiqc {
+        path "multiqc"
+    }
 }
 
 /*

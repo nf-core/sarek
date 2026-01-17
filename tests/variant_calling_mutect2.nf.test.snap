@@ -615,8 +615,6 @@
                 }
             },
             [
-                "build",
-                "build/fai.bed",
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
@@ -736,7 +734,6 @@
                 "variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.tbi"
             ],
             [
-                "fai.bed:md5,472d213cfcde96565699779d5bfc0e32",
                 "mosdepth-coverage-per-contig-single.txt:md5,a0266cd06dd6f7f5463f09e3cb8af71d",
                 "mosdepth-cumcoverage-dist-id.txt:md5,88b94dd2dcc423983da65125ece7651e",
                 "mosdepth_perchrom.txt:md5,a0266cd06dd6f7f5463f09e3cb8af71d",
