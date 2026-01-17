@@ -29,6 +29,7 @@ nextflow_pipeline {
                 snv_consensus_calling: true,
                 tools: 'mpileup,mutect2,strelka'
             ],
+            ignoreFiles: '**/consensus/**/{0000.vcf{,.gz},sites.txt}',
             include_freebayes_unfiltered: true,
             no_vcf_md5sum: true,
             no_conda: true
@@ -51,6 +52,7 @@ nextflow_pipeline {
                 tools: 'mpileup,mutect2,strelka',
                 filter_vcfs: true,
             ],
+            ignoreFiles: '**/consensus/**/{0000.vcf{,.gz},sites.txt}',
             include_freebayes_unfiltered: true,
             no_conda: true
         ],
@@ -71,6 +73,7 @@ nextflow_pipeline {
                 snv_consensus_calling: true,
                 tools: 'lofreq,mpileup,mutect2'
             ],
+            ignoreFiles: '**/consensus/**/{0000.vcf{,.gz},sites.txt}',
             include_freebayes_unfiltered: true,
             no_vcf_md5sum: true,
             no_conda: true
