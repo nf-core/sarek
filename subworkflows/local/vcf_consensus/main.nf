@@ -15,18 +15,35 @@ workflow CONSENSUS {
 
     ch_vcfs = vcfs
         .branch{ meta, vcf, tbi ->
-            strelka_somatic: meta.variantcaller == 'strelka' && meta.status == '1'
+            // Somatic Strelka samples have tumor_id field (tumor-normal pairs)
+            // This is semantically equivalent to checking status == '1' (tumor) but more explicit
+            strelka_somatic: meta.variantcaller == 'strelka' && meta.tumor_id
             other: true
         }
 
-    BCFTOOLS_CONCAT(ch_vcfs.strelka_somatic.groupTuple(size: 2))// somatic strelkas have two vcf files: SNPs and indels
+    // Group somatic Strelka SNVs and INDELs by sample for concatenation
+    // Remove filename from grouping key since SNVs and INDELs have different filenames but should be grouped together
+    ch_strelka_grouped = ch_vcfs.strelka_somatic
+        .map { meta, vcf, tbi ->
+            def key = meta - meta.subMap('filename')
+            [key, vcf, tbi]
+        }
+        .groupTuple(size: 2)
+
+    BCFTOOLS_CONCAT(ch_strelka_grouped)// somatic strelkas have two vcf files: SNPs and indels
     ch_versions = ch_versions.mix(BCFTOOLS_CONCAT.out.versions)
 
     //Combine concat strelka with remaining VCFs
     ch_consensus_in = ch_vcfs.other
                         .mix(BCFTOOLS_CONCAT.out.vcf.join(BCFTOOLS_CONCAT.out.tbi))
                         .map { meta, vcf, tbi ->
-                                    [meta - meta.subMap('variantcaller', 'contamination', 'filename'), vcf, tbi]
+                                    // Remove metadata fields that differ between variant callers to enable proper grouping:
+                                    // - variantcaller: varies by caller (mutect2, strelka, etc.)
+                                    // - contamination: only present for some callers
+                                    // - filename: differs for strelka SNVs vs INDELs
+                                    // - data_type: may differ between germline/somatic workflows
+                                    // - num_intervals: internal tracking field not needed for consensus
+                                    [meta - meta.subMap('variantcaller', 'contamination', 'filename', 'data_type', 'num_intervals'), vcf, tbi]
                         }
                         //TODO blocking operation unless we learn how many variantcallers were
                         // specified also this depends on whether this n,t, or nt on how many
