@@ -84,9 +84,9 @@ class UTILS {
             }
 
             if (scenario.snapshot_include) {
-                assertion.add(filterNextflowOutput(workflow_std.flatten(), ignore: [scenario.snapshot_ignore], include:[scenario.snapshot_include]))
+                assertion.add(filterNextflowOutput(workflow_std.flatten(), ignore: ["~~~~~~~~~~~~", "Pulling Singularity image", scenario.snapshot_ignore], include:[scenario.snapshot_include]))
             } else {
-                assertion.add(filterNextflowOutput(workflow_std.flatten(), ignore: [scenario.snapshot_ignore]))
+                assertion.add(filterNextflowOutput(workflow_std.flatten(), ignore: ["~~~~~~~~~~~~", "Pulling Singularity image", scenario.snapshot_ignore]))
             }
         }
 
