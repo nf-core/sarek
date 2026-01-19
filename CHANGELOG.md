@@ -62,7 +62,8 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 
 #### Fixed
 
-- Fix `bbsplit.nf.test` input cardinality to match current PREPARE_GENOME subworkflow signature (31 parameters)
+- [#2104](https://github.com/nf-core/sarek/pull/2104) - Ignore warnings coming from singularity and conda
+- [#2099](https://github.com/nf-core/sarek/pull/2099) - Fix `bbsplit.nf.test` input cardinality to match current PREPARE_GENOME subworkflow signature (31 parameters)
 
 #### Removed
 
