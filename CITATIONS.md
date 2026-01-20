@@ -128,6 +128,8 @@
 
   > NVIDIA (2025). Clara Parabricks (v.4.4.0-1 and above). <https://www.nvidia.com/en-us/clara/genomics/>
 
+- [Phenotypes](https://github.com/Ensembl/VEP_plugins/blob/release/115/Phenotypes.pm)
+
 - [PIGZ](https://zlib.net/pigz/)
 
 - [P7Zip](http://p7zip.sourceforge.net/)
