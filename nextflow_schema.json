@@ -690,8 +690,9 @@
                 "phenotypes_include_types": {
                     "type": "string",
                     "fa_icon": "far fa-check-circle",
+                    "pattern": "^((Gene|Variation|QTL|StructuralVariation|SupportingStructuralVariation|RegulatoryFeature)?&?)*(?<!&)$",
                     "description": "Phenotypes plugin feature types to include.",
-                    "help_text": "Comma-separated list of feature types to include (e.g., 'Gene,Variation'). Options: Gene, Variation, QTL, StructuralVariation. To be used with `--vep_phenotypes`."
+                    "help_text": "&-separated list of feature types to include (e.g., 'Gene,Variation'). Options: Gene, Variation, QTL, StructuralVariation, SupportingStructuralVariation, RegulatoryFeature. To be used with `--vep_phenotypes`."
                 },
                 "vep_spliceai": {
                     "type": "boolean",
