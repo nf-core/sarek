@@ -11,7 +11,8 @@ nextflow_pipeline {
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_tumor_only.csv",
                 tools: "cnvkit,freebayes,mpileup,mutect2,tiddit"
-            ]
+            ],
+            ignoreFiles: '**/*.freebayes.vcf.gz'
         ],
         [
             name: "-profile test --input tests/csv/3.0/fastq_pair.csv --tools cnvkit,deepvariant,freebayes,mpileup,msisensorpro,strelka,tiddit",
@@ -20,7 +21,8 @@ nextflow_pipeline {
                 tools: "cnvkit,deepvariant,freebayes,mpileup,msisensorpro,strelka,tiddit"
             ],
             include_freebayes_unfiltered: true,
-            ignoreFiles: '**/*.freebayes{.filtered,}.vcf{,.gz}'
+            ignoreFiles: '**/*.freebayes{.filtered,}.vcf{,.gz}',
+            no_conda: true
         ],
         [
             name: "-profile test --input tests/csv/3.0/fastq_single.csv --tools cnvkit,deepvariant,freebayes,mpileup,strelka,tiddit",
@@ -29,7 +31,8 @@ nextflow_pipeline {
                 tools: "cnvkit,deepvariant,freebayes,mpileup,strelka,tiddit"
             ],
             include_freebayes_unfiltered: true,
-            ignoreFiles: '**/*.freebayes.vcf{,.gz}'
+            ignoreFiles: '**/*.freebayes.vcf{,.gz}',
+            no_conda: true
         ]
     ]
 

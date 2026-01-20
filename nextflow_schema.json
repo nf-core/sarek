@@ -653,23 +653,20 @@
                     "help_text": "To be used with `--vep_mastermind`. Download from https://www.genomenon.com/cvr/. File must be bgzipped and tabix indexed."
                 },
                 "mastermind_mutations": {
-                    "type": "integer",
+                    "type": "boolean",
                     "fa_icon": "fas fa-align-center",
-                    "enum": [0, 1],
                     "description": "Mastermind plugin mutations parameter.",
-                    "help_text": "Set to 1 to return citations for all mutations/transcripts (default: 0, matches specific mutation). To be used with `--vep_mastermind`."
+                    "help_text": "Set to true to return citations for all mutations/transcripts (default: false, matches specific mutation). To be used with `--vep_mastermind`."
                 },
                 "mastermind_var_iden": {
-                    "type": "integer",
+                    "type": "boolean",
                     "fa_icon": "far fa-address-card",
-                    "enum": [0, 1],
                     "description": "Mastermind plugin var_iden parameter.",
-                    "help_text": "Set to 1 to return only Mastermind variant identifiers as gene:key format (default: 0). To be used with `--vep_mastermind`."
+                    "help_text": "Set to true to return only Mastermind variant identifiers as gene:key format (default: false). To be used with `--vep_mastermind`."
                 },
                 "mastermind_url": {
-                    "type": "integer",
+                    "type": "boolean",
                     "fa_icon": "fas fa-external-link-alt",
-                    "enum": [0, 1],
                     "description": "Mastermind plugin url parameter.",
                     "help_text": "Set to 1 to return the built Mastermind URL (default: 0). To be used with `--vep_mastermind`."
                 },
@@ -690,8 +687,9 @@
                 "phenotypes_include_types": {
                     "type": "string",
                     "fa_icon": "far fa-check-circle",
+                    "pattern": "^((Gene|Variation|QTL|StructuralVariation|SupportingStructuralVariation|RegulatoryFeature)?&?)*(?<!&)$",
                     "description": "Phenotypes plugin feature types to include.",
-                    "help_text": "Comma-separated list of feature types to include (e.g., 'Gene,Variation'). Options: Gene, Variation, QTL, StructuralVariation. To be used with `--vep_phenotypes`."
+                    "help_text": "&-separated list of feature types to include (e.g., 'Gene,Variation'). Options: Gene, Variation, QTL, StructuralVariation, SupportingStructuralVariation, RegulatoryFeature. To be used with `--vep_phenotypes`."
                 },
                 "vep_spliceai": {
                     "type": "boolean",

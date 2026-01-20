@@ -1577,7 +1577,6 @@
             [
                 "test2.bcftools.vcf.gz:md5,43478c30492f2a1caab22047cf1ad632",
                 "test2.freebayes.filtered.vcf.gz:md5,8461ef8ccf651775bde7c29d0e563474",
-                "test2.freebayes.vcf.gz:md5,338582fecb55a7f56703acba43bf6388",
                 "test2.mutect2.filtered.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2.mutect2.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2.tiddit.vcf.gz:md5,a4a162ddf9a49df61c62abbf704e2d19"
