@@ -11,6 +11,7 @@ nextflow_pipeline {
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_tumor_only.csv",
                 tools: "cnvkit,freebayes,mpileup,mutect2,tiddit"
+                ignoreFiles: '**/*.freebayes.vcf.gz'
             ]
         ],
         [
