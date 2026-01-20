@@ -1274,7 +1274,7 @@ Enable with `--vep_phenotypes`. The following parameters are optional:
 
 The plugin retrieves overlapping phenotype information from Ensembl's phenotype annotation databases, mapping phenotype data to genomic features including genes, variants, and QTLs.
 
-For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#phenotypes).
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#Phenotypes).
 
 #### SpliceAi
 
