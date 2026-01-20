@@ -667,9 +667,8 @@
                     "help_text": "Set to 1 to return only Mastermind variant identifiers as gene:key format (default: 0). To be used with `--vep_mastermind`."
                 },
                 "mastermind_url": {
-                    "type": "integer",
+                    "type": "boolean",
                     "fa_icon": "fas fa-external-link-alt",
-                    "enum": [0, 1],
                     "description": "Mastermind plugin url parameter.",
                     "help_text": "Set to 1 to return the built Mastermind URL (default: 0). To be used with `--vep_mastermind`."
                 },
