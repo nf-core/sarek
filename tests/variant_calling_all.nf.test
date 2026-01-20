@@ -22,6 +22,7 @@ nextflow_pipeline {
             ],
             include_freebayes_unfiltered: true,
             ignoreFiles: '**/*.freebayes{.filtered,}.vcf{,.gz}'
+            no_conda: true
         ],
         [
             name: "-profile test --input tests/csv/3.0/fastq_single.csv --tools cnvkit,deepvariant,freebayes,mpileup,strelka,tiddit",
@@ -31,6 +32,7 @@ nextflow_pipeline {
             ],
             include_freebayes_unfiltered: true,
             ignoreFiles: '**/*.freebayes.vcf{,.gz}'
+            no_conda: true
         ]
     ]
 

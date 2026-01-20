@@ -197,7 +197,7 @@ workflow NFCORE_SAREK {
             params.vep_cache_version,
             params.vep_genome,
             params.vep_custom_args,
-            "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.",
+            "Please refer to https://nf-co.re/sarek/usage#how-to-customise-snpeff-and-vep-annotation for more information.",
         )
 
         snpeff_cache = ANNOTATION_CACHE_INITIALISATION.out.snpeff_cache
@@ -212,7 +212,7 @@ workflow NFCORE_SAREK {
     }
     else if (params.dbnsfp && !params.dbnsfp_tbi) {
         System.err.println("DBNSFP: ${params.dbnsfp} has been provided with `--dbnsfp, but no dbnsfp_tbi has")
-        System.err.println("cf: https://nf-co.re/sarek/parameters/#dbnsfp")
+        System.err.println("cf: https://nf-co.re/sarek/parameters#dbnsfp")
         error("Execution halted due to dbnsfp inconsistency.")
     }
 
