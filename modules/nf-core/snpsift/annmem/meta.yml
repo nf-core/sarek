@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "snpsift_annmem"
+description: High-performance annotation of VCF files using memory-optimized databases
+keywords:
+  - vcf
+  - annotation
+  - snpsift
+  - variant
+tools:
+  - "snpsift":
+      description: "Genetic variant annotations and functional effect prediction toolbox"
+      homepage: "https://pcingola.github.io/SnpEff/snpsift/annotate_mem/"
+      documentation: "https://pcingola.github.io/SnpEff/snpsift/annotate_mem/"
+      tool_dev_url: "https://github.com/pcingola/SnpSift"
+      doi: "10.3389/fgene.2012.00035"
+      licence: ["MIT"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'test', single_end:false ]`
+  - vcf:
+      type: file
+      description: Input VCF file to annotate
+      pattern: "*.{vcf,vcf.gz}"
+  - vcf_tbi:
+      type: file
+      description: Tabix index for input VCF
+      pattern: "*.{tbi}"
+  - databases:
+      type: file
+      description: List of annotation VCF database files
+      pattern: "*.{vcf,vcf.gz}"
+  - dbs_tbis:
+      type: file
+      description: List of tabix indices for database files
+      pattern: "*.{tbi}"
+  - db_vardbs:
+      type: directory
+      description: List of pre-built .snpsift.vardb directories (optional, improves performance)
+      pattern: "*.snpsift.vardb"
+  - db_configs:
+      type: list
+      description: |
+        List of maps containing configuration for each database.
+        Each map can contain:
+        - fields: Comma-separated list of INFO fields to annotate
+        - prefix: Prefix to add to annotated field names
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'test', single_end:false ]`
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - vcf:
+      type: file
+      description: Annotated VCF file
+      pattern: "*.vcf.gz"
+
+authors:
+  - "@friederike-hanssen"
+maintainers:
+  - "@friederike-hanssen"

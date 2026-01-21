@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "vcf_annotate_snpsift"
+description: Annotate VCF files using SnpSift annotateMem with multiple databases
+keywords:
+  - vcf
+  - annotation
+  - snpsift
+  - variant
+components:
+  - snpsift/annmem/create_db
+  - snpsift/annmem
+input:
+  - ch_vcf:
+      type: file
+      description: |
+        Channel containing VCF files with metadata and index
+        Structure: [val(meta), path(vcf), path(tbi)]
+      pattern: "*.{vcf,vcf.gz}"
+  - val_databases:
+      type: file
+      description: List of annotation VCF database files
+      pattern: "*.{vcf,vcf.gz}"
+  - val_databases_tbi:
+      type: file
+      description: List of tabix indices for database files
+      pattern: "*.{tbi}"
+  - val_db_configs:
+      type: list
+      description: |
+        List of configuration maps for each database.
+        Each map can contain:
+        - fields: Comma-separated INFO fields to annotate
+        - prefix: Prefix for annotated field names
+  - val_create_dbs:
+      type: boolean
+      description: Whether to create .snpsift.vardb databases (true) or use pre-existing (false)
+output:
+  - vcf_tbi:
+      type: file
+      description: |
+        Channel containing annotated VCF files with metadata and index
+        Structure: [val(meta), path(vcf), path(tbi)]
+      pattern: "*.{vcf.gz}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@friederike-hanssen"
+maintainers:
+  - "@friederike-hanssen"

@@ -6,6 +6,7 @@ include { BCFTOOLS_ANNOTATE                             } from '../../../modules
 include { VCF_ANNOTATE_ENSEMBLVEP                       } from '../../nf-core/vcf_annotate_ensemblvep'
 include { VCF_ANNOTATE_ENSEMBLVEP as VCF_ANNOTATE_MERGE } from '../../nf-core/vcf_annotate_ensemblvep'
 include { VCF_ANNOTATE_SNPEFF                           } from '../../nf-core/vcf_annotate_snpeff'
+include { VCF_ANNOTATE_SNPSIFT                          } from '../vcf_annotate_snpsift/main'
 
 workflow VCF_ANNOTATE_ALL {
     take:
@@ -23,6 +24,10 @@ workflow VCF_ANNOTATE_ALL {
     bcftools_annotations_index
     bcftools_columns
     bcftools_header_lines
+    snpsift_databases
+    snpsift_databases_tbi
+    snpsift_db_configs
+    snpsift_create_dbs
 
     main:
     reports = Channel.empty()
@@ -43,6 +48,18 @@ workflow VCF_ANNOTATE_ALL {
         versions = versions.mix(BCFTOOLS_ANNOTATE.out.versions)
     }
 
+    if (tools.split(',').contains('snpsift')) {
+        VCF_ANNOTATE_SNPSIFT(
+            vcf,
+            snpsift_databases,
+            snpsift_databases_tbi,
+            snpsift_db_configs,
+            snpsift_create_dbs
+        )
+
+        vcf_ann = vcf_ann.mix(VCF_ANNOTATE_SNPSIFT.out.vcf_tbi)
+        versions = versions.mix(VCF_ANNOTATE_SNPSIFT.out.versions)
+    }
 
     if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff')) {
         VCF_ANNOTATE_SNPEFF(vcf, snpeff_db, snpeff_cache)

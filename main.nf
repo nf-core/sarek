@@ -223,6 +223,30 @@ workflow NFCORE_SAREK {
         vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
     }
 
+    // Build SnpSift annotation databases configuration
+    // Users can specify databases in a custom config file like:
+    // params {
+    //     snpsift_databases = [
+    //         [vcf: 'cosmic.vcf.gz', tbi: 'cosmic.vcf.gz.tbi', fields: 'AA,CDS,CNT,GENE', prefix: 'COSMIC_'],
+    //         [vcf: 'exac.vcf.gz', tbi: 'exac.vcf.gz.tbi', fields: 'AF', prefix: 'ExAC_'],
+    //         [vcf: '1000g.vcf.gz', tbi: '1000g.vcf.gz.tbi', fields: 'AF', prefix: '1000G_']
+    //     ]
+    // }
+    snpsift_databases = []
+    snpsift_databases_tbi = []
+    snpsift_db_configs = []
+
+    if (params.snpsift_databases) {
+        params.snpsift_databases.each { db_config ->
+            snpsift_databases.add(file(db_config.vcf, checkIfExists: true))
+            snpsift_databases_tbi.add(file(db_config.tbi, checkIfExists: true))
+            snpsift_db_configs.add([
+                fields: db_config.fields ?: '',
+                prefix: db_config.prefix ?: ''
+            ])
+        }
+    }
+
     //
     // WORKFLOW: Run pipeline
     //

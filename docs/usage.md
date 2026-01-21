@@ -1215,6 +1215,142 @@ But for each of these tools, an helper script `build.sh` can be found at the roo
 
 Overwritting the container declaration is then possible to accomodate for the new container.
 
+## How to use SnpSift annotation
+
+SnpSift provides efficient annotation of VCF files using custom annotation databases. Sarek supports SnpSift's `annotateMem` mode, which can annotate VCF files with multiple databases in a single pass using in-memory operations for optimal performance.
+
+### Enabling SnpSift annotation
+
+To enable SnpSift annotation, add `snpsift` to the `--tools` parameter:
+
+```bash
+nextflow run nf-core/sarek --tools snpsift --snpsift_databases databases.json ...
+```
+
+### Configuring annotation databases
+
+SnpSift requires a JSON configuration file that specifies the annotation databases to use. Each database entry must include:
+
+- `vcf`: Path to the annotation VCF file (can be gzipped)
+- `tbi`: Path to the corresponding tabix index file
+- `fields` (optional): Comma-separated list of INFO fields to annotate. If omitted, all fields are annotated.
+- `prefix` (optional): Prefix to add to annotated field names to avoid naming conflicts
+
+An example configuration file is provided at `assets/snpsift_databases_example.json`. Here's a sample configuration:
+
+```json
+[
+  {
+    "vcf": "/data/annotations/dbsnp/dbsnp_156.vcf.gz",
+    "tbi": "/data/annotations/dbsnp/dbsnp_156.vcf.gz.tbi",
+    "fields": "RS,COMMON,SAO",
+    "prefix": "dbSNP_"
+  },
+  {
+    "vcf": "/data/annotations/gnomad/gnomad.genomes.v4.0.sites.vcf.gz",
+    "tbi": "/data/annotations/gnomad/gnomad.genomes.v4.0.sites.vcf.gz.tbi",
+    "fields": "AF,AC,AN,nhomalt",
+    "prefix": "gnomAD_"
+  },
+  {
+    "vcf": "/data/annotations/clinvar/clinvar_20240101.vcf.gz",
+    "tbi": "/data/annotations/clinvar/clinvar_20240101.vcf.gz.tbi",
+    "fields": "CLNSIG,CLNDN,CLNREVSTAT",
+    "prefix": "ClinVar_"
+  }
+]
+```
+
+Then run Sarek with:
+
+```bash
+nextflow run nf-core/sarek \
+    --tools snpsift \
+    --snpsift_databases databases.json \
+    --input samplesheet.csv \
+    --outdir results
+```
+
+### Database preparation
+
+SnpSift's annotateMem requires databases to be converted into an optimized `.snpsift.vardb` format for efficient annotation. Sarek provides two options:
+
+#### Option 1: Let Sarek create databases automatically
+
+Set `--snpsift_create_dbs true` and Sarek will automatically create the `.snpsift.vardb` directories from your VCF files:
+
+```bash
+nextflow run nf-core/sarek \
+    --tools snpsift \
+    --snpsift_databases databases.json \
+    --snpsift_create_dbs true \
+    ...
+```
+
+Note: Database creation is a one-time operation but can take considerable time for large databases.
+
+#### Option 2: Pre-create databases manually (Recommended)
+
+For better control and reusability, you can pre-create the databases outside of Sarek using SnpSift directly:
+
+```bash
+# Create database directory for each annotation VCF
+SnpSift annmem -create -dbfile /data/annotations/dbsnp/dbsnp_156.vcf.gz -fields RS,COMMON,SAO
+
+# This creates a .snpsift.vardb directory alongside the VCF file
+```
+
+When running Sarek with pre-created databases, set `--snpsift_create_dbs false` (default):
+
+```bash
+nextflow run nf-core/sarek \
+    --tools snpsift \
+    --snpsift_databases databases.json \
+    --snpsift_create_dbs false \
+    ...
+```
+
+### Field prefixing to avoid naming conflicts
+
+When annotating with multiple databases, field name conflicts can occur (e.g., multiple databases may have an `AF` field). Use the `prefix` parameter to distinguish fields from different sources:
+
+```json
+[
+  {
+    "vcf": "/data/gnomad.vcf.gz",
+    "tbi": "/data/gnomad.vcf.gz.tbi",
+    "fields": "AF",
+    "prefix": "gnomAD_"
+  },
+  {
+    "vcf": "/data/1000g.vcf.gz",
+    "tbi": "/data/1000g.vcf.gz.tbi",
+    "fields": "AF",
+    "prefix": "1000G_"
+  }
+]
+```
+
+This will create two distinct fields in your annotated VCF: `gnomAD_AF` and `1000G_AF`.
+
+### Performance considerations
+
+- SnpSift annotateMem is optimized for speed and can process >1M variants per minute
+- Memory requirements: Expect ~16GB RAM for large annotation databases
+- The process_high label is automatically applied to SnpSift processes in Sarek
+
+### Using SnpSift with other annotation tools
+
+SnpSift can be combined with other annotation tools. For example, to annotate with both SnpEff and SnpSift:
+
+```bash
+nextflow run nf-core/sarek \
+    --tools snpeff,snpsift \
+    --snpeff_cache /data/snpeff_cache \
+    --snpsift_databases databases.json \
+    ...
+```
+
 ### Using VEP plugins
 
 #### dbnsfp
