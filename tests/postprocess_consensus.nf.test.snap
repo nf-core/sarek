@@ -357,17 +357,13 @@
     },
     "-profile test --snv_consensus_calling --normalize_vcfs --tools lofreq,mpileup,mutect2 (tumor-only)": {
         "content": [
-            40,
+            36,
             {
                 "ADD_INFO_TO_VCF": {
                     "gawk": "5.3.0"
                 },
                 "BCFTOOLS_ISEC": {
                     "bcftools": 1.22
-                },
-                "CONSENSUS_FROM_SITES": {
-                    "gawk": "5.3.0",
-                    "htslib": 1.21
                 },
                 "BCFTOOLS_MPILEUP": {
                     "bcftools": 1.21
@@ -615,7 +611,15 @@
                 ],
                 [
                     "sample2.consensus.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=70, phased=true, phasedAutodetect=true]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=71, phased=true, phasedAutodetect=true]"
+                ],
+                [
+                    "0001.vcf.gz",
+                    "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=67, phased=true, phasedAutodetect=true]"
+                ],
+                [
+                    "0002.vcf.gz",
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=55, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "sample2.lofreq.vcf.gz",
