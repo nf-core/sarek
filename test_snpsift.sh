@@ -12,4 +12,5 @@ nextflow run main.nf \
     --tools snpsift \
     --snpsift_databases tests/config/snpsift_test_databases.json \
     --snpsift_create_dbs true \
-    --outdir results_snpsift_test
+    --outdir results_snpsift_test \
+    --validationSchemaIgnoreParams input,snpsift_databases
