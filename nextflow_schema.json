@@ -588,7 +588,7 @@
                 },
                 "condel_config": {
                     "type": "string",
-                    "format": "directory-path",
+                    "format": "file-path",
                     "exists": true,
                     "fa_icon": "fas fa-folder",
                     "description": "Path to Condel config directory.",
