@@ -424,7 +424,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `shifter`
   - A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
 - `charliecloud`
-  - A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
+  - A generic configuration profile to be used with [Charliecloud](https://charliecloud.io/)
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
 - `wave`
@@ -456,6 +456,26 @@ NXF_OPTS='-Xms1g -Xmx4g'
 Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the pipeline steps, if the job exits with any of the error codes specified [here](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L18) it will automatically be resubmitted with higher resources request (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
 
 To change the resource requests, please see the [max resources](https://nf-co.re/docs/usage/configuration#max-resources) and [tuning workflow resources](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources) section of the nf-core website.
+
+### Custom Containers
+
+In some cases, you may wish to change the container or conda environment used by a pipeline steps for a particular tool. By default, nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However, in some cases the pipeline specified version maybe out of date.
+
+To use a different container from the default container or conda environment specified in a pipeline, please see the [updating tool versions](https://nf-co.re/docs/usage/configuration#updating-tool-versions) section of the nf-core website.
+
+### Custom Tool Arguments
+
+A pipeline might not always support every possible argument or option of a particular tool used in pipeline. Fortunately, nf-core pipelines provide some freedom to users to insert additional parameters that the pipeline does not include by default.
+
+To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/usage/configuration#customising-tool-arguments) section of the nf-core website.
+
+### nf-core/configs
+
+In most cases, you will only need to create a custom config as a one-off but if you and others within your organisation are likely to be running nf-core pipelines regularly and need to use the same settings regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter. You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
+
+See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for more information about creating your own configuration files.
+
+If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
 
 ## Running in the background
 
@@ -1018,12 +1038,6 @@ For GATK.GRCh38 the links for each reference file and the corresponding processe
 | pon                   | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 | pon_tbi               | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 
-## How to customise SnpEff and VEP annotation
-
-SNPeff and VEP both require a large resource of files known as a cache.
-These are folders composed of multiple gigabytes of files which need to be available for the software to properly function.
-To use these, supply the parameters `--vep_cache` and/or `--snpeff_cache` with the locations to the root of the annotation cache folder for each tool.
-
 ## What happened with snpeff db 105
 
 At the time of writing, the SnpEff db 105 is not available to download from the SnpEff website, or to use with snpeff 5.3a, even with an already downloaded cache.
@@ -1037,6 +1051,12 @@ withName: SNPEFF_SNPEFF {
 ```
 
 Please note that if you do so, the download is not working anymore.
+
+## How to customise SnpEff and VEP annotation
+
+SNPeff and VEP both require a large resource of files known as a cache.
+These are folders composed of multiple gigabytes of files which need to be available for the software to properly function.
+To use these, supply the parameters `--vep_cache` and/or `--snpeff_cache` with the locations to the root of the annotation cache folder for each tool.
 
 ### Specify the cache location
 
@@ -1115,8 +1135,8 @@ Which can then be used this way in Sarek:
 ```bash
 nextflow run nf-core/sarek \
     --igenomes_base s3://my-reference-data/igenomes/ \
-    --snpeff_cache s3://my-reference-data/cache/ensemblvep/ \
-    --vep_cache s3://my-reference-data/cache/snpeff/ \
+    --snpeff_cache s3://my-reference-data/cache/snpeff/ \
+    --vep_cache s3://my-reference-data/cache/ensemblvep/ \
     ...
 ```
 
@@ -1215,11 +1235,46 @@ The following parameters are optional:
 
 For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#dbnsfp).
 
+#### Condel
+
+Enable with `--vep_condel`. The following parameters are mandatory:
+
+- `--condel_config`, to specify the path to the Condel config directory containing cutoffs and distribution files.
+
+The plugin calculates the Consensus Deleteriousness score for missense mutations using SIFT and PolyPhen-2 predictions from the Ensembl API.
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#Condel).
+
 #### LOFTEE
 
 Enable with `--vep_loftee`.
 
 For more details, see [here](https://github.com/konradjk/loftee).
+
+#### Mastermind
+
+Enable with `--vep_mastermind`. The following parameters are mandatory:
+
+- `--mastermind_file`, to specify the path to the Mastermind cited variants VCF file (must be bgzipped and tabix indexed).
+
+The following parameters are optional:
+
+- `--mastermind_mutations`, set to `true` to return citations for all mutations/transcripts (default: `false`).
+- `--mastermind_var_iden`, set to `true` to return only Mastermind variant identifiers as gene:key format (default: `false`).
+- `--mastermind_url`, set to `true` to return the built Mastermind URL (default: `false`).
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#Mastermind).
+
+#### Phenotypes
+
+Enable with `--vep_phenotypes`. The following parameters are optional:
+
+- `--phenotypes_file`, to specify the path to the phenotype annotation GFF/GVF file. If not specified, the plugin will automatically download phenotype data on first run.
+- `--phenotypes_include_types`, &-separated list of feature types to include (e.g., 'Gene,Variation'). Options: Gene, Variation, QTL, StructuralVariation, SupportingStructuralVariation, RegulatoryFeature.
+
+The plugin retrieves overlapping phenotype information from Ensembl's phenotype annotation databases, mapping phenotype data to genomic features including genes, variants, and QTLs.
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#Phenotypes).
 
 #### SpliceAi
 

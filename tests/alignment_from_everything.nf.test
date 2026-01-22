@@ -4,8 +4,6 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
-    tag "pipeline"
-    tag "pipeline_sarek"
 
     def test_scenario = [
         [
@@ -15,12 +13,13 @@ nextflow_pipeline {
                 tools: '',
                 save_mapped: true,
                 save_output_as_bam: true
-            ]
+            ],
+            snapshot_ignoreWarning: 'runner'
         ]
     ]
 
     // Generate tests for each scenario
     test_scenario.each { scenario ->
-        test(scenario.name, UTILS.get_test(scenario))
+        test(scenario.name, UTILS.getTest(scenario))
     }
 }

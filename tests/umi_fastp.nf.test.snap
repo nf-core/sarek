@@ -336,12 +336,15 @@
                 "test.md.cram:md5,dc339a125287041fa36a4cdda432ec8c",
                 "test.recal.cram:md5,dc339a125287041fa36a4cdda432ec8c"
             ],
-            "No VCF files"
+            "No VCF files",
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_umi_cleanname_1.fastq.gz): Cannot extract flowcell ID from @922332"
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T22:00:22.489872264"
+        "timestamp": "2025-12-15T21:51:24.395033366"
     }
 }

@@ -1021,7 +1021,7 @@ As varlociraptor requires to provide a set of candidate variants to consider it 
 
 ### Filtering
 
-VCFs from all variantcallers can be filtered using `bcftools view`. Filtering is enabled by setting `--filter_vcfs` parameter. By default, variants are filtered to include only those with `PASS` in the FILTER field. Custom filtering criteria can be specified using the `--bcftools_filtering` parameter (see [bcftools view documentation](https://samtools.github.io/bcftools/bcftools.html#view) for filter syntax).
+VCFs from all variantcallers can be filtered using `bcftools view`. Filtering is enabled by setting `--filter_vcfs` parameter. By default, variants are filtered to include only those with `PASS` in the FILTER field. Custom filtering criteria can be specified using the `--bcftools_filter_criteria` parameter (see [bcftools view documentation](https://samtools.github.io/bcftools/bcftools.html#view) for filter syntax).
 
 <details markdown="1">
 <summary>Filtered VCF-files for normal and tumor samples</summary>
@@ -1049,7 +1049,7 @@ All VCFs are normalized with `bcftools norm`. The field `SOURCE` is added to the
 
 ### Consensus calling
 
-The consensus call set of multiple VCF files be obtained by using `bcftools isec` to identify variants that are called by multiple tools.
+When `--snv_consensus_calling` is enabled, consensus VCFs are generated from a set of multiple VCF files by using `bcftools isec` to identify variants that are called by multiple tools.
 
 Strelka somatic calling results produces separate VCF files for SNPs and indels that are concatenated before consensus calling. The workflow then groups VCF files by sample and performs consensus calling across all specified variant callers.
 
@@ -1058,7 +1058,7 @@ By default, `bcftools isec` identifies variants present in at least a minimum nu
 <details markdown="1">
 <summary>Consensus called VCF files for all samples</summary>
 
-**Output directory: `{outdir}/variant_calling/consenus/<sample>/`**
+**Output directory: `{outdir}/variant_calling/consensus/<sample>/`**
 
 - `0000.vcf.gz` and `0000.vcf.gz.tbi`
   - VCF with tabix index containing variants present in the consensus set of input variant callers
@@ -1124,7 +1124,7 @@ Currently, it contains:
 - _Protein_position_: Relative position of amino acid in protein
 - _BIOTYPE_: Biotype of transcript or regulatory feature
 
-plus any additional filed selected via the plugins: [dbNSFP](https://sites.google.com/site/jpopgen/dbNSFP), [LOFTEE](https://github.com/konradjk/loftee), [SpliceAI](https://spliceailookup.broadinstitute.org/), [SpliceRegion](https://www.ensembl.info/2018/10/26/cool-stuff-the-vep-can-do-splice-site-variant-annotation/).
+plus any additional fields selected via the plugins: [Condel](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#condel), [dbNSFP](https://sites.google.com/site/jpopgen/dbNSFP), [LOFTEE](https://github.com/konradjk/loftee), [Mastermind](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#mastermind), [Phenotypes](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#phenotypes), [SpliceAI](https://spliceailookup.broadinstitute.org/), [SpliceRegion](https://www.ensembl.info/2018/10/26/cool-stuff-the-vep-can-do-splice-site-variant-annotation/).
 
 <details markdown="1">
 <summary>Output files for all samples</summary>

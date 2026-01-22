@@ -42,6 +42,10 @@
 
   > Talevich E, Shain AH, Botton T, Bastian BC (2016) CNVkit: Genome-Wide Copy Number Detection and Visualization from Targeted DNA Sequencing. PLoS Comput Biol 12(4): e1004873. doi: 10.1371/journal.pcbi.1004873. PubMed PMID: 27100738. PubMed Central PMCID: PMC4839673.
 
+- [Condel](https://pubmed.ncbi.nlm.nih.gov/21457909/)
+
+  > González-Pérez A, López-Bigas N. Improving the assessment of the outcome of nonsynonymous SNVs with a consensus deleteriousness score, Condel. Am J Hum Genet. 2011 Apr 8;88(4):440-9. doi: 10.1016/j.ajhg.2011.03.004. PubMed PMID: 21457909; PubMed Central PMCID: PMC3071923.
+
 - [Control-FREEC](https://pubmed.ncbi.nlm.nih.gov/22155870/)
 
   > Boeva V, Popova T, Bleakley K, et al.: Control-FREEC: a tool for assessing copy number and allelic content using next-generation sequencing data. Bioinformatics. 2012; 28(3): 423–5. doi: 10.1093/bioinformatics/btr670. Epub 2011 Dec 6. PubMed PMID: 22155870; PubMed Central PMCID: PMC3268243.
@@ -82,6 +86,10 @@
 
 - [GNU sed](http://www.gnu.org/software/sed/)
 
+- [goleft indexcov](https://pubmed.ncbi.nlm.nih.gov/29048539/)
+
+  > Pedersen BS, Collins RL, Talkowski ME, Quinlan AR. Indexcov: fast coverage quality control for whole-genome sequencing. Gigascience. 2017 Nov 1;6(11):1-6. doi: 10.1093/gigascience/gix090. PubMed PMID: 29048539; PubMed Central PMCID: PMC5737511.
+
 - [HaplotypeCaller Joint Germline](https://www.biorxiv.org/content/10.1101/201178v3)
 
   > Poplin R. et al, Scaling accurate genetic variant discovery to tens of thousands of samples, bioRxiv 2018. doi: 10.1101/201178
@@ -93,6 +101,10 @@
 - [Manta](https://pubmed.ncbi.nlm.nih.gov/26647377/)
 
   > Chen X, Schulz-Trieglaff O, Shaw R, et al.: Manta: rapid detection of structural variants and indels for germline and cancer sequencing applications. Bioinformatics. 2016 Apr 15;32(8):1220-2. doi: 10.1093/bioinformatics/btv710. PubMed PMID: 26647377.
+
+- [Mastermind](https://pubmed.ncbi.nlm.nih.gov/33281875/)
+
+  > Chunn LM, Nefcy DC, Scouten RW, Tarpey RP, Chauhan G, Lim MS, Elenitoba-Johnson KSJ, Schwartz SA, Kiel MJ. Mastermind: A Comprehensive Genomic Association Search Engine for Empirical Evidence Curation and Genetic Variant Interpretation. Front Genet. 2020 Nov 13;11:577152. doi: 10.3389/fgene.2020.577152. PubMed PMID: 33281875; PubMed Central PMCID: PMC7691534.
 
 - [Mosdepth](https://academic.oup.com/bioinformatics/article/34/5/867/4583630)
 
@@ -108,9 +120,15 @@
 
   > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
 
+- [NGSCheckMate](https://pubmed.ncbi.nlm.nih.gov/28369524/)
+
+  > Lee S, Lee S, Ouellette S, Park WY, Lee EA, Park PJ. NGSCheckMate: software for validating sample identity in next-generation sequencing studies within and across data types. Nucleic Acids Res. 2017 Jun 20;45(11):e103. doi: 10.1093/nar/gkx193. PubMed PMID: 28369524; PubMed Central PMCID: PMC5499645.
+
 - [NVIDIA Clara Parabricks](https://docs.nvidia.com/clara/parabricks/latest/index.html)
 
   > NVIDIA (2025). Clara Parabricks (v.4.4.0-1 and above). <https://www.nvidia.com/en-us/clara/genomics/>
+
+- [Phenotypes](https://github.com/Ensembl/VEP_plugins/blob/release/115/Phenotypes.pm)
 
 - [PIGZ](https://zlib.net/pigz/)
 
@@ -129,6 +147,10 @@
   > Jaganathan K, et al.: Predicting Splicing from Primary Sequence with Deep Learning. Cell. 2019 Jan 24;176(3):535-548.e24. doi: 10.1016/j.cell.2018.12.015. PubMed PMID: 30661751.
 
 - [SpliceRegion](https://github.com/Ensembl/VEP_plugins/blob/release/106/SpliceRegion.pm)
+
+- [SPRING](https://pubmed.ncbi.nlm.nih.gov/30535063/)
+
+  > Chandak S, Tatwawadi K, Ochoa I, Hernaez M, Weissman T. SPRING: a next-generation compressor for FASTQ data. Bioinformatics. 2019 Aug 1;35(15):2674-2676. doi: 10.1093/bioinformatics/bty1015. PubMed PMID: 30535063; PubMed Central PMCID: PMC6662292.
 
 - [Strelka2](https://pubmed.ncbi.nlm.nih.gov/30013048/)
 
@@ -151,6 +173,10 @@
 - [VCFTools](https://pubmed.ncbi.nlm.nih.gov/21653522/)
 
   > Danecek P, Auton A, Abecasis G, et al.: The variant call format and VCFtools. Bioinformatics. 2011 Aug 1;27(15):2156-8. doi: 10.1093/bioinformatics/btr330. Epub 2011 Jun 7. PubMed PMID: 21653522; PubMed Central PMCID: PMC3137218.
+
+- [vcflib](https://pubmed.ncbi.nlm.nih.gov/35639788/)
+
+  > Garrison E, Kronenberg ZN, Dawson ET, Pedersen BS, Prins P. A spectrum of free software tools for processing the VCF variant call format: vcflib, bio-vcf, cyvcf2, hts-nim and slivar. PLoS Comput Biol. 2022 May 31;18(5):e1009123. doi: 10.1371/journal.pcbi.1009123. PubMed PMID: 35639788; PubMed Central PMCID: PMC9286226.
 
 - [Lofreq](https://pubmed.ncbi.nlm.nih.gov/23066108/)
 

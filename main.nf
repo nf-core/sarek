@@ -169,7 +169,7 @@ workflow NFCORE_SAREK {
     versions = versions.mix(PREPARE_INTERVALS.out.versions)
 
     // Fails when consensus calling is specified without normalization
-    if (params.snv_consensus_calling && !params.normalize_vcfs){
+    if (params.snv_consensus_calling && !params.normalize_vcfs) {
         error("Consensus calling was specified without normalization. Set --normalize_vcfs in addition. See: https://www.biostars.org/p/307035/")
     }
 
@@ -197,7 +197,7 @@ workflow NFCORE_SAREK {
             params.vep_cache_version,
             params.vep_genome,
             params.vep_custom_args,
-            "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.",
+            "Please refer to https://nf-co.re/sarek/usage#how-to-customise-snpeff-and-vep-annotation for more information.",
         )
 
         snpeff_cache = ANNOTATION_CACHE_INITIALISATION.out.snpeff_cache
@@ -212,7 +212,7 @@ workflow NFCORE_SAREK {
     }
     else if (params.dbnsfp && !params.dbnsfp_tbi) {
         System.err.println("DBNSFP: ${params.dbnsfp} has been provided with `--dbnsfp, but no dbnsfp_tbi has")
-        System.err.println("cf: https://nf-co.re/sarek/parameters/#dbnsfp")
+        System.err.println("cf: https://nf-co.re/sarek/parameters#dbnsfp")
         error("Execution halted due to dbnsfp inconsistency.")
     }
 
@@ -272,10 +272,9 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.pon,
         PREPARE_GENOME.out.pon_tbi,
         params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect() : Channel.value([]),
-         // Set Varlociraptor reference files
-        params.varlociraptor_scenario_germline   ? Channel.fromPath(params.varlociraptor_scenario_germline).map { it -> [[id: it.baseName - '.yte'], it] }.collect()    : Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect(),
-        params.varlociraptor_scenario_somatic    ? Channel.fromPath(params.varlociraptor_scenario_somatic).map { it -> [[id: it.baseName - '.yte'], it] }.collect()     : Channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect(),
-        params.varlociraptor_scenario_tumor_only ? Channel.fromPath(params.varlociraptor_scenario_tumor_only).map { it -> [[id: it.baseName - '.yte'], it] }.collect()  : Channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect(),
+        params.varlociraptor_scenario_germline ? Channel.fromPath(params.varlociraptor_scenario_germline).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect(),
+        params.varlociraptor_scenario_somatic ? Channel.fromPath(params.varlociraptor_scenario_somatic).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : Channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect(),
+        params.varlociraptor_scenario_tumor_only ? Channel.fromPath(params.varlociraptor_scenario_tumor_only).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : Channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect(),
         snpeff_cache,
         params.snpeff_db,
         vep_cache,
@@ -288,7 +287,8 @@ workflow NFCORE_SAREK {
     )
 
     emit:
-    multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
+    multiqc_publish = SAREK.out.multiqc_publish
+    multiqc_report  = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -297,6 +297,8 @@ workflow NFCORE_SAREK {
 */
 
 workflow {
+
+    main:
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
@@ -306,6 +308,9 @@ workflow {
         args,
         params.outdir,
         params.input,
+        params.help,
+        params.help_full,
+        params.show_hidden,
     )
 
     //
@@ -325,6 +330,15 @@ workflow {
         params.hook_url,
         NFCORE_SAREK.out.multiqc_report,
     )
+
+    publish:
+    multiqc = NFCORE_SAREK.out.multiqc_publish
+}
+
+output {
+    multiqc {
+        path "multiqc"
+    }
 }
 
 /*

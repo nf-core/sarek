@@ -169,7 +169,8 @@
                 "test.md.cram:md5,2f11e4fe3390b8ad0a1852616fd1da04",
                 "test.recal.cram:md5,463ac3b905fbf4ddf113a94dbfa8d69f"
             ],
-            "No VCF files"
+            "No VCF files",
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -347,7 +348,8 @@
                 "test.md.cram:md5,2f11e4fe3390b8ad0a1852616fd1da04",
                 "test.recal.cram:md5,463ac3b905fbf4ddf113a94dbfa8d69f"
             ],
-            "No VCF files"
+            "No VCF files",
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -495,7 +497,8 @@
             [
                 "test.recal.cram:md5,463ac3b905fbf4ddf113a94dbfa8d69f"
             ],
-            "No VCF files"
+            "No VCF files",
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -643,7 +646,8 @@
             [
                 "test.recal.cram:md5,463ac3b905fbf4ddf113a94dbfa8d69f"
             ],
-            "No VCF files"
+            "No VCF files",
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",

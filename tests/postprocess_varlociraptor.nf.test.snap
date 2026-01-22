@@ -299,7 +299,8 @@
             [
                 "sample3.strelka.germline.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=53245, phased=true, phasedAutodetect=false]",
                 "sample4_vs_sample3.strelka.somatic.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=54634, phased=true, phasedAutodetect=false]"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -547,7 +548,8 @@
             ],
             [
                 "sample2.mutect2.tumor_only.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=1258, phased=true, phasedAutodetect=false]"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.2",
@@ -771,7 +773,8 @@
             ],
             [
                 "sample1.strelka.germline.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=53245, phased=true, phasedAutodetect=false]"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.2",

@@ -150,6 +150,8 @@ workflow FASTQ_PREPROCESS_GATK {
                                     )
                                     .primary_fastq
 
+            reports = reports.mix(BBMAP_BBSPLIT.out.stats.collect{ _meta, stats -> stats })
+
             versions = versions.mix(BBMAP_BBSPLIT.out.versions.first())
 
         } else {

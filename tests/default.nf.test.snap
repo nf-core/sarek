@@ -284,13 +284,116 @@
             [
                 "test.strelka.genome.vcf.gz:md5,16437a040679d88b7d84a9276f793d6c",
                 "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565"
+            ],
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ],
+            [
+                "N E X T F L O W  ~  version [VERSION]",
+                "Launching `[PATH]/tests/../main.nf` [RUN_NAME] DSL2 - revision: [REVISION]",
+                "------------------------------------------------------",
+                "                                        ,--./,-.",
+                "        ___     __   __   __   ___     /,-._.--~'",
+                "  |\\ | |__  __ /  ` /  \\ |__) |__         }  {",
+                "  | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,",
+                "                                        `._,._,'",
+                "      ____",
+                "    .\u00b4 _  `.",
+                "   /  |\\`-_ \\      __        __   ___     ",
+                "  |   | \\  `-|    |__`  /\\  |__) |__  |__/",
+                "   \\ |   \\  /     .__| /\u00af\u00af\\ |  \\ |___ |  \\",
+                "    `|____\\\u00b4",
+                "  nf-core/sarek [VERSION]",
+                "------------------------------------------------------",
+                "Input/output options",
+                "  input                       : [PATH]/tests/csv/3.0/fastq_single.csv",
+                "  outdir                      : [PATH]/tests/[NFT_HASH]/output",
+                "Main options",
+                "  split_fastq                 : 0",
+                "  intervals                   : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data//genomics/homo_sapiens/genome/genome.interval_list",
+                "  tools                       : strelka",
+                "Annotation",
+                "  bcftools_annotations        : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data//genomics/sarscov2/illumina/vcf/test2.vcf.gz",
+                "  bcftools_annotations_tbi    : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data//genomics/sarscov2/illumina/vcf/test2.vcf.gz.tbi",
+                "  bcftools_header_lines       : [PATH]/tests/config/bcfann_test_header.txt",
+                "General reference genome options",
+                "  igenomes_base               : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/",
+                "Reference genome options",
+                "  genome                      : testdata.nf-core.sarek",
+                "  dbsnp                       : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data//genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz",
+                "  dbsnp_tbi                   : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data//genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz.tbi",
+                "  dbsnp_vqsr                  : --resource:dbsnp,known=false,training=true,truth=false,prior=2.0 dbsnp_146.hg38.vcf.gz",
+                "  dict                        : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data//genomics/homo_sapiens/genome/genome.dict",
+                "  fasta                       : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data//genomics/homo_sapiens/genome/genome.fasta",
+                "  fasta_fai                   : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data//genomics/homo_sapiens/genome/genome.fasta.fai",
+                "  germline_resource           : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data//genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz",
+                "  germline_resource_tbi       : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data//genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz.tbi",
+                "  known_indels                : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data//genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz",
+                "  known_indels_tbi            : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data//genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz.tbi",
+                "  known_indels_vqsr           : --resource:mills,known=false,training=true,truth=true,prior=10.0 mills_and_1000G.indels.vcf.gz",
+                "  ngscheckmate_bed            : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data//genomics/homo_sapiens/genome/chr21/germlineresources/SNP_GRCh38_hg38_wChr.bed",
+                "  sentieon_dnascope_model     : s3://ngi-igenomes/igenomes/Homo_sapiens/GATK/GRCh38/Annotation/Sentieon/SentieonDNAscopeModel1.1.model",
+                "  snpeff_db                   : WBcel235.99",
+                "  vep_cache_version           : 114",
+                "  vep_genome                  : WBcel235",
+                "  vep_species                 : caenorhabditis_elegans",
+                "Institutional config options",
+                "  config_profile_name         : Test profile",
+                "  config_profile_description  : Minimal test dataset to check pipeline function",
+                "  modules_testdata_base_path  : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/",
+                "Generic options",
+                "  pipelines_testdata_base_path: https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/",
+                "  trace_report_suffix         : [TIMESTAMP]",
+                "Core Nextflow options",
+                "  runName                     : [RUN_NAME]",
+                "  launchDir                   : [PATH]/tests/[NFT_HASH]",
+                "  workDir                     : [PATH]/tests/[NFT_HASH]/work",
+                "  projectDir                  : [PATH]",
+                "  userName                    : [USER]",
+                "  profile                     : test,[CONTAINER]",
+                "  configFiles                 : [PATH]/nextflow.config, [PATH]/nextflow.config, [PATH]/tests/nextflow.config",
+                "!! Only displaying parameters that differ from the pipeline defaults !!",
+                "------------------------------------------------------",
+                "* The pipeline",
+                "    https://doi.org/10.12688/f1000research.16665.2",
+                "    https://doi.org/10.1093/nargab/lqae031",
+                "    https://doi.org/10.5281/zenodo.3476425",
+                "* The nf-core framework",
+                "    https://doi.org/10.1038/s41587-020-0439-x",
+                "* Software dependencies",
+                "    https://github.com/nf-core/sarek/blob/master/CITATIONS.md",
+                "-[nf-core/sarek] Pipeline completed successfully-",
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:PREPARE_GENOME:BWAMEM1_INDEX (genome.fasta)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:PREPARE_INTERVALS:CREATE_INTERVALS_BED (genome.interval_list)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:PREPARE_INTERVALS:GATK4_INTERVALLISTTOBED (genome)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:PREPARE_INTERVALS:TABIX_BGZIPTABIX_INTERVAL_COMBINED (genome)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:PREPARE_INTERVALS:TABIX_BGZIPTABIX_INTERVAL_SPLIT (chr22_1-40001)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_SINGLE_STRELKA:STRELKA_SINGLE (test)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:CRAM_SAMPLEQC:CRAM_QC_RECAL:MOSDEPTH (test)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:CRAM_SAMPLEQC:CRAM_QC_RECAL:SAMTOOLS_STATS (test)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:FASTQC (test-test_L1)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:FASTQC (test-test_L2)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:FASTQ_PREPROCESS_GATK:BAM_APPLYBQSR:CRAM_MERGE_INDEX_SAMTOOLS:INDEX_CRAM (test)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:FASTQ_PREPROCESS_GATK:BAM_APPLYBQSR:GATK4_APPLYBQSR (test)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:FASTQ_PREPROCESS_GATK:BAM_BASERECALIBRATOR:GATK4_BASERECALIBRATOR (test)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:FASTQ_PREPROCESS_GATK:BAM_MARKDUPLICATES:CRAM_QC_MOSDEPTH_SAMTOOLS:MOSDEPTH (test)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:FASTQ_PREPROCESS_GATK:BAM_MARKDUPLICATES:CRAM_QC_MOSDEPTH_SAMTOOLS:SAMTOOLS_STATS (test)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:FASTQ_PREPROCESS_GATK:BAM_MARKDUPLICATES:GATK4_MARKDUPLICATES (test)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:FASTQ_PREPROCESS_GATK:FASTQ_ALIGN:BWAMEM1_MEM (test-test_L1)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:FASTQ_PREPROCESS_GATK:FASTQ_ALIGN:BWAMEM1_MEM (test-test_L2)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:MULTIQC",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:VCF_QC_BCFTOOLS_VCFTOOLS:BCFTOOLS_STATS (test)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:VCF_QC_BCFTOOLS_VCFTOOLS:VCFTOOLS_SUMMARY (test)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:VCF_QC_BCFTOOLS_VCFTOOLS:VCFTOOLS_TSTV_COUNT (test)",
+                "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:VCF_QC_BCFTOOLS_VCFTOOLS:VCFTOOLS_TSTV_QUAL (test)"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T20:20:04.467847875"
+        "timestamp": "2025-12-15T19:44:11.568889909"
     },
     "-profile test -stub": {
         "content": [
@@ -489,12 +592,16 @@
                 "variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi",
                 "variant_calling/strelka/test/test.strelka.variants.vcf.gz",
                 "variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi"
+            ],
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-07-11T10:26:03.957093162"
+        "timestamp": "2025-12-15T16:45:00.369779623"
     }
 }
