@@ -138,8 +138,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
             cram.map { meta_, cram_, crai_ ->
                 joint_mutect2
-                    ? [meta_ - meta_.subMap('data_type', 'status') + [id: meta_.patient], cram_, crai_]
-                    : [meta_ - meta_.subMap('data_type', 'status'), cram_, crai_]
+                    ? [meta_ - meta_.subMap('data_type') + [id: meta_.patient], cram_, crai_]
+                    : [meta_ - meta_.subMap('data_type'), cram_, crai_]
             },
             fasta,
             fasta_fai,
@@ -152,8 +152,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             joint_mutect2,
         )
 
-        vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.vcf_filtered
-        tbi_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.index_filtered
+        // vcf_mutect2 and tbi_mutect2 always contain usable output (filtered if available, otherwise unfiltered)
+        vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.vcf
+        tbi_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
     }
 

@@ -72,6 +72,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     tbi_freebayes            = Channel.empty()
     tbi_haplotypecaller      = Channel.empty()
     tbi_manta                = Channel.empty()
+    tbi_mpileup              = Channel.empty()
     tbi_sentieon_dnascope    = Channel.empty()
     tbi_sentieon_haplotyper  = Channel.empty()
     tbi_strelka              = Channel.empty()
@@ -86,6 +87,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             intervals
         )
         vcf_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.vcf
+        tbi_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
     }
 
@@ -391,6 +393,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         tbi_sentieon_dnascope,
         tbi_haplotypecaller,
         tbi_manta,
+        tbi_mpileup,
         tbi_sentieon_haplotyper,
         tbi_strelka,
         tbi_tiddit
@@ -415,6 +418,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     tbi_freebayes
     tbi_haplotypecaller
     tbi_manta
+    tbi_mpileup
     tbi_sentieon_dnascope
     tbi_sentieon_haplotyper
     tbi_strelka

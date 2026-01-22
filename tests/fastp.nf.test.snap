@@ -1,5 +1,5 @@
 {
-    "-profile test,trimming --save_trimmed": {
+    "-profile test --save_trimmed": {
         "content": [
             20,
             {
@@ -352,9 +352,9 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T19:47:31.871293074"
+        "timestamp": "2025-12-17T14:34:45.9737357"
     },
-    "-profile test,split_fastq": {
+    "-profile test --split_fastq 150000": {
         "content": [
             26,
             {
@@ -731,6 +731,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T19:49:50.158972554"
+        "timestamp": "2025-12-17T14:36:41.181778447"
     }
 }

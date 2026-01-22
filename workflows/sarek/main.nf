@@ -123,6 +123,7 @@ workflow SAREK {
     main:
     // To gather all QC reports for MultiQC
     ch_multiqc_files = channel.empty()
+    multiqc_publish = channel.empty()
     multiqc_report = channel.empty()
     reports = channel.empty()
 
@@ -516,26 +517,26 @@ workflow SAREK {
 
         // POST VARIANTCALLING
         POST_VARIANTCALLING(
-                tools,
-                cram_variant_calling_status_normal,
-                BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
-                BAM_VARIANT_CALLING_GERMLINE_ALL.out.tbi_all,
-                cram_variant_calling_tumor_only,
-                BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all,
-                BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.tbi_all,
-                cram_variant_calling_pair,
-                BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all,
-                BAM_VARIANT_CALLING_SOMATIC_ALL.out.tbi_all,
-                fasta,
-                fasta_fai,
-                params.concatenate_vcfs,
-                params.filter_vcfs,
-                params.snv_consensus_calling,
-                params.normalize_vcfs,
-                params.varlociraptor_chunk_size,
-                varlociraptor_scenario_germline,
-                varlociraptor_scenario_somatic,
-                varlociraptor_scenario_tumor_only,
+            tools,
+            cram_variant_calling_status_normal,
+            BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
+            BAM_VARIANT_CALLING_GERMLINE_ALL.out.tbi_all,
+            cram_variant_calling_tumor_only,
+            BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all,
+            BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.tbi_all,
+            cram_variant_calling_pair,
+            BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all,
+            BAM_VARIANT_CALLING_SOMATIC_ALL.out.tbi_all,
+            fasta,
+            fasta_fai,
+            params.concatenate_vcfs,
+            params.filter_vcfs,
+            params.snv_consensus_calling,
+            params.normalize_vcfs,
+            params.varlociraptor_chunk_size,
+            varlociraptor_scenario_germline,
+            varlociraptor_scenario_somatic,
+            varlociraptor_scenario_tumor_only,
         )
 
         // Gather vcf files for annotation and QC
@@ -617,11 +618,13 @@ workflow SAREK {
             [],
             [],
         )
+        multiqc_publish = MULTIQC.out.data.mix(MULTIQC.out.plots, MULTIQC.out.report)
         multiqc_report = MULTIQC.out.report.toList()
     }
 
     emit:
     multiqc_report // channel: /path/to/multiqc_report.html
+    multiqc_publish
     versions // channel: [ path(versions.yml) ]
 }
 

@@ -2,7 +2,7 @@
 
 class UTILS {
 
-    public static def get_assertion = { Map args ->
+    public static def getAssertions = { Map args ->
         // Mandatory, as we always need an outdir
         def outdir = args.outdir
 
@@ -68,9 +68,9 @@ class UTILS {
 
         // Always capture stdout and stderr for any WARN message
         if (scenario.snapshot_ignoreWarning) {
-            assertion.add(filterNextflowOutput(workflow.stderr + workflow.stdout, include: ["WARN"], ignore: [scenario.snapshot_ignoreWarning] ) ?: "No warnings")
+            assertion.add(filterNextflowOutput(workflow.stderr + workflow.stdout, include: ["WARN"], ignore: ["Creating env using", "Pulling Singularity image", scenario.snapshot_ignoreWarning] ) ?: "No warnings")
         } else {
-            assertion.add(filterNextflowOutput(workflow.stderr + workflow.stdout, include: ["WARN"] ) ?: "No warnings")
+            assertion.add(filterNextflowOutput(workflow.stderr + workflow.stdout, include: ["WARN"], ignore: ["Creating env using", "Pulling Singularity image"] ) ?: "No warnings")
         }
 
         // Capture std for snapshot
@@ -84,16 +84,16 @@ class UTILS {
             }
 
             if (scenario.snapshot_include) {
-                assertion.add(filterNextflowOutput(workflow_std.flatten(), ignore: [scenario.snapshot_ignore], include:[scenario.snapshot_include]))
+                assertion.add(filterNextflowOutput(workflow_std.flatten(), ignore: ["Creating env using", "Pulling Singularity image", scenario.snapshot_ignore], include:[scenario.snapshot_include]))
             } else {
-                assertion.add(filterNextflowOutput(workflow_std.flatten(), ignore: [scenario.snapshot_ignore]))
+                assertion.add(filterNextflowOutput(workflow_std.flatten(), ignore: ["Creating env using", "Pulling Singularity image", scenario.snapshot_ignore]))
             }
         }
 
         return assertion
     }
 
-    public static def get_test = { scenario ->
+    public static def getTest = { scenario ->
         // This function returns a closure that will be used to run the test and the assertion
         // It will create tags or options based on the scenario
 
@@ -115,9 +115,14 @@ class UTILS {
             // gpu_conda_stub (this should never happen)
             // cpu_conda_stub
 
+            tag "pipeline"
+            tag "pipeline_sarek"
+
             if (scenario.stub) {
                 options "-stub"
             }
+
+            options "-output-dir $outputDir"
 
             if (scenario.gpu) {
                 tag "gpu${!scenario.no_conda ? '_conda' : ''}${scenario.stub ? '_stub' : ''}"
@@ -153,7 +158,7 @@ class UTILS {
                 assertAll(
                     { assert snapshot(
                         // All assertions based on the scenario
-                        *UTILS.get_assertion(
+                        *UTILS.getAssertions(
                             outdir: params.outdir,
                             scenario: scenario,
                             workflow: workflow
