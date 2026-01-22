@@ -18,11 +18,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Nextflow workflow report for run id [adoring_golick]">
+  <meta name="description" content="Nextflow workflow report for run id [tiny_bardeen]">
   <meta name="author" content="Paolo Di Tommaso, Phil Ewels">
   <link rel="icon" type="image/png" href="https://www.nextflow.io/img/favicon.png" />
 
-  <title>[adoring_golick] Nextflow Workflow Report</title>
+  <title>[tiny_bardeen] Nextflow Workflow Report</title>
 
   <style type="text/css">
   /*!
@@ -137,7 +137,7 @@ table.DTCR_clonedTable.dataTable{position:absolute !important;background-color:r
         <li class="nav-item"><a class="nav-link" href="#tasks">Tasks</a></li>
       </ul>
       <span class="navbar-text">
-        [adoring_golick]
+        [tiny_bardeen]
       </span>
     </div>
   </nav>
@@ -146,78 +146,102 @@ table.DTCR_clonedTable.dataTable{position:absolute !important;background-color:r
     <div class="container">
 
       <h1 class="display-3">Nextflow workflow report</h1>
-      <h2 class="text-muted mb-4"><samp>[adoring_golick]</samp> </h2>
+      <h2 class="text-muted mb-4"><samp>[tiny_bardeen]</samp> </h2>
 
       
           <div class="alert alert-danger mb-4">
               <h4>Workflow execution completed unsuccessfully!</h4>
-              <p>The exit status of the task that caused the workflow execution to fail was: <code>127</code>.</p>
+              <p>The exit status of the task that caused the workflow execution to fail was: <code>1</code>.</p>
               <p>The full error message was:</p>
-              <pre>Error executing process > 'NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)'
+              <pre>Error executing process > 'NFCORE_SAREK:SAREK:MULTIQC'
 
 Caused by:
-  Process `NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)` terminated with an error exit status (127)
+  Process `NFCORE_SAREK:SAREK:MULTIQC` terminated with an error exit status (1)
 
 
 Command executed:
 
-  # Link database directories from db_vardbs/ to current directory
-  # so SnpSift can find them next to the VCF files
-  if [ -d "db_vardbs" ]; then
-      for vardb in db_vardbs/*.snpsift.vardb; do
-          if [ -d "$vardb" ]; then
-              ln -s "$vardb" .
-          fi
-      done
-  fi
-  
-  SnpSift \
-      annmem \
+  multiqc \
+      --force \
        \
-      -dbfile test2.vcf.gz -fields DP,VDB,MQB,BQB -prefix TEST_ \
-      test.vcf.gz \
-      | bgzip -c > test_snpSift.ann.vcf.gz
-  
-  tabix -p vcf test_snpSift.ann.vcf.gz
-  
-  cat <<-END_VERSIONS > versions.yml
-  "NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM":
-      snpsift: $( echo $(SnpSift split -h 2>&1) | sed 's/^.*version //' | sed 's/(.*//' | sed 's/t//g' )
-  END_VERSIONS
+      --config multiqc_config.yml \
+       \
+       \
+       \
+       \
+       \
+      .
 
 Command exit status:
-  127
+  1
 
 Command output:
   (empty)
 
 Command error:
   WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
-  .command.sh: line 17: bgzip: command not found
+  Traceback (most recent call last):
+    File "/opt/conda/bin/multiqc", line 10, in <module>
+      sys.exit(run_multiqc())
+               ~~~~~~~~~~~^^
+    File "/opt/conda/lib/python3.14/site-packages/multiqc/__main__.py", line 21, in run_multiqc
+      multiqc.run_cli(prog_name="multiqc")
+      ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+    File "/opt/conda/lib/python3.14/site-packages/click/core.py", line 1485, in __call__
+      return self.main(*args, **kwargs)
+             ~~~~~~~~~^^^^^^^^^^^^^^^^^
+    File "/opt/conda/lib/python3.14/site-packages/rich_click/rich_command.py", line 216, in main
+      rv = self.invoke(ctx)
+    File "/opt/conda/lib/python3.14/site-packages/click/core.py", line 1269, in invoke
+      return ctx.invoke(self.callback, **ctx.params)
+             ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/opt/conda/lib/python3.14/site-packages/click/core.py", line 824, in invoke
+      return callback(*args, **kwargs)
+    File "/opt/conda/lib/python3.14/site-packages/multiqc/multiqc.py", line 545, in run_cli
+      result = run(*analysis_dir, clean_up=clean_up, cfg=cfg, interactive=False)
+    File "/opt/conda/lib/python3.14/site-packages/multiqc/multiqc.py", line 600, in run
+      update_config(*analysis_dir, cfg=cfg, log_to_file=not interactive, print_intro_fn=print_intro)
+      ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/opt/conda/lib/python3.14/site-packages/multiqc/core/update_config.py", line 104, in update_config
+      log_and_rich.init_log(log_to_file=log_to_file)
+      ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/opt/conda/lib/python3.14/site-packages/multiqc/core/log_and_rich.py", line 100, in init_log
+      _add_file_handler()
+      ~~~~~~~~~~~~~~~~~^^
+    File "/opt/conda/lib/python3.14/site-packages/multiqc/core/log_and_rich.py", line 109, in _add_file_handler
+      log_tmp_fn = tmp_dir.get_tmp_dir() / "multiqc.log"
+                   ~~~~~~~~~~~~~~~~~~~^^
+    File "/opt/conda/lib/python3.14/site-packages/multiqc/core/tmp_dir.py", line 21, in get_tmp_dir
+      _tmp_dir = Path(tempfile.mkdtemp())
+                      ~~~~~~~~~~~~~~~~^^
+    File "/opt/conda/lib/python3.14/tempfile.py", line 385, in mkdtemp
+      _os.mkdir(file, 0o700)
+      ~~~~~~~~~^^^^^^^^^^^^^
+  OSError: [Errno 28] No space left on device: '/tmp/tmptsgxahm0'
 
 Work dir:
-  /Users/friederike.hanssen/Projects/sarek-snpsift/work/09/3277d4fb8a813f83fcce5c8e09cc8d
+  /Users/friederike.hanssen/Projects/sarek-snpsift/work/0e/ed60c75a74714d90667eaecdfdcd32
 
 Container:
-  community.wave.seqera.io/library/snpsift:5.3.0a--67d3871d6f67ac2b
+  community.wave.seqera.io/library/multiqc:1.33--ee7739d47738383b
 
-Tip: when you have fixed the problem you can continue the execution adding the option `-resume` to the run command line</pre>
+Tip: you can try to figure out what's wrong by changing to the process work dir and showing the script file named `.command.sh`</pre>
           </div>
       
 
       <dl>
         <dt>Run times</dt>
         <dd>
-          <span id="workflow_start">22-Jan-2026 13:57:06</span> - <span id="workflow_complete">22-Jan-2026 13:58:52</span>
-          (<span id="completed_fromnow"></span>duration: <strong>1m 46s</strong>)
+          <span id="workflow_start">22-Jan-2026 14:06:21</span> - <span id="workflow_complete">22-Jan-2026 14:09:35</span>
+          (<span id="completed_fromnow"></span>duration: <strong>3m 14s</strong>)
         </dd>
 
         <dl>
           <div class="progress" style="height: 1.6rem; margin: 1.2rem auto; border-radius: 0.20rem;">
-            <div style="width: 50.0%" class="progress-bar bg-success" data-toggle="tooltip" data-placement="top" title="1 tasks succeeded"><span class="text-truncate">&nbsp; 1 succeeded &nbsp;</span></div>
+            <div style="width: 66.67%" class="progress-bar bg-success" data-toggle="tooltip" data-placement="top" title="2 tasks succeeded"><span class="text-truncate">&nbsp; 2 succeeded &nbsp;</span></div>
             <div style="width: 0.0%" class="progress-bar bg-secondary" data-toggle="tooltip" data-placement="top" title="0 tasks were cached"><span class="text-truncate">&nbsp; 0 cached &nbsp;</span></div>
             <div style="width: 0.0%" class="progress-bar bg-warning" data-toggle="tooltip" data-placement="top" title="0 tasks failed and were ignored"><span class="text-truncate">&nbsp; 0 ignored &nbsp;</span></div>
-            <div style="width: 50.0%" class="progress-bar bg-danger" data-toggle="tooltip" data-placement="top" title="1 tasks failed"><span class="text-truncate">&nbsp; 1 failed (0 retries) &nbsp;</span></div>
+            <div style="width: 33.33%" class="progress-bar bg-danger" data-toggle="tooltip" data-placement="top" title="1 tasks failed"><span class="text-truncate">&nbsp; 1 failed (0 retries) &nbsp;</span></div>
           </div>
         </dl>
 
@@ -249,7 +273,7 @@ Tip: when you have fixed the problem you can continue the execution adding the o
         
 
         <dt class="col-sm-3">Workflow session</dt>
-        <dd class="col-sm-9"><code>64e0006b-e1ca-401e-8f37-9d78a4dcf03c</code></dd>
+        <dd class="col-sm-9"><code>2393769f-7df4-489e-814e-6ec8b7b34f53</code></dd>
 
         
 
@@ -1083,7 +1107,7 @@ $(function() {
 
   // Nextflow report data
   window.data = { "trace":[
-{"task_id":"1","hash":"4c\/f1cb22","native_id":"34193","process":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB","module":"-","container":"community.wave.seqera.io\/library\/snpsift:5.3.0a--67d3871d6f67ac2b","tag":"test2.vcf","name":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","status":"COMPLETED","exit":"0","submit":"1769086722293","start":"1769086722382","complete":"1769086728620","duration":"6327","realtime":"3679","%cpu":"185.1","%mem":"1.7","rss":"203669504","vmem":"4516233216","peak_rss":"203669504","peak_vmem":"4577533952","rchar":"9440954","wchar":"13784","syscr":"1729","syscw":"370","read_bytes":"0","write_bytes":"8167","attempt":"1","workdir":"\/Users\/friederike.hanssen\/Projects\/sarek-snpsift\/work\/4c\/f1cb223a69e6be5fa6286185fb9870","script":"\n    SnpSift \\\n        annmem \\\n        -create \\\n         \\\n        -dbfile test2.vcf.gz \\\n        -fields DP,VDB,MQB,BQB\n\n    cat <<-END_VERSIONS > versions.yml\n    \"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB\":\n        snpsift: $( echo $(SnpSift split -h 2>&1) | sed \'s\/^.*version \/\/\' | sed \'s\/(.*\/\/\' | sed \'s\/t\/\/g\' )\n    END_VERSIONS\n    ","scratch":"-","queue":"-","cpus":"4","memory":"16106127360","disk":"-","time":"7200000","env":"PYTHONNOUSERSITE=1\nR_PROFILE_USER=\/.Rprofile\nR_ENVIRON_USER=\/.Renviron\nJULIA_DEPOT_PATH=\/usr\/local\/share\/julia\nPATH=$PATH:\/Users\/friederike.hanssen\/Projects\/sarek-snpsift\/bin\n","error_action":"-","vol_ctxt":"14","inv_ctxt":"0","hostname":"-","cpu_model":"-"},{"task_id":"2","hash":"09\/3277d4","native_id":"34861","process":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM","module":"-","container":"community.wave.seqera.io\/library\/snpsift:5.3.0a--67d3871d6f67ac2b","tag":"test","name":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","status":"FAILED","exit":"127","submit":"1769086729380","start":"1769086729450","complete":"1769086732646","duration":"3266","realtime":"3196","%cpu":"-","%mem":"-","rss":"-","vmem":"-","peak_rss":"-","peak_vmem":"-","rchar":"-","wchar":"-","syscr":"-","syscw":"-","read_bytes":"-","write_bytes":"-","attempt":"1","workdir":"\/Users\/friederike.hanssen\/Projects\/sarek-snpsift\/work\/09\/3277d4fb8a813f83fcce5c8e09cc8d","script":"\n    # Link database directories from db_vardbs\/ to current directory\n    # so SnpSift can find them next to the VCF files\n    if [ -d \"db_vardbs\" ]; then\n        for vardb in db_vardbs\/*.snpsift.vardb; do\n            if [ -d \"$vardb\" ]; then\n                ln -s \"$vardb\" .\n            fi\n        done\n    fi\n\n    SnpSift \\\n        annmem \\\n         \\\n        -dbfile test2.vcf.gz -fields DP,VDB,MQB,BQB -prefix TEST_ \\\n        test.vcf.gz \\\n        | bgzip -c > test_snpSift.ann.vcf.gz\n\n    tabix -p vcf test_snpSift.ann.vcf.gz\n\n    cat <<-END_VERSIONS > versions.yml\n    \"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM\":\n        snpsift: $( echo $(SnpSift split -h 2>&1) | sed \'s\/^.*version \/\/\' | sed \'s\/(.*\/\/\' | sed \'s\/t\/\/g\' )\n    END_VERSIONS\n    ","scratch":"-","queue":"-","cpus":"4","memory":"16106127360","disk":"-","time":"7200000","env":"PYTHONNOUSERSITE=1\nR_PROFILE_USER=\/.Rprofile\nR_ENVIRON_USER=\/.Renviron\nJULIA_DEPOT_PATH=\/usr\/local\/share\/julia\nPATH=$PATH:\/Users\/friederike.hanssen\/Projects\/sarek-snpsift\/bin\n","error_action":"FINISH","vol_ctxt":"-","inv_ctxt":"-","hostname":"-","cpu_model":"-"}], "summary":[{"cpuUsage":{"mean":46.28,"min":46.28,"q1":46.28,"q2":46.28,"q3":46.28,"max":46.28,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)"},"process":"SNPSIFT_ANNMEM_CREATE_DB","mem":{"mean":203669504,"min":203669504,"q1":203669504,"q2":203669504,"q3":203669504,"max":203669504,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)"},"memUsage":{"mean":1.26,"min":1.26,"q1":1.26,"q2":1.26,"q3":1.26,"max":1.26,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)"},"timeUsage":{"mean":0.05,"min":0.05,"q1":0.05,"q2":0.05,"q3":0.05,"max":0.05,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)"},"vmem":{"mean":4577533952,"min":4577533952,"q1":4577533952,"q2":4577533952,"q3":4577533952,"max":4577533952,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)"},"reads":{"mean":9440954,"min":9440954,"q1":9440954,"q2":9440954,"q3":9440954,"max":9440954,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)"},"cpu":{"mean":185.1,"min":185.1,"q1":185.1,"q2":185.1,"q3":185.1,"max":185.1,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)"},"time":{"mean":3679,"min":3679,"q1":3679,"q2":3679,"q3":3679,"max":3679,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)"},"writes":{"mean":13784,"min":13784,"q1":13784,"q2":13784,"q3":13784,"max":13784,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)"}},{"cpuUsage":null,"process":"SNPSIFT_ANNMEM","mem":null,"memUsage":null,"timeUsage":{"mean":0.04,"min":0.04,"q1":0.04,"q2":0.04,"q3":0.04,"max":0.04,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)"},"vmem":null,"reads":null,"cpu":null,"time":{"mean":3196,"min":3196,"q1":3196,"q2":3196,"q3":3196,"max":3196,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)"},"writes":null}] };
+{"task_id":"1","hash":"82\/3124ab","native_id":"82938","process":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB","module":"-","container":"community.wave.seqera.io\/library\/htslib_snpsift:4df051c7ff79f7f9","tag":"test2.vcf","name":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","status":"COMPLETED","exit":"0","submit":"1769087278472","start":"1769087278506","complete":"1769087306289","duration":"27817","realtime":"281","%cpu":"160.7","%mem":"0.1","rss":"12750848","vmem":"19390464","peak_rss":"12750848","peak_vmem":"19390464","rchar":"19937977","wchar":"9651","syscr":"3789","syscw":"290","read_bytes":"552960","write_bytes":"8167","attempt":"1","workdir":"\/Users\/friederike.hanssen\/Projects\/sarek-snpsift\/work\/82\/3124abbf6cc8e311a630c16708a38a","script":"\n    SnpSift \\\n        annmem \\\n        -create \\\n         \\\n        -dbfile test2.vcf.gz \\\n        -fields DP,VDB,MQB,BQB\n\n    cat <<-END_VERSIONS > versions.yml\n    \"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB\":\n        snpsift: $( echo $(SnpSift split -h 2>&1) | sed \'s\/^.*version \/\/\' | sed \'s\/(.*\/\/\' | sed \'s\/t\/\/g\' )\n    END_VERSIONS\n    ","scratch":"-","queue":"-","cpus":"4","memory":"16106127360","disk":"-","time":"7200000","env":"PYTHONNOUSERSITE=1\nR_PROFILE_USER=\/.Rprofile\nR_ENVIRON_USER=\/.Renviron\nJULIA_DEPOT_PATH=\/usr\/local\/share\/julia\nPATH=$PATH:\/Users\/friederike.hanssen\/Projects\/sarek-snpsift\/bin\n","error_action":"-","vol_ctxt":"7","inv_ctxt":"1","hostname":"-","cpu_model":"-"},{"task_id":"2","hash":"5a\/338d2a","native_id":"90968","process":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM","module":"-","container":"community.wave.seqera.io\/library\/htslib_snpsift:4df051c7ff79f7f9","tag":"test","name":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","status":"COMPLETED","exit":"0","submit":"1769087367840","start":"1769087367872","complete":"1769087368569","duration":"729","realtime":"290","%cpu":"169.0","%mem":"0.0","rss":"3092480","vmem":"4567040","peak_rss":"3092480","peak_vmem":"4567040","rchar":"19796511","wchar":"7535","syscr":"5625","syscw":"40","read_bytes":"69632","write_bytes":"1721","attempt":"1","workdir":"\/Users\/friederike.hanssen\/Projects\/sarek-snpsift\/work\/5a\/338d2a9d8c3ebeac036bfb752992a8","script":"\n    # Link database directories from db_vardbs\/ to current directory\n    # so SnpSift can find them next to the VCF files\n    if [ -d \"db_vardbs\" ]; then\n        for vardb in db_vardbs\/*.snpsift.vardb; do\n            if [ -d \"$vardb\" ]; then\n                ln -s \"$vardb\" .\n            fi\n        done\n    fi\n\n    SnpSift \\\n        annmem \\\n         \\\n        -dbfile test2.vcf.gz -fields DP,VDB,MQB,BQB -prefix TEST_ \\\n        test.vcf.gz \\\n        | bgzip -c > test_snpSift.ann.vcf.gz\n\n    tabix -p vcf test_snpSift.ann.vcf.gz\n\n    cat <<-END_VERSIONS > versions.yml\n    \"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM\":\n        snpsift: $( echo $(SnpSift split -h 2>&1) | sed \'s\/^.*version \/\/\' | sed \'s\/(.*\/\/\' | sed \'s\/t\/\/g\' )\n    END_VERSIONS\n    ","scratch":"-","queue":"-","cpus":"4","memory":"16106127360","disk":"-","time":"7200000","env":"PYTHONNOUSERSITE=1\nR_PROFILE_USER=\/.Rprofile\nR_ENVIRON_USER=\/.Renviron\nJULIA_DEPOT_PATH=\/usr\/local\/share\/julia\nPATH=$PATH:\/Users\/friederike.hanssen\/Projects\/sarek-snpsift\/bin\n","error_action":"-","vol_ctxt":"16","inv_ctxt":"0","hostname":"-","cpu_model":"-"},{"task_id":"3","hash":"0e\/ed60c7","native_id":"91012","process":"NFCORE_SAREK:SAREK:MULTIQC","module":"-","container":"community.wave.seqera.io\/library\/multiqc:1.33--ee7739d47738383b","tag":"-","name":"NFCORE_SAREK:SAREK:MULTIQC","status":"FAILED","exit":"1","submit":"1769087368603","start":"1769087368669","complete":"1769087375629","duration":"7026","realtime":"6960","%cpu":"-","%mem":"-","rss":"-","vmem":"-","peak_rss":"-","peak_vmem":"-","rchar":"-","wchar":"-","syscr":"-","syscw":"-","read_bytes":"-","write_bytes":"-","attempt":"1","workdir":"\/Users\/friederike.hanssen\/Projects\/sarek-snpsift\/work\/0e\/ed60c75a74714d90667eaecdfdcd32","script":"\n    multiqc \\\n        --force \\\n         \\\n        --config multiqc_config.yml \\\n         \\\n         \\\n         \\\n         \\\n         \\\n        .\n    ","scratch":"-","queue":"-","cpus":"4","memory":"12884901888","disk":"-","time":"7200000","env":"PYTHONNOUSERSITE=1\nR_PROFILE_USER=\/.Rprofile\nR_ENVIRON_USER=\/.Renviron\nJULIA_DEPOT_PATH=\/usr\/local\/share\/julia\nPATH=$PATH:\/Users\/friederike.hanssen\/Projects\/sarek-snpsift\/bin\n","error_action":"FINISH","vol_ctxt":"-","inv_ctxt":"-","hostname":"-","cpu_model":"-"}], "summary":[{"cpuUsage":{"mean":40.17,"min":40.17,"q1":40.17,"q2":40.17,"q3":40.17,"max":40.17,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)"},"process":"SNPSIFT_ANNMEM_CREATE_DB","mem":{"mean":12750848,"min":12750848,"q1":12750848,"q2":12750848,"q3":12750848,"max":12750848,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)"},"memUsage":{"mean":0.08,"min":0.08,"q1":0.08,"q2":0.08,"q3":0.08,"max":0.08,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)"},"timeUsage":null,"vmem":{"mean":19390464,"min":19390464,"q1":19390464,"q2":19390464,"q3":19390464,"max":19390464,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)"},"reads":{"mean":19937977,"min":19937977,"q1":19937977,"q2":19937977,"q3":19937977,"max":19937977,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)"},"cpu":{"mean":160.7,"min":160.7,"q1":160.7,"q2":160.7,"q3":160.7,"max":160.7,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)"},"time":{"mean":281,"min":281,"q1":281,"q2":281,"q3":281,"max":281,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)"},"writes":{"mean":9651,"min":9651,"q1":9651,"q2":9651,"q3":9651,"max":9651,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM_CREATE_DB (test2.vcf)"}},{"cpuUsage":{"mean":42.25,"min":42.25,"q1":42.25,"q2":42.25,"q3":42.25,"max":42.25,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)"},"process":"SNPSIFT_ANNMEM","mem":{"mean":3092480,"min":3092480,"q1":3092480,"q2":3092480,"q3":3092480,"max":3092480,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)"},"memUsage":{"mean":0.02,"min":0.02,"q1":0.02,"q2":0.02,"q3":0.02,"max":0.02,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)"},"timeUsage":null,"vmem":{"mean":4567040,"min":4567040,"q1":4567040,"q2":4567040,"q3":4567040,"max":4567040,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)"},"reads":{"mean":19796511,"min":19796511,"q1":19796511,"q2":19796511,"q3":19796511,"max":19796511,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)"},"cpu":{"mean":169,"min":169,"q1":169,"q2":169,"q3":169,"max":169,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)"},"time":{"mean":290,"min":290,"q1":290,"q2":290,"q3":290,"max":290,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)"},"writes":{"mean":7535,"min":7535,"q1":7535,"q2":7535,"q3":7535,"max":7535,"minLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","maxLabel":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q1Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q2Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)","q3Label":"NFCORE_SAREK:SAREK:VCF_ANNOTATE_ALL:VCF_ANNOTATE_SNPSIFT:SNPSIFT_ANNMEM (test)"}},{"cpuUsage":null,"process":"MULTIQC","mem":null,"memUsage":null,"timeUsage":{"mean":0.1,"min":0.1,"q1":0.1,"q2":0.1,"q3":0.1,"max":0.1,"minLabel":"NFCORE_SAREK:SAREK:MULTIQC","maxLabel":"NFCORE_SAREK:SAREK:MULTIQC","q1Label":"NFCORE_SAREK:SAREK:MULTIQC","q2Label":"NFCORE_SAREK:SAREK:MULTIQC","q3Label":"NFCORE_SAREK:SAREK:MULTIQC"},"vmem":null,"reads":null,"cpu":null,"time":{"mean":6960,"min":6960,"q1":6960,"q2":6960,"q3":6960,"max":6960,"minLabel":"NFCORE_SAREK:SAREK:MULTIQC","maxLabel":"NFCORE_SAREK:SAREK:MULTIQC","q1Label":"NFCORE_SAREK:SAREK:MULTIQC","q2Label":"NFCORE_SAREK:SAREK:MULTIQC","q3Label":"NFCORE_SAREK:SAREK:MULTIQC"},"writes":null}] };
 
   </script>
 

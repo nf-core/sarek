@@ -125,7 +125,7 @@
     "show_hidden": false,
     "version": false,
     "pipelines_testdata_base_path": "https://raw.githubusercontent.com/nf-core/test-datasets/",
-    "trace_report_suffix": "2026-01-22_13-57-03",
+    "trace_report_suffix": "2026-01-22_14-06-19",
     "config_profile_name": "Test profile",
     "config_profile_description": "Minimal test dataset to check pipeline function",
     "custom_config_version": "master",
