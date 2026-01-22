@@ -658,7 +658,7 @@
     },
     "-profile test --snv_consensus_calling --normalize_vcfs --tools mpileup,mutect2,strelka (germline + somatic)": {
         "content": [
-            67,
+            62,
             {
                 "ADD_INFO_TO_VCF": {
                     "gawk": "5.3.0"
@@ -668,10 +668,6 @@
                 },
                 "BCFTOOLS_ISEC": {
                     "bcftools": 1.22
-                },
-                "CONSENSUS_FROM_SITES": {
-                    "gawk": "5.3.0",
-                    "htslib": 1.21
                 },
                 "BCFTOOLS_MPILEUP": {
                     "bcftools": 1.21
@@ -898,20 +894,14 @@
                 "variant_calling/consensus/sample3/sample3_consensus/0000.vcf.gz.tbi",
                 "variant_calling/consensus/sample3/sample3_consensus/0001.vcf.gz",
                 "variant_calling/consensus/sample3/sample3_consensus/0001.vcf.gz.tbi",
-                "variant_calling/consensus/sample3/sample3_consensus/0002.vcf.gz",
-                "variant_calling/consensus/sample3/sample3_consensus/0002.vcf.gz.tbi",
                 "variant_calling/consensus/sample3/sample3_consensus/README.txt",
                 "variant_calling/consensus/sample3/sample3_consensus/sites.txt",
                 "variant_calling/consensus/sample4_vs_sample3",
-                "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3.consensus.vcf.gz",
-                "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3.consensus.vcf.gz.tbi",
                 "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus",
                 "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus/0000.vcf.gz",
                 "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus/0000.vcf.gz.tbi",
                 "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus/0001.vcf.gz",
                 "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus/0001.vcf.gz.tbi",
-                "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus/0002.vcf.gz",
-                "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus/0002.vcf.gz.tbi",
                 "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus/README.txt",
                 "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus/sites.txt",
                 "variant_calling/mutect2",
@@ -1010,8 +1000,12 @@
                     "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=70, phased=true, phasedAutodetect=true]"
                 ],
                 [
-                    "sample4_vs_sample3.consensus.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=70, phased=true, phasedAutodetect=true]"
+                    "0001.vcf.gz",
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=70, phased=false, phasedAutodetect=false]"
+                ],
+                [
+                    "0001.vcf.gz",
+                    "VcfFile [chromosomes=[], sampleCount=2, variantCount=0, phased=true, phasedAutodetect=true]"
                 ],
                 [
                     "sample4_vs_sample3.mutect2.filtered.vcf.gz",
