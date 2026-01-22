@@ -557,7 +557,7 @@ workflow SAREK {
             vcf_to_annotate = input_sample
         }
 
-        if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff') || tools.split(',').contains('vep') || tools.split(',').contains('bcfann')) {
+        if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff') || tools.split(',').contains('vep') || tools.split(',').contains('bcfann') || tools.split(',').contains('snpsift')) {
 
             vep_fasta = params.vep_include_fasta ? fasta : [[id: 'null'], []]
 

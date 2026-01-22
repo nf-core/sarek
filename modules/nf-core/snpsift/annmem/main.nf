@@ -41,6 +41,16 @@ process SNPSIFT_ANNMEM {
     }
 
     """
+    # Link database directories from db_vardbs/ to current directory
+    # so SnpSift can find them next to the VCF files
+    if [ -d "db_vardbs" ]; then
+        for vardb in db_vardbs/*.snpsift.vardb; do
+            if [ -d "\$vardb" ]; then
+                ln -s "\$vardb" .
+            fi
+        done
+    fi
+
     SnpSift \\
         annmem \\
         ${args} \\

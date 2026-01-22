@@ -1,0 +1,5 @@
+SNPSIFT_ANNMEM_CREATE_DB:
+  snpsift: 5.3a
+Workflow:
+    nf-core/sarek: v3.8.0
+    Nextflow: 25.10.2

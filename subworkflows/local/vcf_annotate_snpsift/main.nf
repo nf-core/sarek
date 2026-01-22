@@ -7,7 +7,7 @@ include { SNPSIFT_ANNMEM          } from '../../../modules/nf-core/snpsift/annme
 
 workflow VCF_ANNOTATE_SNPSIFT {
     take:
-    ch_vcf                  // channel: [val(meta), path(vcf), path(tbi)]
+    ch_vcf                  // channel: [val(meta), path(vcf)]
     val_databases           // List: [path(db1.vcf.gz), path(db2.vcf.gz), ...]
     val_databases_tbi       // List: [path(db1.vcf.gz.tbi), path(db2.vcf.gz.tbi), ...]
     val_db_configs          // List: [[fields: 'ID', prefix: ''], [fields: 'AF', prefix: 'ExAC_'], ...]
@@ -16,6 +16,9 @@ workflow VCF_ANNOTATE_SNPSIFT {
     main:
     ch_versions = Channel.empty()
     ch_db_vardbs = Channel.empty()
+
+    // Add empty tbi placeholder to input VCF channel
+    ch_vcf_with_tbi = ch_vcf.map { meta, vcf -> [meta, vcf, []] }
 
     // Step 1: Create databases if requested
     if (val_create_dbs) {
@@ -46,7 +49,7 @@ workflow VCF_ANNOTATE_SNPSIFT {
 
     // Step 2: Annotate with all databases in one pass
     SNPSIFT_ANNMEM(
-        ch_vcf,
+        ch_vcf_with_tbi,
         val_databases,
         val_databases_tbi,
         ch_db_vardbs,

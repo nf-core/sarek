@@ -1,0 +1,8 @@
+[
+    {
+        "vcf": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/vcf/test2.vcf.gz",
+        "tbi": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/vcf/test2.vcf.gz.tbi",
+        "fields": "DP,VDB,MQB,BQB",
+        "prefix": "TEST_"
+    }
+]

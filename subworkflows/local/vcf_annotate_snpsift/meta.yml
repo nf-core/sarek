@@ -13,8 +13,8 @@ input:
   - ch_vcf:
       type: file
       description: |
-        Channel containing VCF files with metadata and index
-        Structure: [val(meta), path(vcf), path(tbi)]
+        Channel containing VCF files with metadata
+        Structure: [val(meta), path(vcf)]
       pattern: "*.{vcf,vcf.gz}"
   - val_databases:
       type: file

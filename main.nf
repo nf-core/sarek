@@ -224,20 +224,22 @@ workflow NFCORE_SAREK {
     }
 
     // Build SnpSift annotation databases configuration
-    // Users can specify databases in a custom config file like:
-    // params {
-    //     snpsift_databases = [
-    //         [vcf: 'cosmic.vcf.gz', tbi: 'cosmic.vcf.gz.tbi', fields: 'AA,CDS,CNT,GENE', prefix: 'COSMIC_'],
-    //         [vcf: 'exac.vcf.gz', tbi: 'exac.vcf.gz.tbi', fields: 'AF', prefix: 'ExAC_'],
-    //         [vcf: '1000g.vcf.gz', tbi: '1000g.vcf.gz.tbi', fields: 'AF', prefix: '1000G_']
-    //     ]
-    // }
+    // Users can specify databases in a JSON file like:
+    // [
+    //     {"vcf": "cosmic.vcf.gz", "tbi": "cosmic.vcf.gz.tbi", "fields": "AA,CDS,CNT,GENE", "prefix": "COSMIC_"},
+    //     {"vcf": "exac.vcf.gz", "tbi": "exac.vcf.gz.tbi", "fields": "AF", "prefix": "ExAC_"},
+    //     {"vcf": "1000g.vcf.gz", "tbi": "1000g.vcf.gz.tbi", "fields": "AF", "prefix": "1000G_"}
+    // ]
     snpsift_databases = []
     snpsift_databases_tbi = []
     snpsift_db_configs = []
 
     if (params.snpsift_databases) {
-        params.snpsift_databases.each { db_config ->
+        // Parse JSON file
+        def json_file = file(params.snpsift_databases, checkIfExists: true)
+        def databases_list = new groovy.json.JsonSlurper().parse(json_file)
+
+        databases_list.each { db_config ->
             snpsift_databases.add(file(db_config.vcf, checkIfExists: true))
             snpsift_databases_tbi.add(file(db_config.tbi, checkIfExists: true))
             snpsift_db_configs.add([
@@ -307,6 +309,10 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.vep_fasta,
         params.vep_genome,
         params.vep_species,
+        snpsift_databases,
+        snpsift_databases_tbi,
+        snpsift_db_configs,
+        params.snpsift_create_dbs,
         versions,
     )
 
