@@ -588,11 +588,11 @@
                 },
                 "condel_config": {
                     "type": "string",
-                    "format": "directory-path",
+                    "format": "file-path",
                     "exists": true,
-                    "fa_icon": "fas fa-folder",
-                    "description": "Path to Condel config directory.",
-                    "help_text": "To be used with `--vep_condel`. The directory should contain cutoffs and distribution files for the Condel plugin."
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to Condel config file.",
+                    "help_text": "To be used with `--vep_condel`. Path to the Condel plugin configuration file (e.g., condel_SP.conf)."
                 },
                 "vep_dbnsfp": {
                     "type": "boolean",
@@ -689,7 +689,7 @@
                     "fa_icon": "far fa-check-circle",
                     "pattern": "^((Gene|Variation|QTL|StructuralVariation|SupportingStructuralVariation|RegulatoryFeature)?&?)*(?<!&)$",
                     "description": "Phenotypes plugin feature types to include.",
-                    "help_text": "&-separated list of feature types to include (e.g., 'Gene,Variation'). Options: Gene, Variation, QTL, StructuralVariation, SupportingStructuralVariation, RegulatoryFeature. To be used with `--vep_phenotypes`."
+                    "help_text": "&-separated list of feature types to include (e.g., 'Gene&Variation'). Options: Gene, Variation, QTL, StructuralVariation, SupportingStructuralVariation, RegulatoryFeature. To be used with `--vep_phenotypes`."
                 },
                 "vep_spliceai": {
                     "type": "boolean",
