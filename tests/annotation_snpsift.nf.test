@@ -1,0 +1,35 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+
+    def test_scenario = [
+        [
+            name: "-profile test --tools snpsift --snpsift_create_dbs",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
+                step: 'annotate',
+                tools: 'snpsift',
+                snpsift_databases: "${projectDir}/tests/config/snpsift_test_databases.csv",
+                snpsift_create_dbs: true
+            ]
+        ],
+        [
+            name: "-profile test --tools snpsift (no db creation)",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
+                step: 'annotate',
+                tools: 'snpsift',
+                snpsift_databases: "${projectDir}/tests/config/snpsift_test_databases.csv",
+                snpsift_create_dbs: false
+            ]
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}

@@ -75,6 +75,7 @@ include { PIPELINE_INITIALISATION         } from './subworkflows/local/utils_nfc
 include { PREPARE_GENOME                  } from './subworkflows/local/prepare_genome'
 include { PREPARE_INTERVALS               } from './subworkflows/local/prepare_intervals'
 include { PREPARE_REFERENCE_CNVKIT        } from './subworkflows/local/prepare_reference_cnvkit'
+include { samplesheetToList               } from 'plugin/nf-schema'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -223,28 +224,30 @@ workflow NFCORE_SAREK {
         vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
     }
 
-    // Build SnpSift annotation databases configuration
-    // Users can specify databases in a JSON file like:
-    // [
-    //     {"vcf": "cosmic.vcf.gz", "tbi": "cosmic.vcf.gz.tbi", "fields": "AA,CDS,CNT,GENE", "prefix": "COSMIC_"},
-    //     {"vcf": "exac.vcf.gz", "tbi": "exac.vcf.gz.tbi", "fields": "AF", "prefix": "ExAC_"},
-    //     {"vcf": "1000g.vcf.gz", "tbi": "1000g.vcf.gz.tbi", "fields": "AF", "prefix": "1000G_"}
-    // ]
-    snpsift_databases = []
-    snpsift_databases_tbi = []
+    // Build SnpSift annotation databases configuration from CSV samplesheet
+    // CSV format: vcf,tbi,fields,prefix,vardb
+    // - vcf: Path to annotation VCF (required)
+    // - tbi: Path to tabix index (optional, defaults to ${vcf}.tbi)
+    // - fields: Semicolon-separated INFO fields to extract (optional)
+    // - prefix: Prefix for annotated field names (optional)
+    // - vardb: Path to pre-built .snpsift.vardb directory (optional)
     snpsift_db_configs = []
 
     if (params.snpsift_databases) {
-        // Parse JSON file
-        def json_file = file(params.snpsift_databases, checkIfExists: true)
-        def databases_list = new groovy.json.JsonSlurper().parse(json_file)
+        // Parse and validate CSV using nf-schema
+        def db_list = samplesheetToList(params.snpsift_databases, "${projectDir}/assets/schema_snpsift_databases.json")
 
-        databases_list.each { db_config ->
-            snpsift_databases.add(file(db_config.vcf, checkIfExists: true))
-            snpsift_databases_tbi.add(file(db_config.tbi, checkIfExists: true))
+        db_list.each { row ->
+            def vcf_file = file(row.vcf, checkIfExists: true)
+            def tbi_file = row.tbi ? file(row.tbi, checkIfExists: true) : file("${row.vcf}.tbi", checkIfExists: true)
+            def vardb_file = row.vardb ? file(row.vardb, checkIfExists: true) : null
+
             snpsift_db_configs.add([
-                fields: db_config.fields ?: '',
-                prefix: db_config.prefix ?: ''
+                vcf: vcf_file,
+                tbi: tbi_file,
+                fields: row.fields ?: '',
+                prefix: row.prefix ?: '',
+                vardb: vardb_file
             ])
         }
     }
@@ -309,8 +312,6 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.vep_fasta,
         params.vep_genome,
         params.vep_species,
-        snpsift_databases,
-        snpsift_databases_tbi,
         snpsift_db_configs,
         params.snpsift_create_dbs,
         versions,

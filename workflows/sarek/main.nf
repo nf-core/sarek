@@ -118,8 +118,6 @@ workflow SAREK {
     vep_fasta
     vep_genome
     vep_species
-    snpsift_databases
-    snpsift_databases_tbi
     snpsift_db_configs
     snpsift_create_dbs
     versions
@@ -576,8 +574,6 @@ workflow SAREK {
                 bcftools_annotations_tbi,
                 bcftools_columns,
                 bcftools_header_lines,
-                snpsift_databases,
-                snpsift_databases_tbi,
                 snpsift_db_configs,
                 snpsift_create_dbs,
             )

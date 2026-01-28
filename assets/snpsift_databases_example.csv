@@ -1,0 +1,7 @@
+vcf,tbi,fields,prefix,vardb
+/path/to/annotations/dbsnp/dbsnp_156.vcf.gz,,RS;COMMON;SAO,dbSNP_,/path/to/annotations/dbsnp/dbsnp_156.vcf.gz.snpsift.vardb
+/path/to/annotations/gnomad/gnomad.genomes.v4.0.sites.vcf.gz,,AF;AC;AN;nhomalt,gnomAD_,
+/path/to/annotations/clinvar/clinvar_20240101.vcf.gz,,CLNSIG;CLNDN;CLNREVSTAT,ClinVar_,
+/path/to/annotations/1000genomes/ALL.wgs.phase3.sites.vcf.gz,,AF;EAS_AF;EUR_AF;AFR_AF,1000G_,
+/path/to/annotations/cosmic/cosmic_v99.vcf.gz,,GENE;STRAND;CDS;AA;CNT,COSMIC_,
+/path/to/annotations/custom/my_annotations.vcf.gz,/path/to/custom.vcf.gz.tbi,,,

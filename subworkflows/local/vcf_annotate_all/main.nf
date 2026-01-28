@@ -24,8 +24,6 @@ workflow VCF_ANNOTATE_ALL {
     bcftools_annotations_index
     bcftools_columns
     bcftools_header_lines
-    snpsift_databases
-    snpsift_databases_tbi
     snpsift_db_configs
     snpsift_create_dbs
 
@@ -51,8 +49,6 @@ workflow VCF_ANNOTATE_ALL {
     if (tools.split(',').contains('snpsift')) {
         VCF_ANNOTATE_SNPSIFT(
             vcf,
-            snpsift_databases,
-            snpsift_databases_tbi,
             snpsift_db_configs,
             snpsift_create_dbs
         )

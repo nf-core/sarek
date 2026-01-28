@@ -8,52 +8,63 @@ include { SNPSIFT_ANNMEM          } from '../../../modules/nf-core/snpsift/annme
 workflow VCF_ANNOTATE_SNPSIFT {
     take:
     ch_vcf                  // channel: [val(meta), path(vcf)]
-    val_databases           // List: [path(db1.vcf.gz), path(db2.vcf.gz), ...]
-    val_databases_tbi       // List: [path(db1.vcf.gz.tbi), path(db2.vcf.gz.tbi), ...]
-    val_db_configs          // List: [[fields: 'ID', prefix: ''], [fields: 'AF', prefix: 'ExAC_'], ...]
-    val_create_dbs          // Boolean: whether to create databases (false = use existing)
+    val_db_configs          // List of maps: [[vcf: file, tbi: file, fields: '', prefix: '', vardb: null], ...]
+    val_create_dbs          // Boolean: whether to create databases for entries without pre-built vardb
 
     main:
     ch_versions = Channel.empty()
-    ch_db_vardbs = Channel.empty()
 
     // Add empty tbi placeholder to input VCF channel
     ch_vcf_with_tbi = ch_vcf.map { meta, vcf -> [meta, vcf, []] }
 
-    // Step 1: Create databases if requested
+    // Extract components from unified config
+    def databases = val_db_configs.collect { it.vcf }
+    def databases_tbi = val_db_configs.collect { it.tbi }
+    def db_configs_simple = val_db_configs.collect { [fields: it.fields ?: '', prefix: it.prefix ?: ''] }
+    def prebuilt_vardbs = val_db_configs.collect { it.vardb }.findAll { it != null }
+
     if (val_create_dbs) {
-        // Create channel with database info
-        ch_dbs_to_create = Channel.fromList(
-            val_databases.withIndex().collect { db, idx ->
+        // Only create databases for entries WITHOUT pre-built vardb
+        def dbs_to_create = val_db_configs
+            .findAll { it.vardb == null }
+            .collect { config ->
                 [
-                    [id: db.baseName],
-                    db,
-                    val_databases_tbi[idx],
-                    val_db_configs[idx].fields ?: ''
+                    [id: config.vcf.baseName],
+                    config.vcf,
+                    config.tbi,
+                    config.fields ?: ''
                 ]
             }
-        )
 
-        SNPSIFT_ANNMEM_CREATE_DB(ch_dbs_to_create)
+        if (dbs_to_create) {
+            ch_dbs_to_create = Channel.fromList(dbs_to_create)
 
-        ch_db_vardbs = SNPSIFT_ANNMEM_CREATE_DB.out.database
-            .map { meta, vardb -> vardb }
-            .collect()
+            SNPSIFT_ANNMEM_CREATE_DB(ch_dbs_to_create)
 
-        ch_versions = ch_versions.mix(SNPSIFT_ANNMEM_CREATE_DB.out.versions.first())
+            // Combine created vardbs with pre-built ones
+            ch_db_vardbs = SNPSIFT_ANNMEM_CREATE_DB.out.database
+                .map { meta, vardb -> vardb }
+                .collect()
+                .map { created -> prebuilt_vardbs + created }
+
+            ch_versions = ch_versions.mix(SNPSIFT_ANNMEM_CREATE_DB.out.versions.first())
+        } else {
+            // All databases have pre-built vardbs
+            ch_db_vardbs = Channel.value(prebuilt_vardbs)
+        }
     } else {
-        // Use pre-existing databases
-        // SnpSift will look for .snpsift.vardb directories next to VCF files
-        ch_db_vardbs = Channel.value([])
+        // Use pre-existing databases only
+        // If user specified vardb paths in config, use those
+        ch_db_vardbs = Channel.value(prebuilt_vardbs)
     }
 
-    // Step 2: Annotate with all databases in one pass
+    // Annotate with all databases in one pass
     SNPSIFT_ANNMEM(
         ch_vcf_with_tbi,
-        val_databases,
-        val_databases_tbi,
+        databases,
+        databases_tbi,
         ch_db_vardbs,
-        val_db_configs
+        db_configs_simple
     )
 
     ch_versions = ch_versions.mix(SNPSIFT_ANNMEM.out.versions)
