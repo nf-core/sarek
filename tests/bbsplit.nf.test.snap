@@ -3,9 +3,6 @@
         "content": [
             26,
             {
-                "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
-                },
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
                 },
@@ -309,9 +306,6 @@
         "content": [
             26,
             {
-                "BBMAP_BBSPLIT": {
-                    "bbmap": 39.18
-                },
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
                 },
