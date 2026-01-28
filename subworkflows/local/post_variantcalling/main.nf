@@ -128,18 +128,24 @@ workflow POST_VARIANTCALLING {
         }
 
         if (normalize_vcfs && snv_consensus_calling){
+            // Preserve individual caller VCFs before consensus (for annotation)
+            individual_caller_vcfs = small_variant_vcfs
+            individual_caller_tbis = small_variant_tbis
 
             CONSENSUS(small_variant_vcfs.join(small_variant_tbis, failOnDuplicate: true, failOnMismatch: true))
 
-            small_variant_vcfs = CONSENSUS.out.vcfs.map { meta, vcfs_ ->
+            consensus_vcfs = CONSENSUS.out.vcfs.map { meta, vcfs_ ->
                                         meta.variantcaller = 'consensus'
                                         [meta, vcfs_]
-                                    } // [meta, vcfs]
-
-            small_variant_tbis = CONSENSUS.out.tbis.map { meta, tbis_ ->
+                                    }
+            consensus_tbis = CONSENSUS.out.tbis.map { meta, tbis_ ->
                                         meta.variantcaller = 'consensus'
                                         [meta, tbis_]
-                                    } // [meta, tbis]
+                                    }
+
+            // Mix consensus VCF with individual caller VCFs for downstream annotation
+            small_variant_vcfs = consensus_vcfs.mix(individual_caller_vcfs)
+            small_variant_tbis = consensus_tbis.mix(individual_caller_tbis)
 
             versions = versions.mix(CONSENSUS.out.versions)
         }

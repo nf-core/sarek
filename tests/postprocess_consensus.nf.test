@@ -1,3 +1,4 @@
+// Tests consensus calling with CONSENSUS_FROM_SITES module
 def projectDir = new File('.').absolutePath
 def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
 
