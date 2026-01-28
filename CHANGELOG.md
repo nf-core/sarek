@@ -17,6 +17,7 @@ This patch release includes a bump to Nextflow 25.04.8.
 
 ### Fixed
 
+- [#2050](https://github.com/nf-core/sarek/issues/2050) - Fix regex patterns for `dbnsfp_tbi`, `spliceai_snv`, and `spliceai_snv_tbi` parameter validation
 - [2029](https://github.com/nf-core/sarek/pull/2029) - Correct intervals channel for parabricks
 
 ### Removed
