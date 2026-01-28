@@ -32,21 +32,21 @@ nextflow_pipeline {
             ],
             stub: true
         ],
-        // Test BBSplit index building in PREPARE_GENOME (stub mode)
+        // Test BBSplit index building in PREPARE_GENOME (no prebuilt index)
         // This tests the edge case where BBMAP_BBSPLIT is called with empty reads
         // to build the index, which requires ext.prefix to handle null reads gracefully
         [
-            name: "-profile test --tools bbsplit --bbsplit_fasta_list --build_only_index -stub",
+            name: "-profile test --tools bbsplit --bbsplit_fasta_list (no prebuilt index)",
             params: [
                 tools: 'bbsplit',
                 bbsplit_fasta_list: "${projectDir}/tests/csv/bbsplit_fasta_list.csv",
-                build_only_index: true,
                 input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
-                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
-                igenomes_base: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
-                genome: 'testdata.nf-core.sarek'
-            ],
-            stub: true
+                fasta: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta',
+                igenomes_ignore: true,
+                genome: false,
+                skip_tools: 'baserecalibrator',
+                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+            ]
         ]
     ]
 
