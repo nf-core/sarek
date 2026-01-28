@@ -725,27 +725,15 @@
                 "fastqc_sequence_counts_plot.txt:md5,7f0f19a58e8e54e792a751fd04a9ae13",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,92b02e250ff78725deb9a10d510fcecc",
                 "fastqc_sequence_length_distribution_plot.txt:md5,fb04dce68ec566314125bc9438211b28",
-                "mosdepth-coverage-per-contig-single.txt:md5,5bdd6e610ad62c08317a882b441f93db",
-                "mosdepth-cumcoverage-dist-id.txt:md5,46ad995ad3f4563dbcda37ae1b5bd7f7",
-                "mosdepth_perchrom.txt:md5,5bdd6e610ad62c08317a882b441f93db",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,44a8479e4a51520c9b257699b289fae7",
-                "samtools_alignment_plot.txt:md5,08e84810fbad0e6d7a0d2a3f07b4b014",
-                "test.md.mosdepth.global.dist.txt:md5,080a0293c46769963f6ce587472eff8b",
-                "test.md.mosdepth.region.dist.txt:md5,343a0e64d0d67693f75e6f4fcd0956b5",
-                "test.md.mosdepth.summary.txt:md5,ee144cfea9c0d87488d853c8862959df",
-                "test.md.regions.bed.gz:md5,92480c195e8e4731263720c649b5a869",
-                "test.md.regions.bed.gz.csi:md5,82a5532578de28823c4228df69b91a7a"
+                "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             "No BAM files",
-            [
-                "test.md.cram:md5,4a82bcf34dbf2f40c2e7a08d4bc80832"
-            ],
+            "No CRAM files",
             "No VCF files",
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
