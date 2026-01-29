@@ -45,16 +45,6 @@ workflow VCF_ANNOTATE_ALL {
         versions = versions.mix(BCFTOOLS_ANNOTATE.out.versions)
     }
 
-    if (tools.split(',').contains('snpsift')) {
-        VCF_ANNOTATE_SNPSIFT(
-            vcf,
-            snpsift_db_configs
-        )
-
-        vcf_ann = vcf_ann.mix(VCF_ANNOTATE_SNPSIFT.out.vcf_tbi)
-        // versions collected via topic channel
-    }
-
     if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff')) {
         VCF_ANNOTATE_SNPEFF(vcf, snpeff_db, snpeff_cache)
 
@@ -81,6 +71,26 @@ workflow VCF_ANNOTATE_ALL {
         tab_ann = tab_ann.mix(VCF_ANNOTATE_ENSEMBLVEP.out.tab)
         json_ann = json_ann.mix(VCF_ANNOTATE_ENSEMBLVEP.out.json)
         versions = versions.mix(VCF_ANNOTATE_ENSEMBLVEP.out.versions)
+    }
+
+    // SnpSift runs LAST on annotated outputs (per best practices)
+    // If no other annotators were used, fall back to original vcf
+    if (tools.split(',').contains('snpsift')) {
+        def has_other_annotators = tools.split(',').any { it in ['bcfann', 'snpeff', 'vep', 'merge'] }
+
+        if (has_other_annotators) {
+            vcf_for_snpsift = vcf_ann.map { meta, vcf_, _tbi -> [meta, vcf_] }
+        } else {
+            vcf_for_snpsift = vcf
+        }
+
+        VCF_ANNOTATE_SNPSIFT(
+            vcf_for_snpsift,
+            snpsift_db_configs
+        )
+
+        vcf_ann = vcf_ann.mix(VCF_ANNOTATE_SNPSIFT.out.vcf_tbi)
+        // versions collected via topic channel
     }
 
     emit:
