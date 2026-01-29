@@ -1,4 +1,4 @@
-include { BBMAP_BBSPLIT                             } from '../../../modules/nf-core/bbmap/bbsplit'
+include { BBMAP_BBSPLIT as BBMAP_INDEX              } from '../../../modules/nf-core/bbmap/bbsplit'
 include { BWAMEM2_INDEX                             } from '../../../modules/nf-core/bwamem2/index'
 include { BWA_INDEX as BWAMEM1_INDEX                } from '../../../modules/nf-core/bwa/index'
 include { DRAGMAP_HASHTABLE                         } from '../../../modules/nf-core/dragmap/hashtable'
@@ -137,14 +137,13 @@ workflow PREPARE_GENOME {
                 .collect { [it] }
                 .set { ch_bbsplit_fasta_list }
 
-            bbsplit_index = BBMAP_BBSPLIT(
+            bbsplit_index = BBMAP_INDEX(
                 [[id: "build_index"], []],
                 [],
                 fasta.map { _meta, fasta_ -> fasta_ },
                 ch_bbsplit_fasta_list,
                 true,
             ).index
-            versions = versions.mix(BBMAP_BBSPLIT.out.versions)
         }
     }
 
