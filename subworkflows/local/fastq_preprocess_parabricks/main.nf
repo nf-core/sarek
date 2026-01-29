@@ -68,7 +68,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
         }
         // Manipulate meta map to remove old fields and add new ones
         .map { meta, cram ->
-            [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size', 'sample_lane_id', 'lane') + [ data_type: 'cram', id: meta.sample ], cram ]
+            [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'size', 'sample_lane_id', 'lane') + [ data_type: 'cram', id: meta.sample ], cram ]
         }
         // Create groupKey from meta map
         .map { meta, cram ->
@@ -84,7 +84,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
 
     cram_variant_calling = CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai
         .map { meta, cram, crai ->
-                    [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size', 'sample_lane_id', 'lane') + [ data_type: 'cram', id: meta.sample ], cram, crai ]
+                    [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'size', 'sample_lane_id', 'lane') + [ data_type: 'cram', id: meta.sample ], cram, crai ]
                 }
 
     if (val_save_output_as_bam) {
