@@ -22,7 +22,7 @@
             },
             "fields": {
                 "type": "string",
-                "errorMessage": "Comma-separated INFO field names to extract"
+                "errorMessage": "Semicolon-separated INFO field names to extract (e.g., DP;AF;MQ)"
             },
             "prefix": {
                 "type": "string",

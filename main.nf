@@ -235,18 +235,21 @@ workflow NFCORE_SAREK {
 
     if (params.snpsift_databases) {
         // Parse and validate CSV using nf-schema
+        // Returns list of tuples: [vcf, tbi, fields, prefix, vardb]
         def db_list = samplesheetToList(params.snpsift_databases, "${projectDir}/assets/schema_snpsift_databases.json")
 
-        db_list.each { row ->
-            def vcf_file = file(row.vcf, checkIfExists: true)
-            def tbi_file = row.tbi ? file(row.tbi, checkIfExists: true) : file("${row.vcf}.tbi", checkIfExists: true)
-            def vardb_file = row.vardb ? file(row.vardb, checkIfExists: true) : null
+        db_list.each { vcf, tbi, fields, prefix, vardb ->
+            // For remote URLs, don't use checkIfExists (Nextflow handles them at runtime)
+            def is_remote = vcf.toString().startsWith('http://') || vcf.toString().startsWith('https://') || vcf.toString().startsWith('s3://') || vcf.toString().startsWith('gs://')
+            def vcf_file = is_remote ? file(vcf) : file(vcf, checkIfExists: true)
+            def tbi_file = tbi ? (is_remote ? file(tbi) : file(tbi, checkIfExists: true)) : file("${vcf}.tbi", checkIfExists: !is_remote)
+            def vardb_file = vardb ? file(vardb, checkIfExists: true) : null
 
             snpsift_db_configs.add([
                 vcf: vcf_file,
                 tbi: tbi_file,
-                fields: row.fields ?: '',
-                prefix: row.prefix ?: '',
+                fields: fields ?: '',
+                prefix: prefix ?: '',
                 vardb: vardb_file
             ])
         }

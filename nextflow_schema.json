@@ -796,6 +796,7 @@
                 "snpsift_databases": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "pattern": "^\\S+\\.csv$",
                     "schema": "assets/schema_snpsift_databases.json",
                     "fa_icon": "fas fa-database",

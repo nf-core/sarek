@@ -32,7 +32,9 @@ process SNPSIFT_ANNMEM {
         def config = db_configs && db_configs[idx] ? db_configs[idx] : [:]
         def db_arg = "-dbfile ${db}"
         if (config.fields) {
-            db_arg += " -fields ${config.fields}"
+            // Convert semicolons to commas for SnpSift (semicolons used in CSV to avoid delimiter conflict)
+            def fields_csv = config.fields.replace(';', ',')
+            db_arg += " -fields ${fields_csv}"
         }
         if (config.prefix) {
             db_arg += " -prefix ${config.prefix}"

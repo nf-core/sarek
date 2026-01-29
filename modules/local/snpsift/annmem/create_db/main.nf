@@ -19,7 +19,9 @@ process SNPSIFT_ANNMEM_CREATE_DB {
 
     script:
     def args = task.ext.args ?: ''
-    def fields_arg = fields ? "-fields ${fields}" : ""
+    // Convert semicolons to commas for SnpSift (semicolons used in CSV to avoid delimiter conflict)
+    def fields_csv = fields ? fields.replace(';', ',') : ''
+    def fields_arg = fields_csv ? "-fields ${fields_csv}" : ""
 
     """
     SnpSift \\
