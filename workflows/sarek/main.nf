@@ -118,7 +118,7 @@ workflow SAREK {
     vep_fasta
     vep_genome
     vep_species
-    snpsift_db_configs
+    snpsift_db_configs          // channel: [[vcf: file, tbi: file, fields: '', prefix: '', vardb: file], ...]
     versions
 
     main:

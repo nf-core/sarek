@@ -75,6 +75,7 @@ include { PIPELINE_INITIALISATION         } from './subworkflows/local/utils_nfc
 include { PREPARE_GENOME                  } from './subworkflows/local/prepare_genome'
 include { PREPARE_INTERVALS               } from './subworkflows/local/prepare_intervals'
 include { PREPARE_REFERENCE_CNVKIT        } from './subworkflows/local/prepare_reference_cnvkit'
+include { PREPARE_SNPSIFT_DATABASES       } from './subworkflows/local/prepare_snpsift_databases'
 include { samplesheetToList               } from 'plugin/nf-schema'
 
 /*
@@ -255,6 +256,13 @@ workflow NFCORE_SAREK {
         }
     }
 
+    // Prepare SnpSift databases (build if vardb not provided, returns unified config with all vardbs)
+    ch_snpsift_db_configs = Channel.value([])
+    if (params.tools && params.tools.split(',').contains('snpsift') && snpsift_db_configs) {
+        PREPARE_SNPSIFT_DATABASES(snpsift_db_configs)
+        ch_snpsift_db_configs = PREPARE_SNPSIFT_DATABASES.out.db_configs
+    }
+
     //
     // WORKFLOW: Run pipeline
     //
@@ -315,7 +323,7 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.vep_fasta,
         params.vep_genome,
         params.vep_species,
-        snpsift_db_configs,
+        ch_snpsift_db_configs,
         versions,
     )
 

@@ -24,7 +24,7 @@ workflow VCF_ANNOTATE_ALL {
     bcftools_annotations_index
     bcftools_columns
     bcftools_header_lines
-    snpsift_db_configs
+    snpsift_db_configs          // channel: [[vcf: file, tbi: file, fields: '', prefix: '', vardb: file], ...]
 
     main:
     reports = Channel.empty()

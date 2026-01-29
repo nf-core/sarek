@@ -10,14 +10,12 @@
             "vcf": {
                 "type": "string",
                 "pattern": "^\\S+\\.vcf(\\.gz)?$",
-                "errorMessage": "VCF file path must be provided and end with .vcf or .vcf.gz",
-                "format": "file-path"
+                "errorMessage": "VCF file path must be provided and end with .vcf or .vcf.gz"
             },
             "tbi": {
                 "type": "string",
                 "pattern": "^\\S+\\.tbi$",
-                "errorMessage": "Index file must end with .tbi",
-                "format": "file-path"
+                "errorMessage": "Index file must end with .tbi"
             },
             "fields": {
                 "type": "string",
