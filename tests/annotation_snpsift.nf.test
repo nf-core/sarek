@@ -7,23 +7,12 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --tools snpsift --snpsift_create_dbs",
+            name: "-profile test --tools snpsift",
             params: [
                 input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
                 step: 'annotate',
                 tools: 'snpsift',
-                snpsift_databases: "${projectDir}/tests/config/snpsift_test_databases.csv",
-                snpsift_create_dbs: true
-            ]
-        ],
-        [
-            name: "-profile test --tools snpsift (no db creation)",
-            params: [
-                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
-                step: 'annotate',
-                tools: 'snpsift',
-                snpsift_databases: "${projectDir}/tests/config/snpsift_test_databases.csv",
-                snpsift_create_dbs: false
+                snpsift_databases: "${projectDir}/tests/config/snpsift_test_databases.csv"
             ]
         ]
     ]

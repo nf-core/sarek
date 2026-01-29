@@ -316,7 +316,6 @@ workflow NFCORE_SAREK {
         params.vep_genome,
         params.vep_species,
         snpsift_db_configs,
-        params.snpsift_create_dbs,
         versions,
     )
 

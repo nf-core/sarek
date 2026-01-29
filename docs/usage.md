@@ -1243,10 +1243,7 @@ vcf,tbi,fields,prefix,vardb
 
 ### Database creation
 
-SnpSift uses optimized `.snpsift.vardb` databases. Either:
-
-- Set `--snpsift_create_dbs true` to create them automatically (slower first run)
-- Pre-create databases and specify the `vardb` column in the samplesheet (recommended for large databases)
+SnpSift uses optimized `.snpsift.vardb` databases. If the `vardb` column is empty, databases are built automatically. For large databases, pre-build them and specify the path in the `vardb` column to speed up subsequent runs.
 
 ### Using VEP plugins
 

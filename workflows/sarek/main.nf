@@ -119,7 +119,6 @@ workflow SAREK {
     vep_genome
     vep_species
     snpsift_db_configs
-    snpsift_create_dbs
     versions
 
     main:
@@ -575,7 +574,6 @@ workflow SAREK {
                 bcftools_columns,
                 bcftools_header_lines,
                 snpsift_db_configs,
-                snpsift_create_dbs,
             )
 
             // Gather used softwares versions

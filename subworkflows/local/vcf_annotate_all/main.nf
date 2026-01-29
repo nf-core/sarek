@@ -25,7 +25,6 @@ workflow VCF_ANNOTATE_ALL {
     bcftools_columns
     bcftools_header_lines
     snpsift_db_configs
-    snpsift_create_dbs
 
     main:
     reports = Channel.empty()
@@ -49,8 +48,7 @@ workflow VCF_ANNOTATE_ALL {
     if (tools.split(',').contains('snpsift')) {
         VCF_ANNOTATE_SNPSIFT(
             vcf,
-            snpsift_db_configs,
-            snpsift_create_dbs
+            snpsift_db_configs
         )
 
         vcf_ann = vcf_ann.mix(VCF_ANNOTATE_SNPSIFT.out.vcf_tbi)
