@@ -11,8 +11,7 @@
                 "type": "string",
                 "pattern": "^\\S+\\.vcf(\\.gz)?$",
                 "errorMessage": "VCF file path must be provided and end with .vcf or .vcf.gz",
-                "format": "file-path",
-                "exists": true
+                "format": "file-path"
             },
             "tbi": {
                 "type": "string",
