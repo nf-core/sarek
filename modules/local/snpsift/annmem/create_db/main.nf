@@ -12,7 +12,7 @@ process SNPSIFT_ANNMEM_CREATE_DB {
 
     output:
     tuple val(meta), path("*.snpsift.vardb"), emit: database
-    path "versions.yml"                     , emit: versions
+    tuple val("${task.process}"), val('snpsift'), eval("SnpSift split -h 2>&1 | head -1 | sed 's/^.*version //' | sed 's/(.*//' | sed 's/t//g'"), topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when
@@ -28,21 +28,11 @@ process SNPSIFT_ANNMEM_CREATE_DB {
         ${args} \\
         -dbfile ${vcf} \\
         ${fields_arg}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        snpsift: \$( echo \$(SnpSift split -h 2>&1) | sed 's/^.*version //' | sed 's/(.*//' | sed 's/t//g' )
-    END_VERSIONS
     """
 
     stub:
     """
     mkdir -p ${vcf}.snpsift.vardb
     touch ${vcf}.snpsift.vardb/chr1.snpsift.df
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        snpsift: \$( echo \$(SnpSift split -h 2>&1) | sed 's/^.*version //' | sed 's/(.*//' | sed 's/t//g' )
-    END_VERSIONS
     """
 }

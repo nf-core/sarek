@@ -39,10 +39,7 @@ output:
         Channel containing annotated VCF files with metadata and index
         Structure: [val(meta), path(vcf), path(tbi)]
       pattern: "*.{vcf.gz}"
-  - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+  # versions are emitted via topic channel
 authors:
   - "@friederike-hanssen"
 maintainers:

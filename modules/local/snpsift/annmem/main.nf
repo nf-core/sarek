@@ -16,7 +16,7 @@ process SNPSIFT_ANNMEM {
 
     output:
     tuple val(meta), path("*.vcf.gz"), path("*.vcf.gz.tbi"), emit: vcf
-    path "versions.yml"                                     , emit: versions
+    tuple val("${task.process}"), val('snpsift'), eval("SnpSift split -h 2>&1 | head -1 | sed 's/^.*version //' | sed 's/(.*//' | sed 's/t//g'"), topic: 'versions'
 
     when:
     task.ext.when == null || task.ext.when
@@ -59,11 +59,6 @@ process SNPSIFT_ANNMEM {
         | bgzip -c > ${prefix}.vcf.gz
 
     tabix -p vcf ${prefix}.vcf.gz
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        snpsift: \$( echo \$(SnpSift split -h 2>&1) | sed 's/^.*version //' | sed 's/(.*//' | sed 's/t//g' )
-    END_VERSIONS
     """
 
     stub:
@@ -71,10 +66,5 @@ process SNPSIFT_ANNMEM {
     """
     touch ${prefix}.vcf.gz
     touch ${prefix}.vcf.gz.tbi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        snpsift: \$( echo \$(SnpSift split -h 2>&1) | sed 's/^.*version //' | sed 's/(.*//' | sed 's/t//g' )
-    END_VERSIONS
     """
 }

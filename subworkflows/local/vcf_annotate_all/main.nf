@@ -54,7 +54,7 @@ workflow VCF_ANNOTATE_ALL {
         )
 
         vcf_ann = vcf_ann.mix(VCF_ANNOTATE_SNPSIFT.out.vcf_tbi)
-        versions = versions.mix(VCF_ANNOTATE_SNPSIFT.out.versions)
+        // versions collected via topic channel
     }
 
     if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff')) {

@@ -3,7 +3,7 @@
 //
 
 include { SNPSIFT_ANNMEM_CREATE_DB } from '../../../modules/local/snpsift/annmem/create_db/main'
-include { SNPSIFT_ANNMEM          } from '../../../modules/nf-core/snpsift/annmem/main'
+include { SNPSIFT_ANNMEM          } from '../../../modules/local/snpsift/annmem/main'
 
 workflow VCF_ANNOTATE_SNPSIFT {
     take:
@@ -12,8 +12,6 @@ workflow VCF_ANNOTATE_SNPSIFT {
     val_create_dbs          // Boolean: whether to create databases for entries without pre-built vardb
 
     main:
-    ch_versions = Channel.empty()
-
     // Add empty tbi placeholder to input VCF channel
     ch_vcf_with_tbi = ch_vcf.map { meta, vcf -> [meta, vcf, []] }
 
@@ -46,8 +44,6 @@ workflow VCF_ANNOTATE_SNPSIFT {
                 .map { meta, vardb -> vardb }
                 .collect()
                 .map { created -> prebuilt_vardbs + created }
-
-            ch_versions = ch_versions.mix(SNPSIFT_ANNMEM_CREATE_DB.out.versions.first())
         } else {
             // All databases have pre-built vardbs
             ch_db_vardbs = Channel.value(prebuilt_vardbs)
@@ -67,9 +63,6 @@ workflow VCF_ANNOTATE_SNPSIFT {
         db_configs_simple
     )
 
-    ch_versions = ch_versions.mix(SNPSIFT_ANNMEM.out.versions)
-
     emit:
-    vcf_tbi  = SNPSIFT_ANNMEM.out.vcf  // channel: [val(meta), path(vcf), path(tbi)]
-    versions = ch_versions             // channel: path(versions.yml)
+    vcf_tbi = SNPSIFT_ANNMEM.out.vcf  // channel: [val(meta), path(vcf), path(tbi)]
 }
