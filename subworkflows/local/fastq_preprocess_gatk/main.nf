@@ -152,8 +152,6 @@ workflow FASTQ_PREPROCESS_GATK {
 
             reports = reports.mix(BBMAP_BBSPLIT.out.stats.collect{ _meta, stats -> stats })
 
-            versions = versions.mix(BBMAP_BBSPLIT.out.versions.first())
-
         } else {
             reads_for_alignment = reads_for_bbsplit
         }
