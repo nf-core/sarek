@@ -13,6 +13,18 @@ nextflow_pipeline {
             params: [
                 aligner: 'parabricks',
                 save_reference: true,
+                save_mapped: true,
+                tools: '',
+                wes : true,
+            ],
+            gpu: true,
+            no_conda: true
+        ],
+        [
+            name: "-profile test --aligner parabricks --wes --save_output_as_bam",
+            params: [
+                aligner: 'parabricks',
+                save_reference: true,
                 save_output_as_bam: true,
                 tools: '',
                 wes : true,
