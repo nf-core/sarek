@@ -118,7 +118,7 @@ workflow SAREK {
     vep_fasta
     vep_genome
     vep_species
-    snpsift_db_configs          // channel: [[vcf: file, tbi: file, fields: '', prefix: '', vardb: file], ...]
+    snpsift_db                  // channel: [[databases], [tbis], [vardbs], [fields], [prefixes]]
     versions
 
     main:
@@ -573,7 +573,7 @@ workflow SAREK {
                 bcftools_annotations_tbi,
                 bcftools_columns,
                 bcftools_header_lines,
-                snpsift_db_configs,
+                snpsift_db,
             )
 
             // Gather used softwares versions

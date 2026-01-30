@@ -9,10 +9,7 @@ process SNPSIFT_ANNMEM {
 
     input:
     tuple val(meta), path(vcf), path(vcf_tbi)
-    path databases                                  // List of annotation VCF files
-    path dbs_tbis                                   // List of corresponding index files
-    path db_vardbs, stageAs: 'db_vardbs/*'         // List of .snpsift.vardb directories
-    val db_configs                                  // List of maps: [[fields: 'field1,field2', prefix: 'DB1_'], ...]
+    tuple path(databases), path(dbs_tbis), path(db_vardbs, stageAs: 'db_vardbs/*'), val(db_fields), val(db_prefixes)
 
     output:
     tuple val(meta), path("*.vcf.gz"), path("*.vcf.gz.tbi"), emit: vcf
@@ -25,21 +22,16 @@ process SNPSIFT_ANNMEM {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def db_list = databases instanceof List ? databases : [databases]
+    def fields_list = db_fields instanceof List ? db_fields : [db_fields]
+    def prefix_list = db_prefixes instanceof List ? db_prefixes : [db_prefixes]
 
-    // Build -dbfile arguments for each database
-    def dbfile_args = []
-    db_list.eachWithIndex { db, idx ->
-        def config = db_configs && db_configs[idx] ? db_configs[idx] : [:]
-        def db_arg = "-dbfile ${db}"
-        if (config.fields) {
-            // Convert semicolons to commas for SnpSift (semicolons used in CSV to avoid delimiter conflict)
-            def fields_csv = config.fields.replace(';', ',')
-            db_arg += " -fields ${fields_csv}"
-        }
-        if (config.prefix) {
-            db_arg += " -prefix ${config.prefix}"
-        }
-        dbfile_args << db_arg
+    // Build -dbfile arguments for each database (semicolons converted to commas for SnpSift)
+    def dbfile_args = db_list.withIndex().collect { db, idx ->
+        def fields = fields_list[idx]?.replace(';', ',')
+        def db_prefix = prefix_list[idx]
+        "-dbfile ${db}" +
+            (fields ? " -fields ${fields}" : '') +
+            (db_prefix ? " -prefix ${db_prefix}" : '')
     }
 
     """

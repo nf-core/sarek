@@ -256,11 +256,11 @@ workflow NFCORE_SAREK {
         }
     }
 
-    // Prepare SnpSift databases (build if vardb not provided, returns unified config with all vardbs)
-    ch_snpsift_db_configs = Channel.value([])
+    // Prepare SnpSift databases (build if vardb not provided, returns tuple for SNPSIFT_ANNMEM)
+    ch_snpsift_db = Channel.value([[], [], [], [], []])
     if (params.tools && params.tools.split(',').contains('snpsift') && snpsift_db_configs) {
         PREPARE_SNPSIFT_DATABASES(snpsift_db_configs)
-        ch_snpsift_db_configs = PREPARE_SNPSIFT_DATABASES.out.db_configs
+        ch_snpsift_db = PREPARE_SNPSIFT_DATABASES.out.db_tuple
     }
 
     //
@@ -323,7 +323,7 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.vep_fasta,
         params.vep_genome,
         params.vep_species,
-        ch_snpsift_db_configs,
+        ch_snpsift_db,
         versions,
     )
 

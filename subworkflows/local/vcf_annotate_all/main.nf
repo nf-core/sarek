@@ -24,7 +24,7 @@ workflow VCF_ANNOTATE_ALL {
     bcftools_annotations_index
     bcftools_columns
     bcftools_header_lines
-    snpsift_db_configs          // channel: [[vcf: file, tbi: file, fields: '', prefix: '', vardb: file], ...]
+    snpsift_db                  // channel: [[databases], [tbis], [vardbs], [fields], [prefixes]]
 
     main:
     reports = Channel.empty()
@@ -73,7 +73,7 @@ workflow VCF_ANNOTATE_ALL {
         versions = versions.mix(VCF_ANNOTATE_ENSEMBLVEP.out.versions)
     }
 
-    // SnpSift runs LAST on annotated outputs (per best practices)
+    // SnpSift runs last on all annotated outputs
     // If no other annotators were used, fall back to original vcf
     if (tools.split(',').contains('snpsift')) {
         def has_other_annotators = tools.split(',').any { it in ['bcfann', 'snpeff', 'vep', 'merge'] }
@@ -86,11 +86,9 @@ workflow VCF_ANNOTATE_ALL {
 
         VCF_ANNOTATE_SNPSIFT(
             vcf_for_snpsift,
-            snpsift_db_configs
+            snpsift_db
         )
-
         vcf_ann = vcf_ann.mix(VCF_ANNOTATE_SNPSIFT.out.vcf_tbi)
-        // versions collected via topic channel
     }
 
     emit:
