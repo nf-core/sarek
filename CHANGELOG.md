@@ -18,6 +18,8 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 
 ### Changed
 
+- [#2119](https://github.com/nf-core/sarek/pull/2119) - Update VEP version from 111.0-0 to 115.0-0 and VEP cache version from 114 to 115
+
 ### Fixed
 
 - [#2077](https://github.com/nf-core/sarek/pull/2077) - Remove re-indexed bam from `indexcov` from publishing into top level `outdir` directory
