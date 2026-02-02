@@ -223,6 +223,13 @@ workflow NFCORE_SAREK {
         vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
     }
 
+    if (params.phenotypes_file) {
+        vep_extra_files.add(file(params.phenotypes_file, checkIfExists: true))
+        if (params.phenotypes_file_tbi) {
+            vep_extra_files.add(file(params.phenotypes_file_tbi, checkIfExists: true))
+        }
+    }
+
     //
     // WORKFLOW: Run pipeline
     //
