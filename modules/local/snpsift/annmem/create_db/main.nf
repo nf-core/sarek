@@ -5,7 +5,7 @@ process SNPSIFT_ANNMEM_CREATE_DB {
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/56/56f40c9dc9094c1e74d82a7120d64260073b123976503d8943ec19f5c0627a3a/data' :
-        'community.wave.seqera.io/library/snpsift:5.2--5abe9f91cc2a5c02' }"
+        'community.wave.seqera.io/library/snpsift:5.4.0a--6680e6faf23ef488' }"
 
     input:
     tuple val(meta), path(vcf), path(vcf_tbi), val(fields)
