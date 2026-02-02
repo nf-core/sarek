@@ -684,6 +684,15 @@
                     "description": "Path to phenotype annotation GFF/GVF file.",
                     "help_text": "Optional parameter for `--vep_phenotypes`. If not specified, the plugin automatically downloads phenotype data files on first run."
                 },
+                "phenotypes_file_tbi": {
+                    "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.(gff|gvf)\\.gz\\.(csi|tbi)$",
+                    "exists": true,
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to phenotype annotation tabix indexed file.",
+                    "help_text": "Required when using a gzipped `--phenotypes_file`. To be used with `--vep_phenotypes`."
+                },
                 "phenotypes_include_types": {
                     "type": "string",
                     "fa_icon": "far fa-check-circle",
