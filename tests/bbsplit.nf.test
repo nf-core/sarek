@@ -18,7 +18,7 @@ nextflow_pipeline {
                 genome: 'testdata.nf-core.sarek',
                 save_reference: true
             ],
-            ignoreFiles: '{multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt,multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt,multiqc/multiqc_data/mosdepth_perchrom.txt,multiqc/multiqc_data/samtools*.txt,preprocessing/**/*.cram,reports/mosdepth/*/*}'
+            ignoreFiles: '{multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt,multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt,multiqc/multiqc_data/mosdepth_perchrom.txt,multiqc/multiqc_data/samtools*.txt,preprocessing/**/*.cram,reports/mosdepth/*/*,**/info.txt,**/reflist.txt,**/scaffolds.txt.gz,**/summary.txt,**/build_index.log}'
         ],
         [
             name: "-profile test --tools bbsplit,strelka --bbsplit_fasta_list -stub",
