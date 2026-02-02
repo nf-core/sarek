@@ -18,7 +18,7 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 
 ### Changed
 
-- [#2119](https://github.com/nf-core/sarek/pull/2119) - Update VEP version from 111.0-0 to 115.0-0 and VEP cache version from 114 to 115
+- [#2119](https://github.com/nf-core/sarek/pull/2119) - Update VEP version from 111.0-0 to 115.0-0 and VEP cache version from 114 to 115; update ensemblvep module to include `perl-math-cdf` dependency for Condel plugin
 
 ### Fixed
 
