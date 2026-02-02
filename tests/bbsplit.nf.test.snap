@@ -216,6 +216,33 @@
                 "preprocessing/recalibrated/test/test.recal.cram",
                 "preprocessing/recalibrated/test/test.recal.cram.crai",
                 "reference",
+                "reference/bbsplit_index",
+                "reference/bbsplit_index/ref",
+                "reference/bbsplit_index/ref/genome",
+                "reference/bbsplit_index/ref/genome/1",
+                "reference/bbsplit_index/ref/genome/1/chr1.chrom.gz",
+                "reference/bbsplit_index/ref/genome/1/info.txt",
+                "reference/bbsplit_index/ref/genome/1/merged_ref_9222711925177839698.fa.gz",
+                "reference/bbsplit_index/ref/genome/1/namelist.txt",
+                "reference/bbsplit_index/ref/genome/1/reflist.txt",
+                "reference/bbsplit_index/ref/genome/1/scaffolds.txt.gz",
+                "reference/bbsplit_index/ref/genome/1/summary.txt",
+                "reference/bbsplit_index/ref/index",
+                "reference/bbsplit_index/ref/index/1",
+                "reference/bbsplit_index/ref/index/1/chr1_index_k13_c13_b1.block",
+                "reference/bbsplit_index/ref/index/1/chr1_index_k13_c13_b1.block2.gz",
+                "reference/build_index.log",
+                "reference/bwa",
+                "reference/bwa/genome.amb",
+                "reference/bwa/genome.ann",
+                "reference/bwa/genome.bwt",
+                "reference/bwa/genome.pac",
+                "reference/bwa/genome.sa",
+                "reference/intervals",
+                "reference/intervals/chr22_1-40001.bed",
+                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/intervals/genome.bed",
+                "reference/intervals/genome.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -282,6 +309,25 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "chr1.chrom.gz:md5,55963ae4b37886f20734ac01d6041dc8",
+                "info.txt:md5,dc7fe3012fdd9ef07ebc84458cbe6001",
+                "merged_ref_9222711925177839698.fa.gz:md5,619298e6deae7f8cc3ed3b649ab4f875",
+                "namelist.txt:md5,c26fae3e77a7b86aded8dbb20e387f38",
+                "reflist.txt:md5,cdc14019d40694aae61a59ec486291ea",
+                "scaffolds.txt.gz:md5,05842f30328fd9beb5f52c5a841d7b68",
+                "summary.txt:md5,33b47e887efaaf2a80b3843db6a6a489",
+                "chr1_index_k13_c13_b1.block:md5,3f2154585dddcd097072fbb3a618bace",
+                "chr1_index_k13_c13_b1.block2.gz:md5,cbc6dd52d518bd3240d7f7953e9bba47",
+                "build_index.log:md5,e2f010ead0a95e401522d3adc01b2546",
+                "genome.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
+                "genome.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
+                "genome.bwt:md5,815eded87e4cb6b0f1daab5c4d6e30af",
+                "genome.pac:md5,8569fbdb2c98c6fb16dfa73d8eacb070",
+                "genome.sa:md5,e7cff62b919448a3a3d0fe4aaf427594",
+                "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
+                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
                 "test.strelka.variants.bcftools_stats.txt:md5,b6511034fcbf5c396ed035207b4aea41",
                 "test.strelka.variants.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
@@ -292,15 +338,13 @@
                 "test.strelka.genome.vcf.gz:md5,2396656fa8d478e5fd76cda3a1c91cbb",
                 "test.strelka.variants.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
-            ]
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-16T17:09:48.530033279"
+        "timestamp": "2026-02-02T17:03:37.607"
     },
     "-profile test --tools bbsplit,strelka --bbsplit_fasta_list -stub": {
         "content": [
