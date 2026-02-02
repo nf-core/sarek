@@ -3,9 +3,9 @@ process SNPSIFT_ANNMEM_CREATE_DB {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/35/3570381a93c22449d48bdaa85097c5e8a075e90437565546acb2e40a29171bca/data'
-        : 'community.wave.seqera.io/library/htslib_snpsift:4df051c7ff79f7f9'}"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/56/56f40c9dc9094c1e74d82a7120d64260073b123976503d8943ec19f5c0627a3a/data' :
+        'community.wave.seqera.io/library/snpsift:5.2--5abe9f91cc2a5c02' }"
 
     input:
     tuple val(meta), path(vcf), path(vcf_tbi), val(fields)
