@@ -56,7 +56,6 @@ workflow VCF_ANNOTATE_ALL {
         vcf_ann_for_merge = VCF_ANNOTATE_SNPEFF.out.vcf_tbi.map { meta, vcf_, _tbi -> [meta, vcf_, []] }
         VCF_ANNOTATE_MERGE(vcf_ann_for_merge, vep_genome,vep_species,vep_cache_version, vep_cache, fasta, vep_extra_files)
 
-        reports = reports.mix(VCF_ANNOTATE_MERGE.out.report)
         vcf_ann = vcf_ann.mix(VCF_ANNOTATE_MERGE.out.vcf.join(VCF_ANNOTATE_MERGE.out.tbi, failOnDuplicate: true, failOnMismatch: true))
     }
 
