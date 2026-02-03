@@ -3,4 +3,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - "bioconda::snpsift=5.2"
+  - bioconda::snpsift=5.4.0a
