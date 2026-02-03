@@ -1217,11 +1217,7 @@ Overwritting the container declaration is then possible to accomodate for the ne
 
 ## How to use SnpSift annotation
 
-SnpSift annotates VCF files with custom annotation databases (e.g., dbSNP, gnomAD, ClinVar). To enable, add `snpsift` to `--tools` and provide a CSV samplesheet via `--snpsift_databases`:
-
-```bash
-nextflow run nf-core/sarek --tools snpsift --snpsift_databases databases.csv ...
-```
+SnpSift annotates VCF files with custom annotation databases (e.g., dbSNP, gnomAD, ClinVar). To enable, add `snpsift` to `--tools` and provide a CSV samplesheet via `--snpsift_databases`.
 
 ### Database samplesheet
 
