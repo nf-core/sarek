@@ -606,6 +606,8 @@ workflow SAREK {
 
         ch_multiqc_files = ch_multiqc_files.mix(version_yaml)
         ch_multiqc_files = ch_multiqc_files.mix(reports)
+        ch_multiqc_files = ch_multiqc_files.mix(channel.topic("multiqc_files").map { _meta, _process, _tool, report -> report })
+
         ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true))
 
         MULTIQC(

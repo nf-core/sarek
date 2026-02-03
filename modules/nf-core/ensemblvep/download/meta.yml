@@ -1,6 +1,6 @@
 name: ensemblvep_download
-description: Ensembl Variant Effect Predictor (VEP). The cache downloading options
-  are controlled through `task.ext.args`.
+description: Ensembl Variant Effect Predictor (VEP). The cache downloading
+  options are controlled through `task.ext.args`.
 keywords:
   - annotation
   - cache
@@ -12,7 +12,8 @@ tools:
         or structural variants) on genes, transcripts, and protein sequence, as well as regulatory regions.
       homepage: https://www.ensembl.org/info/docs/tools/vep/index.html
       documentation: https://www.ensembl.org/info/docs/tools/vep/script/index.html
-      licence: ["Apache-2.0"]
+      licence:
+        - "Apache-2.0"
       identifier: ""
 input:
   - - meta:
@@ -44,13 +45,46 @@ output:
           description: cache
           pattern: "*"
           ontologies: []
+  versions_ensemblvep:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - ensemblvep:
+          type: string
+          description: The tool name
+      - "vep --help | sed -n '/ensembl-vep/s/.*: //p'":
+          type: eval
+          description: The command used to generate the version of the tool
+  versions_perlmathcdf:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - perl-math-cdf:
+          type: string
+          description: The name of the tool
+      - perl -MMath::CDF -e 'print \$Math::CDF::VERSION':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - ensemblvep:
+          type: string
+          description: The tool name
+      - "vep --help | sed -n '/ensembl-vep/s/.*: //p'":
+          type: eval
+          description: The command used to generate the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - perl-math-cdf:
+          type: string
+          description: The name of the tool
+      - perl -MMath::CDF -e 'print \$Math::CDF::VERSION':
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@maxulysse"
 maintainers:

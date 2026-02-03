@@ -1296,6 +1296,7 @@ For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/
 Enable with `--vep_phenotypes`. The following parameters are optional:
 
 - `--phenotypes_file`, to specify the path to the phenotype annotation GFF/GVF file. If not specified, the plugin will automatically download phenotype data on first run.
+- `--phenotypes_file_tbi`, to specify the path to the phenotype annotation tabix indexed file. Required when using a gzipped `--phenotypes_file`.
 - `--phenotypes_include_types`, &-separated list of feature types to include (e.g., 'Gene&Variation'). Options: Gene, Variation, QTL, StructuralVariation, SupportingStructuralVariation, RegulatoryFeature.
 
 The plugin retrieves overlapping phenotype information from Ensembl's phenotype annotation databases, mapping phenotype data to genomic features including genes, variants, and QTLs.

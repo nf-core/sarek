@@ -225,6 +225,13 @@ workflow NFCORE_SAREK {
         vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
     }
 
+    if (params.phenotypes_file) {
+        vep_extra_files.add(file(params.phenotypes_file, checkIfExists: true))
+        if (params.phenotypes_file_tbi) {
+            vep_extra_files.add(file(params.phenotypes_file_tbi, checkIfExists: true))
+        }
+    }
+
     // Build SnpSift annotation databases configuration from CSV samplesheet
     // CSV format: vcf,tbi,fields,prefix,vardb
     // - vcf: Path to annotation VCF (required)
