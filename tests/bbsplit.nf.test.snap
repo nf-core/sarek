@@ -310,15 +310,10 @@
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "chr1.chrom.gz:md5,55963ae4b37886f20734ac01d6041dc8",
-                "info.txt:md5,dc7fe3012fdd9ef07ebc84458cbe6001",
                 "merged_ref_9222711925177839698.fa.gz:md5,619298e6deae7f8cc3ed3b649ab4f875",
                 "namelist.txt:md5,c26fae3e77a7b86aded8dbb20e387f38",
-                "reflist.txt:md5,cdc14019d40694aae61a59ec486291ea",
-                "scaffolds.txt.gz:md5,05842f30328fd9beb5f52c5a841d7b68",
-                "summary.txt:md5,33b47e887efaaf2a80b3843db6a6a489",
                 "chr1_index_k13_c13_b1.block:md5,3f2154585dddcd097072fbb3a618bace",
                 "chr1_index_k13_c13_b1.block2.gz:md5,cbc6dd52d518bd3240d7f7953e9bba47",
-                "build_index.log:md5,e2f010ead0a95e401522d3adc01b2546",
                 "genome.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
                 "genome.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
                 "genome.bwt:md5,815eded87e4cb6b0f1daab5c4d6e30af",
@@ -344,7 +339,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-02T17:03:37.607"
+        "timestamp": "2026-02-03T10:51:23.379602"
     },
     "-profile test --tools bbsplit,strelka --bbsplit_fasta_list -stub": {
         "content": [
