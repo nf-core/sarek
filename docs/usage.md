@@ -1229,13 +1229,13 @@ vcf,tbi,fields,prefix,vardb
 /data/gnomad.vcf.gz,,AF;AC;AN,gnomAD_,/data/gnomad.vcf.gz.snpsift.vardb
 ```
 
-| Column   | Required | Description                                                |
-| -------- | -------- | ---------------------------------------------------------- |
-| `vcf`    | Yes      | Path to annotation VCF file                                |
-| `tbi`    | No       | Path to tabix index (defaults to `${vcf}.tbi`)             |
-| `fields` | No       | Semicolon-separated INFO fields to extract (empty = all)   |
-| `prefix` | No       | Prefix for annotated field names (avoids naming conflicts) |
-| `vardb`  | No       | Path to pre-built `.snpsift.vardb` directory               |
+| Column   | Required                      | Description                                                |
+| -------- | ----------------------------- | ---------------------------------------------------------- |
+| `vcf`    | Yes                           | Path to annotation VCF file                                |
+| `tbi`    | No                            | Path to tabix index (defaults to `${vcf}.tbi`)             |
+| `fields` | Yes (if `vardb` not provided) | Semicolon-separated INFO fields to extract                 |
+| `prefix` | No                            | Prefix for annotated field names (avoids naming conflicts) |
+| `vardb`  | No                            | Path to pre-built `.snpsift.vardb` directory               |
 
 ### Database creation
 

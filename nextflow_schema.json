@@ -810,7 +810,7 @@
                     "schema": "assets/schema_snpsift_databases.json",
                     "fa_icon": "fas fa-database",
                     "description": "Path to CSV samplesheet specifying SnpSift annotation databases.",
-                    "help_text": "CSV with columns: vcf (required), tbi (optional, defaults to vcf.tbi), fields (semicolon-separated INFO fields), prefix (prefix for annotated fields), vardb (optional, path to pre-built .snpsift.vardb directory). If vardb is empty, the database will be built automatically. See assets/snpsift_databases_example.csv."
+                    "help_text": "CSV with columns: vcf (required), fields (required if vardb not provided, semicolon-separated INFO fields), tbi (optional, defaults to vcf.tbi), prefix (optional, prefix for annotated fields), vardb (optional, path to pre-built .snpsift.vardb directory). If vardb is empty, the database will be built automatically. See assets/snpsift_databases_example.csv."
                 }
             }
         },

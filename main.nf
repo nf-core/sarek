@@ -247,6 +247,11 @@ workflow NFCORE_SAREK {
         def db_list = samplesheetToList(params.snpsift_databases, "${projectDir}/assets/schema_snpsift_databases.json")
 
         db_list.each { vcf, tbi, fields, prefix, vardb ->
+            // Fields are required when vardb is not provided (needed to build the database)
+            if (!vardb && !fields) {
+                error("SnpSift database '${vcf}': 'fields' column is required when 'vardb' is not provided (needed for database creation)")
+            }
+
             // For remote URLs, don't use checkIfExists (Nextflow handles them at runtime)
             def is_remote = vcf.toString().startsWith('http://') || vcf.toString().startsWith('https://') || vcf.toString().startsWith('s3://') || vcf.toString().startsWith('gs://')
             def vcf_file = is_remote ? file(vcf) : file(vcf, checkIfExists: true)
