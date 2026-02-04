@@ -6,7 +6,7 @@ include { BCFTOOLS_ANNOTATE                             } from '../../../modules
 include { ENSEMBLVEP_VEP                                } from '../../../modules/nf-core/ensemblvep/vep'
 include { ENSEMBLVEP_VEP as VCF_ANNOTATE_MERGE          } from '../../../modules/nf-core/ensemblvep/vep'
 include { VCF_ANNOTATE_SNPEFF                           } from '../../nf-core/vcf_annotate_snpeff'
-include { VCF_ANNOTATE_SNPSIFT                          } from '../vcf_annotate_snpsift/main'
+include { SNPSIFT_ANNMEM                                } from '../../../modules/local/snpsift/annmem/main'
 
 workflow VCF_ANNOTATE_ALL {
     take:
@@ -74,11 +74,11 @@ workflow VCF_ANNOTATE_ALL {
     if (tools.split(',').contains('snpsift')) {
         def has_other_annotators = ['merge', 'snpeff', 'vep', 'bcfann'].any { tools.split(',').contains(it) }
         def snpsift_input = tools.split(',').contains('merge')
-            ? VCF_ANNOTATE_MERGE.out.vcf
-            : (has_other_annotators ? vcf_ann : vcf)
+            ? VCF_ANNOTATE_MERGE.out.vcf.map { meta, vcf_ -> [meta, vcf_, []] }
+            : (has_other_annotators ? vcf_ann.map { meta, vcf_, _tbi -> [meta, vcf_, []] } : vcf.map { meta, vcf_ -> [meta, vcf_, []] })
 
-        VCF_ANNOTATE_SNPSIFT(snpsift_input, snpsift_db)
-        vcf_ann = vcf_ann.mix(VCF_ANNOTATE_SNPSIFT.out.vcf_tbi)
+        SNPSIFT_ANNMEM(snpsift_input, snpsift_db, false)
+        vcf_ann = vcf_ann.mix(SNPSIFT_ANNMEM.out.vcf)
     }
 
     emit:
