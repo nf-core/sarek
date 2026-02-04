@@ -69,19 +69,12 @@ workflow VCF_ANNOTATE_ALL {
         json_ann = json_ann.mix(ENSEMBLVEP_VEP.out.json)
     }
 
-    // SnpSift runs last on all annotated outputs
+    // SnpSift runs on all final annotated outputs
     // If no other annotators were used, fall back to original vcf
     if (tools.split(',').contains('snpsift')) {
-        def has_other_annotators = tools.split(',').any { it in ['bcfann', 'snpeff', 'vep', 'merge'] }
-
-        if (has_other_annotators) {
-            vcf_for_snpsift = vcf_ann.map { meta, vcf_, _tbi -> [meta, vcf_] }
-        } else {
-            vcf_for_snpsift = vcf
-        }
 
         VCF_ANNOTATE_SNPSIFT(
-            vcf_for_snpsift,
+            tools.split(',').contains('merge') ? VCF_ANNOTATE_MERGE.out.vcf : vcf_ann,
             snpsift_db
         )
         vcf_ann = vcf_ann.mix(VCF_ANNOTATE_SNPSIFT.out.vcf_tbi)
