@@ -10,12 +10,13 @@ workflow VCF_ANNOTATE_SNPSIFT {
     ch_db_tuple     // channel: [[databases], [tbis], [vardbs], [fields], [prefixes]]
 
     main:
-    // Add empty tbi placeholder to input VCF channel
-    ch_vcf_with_tbi = ch_vcf.map { meta, vcf -> [meta, vcf, []] }
+    // Add empty tbi and fields placeholder to input VCF channel
+    // Input format: tuple(meta, vcf, tbi, fields)
+    ch_vcf_input = ch_vcf.map { meta, vcf -> [meta, vcf, [], ''] }
 
     // Annotate with all databases in one pass
     SNPSIFT_ANNMEM(
-        ch_vcf_with_tbi,
+        ch_vcf_input,
         ch_db_tuple
     )
 

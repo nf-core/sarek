@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/meta-schema.json
 name: "vcf_annotate_snpsift"
 description: Annotate VCF files using SnpSift annotateMem with multiple databases
 keywords:
@@ -7,7 +7,6 @@ keywords:
   - snpsift
   - variant
 components:
-  - snpsift/annmem/create_db
   - snpsift/annmem
 input:
   - ch_vcf:
@@ -16,22 +15,11 @@ input:
         Channel containing VCF files with metadata
         Structure: [val(meta), path(vcf)]
       pattern: "*.{vcf,vcf.gz}"
-  - val_db_configs:
-      type: list
+  - ch_db_tuple:
+      type: tuple
       description: |
-        List of unified configuration maps for each database.
-        Each map contains:
-        - vcf: Path to annotation VCF file (required)
-        - tbi: Path to tabix index (required)
-        - fields: Comma-separated INFO fields to annotate (optional)
-        - prefix: Prefix for annotated field names (optional)
-        - vardb: Path to pre-built .snpsift.vardb directory (optional)
-  - val_create_dbs:
-      type: boolean
-      description: |
-        Whether to create .snpsift.vardb databases for entries without pre-built vardbs.
-        When true, creates databases for faster annotation.
-        When false, uses pre-built vardbs if specified, otherwise processes VCF directly.
+        Tuple containing prepared database information:
+        [[databases], [tbis], [vardbs], [fields], [prefixes]]
 output:
   - vcf_tbi:
       type: file
@@ -39,7 +27,6 @@ output:
         Channel containing annotated VCF files with metadata and index
         Structure: [val(meta), path(vcf), path(tbi)]
       pattern: "*.{vcf.gz}"
-  # versions are emitted via topic channel
 authors:
   - "@friederike-hanssen"
 maintainers:

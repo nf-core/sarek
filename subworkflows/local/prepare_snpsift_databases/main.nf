@@ -2,7 +2,7 @@
 // Prepare SnpSift annotation databases
 //
 
-include { SNPSIFT_ANNMEM_CREATE_DB } from '../../../modules/local/snpsift/annmem/create_db/main'
+include { SNPSIFT_ANNMEM } from '../../../modules/local/snpsift/annmem/main'
 
 workflow PREPARE_SNPSIFT_DATABASES {
     take:
@@ -21,15 +21,24 @@ workflow PREPARE_SNPSIFT_DATABASES {
     }.set { ch_branched }
 
     // Create databases for those that need it
+    // Input format: tuple(meta, vcf, tbi, fields), tuple(databases, tbis, vardbs, fields, prefixes)
+    // For create mode, second tuple is empty placeholders
     ch_to_create = ch_branched.needs_vardb.map { idx, config ->
-        [[id: config.vcf.baseName, idx: idx], config.vcf, config.tbi, config.fields ?: '']
+        [
+            [[id: config.vcf.baseName, idx: idx], config.vcf, config.tbi, config.fields ?: ''],
+            [[], [], [], [], []]  // Empty second tuple for create mode
+        ]
     }
 
-    SNPSIFT_ANNMEM_CREATE_DB(ch_to_create)
+    // Call unified module in create mode (set via ext.create in config)
+    SNPSIFT_ANNMEM(
+        ch_to_create.map { it[0] },
+        ch_to_create.map { it[1] }
+    )
 
     // Join created vardb back with original config to build complete tuple
     // Output: [idx, vcf, tbi, vardb, fields, prefix]
-    ch_created_complete = SNPSIFT_ANNMEM_CREATE_DB.out.database
+    ch_created_complete = SNPSIFT_ANNMEM.out.database
         .map { meta, vardb -> [meta.idx, vardb] }
         .join(ch_branched.needs_vardb)
         .map { idx, vardb, config ->
