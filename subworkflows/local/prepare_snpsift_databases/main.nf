@@ -21,19 +21,20 @@ workflow PREPARE_SNPSIFT_DATABASES {
     }.set { ch_branched }
 
     // Create databases for those that need it
-    // Input format: tuple(meta, vcf, tbi, fields), tuple(databases, tbis, vardbs, fields, prefixes)
-    // For create mode, second tuple is empty placeholders
+    // First tuple: empty sample VCF (not used in create mode)
+    // Second tuple: database VCF and fields to index
     ch_to_create = ch_branched.needs_vardb.map { idx, config ->
         [
-            [[id: config.vcf.baseName, idx: idx], config.vcf, config.tbi, config.fields ?: ''],
-            [[], [], [], [], []]  // Empty second tuple for create mode
+            [[id: config.vcf.baseName, idx: idx], [], []],  // Empty sample VCF tuple
+            [config.vcf, config.tbi, [], config.fields ? [config.fields] : [[]], []]  // Database info
         ]
     }
 
-    // Call unified module in create mode (set via ext.create in config)
+    // Call unified module in create mode
     SNPSIFT_ANNMEM(
-        ch_to_create.map { it[0] },
-        ch_to_create.map { it[1] }
+        ch_to_create.map { it[0] },  // Empty sample tuple
+        ch_to_create.map { it[1] },  // Database VCF to index
+        true                         // create = true for database creation
     )
 
     // Join created vardb back with original config to build complete tuple
@@ -57,14 +58,14 @@ workflow PREPARE_SNPSIFT_DATABASES {
         .toSortedList { a, b -> a[0] <=> b[0] }
         .map { list ->
             [
-                list.collect { it[1] },  // databases (vcf)
-                list.collect { it[2] },  // tbis
-                list.collect { it[3] },  // vardbs
-                list.collect { it[4] },  // fields
-                list.collect { it[5] }   // prefixes
+                list.collect { it[1] },  // db_vcf
+                list.collect { it[2] },  // db_vcf_tbi
+                list.collect { it[3] },  // db_vardb
+                list.collect { it[4] },  // db_fields
+                list.collect { it[5] }   // db_prefixes
             ]
         }
 
     emit:
-    db_tuple = ch_db_tuple  // channel: [[databases], [tbis], [vardbs], [fields], [prefixes]]
+    db_tuple = ch_db_tuple  // channel: [[db_vcf], [db_vcf_tbi], [db_vardb], [db_fields], [db_prefixes]]
 }
