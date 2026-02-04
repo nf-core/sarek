@@ -38,16 +38,16 @@ process SNPSIFT_ANNMEM {
         """
     } else {
         def dbs = db_vcf instanceof List ? db_vcf : [db_vcf]
-        def vardbs = db_vardb instanceof List ? db_vardb : [db_vardb]
         def all_fields = db_fields instanceof List ? db_fields : [db_fields]
         def prefixes = db_prefixes instanceof List ? db_prefixes : [db_prefixes]
 
+        // SnpSift expects -dbfile to point to VCF, it finds .snpsift.vardb automatically
+        // The vardb is staged via path() input so SnpSift can locate it
         def dbfile_args = dbs.withIndex().collect { db, i ->
-            def dbfile = vardbs[i] ?: db
             def f = all_fields[i]
             def fields = f instanceof List ? f.join(',') : f?.replace(';', ',')
             def p = prefixes[i]
-            "-dbfile ${dbfile}${fields ? " -fields ${fields}" : ''}${p ? " -prefix ${p}" : ''}"
+            "-dbfile ${db}${fields ? " -fields ${fields}" : ''}${p ? " -prefix ${p}" : ''}"
         }
 
         """

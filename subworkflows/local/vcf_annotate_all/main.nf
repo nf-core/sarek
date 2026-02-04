@@ -72,11 +72,12 @@ workflow VCF_ANNOTATE_ALL {
     // SnpSift runs on all final annotated outputs
     // If no other annotators were used, fall back to original vcf
     if (tools.split(',').contains('snpsift')) {
+        def has_other_annotators = ['merge', 'snpeff', 'vep', 'bcfann'].any { tools.split(',').contains(it) }
+        def snpsift_input = tools.split(',').contains('merge')
+            ? VCF_ANNOTATE_MERGE.out.vcf
+            : (has_other_annotators ? vcf_ann : vcf)
 
-        VCF_ANNOTATE_SNPSIFT(
-            tools.split(',').contains('merge') ? VCF_ANNOTATE_MERGE.out.vcf : vcf_ann,
-            snpsift_db
-        )
+        VCF_ANNOTATE_SNPSIFT(snpsift_input, snpsift_db)
         vcf_ann = vcf_ann.mix(VCF_ANNOTATE_SNPSIFT.out.vcf_tbi)
     }
 
