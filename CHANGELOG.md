@@ -11,11 +11,11 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 
 ### Added
 
-- [#2111](https://github.com/nf-core/sarek/pull/2111) - Add SnpSift annotation support using `--tools snpsift` with `--snpsift_databases` CSV configuration
 - [#2092](https://github.com/nf-core/sarek/pull/2092) - Add support for VEP Condel plugin to calculate Consensus Deleteriousness scores for missense mutations
 - [#2093](https://github.com/nf-core/sarek/pull/2093) - Add support for VEP Mastermind plugin to retrieve citation counts from Mastermind Genomic Search Engine
 - [#2094](https://github.com/nf-core/sarek/pull/2094) - Add support for VEP Phenotypes plugin to retrieve overlapping phenotype information from Ensembl databases
 - [#2103](https://github.com/nf-core/sarek/pull/2103) - Documentation update about new VEP plugins
+- [#2111](https://github.com/nf-core/sarek/pull/2111) - Add SnpSift annotation support using `--tools snpsift` with `--snpsift_databases` CSV configuration
 
 ### Changed
 
