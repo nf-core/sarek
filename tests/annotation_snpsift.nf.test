@@ -14,6 +14,16 @@ nextflow_pipeline {
                 tools: 'snpsift',
                 snpsift_databases: "${projectDir}/tests/config/snpsift_test_databases.csv"
             ]
+        ],
+        [
+            name: "-profile test --tools snpsift --save_reference",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
+                step: 'annotate',
+                tools: 'snpsift',
+                snpsift_databases: "${projectDir}/tests/config/snpsift_test_databases.csv",
+                save_reference: true
+            ]
         ]
     ]
 

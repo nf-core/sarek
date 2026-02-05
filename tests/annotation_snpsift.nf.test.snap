@@ -41,5 +41,53 @@
             "nextflow": "25.10.2"
         },
         "timestamp": "2026-02-05T00:55:11.330911"
+    },
+    "-profile test --tools snpsift --save_reference": {
+        "content": [
+            3,
+            {
+                
+            },
+            [
+                "annotation",
+                "annotation/test",
+                "annotation/test/test_snpSift.ann.vcf.gz",
+                "annotation/test/test_snpSift.ann.vcf.gz.tbi",
+                "csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/snpsift",
+                "reference/snpsift/test2.vcf.gz.snpsift.vardb",
+                "reference/snpsift/test2.vcf.gz.snpsift.vardb/MT192765.1.snpsift.df",
+                "reference/snpsift/test2.vcf.gz.snpsift.vardb/fields.snpsift.db_fields"
+            ],
+            [
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
+                "MT192765.1.snpsift.df:md5,87a35e6b78cb075081b87403df36f333",
+                "fields.snpsift.db_fields:md5,12dd1c56cca1cb9046c507172b0f9ae0"
+            ],
+            "No BAM files",
+            "No CRAM files",
+            [
+                "test_snpSift.ann.vcf.gz:md5,5a8fa867f12f8f13038f81370d4cd00a"
+            ],
+            "No warnings"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-02-05T01:04:12.820745"
     }
 }
