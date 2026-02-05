@@ -9,7 +9,7 @@ workflow PREPARE_SNPSIFT_DATABASES {
     val_db_configs  // List of maps: [[vcf: file, tbi: file, fields: '', prefix: '', vardb: null], ...]
 
     main:
-    ch_configs = Channel.fromList(val_db_configs)
+    ch_configs = channel.fromList(val_db_configs)
 
     // Branch: create vardb if not provided
     ch_configs.branch {
