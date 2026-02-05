@@ -39,12 +39,11 @@ process SNPSIFT_ANNMEM {
         """
     } else {
         def dbs = db_vcf instanceof List ? db_vcf : [db_vcf]
-        def vardbs = db_vardb instanceof List ? db_vardb : [db_vardb]
         def all_fields = db_fields instanceof List ? db_fields : [db_fields]
         def prefixes = db_prefixes instanceof List ? db_prefixes : [db_prefixes]
 
         def dbfile_args = dbs.withIndex().collect { db, i ->
-            def dbfile = vardbs[i] ?: db
+            def dbfile = db
             def f = all_fields[i]
             def fields = f instanceof List ? f.join(',') : f?.replace(';', ',')
             def p = prefixes[i]
