@@ -2,7 +2,7 @@
 // Prepare SnpSift annotation databases
 //
 
-include { SNPSIFT_ANNMEM } from '../../../modules/local/snpsift/annmem/main'
+include { SNPSIFT_ANNMEM } from '../../../modules/nf-core/snpsift/annmem'
 
 workflow PREPARE_SNPSIFT_DATABASES {
     take:

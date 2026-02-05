@@ -6,7 +6,7 @@ include { BCFTOOLS_ANNOTATE                             } from '../../../modules
 include { ENSEMBLVEP_VEP                                } from '../../../modules/nf-core/ensemblvep/vep'
 include { ENSEMBLVEP_VEP as VCF_ANNOTATE_MERGE          } from '../../../modules/nf-core/ensemblvep/vep'
 include { VCF_ANNOTATE_SNPEFF                           } from '../../nf-core/vcf_annotate_snpeff'
-include { SNPSIFT_ANNMEM                                } from '../../../modules/local/snpsift/annmem/main'
+include { SNPSIFT_ANNMEM                                } from '../../../modules/nf-core/snpsift/annmem'
 
 workflow VCF_ANNOTATE_ALL {
     take:
@@ -78,7 +78,7 @@ workflow VCF_ANNOTATE_ALL {
             : (has_other_annotators ? vcf_ann.map { meta, vcf_, _tbi -> [meta, vcf_, []] } : vcf.map { meta, vcf_ -> [meta, vcf_, []] })
 
         SNPSIFT_ANNMEM(snpsift_input, snpsift_db, false)
-        vcf_ann = vcf_ann.mix(SNPSIFT_ANNMEM.out.vcf)
+        vcf_ann = vcf_ann.mix(SNPSIFT_ANNMEM.out.vcf.join(SNPSIFT_ANNMEM.out.tbi, failOnDuplicate: true, failOnMismatch: true))
     }
 
     emit:

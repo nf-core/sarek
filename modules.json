@@ -516,6 +516,11 @@
                         "git_sha": "b966311b31f51b65e87f124d08f948fec019787d",
                         "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
+                    "snpsift/annmem": {
+                        "branch": "master",
+                        "git_sha": "b788cb7c37f9f6baad856b1d2aeb2e58b371cec3",
+                        "installed_by": ["modules"]
+                    },
                     "spring/decompress": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
