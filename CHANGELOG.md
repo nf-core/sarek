@@ -53,6 +53,8 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 | `--phenotypes_file`          | added   |
 | `--phenotypes_file_tbi`      | added   |
 | `--phenotypes_include_types` | added   |
+| `--tools snpsift`            | added   |
+| `--snpsift_databases`        | added   |
 | `--msisensor2_scan`          | removed |
 
 ### Developer section
