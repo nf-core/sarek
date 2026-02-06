@@ -63,6 +63,7 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 - [#2076](https://github.com/nf-core/sarek/pull/2076) - Back to Dev
 - [#2098](https://github.com/nf-core/sarek/pull/2098) - Starting workflow output migration with multiqc
 - [#2101](https://github.com/nf-core/sarek/pull/2101) - Prepare release 3.8.0
+- [#2126](https://github.com/nf-core/sarek/pull/2126) - Start versions migration to topics
 
 #### Fixed
 
