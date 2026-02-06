@@ -17,10 +17,10 @@ Buollámtjåhkka is the closest mountain to Saltoluokta and an easy peak to clim
 
 ### Fixed
 
-- [#2124](https://github.com/nf-core/sarek/pull/2124) - Fix FilterMutectCalls not running when starting from BAM with lane field in samplesheet
 - [#2069](https://github.com/nf-core/sarek/pull/2069) - Propagate tbi indices for HaplotypeCaller and Haplotyper to fix bug with merging vcfs and tbis.
-- [#2073](https://github.com/nf-core/sarek/pull/2073) - Apply fix for BBSplit error: `unterminated s' command`
 - [#2071](https://github.com/nf-core/sarek/pull/2071) - Updated parameter validation to support the use of umi_read_structure along with umi_in_read_headers
+- [#2073](https://github.com/nf-core/sarek/pull/2073) - Apply fix for BBSplit error: `unterminated s' command`
+- [#2124](https://github.com/nf-core/sarek/pull/2124) - Fix FilterMutectCalls not running when starting from BAM with lane field in samplesheet
 
 ### Removed
 
