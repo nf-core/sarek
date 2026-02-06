@@ -66,11 +66,13 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 - [#2076](https://github.com/nf-core/sarek/pull/2076) - Back to Dev
 - [#2098](https://github.com/nf-core/sarek/pull/2098) - Starting workflow output migration with multiqc
 - [#2101](https://github.com/nf-core/sarek/pull/2101) - Prepare release 3.8.0
+- [#2126](https://github.com/nf-core/sarek/pull/2126) - Start versions migration to topics
 
 #### Fixed
 
 - [#2099](https://github.com/nf-core/sarek/pull/2099) - Fix `bbsplit.nf.test` input cardinality to match current PREPARE_GENOME subworkflow signature (31 parameters)
 - [#2112](https://github.com/nf-core/sarek/pull/2112) - Fix BBSplit index building failure by adding null check for reads in `ext.prefix` configuration
+- [#2120](https://github.com/nf-core/sarek/pull/2120) - Fix BBSplit index publish pattern from `bbmap` to `bbmap_index` to correctly save reference
 - [#2104](https://github.com/nf-core/sarek/pull/2104) - Ignore warnings coming from singularity and conda
 - [#2105](https://github.com/nf-core/sarek/pull/2105) - Ignore warnings coming from singularity
 - [#2106](https://github.com/nf-core/sarek/pull/2106) - Fix conda setup in GHA

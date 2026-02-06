@@ -15,9 +15,10 @@ nextflow_pipeline {
                 input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
                 modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
                 igenomes_base: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
-                genome: 'testdata.nf-core.sarek'
+                genome: 'testdata.nf-core.sarek',
+                save_reference: true
             ],
-            ignoreFiles: '{multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt,multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt,multiqc/multiqc_data/mosdepth_perchrom.txt,multiqc/multiqc_data/samtools*.txt,preprocessing/**/*.cram,reports/mosdepth/*/*}'
+            ignoreFiles: '{multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt,multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt,multiqc/multiqc_data/mosdepth_perchrom.txt,multiqc/multiqc_data/samtools*.txt,preprocessing/**/*.cram,reports/mosdepth/*/*,**/info.txt,**/reflist.txt,**/scaffolds.txt.gz,**/summary.txt,**/build_index.log}'
         ],
         [
             name: "-profile test --tools bbsplit,strelka --bbsplit_fasta_list -stub",
