@@ -408,7 +408,7 @@
                     },
                     "parabricks/fq2bam": {
                         "branch": "master",
-                        "git_sha": "1e4345f4e18eca1985e35562e8f5d29caf7f8206",
+                        "git_sha": "f0b0dc3c3f001b1b7bf814a3c353baecbab17ea1",
                         "installed_by": ["modules"]
                     },
                     "rbt/vcfsplit": {

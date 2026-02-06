@@ -54,8 +54,6 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
         val_output_fmt      // either bam or cram
     )
 
-    ch_versions = ch_versions.mix(PARABRICKS_FQ2BAM.out.versions)
-
     // Grouping the bams from the same samples not to stall the workflow
     // Use groupKey to make sure that the correct group can advance as soon as it is complete
     // and not stall the workflow until all reads from all channels are mapped
