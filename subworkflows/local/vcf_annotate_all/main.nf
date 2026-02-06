@@ -77,7 +77,7 @@ workflow VCF_ANNOTATE_ALL {
             ? VCF_ANNOTATE_MERGE.out.vcf.map { meta, vcf_ -> [meta, vcf_, []] }
             : (has_other_annotators ? vcf_ann.map { meta, vcf_, _tbi -> [meta, vcf_, []] } : vcf.map { meta, vcf_ -> [meta, vcf_, []] })
 
-        SNPSIFT_ANNMEM(snpsift_input, snpsift_db, false)
+        SNPSIFT_ANNMEM(snpsift_input, snpsift_db)
         vcf_ann = vcf_ann.mix(SNPSIFT_ANNMEM.out.vcf.join(SNPSIFT_ANNMEM.out.tbi, failOnDuplicate: true, failOnMismatch: true))
     }
 

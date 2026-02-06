@@ -1,7 +1,7 @@
-name: "snpsift_annmem"
+name: "snpsift_annmemcreate"
 description: |
-  Annotate VCF files using pre-built SnpSift annMem databases.
-  Enriches input VCF records by querying memory-optimized indexed dataframes for high-performance annotation.
+  Create memory-optimized SnpSift vardb databases from VCF files for use with SnpSift annMem annotation.
+  Converts VCF files (e.g. ClinVar, dbSNP, Cosmic) into indexed dataframes for fast lookup.
 keywords:
   - vcf
   - annotation
@@ -24,64 +24,32 @@ input:
         description: |
           Groovy Map containing sample information
           e.g. `[ id:'test' ]`
-    - vcf:
+    - db_vcf:
         type: file
-        description: VCF file to annotate
-        pattern: "*.{vcf,vcf.gz}"
-        ontologies: []
-    - vcf_tbi:
-        type: file
-        description: Tabix index for input VCF (optional)
-        pattern: "*.tbi"
-        ontologies: []
-  - - db_vcf:
-        type: file
-        description: |
-          VCF database file(s) for annotation.
-          Can provide multiple databases for multi-database annotation.
+        description: VCF file to build the database from
         pattern: "*.{vcf,vcf.gz}"
         ontologies: []
     - db_vcf_tbi:
         type: file
-        description: Tabix index for database VCF file(s)
+        description: Tabix index for the database VCF file (optional)
         pattern: "*.tbi"
         ontologies: []
-    - db_vardb:
-        type: directory
-        description: Pre-built .snpsift.vardb directory (used instead of db_vcf if provided)
-        pattern: "*.snpsift.vardb"
     - db_fields:
         type: list
         description: |
-          INFO field names to annotate with.
+          INFO field names to include in the database.
           Can be a list or a single string.
-    - db_prefixes:
-        type: string
-        description: Prefix to add to annotated field names
 output:
-  vcf:
+  database:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'test' ]`
-      - "*.vcf.gz":
-          type: file
-          description: Annotated VCF file
-          pattern: "*.vcf.gz"
-          ontologies:
-            - edam: http://edamontology.org/format_3989
-  tbi:
-    - - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. `[ id:'test' ]`
-      - "*.vcf.gz.tbi":
-          type: file
-          description: Tabix index for annotated VCF
-          pattern: "*.vcf.gz.tbi"
-          ontologies: []
+      - "*.snpsift.vardb":
+          type: directory
+          description: SnpSift vardb directory containing indexed dataframes
+          pattern: "*.snpsift.vardb"
   versions_snpsift:
     - - ${task.process}:
           type: string

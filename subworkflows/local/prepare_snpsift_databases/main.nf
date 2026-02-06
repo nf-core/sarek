@@ -2,7 +2,7 @@
 // Prepare SnpSift annotation databases
 //
 
-include { SNPSIFT_ANNMEM } from '../../../modules/nf-core/snpsift/annmem'
+include { SNPSIFT_ANNMEMCREATE } from '../../../modules/nf-core/snpsift/annmemcreate'
 
 workflow PREPARE_SNPSIFT_DATABASES {
     take:
@@ -18,21 +18,20 @@ workflow PREPARE_SNPSIFT_DATABASES {
     }.set { ch_branched }
 
     // Create vardbs for databases that need them
-    SNPSIFT_ANNMEM(
-        ch_branched.needs_vardb.map { [[id: it.vcf.baseName], [], []] },
-        ch_branched.needs_vardb.map { [it.vcf, it.tbi, [], it.fields ? [it.fields] : [[]], []] },
-        true
+    // Convert semicolon-separated fields to comma-separated (SnpSift expects commas)
+    SNPSIFT_ANNMEMCREATE(
+        ch_branched.needs_vardb.map { [[id: it.vcf.baseName], it.vcf, it.tbi, it.fields ? it.fields.replace(';', ',') : ''] }
     )
 
     // Join created vardbs back with their configs
-    ch_created = SNPSIFT_ANNMEM.out.database
+    ch_created = SNPSIFT_ANNMEMCREATE.out.database
         .map { meta, vardb -> [meta.id, vardb] }
         .join(ch_branched.needs_vardb.map { [it.vcf.baseName, it] })
-        .map { _id, vardb, config -> [config.vcf, config.tbi, vardb, config.fields ?: '', config.prefix ?: ''] }
+        .map { _id, vardb, config -> [config.vcf, config.tbi, vardb, config.fields ? config.fields.replace(';', ',') : '', config.prefix ?: ''] }
 
     // Configs with pre-built vardb
     ch_prebuilt = ch_branched.has_vardb
-        .map { [it.vcf, it.tbi, it.vardb, it.fields ?: '', it.prefix ?: ''] }
+        .map { [it.vcf, it.tbi, it.vardb, it.fields ? it.fields.replace(';', ',') : '', it.prefix ?: ''] }
 
     // Collect all into output tuple
     ch_db_tuple = ch_prebuilt
