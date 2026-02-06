@@ -70,13 +70,27 @@ output:
           pattern: "*.bcf"
           ontologies:
             - edam: http://edamontology.org/format_3020 # BCF
+  versions_varlociraptor:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - varlociraptor:
+          type: string
+          description: The tool name
+      - "varlociraptor --version | sed 's/^varlociraptor //'":
+          type: string
+          description: The command used to generate the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - varlociraptor:
+          type: string
+          description: The tool name
+      - "varlociraptor --version | sed 's/^varlociraptor //'":
+          type: string
+          description: The command used to generate the version of the tool
 authors:
   - "@FriederikeHanssen"
 maintainers:

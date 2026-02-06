@@ -24,7 +24,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     val_num_chunks
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     meta_map = ch_cram.map { meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai ->
         meta + [sex_string: (meta.sex == "XX" ? "female" : "male")]
@@ -53,9 +53,6 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         }
     )
 
-    ch_versions = ch_versions.mix(ALIGNMENTPROPERTIES_TUMOR.out.versions)
-    ch_versions = ch_versions.mix(ALIGNMENTPROPERTIES_NORMAL.out.versions)
-
     //
     // CONCAT SNV AND INDEL VCFS FOR STRELKA
     //
@@ -64,9 +61,9 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_somatic_vcf_tbi = ch_somatic_vcf.join(TABIX_SOMATIC.out.tbi, by: [0])
 
     // CONCAT SNV / INDEL VCFs COMING FROM STRELKA
-    ch_somatic_branched = ch_somatic_vcf_tbi.branch {
-        strelka: it[0].variantcaller == 'strelka'
-        other: it[0].variantcaller != 'strelka'
+    ch_somatic_branched = ch_somatic_vcf_tbi.branch { items ->
+        strelka: items[0].variantcaller == 'strelka'
+        other: items[0].variantcaller != 'strelka'
     }
 
     // Group somatic strelka SNVs and INDELs by sample for concatenation
@@ -102,9 +99,9 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     def matching_pairs = somatic_with_key.join(germline_with_key, failOnMismatch: false)
 
     // Branch based on whether a matching germline VCF was found
-    def branched = matching_pairs.branch {
-        matched: it.size() == 7
-        unmatched: it.size() == 4
+    def branched = matching_pairs.branch { items ->
+        matched: items.size() == 7
+        unmatched: items.size() == 4
     }
 
     MERGE_GERMLINE_SOMATIC_VCFS(
@@ -135,7 +132,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     //
     // SPLIT VCF CHUNKS - create chunked VCFs for both tumor and normal preprocessing
     //
-    ch_chunked_vcfs_tumor = RBT_VCFSPLIT.out.bcfchunks
+    ch_chunked_tumor_vcfs = RBT_VCFSPLIT.out.bcfchunks
         .transpose()
         .map { meta, vcf_chunked ->
             [
@@ -145,7 +142,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         }
 
     // Create chunked VCFs with normal metadata for normal preprocessing
-    ch_chunked_vcfs_normal = RBT_VCFSPLIT.out.bcfchunks
+    ch_chunked_normal_vcfs = RBT_VCFSPLIT.out.bcfchunks
         .transpose()
         .map { meta, vcf_chunked ->
             [
@@ -157,7 +154,6 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     //
     // PREPROCESS VCF WITH TUMOR CRAM
     //
-    ch_chunked_tumor_vcfs = ch_chunked_vcfs_tumor
 
     // Create base channels for data that will be replicated for each chunk
     ch_cram_tumor = cram_tumor
@@ -188,12 +184,10 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     PREPROCESS_TUMOR(
         ch_input_tumor_preprocess_chunked
     )
-    ch_versions = ch_versions.mix(PREPROCESS_TUMOR.out.versions)
 
     //
     // PREPROCESS VCF WITH NORMAL CRAM
     //
-    ch_chunked_normal_vcfs = ch_chunked_vcfs_normal
 
     // Create base channels for data that will be replicated for each chunk
     ch_cram_alignment = cram_normal
@@ -205,10 +199,10 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         .combine(ch_cram_alignment, by: 0)
         .combine(ch_fasta)
         .combine(ch_fasta_fai)
-        .map { _id, meta_vcf, vcf, meta_cram, normal_cram, normal_crai, alignment_json, _meta_fasta, fasta, _meta_fai, fai ->
+        .map { _match_id, meta_vcf, vcf, meta_cram, normal_cram, normal_crai, alignment_json, _meta_fasta, fasta, _meta_fai, fai ->
             [
                 meta_vcf + [
-                    id: meta_cram.match_id,
+                    id: meta_cram.id,
                     postprocess: 'varlociraptor',
                 ],
                 normal_cram,
@@ -223,13 +217,12 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     PREPROCESS_NORMAL(
         ch_input_normal_preprocess_chunked
     )
-    ch_versions = ch_versions.mix(PREPROCESS_NORMAL.out.versions)
 
     //
     // CALL VARIANTS WITH VARLOCIRAPTOR
     //
     ch_normal_for_join = PREPROCESS_NORMAL.out.bcf
-        .map { meta, normal_bcf -> [[meta.patient, meta.id, meta.chunk, meta.variantcaller], meta, normal_bcf] }
+        .map { meta, normal_bcf -> [[meta.patient, meta.match_id, meta.chunk, meta.variantcaller], meta, normal_bcf] }
         .dump(tag: 'NORMAL_KEY', pretty: true)
 
     ch_tumor_for_join = PREPROCESS_TUMOR.out.bcf
@@ -251,8 +244,6 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     VARLOCIRAPTOR_CALLVARIANTS(
         ch_vcf_for_callvariants
     )
-
-    ch_versions = ch_versions.mix(VARLOCIRAPTOR_CALLVARIANTS.out.versions)
 
     //
     // SORT AND MERGE CALLED VARIANTS

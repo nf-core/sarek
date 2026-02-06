@@ -4,15 +4,15 @@ process VARLOCIRAPTOR_PREPROCESS {
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/83/834c886cf862aade1d5d28a4a750b0676dfbced7300b10a795d5ebb993fa2586/data'
-        : 'community.wave.seqera.io/library/varlociraptor:8.9.0--7199b2ed2f0e184f'}"
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/9a/9ac0825c21b2cbaf9535ffe443e53a0bb4d61596cafcb5a5b444dfb31b945ab2/data'
+        : 'community.wave.seqera.io/library/varlociraptor:8.9.3--fa2ce5da2782669c'}"
 
     input:
     tuple val(meta), path(bam), path(bai), path(candidates), path(alignment_json), path(fasta), path(fai)
 
     output:
     tuple val(meta), path("*.bcf"), emit: bcf
-    path "versions.yml",            emit: versions
+    tuple val("${task.process}"), val('varlociraptor'), eval("varlociraptor --version | sed 's/^varlociraptor //'"), topic: versions, emit: versions_varlociraptor
 
     when:
     task.ext.when == null || task.ext.when
@@ -29,21 +29,11 @@ process VARLOCIRAPTOR_PREPROCESS {
         --candidates ${candidates} \\
         ${args} \\
         --output ${prefix}.bcf
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        varlociraptor: \$(echo \$(varlociraptor --version 2>&1) | sed 's/^.*varlociraptor //; s/:.*\$//' )
-    END_VERSIONS
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.bcf
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        varlociraptor: \$(echo \$(varlociraptor --version 2>&1) | sed 's/^.*varlociraptor //; s/:.*\$//' )
-    END_VERSIONS
     """
 }

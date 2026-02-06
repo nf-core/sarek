@@ -18,7 +18,7 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     val_sampletype
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     meta_map = ch_cram.map { meta, _cram, _crai -> meta + [sex_string: (meta.sex == "XX" ? "female" : "male")] }
 

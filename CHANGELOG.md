@@ -126,7 +126,7 @@ This release includes a bump to Nextflow 25.10.2.
 ### Changed
 
 - [#2045](https://github.com/nf-core/sarek/pull/2045) - Propagate fastp shard naming if exists through BBSplit to ensure unique naming in Markduplicates
-- [#2055](https://github.com/nf-core/sarek/pull/2055) - Sort final vcf in varlociraptor sbwfs
+- [#2055](https://github.com/nf-core/sarek/pull/2055) - Sort final vcf in varlociraptor sbwfs and update varlociraptor
 - [#2065](https://github.com/nf-core/sarek/pull/2065) - Bump minimal Nextflow version to 25.10.2
 
 ### Fixed
@@ -141,7 +141,7 @@ This release includes a bump to Nextflow 25.10.2.
 | Dependency    | Old version | New version |
 | ------------- | ----------- | ----------- |
 | nf-schema     | 2.4.2       | 2.6.1       |
-| varlociraptor | 8.7.4       | 8.9.0       |
+| varlociraptor | 8.7.4       | 8.9.3       |
 
 ### Parameters
 
