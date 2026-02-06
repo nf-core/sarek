@@ -208,7 +208,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         .map { _id, meta_vcf, vcf, meta_cram, normal_cram, normal_crai, alignment_json, _meta_fasta, fasta, _meta_fai, fai ->
             [
                 meta_vcf + [
-                    id: meta_cram.id,
+                    id: meta_cram.match_id,
                     postprocess: 'varlociraptor',
                 ],
                 normal_cram,
