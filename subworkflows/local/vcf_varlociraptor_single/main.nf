@@ -35,7 +35,6 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
             [meta_cram, cram, crai, fasta, fai]
         }
     )
-    ch_versions = ch_versions.mix(VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES.out.versions)
 
     //
     // CHUNK AND PREPROCESS GERMLINE VCF
@@ -87,7 +86,6 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     VARLOCIRAPTOR_PREPROCESS(
         ch_input_preprocess_chunked
     )
-    ch_versions = ch_versions.mix(VARLOCIRAPTOR_PREPROCESS.out.versions)
 
     //
     // CALL VARIANTS WITH VARLOCIRAPTOR
@@ -101,7 +99,6 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     VARLOCIRAPTOR_CALLVARIANTS(
         ch_vcfs_for_callvariants
     )
-    ch_versions = ch_versions.mix(VARLOCIRAPTOR_CALLVARIANTS.out.versions)
 
     //
     // SORT AND MERGE CALLED VARIANTS
