@@ -1,11 +1,12 @@
 {
     "-profile test --tools merge,snpeff,vep": {
         "content": [
-            7,
+            5,
             {
                 "ENSEMBLVEP_VEP": {
-                    "ensemblvep": 115.2,
-                    "tabix": 1.21
+                    "ensemblvep": "115.2",
+                    "perl-math-cdf": "0.1",
+                    "tabix": "1.21"
                 },
                 "SNPEFF_SNPEFF": {
                     "snpeff": "5.3a"
@@ -13,19 +14,19 @@
                 "TABIX_BGZIPTABIX": {
                     "tabix": 1.21
                 },
-                "TABIX_TABIX": {
-                    "tabix": 1.21
+                "VCF_ANNOTATE_MERGE": {
+                    "ensemblvep": "115.2",
+                    "perl-math-cdf": "0.1",
+                    "tabix": "1.21"
                 }
             },
             [
                 "annotation",
                 "annotation/test",
                 "annotation/test/test_VEP.ann.vcf.gz",
-                "annotation/test/test_VEP.ann.vcf.gz.tbi",
                 "annotation/test/test_snpEff.ann.vcf.gz",
                 "annotation/test/test_snpEff.ann.vcf.gz.tbi",
-                "annotation/test/test_snpEff_VEP.ann.vcf.gz",
-                "annotation/test/test_snpEff_VEP.ann.vcf.gz.tbi",
+                "annotation/test/test_snpEff.ann_VEP.ann.vcf.gz",
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
@@ -78,7 +79,7 @@
                 "reports/EnsemblVEP",
                 "reports/EnsemblVEP/test",
                 "reports/EnsemblVEP/test/test_VEP.ann.summary.html",
-                "reports/EnsemblVEP/test/test_snpEff_VEP.ann.summary.html",
+                "reports/EnsemblVEP/test/test_snpEff.ann_VEP.ann.summary.html",
                 "reports/snpeff",
                 "reports/snpeff/test",
                 "reports/snpeff/test/snpEff_summary.html",
@@ -91,8 +92,8 @@
                 "snpeff_effects.txt:md5,3c5e9a1c191b77c781dc4d033b1dd1f7",
                 "snpeff_qualities.txt:md5,4c059b4e8bf0a64940ad1d6e30efd3a6",
                 "snpeff_variant_effects_region.txt:md5,05efd324edadced17ba3cd2b7714af57",
-                "vep-general-stats.txt:md5,71c994ae4221384f4e22459723d29cd0",
-                "vep.txt:md5,20570f3e4e51407b860a31d7e1d59de0",
+                "vep-general-stats.txt:md5,4dfe43c5f1eb2f952ec3de8c597df56b",
+                "vep.txt:md5,8b7760cf5a83b416a1959e1d04a755ce",
                 "test_snpEff.genes.txt:md5,130536bf0237d7f3f746d32aaa32840a"
             ],
             "No BAM files",
@@ -100,39 +101,36 @@
             [
                 "test_VEP.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test_snpEff.ann.vcf.gz:md5,fd266e623365c7d1837bc9eb088fe70c",
-                "test_snpEff_VEP.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "test_snpEff.ann_VEP.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-12-15T19:13:04.158148226"
+        "timestamp": "2026-02-06T15:49:57.865299936"
     },
     "-profile test --tools merge": {
         "content": [
-            5,
+            4,
             {
-                "ENSEMBLVEP_VEP": {
-                    "ensemblvep": 115.2,
-                    "tabix": 1.21
-                },
                 "SNPEFF_SNPEFF": {
                     "snpeff": "5.3a"
                 },
                 "TABIX_BGZIPTABIX": {
                     "tabix": 1.21
                 },
-                "TABIX_TABIX": {
-                    "tabix": 1.21
+                "VCF_ANNOTATE_MERGE": {
+                    "ensemblvep": "115.2",
+                    "perl-math-cdf": "0.1",
+                    "tabix": "1.21"
                 }
             },
             [
                 "annotation",
                 "annotation/test",
-                "annotation/test/test_snpEff_VEP.ann.vcf.gz",
-                "annotation/test/test_snpEff_VEP.ann.vcf.gz.tbi",
+                "annotation/test/test_snpEff.ann_VEP.ann.vcf.gz",
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
@@ -184,7 +182,7 @@
                 "reports",
                 "reports/EnsemblVEP",
                 "reports/EnsemblVEP/test",
-                "reports/EnsemblVEP/test/test_snpEff_VEP.ann.summary.html",
+                "reports/EnsemblVEP/test/test_snpEff.ann_VEP.ann.summary.html",
                 "reports/snpeff",
                 "reports/snpeff/test"
             ],
@@ -194,20 +192,20 @@
                 "snpeff_effects.txt:md5,3c5e9a1c191b77c781dc4d033b1dd1f7",
                 "snpeff_qualities.txt:md5,4c059b4e8bf0a64940ad1d6e30efd3a6",
                 "snpeff_variant_effects_region.txt:md5,05efd324edadced17ba3cd2b7714af57",
-                "vep-general-stats.txt:md5,57563be109a57f6edfa427b2b2c310ba",
-                "vep.txt:md5,bf54f689bb0ccab5e1566e48373f768c"
+                "vep-general-stats.txt:md5,b5cbac1bdf3ee560c93c7c785074c11d",
+                "vep.txt:md5,e0daa328f63d7512d5f83f5faa23467e"
             ],
             "No BAM files",
             "No CRAM files",
             [
-                "test_snpEff_VEP.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "test_snpEff.ann_VEP.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-12-15T19:11:49.219951409"
+        "timestamp": "2026-02-06T15:48:33.168772356"
     }
 }

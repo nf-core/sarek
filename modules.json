@@ -168,7 +168,7 @@
                     },
                     "ensemblvep/vep": {
                         "branch": "master",
-                        "git_sha": "09ea5d9fcd6eda714f148e0f3b6a4920b2091f41",
+                        "git_sha": "691bb6956ec56154b81ba5771641ca24443c4d17",
                         "installed_by": ["modules"]
                     },
                     "fastp": {
