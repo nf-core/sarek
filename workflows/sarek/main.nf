@@ -6,7 +6,7 @@
 
 include { paramsSummaryMap                                  } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc                              } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML                            } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML                            } from 'plugin/nf-core-utils'
 include { methodsDescriptionText                            } from '../../subworkflows/local/utils_nfcore_sarek_pipeline'
 
 // Create samplesheets to restart from different steps
@@ -583,9 +583,17 @@ workflow SAREK {
     //
     // Collate and save software versions
     //
-    version_yaml = channel.empty()
+    def version_yaml = channel.empty()
     if (!(skip_tools.split(',').contains('versions'))) {
-        version_yaml = softwareVersionsToYAML(versions).collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_' + 'sarek_software_' + 'mqc_' + 'versions.yml', sort: true, newLine: true)
+        version_yaml = softwareVersionsToYAML(
+            softwareVersions: versions.mix(channel.topic("versions")),
+            nextflowVersion: workflow.nextflow.version,
+        ).collectFile(
+            storeDir: "${params.outdir}/pipeline_info",
+            name: 'nf_core_' + 'sarek_software_' + 'mqc_' + 'versions.yml',
+            sort: true,
+            newLine: true,
+        )
     }
 
     //
