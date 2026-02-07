@@ -3,7 +3,12 @@
         "content": [
             3,
             {
-                
+                "SNPSIFT_ANNMEM": {
+                    "snpsift": "5.4a"
+                },
+                "SNPSIFT_ANNMEMCREATE": {
+                    "snpsift": "5.4a"
+                }
             },
             [
                 "annotation",
@@ -40,13 +45,18 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-05T00:55:11.330911"
+        "timestamp": "2026-02-07T00:18:07.39152"
     },
     "-profile test --tools snpsift --save_reference": {
         "content": [
             3,
             {
-                
+                "SNPSIFT_ANNMEM": {
+                    "snpsift": "5.4a"
+                },
+                "SNPSIFT_ANNMEMCREATE": {
+                    "snpsift": "5.4a"
+                }
             },
             [
                 "annotation",
@@ -88,6 +98,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-05T01:04:12.820745"
+        "timestamp": "2026-02-07T00:19:32.088401"
     }
 }
