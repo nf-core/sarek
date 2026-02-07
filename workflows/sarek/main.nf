@@ -118,6 +118,7 @@ workflow SAREK {
     vep_fasta
     vep_genome
     vep_species
+    snpsift_db                  // channel: [[databases], [tbis], [vardbs], [fields], [prefixes]]
     versions
 
     main:
@@ -553,7 +554,7 @@ workflow SAREK {
             vcf_to_annotate = input_sample
         }
 
-        if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff') || tools.split(',').contains('vep') || tools.split(',').contains('bcfann')) {
+        if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff') || tools.split(',').contains('vep') || tools.split(',').contains('bcfann') || tools.split(',').contains('snpsift')) {
 
             vep_fasta = params.vep_include_fasta ? fasta : [[id: 'null'], []]
 
@@ -572,6 +573,7 @@ workflow SAREK {
                 bcftools_annotations_tbi,
                 bcftools_columns,
                 bcftools_header_lines,
+                snpsift_db,
             )
 
             // Gather used softwares versions

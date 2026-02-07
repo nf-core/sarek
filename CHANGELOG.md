@@ -15,6 +15,7 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 - [#2093](https://github.com/nf-core/sarek/pull/2093) - Add support for VEP Mastermind plugin to retrieve citation counts from Mastermind Genomic Search Engine
 - [#2094](https://github.com/nf-core/sarek/pull/2094) - Add support for VEP Phenotypes plugin to retrieve overlapping phenotype information from Ensembl databases
 - [#2103](https://github.com/nf-core/sarek/pull/2103) - Documentation update about new VEP plugins
+- [#2111](https://github.com/nf-core/sarek/pull/2111) - Add SnpSift annotation support using `--tools snpsift` with `--snpsift_databases` CSV configuration
 
 ### Changed
 
@@ -52,6 +53,8 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 | `--phenotypes_file`          | added   |
 | `--phenotypes_file_tbi`      | added   |
 | `--phenotypes_include_types` | added   |
+| `--tools snpsift`            | added   |
+| `--snpsift_databases`        | added   |
 | `--msisensor2_scan`          | removed |
 
 ### Developer section

@@ -75,6 +75,8 @@ include { PIPELINE_INITIALISATION         } from './subworkflows/local/utils_nfc
 include { PREPARE_GENOME                  } from './subworkflows/local/prepare_genome'
 include { PREPARE_INTERVALS               } from './subworkflows/local/prepare_intervals'
 include { PREPARE_REFERENCE_CNVKIT        } from './subworkflows/local/prepare_reference_cnvkit'
+include { PREPARE_SNPSIFT_DATABASES       } from './subworkflows/local/prepare_snpsift_databases'
+include { samplesheetToList               } from 'plugin/nf-schema'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -230,6 +232,47 @@ workflow NFCORE_SAREK {
         }
     }
 
+    // Build SnpSift annotation databases configuration from CSV samplesheet
+    // CSV format: vcf,tbi,fields,prefix,vardb
+    // - vcf: Path to annotation VCF (required)
+    // - tbi: Path to tabix index (optional, defaults to ${vcf}.tbi)
+    // - fields: Semicolon-separated INFO fields to extract (optional)
+    // - prefix: Prefix for annotated field names (optional)
+    // - vardb: Path to pre-built .snpsift.vardb directory (optional)
+    snpsift_db_configs = []
+
+    if (params.snpsift_databases) {
+        // Parse and validate CSV using nf-schema
+        // Returns list of tuples: [vcf, tbi, fields, prefix, vardb]
+        def db_list = samplesheetToList(params.snpsift_databases, "${projectDir}/assets/schema_snpsift_databases.json")
+
+        db_list.each { vcf, tbi, fields, prefix, vardb ->
+            // Fields are required when vardb is not provided (needed to build the database)
+            if (!vardb && !fields) {
+                error("SnpSift database '${vcf}': 'fields' column is required when 'vardb' is not provided (needed for database creation)")
+            }
+
+            def vcf_file = file(vcf, checkIfExists: true)
+            def tbi_file = tbi ? file(tbi, checkIfExists: true) : file("${vcf}.tbi", checkIfExists: true)
+            def vardb_file = vardb ? file(vardb, checkIfExists: true) : null
+
+            snpsift_db_configs.add([
+                vcf: vcf_file,
+                tbi: tbi_file,
+                fields: fields ?: '',
+                prefix: prefix ?: '',
+                vardb: vardb_file
+            ])
+        }
+    }
+
+    // Prepare SnpSift databases (build if vardb not provided, returns tuple for SNPSIFT_ANNMEM)
+    ch_snpsift_db = Channel.value([[], [], [], [], []])
+    if (params.tools && params.tools.split(',').contains('snpsift') && snpsift_db_configs) {
+        PREPARE_SNPSIFT_DATABASES(snpsift_db_configs)
+        ch_snpsift_db = PREPARE_SNPSIFT_DATABASES.out.db_tuple
+    }
+
     //
     // WORKFLOW: Run pipeline
     //
@@ -290,6 +333,7 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.vep_fasta,
         params.vep_genome,
         params.vep_species,
+        ch_snpsift_db,
         versions,
     )
 
