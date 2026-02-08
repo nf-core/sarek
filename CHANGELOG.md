@@ -30,6 +30,8 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 - [#2099](https://github.com/nf-core/sarek/pull/2099) - Remove deprecated `msisensor2_scan` parameter from schema and igenomes config to fix `nf-core pipelines schema build` validation error
 - [#2100](https://github.com/nf-core/sarek/pull/2100) - Add missing citations for Condel, Mastermind, goleft indexcov, NGSCheckMate, SPRING, and vcflib to CITATIONS.md
 - [#2109](https://github.com/nf-core/sarek/pull/2109) - Fix consensus calling to capture all variants from all callers by using `sites.txt` output; adds `CALLERS` and `NCALLERS` INFO fields to consensus VCF
+- [#2113](https://github.com/nf-core/sarek/pull/2113) - Fix regex patterns for `dbnsfp_tbi`, `spliceai_snv`, and `spliceai_snv_tbi` parameter validation
+- [#2128](https://github.com/nf-core/sarek/pull/2128) - Fix `bcftools concat` failing on Strelka somatic VCFs with non-contiguous chromosome blocks by adding `--allow-overlaps`
 
 ### Removed
 
@@ -192,7 +194,6 @@ This patch release includes a bump to Nextflow 25.04.8.
 
 ### Fixed
 
-- [#2050](https://github.com/nf-core/sarek/issues/2050) - Fix regex patterns for `dbnsfp_tbi`, `spliceai_snv`, and `spliceai_snv_tbi` parameter validation
 - [2029](https://github.com/nf-core/sarek/pull/2029) - Correct intervals channel for parabricks
 
 ### Removed
