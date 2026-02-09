@@ -28,7 +28,7 @@
                     "mosdepth": "0.3.10"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "pbrun": "4.6.0-1"
+                    "parabricks": "4.6.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
@@ -250,7 +250,7 @@
                     "mosdepth": "0.3.10"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "pbrun": "4.6.0-1"
+                    "parabricks": "4.6.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
@@ -496,7 +496,7 @@
                     "gatk4": "4.6.1.0"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "pbrun": "4.6.0-1"
+                    "parabricks": "4.6.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
@@ -784,7 +784,7 @@
                     "mosdepth": "0.3.10"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "pbrun": "4.6.0-1"
+                    "parabricks": "4.6.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
