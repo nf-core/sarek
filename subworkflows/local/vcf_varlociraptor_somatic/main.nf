@@ -35,7 +35,6 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         meta_map.combine(ch_scenario).map { meta, scenario_file -> [meta, scenario_file, [], meta] }
     )
     ch_scenario_file = FILL_SCENARIO_FILE.out.rendered
-    ch_versions = ch_versions.mix(FILL_SCENARIO_FILE.out.versions)
 
     cram_normal = ch_cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta + [match_id: meta.normal_id], normal_cram, normal_crai] }
     cram_tumor = ch_cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta + [match_id: meta.normal_id], tumor_cram, tumor_crai] }
@@ -127,7 +126,6 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         ch_vcf,
         val_num_chunks,
     )
-    ch_versions = ch_versions.mix(RBT_VCFSPLIT.out.versions)
 
     //
     // SPLIT VCF CHUNKS - create chunked VCFs for both tumor and normal preprocessing

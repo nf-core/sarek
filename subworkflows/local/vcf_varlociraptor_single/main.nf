@@ -27,7 +27,6 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
         meta_map.combine(ch_scenario).map { meta, scenario_file -> [meta, scenario_file, [], meta] }
     )
     ch_scenario_file = FILL_SCENARIO_FILE.out.rendered
-    ch_versions = ch_versions.mix(FILL_SCENARIO_FILE.out.versions)
 
     // Estimate alignment properties
     VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES(
@@ -43,7 +42,6 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
         ch_vcf,
         val_num_chunks,
     )
-    ch_versions = ch_versions.mix(RBT_VCFSPLIT.out.versions)
 
     ch_chunked_vcfs = RBT_VCFSPLIT.out.bcfchunks
         .transpose()
