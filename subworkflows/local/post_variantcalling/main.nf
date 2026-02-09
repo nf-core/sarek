@@ -64,8 +64,22 @@ workflow POST_VARIANTCALLING {
 
     } else if (filter_vcfs || normalize_vcfs || concatenate_vcfs ) {
 
-        def small_variantcallers = ['deepvariant', 'freebayes', 'haplotypecaller', 'haplotyper',
-                                    'dnascope', 'tnscope', 'muse', 'mutect2', 'strelka' ]
+        // IMPORTANT: When adding new SNV variant callers to Sarek, add them to this list!
+        // This list determines which variant callers are eligible for:
+        // - VCF normalization (--normalize_vcfs)
+        // - VCF filtering (--filter_vcfs)
+        // - Consensus calling (--snv_consensus_calling)
+        //
+        // To find all variant callers: grep "variantcaller:" subworkflows/local/bam_variant_calling*/main.nf
+        //
+        // Excluded callers (not eligible for normalization/consensus):
+        // - manta, tiddit: structural variant callers (separate workflow)
+        // - samtools mpileup produces pileup format for ControlFREEC, not consensus-ready VCFs
+        def small_variantcallers = ['bcftools', 'deepvariant', 'freebayes', 'haplotypecaller',
+                                    'lofreq', 'muse', 'mutect2', 'sentieon_dnascope',
+                                    'sentieon_haplotyper', 'sentieon_tnscope', 'strelka' ]
+
+        def excluded_variantcallers = ['manta', 'tiddit', 'samtools']
 
         all_vcfs = Channel.empty().mix(germline_vcfs, tumor_only_vcfs, somatic_vcfs)
                                 .branch{ meta, vcf ->
@@ -78,6 +92,13 @@ workflow POST_VARIANTCALLING {
                                     small: small_variantcallers.contains(meta.variantcaller)
                                     other: true
                                 }
+
+        // Validate that we're not silently excluding unknown variant callers
+        all_vcfs.other.subscribe { meta, vcf ->
+            if (!excluded_variantcallers.contains(meta.variantcaller)) {
+                error("Variant caller '${meta.variantcaller}' is not in the small_variantcallers list and will be excluded from normalization/filtering/consensus. If this is a new SNV caller, please add it to the list in subworkflows/local/post_variantcalling/main.nf:78-80")
+            }
+        }
 
         // Needs to be reassigned to enable pass through reassignment below
         // Due to strelka having multiple outputs, we are adding the file name (vcf.gz) for both here to make sure the right files are joined below
@@ -107,18 +128,24 @@ workflow POST_VARIANTCALLING {
         }
 
         if (normalize_vcfs && snv_consensus_calling){
+            // Preserve individual caller VCFs before consensus (for annotation)
+            individual_caller_vcfs = small_variant_vcfs
+            individual_caller_tbis = small_variant_tbis
 
             CONSENSUS(small_variant_vcfs.join(small_variant_tbis, failOnDuplicate: true, failOnMismatch: true))
 
-            small_variant_vcfs = CONSENSUS.out.vcfs.map { meta, vcfs_ ->
+            consensus_vcfs = CONSENSUS.out.vcfs.map { meta, vcfs_ ->
                                         meta.variantcaller = 'consensus'
                                         [meta, vcfs_]
-                                    } // [meta, vcfs]
-
-            small_variant_tbis = CONSENSUS.out.tbis.map { meta, tbis_ ->
+                                    }
+            consensus_tbis = CONSENSUS.out.tbis.map { meta, tbis_ ->
                                         meta.variantcaller = 'consensus'
                                         [meta, tbis_]
-                                    } // [meta, tbis]
+                                    }
+
+            // Mix consensus VCF with individual caller VCFs for downstream annotation
+            small_variant_vcfs = consensus_vcfs.mix(individual_caller_vcfs)
+            small_variant_tbis = consensus_tbis.mix(individual_caller_tbis)
 
             versions = versions.mix(CONSENSUS.out.versions)
         }

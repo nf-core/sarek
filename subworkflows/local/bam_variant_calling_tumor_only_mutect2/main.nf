@@ -147,10 +147,22 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
 
     FILTERMUTECTCALLS(vcf_to_filter, fasta, fai, dict)
 
-    vcf_filtered = FILTERMUTECTCALLS.out.vcf.map { meta, vcf_ -> [meta + [variantcaller: 'mutect2'], vcf_] }
+    // Handle filtered vs unfiltered output
+    // vcf_mutect2 and tbi_mutect2 should always contain usable output:
+    // - If filtering happened (germline_resource provided): use filtered results
+    // - If filtering didn't happen: use unfiltered results with variantcaller metadata
+    // This ensures downstream processes always have mutect2 calls available for consensus calling
+    // Using concat() + unique() ensures filtered output takes precedence deterministically
+    // concat() preserves order (filtered first), unique() keeps first occurrence of each meta key
+    vcf_mutect2 = FILTERMUTECTCALLS.out.vcf
+        .map { meta, vcf_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], vcf_] }
+        .concat(vcf.map { meta, vcf_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], vcf_] })
+        .unique { it[0] }
 
     tbi_mutect2 = FILTERMUTECTCALLS.out.tbi
-        .map{ meta, tbi_ -> [ meta + [ variantcaller:'mutect2' ], tbi_ ] }
+        .map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] }
+        .concat(tbi.map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] })
+        .unique { it[0] }
 
     versions = versions.mix(MERGE_MUTECT2.out.versions)
     versions = versions.mix(CALCULATECONTAMINATION.out.versions)
@@ -162,11 +174,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     versions = versions.mix(MUTECT2.out.versions)
 
     emit:
-    vcf   // channel: [ meta, vcf ]
-    stats // channel: [ meta, stats ]
+    vcf = vcf_mutect2   // channel: [ meta, vcf ] - filtered if germline_resource provided, otherwise unfiltered
+    tbi = tbi_mutect2   // channel: [ meta, tbi ] - filtered if germline_resource provided, otherwise unfiltered
 
-    vcf_filtered                                 // channel: [ meta, vcf ]
-    index_filtered     = tbi_mutect2   // channel: [ meta, tbi ]
     stats_filtered     = FILTERMUTECTCALLS.out.stats // channel: [ meta, stats ]
 
     artifact_priors = LEARNREADORIENTATIONMODEL.out.artifactprior    // channel: [ meta, artifactprior ]

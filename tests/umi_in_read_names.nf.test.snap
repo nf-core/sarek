@@ -244,7 +244,8 @@
             [
                 "test.strelka.genome.vcf.gz:md5,c575940c23d416fc423c2f453f443e61",
                 "test.strelka.variants.vcf.gz:md5,20a32949b91e4986cb39355732cbd44d"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -601,7 +602,8 @@
             [
                 "test.strelka.genome.vcf.gz:md5,cc090b782daf68775321dc9d10643be",
                 "test.strelka.variants.vcf.gz:md5,92a9aad92697bf9e22dab35aaad68ffa"
-            ]
+            ],
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",

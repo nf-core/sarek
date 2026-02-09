@@ -1038,12 +1038,6 @@ For GATK.GRCh38 the links for each reference file and the corresponding processe
 | pon                   | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 | pon_tbi               | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 
-## How to customise SnpEff and VEP annotation
-
-SNPeff and VEP both require a large resource of files known as a cache.
-These are folders composed of multiple gigabytes of files which need to be available for the software to properly function.
-To use these, supply the parameters `--vep_cache` and/or `--snpeff_cache` with the locations to the root of the annotation cache folder for each tool.
-
 ## What happened with snpeff db 105
 
 At the time of writing, the SnpEff db 105 is not available to download from the SnpEff website, or to use with snpeff 5.3a, even with an already downloaded cache.
@@ -1057,6 +1051,12 @@ withName: SNPEFF_SNPEFF {
 ```
 
 Please note that if you do so, the download is not working anymore.
+
+## How to customise SnpEff and VEP annotation
+
+SNPeff and VEP both require a large resource of files known as a cache.
+These are folders composed of multiple gigabytes of files which need to be available for the software to properly function.
+To use these, supply the parameters `--vep_cache` and/or `--snpeff_cache` with the locations to the root of the annotation cache folder for each tool.
 
 ### Specify the cache location
 
@@ -1215,6 +1215,32 @@ But for each of these tools, an helper script `build.sh` can be found at the roo
 
 Overwritting the container declaration is then possible to accomodate for the new container.
 
+## How to use SnpSift annotation
+
+SnpSift annotates VCF files with custom annotation databases (e.g., dbSNP, gnomAD, ClinVar). To enable, add `snpsift` to `--tools` and provide a CSV samplesheet via `--snpsift_databases`.
+
+### Database samplesheet
+
+The CSV samplesheet specifies annotation databases. See `assets/snpsift_databases_example.csv`:
+
+```csv
+vcf,tbi,fields,prefix,vardb
+/data/dbsnp.vcf.gz,,RS;COMMON,dbSNP_,
+/data/gnomad.vcf.gz,,AF;AC;AN,gnomAD_,/data/gnomad.vcf.gz.snpsift.vardb
+```
+
+| Column   | Required                      | Description                                                |
+| -------- | ----------------------------- | ---------------------------------------------------------- |
+| `vcf`    | Yes                           | Path to annotation VCF file                                |
+| `tbi`    | No                            | Path to tabix index (defaults to `${vcf}.tbi`)             |
+| `fields` | Yes (if `vardb` not provided) | Semicolon-separated INFO fields to extract                 |
+| `prefix` | No                            | Prefix for annotated field names (avoids naming conflicts) |
+| `vardb`  | No                            | Path to pre-built `.snpsift.vardb` directory               |
+
+### Database creation
+
+SnpSift uses optimized `.snpsift.vardb` databases. If the `vardb` column is empty, databases are built automatically. For large databases, pre-build them and specify the path in the `vardb` column to speed up subsequent runs.
+
 ### Using VEP plugins
 
 #### dbnsfp
@@ -1235,11 +1261,47 @@ The following parameters are optional:
 
 For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#dbnsfp).
 
+#### Condel
+
+Enable with `--vep_condel`. The following parameters are mandatory:
+
+- `--condel_config`, to specify the path to the Condel config directory containing cutoffs and distribution files.
+
+The plugin calculates the Consensus Deleteriousness score for missense mutations using SIFT and PolyPhen-2 predictions from the Ensembl API.
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#Condel).
+
 #### LOFTEE
 
 Enable with `--vep_loftee`.
 
 For more details, see [here](https://github.com/konradjk/loftee).
+
+#### Mastermind
+
+Enable with `--vep_mastermind`. The following parameters are mandatory:
+
+- `--mastermind_file`, to specify the path to the Mastermind cited variants VCF file (must be bgzipped and tabix indexed).
+
+The following parameters are optional:
+
+- `--mastermind_mutations`, set to `true` to return citations for all mutations/transcripts (default: `false`).
+- `--mastermind_var_iden`, set to `true` to return only Mastermind variant identifiers as gene:key format (default: `false`).
+- `--mastermind_url`, set to `true` to return the built Mastermind URL (default: `false`).
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#Mastermind).
+
+#### Phenotypes
+
+Enable with `--vep_phenotypes`. The following parameters are optional:
+
+- `--phenotypes_file`, to specify the path to the phenotype annotation GFF/GVF file. If not specified, the plugin will automatically download phenotype data on first run.
+- `--phenotypes_file_tbi`, to specify the path to the phenotype annotation tabix indexed file. Required when using a gzipped `--phenotypes_file`.
+- `--phenotypes_include_types`, &-separated list of feature types to include (e.g., 'Gene&Variation'). Options: Gene, Variation, QTL, StructuralVariation, SupportingStructuralVariation, RegulatoryFeature.
+
+The plugin retrieves overlapping phenotype information from Ensembl's phenotype annotation databases, mapping phenotype data to genomic features including genes, variants, and QTLs.
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#Phenotypes).
 
 #### SpliceAi
 

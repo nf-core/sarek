@@ -4,8 +4,6 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
-    tag "pipeline"
-    tag "pipeline_sarek"
 
     def test_scenario = [
         [
@@ -18,6 +16,7 @@ nextflow_pipeline {
                 tools: 'freebayes,strelka'
             ],
             include_freebayes_unfiltered: true,
+            ignoreFiles: '**/{testN.germline,testT.germline,*freebayes,*freebayes.filtered.bcftools_filtered*}.vcf{,.gz}',
             no_conda: true
         ],
         [
@@ -31,12 +30,13 @@ nextflow_pipeline {
                 tools: 'freebayes,strelka'
             ],
             include_freebayes_unfiltered: true,
+            ignoreFiles: '**/{testN.germline,testT.germline,*freebayes,*freebayes.filtered.bcftools_filtered*}.vcf{,.gz}',
             no_conda: true
         ]
     ]
 
     // Generate tests for each scenario
     test_scenario.each { scenario ->
-        test(scenario.name, UTILS.get_test(scenario))
+        test(scenario.name, UTILS.getTest(scenario))
     }
 }

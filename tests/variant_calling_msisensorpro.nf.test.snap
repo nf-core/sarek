@@ -32,6 +32,9 @@
                 "reference/intervals/no_intervals.bed.gz",
                 "reference/msisensorpro",
                 "reference/msisensorpro/genome.msisensor_scan.list"
+            ],
+            [
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
         "meta": {
@@ -172,7 +175,8 @@
             ],
             "No BAM files",
             "No CRAM files",
-            "No VCF files"
+            "No VCF files",
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -227,7 +231,8 @@
             ],
             "No BAM files",
             "No CRAM files",
-            "No VCF files"
+            "No VCF files",
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
