@@ -23,7 +23,6 @@ workflow DOWNLOAD_CACHE_SNPEFF_VEP {
     SNPEFF_DOWNLOAD(snpeff_info)
 
     // Gather versions of all tools used
-    versions = versions.mix(ENSEMBLVEP_DOWNLOAD.out.versions)
     versions = versions.mix(SNPEFF_DOWNLOAD.out.versions)
 
     emit:

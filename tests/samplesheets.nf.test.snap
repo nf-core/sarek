@@ -3,8 +3,7 @@
         "content": [
             [
                 "csv",
-                "pipeline_info",
-                "pipeline_info/nf_core_sarek_software_mqc_versions.yml"
+                "pipeline_info"
             ],
             "No stable content",
             "No BAM files",
@@ -20,9 +19,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-12-16T12:15:57.042972377"
+        "timestamp": "2026-02-06T13:52:36.729578236"
     },
     "-profile test --input tests/csv/3.0/fastq_sample_with_space.csv": {
         "content": [
@@ -51,8 +50,7 @@
         "content": [
             [
                 "csv",
-                "pipeline_info",
-                "pipeline_info/nf_core_sarek_software_mqc_versions.yml"
+                "pipeline_info"
             ],
             "No stable content",
             "No BAM files",
@@ -69,16 +67,15 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-12-16T12:18:10.198174102"
+        "timestamp": "2026-02-06T13:54:49.322255498"
     },
     "-profile test --input tests/csv/3.0/fastq_multiple_lane_ids.csv": {
         "content": [
             [
                 "csv",
-                "pipeline_info",
-                "pipeline_info/nf_core_sarek_software_mqc_versions.yml"
+                "pipeline_info"
             ],
             "No stable content",
             "No BAM files",
@@ -95,9 +92,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-12-16T12:17:23.976548139"
+        "timestamp": "2026-02-06T13:54:04.695361045"
     },
     "-profile test,spark --input tests/csv/3.0/fastq_single.csv --use_gatk_spark baserecalibrator,markduplicates --save_mapped --save_output_as_bam": {
         "content": [

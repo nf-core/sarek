@@ -4,8 +4,8 @@ process ENSEMBLVEP_VEP {
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/4b/4b5a8c173dc9beaa93effec76b99687fc926b1bd7be47df5d6ce19d7d6b4d6b7/data'
-        : 'community.wave.seqera.io/library/ensembl-vep:115.2--90ec797ecb088e9a'}"
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/3d/3da6e21cbf9803529421d7e136d1ebec5ff71ec50e0d996eda2ce11ec2c19bf9/data'
+        : 'community.wave.seqera.io/library/ensembl-vep_perl-math-cdf:1e13f65f931a6954'}"
 
     input:
     tuple val(meta), path(vcf), path(custom_extra_files)
@@ -21,8 +21,10 @@ process ENSEMBLVEP_VEP {
     tuple val(meta), path("*.vcf.gz.tbi"), emit: tbi, optional: true
     tuple val(meta), path("*.tab.gz"), emit: tab, optional: true
     tuple val(meta), path("*.json.gz"), emit: json, optional: true
-    path "*.html", emit: report, optional: true
-    path "versions.yml", emit: versions
+    tuple val(meta), val("${task.process}"), val('ensemblvep'), path("*.html"), topic: multiqc_files, emit: report, optional: true
+    tuple val("${task.process}"), val('ensemblvep'), eval("vep --help | sed -n '/ensembl-vep/s/.*: //p'"), topic: versions, emit: versions_ensemblvep
+    tuple val("${task.process}"), val('tabix'), eval("tabix -h 2>&1 | grep -oP 'Version:\\s*\\K[^\\s]+'"), topic: versions, emit: versions_tabix
+    tuple val("${task.process}"), val('perl-math-cdf'), eval("perl -MMath::CDF -e 'print \\\$Math::CDF::VERSION'"), topic: versions, emit: versions_perlmathcdf
 
     when:
     task.ext.when == null || task.ext.when
@@ -51,12 +53,6 @@ process ENSEMBLVEP_VEP {
         --fork ${task.cpus}
 
     ${create_index}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        ensemblvep: \$( echo \$(vep --help 2>&1) | sed 's/^.*Versions:.*ensembl-vep : //;s/ .*\$//')
-        tabix: \$(echo \$(tabix -h 2>&1) | sed 's/^.*Version: //; s/ .*\$//')
-    END_VERSIONS
     """
 
     stub:
@@ -67,11 +63,5 @@ process ENSEMBLVEP_VEP {
     echo "" | gzip > ${prefix}.${file_extension}.gz
     ${create_index}
     touch ${prefix}_summary.html
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        ensemblvep: \$( echo \$(vep --help 2>&1) | sed 's/^.*Versions:.*ensembl-vep : //;s/ .*\$//')
-        tabix: \$(echo \$(tabix -h 2>&1) | sed 's/^.*Version: //; s/ .*\$//')
-    END_VERSIONS
     """
 }

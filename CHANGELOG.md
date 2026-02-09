@@ -15,8 +15,11 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 - [#2093](https://github.com/nf-core/sarek/pull/2093) - Add support for VEP Mastermind plugin to retrieve citation counts from Mastermind Genomic Search Engine
 - [#2094](https://github.com/nf-core/sarek/pull/2094) - Add support for VEP Phenotypes plugin to retrieve overlapping phenotype information from Ensembl databases
 - [#2103](https://github.com/nf-core/sarek/pull/2103) - Documentation update about new VEP plugins
+- [#2111](https://github.com/nf-core/sarek/pull/2111) - Add SnpSift annotation support using `--tools snpsift` with `--snpsift_databases` CSV configuration
 
 ### Changed
+
+- [#2119](https://github.com/nf-core/sarek/pull/2119) - Update VEP version from 111.0-0 to 115.0-0 and VEP cache version from 114 to 115; update ensemblvep module to include `perl-math-cdf` dependency for Condel plugin
 
 ### Fixed
 
@@ -26,6 +29,7 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 - [#2096](https://github.com/nf-core/sarek/pull/2096) - Fix consensus calling to include missing variant callers (`bcftools`, `lofreq`) and correct Sentieon tool names ([#2088](https://github.com/nf-core/sarek/issues/2088))
 - [#2099](https://github.com/nf-core/sarek/pull/2099) - Remove deprecated `msisensor2_scan` parameter from schema and igenomes config to fix `nf-core pipelines schema build` validation error
 - [#2100](https://github.com/nf-core/sarek/pull/2100) - Add missing citations for Condel, Mastermind, goleft indexcov, NGSCheckMate, SPRING, and vcflib to CITATIONS.md
+- [#2109](https://github.com/nf-core/sarek/pull/2109) - Fix consensus calling to capture all variants from all callers by using `sites.txt` output; adds `CALLERS` and `NCALLERS` INFO fields to consensus VCF
 
 ### Removed
 
@@ -47,7 +51,10 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 | `--mastermind_url`           | added   |
 | `--vep_phenotypes`           | added   |
 | `--phenotypes_file`          | added   |
+| `--phenotypes_file_tbi`      | added   |
 | `--phenotypes_include_types` | added   |
+| `--tools snpsift`            | added   |
+| `--snpsift_databases`        | added   |
 | `--msisensor2_scan`          | removed |
 
 ### Developer section
@@ -59,10 +66,13 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 - [#2076](https://github.com/nf-core/sarek/pull/2076) - Back to Dev
 - [#2098](https://github.com/nf-core/sarek/pull/2098) - Starting workflow output migration with multiqc
 - [#2101](https://github.com/nf-core/sarek/pull/2101) - Prepare release 3.8.0
+- [#2126](https://github.com/nf-core/sarek/pull/2126) - Start versions migration to topics
 
 #### Fixed
 
 - [#2099](https://github.com/nf-core/sarek/pull/2099) - Fix `bbsplit.nf.test` input cardinality to match current PREPARE_GENOME subworkflow signature (31 parameters)
+- [#2112](https://github.com/nf-core/sarek/pull/2112) - Fix BBSplit index building failure by adding null check for reads in `ext.prefix` configuration
+- [#2120](https://github.com/nf-core/sarek/pull/2120) - Fix BBSplit index publish pattern from `bbmap` to `bbmap_index` to correctly save reference
 - [#2104](https://github.com/nf-core/sarek/pull/2104) - Ignore warnings coming from singularity and conda
 - [#2105](https://github.com/nf-core/sarek/pull/2105) - Ignore warnings coming from singularity
 - [#2106](https://github.com/nf-core/sarek/pull/2106) - Fix conda setup in GHA
@@ -186,6 +196,7 @@ This patch release includes a bump to Nextflow 25.04.8.
 
 ### Fixed
 
+- [#2050](https://github.com/nf-core/sarek/issues/2050) - Fix regex patterns for `dbnsfp_tbi`, `spliceai_snv`, and `spliceai_snv_tbi` parameter validation
 - [2029](https://github.com/nf-core/sarek/pull/2029) - Correct intervals channel for parabricks
 
 ### Removed

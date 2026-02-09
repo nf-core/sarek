@@ -15,9 +15,10 @@ nextflow_pipeline {
                 input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
                 modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
                 igenomes_base: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/',
-                genome: 'testdata.nf-core.sarek'
+                genome: 'testdata.nf-core.sarek',
+                save_reference: true
             ],
-            ignoreFiles: '{multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt,multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt,multiqc/multiqc_data/mosdepth_perchrom.txt,multiqc/multiqc_data/samtools*.txt,preprocessing/**/*.cram,reports/mosdepth/*/*}'
+            ignoreFiles: '{multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt,multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt,multiqc/multiqc_data/mosdepth_perchrom.txt,multiqc/multiqc_data/samtools*.txt,preprocessing/**/*.cram,reports/mosdepth/*/*,**/info.txt,**/reflist.txt,**/scaffolds.txt.gz,**/summary.txt,**/build_index.log}'
         ],
         [
             name: "-profile test --tools bbsplit,strelka --bbsplit_fasta_list -stub",
@@ -31,6 +32,23 @@ nextflow_pipeline {
                 genome: 'testdata.nf-core.sarek'
             ],
             stub: true
+        ],
+        // Test BBSplit index building in PREPARE_GENOME (no prebuilt index)
+        // This tests the edge case where BBMAP_BBSPLIT is called with empty reads
+        // to build the index, which requires ext.prefix to handle null reads gracefully
+        [
+            name: "-profile test --tools bbsplit --bbsplit_fasta_list (no prebuilt index)",
+            params: [
+                tools: 'bbsplit',
+                bbsplit_fasta_list: "${projectDir}/tests/csv/bbsplit_fasta_list.csv",
+                input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
+                fasta: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta',
+                igenomes_ignore: true,
+                genome: false,
+                skip_tools: 'baserecalibrator',
+                modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+            ],
+            ignoreFiles: '{multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt,multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt,multiqc/multiqc_data/mosdepth_perchrom.txt,multiqc/multiqc_data/samtools*.txt,preprocessing/**/*.cram,reports/mosdepth/*/*}'
         ]
     ]
 
