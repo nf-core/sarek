@@ -152,6 +152,7 @@ This release includes a bump to Nextflow 25.10.2.
 | ------------- | ----------- | ----------- |
 | nf-schema     | 2.4.2       | 2.6.1       |
 | varlociraptor | 8.7.4       | 8.9.3       |
+| yte           | 1.9.0       | 1.9.4       |
 
 ### Parameters
 
