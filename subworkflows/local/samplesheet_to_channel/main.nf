@@ -161,7 +161,10 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 if (step != 'mapping' && !bai) {
                     error("BAM index (bai) should be provided.")
                 }
-                meta = meta + [id: "${meta.sample}-${meta.lane}".toString()]
+                // Only use lane-based ID for mapping step where lanes are processed separately;
+                // for all other steps (variant_calling, recalibrate, etc.) use sample-based ID
+                // to ensure consistent ID matching in downstream channel joins
+                meta = meta + [id: step == 'mapping' ? "${meta.sample}-${meta.lane}".toString() : meta.sample.toString()]
                 def CN = seq_center ? "CN:${seq_center}\\t" : ''
                 def read_group = "\"@RG\\tID:${meta.sample}_${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${fasta}\\tPL:${seq_platform}\""
 
