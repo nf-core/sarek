@@ -7,28 +7,22 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --tools merge",
+            name: "-profile test --tools snpsift",
             params: [
                 input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
                 step: 'annotate',
-                tools: 'merge'
-            ]
-        ],
-        [
-            name: "-profile test --tools merge,snpeff,vep",
-            params: [
-                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
-                step: 'annotate',
-                tools: 'merge,snpeff,vep'
-            ]
-        ],
-        [
-            name: "-profile test --tools merge,snpsift",
-            params: [
-                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
-                step: 'annotate',
-                tools: 'merge,snpsift',
+                tools: 'snpsift',
                 snpsift_databases: "${projectDir}/tests/config/snpsift_test_databases.csv"
+            ]
+        ],
+        [
+            name: "-profile test --tools snpsift --save_reference",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
+                step: 'annotate',
+                tools: 'snpsift',
+                snpsift_databases: "${projectDir}/tests/config/snpsift_test_databases.csv",
+                save_reference: true
             ]
         ]
     ]

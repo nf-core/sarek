@@ -12,7 +12,7 @@
                     },
                     "bbmap/bbsplit": {
                         "branch": "master",
-                        "git_sha": "2ddc92b750c7553f7a7becb4982851cef3ab848e",
+                        "git_sha": "6d1d4b987af3ee5852d852abf99f8883028cea9c",
                         "installed_by": ["modules"]
                     },
                     "bcftools/annotate": {
@@ -163,13 +163,13 @@
                     },
                     "ensemblvep/download": {
                         "branch": "master",
-                        "git_sha": "0567eee9276d4a358e5f9f01c810a149fbd241f8",
+                        "git_sha": "09ea5d9fcd6eda714f148e0f3b6a4920b2091f41",
                         "installed_by": ["modules"]
                     },
                     "ensemblvep/vep": {
                         "branch": "master",
-                        "git_sha": "0567eee9276d4a358e5f9f01c810a149fbd241f8",
-                        "installed_by": ["modules", "vcf_annotate_ensemblvep"]
+                        "git_sha": "691bb6956ec56154b81ba5771641ca24443c4d17",
+                        "installed_by": ["modules"]
                     },
                     "fastp": {
                         "branch": "master",
@@ -516,6 +516,16 @@
                         "git_sha": "b966311b31f51b65e87f124d08f948fec019787d",
                         "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
+                    "snpsift/annmem": {
+                        "branch": "master",
+                        "git_sha": "e12534f75a4504b67984412122698c1cf1966e6f",
+                        "installed_by": ["modules"]
+                    },
+                    "snpsift/annmemcreate": {
+                        "branch": "master",
+                        "git_sha": "e12534f75a4504b67984412122698c1cf1966e6f",
+                        "installed_by": ["modules"]
+                    },
                     "spring/decompress": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
@@ -544,7 +554,7 @@
                     "tabix/tabix": {
                         "branch": "master",
                         "git_sha": "f2cfcf9d3f6a2d123e6c44aefa788aa232204a7a",
-                        "installed_by": ["modules", "vcf_annotate_ensemblvep"]
+                        "installed_by": ["modules"]
                     },
                     "tiddit/sv": {
                         "branch": "master",
@@ -613,11 +623,6 @@
                     "utils_nfschema_plugin": {
                         "branch": "master",
                         "git_sha": "4b406a74dc0449c0401ed87d5bfff4252fd277fd",
-                        "installed_by": ["subworkflows"]
-                    },
-                    "vcf_annotate_ensemblvep": {
-                        "branch": "master",
-                        "git_sha": "0567eee9276d4a358e5f9f01c810a149fbd241f8",
                         "installed_by": ["subworkflows"]
                     },
                     "vcf_annotate_snpeff": {

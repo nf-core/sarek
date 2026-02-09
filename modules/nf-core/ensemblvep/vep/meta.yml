@@ -1,6 +1,6 @@
 name: ensemblvep_vep
-description: Ensembl Variant Effect Predictor (VEP). The output-file-format is controlled
-  through `task.ext.args`.
+description: Ensembl Variant Effect Predictor (VEP). The output-file-format is
+  controlled through `task.ext.args`.
 keywords:
   - annotation
   - vcf
@@ -13,7 +13,8 @@ tools:
         or structural variants) on genes, transcripts, and protein sequence, as well as regulatory regions.
       homepage: https://www.ensembl.org/info/docs/tools/vep/index.html
       documentation: https://www.ensembl.org/info/docs/tools/vep/script/index.html
-      licence: ["Apache-2.0"]
+      licence:
+        - "Apache-2.0"
       identifier: ""
 input:
   - - meta:
@@ -77,7 +78,7 @@ output:
             annotated vcf (optional)
           pattern: "*.vcf.gz"
           ontologies:
-            - edam: http://edamontology.org/format_3989 # GZIP format
+            - edam: http://edamontology.org/format_3989
   tbi:
     - - meta:
           type: map
@@ -100,7 +101,7 @@ output:
             tab file with annotated variants (optional)
           pattern: "*.ann.tab.gz"
           ontologies:
-            - edam: http://edamontology.org/format_3989 # GZIP format
+            - edam: http://edamontology.org/format_3989
   json:
     - - meta:
           type: map
@@ -112,20 +113,98 @@ output:
             json file with annotated variants (optional)
           pattern: "*.ann.json.gz"
           ontologies:
-            - edam: http://edamontology.org/format_3989 # GZIP format
+            - edam: http://edamontology.org/format_3989
   report:
-    - "*.html":
-        type: file
-        description: VEP report file
-        pattern: "*.html"
-        ontologies: []
+    - - meta:
+          type: map
+          description: |
+            Map with sample information
+      - ${task.process}:
+          type: string
+          description: The process
+      - ensemblvep:
+          type: string
+          description: The tool name
+      - "*.html":
+          type: file
+          description: VEP report file
+          pattern: "*.html"
+          ontologies: []
+  versions_ensemblvep:
+    - - ${task.process}:
+          type: string
+          description: The process
+      - ensemblvep:
+          type: string
+          description: The tool name
+      - "vep --help | sed -n '/ensembl-vep/s/.*: //p'":
+          type: eval
+          description: The command used to generate the version of the tool
+  versions_tabix:
+    - - ${task.process}:
+          type: string
+          description: The process
+      - tabix:
+          type: string
+          description: The tool name
+      - tabix -h 2>&1 | grep -oP 'Version:\s*\K[^\s]+':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_perlmathcdf:
+    - - ${task.process}:
+          type: string
+          description: The process
+      - perl-math-cdf:
+          type: string
+          description: The tool name
+      - perl -MMath::CDF -e 'print \\$Math::CDF::VERSION':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  multiqc_files:
+    - - meta:
+          type: string
+          description: |
+            Map with sample information
+      - ${task.process}:
+          type: string
+          description: The process
+      - ensemblvep:
+          type: string
+          description: The tool name
+      - "*.html":
+          type: file
+          description: VEP report file
+          pattern: "*.html"
+          ontologies: []
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process
+      - ensemblvep:
+          type: string
+          description: The tool name
+      - "vep --help | sed -n '/ensembl-vep/s/.*: //p'":
+          type: eval
+          description: The command used to generate the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The process
+      - tabix:
+          type: string
+          description: The tool name
+      - tabix -h 2>&1 | grep -oP 'Version:\s*\K[^\s]+':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The process
+      - perl-math-cdf:
+          type: string
+          description: The tool name
+      - perl -MMath::CDF -e 'print \\$Math::CDF::VERSION':
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@maxulysse"
   - "@matthdsm"

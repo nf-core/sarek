@@ -6,7 +6,7 @@
 
 include { paramsSummaryMap                                  } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc                              } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML                            } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML                            } from 'plugin/nf-core-utils'
 include { methodsDescriptionText                            } from '../../subworkflows/local/utils_nfcore_sarek_pipeline'
 
 // Create samplesheets to restart from different steps
@@ -118,6 +118,7 @@ workflow SAREK {
     vep_fasta
     vep_genome
     vep_species
+    snpsift_db                  // channel: [[databases], [tbis], [vardbs], [fields], [prefixes]]
     versions
 
     main:
@@ -557,7 +558,7 @@ workflow SAREK {
             vcf_to_annotate = input_sample
         }
 
-        if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff') || tools.split(',').contains('vep') || tools.split(',').contains('bcfann')) {
+        if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff') || tools.split(',').contains('vep') || tools.split(',').contains('bcfann') || tools.split(',').contains('snpsift')) {
 
             vep_fasta = params.vep_include_fasta ? fasta : [[id: 'null'], []]
 
@@ -576,6 +577,7 @@ workflow SAREK {
                 bcftools_annotations_tbi,
                 bcftools_columns,
                 bcftools_header_lines,
+                snpsift_db,
             )
 
             // Gather used softwares versions
@@ -587,9 +589,17 @@ workflow SAREK {
     //
     // Collate and save software versions
     //
-    version_yaml = channel.empty()
+    def version_yaml = channel.empty()
     if (!(skip_tools.split(',').contains('versions'))) {
-        version_yaml = softwareVersionsToYAML(versions).collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_' + 'sarek_software_' + 'mqc_' + 'versions.yml', sort: true, newLine: true)
+        version_yaml = softwareVersionsToYAML(
+            softwareVersions: versions.mix(channel.topic("versions")),
+            nextflowVersion: workflow.nextflow.version,
+        ).collectFile(
+            storeDir: "${params.outdir}/pipeline_info",
+            name: 'nf_core_' + 'sarek_software_' + 'mqc_' + 'versions.yml',
+            sort: true,
+            newLine: true,
+        )
     }
 
     //
@@ -608,6 +618,8 @@ workflow SAREK {
 
         ch_multiqc_files = ch_multiqc_files.mix(version_yaml)
         ch_multiqc_files = ch_multiqc_files.mix(reports)
+        ch_multiqc_files = ch_multiqc_files.mix(channel.topic("multiqc_files").map { _meta, _process, _tool, report -> report })
+
         ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true))
 
         MULTIQC(

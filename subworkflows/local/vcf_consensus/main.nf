@@ -1,9 +1,10 @@
 //
-// Intersect VCFs
+// Intersect VCFs and merge consensus variants from all callers
 //
 
-include { BCFTOOLS_ISEC } from '../../../modules/nf-core/bcftools/isec'
-include { BCFTOOLS_CONCAT } from '../../../modules/nf-core/bcftools/concat'
+include { BCFTOOLS_ISEC        } from '../../../modules/nf-core/bcftools/isec'
+include { BCFTOOLS_CONCAT      } from '../../../modules/nf-core/bcftools/concat'
+include { CONSENSUS_FROM_SITES } from '../../../modules/local/consensus_from_sites'
 
 workflow CONSENSUS {
 
@@ -33,44 +34,46 @@ workflow CONSENSUS {
     BCFTOOLS_CONCAT(ch_strelka_grouped)// somatic strelkas have two vcf files: SNPs and indels
     ch_versions = ch_versions.mix(BCFTOOLS_CONCAT.out.versions)
 
-    //Combine concat strelka with remaining VCFs
+    // Combine concat strelka with remaining VCFs
+    // Bundle each VCF with its caller to preserve association through grouping
     ch_consensus_in = ch_vcfs.other
                         .mix(BCFTOOLS_CONCAT.out.vcf.join(BCFTOOLS_CONCAT.out.tbi))
                         .map { meta, vcf, tbi ->
-                                    // Remove metadata fields that differ between variant callers to enable proper grouping:
-                                    // - variantcaller: varies by caller (mutect2, strelka, etc.)
-                                    // - contamination: only present for some callers
-                                    // - filename: differs for strelka SNVs vs INDELs
-                                    // - data_type: may differ between germline/somatic workflows
-                                    // - num_intervals: internal tracking field not needed for consensus
-                                    [meta - meta.subMap('variantcaller', 'contamination', 'filename', 'data_type', 'num_intervals'), vcf, tbi]
+                                    def caller = meta.variantcaller
+                                    def groupKey = meta - meta.subMap('variantcaller', 'contamination', 'filename', 'data_type', 'num_intervals')
+                                    [groupKey, [vcf, caller], tbi]
                         }
-                        //TODO blocking operation unless we learn how many variantcallers were
-                        // specified also this depends on whether this n,t, or nt on how many
-                        //variantcallers are actually executed
+                        // TODO: blocking operation unless we learn how many variantcallers were
+                        // specified - also depends on whether this is n, t, or nt and how many
+                        // variantcallers are actually executed
                         .groupTuple()
-                        .map {meta, vcf, tbi ->
-                            // Sorting the VCF files to ensure the consensus calling is done in a predictable manner
-                            def vcf_sorted = (vcf instanceof List) ? vcf.sort() : vcf
-                            [meta, vcf_sorted, tbi]
+                        .map { meta, vcf_caller_pairs, tbis ->
+                            // Sort by vcf name for predictable isec input order
+                            // callers list will match isec output order in sites.txt
+                            def sorted_pairs = vcf_caller_pairs.sort { a, b -> a[0].name <=> b[0].name }
+                            def sorted_vcfs = sorted_pairs.collect { it[0] }
+                            def callers = sorted_pairs.collect { it[1] }
+                            [meta + [callers: callers], sorted_vcfs, tbis]
                         }
 
 
     BCFTOOLS_ISEC(ch_consensus_in)
     ch_versions = ch_versions.mix(BCFTOOLS_ISEC.out.versions)
 
-    ch_consensus_results = BCFTOOLS_ISEC.out.results
-        .map { meta, dir ->
-            def files = dir.listFiles()
-            def vcf = files.find { it.name == '0000.vcf.gz' }
-            def tbi = files.find { it.name == '0000.vcf.gz.tbi' }
-            // return the consensus file for annotation
-            return [meta, vcf, tbi]
+    // Filter out empty isec results (no consensus variants found)
+    ch_isec_with_results = BCFTOOLS_ISEC.out.results
+        .filter { meta, dir ->
+            def sites_file = dir.resolve('sites.txt')
+            sites_file.exists() && sites_file.size() > 0
         }
+
+    // Create consensus VCF from sites.txt with caller presence info
+    // Versions are collected via topic channel
+    CONSENSUS_FROM_SITES(ch_isec_with_results)
 
     emit:
     versions = ch_versions
-    vcfs = ch_consensus_results.map{ meta, vcf_, _tbi -> [meta, vcf_]}
-    tbis = ch_consensus_results.map{ meta, _vcf, tbi_ -> [meta, tbi_]}
+    vcfs     = CONSENSUS_FROM_SITES.out.vcf
+    tbis     = CONSENSUS_FROM_SITES.out.tbi
 
 }
