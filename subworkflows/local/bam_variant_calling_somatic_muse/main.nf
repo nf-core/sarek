@@ -4,49 +4,38 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { MUSE_CALL                 } from '../../../modules/nf-core/muse/call'
-include { MUSE_SUMP                 } from '../../../modules/nf-core/muse/sump'
-include { TABIX_TABIX as TABIX_MUSE } from '../../../modules/nf-core/tabix/tabix'
+include { MUSE_CALL } from '../../../modules/nf-core/muse/call'
+include { MUSE_SUMP } from '../../../modules/nf-core/muse/sump'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
     take:
     bam_normal // channel: [mandatory] [ meta, normal_bam, normal_bai]
-    bam_tumor  // channel: [mandatory] [ meta, tumor_bam, tumor_bai]
-    fasta      // channel: [mandatory] [ meta, fasta ]
-    dbsnp      // channel: [mandatory] [ dbsnp ]
+    bam_tumor // channel: [mandatory] [ meta, tumor_bam, tumor_bai]
+    fasta // channel: [mandatory] [ meta, fasta ]
+    dbsnp // channel: [mandatory] [ dbsnp ]
+    dbsnp_tbi // channel: [mandatory] [ dbsnp_tbi ]
 
     main:
-    versions = Channel.empty()
-
-    // MuSE requires the dbsnp index to be newer than the file itself, this ensures that we tabix directly before
-    TABIX_MUSE(dbsnp.map { vcf -> [ [id: 'dbsnp'], vcf] })
-    dbsnp_tbi = TABIX_MUSE.out.tbi
-    versions = versions.mix(TABIX_MUSE.out.versions)
-
-    def ch_dbsnp_with_tbi = dbsnp.combine(dbsnp_tbi.map { _meta, tbi -> tbi }).map { vcf, tbi -> [[id: 'dbsnp'], vcf, tbi] }.collect()
-
     // Combine normal and tumor data
     ch_bam = bam_tumor.join(bam_normal, by: [0])
 
-    MUSE_CALL(
-        ch_bam,
-        fasta,
-    )
+    ch_call_input = ch_bam
+        .combine(fasta)
+        .map { meta_tumor_bam, tumor_bam, tumor_bai, _meta_normal_bam, normal_bam, normal_bai, _meta_fasta, fasta_file ->
+            [meta_tumor_bam, tumor_bam, tumor_bai, normal_bam, normal_bai, fasta_file]
+        }
 
-    MUSE_SUMP(
-        MUSE_CALL.out.txt,
-        ch_dbsnp_with_tbi,
-    )
+    MUSE_CALL(ch_call_input)
+
+    ch_sump_input = MUSE_CALL.out.txt.combine(dbsnp.combine(dbsnp_tbi))
+
+    MUSE_SUMP(ch_sump_input)
 
     // add variantcaller to meta map
     vcf = MUSE_SUMP.out.vcf.map { meta, vcf -> [meta + [variantcaller: 'muse'], vcf] }
     tbi = MUSE_SUMP.out.tbi.map { meta, tbi -> [meta + [variantcaller: 'muse'], tbi] }
 
-    versions = versions.mix(MUSE_CALL.out.versions)
-    versions = versions.mix(MUSE_SUMP.out.versions)
-
     emit:
     vcf
     tbi
-    versions
 }
