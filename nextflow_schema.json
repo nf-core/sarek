@@ -111,7 +111,7 @@
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for contamination removal, duplicate marking, variant calling and/or for annotation.",
                     "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper \n- Structural Variants: indexcov, Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Lofreq, mpileup, Mutect2, Sentieon TNScope, Strelka\n- Structural Variants: Manta, Sentieon TNScope, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Sentieon TNScope, Strelka2 \n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC, Sentieon TNScope \n- Microsatellite Instability: MSIsensor2, MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively), and bcftools annotate (needs `--bcftools_annotation`).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
-                    "pattern": "^((ascat|bbsplit|bcfann|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|indexcov|lofreq|manta|merge|mpileup|msisensor2|msisensorpro|muse|mutect2|ngscheckmate|sentieon_dedup|sentieon_dnascope|sentieon_haplotyper|sentieon_tnscope|snpeff|strelka|tiddit|vep|varlociraptor)?,?)*(?<!,)$"
+                    "pattern": "^((ascat|bbsplit|bcfann|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|indexcov|lofreq|manta|merge|mpileup|msisensor2|msisensorpro|muse|mutect2|ngscheckmate|sentieon_dedup|sentieon_dnascope|sentieon_haplotyper|sentieon_tnscope|snpeff|snpsift|strelka|tiddit|vep|varlociraptor)?,?)*(?<!,)$"
                 },
                 "skip_tools": {
                     "type": "string",
@@ -580,6 +580,20 @@
                     "description": "Allow usage of fasta file for annotation with VEP",
                     "help_text": "By pointing VEP to a FASTA file, it is possible to retrieve reference sequence locally. This enables VEP to retrieve HGVS notations (--hgvs), check the reference sequence given in input data, and construct transcript models from a GFF or GTF file without accessing a database.\n\nFor details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_cache.html#fasta)."
                 },
+                "vep_condel": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-database",
+                    "description": "Enable the use of the VEP Condel plugin.",
+                    "help_text": "Calculates the Consensus Deleteriousness score for missense mutations using SIFT and PolyPhen-2 predictions. For details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#condel)."
+                },
+                "condel_config": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to Condel config file.",
+                    "help_text": "To be used with `--vep_condel`. Path to the Condel plugin configuration file (e.g., condel_SP.conf)."
+                },
                 "vep_dbnsfp": {
                     "type": "boolean",
                     "fa_icon": "fas fa-database",
@@ -598,7 +612,7 @@
                 "dbnsfp_tbi": {
                     "type": "string",
                     "format": "file-path",
-                    "pattern": "^\\S+\\.vcf\\.gz\\.(csi|tbi)$",
+                    "pattern": "^\\S+\\.gz\\.(csi|tbi)$",
                     "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to dbNSFP tabix indexed file.",
@@ -623,6 +637,69 @@
                     "description": "Enable the use of the VEP LOFTEE plugin.",
                     "help_text": "For details, see [here](https://github.com/konradjk/loftee)."
                 },
+                "vep_mastermind": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-database",
+                    "description": "Enable the use of the VEP Mastermind plugin.",
+                    "help_text": "Retrieves Mastermind Genomic Search Engine citation counts for variants. For details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#mastermind)."
+                },
+                "mastermind_file": {
+                    "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.vcf\\.gz$",
+                    "exists": true,
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to Mastermind cited variants VCF file.",
+                    "help_text": "To be used with `--vep_mastermind`. Download from https://www.genomenon.com/cvr/. File must be bgzipped and tabix indexed."
+                },
+                "mastermind_mutations": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-align-center",
+                    "description": "Mastermind plugin mutations parameter.",
+                    "help_text": "Set to true to return citations for all mutations/transcripts (default: false, matches specific mutation). To be used with `--vep_mastermind`."
+                },
+                "mastermind_var_iden": {
+                    "type": "boolean",
+                    "fa_icon": "far fa-address-card",
+                    "description": "Mastermind plugin var_iden parameter.",
+                    "help_text": "Set to true to return only Mastermind variant identifiers as gene:key format (default: false). To be used with `--vep_mastermind`."
+                },
+                "mastermind_url": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-external-link-alt",
+                    "description": "Mastermind plugin url parameter.",
+                    "help_text": "Set to 1 to return the built Mastermind URL (default: 0). To be used with `--vep_mastermind`."
+                },
+                "vep_phenotypes": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-database",
+                    "description": "Enable the use of the VEP Phenotypes plugin.",
+                    "help_text": "Retrieves overlapping phenotype information from Ensembl's phenotype annotation databases. For details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#phenotypes)."
+                },
+                "phenotypes_file": {
+                    "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.(gff|gvf)(\\.gz)?$",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to phenotype annotation GFF/GVF file.",
+                    "help_text": "Optional parameter for `--vep_phenotypes`. If not specified, the plugin automatically downloads phenotype data files on first run."
+                },
+                "phenotypes_file_tbi": {
+                    "type": "string",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.(gff|gvf)\\.gz\\.(csi|tbi)$",
+                    "exists": true,
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to phenotype annotation tabix indexed file.",
+                    "help_text": "Required when using a gzipped `--phenotypes_file`. To be used with `--vep_phenotypes`."
+                },
+                "phenotypes_include_types": {
+                    "type": "string",
+                    "fa_icon": "far fa-check-circle",
+                    "pattern": "^((Gene|Variation|QTL|StructuralVariation|SupportingStructuralVariation|RegulatoryFeature)?&?)*(?<!&)$",
+                    "description": "Phenotypes plugin feature types to include.",
+                    "help_text": "&-separated list of feature types to include (e.g., 'Gene&Variation'). Options: Gene, Variation, QTL, StructuralVariation, SupportingStructuralVariation, RegulatoryFeature. To be used with `--vep_phenotypes`."
+                },
                 "vep_spliceai": {
                     "type": "boolean",
                     "fa_icon": "fas fa-database",
@@ -632,7 +709,7 @@
                 "spliceai_snv": {
                     "type": "string",
                     "format": "file-path",
-                    "pattern": "^\\S+\\.\\vcf\\.gz$",
+                    "pattern": "^\\S+\\.vcf\\.gz$",
                     "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to spliceai raw scores snv file.",
@@ -641,7 +718,7 @@
                 "spliceai_snv_tbi": {
                     "type": "string",
                     "format": "file-path",
-                    "pattern": "^\\S+\\\\.vcf\\.gz.(csi|tbi)$",
+                    "pattern": "^\\S+\\.vcf\\.gz\\.(csi|tbi)$",
                     "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to spliceai raw scores snv tabix indexed file.",
@@ -680,7 +757,7 @@
                 },
                 "vep_version": {
                     "type": "string",
-                    "default": "111.0-0",
+                    "default": "115.0-0",
                     "fa_icon": "fas fa-toolbox",
                     "description": "Should reflect the VEP version used in the container.",
                     "help_text": "Used by the loftee plugin that need the full path."
@@ -724,6 +801,16 @@
                     "type": "string",
                     "fa_icon": "fas fa-align-center",
                     "description": "Text file with the header lines of `bcftools_annotations`"
+                },
+                "snpsift_databases": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "pattern": "^\\S+\\.csv$",
+                    "schema": "assets/schema_snpsift_databases.json",
+                    "fa_icon": "fas fa-database",
+                    "description": "Path to CSV samplesheet specifying SnpSift annotation databases.",
+                    "help_text": "CSV with columns: vcf (required), fields (required if vardb not provided, semicolon-separated INFO fields), tbi (optional, defaults to vcf.tbi), prefix (optional, prefix for annotated fields), vardb (optional, path to pre-built .snpsift.vardb directory). If vardb is empty, the database will be built automatically. See assets/snpsift_databases_example.csv."
                 }
             }
         },
@@ -988,14 +1075,6 @@
                     "description": "Path to models folder used with MSIsensor2.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
-                "msisensor2_scan": {
-                    "type": "string",
-                    "format": "path",
-                    "exists": true,
-                    "fa_icon": "fas fa-folder-open",
-                    "description": "Path to scan file used with MSIsensor2.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
-                },
                 "msisensorpro_scan": {
                     "type": "string",
                     "format": "path",
@@ -1025,7 +1104,6 @@
                 "snpeff_cache": {
                     "type": "string",
                     "format": "directory-path",
-                    "exists": true,
                     "fa_icon": "fas fa-cloud-download-alt",
                     "default": "s3://annotation-cache/snpeff_cache/",
                     "description": "Path to snpEff cache.",
@@ -1040,7 +1118,6 @@
                 "vep_cache": {
                     "type": "string",
                     "format": "directory-path",
-                    "exists": true,
                     "fa_icon": "fas fa-cloud-download-alt",
                     "default": "s3://annotation-cache/vep_cache/",
                     "description": "Path to VEP cache.",

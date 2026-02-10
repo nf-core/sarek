@@ -5,8 +5,6 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
-    tag "pipeline"
-    tag "pipeline_sarek"
 
     def test_scenario = [
         [
@@ -20,7 +18,9 @@ nextflow_pipeline {
                 tools: 'vep'
             ],
             failure: true,
-            stdout: "This path is not available within annotation-cache"
+            snapshot: 'stdout',
+            snapshot_ignore: 'Downloading plugin',
+            snapshot_include: 'annotation-cache'
         ],
         [
             name: "Fails with profile test --dbnsfp and no dbnsfp_tbi",
@@ -31,12 +31,14 @@ nextflow_pipeline {
                 tools: 'vep'
             ],
             failure: true,
-            stdout: "Execution halted due to dbnsfp inconsistency"
+            snapshot: 'stdout',
+            snapshot_ignore: 'Downloading plugin',
+            snapshot_include: 'dbnsfp inconsistency'
         ]
     ]
 
     // Generate tests for each scenario
     test_scenario.each { scenario ->
-        test(scenario.name, UTILS.get_test(scenario))
+        test(scenario.name, UTILS.getTest(scenario))
     }
 }

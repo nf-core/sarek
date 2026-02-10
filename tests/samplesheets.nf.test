@@ -4,9 +4,6 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
-    tag "pipeline"
-    tag "pipeline_sarek"
-    tag "cpu"
 
     def test_scenario = [
         [
@@ -15,7 +12,8 @@ nextflow_pipeline {
                 input: "${projectDir}/tests/csv/3.0/fastq_sample_with_space.csv"
             ],
             failure: true,
-            stderr: [0..1,3..5]
+            snapshot: 'stderr',
+            snapshot_ignore: 'Downloading plugin'
         ],
         [
             name: "-profile test --step variant_calling --input tests/csv/3.0/recalibrated_somatic_two_normal_one_sample.csv",
@@ -24,7 +22,8 @@ nextflow_pipeline {
                 step: "variant_calling"
             ],
             failure: true,
-            stderr: [0]
+            snapshot: 'stderr',
+            snapshot_ignore: 'Downloading plugin'
         ],
         [
             name: "-profile test,spark --input tests/csv/3.0/fastq_single.csv --use_gatk_spark baserecalibrator,markduplicates --save_mapped --save_output_as_bam",
@@ -35,7 +34,8 @@ nextflow_pipeline {
                 save_output_as_bam: true
             ],
             failure: true,
-            stderr: [1..2]
+            snapshot: 'stderr',
+            snapshot_ignore: 'Downloading plugin'
         ],
         [
             name: "-profile test --input tests/csv/3.0/fastq_multiple_lane_ids.csv",
@@ -43,7 +43,8 @@ nextflow_pipeline {
                 input: "${projectDir}/tests/csv/3.0/fastq_multiple_lane_ids.csv"
             ],
             failure: true,
-            stderr: [0..-1]
+            snapshot: 'stderr',
+            snapshot_ignore: 'Downloading plugin'
         ],
         [
             name: "-profile test --input tests/csv/3.0/fastq_multiple_sample_ids.csv",
@@ -51,11 +52,12 @@ nextflow_pipeline {
                 input: "${projectDir}/tests/csv/3.0/fastq_multiple_sample_ids.csv"
             ],
             failure: true,
-            stderr: [0..-1]
+            snapshot: 'stderr',
+            snapshot_ignore: 'Downloading plugin'
         ]
     ]
 
     test_scenario.each { scenario ->
-        test(scenario.name, UTILS.get_test(scenario))
+        test(scenario.name, UTILS.getTest(scenario))
     }
 }

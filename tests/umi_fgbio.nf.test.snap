@@ -1,4 +1,24 @@
 {
+    "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null --aligner parabricks": {
+        "content": [
+            [
+                "pipeline_info"
+            ],
+            "No stable content",
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files",
+            "No warnings",
+            [
+                "parabricks is currently not compatible with FGBio UMI handling. Please choose a different aligner."
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2025-12-16T11:40:06.112688481"
+    },
     "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null": {
         "content": [
             29,
@@ -293,12 +313,55 @@
                 "test.md.cram:md5,2d0c176fed158d84a061b69e1947994c",
                 "test.recal.cram:md5,6927569ca52dbba512d27f8742bc6aae"
             ],
-            "No VCF files"
+            "No VCF files",
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_umi_cleanname_1.fastq.gz): Cannot extract flowcell ID from @922332"
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T22:02:16.682547379"
+        "timestamp": "2025-12-15T21:53:07.910593016"
+    },
+    "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null --aligner sentieon-bwamem": {
+        "content": [
+            [
+                "pipeline_info"
+            ],
+            "No stable content",
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files",
+            "No warnings",
+            [
+                "sentieon-bwamem is currently not compatible with FGBio UMI handling. Please choose a different aligner."
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2025-12-16T11:39:15.062875515"
+    },
+    "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '12+T S' --tools null": {
+        "content": [
+            [
+                "pipeline_info"
+            ],
+            "No stable content",
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files",
+            "No warnings",
+            [
+                "Please check the input UMI Read structure`12+T S` invalid"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2025-12-16T11:45:20.994546242"
     }
 }

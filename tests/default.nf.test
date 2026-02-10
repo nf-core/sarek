@@ -2,13 +2,13 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
-    tag "pipeline"
-    tag "pipeline_sarek"
 
     def test_scenario = [
         [
             name: "-profile test",
-            params: []
+            params: [],
+            snapshot: 'stderr,stdout',
+            snapshot_ignore: 'Downloading plugin|Staging foreign file',
         ],
         [
             name: "-profile test -stub",
@@ -19,6 +19,6 @@ nextflow_pipeline {
 
     // Generate tests for each scenario
     test_scenario.each { scenario ->
-        test(scenario.name, UTILS.get_test(scenario))
+        test(scenario.name, UTILS.getTest(scenario))
     }
 }

@@ -17,6 +17,7 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
@@ -31,13 +32,16 @@
                 "reference/intervals/no_intervals.bed.gz",
                 "reference/msisensorpro",
                 "reference/msisensorpro/genome.msisensor_scan.list"
+            ],
+            [
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2025-09-10T11:41:36.496838773"
+        "timestamp": "2026-02-09T10:01:55.42261324"
     },
     "-profile test --tools msisensorpro somatic": {
         "content": [
@@ -171,7 +175,8 @@
             ],
             "No BAM files",
             "No CRAM files",
-            "No VCF files"
+            "No VCF files",
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -226,7 +231,8 @@
             ],
             "No BAM files",
             "No CRAM files",
-            "No VCF files"
+            "No VCF files",
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",

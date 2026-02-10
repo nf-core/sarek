@@ -5,6 +5,82 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.8.0](https://github.com/nf-core/sarek/releases/tag/3.8.0) - Sitojaure
+
+A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
+
+### Added
+
+- [#2092](https://github.com/nf-core/sarek/pull/2092) - Add support for VEP Condel plugin to calculate Consensus Deleteriousness scores for missense mutations
+- [#2093](https://github.com/nf-core/sarek/pull/2093) - Add support for VEP Mastermind plugin to retrieve citation counts from Mastermind Genomic Search Engine
+- [#2094](https://github.com/nf-core/sarek/pull/2094) - Add support for VEP Phenotypes plugin to retrieve overlapping phenotype information from Ensembl databases
+- [#2103](https://github.com/nf-core/sarek/pull/2103) - Documentation update about new VEP plugins
+- [#2111](https://github.com/nf-core/sarek/pull/2111) - Add SnpSift annotation support using `--tools snpsift` with `--snpsift_databases` CSV configuration
+
+### Changed
+
+- [#2119](https://github.com/nf-core/sarek/pull/2119) - Update VEP version from 111.0-0 to 115.0-0 and VEP cache version from 114 to 115; update ensemblvep module to include `perl-math-cdf` dependency for Condel plugin
+
+### Fixed
+
+- [#2077](https://github.com/nf-core/sarek/pull/2077) - Remove re-indexed bam from `indexcov` from publishing into top level `outdir` directory
+- [#2083](https://github.com/nf-core/sarek/pull/2083) - Remove `exists` validation from `snpeff_cache` and `vep_cache` parameters to fix workflow launch failures when annotation tools are not used
+- [#2095](https://github.com/nf-core/sarek/pull/2095) - Fix typo in consensus calling parameter reference (used non-existent `params.consensus_vcfs` instead of `params.snv_consensus_calling`)
+- [#2096](https://github.com/nf-core/sarek/pull/2096) - Fix consensus calling to include missing variant callers (`bcftools`, `lofreq`) and correct Sentieon tool names ([#2088](https://github.com/nf-core/sarek/issues/2088))
+- [#2099](https://github.com/nf-core/sarek/pull/2099) - Remove deprecated `msisensor2_scan` parameter from schema and igenomes config to fix `nf-core pipelines schema build` validation error
+- [#2100](https://github.com/nf-core/sarek/pull/2100) - Add missing citations for Condel, Mastermind, goleft indexcov, NGSCheckMate, SPRING, and vcflib to CITATIONS.md
+- [#2109](https://github.com/nf-core/sarek/pull/2109) - Fix consensus calling to capture all variants from all callers by using `sites.txt` output; adds `CALLERS` and `NCALLERS` INFO fields to consensus VCF
+
+### Removed
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
+| Params                       | status  |
+| ---------------------------- | ------- |
+| `--vep_condel`               | added   |
+| `--condel_config`            | added   |
+| `--vep_mastermind`           | added   |
+| `--mastermind_file`          | added   |
+| `--mastermind_mutations`     | added   |
+| `--mastermind_var_iden`      | added   |
+| `--mastermind_url`           | added   |
+| `--vep_phenotypes`           | added   |
+| `--phenotypes_file`          | added   |
+| `--phenotypes_file_tbi`      | added   |
+| `--phenotypes_include_types` | added   |
+| `--tools snpsift`            | added   |
+| `--snpsift_databases`        | added   |
+| `--msisensor2_scan`          | removed |
+
+### Developer section
+
+#### Added
+
+#### Changed
+
+- [#2076](https://github.com/nf-core/sarek/pull/2076) - Back to Dev
+- [#2098](https://github.com/nf-core/sarek/pull/2098) - Starting workflow output migration with multiqc
+- [#2101](https://github.com/nf-core/sarek/pull/2101) - Prepare release 3.8.0
+- [#2126](https://github.com/nf-core/sarek/pull/2126) - Start versions migration to topics
+
+#### Fixed
+
+- [#2099](https://github.com/nf-core/sarek/pull/2099) - Fix `bbsplit.nf.test` input cardinality to match current PREPARE_GENOME subworkflow signature (31 parameters)
+- [#2112](https://github.com/nf-core/sarek/pull/2112) - Fix BBSplit index building failure by adding null check for reads in `ext.prefix` configuration
+- [#2120](https://github.com/nf-core/sarek/pull/2120) - Fix BBSplit index publish pattern from `bbmap` to `bbmap_index` to correctly save reference
+- [#2104](https://github.com/nf-core/sarek/pull/2104) - Ignore warnings coming from singularity and conda
+- [#2105](https://github.com/nf-core/sarek/pull/2105) - Ignore warnings coming from singularity
+- [#2106](https://github.com/nf-core/sarek/pull/2106) - Fix conda setup in GHA
+
+#### Removed
+
+- [#2084](https://github.com/nf-core/sarek/pull/2084) - Removed no longer used old test profiles
+
 ## [3.7.1](https://github.com/nf-core/sarek/releases/tag/3.7.1) - Buollámtjåhkka
 
 Buollámtjåhkka is the closest mountain to Saltoluokta and an easy peak to climb.
@@ -18,8 +94,9 @@ Buollámtjåhkka is the closest mountain to Saltoluokta and an easy peak to clim
 ### Fixed
 
 - [#2069](https://github.com/nf-core/sarek/pull/2069) - Propagate tbi indices for HaplotypeCaller and Haplotyper to fix bug with merging vcfs and tbis.
-- [#2073](https://github.com/nf-core/sarek/pull/2073) - Apply fix for BBSplit error: `unterminated s' command`
 - [#2071](https://github.com/nf-core/sarek/pull/2071) - Updated parameter validation to support the use of umi_read_structure along with umi_in_read_headers
+- [#2073](https://github.com/nf-core/sarek/pull/2073) - Apply fix for BBSplit error: `unterminated s' command`
+- [#2124](https://github.com/nf-core/sarek/pull/2124) - Fix FilterMutectCalls not running when starting from BAM with lane field in samplesheet
 
 ### Removed
 
@@ -27,7 +104,7 @@ Buollámtjåhkka is the closest mountain to Saltoluokta and an easy peak to clim
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
-| multiqc    | 1.31        | 1.32        |
+| multiqc    | 1.31        | 1.33        |
 
 ### Parameters
 
@@ -48,7 +125,7 @@ Buollámtjåhkka is the closest mountain to Saltoluokta and an easy peak to clim
 
 ## [3.7.0](https://github.com/nf-core/sarek/releases/tag/3.7.0) - Saltoluokta
 
-Saltoluokta is a a mountain lodge located in northern Sweden and a popular starting point into the Sarek Nationalpark.
+Saltoluokta is a mountain lodge located in northern Sweden and a popular starting point into the Sarek Nationalpark.
 
 This release includes a bump to Nextflow 25.10.2.
 
@@ -94,6 +171,7 @@ This release includes a bump to Nextflow 25.10.2.
 - [#2043](https://github.com/nf-core/sarek/pull/2043) - Refactor postvariantcalling and split out varlociraptor from other options
 - [#2048](https://github.com/nf-core/sarek/pull/2048) - No null value for snpeff_cache and vep_cache in tests
 - [#2058](https://github.com/nf-core/sarek/pull/2058) - Template update for nf-core/tools v3.5.1
+- [#2080](https://github.com/nf-core/sarek/pull/2080) - Improve test suite and capture stdout/err logs more efficiently
 
 #### Fixed
 
@@ -115,6 +193,7 @@ This patch release includes a bump to Nextflow 25.04.8.
 
 ### Fixed
 
+- [#2050](https://github.com/nf-core/sarek/issues/2050) - Fix regex patterns for `dbnsfp_tbi`, `spliceai_snv`, and `spliceai_snv_tbi` parameter validation
 - [2029](https://github.com/nf-core/sarek/pull/2029) - Correct intervals channel for parabricks
 
 ### Removed
