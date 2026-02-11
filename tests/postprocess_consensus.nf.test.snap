@@ -666,7 +666,7 @@
     },
     "-profile test --snv_consensus_calling --normalize_vcfs --tools mpileup,mutect2,strelka (germline + somatic)": {
         "content": [
-            62,
+            63,
             {
                 "ADD_INFO_TO_VCF": {
                     "gawk": "5.3.0"
@@ -909,6 +909,8 @@
                 "variant_calling/consensus/sample3/sample3_consensus/README.txt",
                 "variant_calling/consensus/sample3/sample3_consensus/sites.txt",
                 "variant_calling/consensus/sample4_vs_sample3",
+                "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus/sample4_vs_sample3.consensus.vcf.gz",
+                "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus/sample4_vs_sample3.consensus.vcf.gz.tbi",
                 "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus",
                 "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus/0000.vcf.gz",
                 "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus/0000.vcf.gz.tbi",
@@ -1020,7 +1022,7 @@
                 ],       
                 [
                     "0001.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=1, phased=true, phasedAutodetect=true]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=10, phased=true, phasedAutodetect=true]"
                 ],
                 [
                     "sample4_vs_sample3.mutect2.filtered.vcf.gz",
