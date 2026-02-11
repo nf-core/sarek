@@ -5,13 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev
+## [3.8.1](https://github.com/nf-core/sarek/releases/tag/3.8.1) - Laitaure
 
 ### Added
 
 ### Changed
 
 ### Fixed
+
+- [#2128](https://github.com/nf-core/sarek/pull/2128) - Fix `bcftools concat` failing on Strelka somatic VCFs with non-contiguous chromosome blocks by adding `--allow-overlaps`
 
 ### Removed
 
@@ -63,7 +65,6 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 - [#2100](https://github.com/nf-core/sarek/pull/2100) - Add missing citations for Condel, Mastermind, goleft indexcov, NGSCheckMate, SPRING, and vcflib to CITATIONS.md
 - [#2109](https://github.com/nf-core/sarek/pull/2109) - Fix consensus calling to capture all variants from all callers by using `sites.txt` output; adds `CALLERS` and `NCALLERS` INFO fields to consensus VCF
 - [#2113](https://github.com/nf-core/sarek/pull/2113) - Fix regex patterns for `dbnsfp_tbi`, `spliceai_snv`, and `spliceai_snv_tbi` parameter validation
-- [#2128](https://github.com/nf-core/sarek/pull/2128) - Fix `bcftools concat` failing on Strelka somatic VCFs with non-contiguous chromosome blocks by adding `--allow-overlaps`
 
 ### Removed
 
