@@ -140,8 +140,8 @@
                 "annotation/test",
                 "annotation/test/test_snpEff_VEP.ann.vcf.gz",
                 "annotation/test/test_snpEff_VEP.ann.vcf.gz.tbi",
-                "annotation/test/test_snpEff_VEP.ann_snpSift.ann.vcf.gz",
-                "annotation/test/test_snpEff_VEP.ann_snpSift.ann.vcf.gz.tbi",
+                "annotation/test/test_snpEff_VEP_snpSift.ann.vcf.gz",
+                "annotation/test/test_snpEff_VEP_snpSift.ann.vcf.gz.tbi",
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
@@ -212,15 +212,15 @@
             "No CRAM files",
             [
                 "test_snpEff_VEP.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "test_snpEff_VEP.ann_snpSift.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "test_snpEff_VEP_snpSift.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2026-02-07T08:55:53.704259"
+        "timestamp": "2026-02-09T15:02:33.282539192"
     },
     "-profile test --tools merge": {
         "content": [
