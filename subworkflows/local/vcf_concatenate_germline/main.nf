@@ -14,7 +14,7 @@ workflow CONCATENATE_GERMLINE_VCFS {
     vcfs
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Concatenate vcf-files
     ADD_INFO_TO_VCF(vcfs)
@@ -29,8 +29,6 @@ workflow CONCATENATE_GERMLINE_VCFS {
     // Gather versions of all tools used
     versions = versions.mix(ADD_INFO_TO_VCF.out.versions)
     versions = versions.mix(TABIX_EXT_VCF.out.versions)
-    versions = versions.mix(GERMLINE_VCFS_CONCAT.out.versions)
-    versions = versions.mix(GERMLINE_VCFS_CONCAT_SORT.out.versions)
 
     emit:
     vcfs = GERMLINE_VCFS_CONCAT_SORT.out.vcf // concatenated vcfs

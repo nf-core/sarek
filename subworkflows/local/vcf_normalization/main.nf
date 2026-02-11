@@ -13,7 +13,7 @@ workflow NORMALIZE_VCFS {
     fasta
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Add additional information to VCF files
     ADD_INFO_TO_VCF(vcfs)
@@ -30,8 +30,6 @@ workflow NORMALIZE_VCFS {
     // Gather versions of all tools used
     versions = versions.mix(ADD_INFO_TO_VCF.out.versions)
     versions = versions.mix(TABIX_EXT_VCF.out.versions)
-    versions = versions.mix(VCFS_NORM.out.versions)
-    versions = versions.mix(VCFS_NORM_SORT.out.versions)
 
     emit:
     vcfs     = VCFS_NORM_SORT.out.vcf // normalized vcfs

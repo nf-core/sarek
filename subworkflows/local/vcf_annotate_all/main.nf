@@ -2,17 +2,17 @@
 // ANNOTATION
 //
 
-include { BCFTOOLS_ANNOTATE                             } from '../../../modules/nf-core/bcftools/annotate'
-include { ENSEMBLVEP_VEP                                } from '../../../modules/nf-core/ensemblvep/vep'
-include { ENSEMBLVEP_VEP as VCF_ANNOTATE_MERGE          } from '../../../modules/nf-core/ensemblvep/vep'
-include { VCF_ANNOTATE_SNPEFF                           } from '../../nf-core/vcf_annotate_snpeff'
-include { SNPSIFT_ANNMEM                                } from '../../../modules/nf-core/snpsift/annmem'
+include { BCFTOOLS_ANNOTATE                    } from '../../../modules/nf-core/bcftools/annotate'
+include { ENSEMBLVEP_VEP                       } from '../../../modules/nf-core/ensemblvep/vep'
+include { ENSEMBLVEP_VEP as VCF_ANNOTATE_MERGE } from '../../../modules/nf-core/ensemblvep/vep'
+include { VCF_ANNOTATE_SNPEFF                  } from '../../nf-core/vcf_annotate_snpeff'
+include { SNPSIFT_ANNMEM                       } from '../../../modules/nf-core/snpsift/annmem'
 
 workflow VCF_ANNOTATE_ALL {
     take:
-    vcf                        // channel: [ val(meta), vcf ]
+    vcf // channel: [ val(meta), vcf ]
     fasta
-    tools                      // Mandatory, list of tools to apply
+    tools // Mandatory, list of tools to apply
     snpeff_db
     snpeff_cache
     vep_genome
@@ -24,14 +24,13 @@ workflow VCF_ANNOTATE_ALL {
     bcftools_annotations_index
     bcftools_columns
     bcftools_header_lines
-    snpsift_db                  // channel: [[databases], [tbis], [vardbs], [fields], [prefixes]]
+    snpsift_db // channel: [[databases], [tbis], [vardbs], [fields], [prefixes]]
 
     main:
-    reports = Channel.empty()
-    vcf_ann = Channel.empty()
-    tab_ann = Channel.empty()
-    json_ann = Channel.empty()
-    versions = Channel.empty()
+    reports = channel.empty()
+    vcf_ann = channel.empty()
+    tab_ann = channel.empty()
+    json_ann = channel.empty()
 
     if (tools.split(',').contains('bcfann')) {
         BCFTOOLS_ANNOTATE(
@@ -42,7 +41,6 @@ workflow VCF_ANNOTATE_ALL {
         )
 
         vcf_ann = vcf_ann.mix(BCFTOOLS_ANNOTATE.out.vcf.join(BCFTOOLS_ANNOTATE.out.tbi, failOnDuplicate: true, failOnMismatch: true))
-        versions = versions.mix(BCFTOOLS_ANNOTATE.out.versions)
     }
 
     if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff')) {
@@ -50,12 +48,11 @@ workflow VCF_ANNOTATE_ALL {
 
         reports = reports.mix(VCF_ANNOTATE_SNPEFF.out.reports.map { _meta, reports_ -> [reports_] })
         vcf_ann = vcf_ann.mix(VCF_ANNOTATE_SNPEFF.out.vcf_tbi)
-        versions = versions.mix(VCF_ANNOTATE_SNPEFF.out.versions)
     }
 
     if (tools.split(',').contains('merge')) {
         vcf_ann_for_merge = VCF_ANNOTATE_SNPEFF.out.vcf_tbi.map { meta, vcf_, _tbi -> [meta, vcf_, []] }
-        VCF_ANNOTATE_MERGE(vcf_ann_for_merge, vep_genome,vep_species,vep_cache_version, vep_cache, fasta, vep_extra_files)
+        VCF_ANNOTATE_MERGE(vcf_ann_for_merge, vep_genome, vep_species, vep_cache_version, vep_cache, fasta, vep_extra_files)
 
         vcf_ann = vcf_ann.mix(VCF_ANNOTATE_MERGE.out.vcf.join(VCF_ANNOTATE_MERGE.out.tbi, failOnDuplicate: true, failOnMismatch: true))
     }
@@ -72,7 +69,7 @@ workflow VCF_ANNOTATE_ALL {
     // SnpSift runs on all final annotated outputs
     // If no other annotators were used, fall back to original vcf
     if (tools.split(',').contains('snpsift')) {
-        def has_other_annotators = ['merge', 'snpeff', 'vep', 'bcfann'].any { tools.split(',').contains(it) }
+        def has_other_annotators = ['merge', 'snpeff', 'vep', 'bcfann'].any { tool -> tools.split(',').contains(tool) }
         def snpsift_input = tools.split(',').contains('merge')
             ? VCF_ANNOTATE_MERGE.out.vcf.map { meta, vcf_ -> [meta, vcf_, []] }
             : (has_other_annotators ? vcf_ann.map { meta, vcf_, _tbi -> [meta, vcf_, []] } : vcf.map { meta, vcf_ -> [meta, vcf_, []] })
@@ -82,9 +79,8 @@ workflow VCF_ANNOTATE_ALL {
     }
 
     emit:
-    vcf_ann  // channel: [ val(meta), vcf.gz, vcf.gz.tbi ]
+    vcf_ann // channel: [ val(meta), vcf.gz, vcf.gz.tbi ]
     tab_ann
     json_ann
-    reports  //    path: *.html
-    versions //    path: versions.yml
+    reports //    path: *.html
 }

@@ -4,10 +4,10 @@
             11,
             {
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -179,10 +179,10 @@
             9,
             {
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -351,10 +351,10 @@
             9,
             {
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -523,10 +523,10 @@
             11,
             {
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"

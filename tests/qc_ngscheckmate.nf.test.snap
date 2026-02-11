@@ -4,7 +4,7 @@
             17,
             {
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -123,7 +123,7 @@
             17,
             {
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"

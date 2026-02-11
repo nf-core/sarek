@@ -4,7 +4,7 @@
             19,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -258,7 +258,7 @@
             30,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.18-r1243-dirty"

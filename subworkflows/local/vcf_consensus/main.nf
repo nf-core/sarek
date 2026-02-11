@@ -12,10 +12,8 @@ workflow CONSENSUS {
     vcfs     // [meta, vcf ,tbi]
 
     main:
-    ch_versions = Channel.empty()
-
     ch_vcfs = vcfs
-        .branch{ meta, vcf, tbi ->
+        .branch{ meta, _vcf, _tbi ->
             // Somatic Strelka samples have tumor_id field (tumor-normal pairs)
             // This is semantically equivalent to checking status == '1' (tumor) but more explicit
             strelka_somatic: meta.variantcaller == 'strelka' && meta.tumor_id
@@ -32,7 +30,6 @@ workflow CONSENSUS {
         .groupTuple(size: 2)
 
     BCFTOOLS_CONCAT(ch_strelka_grouped)// somatic strelkas have two vcf files: SNPs and indels
-    ch_versions = ch_versions.mix(BCFTOOLS_CONCAT.out.versions)
 
     // Combine concat strelka with remaining VCFs
     // Bundle each VCF with its caller to preserve association through grouping
@@ -51,18 +48,17 @@ workflow CONSENSUS {
                             // Sort by vcf name for predictable isec input order
                             // callers list will match isec output order in sites.txt
                             def sorted_pairs = vcf_caller_pairs.sort { a, b -> a[0].name <=> b[0].name }
-                            def sorted_vcfs = sorted_pairs.collect { it[0] }
-                            def callers = sorted_pairs.collect { it[1] }
+                            def sorted_vcfs = sorted_pairs.collect { pair -> pair[0] }
+                            def callers = sorted_pairs.collect { pair -> pair[1] }
                             [meta + [callers: callers], sorted_vcfs, tbis]
                         }
 
 
     BCFTOOLS_ISEC(ch_consensus_in)
-    ch_versions = ch_versions.mix(BCFTOOLS_ISEC.out.versions)
 
     // Filter out empty isec results (no consensus variants found)
     ch_isec_with_results = BCFTOOLS_ISEC.out.results
-        .filter { meta, dir ->
+        .filter { _meta, dir ->
             def sites_file = dir.resolve('sites.txt')
             sites_file.exists() && sites_file.size() > 0
         }
@@ -72,7 +68,6 @@ workflow CONSENSUS {
     CONSENSUS_FROM_SITES(ch_isec_with_results)
 
     emit:
-    versions = ch_versions
     vcfs     = CONSENSUS_FROM_SITES.out.vcf
     tbis     = CONSENSUS_FROM_SITES.out.tbi
 

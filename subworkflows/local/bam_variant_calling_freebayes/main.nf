@@ -20,7 +20,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     ch_intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = ch_cram.combine(ch_intervals)
@@ -32,10 +32,10 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     BCFTOOLS_SORT(FREEBAYES.out.vcf)
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    bcftools_vcf_out = BCFTOOLS_SORT.out.vcf.branch{
+    bcftools_vcf_out = BCFTOOLS_SORT.out.vcf.branch{ items ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+        intervals:    items[0].num_intervals > 1
+        no_intervals: items[0].num_intervals <= 1
     }
 
     // Only when using intervals
@@ -64,7 +64,6 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     // Index the filtered VCFs
     TABIX_VC_FREEBAYES_FILT(vcf_filtered)
 
-    versions = versions.mix(BCFTOOLS_SORT.out.versions)
     versions = versions.mix(FREEBAYES.out.versions)
     versions = versions.mix(MERGE_FREEBAYES.out.versions)
     versions = versions.mix(TABIX_VC_FREEBAYES.out.versions)

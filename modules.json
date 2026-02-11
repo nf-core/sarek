@@ -17,47 +17,47 @@
                     },
                     "bcftools/annotate": {
                         "branch": "master",
-                        "git_sha": "28438d38e50710e20885ff2594344b9d5a03dec7",
+                        "git_sha": "6383d8fe58f9498eecd5aa303e71a4a932d1e9f6",
                         "installed_by": ["modules"]
                     },
                     "bcftools/concat": {
                         "branch": "master",
-                        "git_sha": "1503efe8f6450e71218097f93cf43e4b625018d4",
+                        "git_sha": "6383d8fe58f9498eecd5aa303e71a4a932d1e9f6",
                         "installed_by": ["modules"]
                     },
                     "bcftools/isec": {
                         "branch": "master",
-                        "git_sha": "f17049e03697726ace7499d2fe342f892594f6f3",
+                        "git_sha": "3b2c3559699a7bca6a7c2b220695a072e030e17d",
                         "installed_by": ["modules"]
                     },
                     "bcftools/merge": {
                         "branch": "master",
-                        "git_sha": "f17049e03697726ace7499d2fe342f892594f6f3",
+                        "git_sha": "6383d8fe58f9498eecd5aa303e71a4a932d1e9f6",
                         "installed_by": ["modules"]
                     },
                     "bcftools/mpileup": {
                         "branch": "master",
-                        "git_sha": "c9c3ef86c1892413b3c86fb38c4e39fd7288512f",
+                        "git_sha": "6383d8fe58f9498eecd5aa303e71a4a932d1e9f6",
                         "installed_by": ["bam_ngscheckmate"]
                     },
                     "bcftools/norm": {
                         "branch": "master",
-                        "git_sha": "39fed2e840a805454a64dda9c2ef64c00e2c6781",
+                        "git_sha": "6383d8fe58f9498eecd5aa303e71a4a932d1e9f6",
                         "installed_by": ["modules"]
                     },
                     "bcftools/sort": {
                         "branch": "master",
-                        "git_sha": "c9c3ef86c1892413b3c86fb38c4e39fd7288512f",
+                        "git_sha": "6383d8fe58f9498eecd5aa303e71a4a932d1e9f6",
                         "installed_by": ["modules"]
                     },
                     "bcftools/stats": {
                         "branch": "master",
-                        "git_sha": "c9c3ef86c1892413b3c86fb38c4e39fd7288512f",
+                        "git_sha": "6383d8fe58f9498eecd5aa303e71a4a932d1e9f6",
                         "installed_by": ["modules"]
                     },
                     "bcftools/view": {
                         "branch": "master",
-                        "git_sha": "f17049e03697726ace7499d2fe342f892594f6f3",
+                        "git_sha": "6383d8fe58f9498eecd5aa303e71a4a932d1e9f6",
                         "installed_by": ["modules"]
                     },
                     "bwa/index": {
@@ -403,7 +403,7 @@
                     },
                     "ngscheckmate/ncm": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "bcf558dad50357a2f12a347091401390415f86ee",
                         "installed_by": ["bam_ngscheckmate"]
                     },
                     "parabricks/fq2bam": {
@@ -508,12 +508,12 @@
                     },
                     "snpeff/download": {
                         "branch": "master",
-                        "git_sha": "b966311b31f51b65e87f124d08f948fec019787d",
+                        "git_sha": "ab50ae0a7c0714bf8b13918c1b7af732002c244d",
                         "installed_by": ["modules"]
                     },
                     "snpeff/snpeff": {
                         "branch": "master",
-                        "git_sha": "b966311b31f51b65e87f124d08f948fec019787d",
+                        "git_sha": "51d2d20973eca80048a9490339e8b421db122908",
                         "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "snpsift/annmem": {
@@ -548,7 +548,7 @@
                     },
                     "tabix/bgziptabix": {
                         "branch": "master",
-                        "git_sha": "f2cfcf9d3f6a2d123e6c44aefa788aa232204a7a",
+                        "git_sha": "91a902fb32d6717da38a9694eb4ad3fade53a8db",
                         "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "tabix/tabix": {
@@ -607,7 +607,7 @@
                 "nf-core": {
                     "bam_ngscheckmate": {
                         "branch": "master",
-                        "git_sha": "c9c3ef86c1892413b3c86fb38c4e39fd7288512f",
+                        "git_sha": "bcf558dad50357a2f12a347091401390415f86ee",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {
@@ -627,7 +627,7 @@
                     },
                     "vcf_annotate_snpeff": {
                         "branch": "master",
-                        "git_sha": "b966311b31f51b65e87f124d08f948fec019787d",
+                        "git_sha": "23004c9c64013c90b7d835621ef4cdeff19a1427",
                         "installed_by": ["subworkflows"]
                     }
                 }

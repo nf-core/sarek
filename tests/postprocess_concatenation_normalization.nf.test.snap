@@ -7,10 +7,10 @@
                     "gawk": "5.3.0"
                 },
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -25,10 +25,10 @@
                     "gatk4": "4.6.1.0"
                 },
                 "GERMLINE_VCFS_CONCAT": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "GERMLINE_VCFS_CONCAT_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -58,10 +58,10 @@
                     "vcflib": "1.0.14"
                 },
                 "VCFS_NORM": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "VCFS_NORM_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -329,10 +329,10 @@
                     "gawk": "5.3.0"
                 },
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -344,10 +344,10 @@
                     "gatk4": "4.6.1.0"
                 },
                 "GERMLINE_VCFS_CONCAT": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "GERMLINE_VCFS_CONCAT_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -377,10 +377,10 @@
                     "vcflib": "1.0.14"
                 },
                 "VCFS_NORM": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "VCFS_NORM_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"

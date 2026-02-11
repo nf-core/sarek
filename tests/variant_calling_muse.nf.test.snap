@@ -4,7 +4,7 @@
             18,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "CRAM_TO_BAM": {
                     "samtools": 1.21
@@ -185,7 +185,7 @@
             19,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "CRAM_TO_BAM": {
                     "samtools": 1.21

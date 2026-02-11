@@ -4,4 +4,7 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::bcftools=1.21
+  # renovate: datasource=conda depName=bioconda/htslib
+  - bioconda::htslib=1.22.1
+  # renovate: datasource=conda depName=bioconda/bcftools
+  - bioconda::bcftools=1.22

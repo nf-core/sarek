@@ -56,7 +56,7 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.{vcf,vcf.gz,bcf,bcf.gz}":
+      - "${prefix}.${extension}":
           type: file
           description: Compressed annotated VCF file
           pattern: "*{vcf,vcf.gz,bcf,bcf.gz}"
@@ -67,7 +67,7 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.tbi":
+      - "${prefix}.${extension}.tbi":
           type: file
           description: Alternative VCF file index
           pattern: "*.tbi"
@@ -78,18 +78,32 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.csi":
+      - "${prefix}.${extension}.csi":
           type: file
           description: Default VCF file index
           pattern: "*.csi"
           ontologies: []
+  versions_bcftools:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - bcftools:
+          type: string
+          description: The tool name
+      - "bcftools --version | sed '1!d; s/^.*bcftools //'":
+          type: string
+          description: The command used to generate the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - bcftools:
+          type: string
+          description: The tool name
+      - "bcftools --version | sed '1!d; s/^.*bcftools //'":
+          type: string
+          description: The command used to generate the version of the tool
 authors:
   - "@projectoriented"
   - "@ramprasadn"

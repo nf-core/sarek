@@ -1,11 +1,11 @@
 process BCFTOOLS_MPILEUP {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/5a/5acacb55c52bec97c61fd34ffa8721fce82ce823005793592e2a80bf71632cd0/data':
-        'community.wave.seqera.io/library/bcftools:1.21--4335bec1d7b44d11' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/47/474a5ea8dc03366b04df884d89aeacc4f8e6d1ad92266888e7a8e7958d07cde8/data'
+        : 'community.wave.seqera.io/library/bcftools_htslib:0a3fa2654b52006f'}"
 
     input:
     tuple val(meta), path(bam), path(intervals)
@@ -13,11 +13,11 @@ process BCFTOOLS_MPILEUP {
     val save_mpileup
 
     output:
-    tuple val(meta), path("*vcf.gz")     , emit: vcf
-    tuple val(meta), path("*vcf.gz.tbi") , emit: tbi
-    tuple val(meta), path("*stats.txt")  , emit: stats
+    tuple val(meta), path("*vcf.gz"), emit: vcf
+    tuple val(meta), path("*vcf.gz.tbi"), emit: tbi
+    tuple val(meta), path("*stats.txt"), emit: stats
     tuple val(meta), path("*.mpileup.gz"), emit: mpileup, optional: true
-    path  "versions.yml"                 , emit: versions
+    tuple val("${task.process}"), val('bcftools'), eval("bcftools --version | sed '1!d; s/^.*bcftools //'"), topic: versions, emit: versions_bcftools
 
     when:
     task.ext.when == null || task.ext.when
@@ -35,25 +35,20 @@ process BCFTOOLS_MPILEUP {
 
     bcftools \\
         mpileup \\
-        --fasta-ref $fasta \\
-        $args \\
-        $bam \\
-        $intervals_cmd \\
-        $mpileup \\
-        | bcftools call --output-type v $args2 \\
+        --fasta-ref ${fasta} \\
+        ${args} \\
+        ${bam} \\
+        ${intervals_cmd} \\
+        ${mpileup} \\
+        | bcftools call --output-type v ${args2} \\
         | bcftools reheader --samples sample_name.list \\
-        | bcftools view --output-file ${prefix}.vcf.gz --output-type z $args3
+        | bcftools view --output-file ${prefix}.vcf.gz --output-type z ${args3}
 
-    $bgzip_mpileup
+    ${bgzip_mpileup}
 
     tabix -p vcf -f ${prefix}.vcf.gz
 
     bcftools stats ${prefix}.vcf.gz > ${prefix}.bcftools_stats.txt
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bcftools: \$(bcftools --version 2>&1 | head -n1 | sed 's/^.*bcftools //; s/ .*\$//')
-    END_VERSIONS
     """
 
     stub:
@@ -63,10 +58,5 @@ process BCFTOOLS_MPILEUP {
     echo "" | gzip > ${prefix}.vcf.gz
     touch ${prefix}.vcf.gz.tbi
     echo "" | gzip > ${prefix}.mpileup.gz
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bcftools: \$(bcftools --version 2>&1 | head -n1 | sed 's/^.*bcftools //; s/ .*\$//')
-    END_VERSIONS
     """
 }

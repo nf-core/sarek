@@ -4,8 +4,8 @@ process BCFTOOLS_ANNOTATE {
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/5a/5acacb55c52bec97c61fd34ffa8721fce82ce823005793592e2a80bf71632cd0/data'
-        : 'community.wave.seqera.io/library/bcftools:1.21--4335bec1d7b44d11'}"
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/47/474a5ea8dc03366b04df884d89aeacc4f8e6d1ad92266888e7a8e7958d07cde8/data'
+        : 'community.wave.seqera.io/library/bcftools_htslib:0a3fa2654b52006f'}"
 
     input:
     tuple val(meta), path(input), path(index), path(annotations), path(annotations_index)
@@ -14,25 +14,28 @@ process BCFTOOLS_ANNOTATE {
     path rename_chrs
 
     output:
-    tuple val(meta), path("*.{vcf,vcf.gz,bcf,bcf.gz}"), emit: vcf
-    tuple val(meta), path("*.tbi"),                     emit: tbi, optional: true
-    tuple val(meta), path("*.csi"),                     emit: csi, optional: true
-    path "versions.yml",                                emit: versions
+    tuple val(meta), path("${prefix}.${extension}"), emit: vcf
+    tuple val(meta), path("${prefix}.${extension}.tbi"), emit: tbi, optional: true
+    tuple val(meta), path("${prefix}.${extension}.csi"), emit: csi, optional: true
+    tuple val("${task.process}"), val('bcftools'), eval("bcftools --version | sed '1!d; s/^.*bcftools //'"), topic: versions, emit: versions_bcftools
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     def annotations_file = annotations ? "--annotations ${annotations}" : ''
     def columns_file = columns ? "--columns-file ${columns}" : ''
     def header_file = header_lines ? "--header-lines ${header_lines}" : ''
     def rename_chrs_file = rename_chrs ? "--rename-chrs ${rename_chrs}" : ''
-    def extension = args.contains("--output-type b") || args.contains("-Ob") ? "bcf.gz" :
-                    args.contains("--output-type u") || args.contains("-Ou") ? "bcf" :
-                    args.contains("--output-type z") || args.contains("-Oz") ? "vcf.gz" :
-                    args.contains("--output-type v") || args.contains("-Ov") ? "vcf" : "vcf"
+    extension = args.contains("--output-type b") || args.contains("-Ob")
+        ? "bcf.gz"
+        : args.contains("--output-type u") || args.contains("-Ou")
+            ? "bcf"
+            : args.contains("--output-type z") || args.contains("-Oz")
+                ? "vcf.gz"
+                : args.contains("--output-type v") || args.contains("-Ov") ? "vcf" : "vcf"
     def index_command = !index ? "bcftools index ${input}" : ''
 
     if ("${input}" == "${prefix}.${extension}") {
@@ -51,24 +54,23 @@ process BCFTOOLS_ANNOTATE {
         --output ${prefix}.${extension} \\
         --threads ${task.cpus} \\
         ${input}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bcftools: \$( bcftools --version |& sed '1!d; s/^.*bcftools //' )
-    END_VERSIONS
     """
 
     stub:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def extension = args.contains("--output-type b") || args.contains("-Ob") ? "bcf.gz" :
-                    args.contains("--output-type u") || args.contains("-Ou") ? "bcf" :
-                    args.contains("--output-type z") || args.contains("-Oz") ? "vcf.gz" :
-                    args.contains("--output-type v") || args.contains("-Ov") ? "vcf" :
-                    "vcf"
-    def index_extension = args.contains("--write-index=tbi") || args.contains("-W=tbi") ? "tbi" :
-                            args.contains("--write-index=csi") || args.contains("-W=csi") ? "csi" :
-                            args.contains("--write-index") || args.contains("-W") ? "csi" : ""
+    prefix = task.ext.prefix ?: "${meta.id}"
+    extension = args.contains("--output-type b") || args.contains("-Ob")
+        ? "bcf.gz"
+        : args.contains("--output-type u") || args.contains("-Ou")
+            ? "bcf"
+            : args.contains("--output-type z") || args.contains("-Oz")
+                ? "vcf.gz"
+                : args.contains("--output-type v") || args.contains("-Ov") ? "vcf" : "vcf"
+    def index_extension = args.contains("--write-index=tbi") || args.contains("-W=tbi")
+        ? "tbi"
+        : args.contains("--write-index=csi") || args.contains("-W=csi")
+            ? "csi"
+            : args.contains("--write-index") || args.contains("-W") ? "csi" : ""
     def create_cmd = extension.endsWith(".gz") ? "echo '' | gzip >" : "touch"
     def create_index = extension.endsWith(".gz") && index_extension.matches("csi|tbi") ? "touch ${prefix}.${extension}.${index_extension}" : ""
 
@@ -78,10 +80,5 @@ process BCFTOOLS_ANNOTATE {
     """
     ${create_cmd} ${prefix}.${extension}
     ${create_index}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bcftools: \$( bcftools --version |& sed '1!d; s/^.*bcftools //' )
-    END_VERSIONS
     """
 }

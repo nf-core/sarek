@@ -17,7 +17,7 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
     intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram
@@ -32,21 +32,21 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
     SAMTOOLS_MPILEUP(cram_intervals, fasta)
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    vcf_mpileup = BCFTOOLS_MPILEUP.out.vcf.branch {
-        intervals: it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+    vcf_mpileup = BCFTOOLS_MPILEUP.out.vcf.branch { items ->
+        intervals: items[0].num_intervals > 1
+        no_intervals: items[0].num_intervals <= 1
     }
 
     // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_mpileup = BCFTOOLS_MPILEUP.out.tbi.branch {
-        intervals: it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+    tbi_mpileup = BCFTOOLS_MPILEUP.out.tbi.branch { items ->
+        intervals: items[0].num_intervals > 1
+        no_intervals: items[0].num_intervals <= 1
     }
 
     // Figuring out if there is one or more mpileup(s) from the same sample
-    mpileup_samtools = SAMTOOLS_MPILEUP.out.mpileup.branch {
-        intervals: it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+    mpileup_samtools = SAMTOOLS_MPILEUP.out.mpileup.branch { items ->
+        intervals: items[0].num_intervals > 1
+        no_intervals: items[0].num_intervals <= 1
     }
 
     // Merge mpileup and natural order sort them
@@ -69,7 +69,6 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
         .map { meta, tbi -> [meta - meta.subMap('num_intervals') + [variantcaller: 'bcftools'], tbi] }
 
     versions = versions.mix(SAMTOOLS_MPILEUP.out.versions)
-    versions = versions.mix(BCFTOOLS_MPILEUP.out.versions)
     versions = versions.mix(CAT_MPILEUP.out.versions)
     versions = versions.mix(MERGE_BCFTOOLS_MPILEUP.out.versions)
 

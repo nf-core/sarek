@@ -7,16 +7,16 @@
                     "gawk": "5.3.0"
                 },
                 "BCFTOOLS_CONCAT": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "BCFTOOLS_ISEC": {
                     "bcftools": 1.22
                 },
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "CONSENSUS_FROM_SITES": {
                     "gawk": "mawk 1.3.4 20240123",
@@ -59,10 +59,10 @@
                     "tabix": 1.21
                 },
                 "VCFS_NORM": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "VCFS_NORM_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -370,10 +370,10 @@
                     "bcftools": 1.22
                 },
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "CONSENSUS_FROM_SITES": {
                     "gawk": "mawk 1.3.4 20240123",
@@ -410,10 +410,10 @@
                     "tabix": 1.21
                 },
                 "VCFS_NORM": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "VCFS_NORM_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -669,16 +669,16 @@
                     "gawk": "5.3.0"
                 },
                 "BCFTOOLS_CONCAT": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "BCFTOOLS_ISEC": {
                     "bcftools": 1.22
                 },
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "CALCULATECONTAMINATION": {
                     "gatk4": "4.6.1.0"
@@ -730,10 +730,10 @@
                     "tabix": 1.21
                 },
                 "VCFS_NORM": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "VCFS_NORM_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": 1.22
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"

@@ -33,9 +33,9 @@ workflow POST_VARIANTCALLING {
     varlociraptor_scenario_tumor_only
 
     main:
-    versions = Channel.empty()
-    vcfs = Channel.empty()
-    tbis = Channel.empty()
+    versions = channel.empty()
+    vcfs = channel.empty()
+    tbis = channel.empty()
 
     //
     // VARLOCIRAPTOR
@@ -81,20 +81,20 @@ workflow POST_VARIANTCALLING {
 
         def excluded_variantcallers = ['manta', 'tiddit', 'samtools']
 
-        all_vcfs = Channel.empty().mix(germline_vcfs, tumor_only_vcfs, somatic_vcfs)
-                                .branch{ meta, vcf ->
+        all_vcfs = channel.empty().mix(germline_vcfs, tumor_only_vcfs, somatic_vcfs)
+                                .branch{ meta, _vcf ->
                                     small: small_variantcallers.contains(meta.variantcaller)
                                     other: true
                                 }
 
-        all_tbis = Channel.empty().mix(germline_tbis, tumor_only_tbis, somatic_tbis)
-                                .branch{ meta, tbi ->
+        all_tbis = channel.empty().mix(germline_tbis, tumor_only_tbis, somatic_tbis)
+                                .branch{ meta, _tbi ->
                                     small: small_variantcallers.contains(meta.variantcaller)
                                     other: true
                                 }
 
         // Validate that we're not silently excluding unknown variant callers
-        all_vcfs.other.subscribe { meta, vcf ->
+        all_vcfs.other.subscribe { meta, _vcf ->
             if (!excluded_variantcallers.contains(meta.variantcaller)) {
                 error("Variant caller '${meta.variantcaller}' is not in the small_variantcallers list and will be excluded from normalization/filtering/consensus. If this is a new SNV caller, please add it to the list in subworkflows/local/post_variantcalling/main.nf:78-80")
             }
@@ -115,7 +115,6 @@ workflow POST_VARIANTCALLING {
 
             small_variant_vcfs = FILTER_VCFS.out.vcf
             small_variant_tbis = FILTER_VCFS.out.tbi
-            versions = versions.mix(FILTER_VCFS.out.versions)
         }
 
         if (normalize_vcfs) {
