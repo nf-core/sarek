@@ -413,7 +413,7 @@
                     },
                     "rbt/vcfsplit": {
                         "branch": "master",
-                        "git_sha": "3e5034548e2398b006a9e01fb82673ffa5c83d9f",
+                        "git_sha": "c734c101f0010ec13ed9bbf578477962c32f9cc3",
                         "installed_by": ["modules"]
                     },
                     "samtools/bam2fq": {
@@ -573,17 +573,17 @@
                     },
                     "varlociraptor/callvariants": {
                         "branch": "master",
-                        "git_sha": "36cf856b511b7623a2d90788c9afa2a655fe6d43",
+                        "git_sha": "5ae3c74e09c529c5c768aa89397e490ba4728219",
                         "installed_by": ["modules"]
                     },
                     "varlociraptor/estimatealignmentproperties": {
                         "branch": "master",
-                        "git_sha": "36cf856b511b7623a2d90788c9afa2a655fe6d43",
+                        "git_sha": "5ae3c74e09c529c5c768aa89397e490ba4728219",
                         "installed_by": ["modules"]
                     },
                     "varlociraptor/preprocess": {
                         "branch": "master",
-                        "git_sha": "36cf856b511b7623a2d90788c9afa2a655fe6d43",
+                        "git_sha": "5ae3c74e09c529c5c768aa89397e490ba4728219",
                         "installed_by": ["modules"]
                     },
                     "vcflib/vcffilter": {
@@ -598,7 +598,7 @@
                     },
                     "yte": {
                         "branch": "master",
-                        "git_sha": "b9947fd7a338e1087a5c386ac7192588d3059122",
+                        "git_sha": "c734c101f0010ec13ed9bbf578477962c32f9cc3",
                         "installed_by": ["modules"]
                     }
                 }
