@@ -1,7 +1,7 @@
 name: "parabricks_fq2bam"
-description: NVIDIA Clara Parabricks GPU-accelerated alignment, sorting, BQSR calculation,
-  and duplicate marking. Note this nf-core module requires files to be copied into
-  the working directory and not symlinked.
+description: NVIDIA Clara Parabricks GPU-accelerated alignment, sorting, BQSR
+  calculation, and duplicate marking. Note this nf-core module requires files to
+  be copied into the working directory and not symlinked.
 keywords:
   - align
   - sort
@@ -50,10 +50,10 @@ input:
         type: map
         description: |
           Groovy Map containing index information
-    - interval_file:
+    - intervals:
         type: file
-        description: (optional) file(s) containing genomic intervals for use in base
-          quality score recalibration (BQSR)
+        description: (optional) file(s) containing genomic intervals for use in
+          base quality score recalibration (BQSR)
         pattern: "*.{bed,interval_list,picard,list,intervals}"
         ontologies: []
   - - meta5:
@@ -62,8 +62,8 @@ input:
           Groovy Map containing known sites information
     - known_sites:
         type: file
-        description: (optional) known sites file(s) for calculating BQSR. markdups must
-          be true to perform BQSR.
+        description: (optional) known sites file(s) for calculating BQSR. markdups
+          must be true to perform BQSR.
         pattern: "*.vcf.gz"
         ontologies:
           - edam: "http://edamontology.org/format_3016" # VCF
@@ -125,8 +125,7 @@ output:
             e.g. [ id:'test', single_end:false ]
       - "*.table":
           type: file
-          description: (optional) table from base quality score recalibration calculation,
-            to be used with parabricks/applybqsr
+          description: (optional) table from base quality score recalibration calculation, to be used with parabricks/applybqsr
           pattern: "*.table"
           ontologies: []
   qc_metrics:
@@ -147,8 +146,7 @@ output:
             e.g. [ id:'test', single_end:false ]
       - "*.duplicate-metrics.txt":
           type: file
-          description: (optional) metrics calculated from marking duplicates in the
-            bam file
+          description: (optional) metrics calculated from marking duplicates in the bam file
           pattern: "*.duplicate-metrics.txt"
           ontologies: []
   compatible_versions:
@@ -158,13 +156,27 @@ output:
         pattern: "compatible_versions.yml"
         ontologies:
           - edam: http://edamontology.org/format_3750 # YAML
+  versions_parabricks:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - parabricks:
+          type: string
+          description: The tool name
+      - "pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'":
+          type: string
+          description: The command used to generate the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: "http://edamontology.org/format_3750" # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - parabricks:
+          type: string
+          description: The tool name
+      - "pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'":
+          type: string
+          description: The command used to generate the version of the tool
 authors:
   - "@bsiranosian"
   - "@adamrtalbot"

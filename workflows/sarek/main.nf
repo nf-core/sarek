@@ -214,10 +214,14 @@ workflow SAREK {
             FASTQ_PREPROCESS_PARABRICKS(
                 input_fastq,
                 fasta,
+                fasta_fai,
                 index_alignment,
                 intervals_bed_combined,
                 known_sites_indels,
                 channel.value("cram"),
+                params.save_mapped,
+                params.save_output_as_bam,
+                params.outdir,
             )
 
             // Gather preprocessing output
