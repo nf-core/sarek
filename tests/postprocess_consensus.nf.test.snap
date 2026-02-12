@@ -1,7 +1,7 @@
 {
     "-profile test --filter_vcfs --snv_consensus_calling --normalize_vcfs --tools mpileup,mutect2,strelka (germline + somatic)": {
         "content": [
-            63,
+            64,
             {
                 "ADD_INFO_TO_VCF": {
                     "gawk": "5.3.0"
@@ -235,6 +235,8 @@
                 "variant_calling/consensus/sample3/sample3_consensus/README.txt",
                 "variant_calling/consensus/sample3/sample3_consensus/sites.txt",
                 "variant_calling/consensus/sample4_vs_sample3",
+                "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3.consensus.vcf.gz",
+                "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3.consensus.vcf.gz.tbi",
                 "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus",
                 "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus/0000.vcf.gz",
                 "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus/0000.vcf.gz.tbi",
@@ -331,7 +333,8 @@
                 "sample3.bcftools.vcf.gz:md5,c55cf36bc05b6a7b4a98bb3ba925fc0a",
                 "sample3.consensus.vcf.gz:md5,eb2d34b0469dce34bb82b6f1c228ede5",
                 "0001.vcf.gz:md5,87e67c661c05d0355873776659ce7f64",
-                "0001.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.consensus.vcf.gz:md5,32fd4315aa4012d8c066927ab0313a22",
+                "0001.vcf.gz:md5,e5e12b0d83fdea7e2013b63241eb456a",
                 "sample3.bcftools.bcftools_filtered.vcf.gz:md5,c55cf36bc05b6a7b4a98bb3ba925fc0a",
                 "sample3.strelka.variants.bcftools_filtered.vcf.gz:md5,bdd5d76d3f2cc6a873ba829b91155562",
                 "sample4_vs_sample3.mutect2.bcftools_filtered.vcf.gz:md5,6714999f8c31fa73d82272d99b34a3a1",
@@ -663,7 +666,7 @@
     },
     "-profile test --snv_consensus_calling --normalize_vcfs --tools mpileup,mutect2,strelka (germline + somatic)": {
         "content": [
-            62,
+            63,
             {
                 "ADD_INFO_TO_VCF": {
                     "gawk": "5.3.0"
@@ -906,6 +909,8 @@
                 "variant_calling/consensus/sample3/sample3_consensus/README.txt",
                 "variant_calling/consensus/sample3/sample3_consensus/sites.txt",
                 "variant_calling/consensus/sample4_vs_sample3",
+                "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3.consensus.vcf.gz",
+                "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3.consensus.vcf.gz.tbi",
                 "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus",
                 "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus/0000.vcf.gz",
                 "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus/0000.vcf.gz.tbi",
@@ -1012,9 +1017,12 @@
                     "0001.vcf.gz",
                     "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=70, phased=false, phasedAutodetect=false]"
                 ],
+                [   "sample4_vs_sample3.consensus.vcf.gz",                      
+                    "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=10, phased=true, phasedAutodetect=true]"
+                ],       
                 [
                     "0001.vcf.gz",
-                    "VcfFile [chromosomes=[], sampleCount=2, variantCount=0, phased=true, phasedAutodetect=true]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=10, phased=true, phasedAutodetect=true]"
                 ],
                 [
                     "sample4_vs_sample3.mutect2.filtered.vcf.gz",
