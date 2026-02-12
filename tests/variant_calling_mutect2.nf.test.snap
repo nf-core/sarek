@@ -4,7 +4,7 @@
             11,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
@@ -21,7 +21,7 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
@@ -185,7 +185,7 @@
             15,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -205,11 +205,11 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
@@ -393,7 +393,7 @@
             13,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
@@ -410,7 +410,7 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
@@ -585,7 +585,7 @@
             14,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "BUILD_INTERVALS": {
                     "gawk": "5.3.0"
@@ -608,11 +608,11 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },

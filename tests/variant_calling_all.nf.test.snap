@@ -4,13 +4,13 @@
             97,
             {
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.18-r1243-dirty"
@@ -91,11 +91,11 @@
                     "bcftools": 1.21,
                     "svdb": "2.8.2"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
@@ -650,13 +650,13 @@
             55,
             {
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.18-r1243-dirty"
@@ -724,11 +724,11 @@
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
@@ -1145,13 +1145,13 @@
             49,
             {
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.18-r1243-dirty"
@@ -1218,11 +1218,11 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },

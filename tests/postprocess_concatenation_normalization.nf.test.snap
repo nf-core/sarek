@@ -7,16 +7,16 @@
                     "gawk": "5.3.0"
                 },
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "FILTER_VCFS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "FREEBAYES": {
                     "freebayes": "1.3.10"
@@ -25,10 +25,10 @@
                     "gatk4": "4.6.1.0"
                 },
                 "GERMLINE_VCFS_CONCAT": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "GERMLINE_VCFS_CONCAT_SORT": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -39,16 +39,17 @@
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
                 "TABIX_EXT_VCF": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_VC_FREEBAYES": {
                     "tabix": 1.21
@@ -60,10 +61,10 @@
                     "vcflib": "1.0.14"
                 },
                 "VCFS_NORM": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "VCFS_NORM_SORT": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -331,10 +332,10 @@
                     "gawk": "5.3.0"
                 },
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -346,10 +347,10 @@
                     "gatk4": "4.6.1.0"
                 },
                 "GERMLINE_VCFS_CONCAT": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "GERMLINE_VCFS_CONCAT_SORT": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -360,16 +361,17 @@
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
                 "TABIX_EXT_VCF": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_VC_FREEBAYES": {
                     "tabix": 1.21
@@ -381,10 +383,10 @@
                     "vcflib": "1.0.14"
                 },
                 "VCFS_NORM": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "VCFS_NORM_SORT": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"

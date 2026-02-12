@@ -33,11 +33,11 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 }
@@ -217,7 +217,7 @@
             "No CRAM files",
             "No VCF files",
             [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"                  
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
         "meta": {
@@ -459,7 +459,7 @@
             26,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.18-r1243-dirty"
@@ -503,11 +503,11 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
@@ -793,11 +793,11 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 }

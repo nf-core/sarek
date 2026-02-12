@@ -4,7 +4,7 @@
             19,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -33,11 +33,11 @@
                 "SENTIEON_VARCAL_SNP": {
                     "sentieon": 202503.01
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
@@ -205,7 +205,7 @@
             11,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "CNNSCOREVARIANTS": {
                     "gatk4": "4.5.0.0"
@@ -222,7 +222,7 @@
                 "SENTIEON_HAPLOTYPER": {
                     "sentieon": 202503.01
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
@@ -387,7 +387,7 @@
             12,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -404,11 +404,11 @@
                 "SENTIEON_HAPLOTYPER": {
                     "sentieon": 202503.01
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
@@ -567,7 +567,7 @@
             14,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.22"
                 },
                 "CNNSCOREVARIANTS": {
                     "gatk4": "4.5.0.0"
@@ -590,11 +590,11 @@
                 "SENTIEON_HAPLOTYPER": {
                     "sentieon": 202503.01
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
