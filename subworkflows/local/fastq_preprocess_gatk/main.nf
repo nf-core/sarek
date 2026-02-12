@@ -66,8 +66,8 @@ workflow FASTQ_PREPROCESS_GATK {
     main:
 
     // To gather all QC reports for MultiQC
-    reports          = Channel.empty()
-    versions         = Channel.empty()
+    reports          = channel.empty()
+    versions         = channel.empty()
 
     // PREPROCESSING
 
@@ -180,8 +180,8 @@ workflow FASTQ_PREPROCESS_GATK {
         sort_bam = true
         FASTQ_ALIGN(reads_for_alignment, index_alignment, sort_bam, fasta, fasta_fai)
 
-        aligned_bam = Channel.empty()
-        aligned_bai = Channel.empty()
+        aligned_bam = channel.empty()
+        aligned_bai = channel.empty()
         // If UMIs started in read header or were put there by fastp, copy to RX tag
         if (params.umi_in_read_header || params.umi_location) {
             FGBIO_COPYUMIFROMREADNAME(FASTQ_ALIGN.out.bam.map{meta, bam -> [meta, bam, []]})
@@ -205,7 +205,7 @@ workflow FASTQ_PREPROCESS_GATK {
             }
             // Manipulate meta map to remove old fields and add new ones
             .map { meta, bam ->
-                [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size', 'sample_lane_id') + [ data_type: 'bam', id: meta.sample ], bam ]
+                [ meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [ data_type: 'bam', id: meta.sample ], bam ]
             }
             // Create groupKey from meta map
             .map { meta, bam ->
@@ -223,7 +223,7 @@ workflow FASTQ_PREPROCESS_GATK {
             }
             // Manipulate meta map to remove old fields and add new ones
             .map { meta, bai ->
-                [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size', 'sample_lane_id') + [ data_type: 'bai', id: meta.sample ], bai ]
+                [ meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [ data_type: 'bai', id: meta.sample ], bai ]
             }
             // Create groupKey from meta map
             .map { meta, bai ->
@@ -261,10 +261,10 @@ workflow FASTQ_PREPROCESS_GATK {
 
     if (params.step in ['mapping', 'markduplicates']) {
 
-        // ch_cram_no_markduplicates_restart = Channel.empty()
-        cram_markduplicates_no_spark = Channel.empty()
-        cram_sentieon_dedup          = Channel.empty()
-        cram_markduplicates_spark    = Channel.empty()
+        // ch_cram_no_markduplicates_restart = channel.empty()
+        cram_markduplicates_no_spark = channel.empty()
+        cram_sentieon_dedup          = channel.empty()
+        cram_markduplicates_spark    = channel.empty()
 
         // STEP 2: markduplicates (+QC) + convert to CRAM
 
@@ -280,7 +280,7 @@ workflow FASTQ_PREPROCESS_GATK {
 
         // if no MD is done, then run QC on mapped & converted CRAM files
         // or the input BAM (+converted) or CRAM files
-        cram_skip_markduplicates = Channel.empty()
+        cram_skip_markduplicates = channel.empty()
 
         // Should it be possible to restart from converted crams?
         // For now, conversion from bam to cram is only done when skipping markduplicates
@@ -293,7 +293,7 @@ workflow FASTQ_PREPROCESS_GATK {
             if (params.step == 'mapping') {
                 cram_skip_markduplicates = BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true)
             } else {
-                cram_skip_markduplicates = Channel.empty().mix(input_sample)
+                cram_skip_markduplicates = channel.empty().mix(input_sample)
             }
 
             CRAM_QC_NO_MD(cram_skip_markduplicates, fasta, intervals_for_preprocessing)
@@ -357,7 +357,7 @@ workflow FASTQ_PREPROCESS_GATK {
         // - crams from sentieon_dedup
         // - crams from markduplicates_spark
         // - crams from input step markduplicates --> from the converted ones only?
-        ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark, cram_markduplicates_spark, cram_sentieon_dedup)
+        ch_md_cram_for_restart = channel.empty().mix(cram_markduplicates_no_spark, cram_markduplicates_spark, cram_sentieon_dedup)
             // Make sure correct data types are carried through
             .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
 
@@ -378,7 +378,7 @@ workflow FASTQ_PREPROCESS_GATK {
         // Run if starting from step "prepare_recalibration"
         if (params.step == 'prepare_recalibration') {
 
-            ch_cram_for_bam_baserecalibrator = Channel.empty().mix(input_sample)
+            ch_cram_for_bam_baserecalibrator = channel.empty().mix(input_sample)
 
             // Set the input samples for restart so we generate a samplesheet that contains the input files together with the recalibration table
             ch_md_cram_for_restart           = ch_cram_for_bam_baserecalibrator
@@ -390,7 +390,7 @@ workflow FASTQ_PREPROCESS_GATK {
             // - crams from markduplicates_spark
             // - crams converted from bam mapped when skipping markduplicates
             // - input cram files, when start from step markduplicates
-            ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_md_cram_for_restart, cram_skip_markduplicates )
+            ch_cram_for_bam_baserecalibrator = channel.empty().mix(ch_md_cram_for_restart, cram_skip_markduplicates )
                 // Make sure correct data types are carried through
                 .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
 
@@ -399,8 +399,8 @@ workflow FASTQ_PREPROCESS_GATK {
         // STEP 3: Create recalibration tables
         if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
 
-            ch_table_bqsr_no_spark = Channel.empty()
-            ch_table_bqsr_spark    = Channel.empty()
+            ch_table_bqsr_no_spark = channel.empty()
+            ch_table_bqsr_spark    = channel.empty()
 
             if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
             BAM_BASERECALIBRATOR_SPARK(
@@ -436,7 +436,7 @@ workflow FASTQ_PREPROCESS_GATK {
             // ch_table_bqsr contains either:
             // - bqsr table from baserecalibrator
             // - bqsr table from baserecalibrator_spark
-            ch_table_bqsr = Channel.empty().mix(
+            ch_table_bqsr = channel.empty().mix(
                 ch_table_bqsr_no_spark,
                 ch_table_bqsr_spark)
 
@@ -455,13 +455,13 @@ workflow FASTQ_PREPROCESS_GATK {
         // Run if starting from step "prepare_recalibration"
         if (params.step == 'recalibrate') {
 
-            cram_applybqsr = Channel.empty().mix(input_sample)
+            cram_applybqsr = channel.empty().mix(input_sample)
 
         }
 
         if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
-            cram_variant_calling_no_spark = Channel.empty()
-            cram_variant_calling_spark    = Channel.empty()
+            cram_variant_calling_no_spark = channel.empty()
+            cram_variant_calling_spark    = channel.empty()
 
             if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
 
@@ -492,7 +492,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 versions = versions.mix(BAM_APPLYBQSR.out.versions)
             }
 
-            cram_variant_calling = Channel.empty().mix(
+            cram_variant_calling = channel.empty().mix(
                 cram_variant_calling_no_spark,
                 cram_variant_calling_spark)
 
@@ -501,7 +501,7 @@ workflow FASTQ_PREPROCESS_GATK {
             versions = versions.mix(CRAM_TO_BAM_RECAL.out.versions)
 
             // CSV should be written for the file actually out out, either CRAM or BAM
-            csv_recalibration = Channel.empty()
+            csv_recalibration = channel.empty()
             csv_recalibration = params.save_output_as_bam ? CRAM_TO_BAM_RECAL.out.bam.join(CRAM_TO_BAM_RECAL.out.bai, failOnDuplicate: true, failOnMismatch: true) : cram_variant_calling
 
             // Create CSV to restart from this step
@@ -511,11 +511,11 @@ workflow FASTQ_PREPROCESS_GATK {
             // cram_variant_calling contains either:
             // - input bams converted to crams, if started from step recal + skip BQSR
             // - input crams if started from step recal + skip BQSR
-            cram_variant_calling = Channel.empty().mix(input_sample.map{ meta, cram, crai, _table -> [ meta, cram, crai ] })
+            cram_variant_calling = channel.empty().mix(input_sample.map{ meta, cram, crai, _table -> [ meta, cram, crai ] })
         } else {
             // cram_variant_calling contains either:
             // - crams from markduplicates = ch_cram_for_bam_baserecalibrator if skip BQSR but not started from step recalibration
-            cram_variant_calling = Channel.empty().mix(ch_cram_for_bam_baserecalibrator)
+            cram_variant_calling = channel.empty().mix(ch_cram_for_bam_baserecalibrator)
         }
     }
 

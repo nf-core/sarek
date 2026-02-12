@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [#2117](https://github.com/nf-core/sarek/pull/2117) - Silent failure with multi-lane samples
+
 ### Removed
 
 ### Dependencies
@@ -39,6 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2139](https://github.com/nf-core/sarek/pull/2139) - Back to dev (3.9.0dev)
 
 #### Fixed
+
+- [#2117](https://github.com/nf-core/sarek/pull/2117) - Update alignment related files to strict syntax
 
 #### Removed
 
