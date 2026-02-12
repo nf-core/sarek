@@ -46,22 +46,12 @@ input:
         pattern: "*.json"
         ontologies:
           - edam: http://edamontology.org/format_3464 # JSON
-  - - meta2:
-        type: map
-        description: |
-          Groovy Map containing reference information
-          e.g. [ id:'test', single_end:false ]
     - fasta:
         type: file
         description: Reference fasta file
         pattern: "*.{fasta}"
         ontologies:
           - edam: http://edamontology.org/format_1929 # FASTA
-  - - meta3:
-        type: map
-        description: |
-          Groovy Map containing reference index information
-          e.g. [ id:'test', single_end:false ]
     - fai:
         type: file
         description: Index for reference fasta file (must be with samtools index)
@@ -80,13 +70,27 @@ output:
           pattern: "*.bcf"
           ontologies:
             - edam: http://edamontology.org/format_3020 # BCF
+  versions_varlociraptor:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - varlociraptor:
+          type: string
+          description: The tool name
+      - "varlociraptor --version | sed 's/^varlociraptor //'":
+          type: string
+          description: The command used to generate the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - varlociraptor:
+          type: string
+          description: The tool name
+      - "varlociraptor --version | sed 's/^varlociraptor //'":
+          type: string
+          description: The command used to generate the version of the tool
 authors:
   - "@FriederikeHanssen"
 maintainers:

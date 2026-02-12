@@ -2,6 +2,7 @@ include { BCFTOOLS_CONCAT as CONCAT_CALLED_CHUNKS                               
 include { BCFTOOLS_CONCAT as CONCAT_SOMATIC_STRELKA                               } from '../../../modules/nf-core/bcftools/concat'
 include { BCFTOOLS_MERGE as MERGE_GERMLINE_SOMATIC_VCFS                           } from '../../../modules/nf-core/bcftools/merge'
 include { BCFTOOLS_SORT as SORT_CALLED_CHUNKS                                     } from '../../../modules/nf-core/bcftools/sort'
+include { BCFTOOLS_SORT as SORT_FINAL_VCF                                         } from '../../../modules/nf-core/bcftools/sort'
 include { TABIX_TABIX as TABIX_GERMLINE                                           } from '../../../modules/nf-core/tabix/tabix'
 include { TABIX_TABIX as TABIX_SOMATIC                                            } from '../../../modules/nf-core/tabix/tabix'
 include { RBT_VCFSPLIT                                                            } from '../../../modules/nf-core/rbt/vcfsplit'
@@ -23,37 +24,32 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     val_num_chunks
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     meta_map = ch_cram.map { meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai ->
         meta + [sex_string: (meta.sex == "XX" ? "female" : "male")]
     }
 
-    //TODO this seems suspicious but not the cause for the current resume issues as I am only testing with one sample
     FILL_SCENARIO_FILE(
-        meta_map.combine(ch_scenario).map{ meta, scenario_file -> [ meta, scenario_file, [], meta ] }
+        meta_map.combine(ch_scenario).map { meta, scenario_file -> [meta, scenario_file, [], meta] }
     )
     ch_scenario_file = FILL_SCENARIO_FILE.out.rendered
-    ch_versions = ch_versions.mix(FILL_SCENARIO_FILE.out.versions)
 
-    cram_normal = ch_cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] }
-    cram_tumor = ch_cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
+    cram_normal = ch_cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta + [match_id: meta.normal_id], normal_cram, normal_crai] }
+    cram_tumor = ch_cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta + [match_id: meta.normal_id], tumor_cram, tumor_crai] }
 
     // Estimate alignment properties
     ALIGNMENTPROPERTIES_TUMOR(
-        cram_normal,
-        ch_fasta,
-        ch_fasta_fai,
+        cram_tumor.combine(ch_fasta).combine(ch_fasta_fai).map { meta_cram, cram, crai, _meta_fasta, fasta, _meta_fai, fai ->
+            [meta_cram, cram, crai, fasta, fai]
+        }
     )
 
     ALIGNMENTPROPERTIES_NORMAL(
-        cram_tumor,
-        ch_fasta,
-        ch_fasta_fai,
+        cram_normal.combine(ch_fasta).combine(ch_fasta_fai).map { meta_cram, cram, crai, _meta_fasta, fasta, _meta_fai, fai ->
+            [meta_cram, cram, crai, fasta, fai]
+        }
     )
-
-    ch_versions = ch_versions.mix(ALIGNMENTPROPERTIES_TUMOR.out.versions)
-    ch_versions = ch_versions.mix(ALIGNMENTPROPERTIES_NORMAL.out.versions)
 
     //
     // CONCAT SNV AND INDEL VCFS FOR STRELKA
@@ -63,9 +59,9 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_somatic_vcf_tbi = ch_somatic_vcf.join(TABIX_SOMATIC.out.tbi, by: [0])
 
     // CONCAT SNV / INDEL VCFs COMING FROM STRELKA
-    ch_somatic_branched = ch_somatic_vcf_tbi.branch {
-        strelka: it[0].variantcaller == 'strelka'
-        other: it[0].variantcaller != 'strelka'
+    ch_somatic_branched = ch_somatic_vcf_tbi.branch { items ->
+        strelka: items[0].variantcaller == 'strelka'
+        other: items[0].variantcaller != 'strelka'
     }
 
     // Group somatic strelka SNVs and INDELs by sample for concatenation
@@ -101,9 +97,9 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     def matching_pairs = somatic_with_key.join(germline_with_key, failOnMismatch: false)
 
     // Branch based on whether a matching germline VCF was found
-    def branched = matching_pairs.branch {
-        matched: it.size() == 7
-        unmatched: it.size() == 4
+    def branched = matching_pairs.branch { items ->
+        matched: items.size() == 7
+        unmatched: items.size() == 4
     }
 
     MERGE_GERMLINE_SOMATIC_VCFS(
@@ -129,92 +125,122 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         ch_vcf,
         val_num_chunks,
     )
-    ch_versions = ch_versions.mix(RBT_VCFSPLIT.out.versions)
 
     //
-    // PREPROCESS VCF WITH TUMOR CRAM
+    // SPLIT VCF CHUNKS - create chunked VCFs for both tumor and normal preprocessing
     //
     ch_chunked_tumor_vcfs = RBT_VCFSPLIT.out.bcfchunks
         .transpose()
         .map { meta, vcf_chunked ->
-            [   meta + [chunk: vcf_chunked.name.split(/\./)[-2]],
-                vcf_chunked
+            [
+                meta + [chunk: vcf_chunked.name.split(/\./)[-2]],
+                vcf_chunked,
             ]
         }
 
+    // Create chunked VCFs with normal metadata for normal preprocessing
+    ch_chunked_normal_vcfs = RBT_VCFSPLIT.out.bcfchunks
+        .transpose()
+        .map { meta, vcf_chunked ->
+            [
+                meta + [match_id: meta.normal_id, chunk: vcf_chunked.name.split(/\./)[-2]],
+                vcf_chunked,
+            ]
+        }
+
+    //
+    // PREPROCESS VCF WITH TUMOR CRAM
+    //
+
     // Create base channels for data that will be replicated for each chunk
-    ch_cram_tumor = cram_tumor.join(ALIGNMENTPROPERTIES_TUMOR.out.alignment_properties_json, failOnMismatch:true, failOnDuplicate:true)
-                                .map{meta, cram, crai, json -> [meta.id, meta, cram, crai, json]}
+    ch_cram_tumor = cram_tumor
+        .join(ALIGNMENTPROPERTIES_TUMOR.out.alignment_properties_json, failOnMismatch: true, failOnDuplicate: true)
+        .map { meta, cram, crai, json -> [meta.id, meta, cram, crai, json] }
 
     ch_input_tumor_preprocess_chunked = ch_chunked_tumor_vcfs
         .map { meta, vcf -> [meta.id, meta, vcf] }
         .combine(ch_cram_tumor, by: 0)
-        .map { _id, meta_vcf, vcf, meta_cram, tumor_cram, tumor_crai, alignment_json ->
-            [   meta_cram + [
-                variantcaller: meta_vcf.variantcaller,
-                postprocess: 'varlociraptor',
-                chunk: meta_vcf.chunk,
+        .combine(ch_fasta)
+        .combine(ch_fasta_fai)
+        .map { _id, meta_vcf, vcf, meta_cram, tumor_cram, tumor_crai, alignment_json, _meta_fasta, fasta, _meta_fai, fai ->
+            [
+                meta_cram + [
+                    variantcaller: meta_vcf.variantcaller,
+                    postprocess: 'varlociraptor',
+                    chunk: meta_vcf.chunk,
                 ],
-                tumor_cram, tumor_crai, vcf, alignment_json]
+                tumor_cram,
+                tumor_crai,
+                vcf,
+                alignment_json,
+                fasta,
+                fai,
+            ]
         }
 
     PREPROCESS_TUMOR(
-        ch_input_tumor_preprocess_chunked,
-        ch_fasta,
-        ch_fasta_fai,
+        ch_input_tumor_preprocess_chunked
     )
-    ch_versions = ch_versions.mix(PREPROCESS_TUMOR.out.versions)
 
     //
     // PREPROCESS VCF WITH NORMAL CRAM
     //
-    ch_chunked_normal_vcfs = RBT_VCFSPLIT.out.bcfchunks
-        .transpose()
-        .map { meta, vcf_chunked ->
-            [meta + [chunk: vcf_chunked.name.split(/\./)[-2]], vcf_chunked]
-        }
 
     // Create base channels for data that will be replicated for each chunk
-    ch_cram_alignment = cram_normal.join(ALIGNMENTPROPERTIES_NORMAL.out.alignment_properties_json, failOnMismatch:true, failOnDuplicate:true)
-                                .map{meta, cram, crai, json -> [meta.id, meta, cram, crai, json]}
+    ch_cram_alignment = cram_normal
+        .join(ALIGNMENTPROPERTIES_NORMAL.out.alignment_properties_json, failOnMismatch: true, failOnDuplicate: true)
+        .map { meta, cram, crai, json -> [meta.match_id, meta, cram, crai, json] }
 
     ch_input_normal_preprocess_chunked = ch_chunked_normal_vcfs
-        .map { meta, vcf -> [meta.id, meta, vcf] }
+        .map { meta, vcf -> [meta.match_id, meta, vcf] }
         .combine(ch_cram_alignment, by: 0)
-        .map { _id, meta_vcf, vcf, meta_cram, normal_cram, normal_crai, alignment_json ->
-            [   meta_cram + [
-                variantcaller: meta_vcf.variantcaller,
-                postprocess: 'varlociraptor',
-                chunk: meta_vcf.chunk,
-            ], normal_cram, normal_crai, vcf, alignment_json]
+        .combine(ch_fasta)
+        .combine(ch_fasta_fai)
+        .map { _match_id, meta_vcf, vcf, meta_cram, normal_cram, normal_crai, alignment_json, _meta_fasta, fasta, _meta_fai, fai ->
+            [
+                meta_vcf + [
+                    id: meta_cram.id,
+                    postprocess: 'varlociraptor',
+                ],
+                normal_cram,
+                normal_crai,
+                vcf,
+                alignment_json,
+                fasta,
+                fai,
+            ]
         }
 
     PREPROCESS_NORMAL(
-        ch_input_normal_preprocess_chunked,
-        ch_fasta,
-        ch_fasta_fai,
+        ch_input_normal_preprocess_chunked
     )
-    ch_versions = ch_versions.mix(PREPROCESS_NORMAL.out.versions)
 
     //
     // CALL VARIANTS WITH VARLOCIRAPTOR
     //
-    ch_vcf_for_callvariants = PREPROCESS_NORMAL.out.bcf
-        .map { meta, normal_bcf -> [meta.id + meta.chunk + meta.variantcaller, meta, normal_bcf] }
+    ch_normal_for_join = PREPROCESS_NORMAL.out.bcf
+        .map { meta, normal_bcf -> [[meta.patient, meta.match_id, meta.chunk, meta.variantcaller], meta, normal_bcf] }
+        .dump(tag: 'NORMAL_KEY', pretty: true)
+
+    ch_tumor_for_join = PREPROCESS_TUMOR.out.bcf
+        .map { meta, tumor_bcf -> [[meta.patient, meta.normal_id, meta.chunk, meta.variantcaller], meta, tumor_bcf] }
+        .dump(tag: 'TUMOR_KEY', pretty: true)
+
+    ch_vcf_for_callvariants = ch_normal_for_join
         .join(
-            PREPROCESS_TUMOR.out.bcf.map { meta, tumor_bcf -> [meta.id + meta.chunk + meta.variantcaller, meta, tumor_bcf] }
+            ch_tumor_for_join,
+            by: [0],
+            failOnMismatch: true,
+            failOnDuplicate: true,
         )
-        .map { _id, meta_normal, normal_bcf, _meta_tumor, tumor_bcf ->
-            [meta_normal, [normal_bcf, tumor_bcf]]
+        .combine(ch_scenario_file)
+        .map { _id, meta_normal, normal_bcf, _meta_tumor, tumor_bcf, _meta_scenario, scenario_file ->
+            [meta_normal, [normal_bcf, tumor_bcf], scenario_file, ["normal", "tumor"]]
         }
 
     VARLOCIRAPTOR_CALLVARIANTS(
-        ch_vcf_for_callvariants,
-        ch_scenario_file.map { it -> it[1] }.collect(),
-        Channel.value(["normal", "tumor"]),
+        ch_vcf_for_callvariants
     )
-
-    ch_versions = ch_versions.mix(VARLOCIRAPTOR_CALLVARIANTS.out.versions)
 
     //
     // SORT AND MERGE CALLED VARIANTS
@@ -224,20 +250,18 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     )
     ch_versions = ch_versions.mix(SORT_CALLED_CHUNKS.out.versions)
 
-    ch_sort_called_chunks_vcf = SORT_CALLED_CHUNKS.out.vcf
-            .branch {
-                single: val_num_chunks <= 1
-                multiple: val_num_chunks > 1
-            }
+    ch_sort_called_chunks_vcf = SORT_CALLED_CHUNKS.out.vcf.branch {
+        single: val_num_chunks <= 1
+        multiple: val_num_chunks > 1
+    }
 
-    ch_sort_called_chunks_tbi = SORT_CALLED_CHUNKS.out.tbi
-            .branch {
-                single: val_num_chunks <= 1
-                multiple: val_num_chunks > 1
-            }
+    ch_sort_called_chunks_tbi = SORT_CALLED_CHUNKS.out.tbi.branch {
+        single: val_num_chunks <= 1
+        multiple: val_num_chunks > 1
+    }
 
     ch_vcf_tbi_chunks = ch_sort_called_chunks_vcf.multiple
-        .join(ch_sort_called_chunks_tbi.multiple, failOnMismatch: true, failOnDuplicate: true)
+        .join(ch_sort_called_chunks_tbi.multiple, by: 0, failOnMismatch: true, failOnDuplicate: true)
         .map { meta, vcf, tbi ->
             [meta - meta.subMap("chunk"), vcf, tbi]
         }
@@ -247,8 +271,14 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     ch_versions = ch_versions.mix(CONCAT_CALLED_CHUNKS.out.versions)
 
+    ch_final_vcf = ch_sort_called_chunks_vcf.single.mix(CONCAT_CALLED_CHUNKS.out.vcf)
+
+    SORT_FINAL_VCF(ch_final_vcf)
+
+    ch_versions = ch_versions.mix(SORT_FINAL_VCF.out.versions)
+
     emit:
-    vcf      = ch_sort_called_chunks_vcf.single.mix(CONCAT_CALLED_CHUNKS.out.vcf)
-    tbi      = ch_sort_called_chunks_tbi.single.mix(CONCAT_CALLED_CHUNKS.out.tbi)
+    vcf      = SORT_FINAL_VCF.out.vcf
+    tbi      = SORT_FINAL_VCF.out.tbi
     versions = ch_versions
 }
