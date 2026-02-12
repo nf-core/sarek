@@ -30,7 +30,6 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         meta + [sex_string: (meta.sex == "XX" ? "female" : "male")]
     }
 
-    //TODO this seems suspicious but not the cause for the current resume issues as I am only testing with one sample
     FILL_SCENARIO_FILE(
         meta_map.combine(ch_scenario).map { meta, scenario_file -> [meta, scenario_file, [], meta] }
     )

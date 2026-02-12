@@ -22,7 +22,6 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
 
     meta_map = ch_cram.map { meta, _cram, _crai -> meta + [sex_string: (meta.sex == "XX" ? "female" : "male")] }
 
-    //TODO this seems suspicious but not the cause for the current resume issues as I am only testing with one sample?
     FILL_SCENARIO_FILE(
         meta_map.combine(ch_scenario).map { meta, scenario_file -> [meta, scenario_file, [], meta] }
     )
@@ -78,8 +77,6 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
                 fasta_fai,
             ]
         }
-
-    ch_input_preprocess_chunked.dump(pretty: true, tag: "cram_alignment")
 
     VARLOCIRAPTOR_PREPROCESS(
         ch_input_preprocess_chunked
