@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#2087](https://github.com/nf-core/sarek/pull/2087) - Add `bam` as output format for parabricks/fq2bam, add multi lane support
+
 ### Changed
 
 - [#2055](https://github.com/nf-core/sarek/pull/2055) - Sort final vcf in varlociraptor sbwfs and update varlociraptor
@@ -39,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Changed
 
 - [#2055](https://github.com/nf-core/sarek/pull/2055) - Update varlociraptor to use only one input channel, swap to topics
+- [#2087](https://github.com/nf-core/sarek/pull/2087) - Move parabricks config into its own, adhere to strict syntax, swap to topics
 - [#2138](https://github.com/nf-core/sarek/pull/2138) - Update nf-core subworkflows plus related modules (bcftools, snpeff) to strict syntax
 - [#2139](https://github.com/nf-core/sarek/pull/2139) - Back to dev (3.9.0dev)
 
