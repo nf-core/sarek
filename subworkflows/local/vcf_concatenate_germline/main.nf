@@ -7,7 +7,6 @@ include { ADD_INFO_TO_VCF                                } from '../../../module
 include { BCFTOOLS_CONCAT as GERMLINE_VCFS_CONCAT        } from '../../../modules/nf-core/bcftools/concat'
 include { BCFTOOLS_SORT as GERMLINE_VCFS_CONCAT_SORT     } from '../../../modules/nf-core/bcftools/sort'
 include { TABIX_BGZIPTABIX as TABIX_EXT_VCF              } from '../../../modules/nf-core/tabix/bgziptabix'
-include { TABIX_TABIX as TABIX_GERMLINE_VCFS_CONCAT_SORT } from '../../../modules/nf-core/tabix/tabix'
 
 workflow CONCATENATE_GERMLINE_VCFS {
     take:
@@ -21,17 +20,16 @@ workflow CONCATENATE_GERMLINE_VCFS {
     TABIX_EXT_VCF(ADD_INFO_TO_VCF.out.vcf)
 
     // Gather vcfs and vcf-tbis for concatenating germline-vcfs
-    germline_vcfs_with_tbis = TABIX_EXT_VCF.out.gz_tbi.groupTuple()
+    germline_vcfs_with_tbis = TABIX_EXT_VCF.out.gz_index.groupTuple()
 
     GERMLINE_VCFS_CONCAT(germline_vcfs_with_tbis)
     GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT.out.vcf)
 
     // Gather versions of all tools used
     versions = versions.mix(ADD_INFO_TO_VCF.out.versions)
-    versions = versions.mix(TABIX_EXT_VCF.out.versions)
 
     emit:
-    vcfs = GERMLINE_VCFS_CONCAT_SORT.out.vcf // concatenated vcfs
-    tbis = GERMLINE_VCFS_CONCAT_SORT.out.tbi // matching tbis
+    vcfs     = GERMLINE_VCFS_CONCAT_SORT.out.vcf // concatenated vcfs
+    tbis     = GERMLINE_VCFS_CONCAT_SORT.out.tbi // matching tbis
     versions // channel: [ versions.yml ]
 }
