@@ -50,7 +50,7 @@ workflow CONSENSUS {
                             def sorted_pairs = vcf_caller_pairs.sort { a, b -> a[0].name <=> b[0].name }
                             def sorted_vcfs = sorted_pairs.collect { pair -> pair[0] }
                             def callers = sorted_pairs.collect { pair -> pair[1] }
-                            [meta + [callers: callers], sorted_vcfs, tbis]
+                            [meta + [callers: callers], sorted_vcfs, tbis, [], [], []]
                         }
 
 
