@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#2087](https://github.com/nf-core/sarek/pull/2087) - Add `bam` as output format for parabricks/fq2bam, add multi lane support
+
 ### Changed
 
 ### Fixed
@@ -31,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Changed
 
+- [#2087](https://github.com/nf-core/sarek/pull/2087) - Move parabricks config into its own, adhere to strict syntax, swap to topics
 - [#2139](https://github.com/nf-core/sarek/pull/2139) - Back to dev (3.9.0dev)
 
 #### Fixed
@@ -77,7 +80,6 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 
 ### Added
 
-- [#2087](https://github.com/nf-core/sarek/pull/2087) - Add `bam` as output format for parabricks/fq2bam
 - [#2092](https://github.com/nf-core/sarek/pull/2092) - Add support for VEP Condel plugin to calculate Consensus Deleteriousness scores for missense mutations
 - [#2093](https://github.com/nf-core/sarek/pull/2093) - Add support for VEP Mastermind plugin to retrieve citation counts from Mastermind Genomic Search Engine
 - [#2094](https://github.com/nf-core/sarek/pull/2094) - Add support for VEP Phenotypes plugin to retrieve overlapping phenotype information from Ensembl databases
@@ -132,7 +134,6 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 #### Changed
 
 - [#2076](https://github.com/nf-core/sarek/pull/2076) - Back to Dev
-- [#2087](https://github.com/nf-core/sarek/pull/2087) - Move parabricks config into its own, fix some language server stuff
 - [#2098](https://github.com/nf-core/sarek/pull/2098) - Starting workflow output migration with multiqc
 - [#2101](https://github.com/nf-core/sarek/pull/2101) - Prepare release 3.8.0
 - [#2126](https://github.com/nf-core/sarek/pull/2126) - Start versions migration to topics
