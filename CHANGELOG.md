@@ -11,14 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [#2055](https://github.com/nf-core/sarek/pull/2055) - Sort final vcf in varlociraptor sbwfs and update varlociraptor
+
 ### Fixed
 
 ### Removed
 
 ### Dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| varlociraptor | 8.7.4       | 8.9.3       |
+| yte           | 1.9.0       | 1.9.4       |
 
 ### Parameters
 
@@ -31,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Changed
 
+- [#2055](https://github.com/nf-core/sarek/pull/2055) - Update varlociraptor to use only one input channel, swap to topics
 - [#2139](https://github.com/nf-core/sarek/pull/2139) - Back to dev (3.9.0dev)
 
 #### Fixed
@@ -204,7 +209,6 @@ This release includes a bump to Nextflow 25.10.2.
 ### Changed
 
 - [#2045](https://github.com/nf-core/sarek/pull/2045) - Propagate fastp shard naming if exists through BBSplit to ensure unique naming in Markduplicates
-- [#2055](https://github.com/nf-core/sarek/pull/2055) - Sort final vcf in varlociraptor sbwfs and update varlociraptor
 - [#2065](https://github.com/nf-core/sarek/pull/2065) - Bump minimal Nextflow version to 25.10.2
 
 ### Fixed
@@ -216,11 +220,9 @@ This release includes a bump to Nextflow 25.10.2.
 
 ### Dependencies
 
-| Dependency    | Old version | New version |
-| ------------- | ----------- | ----------- |
-| nf-schema     | 2.4.2       | 2.6.1       |
-| varlociraptor | 8.7.4       | 8.9.3       |
-| yte           | 1.9.0       | 1.9.4       |
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| nf-schema  | 2.4.2       | 2.6.1       |
 
 ### Parameters
 
@@ -241,7 +243,6 @@ This release includes a bump to Nextflow 25.10.2.
 - [#2041](https://github.com/nf-core/sarek/pull/2041) - Back to dev
 - [#2043](https://github.com/nf-core/sarek/pull/2043) - Refactor postvariantcalling and split out varlociraptor from other options
 - [#2048](https://github.com/nf-core/sarek/pull/2048) - No null value for snpeff_cache and vep_cache in tests
-- [#2055](https://github.com/nf-core/sarek/pull/2055) - Sort final vcf in varlociraptor sbwfs and update varlociraptor to use only one input channel
 - [#2058](https://github.com/nf-core/sarek/pull/2058) - Template update for nf-core/tools v3.5.1
 - [#2080](https://github.com/nf-core/sarek/pull/2080) - Improve test suite and capture stdout/err logs more efficiently
 
