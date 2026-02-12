@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [#2138](https://github.com/nf-core/sarek/pull/2138) - Update bcftools
+
 ### Fixed
 
 ### Removed
@@ -19,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+| bcftools   | 1.21        | 1.22        |
 
 ### Parameters
 
@@ -31,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Changed
 
+- [#2138](https://github.com/nf-core/sarek/pull/2138) - Update nf-core subworkflows plus related modules (bcftools, snpeff) to strict syntax
 - [#2139](https://github.com/nf-core/sarek/pull/2139) - Back to dev (3.9.0dev)
 
 #### Fixed
