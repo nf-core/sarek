@@ -91,11 +91,13 @@
                     "bcftools": 1.21,
                     "svdb": "2.8.2"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIP_TIDDIT_SV": {
                     "tabix": 1.21
@@ -722,11 +724,13 @@
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIP_TIDDIT_SV": {
                     "tabix": 1.21
@@ -1214,11 +1218,13 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIP_TIDDIT_SV": {
                     "tabix": 1.21

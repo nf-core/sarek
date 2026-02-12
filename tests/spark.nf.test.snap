@@ -43,11 +43,13 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
@@ -272,11 +274,13 @@
                 "INDEX_MARKDUPLICATES": {
                     "samtools": 1.21
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [

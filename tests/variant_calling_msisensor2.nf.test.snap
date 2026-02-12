@@ -6,8 +6,9 @@
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "UNTAR_MSISENSOR2_MODELS": {
                     "untar": 1.34
@@ -97,8 +98,9 @@
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "UNTAR_MSISENSOR2_MODELS": {
                     "untar": 1.34
@@ -171,11 +173,13 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT":  {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "UNTAR_MSISENSOR2_MODELS": {
                     "untar": 1.34
