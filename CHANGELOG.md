@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [#2055](https://github.com/nf-core/sarek/pull/2055) - Sort final vcf in varlociraptor sbwfs and update varlociraptor
 - [#2138](https://github.com/nf-core/sarek/pull/2138) - Update bcftools and snpeff
 
 ### Fixed
@@ -19,10 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
-| bcftools   | 1.21        | 1.22        |
-| snpeff     | 5.3a        | 5.4a        |
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| bcftools      | 1.21        | 1.22        |
+| snpeff        | 5.3a        | 5.4a        |
+| varlociraptor | 8.7.4       | 8.9.3       |
+| yte           | 1.9.0       | 1.9.4       |
 
 ### Parameters
 
@@ -35,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Changed
 
+- [#2055](https://github.com/nf-core/sarek/pull/2055) - Update varlociraptor to use only one input channel, swap to topics
 - [#2138](https://github.com/nf-core/sarek/pull/2138) - Update nf-core subworkflows plus related modules (bcftools, snpeff) to strict syntax
 - [#2139](https://github.com/nf-core/sarek/pull/2139) - Back to dev (3.9.0dev)
 
@@ -208,6 +212,7 @@ This release includes a bump to Nextflow 25.10.2.
 
 ### Changed
 
+- [#2045](https://github.com/nf-core/sarek/pull/2045) - Propagate fastp shard naming if exists through BBSplit to ensure unique naming in Markduplicates
 - [#2065](https://github.com/nf-core/sarek/pull/2065) - Bump minimal Nextflow version to 25.10.2
 
 ### Fixed

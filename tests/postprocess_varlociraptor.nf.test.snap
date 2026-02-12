@@ -1,13 +1,13 @@
 {
     "-profile test --tools strelka,varlociraptor --input recalibrated_somatic.csv": {
         "content": [
-            149,
+            151,
             {
                 "ALIGNMENTPROPERTIES_NORMAL": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.3"
                 },
                 "ALIGNMENTPROPERTIES_TUMOR": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.3"
                 },
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.22
@@ -19,7 +19,7 @@
                     "gawk": "5.3.0"
                 },
                 "FILL_SCENARIO_FILE": {
-                    "yte": "1.9.0"
+                    "yte": "1.9.4"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
@@ -43,19 +43,22 @@
                     "mosdepth": "0.3.10"
                 },
                 "PREPROCESS_NORMAL": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.3"
                 },
                 "PREPROCESS_TUMOR": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.3"
                 },
                 "RBT_VCFSPLIT": {
-                    "Rust-Bio-Tools": "0.42.2"
+                    "rbt": "0.42.2"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
                 "SORT_CALLED_CHUNKS": {
                     "bcftools": 1.22
+                },
+                "SORT_FINAL_VCF": {
+                    "bcftools": 1.21
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -76,13 +79,13 @@
                     "tabix": 1.21
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.3"
                 },
                 "VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.3"
                 },
                 "VARLOCIRAPTOR_PREPROCESS": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.3"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -307,7 +310,7 @@
     },
     "-profile test --tools mutect2,varlociraptor --input recalibrated_tumoronly.csv": {
         "content": [
-            71,
+            72,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.22
@@ -322,7 +325,7 @@
                     "gawk": "5.3.0"
                 },
                 "FILL_SCENARIO_FILE": {
-                    "yte": "1.9.0"
+                    "yte": "1.9.4"
                 },
                 "FILTERMUTECTCALLS": {
                     "gatk4": "4.6.1.0"
@@ -352,13 +355,16 @@
                     "gatk4": "4.6.1.0"
                 },
                 "RBT_VCFSPLIT": {
-                    "Rust-Bio-Tools": "0.42.2"
+                    "rbt": "0.42.2"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
                 "SORT_CALLED_CHUNKS": {
                     "bcftools": 1.22
+                },
+                "SORT_FINAL_VCF": {
+                    "bcftools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "tabix": 1.21
@@ -367,13 +373,13 @@
                     "tabix": 1.21
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.3"
                 },
                 "VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.3"
                 },
                 "VARLOCIRAPTOR_PREPROCESS": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.3"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -553,7 +559,7 @@
     },
     "-profile test --tools strelka,varlociraptor --input recalibrated_germline.csv": {
         "content": [
-            66,
+            67,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.22
@@ -565,7 +571,7 @@
                     "gawk": "5.3.0"
                 },
                 "FILL_SCENARIO_FILE": {
-                    "yte": "1.9.0"
+                    "yte": "1.9.4"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
@@ -580,13 +586,16 @@
                     "mosdepth": "0.3.10"
                 },
                 "RBT_VCFSPLIT": {
-                    "Rust-Bio-Tools": "0.42.2"
+                    "rbt": "0.42.2"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
                 "SORT_CALLED_CHUNKS": {
                     "bcftools": 1.22
+                },
+                "SORT_FINAL_VCF": {
+                    "bcftools": 1.21
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -601,13 +610,13 @@
                     "tabix": 1.21
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.3"
                 },
                 "VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.3"
                 },
                 "VARLOCIRAPTOR_PREPROCESS": {
-                    "varlociraptor": "8.7.4"
+                    "varlociraptor": "8.9.3"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
