@@ -5,6 +5,72 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
+| Params | status |
+| ------ | ------ |
+
+### Developer section
+
+#### Added
+
+#### Changed
+
+- [#2139](https://github.com/nf-core/sarek/pull/2139) - Back to dev (3.9.0dev)
+
+#### Fixed
+
+#### Removed
+
+## [3.8.1](https://github.com/nf-core/sarek/releases/tag/3.8.1) - Laitaure
+
+### Added
+
+### Changed
+
+### Fixed
+
+- [#2128](https://github.com/nf-core/sarek/pull/2128) - Fix `bcftools concat` failing on Strelka somatic VCFs with non-contiguous chromosome blocks by adding `--allow-overlaps`
+
+### Removed
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
+| Params | status |
+| ------ | ------ |
+
+### Developer section
+
+#### Added
+
+#### Changed
+
+- [#2134](https://github.com/nf-core/sarek/pull/2134) - Back to dev (3.9.0dev)
+
+#### Fixed
+
+#### Removed
+
 ## [3.8.0](https://github.com/nf-core/sarek/releases/tag/3.8.0) - Sitojaure
 
 A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
@@ -30,6 +96,7 @@ A mountain cabin near the Sami settlement between Saltoluokta and Kvikkjokk.
 - [#2099](https://github.com/nf-core/sarek/pull/2099) - Remove deprecated `msisensor2_scan` parameter from schema and igenomes config to fix `nf-core pipelines schema build` validation error
 - [#2100](https://github.com/nf-core/sarek/pull/2100) - Add missing citations for Condel, Mastermind, goleft indexcov, NGSCheckMate, SPRING, and vcflib to CITATIONS.md
 - [#2109](https://github.com/nf-core/sarek/pull/2109) - Fix consensus calling to capture all variants from all callers by using `sites.txt` output; adds `CALLERS` and `NCALLERS` INFO fields to consensus VCF
+- [#2113](https://github.com/nf-core/sarek/pull/2113) - Fix regex patterns for `dbnsfp_tbi`, `spliceai_snv`, and `spliceai_snv_tbi` parameter validation
 
 ### Removed
 
@@ -193,7 +260,6 @@ This patch release includes a bump to Nextflow 25.04.8.
 
 ### Fixed
 
-- [#2050](https://github.com/nf-core/sarek/issues/2050) - Fix regex patterns for `dbnsfp_tbi`, `spliceai_snv`, and `spliceai_snv_tbi` parameter validation
 - [2029](https://github.com/nf-core/sarek/pull/2029) - Correct intervals channel for parabricks
 
 ### Removed
