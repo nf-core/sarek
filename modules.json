@@ -508,12 +508,12 @@
                     },
                     "snpeff/download": {
                         "branch": "master",
-                        "git_sha": "b966311b31f51b65e87f124d08f948fec019787d",
+                        "git_sha": "ab50ae0a7c0714bf8b13918c1b7af732002c244d",
                         "installed_by": ["modules"]
                     },
                     "snpeff/snpeff": {
                         "branch": "master",
-                        "git_sha": "b966311b31f51b65e87f124d08f948fec019787d",
+                        "git_sha": "51d2d20973eca80048a9490339e8b421db122908",
                         "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "snpsift/annmem": {
@@ -548,7 +548,7 @@
                     },
                     "tabix/bgziptabix": {
                         "branch": "master",
-                        "git_sha": "f2cfcf9d3f6a2d123e6c44aefa788aa232204a7a",
+                        "git_sha": "91a902fb32d6717da38a9694eb4ad3fade53a8db",
                         "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "tabix/tabix": {
@@ -627,7 +627,7 @@
                     },
                     "vcf_annotate_snpeff": {
                         "branch": "master",
-                        "git_sha": "b966311b31f51b65e87f124d08f948fec019787d",
+                        "git_sha": "23004c9c64013c90b7d835621ef4cdeff19a1427",
                         "installed_by": ["subworkflows"]
                     }
                 }

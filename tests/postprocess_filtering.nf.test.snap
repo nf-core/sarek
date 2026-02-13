@@ -31,16 +31,20 @@
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_VC_FREEBAYES": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_VC_FREEBAYES_FILT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"

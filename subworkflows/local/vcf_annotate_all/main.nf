@@ -50,7 +50,6 @@ workflow VCF_ANNOTATE_ALL {
 
         reports = reports.mix(VCF_ANNOTATE_SNPEFF.out.reports.map { _meta, reports_ -> [reports_] })
         vcf_ann = vcf_ann.mix(VCF_ANNOTATE_SNPEFF.out.vcf_tbi)
-        versions = versions.mix(VCF_ANNOTATE_SNPEFF.out.versions)
     }
 
     if (tools.split(',').contains('merge')) {
