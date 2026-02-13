@@ -27,11 +27,10 @@ workflow VCF_ANNOTATE_ALL {
     snpsift_db                  // channel: [[databases], [tbis], [vardbs], [fields], [prefixes]]
 
     main:
-    reports = Channel.empty()
-    vcf_ann = Channel.empty()
-    tab_ann = Channel.empty()
-    json_ann = Channel.empty()
-    versions = Channel.empty()
+    vcf_ann = channel.empty()
+    tab_ann = channel.empty()
+    json_ann = channel.empty()
+    versions = channel.empty()
 
     if (tools.split(',').contains('bcfann')) {
         BCFTOOLS_ANNOTATE(
@@ -48,7 +47,6 @@ workflow VCF_ANNOTATE_ALL {
     if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff')) {
         VCF_ANNOTATE_SNPEFF(vcf, snpeff_db, snpeff_cache)
 
-        reports = reports.mix(VCF_ANNOTATE_SNPEFF.out.reports.map { _meta, reports_ -> [reports_] })
         vcf_ann = vcf_ann.mix(VCF_ANNOTATE_SNPEFF.out.vcf_tbi)
     }
 
@@ -71,7 +69,7 @@ workflow VCF_ANNOTATE_ALL {
     // SnpSift runs on all final annotated outputs
     // If no other annotators were used, fall back to original vcf
     if (tools.split(',').contains('snpsift')) {
-        def has_other_annotators = ['merge', 'snpeff', 'vep', 'bcfann'].any { tools.split(',').contains(it) }
+        def has_other_annotators = ['merge', 'snpeff', 'vep', 'bcfann'].any { tool -> tools.split(',').contains(tool) }
         def snpsift_input = tools.split(',').contains('merge')
             ? VCF_ANNOTATE_MERGE.out.vcf.map { meta, vcf_ -> [meta, vcf_, []] }
             : (has_other_annotators ? vcf_ann.map { meta, vcf_, _tbi -> [meta, vcf_, []] } : vcf.map { meta, vcf_ -> [meta, vcf_, []] })
@@ -84,6 +82,5 @@ workflow VCF_ANNOTATE_ALL {
     vcf_ann  // channel: [ val(meta), vcf.gz, vcf.gz.tbi ]
     tab_ann
     json_ann
-    reports  //    path: *.html
     versions //    path: versions.yml
 }
