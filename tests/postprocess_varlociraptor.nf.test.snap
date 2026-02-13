@@ -75,12 +75,10 @@
                     "tabix": "1.21"
                 },
                 "TABIX_GERMLINE": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "tabix": 1.21
                 },
                 "TABIX_SOMATIC": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "tabix": 1.21
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
                     "varlociraptor": "8.9.3"
@@ -615,8 +613,7 @@
                     "tabix": "1.21"
                 },
                 "TABIX_GERMLINE": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "tabix": 1.21
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
                     "varlociraptor": "8.9.3"
