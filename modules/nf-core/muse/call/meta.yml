@@ -45,11 +45,6 @@ input:
         description: Index file for the normal BAM file
         pattern: "*.bai"
         ontologies: []
-  - - meta2:
-        type: map
-        description: |
-          Groovy Map containing reference information.
-          e.g. `[ id:'test' ]`
     - reference:
         type: file
         description: reference genome file
@@ -67,13 +62,27 @@ output:
           description: position-specific summary statistics
           pattern: "*.MuSE.txt"
           ontologies: []
+  versions_muse:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - muse:
+          type: string
+          description: The tool name
+      - "MuSE --version | sed -e 's/MuSE, version //g' | sed -e 's/MuSE v//g'":
+          type: string
+          description: The command used to generate the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - muse:
+          type: string
+          description: The tool name
+      - "MuSE --version | sed -e 's/MuSE, version //g' | sed -e 's/MuSE v//g'":
+          type: string
+          description: The command used to generate the version of the tool
 authors:
   - "@famosab"
 maintainers:
