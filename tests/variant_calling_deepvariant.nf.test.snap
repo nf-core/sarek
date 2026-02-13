@@ -327,7 +327,9 @@
                 "variant_calling/deepvariant/test/test.deepvariant.vcf.gz",
                 "variant_calling/deepvariant/test/test.deepvariant.vcf.gz.tbi"
             ],
-            "No warnings"
+            [
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -477,7 +479,9 @@
                 "variant_calling/deepvariant/test/test.deepvariant.vcf.gz",
                 "variant_calling/deepvariant/test/test.deepvariant.vcf.gz.tbi"
             ],
-            "No warnings"
+            [
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",

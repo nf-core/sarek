@@ -146,7 +146,9 @@
                 "variant_calling/muse/sample4_vs_sample3/sample4_vs_sample3.muse.vcf.gz",
                 "variant_calling/muse/sample4_vs_sample3/sample4_vs_sample3.muse.vcf.gz.tbi"
             ],
-            "No warnings"
+            [
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",

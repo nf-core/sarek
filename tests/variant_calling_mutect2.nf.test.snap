@@ -757,7 +757,10 @@
             [
                 "sample2.mutect2.vcf.gz:md5,4a803cf2687fc368a8c4eef5e2fc8c9c"
             ],
-            "No warnings"
+            [
+                "WARN: If Mutect2 is specified without a germline resource, no filtering will be done.",
+                "WARN: No Panel-of-normal was specified for Mutect2."
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",

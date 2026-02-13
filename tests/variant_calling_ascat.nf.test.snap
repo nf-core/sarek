@@ -104,7 +104,10 @@
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourBAF_rawBAF.txt",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourLogR.txt"
             ],
-            "No warnings"
+            [
+                "WARN: No LogRCorrection performed in ASCAT. For LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files.",
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -362,7 +365,10 @@
             "No BAM files",
             "No CRAM files",
             "No VCF files",
-            "No warnings"
+            [
+                "WARN: No LogRCorrection performed in ASCAT. For LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files.",
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -505,7 +511,9 @@
             "No BAM files",
             "No CRAM files",
             "No VCF files",
-            "No warnings"
+            [
+                "WARN: No LogRCorrection performed in ASCAT. For LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files."
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",

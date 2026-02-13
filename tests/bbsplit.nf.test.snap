@@ -331,7 +331,7 @@
                 "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
                 "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
-                "test.strelka.variants.bcftools_stats.txt:md5,b6511034fcbf5c396ed035207b4aea41",
+                "test.strelka.variants.bcftools_stats.txt:md5,85d861e5509052878e2080742509ee9a",
                 "test.strelka.variants.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
@@ -347,9 +347,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-06T14:19:56.828989311"
+        "timestamp": "2026-02-13T11:03:28.914430392"
     },
     "-profile test --tools bbsplit,strelka --bbsplit_fasta_list -stub": {
         "content": [
@@ -631,9 +631,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-06T14:24:52.101250587"
+        "timestamp": "2026-02-13T11:07:56.944695096"
     },
     "-profile test --tools bbsplit --bbsplit_fasta_list (no prebuilt index)": {
         "content": [
@@ -866,8 +866,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-06T14:28:35.628964819"
+        "timestamp": "2026-02-13T11:11:58.593831195"
     }
 }
