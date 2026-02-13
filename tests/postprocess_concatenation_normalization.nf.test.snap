@@ -52,12 +52,10 @@
                     "tabix": "1.21"
                 },
                 "TABIX_VC_FREEBAYES": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "tabix": 1.21
                 },
                 "TABIX_VC_FREEBAYES_FILT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "tabix": 1.21
                 },
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"
@@ -376,12 +374,10 @@
                     "tabix": "1.21"
                 },
                 "TABIX_VC_FREEBAYES": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "tabix": 1.21
                 },
                 "TABIX_VC_FREEBAYES_FILT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "tabix": 1.21
                 },
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"

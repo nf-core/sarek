@@ -104,12 +104,10 @@
                     "tabix": "1.21"
                 },
                 "TABIX_VC_FREEBAYES": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "tabix": 1.21
                 },
                 "TABIX_VC_FREEBAYES_FILT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "tabix": 1.21
                 },
                 "TIDDIT_SV": {
                     "tiddit": "3.6.1"
@@ -740,12 +738,10 @@
                     "tabix": "1.21"
                 },
                 "TABIX_VC_FREEBAYES": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "tabix": 1.21
                 },
                 "TABIX_VC_FREEBAYES_FILT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "tabix": 1.21
                 },
                 "TIDDIT_SV": {
                     "tiddit": "3.6.1"
@@ -1237,12 +1233,10 @@
                     "tabix": "1.21"
                 },
                 "TABIX_VC_FREEBAYES": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "tabix": 1.21
                 },
                 "TABIX_VC_FREEBAYES_FILT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "tabix": 1.21
                 },
                 "TIDDIT_SV": {
                     "tiddit": "3.6.1"

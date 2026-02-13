@@ -37,8 +37,7 @@
                     "tabix": "1.21"
                 },
                 "TABIX_MUSE": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "tabix": 1.21
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -221,8 +220,7 @@
                     "tabix": "1.21"
                 },
                 "TABIX_MUSE": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "tabix": 1.21
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
