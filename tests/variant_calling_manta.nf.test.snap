@@ -117,7 +117,7 @@
                 "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
                 "samtools-stats-dp.txt:md5,41d36c1a8413d565788a1a364b467606",
                 "samtools_alignment_plot.txt:md5,35f8fd2a557568b2237193f46afbab5c",
-                "sample1.manta.diploid_sv.bcftools_stats.txt:md5,636109db283cbee4539786928c811893",
+                "sample1.manta.diploid_sv.bcftools_stats.txt:md5,87a4ba8afac640a148388f19b07c0fd1",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -135,9 +135,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T23:03:03.670841382"
+        "timestamp": "2026-02-13T09:33:09.703856268"
     },
     "-profile test --tools manta --no_intervals tumoronly": {
         "content": [
@@ -253,7 +253,7 @@
                 "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
                 "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
-                "sample2.manta.tumor_sv.bcftools_stats.txt:md5,9fbe26c75869000b526b59b454f76f6a",
+                "sample2.manta.tumor_sv.bcftools_stats.txt:md5,4e04bcf83ed4a43423537ba9d936d199",
                 "sample2.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
@@ -271,9 +271,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T23:08:29.995088195"
+        "timestamp": "2026-02-13T09:42:33.645112124"
     },
     "-profile test --tools manta --no_intervals somatic": {
         "content": [
@@ -415,9 +415,9 @@
                 "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
-                "sample3.manta.diploid_sv.bcftools_stats.txt:md5,36a838390faba81e3eabf5ac8a093a4a",
-                "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,f00cf810d34ef7e5c7980f7039bb4446",
-                "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,7af2ea2e84154ddf2a483b1bd1f0646c",
+                "sample3.manta.diploid_sv.bcftools_stats.txt:md5,0aadd225df3d7e27db02d4b307b8bc53",
+                "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,fee199fd5e430faacb16da073886acd5",
+                "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,ff10e8a7e1a86520b0048ec529388a10",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -446,9 +446,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T23:06:20.662942446"
+        "timestamp": "2026-02-13T09:39:49.771407205"
     },
     "-profile test --tools manta tumoronly": {
         "content": [
@@ -568,7 +568,7 @@
                 "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
                 "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
-                "sample2.manta.tumor_sv.bcftools_stats.txt:md5,9fbe26c75869000b526b59b454f76f6a",
+                "sample2.manta.tumor_sv.bcftools_stats.txt:md5,4e04bcf83ed4a43423537ba9d936d199",
                 "sample2.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
@@ -586,9 +586,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T23:07:26.563804504"
+        "timestamp": "2026-02-13T09:41:13.733438796"
     },
     "-profile test --tools manta --only_paired_variant_calling": {
         "content": [
@@ -762,10 +762,10 @@
                 "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
                 "samtools-stats-dp.txt:md5,b446a47b182d93a9e7e74f5f7c8d41c2",
                 "samtools_alignment_plot.txt:md5,7138a2d29f515993e1df8d745e27b757",
-                "sample1.manta.diploid_sv.bcftools_stats.txt:md5,636109db283cbee4539786928c811893",
-                "sample2.manta.tumor_sv.bcftools_stats.txt:md5,9fbe26c75869000b526b59b454f76f6a",
-                "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,f00cf810d34ef7e5c7980f7039bb4446",
-                "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,7af2ea2e84154ddf2a483b1bd1f0646c",
+                "sample1.manta.diploid_sv.bcftools_stats.txt:md5,87a4ba8afac640a148388f19b07c0fd1",
+                "sample2.manta.tumor_sv.bcftools_stats.txt:md5,4e04bcf83ed4a43423537ba9d936d199",
+                "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,fee199fd5e430faacb16da073886acd5",
+                "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,ff10e8a7e1a86520b0048ec529388a10",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -807,9 +807,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T23:01:59.085899814"
+        "timestamp": "2026-02-13T09:28:26.797562441"
     },
     "-profile test --tools manta somatic": {
         "content": [
@@ -955,9 +955,9 @@
                 "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
-                "sample3.manta.diploid_sv.bcftools_stats.txt:md5,36a838390faba81e3eabf5ac8a093a4a",
-                "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,f00cf810d34ef7e5c7980f7039bb4446",
-                "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,7af2ea2e84154ddf2a483b1bd1f0646c",
+                "sample3.manta.diploid_sv.bcftools_stats.txt:md5,0aadd225df3d7e27db02d4b307b8bc53",
+                "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,fee199fd5e430faacb16da073886acd5",
+                "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,ff10e8a7e1a86520b0048ec529388a10",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -986,9 +986,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T23:05:13.763910639"
+        "timestamp": "2026-02-13T09:37:53.492687333"
     },
     "-profile test --tools manta --no_intervals germline": {
         "content": [
@@ -1104,7 +1104,7 @@
                 "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
                 "samtools-stats-dp.txt:md5,41d36c1a8413d565788a1a364b467606",
                 "samtools_alignment_plot.txt:md5,35f8fd2a557568b2237193f46afbab5c",
-                "sample1.manta.diploid_sv.bcftools_stats.txt:md5,636109db283cbee4539786928c811893",
+                "sample1.manta.diploid_sv.bcftools_stats.txt:md5,87a4ba8afac640a148388f19b07c0fd1",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -1122,8 +1122,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T23:04:06.55406911"
+        "timestamp": "2026-02-13T09:35:42.824253616"
     }
 }

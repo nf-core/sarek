@@ -5,7 +5,7 @@
             {
                 "ASCAT": {
                     "alleleCounter": "4.3.0",
-                    "bioconductor-ascat": "3.2.0"
+                    "ascat": "3.2.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -13,7 +13,7 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 }
@@ -22,7 +22,44 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
                 "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
                 "no_intervals.bed.gz",
@@ -33,31 +70,17 @@
                 "reports",
                 "reports/mosdepth",
                 "reports/mosdepth/NA12878",
-                "reports/mosdepth/NA12878/NA12878.recal.global.dist.txt",
-                "reports/mosdepth/NA12878/NA12878.recal.per-base.bed.gz",
-                "reports/mosdepth/NA12878/NA12878.recal.per-base.bed.gz.csi",
-                "reports/mosdepth/NA12878/NA12878.recal.per-base.d4",
-                "reports/mosdepth/NA12878/NA12878.recal.quantized.bed.gz",
-                "reports/mosdepth/NA12878/NA12878.recal.quantized.bed.gz.csi",
-                "reports/mosdepth/NA12878/NA12878.recal.region.dist.txt",
+                "reports/mosdepth/NA12878/NA12878.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/NA12878/NA12878.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/NA12878/NA12878.recal.mosdepth.summary.txt",
                 "reports/mosdepth/NA12878/NA12878.recal.regions.bed.gz",
                 "reports/mosdepth/NA12878/NA12878.recal.regions.bed.gz.csi",
-                "reports/mosdepth/NA12878/NA12878.recal.summary.txt",
-                "reports/mosdepth/NA12878/NA12878.recal.thresholds.bed.gz",
-                "reports/mosdepth/NA12878/NA12878.recal.thresholds.bed.gz.csi",
                 "reports/mosdepth/NA12878_1X",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.global.dist.txt",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.bed.gz",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.bed.gz.csi",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.d4",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.quantized.bed.gz",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.quantized.bed.gz.csi",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.region.dist.txt",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.mosdepth.summary.txt",
                 "reports/mosdepth/NA12878_1X/NA12878_1X.recal.regions.bed.gz",
                 "reports/mosdepth/NA12878_1X/NA12878_1X.recal.regions.bed.gz.csi",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.summary.txt",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.thresholds.bed.gz",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.thresholds.bed.gz.csi",
                 "reports/samtools",
                 "reports/samtools/NA12878",
                 "reports/samtools/NA12878/NA12878.recal.cram.stats",
@@ -66,10 +89,8 @@
                 "variant_calling",
                 "variant_calling/ascat",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.after_correction.gc_rt.test.tumour.germline.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.after_correction.gc_rt.test.tumour.tumour.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.before_correction.test.tumour.germline.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.before_correction.test.tumour.tumour.png",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.before_correction.NA12878_1X_vs_NA12878.tumour.germline.png",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.before_correction.NA12878_1X_vs_NA12878.tumour.tumour.png",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.cnvs.txt",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.metrics.txt",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.purityploidy.txt",
@@ -77,20 +98,19 @@
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour.ASPCF.png",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour.sunrise.png",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_normalBAF.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_normalBAF_rawBAF.txt",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_normalLogR.txt",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourBAF.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourBAF_rawBAF.txt",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourLogR.txt"
             ],
-            [
-                "WARN: No LogRCorrection performed in ASCAT. For LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files.",
-                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
-            ]
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T22:02:07.62533634"
+        "timestamp": "2026-02-13T09:38:14.296249104"
     },
     "-profile test --tools ascat --input ascat_somatic.csv -stub": {
         "content": [
@@ -98,7 +118,7 @@
             {
                 "ASCAT": {
                     "alleleCounter": "4.3.0",
-                    "bioconductor-ascat": "3.2.0"
+                    "ascat": "3.2.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -106,7 +126,7 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 }
@@ -115,7 +135,44 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
                 "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
                 "no_intervals.bed.gz",
@@ -126,31 +183,17 @@
                 "reports",
                 "reports/mosdepth",
                 "reports/mosdepth/NA12878",
-                "reports/mosdepth/NA12878/NA12878.recal.global.dist.txt",
-                "reports/mosdepth/NA12878/NA12878.recal.per-base.bed.gz",
-                "reports/mosdepth/NA12878/NA12878.recal.per-base.bed.gz.csi",
-                "reports/mosdepth/NA12878/NA12878.recal.per-base.d4",
-                "reports/mosdepth/NA12878/NA12878.recal.quantized.bed.gz",
-                "reports/mosdepth/NA12878/NA12878.recal.quantized.bed.gz.csi",
-                "reports/mosdepth/NA12878/NA12878.recal.region.dist.txt",
+                "reports/mosdepth/NA12878/NA12878.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/NA12878/NA12878.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/NA12878/NA12878.recal.mosdepth.summary.txt",
                 "reports/mosdepth/NA12878/NA12878.recal.regions.bed.gz",
                 "reports/mosdepth/NA12878/NA12878.recal.regions.bed.gz.csi",
-                "reports/mosdepth/NA12878/NA12878.recal.summary.txt",
-                "reports/mosdepth/NA12878/NA12878.recal.thresholds.bed.gz",
-                "reports/mosdepth/NA12878/NA12878.recal.thresholds.bed.gz.csi",
                 "reports/mosdepth/NA12878_1X",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.global.dist.txt",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.bed.gz",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.bed.gz.csi",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.per-base.d4",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.quantized.bed.gz",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.quantized.bed.gz.csi",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.region.dist.txt",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.mosdepth.summary.txt",
                 "reports/mosdepth/NA12878_1X/NA12878_1X.recal.regions.bed.gz",
                 "reports/mosdepth/NA12878_1X/NA12878_1X.recal.regions.bed.gz.csi",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.summary.txt",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.thresholds.bed.gz",
-                "reports/mosdepth/NA12878_1X/NA12878_1X.recal.thresholds.bed.gz.csi",
                 "reports/samtools",
                 "reports/samtools/NA12878",
                 "reports/samtools/NA12878/NA12878.recal.cram.stats",
@@ -159,10 +202,8 @@
                 "variant_calling",
                 "variant_calling/ascat",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.after_correction.gc_rt.test.tumour.germline.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.after_correction.gc_rt.test.tumour.tumour.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.before_correction.test.tumour.germline.png",
-                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.before_correction.test.tumour.tumour.png",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.before_correction.NA12878_1X_vs_NA12878.tumour.germline.png",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.before_correction.NA12878_1X_vs_NA12878.tumour.tumour.png",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.cnvs.txt",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.metrics.txt",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.purityploidy.txt",
@@ -170,20 +211,19 @@
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour.ASPCF.png",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour.sunrise.png",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_normalBAF.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_normalBAF_rawBAF.txt",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_normalLogR.txt",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourBAF.txt",
+                "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourBAF_rawBAF.txt",
                 "variant_calling/ascat/NA12878_1X_vs_NA12878/NA12878_1X_vs_NA12878.tumour_tumourLogR.txt"
             ],
-            [
-                "WARN: No LogRCorrection performed in ASCAT. For LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files.",
-                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
-            ]
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T22:01:28.930546109"
+        "timestamp": "2026-02-13T09:37:11.045833414"
     },
     "-profile test --tools ascat --input ascat_somatic.csv --only_paired_variant_calling including gc and rt": {
         "content": [
@@ -199,7 +239,7 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 }
@@ -344,7 +384,7 @@
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
                 },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED":  {
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 }
@@ -465,14 +505,12 @@
             "No BAM files",
             "No CRAM files",
             "No VCF files",
-            [
-                "WARN: No LogRCorrection performed in ASCAT. For LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files."
-            ]
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T22:00:03.974713999"
+        "timestamp": "2026-02-13T09:35:07.675237059"
     }
 }

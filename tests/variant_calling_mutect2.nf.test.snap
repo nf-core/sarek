@@ -353,7 +353,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
-                "sample4_vs_sample3.mutect2.bcftools_stats.txt:md5,65bc65858d3dfa1d8913119850626823",
+                "sample4_vs_sample3.mutect2.bcftools_stats.txt:md5,472a0c4f30fc162eae95b1cd9574074e",
                 "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
                 "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
                 "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
@@ -377,16 +377,13 @@
             [
                 "sample4_vs_sample3.mutect2.vcf.gz:md5,f2c46d0dae1b1a59180c0b9e595993d2"
             ],
-            [
-                "WARN: If Mutect2 is specified without a germline resource, no filtering will be done.",
-                "WARN: No Panel-of-normal was specified for Mutect2."
-            ]
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T23:23:51.624986383"
+        "timestamp": "2026-02-13T09:40:00.129516551"
     },
     "-profile test --tools mutect2 somatic --no_intervals": {
         "content": [
@@ -551,7 +548,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
-                "sample4_vs_sample3.mutect2.bcftools_stats.txt:md5,65bc65858d3dfa1d8913119850626823",
+                "sample4_vs_sample3.mutect2.bcftools_stats.txt:md5,472a0c4f30fc162eae95b1cd9574074e",
                 "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
                 "sample3.recal.mosdepth.summary.txt:md5,d2775eb102acc5950f7f53883dcb503d",
                 "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
@@ -569,16 +566,13 @@
             [
                 "sample4_vs_sample3.mutect2.vcf.gz:md5,f2c46d0dae1b1a59180c0b9e595993d2"
             ],
-            [
-                "WARN: If Mutect2 is specified without a germline resource, no filtering will be done.",
-                "WARN: No Panel-of-normal was specified for Mutect2."
-            ]
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T23:27:38.999681674"
+        "timestamp": "2026-02-13T09:44:47.271890352"
     },
     "-profile test --tools mutect2 tumoronly": {
         "content": [
@@ -746,7 +740,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
-                "sample2.mutect2.bcftools_stats.txt:md5,c275ee76762a37053d43f4e290485af8",
+                "sample2.mutect2.bcftools_stats.txt:md5,c6fd50ef78eaef4a99d6e09f72e33f09",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.region.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.summary.txt:md5,b0b47739dcafeeb1a9e6218b8abca1e0",
@@ -763,15 +757,12 @@
             [
                 "sample2.mutect2.vcf.gz:md5,4a803cf2687fc368a8c4eef5e2fc8c9c"
             ],
-            [
-                "WARN: If Mutect2 is specified without a germline resource, no filtering will be done.",
-                "WARN: No Panel-of-normal was specified for Mutect2."
-            ]
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T23:30:58.725141411"
+        "timestamp": "2026-02-13T09:48:53.171286523"
     }
 }

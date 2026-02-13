@@ -100,7 +100,8 @@
                     "tabix": "1.21"
                 },
                 "TABIX_BGZIP_TIDDIT_SV": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_VC_FREEBAYES": {
                     "tabix": 1.21
@@ -525,15 +526,15 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,13dab249f7bef935dfef234299550db8",
                 "samtools_alignment_plot.txt:md5,44149e0c5cc4bfa58242824b300219a2",
-                "test.bcftools.bcftools_stats.txt:md5,4b2997064fb500f090639edca1ccaa6e",
-                "test.deepvariant.bcftools_stats.txt:md5,61ab450ed778088b9c879b8dcbbb9db8",
-                "test.freebayes.filtered.bcftools_stats.txt:md5,dde124ceaf6f109cd274b837b950096b",
-                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,6f942caec2f4f02c69e1216226fa44a9",
-                "test.strelka.variants.bcftools_stats.txt:md5,2613827870dd789fe602a8a3b739b7f2",
-                "test2_vs_test.strelka.somatic_indels.bcftools_stats.txt:md5,5e8f9a8fdbc765ced736d0c8c7dd3a52",
-                "test2_vs_test.strelka.somatic_snvs.bcftools_stats.txt:md5,edb7763fad7b6f825e47e01ffa70adbc",
-                "test.tiddit.bcftools_stats.txt:md5,2b96446a75e1ec5d5f1310a934c0dd4c",
-                "test2_vs_test.tiddit_sv_merge.bcftools_stats.txt:md5,a6c45b2a2b7d8844e5536deee5c77af5",
+                "test.bcftools.bcftools_stats.txt:md5,8b6daa7c39d37aa0c31f42b9d03ff4f3",
+                "test.deepvariant.bcftools_stats.txt:md5,582b3d1055687ba303f90f2904d37064",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,fee267bbcaa7003ec8b643b1bd87bb74",
+                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,ffd86b2e7e567174cb2c9c035f87f76e",
+                "test.strelka.variants.bcftools_stats.txt:md5,7796f8d2d7e6ef2243e8ae64f1941186",
+                "test2_vs_test.strelka.somatic_indels.bcftools_stats.txt:md5,0967129c8d692e7d47bc45ec7f02aef0",
+                "test2_vs_test.strelka.somatic_snvs.bcftools_stats.txt:md5,06b8f8645d3225d51cc1f2a41245f22a",
+                "test.tiddit.bcftools_stats.txt:md5,8d4c25bd89c4e7561e6b56f30fc1dba6",
+                "test2_vs_test.tiddit_sv_merge.bcftools_stats.txt:md5,8c1c9e35acbc0a035ace84145263d65b",
                 "test.md.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test.md.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test.md.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
@@ -643,7 +644,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-08T16:27:17.419740053"
+        "timestamp": "2026-02-13T09:35:24.06546146"
     },
     "-profile test --input tests/csv/3.0/fastq_single.csv --tools cnvkit,deepvariant,freebayes,mpileup,strelka,tiddit": {
         "content": [
@@ -733,7 +734,8 @@
                     "tabix": "1.21"
                 },
                 "TABIX_BGZIP_TIDDIT_SV": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_VC_FREEBAYES": {
                     "tabix": 1.21
@@ -1070,11 +1072,11 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,ae7954084b2cd708c5e7369606bf4208",
                 "samtools_alignment_plot.txt:md5,438e719bf574a46726dbd2e0f1442e42",
-                "test.bcftools.bcftools_stats.txt:md5,4b2997064fb500f090639edca1ccaa6e",
-                "test.deepvariant.bcftools_stats.txt:md5,61ab450ed778088b9c879b8dcbbb9db8",
-                "test.freebayes.filtered.bcftools_stats.txt:md5,c6b6e221504c69ee75b209f4a0b2506a",
-                "test.strelka.variants.bcftools_stats.txt:md5,2613827870dd789fe602a8a3b739b7f2",
-                "test.tiddit.bcftools_stats.txt:md5,2b96446a75e1ec5d5f1310a934c0dd4c",
+                "test.bcftools.bcftools_stats.txt:md5,8b6daa7c39d37aa0c31f42b9d03ff4f3",
+                "test.deepvariant.bcftools_stats.txt:md5,582b3d1055687ba303f90f2904d37064",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,b92df9c1de97db83ad852ccd78da9aec",
+                "test.strelka.variants.bcftools_stats.txt:md5,7796f8d2d7e6ef2243e8ae64f1941186",
+                "test.tiddit.bcftools_stats.txt:md5,8d4c25bd89c4e7561e6b56f30fc1dba6",
                 "test.md.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.md.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.md.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
@@ -1138,7 +1140,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-08T12:49:19.475669979"
+        "timestamp": "2026-02-13T09:40:05.746086512"
     },
     "-profile test --input tests/csv/3.0/fastq_tumor_only.csv --tools cnvkit,freebayes,mpileup,mutect2,tiddit": {
         "content": [
@@ -1227,7 +1229,8 @@
                     "tabix": "1.21"
                 },
                 "TABIX_BGZIP_TIDDIT_SV": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_VC_FREEBAYES": {
                     "tabix": 1.21
@@ -1541,10 +1544,10 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,157a95de8aa4dd8947bb965f0c9ae3c7",
                 "samtools_alignment_plot.txt:md5,46e8824724863d243a01cc239a5eff15",
-                "test2.bcftools.bcftools_stats.txt:md5,c61cda67fa314ecdeac858599ce732ee",
-                "test2.freebayes.filtered.bcftools_stats.txt:md5,57082cdcbbe9ffb4c63b314912227afb",
-                "test2.mutect2.filtered.bcftools_stats.txt:md5,3ecb2b3bb668d9f808787ffaa780fc03",
-                "test2.tiddit.bcftools_stats.txt:md5,1122042610f0aed654c8d8b817fd1c50",
+                "test2.bcftools.bcftools_stats.txt:md5,2d62ebea98ce53e748461bd15b2f2b12",
+                "test2.freebayes.filtered.bcftools_stats.txt:md5,905187786a4f43c1080fd73f0daee1ca",
+                "test2.mutect2.filtered.bcftools_stats.txt:md5,b30b46717eb045924221a59ee74b1f27",
+                "test2.tiddit.bcftools_stats.txt:md5,74145ac60063207e641ab17a6583124e",
                 "test2.md.mosdepth.global.dist.txt:md5,2020cf6dfc7ddca020c921dd9f0549b7",
                 "test2.md.mosdepth.region.dist.txt:md5,38ff8b38c33b9231f047fea8ea830aae",
                 "test2.md.mosdepth.summary.txt:md5,8b991358768cade225470a07cd34f573",
@@ -1596,6 +1599,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-08T14:32:16.644778218"
+        "timestamp": "2026-02-13T09:21:51.846064459"
     }
 }

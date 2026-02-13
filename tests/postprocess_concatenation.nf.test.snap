@@ -238,10 +238,10 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,a0c101497a0566f60b9e8388207944ab",
                 "samtools_alignment_plot.txt:md5,563784066de81f3bc8ccf5fbbe82b3d5",
-                "testN.freebayes.filtered.bcftools_stats.txt:md5,96c5e6b9e55f1bb67fca7886fb322b67",
-                "testT.freebayes.filtered.bcftools_stats.txt:md5,ce8b7afaace836b6a00bd8ccdc980500",
-                "testN.strelka.variants.bcftools_stats.txt:md5,f11c9e5e9820868809b5465970c7cc06",
-                "testT.strelka.variants.bcftools_stats.txt:md5,ac070b6cf4de7540a227265971244b31",
+                "testN.freebayes.filtered.bcftools_stats.txt:md5,95b2dd7b432cb5ae00a5ce314b2db63b",
+                "testT.freebayes.filtered.bcftools_stats.txt:md5,58597c6cac310fc593606b49467860a8",
+                "testN.strelka.variants.bcftools_stats.txt:md5,e7085aeb4971bf18b73cd3ad3c6eb1ac",
+                "testT.strelka.variants.bcftools_stats.txt:md5,32e95f3f9386de8c05dee6e9350f9807",
                 "testN.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "testN.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "testN.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
@@ -284,9 +284,9 @@
             "No warnings"
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-03T11:06:26.54547"
+        "timestamp": "2026-02-13T09:14:45.291488682"
     }
 }

@@ -182,9 +182,9 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
-                "sample3.strelka.variants.bcftools_stats.txt:md5,6d4d032ba146941cb226765aaed9d67f",
-                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,62c6123f6494c3cdbd42dc7230e757b3",
-                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,8404ea88658fbc41d447ba20bf46dd0a",
+                "sample3.strelka.variants.bcftools_stats.txt:md5,0b753fcb099137485225d25942b77fc6",
+                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,c856a4cbd56c20e556ccee15111da74a",
+                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,ad3f5d4f4f5dd40e0c6f941d5fb5262b",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -214,9 +214,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T23:48:23.853303187"
+        "timestamp": "2026-02-13T09:30:40.280264265"
     },
     "-profile test --tools strelka germline": {
         "content": [
@@ -371,7 +371,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,41d36c1a8413d565788a1a364b467606",
                 "samtools_alignment_plot.txt:md5,35f8fd2a557568b2237193f46afbab5c",
-                "sample1.strelka.variants.bcftools_stats.txt:md5,7d091579d450a6f6d6e6ed9795dce0cb",
+                "sample1.strelka.variants.bcftools_stats.txt:md5,b76bbea168493ff8f195892cb368073a",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -390,9 +390,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T23:45:18.036242508"
+        "timestamp": "2026-02-13T09:22:00.684012224"
     },
     "-profile test --tools strelka --only_paired_variant_calling": {
         "content": [
@@ -593,9 +593,9 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,b446a47b182d93a9e7e74f5f7c8d41c2",
                 "samtools_alignment_plot.txt:md5,7138a2d29f515993e1df8d745e27b757",
-                "sample1.strelka.variants.bcftools_stats.txt:md5,7d091579d450a6f6d6e6ed9795dce0cb",
-                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,62c6123f6494c3cdbd42dc7230e757b3",
-                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,8404ea88658fbc41d447ba20bf46dd0a",
+                "sample1.strelka.variants.bcftools_stats.txt:md5,b76bbea168493ff8f195892cb368073a",
+                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,c856a4cbd56c20e556ccee15111da74a",
+                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,ad3f5d4f4f5dd40e0c6f941d5fb5262b",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -635,9 +635,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T23:43:48.55687233"
+        "timestamp": "2026-02-13T09:19:16.084185587"
     },
     "-profile test --tools strelka --no_intervals germline": {
         "content": [
@@ -788,7 +788,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,41d36c1a8413d565788a1a364b467606",
                 "samtools_alignment_plot.txt:md5,35f8fd2a557568b2237193f46afbab5c",
-                "sample1.strelka.variants.bcftools_stats.txt:md5,a125b261633ee5e73c4c0bfead86c77c",
+                "sample1.strelka.variants.bcftools_stats.txt:md5,60907ad3b39507ad52862ec7eed06d72",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -807,9 +807,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T23:46:48.703134861"
+        "timestamp": "2026-02-13T09:25:14.876127633"
     },
     "-profile test --tools strelka --no_intervals somatic": {
         "content": [
@@ -990,9 +990,9 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
-                "sample3.strelka.variants.bcftools_stats.txt:md5,322c544c624565a9ab0e128bca556d81",
-                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,62c6123f6494c3cdbd42dc7230e757b3",
-                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,eec9d410eb24068b9a67be417c41d54e",
+                "sample3.strelka.variants.bcftools_stats.txt:md5,cba44242544fb6f1d9884f5e16bd62ba",
+                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,c856a4cbd56c20e556ccee15111da74a",
+                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,fe0bb317d9c1be0f1b457e4547030319",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -1022,8 +1022,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T23:49:57.22542474"
+        "timestamp": "2026-02-13T09:34:57.911920507"
     }
 }

@@ -174,7 +174,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
-                "sample2.freebayes.filtered.bcftools_stats.txt:md5,58e57fe87d5eb8b7ccd9b1ecd2d196df",
+                "sample2.freebayes.filtered.bcftools_stats.txt:md5,1416f6e2e614e7934344537e5f64dba9",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample2.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
@@ -199,10 +199,10 @@
             "No warnings"
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-04T12:14:50.842752"
+        "timestamp": "2026-02-12T22:51:21.05756968"
     },
     "-profile test --tools freebayes --no_intervals --wes --input fastq_pair.csv": {
         "content": [
@@ -542,8 +542,8 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,7a0481b59cdd57cc0b8bc9b5641614c6",
                 "samtools_alignment_plot.txt:md5,8e6178a26fe2a4fc4f45fac3175ba6c6",
-                "test.freebayes.filtered.bcftools_stats.txt:md5,dde124ceaf6f109cd274b837b950096b",
-                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,6f942caec2f4f02c69e1216226fa44a9",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,fee267bbcaa7003ec8b643b1bd87bb74",
+                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,ffd86b2e7e567174cb2c9c035f87f76e",
                 "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.md.mosdepth.summary.txt:md5,0010c2396a3173c7cf4983abe2eb6a4c",
                 "test.md.per-base.bed.gz:md5,34dfe443c0a0767562dd65272e3310ef",
@@ -601,7 +601,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T22:43:02.382544129"
+        "timestamp": "2026-02-12T22:49:42.461328546"
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20": {
         "content": [
@@ -924,7 +924,7 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,300b95526a211b05f18aaffd037dacd3",
                 "samtools_alignment_plot.txt:md5,5053f650b8612fe5e8527b0bca8ab905",
-                "test.freebayes.filtered.bcftools_stats.txt:md5,5ad7fc8a51dd1dc0f827a46acbed01c4",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,89c3da65a6400c8c45eed893f4af94ca",
                 "test.md.mosdepth.global.dist.txt:md5,531a83245143e7975f18e1988c876138",
                 "test.md.mosdepth.region.dist.txt:md5,d25723bdd3fec6b17d2462abfa097b9e",
                 "test.md.mosdepth.summary.txt:md5,87be70cd1237d7af9aa40d8cd8b3a817",
@@ -964,7 +964,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T22:35:44.029764132"
+        "timestamp": "2026-02-12T22:38:01.407646789"
     },
     "-profile test --tools freebayes --no_intervals": {
         "content": [
@@ -1273,7 +1273,7 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,9e836f09043529495de9e1c268ee8e82",
                 "samtools_alignment_plot.txt:md5,bcc2f176a4bc51b33a36bd4381f048a5",
-                "test.freebayes.filtered.bcftools_stats.txt:md5,c6b6e221504c69ee75b209f4a0b2506a",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,b92df9c1de97db83ad852ccd78da9aec",
                 "test.md.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.md.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.md.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
@@ -1309,7 +1309,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T22:38:03.564960868"
+        "timestamp": "2026-02-12T22:42:53.595821507"
     },
     "-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv": {
         "content": [
@@ -1479,7 +1479,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
-                "sample2.freebayes.filtered.bcftools_stats.txt:md5,b83440f3699a3258015d0ce60eea0d46",
+                "sample2.freebayes.filtered.bcftools_stats.txt:md5,1c1c5ece774a9e938d50d5ec036eea1f",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
@@ -1501,10 +1501,10 @@
             "No warnings"
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-04T12:22:29.186457"
+        "timestamp": "2026-02-12T22:52:56.772652322"
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv": {
         "content": [
@@ -1565,7 +1565,8 @@
                     "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_VC_FREEBAYES_FILT": {
                     "tabix": 1.21
@@ -1865,8 +1866,8 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,ff7906db0da2f9c9ba5ce85c34694124",
                 "samtools_alignment_plot.txt:md5,89d0a6e7076223e9feadbecd794948d5",
-                "test.freebayes.filtered.bcftools_stats.txt:md5,b313075b3e9854e0b561dd8d754bf097",
-                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,17df64b64f9235afa93aae6bbe08e283",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,d3714a426d7cfe03320fa80068c000ca",
+                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,44f16ed34963e04d493d12c35044ba70",
                 "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.md.mosdepth.region.dist.txt:md5,835fdc6fa52cc33e6fb76c0c20a8a6c3",
                 "test.md.mosdepth.summary.txt:md5,dcc9ab2bf3248903e02d8da87e678977",
@@ -1930,6 +1931,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T22:40:36.195304962"
+        "timestamp": "2026-02-12T22:46:51.663829518"
     }
 }

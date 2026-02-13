@@ -211,12 +211,12 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
-                "sample3.manta.diploid_sv.bcftools_stats.txt:md5,36a838390faba81e3eabf5ac8a093a4a",
-                "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,f00cf810d34ef7e5c7980f7039bb4446",
-                "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,7af2ea2e84154ddf2a483b1bd1f0646c",
-                "sample3.strelka.variants.bcftools_stats.txt:md5,322c544c624565a9ab0e128bca556d81",
-                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,62c6123f6494c3cdbd42dc7230e757b3",
-                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,eec9d410eb24068b9a67be417c41d54e",
+                "sample3.manta.diploid_sv.bcftools_stats.txt:md5,0aadd225df3d7e27db02d4b307b8bc53",
+                "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,fee199fd5e430faacb16da073886acd5",
+                "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,ff10e8a7e1a86520b0048ec529388a10",
+                "sample3.strelka.variants.bcftools_stats.txt:md5,cba44242544fb6f1d9884f5e16bd62ba",
+                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,c856a4cbd56c20e556ccee15111da74a",
+                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,fe0bb317d9c1be0f1b457e4547030319",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -255,9 +255,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T23:53:32.414589191"
+        "timestamp": "2026-02-13T09:31:34.730332458"
     },
     "-profile test --tools manta,strelka somatic": {
         "content": [
@@ -475,12 +475,12 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
-                "sample3.manta.diploid_sv.bcftools_stats.txt:md5,36a838390faba81e3eabf5ac8a093a4a",
-                "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,f00cf810d34ef7e5c7980f7039bb4446",
-                "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,7af2ea2e84154ddf2a483b1bd1f0646c",
-                "sample3.strelka.variants.bcftools_stats.txt:md5,6d4d032ba146941cb226765aaed9d67f",
-                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,62c6123f6494c3cdbd42dc7230e757b3",
-                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,8404ea88658fbc41d447ba20bf46dd0a",
+                "sample3.manta.diploid_sv.bcftools_stats.txt:md5,0aadd225df3d7e27db02d4b307b8bc53",
+                "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,fee199fd5e430faacb16da073886acd5",
+                "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,ff10e8a7e1a86520b0048ec529388a10",
+                "sample3.strelka.variants.bcftools_stats.txt:md5,0b753fcb099137485225d25942b77fc6",
+                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,c856a4cbd56c20e556ccee15111da74a",
+                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,ad3f5d4f4f5dd40e0c6f941d5fb5262b",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -519,8 +519,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T23:51:45.217803492"
+        "timestamp": "2026-02-13T09:28:56.170733118"
     }
 }
