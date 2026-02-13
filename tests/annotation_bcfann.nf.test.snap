@@ -4,7 +4,7 @@
             2,
             {
                 "BCFTOOLS_ANNOTATE": {
-                    "bcftools": 1.21
+                    "bcftools": "1.22"
                 }
             },
             [
@@ -38,16 +38,16 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-08-14T09:55:08.446532066"
+        "timestamp": "2026-02-13T10:21:00.455096732"
     },
     "-profile test --tools bcfann --bcftools_columns": {
         "content": [
             2,
             {
                 "BCFTOOLS_ANNOTATE": {
-                    "bcftools": 1.21
+                    "bcftools": "1.22"
                 }
             },
             [
@@ -81,8 +81,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-10-01T09:52:49.578328635"
+        "timestamp": "2026-02-13T10:21:49.799960661"
     }
 }

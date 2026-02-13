@@ -224,7 +224,7 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,175b0442368f03294ef9ce9e73172c7b",
                 "samtools_alignment_plot.txt:md5,6555bbf8c1ef12058e9a050545a9fa41",
-                "test.strelka.variants.bcftools_stats.txt:md5,5b7cff7b17c5bcde6177a188b1511986",
+                "test.strelka.variants.bcftools_stats.txt:md5,1f263b99584fcde2fcff42c697517694",
                 "test.md.mosdepth.global.dist.txt:md5,0c795eadf5e5a8ea8469ba8c0ece9bdd",
                 "test.md.mosdepth.region.dist.txt:md5,54273a37adf55f8cee822aaf92a4c321",
                 "test.md.mosdepth.summary.txt:md5,bb12489d3d44c4e44eb5dcc8fdef636c",
@@ -251,9 +251,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-09T09:52:02.012960987"
+        "timestamp": "2026-02-13T10:20:58.606604488"
     },
     "-profile test --input tests/csv/3.0/bam_umi_header.csv --umi_in_read_header --tools markduplicates --step mapping": {
         "content": [
@@ -584,7 +584,7 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,afe461017b5f2189651f29c79f6fee44",
                 "samtools_alignment_plot.txt:md5,9d6e0d529e64404f2c24e74285e242ee",
-                "test.strelka.variants.bcftools_stats.txt:md5,3f4c40f17e956e4140a0432072a9dde0",
+                "test.strelka.variants.bcftools_stats.txt:md5,db26bb4eaa3a68568a81b3458f9716bd",
                 "test.md.mosdepth.global.dist.txt:md5,7b8a7773d5d854ae1b681b971d11bb34",
                 "test.md.mosdepth.region.dist.txt:md5,1dd626f6fef0d1ac29fd7ffb8b1bbd95",
                 "test.md.mosdepth.summary.txt:md5,25af78b074abf710ddd9c90cba1928bc",
@@ -611,8 +611,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T22:06:00.327735562"
+        "timestamp": "2026-02-13T10:19:22.352459364"
     }
 }

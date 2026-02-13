@@ -157,7 +157,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
-                "test.dnascope.unfiltered.bcftools_stats.txt:md5,ccd33b2c34ef09efe1fd7a86474eaa53",
+                "test.dnascope.unfiltered.bcftools_stats.txt:md5,6e82a1cfa33b615761db3eac4cf3fe21",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
@@ -342,7 +342,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
-                "test.dnascope.filtered.bcftools_stats.txt:md5,ad4472e0b4767e0f3c4052ff3e3c1cdb",
+                "test.dnascope.filtered.bcftools_stats.txt:md5,b19e22043a70009f81c31f6d25d124dc",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
@@ -369,6 +369,9 @@
         "content": [
             15,
             {
+                "BCFTOOLS_SORT": {
+                    "bcftools": "1.22"
+                },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.22"
                 },
@@ -529,7 +532,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
-                "joint_germline.bcftools_stats.txt:md5,b66f04fbf0ca30785d07a4d0b4156bb7",
+                "joint_germline.bcftools_stats.txt:md5,e92a03d62608fab30f4401dd193c0a2e",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",

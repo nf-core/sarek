@@ -249,7 +249,7 @@
             ],
             [
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "test.strelka.variants.bcftools_stats.txt:md5,bffd4c0cf553a42c5b183220d71a1466",
+                "test.strelka.variants.bcftools_stats.txt:md5,217b81032bb9e62d500913e558690b68",
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],
@@ -263,9 +263,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T21:51:32.157567526"
+        "timestamp": "2026-02-13T10:21:56.587719441"
     },
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step prepare_recalibration --skip_tools baserecalibrator --tools strelka": {
         "content": [
@@ -376,7 +376,7 @@
             ],
             [
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "test.strelka.variants.bcftools_stats.txt:md5,bffd4c0cf553a42c5b183220d71a1466",
+                "test.strelka.variants.bcftools_stats.txt:md5,217b81032bb9e62d500913e558690b68",
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],
@@ -390,9 +390,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-30T21:50:33.221939876"
+        "timestamp": "2026-02-13T10:20:48.816574521"
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --tools null": {
         "content": [

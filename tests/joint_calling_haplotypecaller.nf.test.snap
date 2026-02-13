@@ -3,6 +3,9 @@
         "content": [
             26,
             {
+                "BCFTOOLS_SORT": {
+                    "bcftools": "1.22"
+                },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.22"
                 },
@@ -181,7 +184,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,a0c101497a0566f60b9e8388207944ab",
                 "samtools_alignment_plot.txt:md5,563784066de81f3bc8ccf5fbbe82b3d5",
-                "joint_germline.bcftools_stats.txt:md5,1e0bcb3e7dc0e812371e4609f477569c",
+                "joint_germline.bcftools_stats.txt:md5,9afa64c4474590e54f43c52b69080df4",
                 "testN.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "testN.recal.mosdepth.region.dist.txt:md5,3a2030e5e8af7bc12720c3a5592bf921",
                 "testN.recal.mosdepth.summary.txt:md5,615c5c5019d88045a9ff5bbe6e63d270",
@@ -214,12 +217,15 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T19:58:09.342469278"
+        "timestamp": "2026-02-13T10:27:41.110562733"
     },
     "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 100": {
         "content": [
             18,
             {
+                "BCFTOOLS_SORT": {
+                    "bcftools": "1.22"
+                },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.22"
                 },
@@ -395,7 +401,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,a0c101497a0566f60b9e8388207944ab",
                 "samtools_alignment_plot.txt:md5,563784066de81f3bc8ccf5fbbe82b3d5",
-                "joint_germline.bcftools_stats.txt:md5,1e0bcb3e7dc0e812371e4609f477569c",
+                "joint_germline.bcftools_stats.txt:md5,9afa64c4474590e54f43c52b69080df4",
                 "testN.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "testN.recal.mosdepth.region.dist.txt:md5,3a2030e5e8af7bc12720c3a5592bf921",
                 "testN.recal.mosdepth.summary.txt:md5,615c5c5019d88045a9ff5bbe6e63d270",
@@ -428,6 +434,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T19:59:28.831246669"
+        "timestamp": "2026-02-13T10:29:10.662911454"
     }
 }

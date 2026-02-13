@@ -18,8 +18,6 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     val_sampletype
 
     main:
-    ch_versions = channel.empty()
-
     meta_map = ch_cram.map { meta, _cram, _crai -> meta + [sex_string: (meta.sex == "XX" ? "female" : "male")] }
 
     FILL_SCENARIO_FILE(
@@ -101,7 +99,6 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     SORT_CALLED_CHUNKS(
         VARLOCIRAPTOR_CALLVARIANTS.out.bcf
     )
-    ch_versions = ch_versions.mix(SORT_CALLED_CHUNKS.out.versions)
 
     ch_sort_called_chunks_vcf = SORT_CALLED_CHUNKS.out.vcf.branch {
         single: val_num_chunks <= 1
@@ -122,16 +119,11 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
 
     CONCAT_CALLED_CHUNKS(ch_vcf_tbi_chunks)
 
-    ch_versions = ch_versions.mix(CONCAT_CALLED_CHUNKS.out.versions)
-
     ch_final_vcf = ch_sort_called_chunks_vcf.single.mix(CONCAT_CALLED_CHUNKS.out.vcf)
 
     SORT_FINAL_VCF(ch_final_vcf)
 
-    ch_versions = ch_versions.mix(SORT_FINAL_VCF.out.versions)
-
     emit:
     vcf      = SORT_FINAL_VCF.out.vcf
     tbi      = SORT_FINAL_VCF.out.tbi
-    versions = ch_versions
 }
