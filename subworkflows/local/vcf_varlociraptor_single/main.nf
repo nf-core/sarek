@@ -27,6 +27,8 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     )
     ch_scenario_file = FILL_SCENARIO_FILE.out.rendered
 
+    ch_scenario_file.dump(tag: "scenario_file")
+
     // Estimate alignment properties
     VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES(
         ch_cram.combine(ch_fasta).combine(ch_fasta_fai).map { meta_cram, cram, crai, _meta_fasta, fasta, _meta_fai, fai ->
@@ -90,6 +92,8 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
         .map { meta_normal, normal_bcf, _meta_scenario, scenario_file ->
             [meta_normal, [normal_bcf], scenario_file, val_sampletype]
         }
+
+    ch_vcfs_for_callvariants.dump(tag: "vcfs_for_callvariants")
 
     VARLOCIRAPTOR_CALLVARIANTS(
         ch_vcfs_for_callvariants
