@@ -87,10 +87,15 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     //
     // CALL VARIANTS WITH VARLOCIRAPTOR
     //
-    // TODO: hier werden alle erzeugten scenario files übergeben aber ich will jeweils nur wenn die meta.id matcht
-    ch_vcfs_for_callvariants = VARLOCIRAPTOR_PREPROCESS.out.bcf.map { meta, bcf -> [meta.id, meta, bcf] }
-        .join(ch_scenario_file.map { meta, scenario_file -> [meta.id, meta, scenario_file] }, by: 0, failOnMismatch: true, failOnDuplicate: true)
-        .map { _id, meta_normal, normal_bcf, _meta_scenario, scenario_file ->
+    ch_vcfs_for_callvariants = VARLOCIRAPTOR_PREPROCESS.out.bcf
+        .map { meta, bcf ->
+            [meta.id, meta, bcf]
+        }
+        .combine(
+            ch_scenario_file.map { meta, scenario_file -> [meta.id, scenario_file] },
+            by: 0
+        )
+        .map { _id, meta_normal, normal_bcf, scenario_file ->
             [meta_normal, [normal_bcf], scenario_file, val_sampletype]
         }
 
