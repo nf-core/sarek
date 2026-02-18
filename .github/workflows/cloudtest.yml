@@ -106,10 +106,14 @@ jobs:
               onComplete {
                 enabled = true
                 message = ':white_check_mark: *sarek/${{ matrix.profile }}* completed successfully! :tada:'
+                showFooter = false
+                includeCommandLine = true
               }
               onError {
                 enabled = true
                 message = ':x: *sarek/${{ matrix.profile }}* failed :crying_cat_face:'
+                showFooter = true
+                includeCommandLine = true
               }
             }
           profiles: ${{ matrix.profile }}
