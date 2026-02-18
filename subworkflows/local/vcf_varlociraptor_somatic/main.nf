@@ -220,22 +220,32 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     //
     ch_normal_for_join = PREPROCESS_NORMAL.out.bcf
         .map { meta, normal_bcf -> [[meta.patient, meta.match_id, meta.chunk, meta.variantcaller], meta, normal_bcf] }
-        .dump(tag: 'NORMAL_KEY', pretty: true)
 
     ch_tumor_for_join = PREPROCESS_TUMOR.out.bcf
         .map { meta, tumor_bcf -> [[meta.patient, meta.normal_id, meta.chunk, meta.variantcaller], meta, tumor_bcf] }
-        .dump(tag: 'TUMOR_KEY', pretty: true)
 
-    ch_vcf_for_callvariants = ch_normal_for_join
+
+    ch_normal_tumor_for_join = ch_normal_for_join
         .join(
             ch_tumor_for_join,
             by: [0],
             failOnMismatch: true,
             failOnDuplicate: true,
         )
-        .combine(ch_scenario_file)
-        .map { _id, meta_normal, normal_bcf, _meta_tumor, tumor_bcf, _meta_scenario, scenario_file ->
-            [meta_normal, [normal_bcf, tumor_bcf], scenario_file, ["normal", "tumor"]]
+        .map { _id, meta_normal, normal_bcf, _meta_tumor, tumor_bcf ->
+            [meta_normal, [normal_bcf, tumor_bcf]]
+        }
+
+    ch_vcf_for_callvariants = ch_normal_tumor_for_join
+        .map { meta, bcfs ->
+            [meta.id, meta, bcfs]
+        }
+        .combine(
+            ch_scenario_file.map { meta, scenario_file -> [meta.id, scenario_file] },
+            by: 0
+        )
+        .map { _id, meta, bcfs, scenario_file ->
+            [meta, bcfs, scenario_file, ["normal", "tumor"]]
         }
 
     VARLOCIRAPTOR_CALLVARIANTS(

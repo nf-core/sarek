@@ -303,8 +303,8 @@
             "No warnings"
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.8"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
         },
         "timestamp": "2025-11-02T16:48:49.54626"
     },
@@ -552,8 +552,8 @@
             "No warnings"
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.8"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
         },
         "timestamp": "2025-11-04T11:46:27.501146"
     },
@@ -777,8 +777,8 @@
             "No warnings"
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.8"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
         },
         "timestamp": "2025-11-01T23:04:58.277878"
     }

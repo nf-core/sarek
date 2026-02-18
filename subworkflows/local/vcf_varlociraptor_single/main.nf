@@ -86,8 +86,14 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     // CALL VARIANTS WITH VARLOCIRAPTOR
     //
     ch_vcfs_for_callvariants = VARLOCIRAPTOR_PREPROCESS.out.bcf
-        .combine(ch_scenario_file)
-        .map { meta_normal, normal_bcf, _meta_scenario, scenario_file ->
+        .map { meta, bcf ->
+            [meta.id, meta, bcf]
+        }
+        .combine(
+            ch_scenario_file.map { meta, scenario_file -> [meta.id, scenario_file] },
+            by: 0
+        )
+        .map { _id, meta_normal, normal_bcf, scenario_file ->
             [meta_normal, [normal_bcf], scenario_file, val_sampletype]
         }
 
