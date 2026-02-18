@@ -90,6 +90,9 @@ jobs:
               "outdir": "${{ secrets[matrix.workdir] }}/sarek/results-${{ steps.revision.outputs.revision }}/${{ matrix.profile }}/"
             }
           nextflow_config: |
+            plugins {
+              id 'nf-slack@0.4.1'
+            }
             slack {
               enabled = true
               bot {
