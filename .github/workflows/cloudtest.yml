@@ -92,30 +92,18 @@ jobs:
           nextflow_config: |
             slack {
               enabled = true
-              validateOnStartup = true
               bot {
                 token = '${{ secrets.NFSLACK_BOT_TOKEN }}'
                 channel = 'sarek_dev'
-              }
-              seqeraPlatform {
-                enabled = true
               }
               onStart {
                 enabled = false
               }
               onComplete {
-                enabled = true
                 message = ':white_check_mark: *sarek/${{ matrix.profile }}* completed successfully! :tada:'
-                showFooter = true
-                includeCommandLine = true
-                includeResourceUsage = true
               }
               onError {
-                enabled = true
                 message = ':x: *sarek/${{ matrix.profile }}* failed :crying_cat_face:'
-                showFooter = true
-                includeCommandLine = true
-                includeResourceUsage = true
               }
             }
           profiles: ${{ matrix.profile }}
