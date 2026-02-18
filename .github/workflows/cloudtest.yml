@@ -41,10 +41,30 @@ jobs:
         run: |
           # All available profiles
           all='[
-            {"profile":"test_aws","test":"test","compute_env":"TOWER_COMPUTE_ENV","workdir":"TOWER_BUCKET_AWS"},
-            {"profile":"test_full_aws","test":"somatic","compute_env":"TOWER_COMPUTE_ENV","workdir":"TOWER_BUCKET_AWS"},
-            {"profile":"test_full_germline_aws","test":"germline","compute_env":"TOWER_COMPUTE_ENV","workdir":"TOWER_BUCKET_AWS"},
-            {"profile":"test_full_germline_ncbench_agilent","test":"germline_ncbench_agilent","compute_env":"TOWER_COMPUTE_ENV","workdir":"TOWER_BUCKET_AWS"}
+            {
+              "profile": "test_aws",
+              "test": "test",
+              "compute_env": "TOWER_COMPUTE_ENV",
+              "workdir": "TOWER_BUCKET_AWS"
+            },
+            {
+              "profile": "test_full_aws",
+              "test": "somatic",
+              "compute_env": "TOWER_COMPUTE_ENV",
+              "workdir": "TOWER_BUCKET_AWS"
+            },
+            {
+              "profile": "test_full_germline_aws",
+              "test": "germline",
+              "compute_env": "TOWER_COMPUTE_ENV",
+              "workdir": "TOWER_BUCKET_AWS"
+            },
+            {
+              "profile": "test_full_germline_ncbench_agilent",
+              "test": "germline_ncbench_agilent",
+              "compute_env": "TOWER_COMPUTE_ENV",
+              "workdir": "TOWER_BUCKET_AWS"
+            }
           ]'
 
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
