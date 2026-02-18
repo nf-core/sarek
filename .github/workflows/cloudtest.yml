@@ -72,10 +72,10 @@ jobs:
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ vars[matrix.compute_env] }}
           revision: ${{ steps.revision.outputs.revision }}
-          workdir: ${{ vars[matrix.workdir] }}/work/sarek/work-${{ steps.revision.outputs.revision }}/${{ matrix.profile }}
+          workdir: ${{ secrets[matrix.workdir] }}/work/sarek/work-${{ steps.revision.outputs.revision }}/${{ matrix.profile }}
           parameters: |
             {
-              "outdir": "${{ vars[matrix.workdir] }}/sarek/results-${{ steps.revision.outputs.revision }}/${{ matrix.profile }}/"
+              "outdir": "${{ secrets[matrix.workdir] }}/sarek/results-${{ steps.revision.outputs.revision }}/${{ matrix.profile }}/"
             }
           envvars: |
             NFSLACK_BOT_TOKEN=${{ secrets.NFSLACK_BOT_TOKEN }}
