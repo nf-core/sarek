@@ -91,7 +91,7 @@ jobs:
             }
           nextflow_config: |
             plugins {
-              id 'nf-slack@0.4.1'
+              id 'nf-slack@0.5.0'
             }
             slack {
               enabled = true
