@@ -118,7 +118,7 @@ jobs:
               enabled = true
               bot {
                 token = '${{ secrets.NFSLACK_BOT_TOKEN }}'
-                channel = 'sarek_dev'
+                channel = 'sarek_dev,aws-megatests'
               }
               onStart {
                 enabled = false
