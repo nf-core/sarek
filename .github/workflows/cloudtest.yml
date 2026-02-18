@@ -31,10 +31,6 @@ on:
         description: "AWS Batch"
         type: boolean
         default: true
-      azure:
-        description: "Azure Batch"
-        type: boolean
-        default: true
 
 jobs:
   run-platform:
@@ -44,37 +40,18 @@ jobs:
         include:
           - profile: test_aws
             test: test
-            cloud: aws
             compute_env: TOWER_COMPUTE_ENV
             workdir: TOWER_BUCKET_AWS
-          - profile: test_azure
-            test: test
-            cloud: azure
-            compute_env: TOWER_CE_AZURE_CPU
-            workdir: TOWER_BUCKET_AZURE
           - profile: test_full_aws
             test: somatic
-            cloud: aws
             compute_env: TOWER_COMPUTE_ENV
             workdir: TOWER_BUCKET_AWS
-          - profile: test_full_azure
-            test: somatic
-            cloud: azure
-            compute_env: TOWER_CE_AZURE_CPU
-            workdir: TOWER_BUCKET_AZURE
           - profile: test_full_germline_aws
             test: germline
-            cloud: aws
             compute_env: TOWER_COMPUTE_ENV
             workdir: TOWER_BUCKET_AWS
-          - profile: test_full_germline_azure
-            test: germline
-            cloud: azure
-            compute_env: TOWER_CE_AZURE_CPU
-            workdir: TOWER_BUCKET_AZURE
           - profile: test_full_germline_ncbench_agilent
             test: germline_ncbench_agilent
-            cloud: aws
             compute_env: TOWER_COMPUTE_ENV
             workdir: TOWER_BUCKET_AWS
     name: Run AWS full tests
@@ -98,9 +75,12 @@ jobs:
           workdir: ${{ vars[matrix.workdir] }}/work/sarek/work-${{ steps.revision.outputs.revision }}/${{ matrix.profile }}
           parameters: |
             {
-              "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
               "outdir": "${{ vars[matrix.workdir] }}/sarek/results-${{ steps.revision.outputs.revision }}/${{ matrix.profile }}/"
             }
+          envvars: |
+            NFSLACK_BOT_TOKEN=${{ secrets.NFSLACK_BOT_TOKEN }}
+          nextflow_config: |
+            slack { enabled = true; bot { token = System.getenv('NFSLACK_BOT_TOKEN'); channel = 'sarek_dev' } }
           profiles: ${{ matrix.profile }}
 
       - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
