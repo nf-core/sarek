@@ -116,6 +116,36 @@ ch_bam_from_markduplicates
 ch_markduplicates_for_baserecalibrator
 ```
 
+### Topic Channels
+
+We are migrating to **Nextflow topic channels** where possible. Topics allow processes and subworkflows to publish to a named topic without explicit channel wiring.
+
+**When touching code in a PR, migrate `versions.mix(...)` to topic channels:**
+
+```groovy
+// OLD - Explicit version collection
+versions = versions.mix(TOOL_A.out.versions)
+versions = versions.mix(TOOL_B.out.versions)
+
+// NEW - Use topic channel
+// In the process/module, publish versions to a topic:
+//   output:
+//   path "versions.yml", topic: 'versions'
+//
+// In the workflow, collect from the topic:
+//   ch_versions = Channel.topic('versions')
+```
+
+**Where to use topics:**
+
+- Version collection (`versions` topic) — primary migration target
+- Any cross-subworkflow channel passing that doesn't depend on meta-keyed joins
+
+**Where NOT to use topics:**
+
+- Channels that need `join`, `groupTuple`, or other keyed operations
+- Channels where ordering or pairing matters
+
 ### General Style
 
 - Use 4-space indentation
@@ -554,33 +584,20 @@ vcf_final = Channel.empty()
 Module behavior is controlled via `conf/modules/<tool>.config`:
 
 ```groovy
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Config file for defining DSL2 per module options and publishing paths
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Available keys to override module options:
-        ext.args   = Additional arguments appended to command in module.
-        ext.args2  = Second set of arguments appended to command in module (multi-tool modules).
-        ext.args3  = Third set of arguments appended to command in module (multi-tool modules).
-        ext.prefix = File name prefix for output files.
-        ext.when   = When to run the module.
-----------------------------------------------------------------------------------------
-*/
-
 process {
-    if (params.tools && params.tools.split(',').contains('newtool')) {
-        withName: 'NEWTOOL_PROCESS' {
-            ext.args   = { params.newtool_args ?: '' }
-            ext.prefix = { "${meta.id}.newtool" }
-            publishDir = [
-                mode: params.publish_dir_mode,
-                path: { "${params.outdir}/variant_calling/newtool/${meta.id}/" },
-                pattern: "*{vcf.gz,vcf.gz.tbi}"
-            ]
-        }
+    withName: 'NEWTOOL_PROCESS' {
+        ext.args   = { params.newtool_args ?: '' }
+        ext.prefix = { "${meta.id}.newtool" }
+        publishDir = [
+            mode: params.publish_dir_mode,
+            path: { "${params.outdir}/variant_calling/newtool/${meta.id}/" },
+            pattern: "*{vcf.gz,vcf.gz.tbi}"
+        ]
     }
 }
 ```
+
+> **Note:** Older config files wrap process blocks in `if (params.tools && params.tools.split(',').contains('tool'))` guards. Do **not** use this pattern in new code — control which processes run via channel operations (`filter`, `branch`) in the workflow/subworkflow instead. When touching existing config files, remove these guards.
 
 ### Resource Labels
 
