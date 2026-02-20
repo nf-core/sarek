@@ -92,19 +92,16 @@ workflow PREPARE_INTERVALS {
         // 2. Create bed.gz and bed.gz.tbi for each interval file. They are split by region (see above)
         TABIX_BGZIPTABIX_INTERVAL_SPLIT(intervals_bed.map{ file, num_intervals -> [ [ id:file.baseName], file ] })
 
-        intervals_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_tbi.map{ meta, bed, tbi -> [ bed, tbi ] }.toList()
+        intervals_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_index.map{ meta, bed, tbi -> [ bed, tbi ] }.toList()
             // Adding number of intervals as elements
             .map{ it -> [ it, it.size() ] }
             .transpose()
-
-        versions = versions.mix(TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.versions)
     }
 
     TABIX_BGZIPTABIX_INTERVAL_COMBINED(intervals_combined)
-    versions = versions.mix(TABIX_BGZIPTABIX_INTERVAL_COMBINED.out.versions)
 
     intervals_bed_combined        = intervals_combined.map{meta, bed -> bed }.collect()
-    intervals_bed_gz_tbi_combined = TABIX_BGZIPTABIX_INTERVAL_COMBINED.out.gz_tbi.map{meta, gz, tbi -> [gz, tbi] }.collect()
+    intervals_bed_gz_tbi_combined = TABIX_BGZIPTABIX_INTERVAL_COMBINED.out.gz_index.map{meta, gz, tbi -> [gz, tbi] }.collect()
 
     emit:
     // Intervals split for parallel execution

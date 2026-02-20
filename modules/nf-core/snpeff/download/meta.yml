@@ -37,13 +37,27 @@ output:
           description: |
             snpEff cache
           ontologies: []
+  versions_snpeff:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - snpeff:
+          type: string
+          description: The tool name
+      - "snpEff -version 2>&1 | cut -f 2 -d '\t'":
+          type: string
+          description: The command used to generate the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - snpeff:
+          type: string
+          description: The tool name
+      - "snpEff -version 2>&1 | cut -f 2 -d '\t'":
+          type: string
+          description: The command used to generate the version of the tool
 authors:
   - "@maxulysse"
 maintainers:

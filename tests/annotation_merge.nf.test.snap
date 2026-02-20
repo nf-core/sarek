@@ -9,10 +9,11 @@
                     "tabix": "1.21"
                 },
                 "SNPEFF_SNPEFF": {
-                    "snpeff": "5.3a"
+                    "snpeff": "5.4a"
                 },
                 "TABIX_BGZIPTABIX": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCF_ANNOTATE_MERGE": {
                     "ensemblvep": "115.2",
@@ -118,7 +119,7 @@
             6,
             {
                 "SNPEFF_SNPEFF": {
-                    "snpeff": "5.3a"
+                    "snpeff": "5.4a"
                 },
                 "SNPSIFT_ANNMEM": {
                     "snpsift": "5.4a"
@@ -127,7 +128,8 @@
                     "snpsift": "5.4a"
                 },
                 "TABIX_BGZIPTABIX": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCF_ANNOTATE_MERGE": {
                     "ensemblvep": "115.2",
@@ -227,10 +229,11 @@
             4,
             {
                 "SNPEFF_SNPEFF": {
-                    "snpeff": "5.3a"
+                    "snpeff": "5.4a"
                 },
                 "TABIX_BGZIPTABIX": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCF_ANNOTATE_MERGE": {
                     "ensemblvep": "115.2",

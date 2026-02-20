@@ -3,16 +3,16 @@ process SNPEFF_DOWNLOAD {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/37/37a5be8afdc2e112fd1bb4aa226e009a437e6537f50a51ed909fe2018fd62e99/data' :
-        'community.wave.seqera.io/library/snpeff:5.3.0a--ca8e0b08f227a463' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/30/30669e5208952f30d59d0d559928772f082830d01a140a853fff13a2283a17b0/data'
+        : 'community.wave.seqera.io/library/snpeff:5.4.0a--eaf6ce30125b2b17'}"
 
     input:
     tuple val(meta), val(snpeff_db)
 
     output:
-    tuple val(meta), path('snpeff_cache'),  emit: cache
-    path "versions.yml",                    emit: versions
+    tuple val(meta), path('snpeff_cache'), emit: cache
+    tuple val("${task.process}"), val('snpeff'), eval("snpEff -version 2>&1 | cut -f 2 -d '\t'"), topic: versions, emit: versions_snpeff
 
     when:
     task.ext.when == null || task.ext.when
@@ -32,12 +32,6 @@ process SNPEFF_DOWNLOAD {
         download ${snpeff_db} \\
         -dataDir \${PWD}/snpeff_cache \\
         ${args}
-
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        snpeff: \$(echo \$(snpEff -version 2>&1) | cut -f 2 -d ' ')
-    END_VERSIONS
     """
 
     stub:
@@ -46,10 +40,5 @@ process SNPEFF_DOWNLOAD {
 
     touch snpeff_cache/${snpeff_db}/sequence.I.bin
     touch snpeff_cache/${snpeff_db}/sequence.bin
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        snpeff: \$(echo \$(snpEff -version 2>&1) | cut -f 2 -d ' ')
-    END_VERSIONS
     """
 }
