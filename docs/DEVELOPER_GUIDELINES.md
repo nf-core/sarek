@@ -871,6 +871,7 @@ Located in `docs/images/`:
 - [ ] **Any touched code updated to strict syntax** (explicit closure params, underscore for unused vars)
 - [ ] **No new `ext.when` usage** - use channel operations instead
 - [ ] **Prefer channel operations** (`filter`, `branch`) over `if` statements for flow control
+- [ ] Pre-commit checks pass: `pre-commit run --all-files`
 - [ ] All tests pass: `nf-test test --profile debug,test,docker`
 - [ ] Linting passes: `nf-core pipelines lint`
 - [ ] No debug mode warnings
