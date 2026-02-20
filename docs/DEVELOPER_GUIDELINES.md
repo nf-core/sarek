@@ -4,6 +4,8 @@ This document provides comprehensive guidelines for contributing to the nf-core/
 
 ## Table of Contents
 
+- [Contributing Principles](#contributing-principles)
+- [Git Workflow](#git-workflow)
 - [Codebase Architecture](#codebase-architecture)
 - [Code Style](#code-style)
 - [Channel Operations and Gotchas](#channel-operations-and-gotchas)
@@ -15,6 +17,27 @@ This document provides comprehensive guidelines for contributing to the nf-core/
 - [Documentation](#documentation)
 - [Metro Map Updates](#metro-map-updates)
 - [PR Checklist](#pr-checklist)
+
+---
+
+## Contributing Principles
+
+- **Read files before editing** — understand existing code before making changes
+- Keep fixes **minimal and focused** — don't refactor surrounding code
+- Don't add docstrings, comments, or type annotations to unchanged code
+- Don't add error handling or validation beyond what's needed
+- Don't over-engineer: no premature abstractions, no feature flags
+- When unsure about scope or approach, ask rather than guess
+
+---
+
+## Git Workflow
+
+- **Always branch off `origin/dev`**, never master
+- Branch naming: `fix/issue-XXXX` or `feat/issue-XXXX`
+- PRs target the `dev` branch
+- Never force push, never amend published commits without asking
+- Commit messages should be descriptive and include the issue reference
 
 ---
 
@@ -754,7 +777,17 @@ Any PR that changes pipeline outputs (new files, changed file names, different c
 
 ### CHANGELOG Format
 
-Follow [Keep a Changelog](https://keepachangelog.com/) format:
+Follow [Keep a Changelog](https://keepachangelog.com/) format.
+
+**Important conventions:**
+
+- Entries reference the **PR number**, not the issue number:
+  ```
+  - [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Description of change
+  ```
+- Use `XXX` as placeholder when no PR exists yet
+- The issue number goes in the **PR description body** (for auto-close), not the changelog
+- Entries within each section are in **ascending order** by PR number
 
 ```markdown
 ## [Unreleased]
