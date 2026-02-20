@@ -522,6 +522,7 @@ Akkatjåkkå is another glacier.
 ### Added
 
 - [1759](https://github.com/nf-core/sarek/pull/1759) - Back to dev
+- [1760](https://github.com/nf-core/sarek/pull/1760) - Add linting of FASTQ with FQ/LINT
 
 ### Changed
 
