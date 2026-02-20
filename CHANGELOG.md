@@ -41,6 +41,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Changed
 
+- [#2142](https://github.com/nf-core/sarek/pull/2142) - Replace custom Slack/Teams notifications with nf-slack plugin (v0.5.0) bot token auth, scoped entirely to CI cloud test workflow
+- [#2142](https://github.com/nf-core/sarek/pull/2142) - Remove Azure cloud test profiles, use dynamic matrix for selective test dispatch
+- [#2142](https://github.com/nf-core/sarek/pull/2142) - Fix cloud test workdir/outdir to use secrets instead of vars for TOWER_BUCKET_AWS
 - [#2055](https://github.com/nf-core/sarek/pull/2055) - Update varlociraptor to use only one input channel, swap to topics
 - [#2087](https://github.com/nf-core/sarek/pull/2087) - Move parabricks config into its own, adhere to strict syntax, swap to topics
 - [#2139](https://github.com/nf-core/sarek/pull/2139) - Back to dev (3.9.0dev)
