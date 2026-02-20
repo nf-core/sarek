@@ -906,6 +906,19 @@ Located in `docs/images/`:
 - [ ] `CITATIONS.md` - Tool citation added
 - [ ] `CHANGELOG.md` - Addition documented
 
+### For New Variant Callers
+
+Adding a variant caller touches **6 locations** — missing any of them causes silent bugs. All of the above "New Tools" items apply, plus:
+
+- [ ] **`nextflow_schema.json`** - Add to the `tools` parameter regex pattern
+- [ ] **Dispatcher subworkflow** - Add call and wire outputs into `vcf_all.mix(...)`:
+  - `subworkflows/local/bam_variant_calling_germline_all/main.nf` (germline callers)
+  - `subworkflows/local/bam_variant_calling_somatic_all/main.nf` (somatic pair callers)
+  - `subworkflows/local/bam_variant_calling_tumor_only_all/main.nf` (tumor-only callers)
+  - Use channel operations (`filter`, `branch`) to control execution — not `if` blocks (existing `if` blocks are legacy)
+- [ ] **`subworkflows/local/post_variantcalling/main.nf`** - Add to `small_variantcallers` list (for SNV callers eligible for normalization/filtering/consensus) or `excluded_variantcallers` (for SV callers). **Forgetting this silently excludes the caller from post-processing.**
+- [ ] **Individual subworkflow** - Set `variantcaller` in meta map (e.g., `meta + [variantcaller: 'toolname']`)
+
 ### For New Parameters
 
 - [ ] Default value in `nextflow.config`
@@ -961,7 +974,12 @@ Any PR that changes output files (new files, renamed files, changed content):
 **Problem:** Old code uses `ext.when` in config to control module execution
 **Solution:** When touching this code, refactor to use channel operations (`filter`, `branch`) to control dataflow. Nextflow is a dataflow language - let the data drive execution. Avoid both `ext.when` AND `if` statements where possible.
 
-### 8. Implicit Variables in Closures
+### 8. Forgetting to Register a New Variant Caller
+
+**Problem:** New variant caller runs and produces VCFs, but is silently excluded from normalization, filtering, and consensus calling
+**Solution:** Must update all 6 registration points — see [For New Variant Callers](#for-new-variant-callers) checklist. The most commonly missed is `post_variantcalling/main.nf`'s `small_variantcallers` list.
+
+### 9. Implicit Variables in Closures
 
 **Problem:** Using implicit `it` makes code harder to read and review
 **Solution:** Always use explicit named parameters in closures: `.map { meta, vcf -> ... }` not `.map { it[0], it[1] -> ... }`
