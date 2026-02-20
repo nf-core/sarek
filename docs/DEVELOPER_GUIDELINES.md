@@ -22,6 +22,7 @@ This document provides comprehensive guidelines for contributing to the nf-core/
 
 ## Contributing Principles
 
+- **One PR, one feature** — scope each PR to a single change; keep it as minimal as possible
 - **Read files before editing** — understand existing code before making changes
 - Keep fixes **minimal and focused** — don't refactor surrounding code
 - Don't add docstrings, comments, or type annotations to unchanged code
@@ -143,31 +144,18 @@ ch_markduplicates_for_baserecalibrator
 
 We are migrating to **Nextflow topic channels** where possible. Topics allow processes and subworkflows to publish to a named topic without explicit channel wiring.
 
-**When touching code in a PR, migrate `versions.mix(...)` to topic channels:**
+When installing or updating an nf-core module, check if it publishes `versions` or `multiqc` outputs via topics. If it does, use the topic and remove the explicit `.mix()` wiring for those channels.
 
 ```groovy
-// OLD - Explicit version collection
+// OLD - Explicit version/report collection
 versions = versions.mix(TOOL_A.out.versions)
-versions = versions.mix(TOOL_B.out.versions)
+ch_multiqc_files = ch_multiqc_files.mix(TOOL_A.out.report)
 
-// NEW - Use topic channel
-// In the process/module, publish versions to a topic:
-//   output:
-//   path "versions.yml", topic: 'versions'
-//
-// In the workflow, collect from the topic:
+// NEW - If the module uses topics, remove the .mix() lines above.
+// The module already publishes to the topic internally.
+// Collect from the topic in the top-level workflow:
 //   ch_versions = Channel.topic('versions')
 ```
-
-**Where to use topics:**
-
-- Version collection (`versions` topic) — primary migration target
-- Any cross-subworkflow channel passing that doesn't depend on meta-keyed joins
-
-**Where NOT to use topics:**
-
-- Channels that need `join`, `groupTuple`, or other keyed operations
-- Channels where ordering or pairing matters
 
 ### General Style
 
