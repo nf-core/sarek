@@ -675,184 +675,199 @@ From 'Reference files' https://github.com/VanLoo-lab/ascat:
 
 ### How to generate ASCAT resources for exome or targeted sequencing
 
-1. Fetch the GC content correction and replication timing (RT) correction files from the [Dropbox links provided by the ASCAT developers](https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS) and intersect the SNP coordinates with the exome target coordinates. If the target file has 'chr' prefixes, make a copy with these removed first. Extract the GC and RT information for only the on target SNPs and zip the results.
+1. Fetch the GC content correction and replication timing (RT) correction files from the [Zenodo links provided by the ASCAT developers](https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WES) and intersect the SNP coordinates with the exome target coordinates. If the target file has 'chr' prefixes, make a copy with these removed first. Extract the GC and RT information for only the on-target SNPs and zip the results.
 
-```bash
-sed -e 's/chr//' targets_with_chr.bed > targets.bed
+    ```bash
+    sed -e 's/chr//' targets_with_chr.bed > targets.bed
+     
+    for t in GC RT
+    do
+      unzip ${t}_G1000_WES_hg38.zip
+    
+      sed -i -e 's/chr//' ${t}_G1000_hg38.txt 
+      cut -f 1-3 ${t}_G1000_hg38.txt > ascat_${t}_snps_hg38.txt
+      tail -n +2 ascat_${t}_snps_hg38.txt | awk '{ print $2 "\t" $3-1 "\t" $3 "\t" $1 }' > ascat_${t}_snps_hg38.bed
+      bedtools intersect -a ascat_${t}_snps_hg38.bed -b targets.bed | awk '{ print $1 "_" $3 }' > ascat_${t}_snps_on_target_hg38.txt
+     
+      head -n 1 ${t}_G1000_hg38.txt > ${t}_G1000_on_target_hg38.txt
+      grep -f ascat_${t}_snps_on_target_hg38.txt ${t}_G1000_hg38.txt >> ${t}_G1000_on_target_hg38.txt
+      zip ${t}_G1000_on_target_hg38.zip ${t}_G1000_on_target_hg38.txt
+     
+      rm ${t}_G1000_WES_hg38.zip
+    done
+    ```
 
-for t in GC RT
-do
-  unzip ${t}_G1000_hg38.zip
+2. Download the Battenberg 1000G loci and alleles files. The steps below download from the [Battenberg repository at the Oxford University Research Archive](https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52) and start preparing the files. Alternatively, the files are also provided by the ASCAT developers via the Zenodo links on the same page as the GC and RT correction files above.
 
-  cut -f 1-3 ${t}_G1000_hg38.txt > ascat_${t}_snps_hg38.txt
-  tail -n +2 ascat_${t}_snps_hg38.txt | awk '{ print $2 "\t" $3-1 "\t" $3 "\t" $1 }' > ascat_${t}_snps_hg38.bed
-  bedtools intersect -a ascat_${t}_snps_hg38.bed -b targets.bed | awk '{ print $1 "_" $3 }' > ascat_${t}_snps_on_target_hg38.txt
+    ```bash
+    wget https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52/files/rt435gd52w
+    
+    mv rt345gd52w battenberg.zip
+    unzip battenberg.zip -d battenberg
+    cd battenberg
+    unzip 1000G_loci_hg38_chr.zip
+    cd 1000G_loci_hg38
+    mkdir battenberg_alleles_on_target_hg38
+    mv *allele* battenberg_alleles_on_target_hg38/
+    mkdir battenberg_loci_on_target_hg38
+    mv *loci* battenberg_loci_on_target_hg38/
+    cd ../../
+    ```
 
-  head -n 1 ${t}_G1000_hg38.txt > ${t}_G1000_on_target_hg38.txt
-  grep -f ascat_${t}_snps_on_target_hg38.txt ${t}_G1000_hg38.txt >> ${t}_G1000_on_target_hg38.txt
-  zip ${t}_G1000_on_target_hg38.zip ${t}_G1000_on_target_hg38.txt
+3. Copy the `targets_with_chr.bed` and `GC_G1000_on_target_hg38.txt` files into the newly created `battenberg_loci_on_target_hg38` folder before running the next set of steps.
 
-  rm ${t}_G1000_hg38.zip
-done
-```
+    ```bash
+    cp GC_G1000_on_target_hg38.txt battenberg/1000G_loci_hg38/battenberg_loci_on_target_hg38
+    cp targets_with_chr.bed battenberg/1000G_loci_hg38/battenberg_loci_on_target_hg38/targets_with_chr.bed
+    ```
 
-2. Download the Battenberg 1000G loci and alleles files. The steps below follow downloading from the [Battenberg repository at the Oxford University Research Archive](https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52). The files are also available via Dropbox links from the same page as the GC and RT correction files above.
+    **If** you are using the Battenberg-provided files (as obtained in step 2), run the following code, **then skip ahead to step 4**:
 
-```bash
-wget https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52/files/rt435gd52w
-mv rt345gd52w battenberg.zip
-tar xf battenberg.zip
+        ```bash
+        cd battenberg/1000G_loci_hg38/battenberg_loci_on_target_hg38/
+        rm -f *chrstring*
+        rm 1kg.phase3.v5a_GRCh38nounref_loci_chr23.txt
+        
+        for i in {1..22} X
+        do
+          awk '{ print $1 "\t" $2-1 "\t" $2 }' 1kg.phase3.v5a_GRCh38nounref_loci_chr${i}.txt > chr${i}.bed
+          grep "^${i}_" GC_G1000_on_target_hg38.txt | awk '{ print "chr" $1 }' > chr${i}.txt
+          bedtools intersect -a chr${i}.bed -b targets_with_chr.bed | awk '{ print $1 "_" $3 }' > chr${i}_on_target.txt
+          n=`wc -l chr${i}_on_target.txt | awk '{ print $1 }'`
+          count=$((n * 3 / 10))
+          grep -xf chr${i}.txt chr${i}_on_target.txt > chr${i}.temp
+          shuf -n $count chr${i}_on_target.txt >> chr${i}.temp
+          sort -n -k2 -t '_' chr${i}.temp | uniq | awk 'BEGIN { FS="_" } ; { print $1 "\t" $2 }' > battenberg_loci_on_target_hg38_chr${i}.txt
+        done
+    
+        zip battenberg_loci_on_target_hg38.zip battenberg_loci_on_target_hg38_chr*.txt
+        ```
 
-unzip 1000G_loci_hg38_chr.zip
-cd 1000G_loci_hg38
-mkdir battenberg_alleles_on_target_hg38
-mv *allele* battenberg_alleles_on_target_hg38/
-mkdir battenberg_loci_on_target_hg38
-mv *loci* battenberg_loci_on_target_hg38/
-```
+    **If** you are using the ASCAT-provided 1000G loci and alleles files, continue here:
 
-3. Copy the `targets_with_chr.bed` and `GC_G1000_on_target_hg38.txt` files into the newly created `battenberg_loci_on_target_hg38` folder before running the next set of steps. ASCAT generates a list of GC correction loci with sufficient coverage in a sample, then intersects that with the list of all loci with tumour logR values in that sample. If the intersection is <10% the size of the latter, it will fail with an error. Because the Battenberg loci/allele sets are very dense, subsetting to on-target regions is still too many loci. This script ensures that all SNPs with GC correction information are included in the loci list, plus a random sample of another 30% of all on target loci. You may need to vary this proportion depending on your set of targets. A good rule of thumb is that the size of your GC correction loci list should be about 15% the size of your total loci list. This allows for a margin of error.
+    ASCAT generates a list of GC correction loci with sufficient coverage in a sample, then intersects that with the list of all loci with tumour logR values in that sample. If the intersection is <10% the size of the latter, it will fail with an error. Because the Battenberg loci/allele sets are very dense, subsetting to on-target regions is still too many loci. This script ensures that all SNPs with GC correction information are included in the loci list, plus a random sample of another 30% of all on target loci. You may need to vary this proportion depending on your set of targets. A good rule of thumb is that the size of your GC correction loci list should be about 15% the size of your total loci list. This allows for a margin of error.
 
-### 'chr'-based versus non 'chr'-based reference
+    Please note that loci files provided from ASCAT developers (https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WES) are not 'chr'-based (chromosome names are '1', '2', '3', etc. and not 'chr1', 'chr2', 'chr3', etc.). If your BAMs are 'chr'-based, you will need to add 'chr'
 
-Please note that loci files provided from ASCAT developers (https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WES) are not 'chr'-based (chromosome names are '1', '2', '3', etc. and not 'chr1', 'chr2', 'chr3', etc.). If your BAMs are 'chr'-based, you will need to add 'chr'
+    ```bash
+    for i in {1..22} X;
+      do sed -i 's/^/chr/' G1000_loci_hg38_chr${i}.txt;
+    done).
+    ```
 
-```bash
-for i in {1..22} X;
-  do sed -i 's/^/chr/' G1000_loci_hg19_chr${i}.txt;
-done).
-```
+    ASCAT will internally remove 'chr' so the other files (allele, GC correction and RT correction) should not be modified and chrom_names (ascat.prepareHTS) should be c(1:22,'X').
 
-ASCAT will internally remove 'chr' so the other files (allele, GC correction and RT correction) should not be modified and chrom_names (ascat.prepareHTS) should be c(1:22,'X').
+    ```bash
+    cd .../G1000_lociAll_hg38_unzipped/G1000_lociAll_hg38
+    
+    # Function to check and correct 'chr' prefix
+    check_and_correct_chr_prefix() {
+        local file=$1
+        local chr_number=$2
+    
+        # Check if file exists
+        if [ ! -f "$file" ]; then
+            echo "Error: File $file not found."
+            exit 1
+        fi
+    
+        # Check first line of the file
+        first_line=$(head -n 1 "$file")
+    
+        if [[ $first_line == chr${chr_number}* ]]; then
+            echo "File $file already has correct 'chr' prefix. No changes needed."
+        elif [[ $first_line == chrchr${chr_number}* ]]; then
+            echo "File $file has duplicate 'chr' prefix. Correcting..."
+            sed -i 's/^chrchr/chr/' "$file"
+        elif [[ $first_line == ${chr_number}* ]]; then
+            echo "File $file is missing 'chr' prefix. Adding..."
+            sed -i 's/^/chr/' "$file"
+        else
+            echo "Error: Unexpected format in $file. Please check manually."
+            exit 1
+        fi
+    }
+    
+    # Check and correct 'chr' prefix for each loci file
+    for i in {1..22} X; do
+        check_and_correct_chr_prefix "G1000_loci_hg38_chr${i}.txt" "${i}"
+    done
+    
+    for i in {1..22} X
+    do
+      # Generate BED file from the tailored loci set
+      awk '{ print $1 "\t" $2-1 "\t" $2 }' G1000_loci_hg38_chr${i}.txt > chr${i}.bed
+    
+      # Extract relevant GC content data for this chromosome
+      grep "^chr${i}_" GC_G1000_on_target_hg38.txt > chr${i}.txt
+    
+      # Intersect BED file with target regions to find loci on target
+      bedtools intersect -a chr${i}.bed -b targets_with_chr.bed | awk '{ print $1 "_" $3 }' > chr${i}_on_target.txt
+    
+      # Calculate the number of lines needed for random sampling (30% of total)
+      n=$(wc -l < chr${i}_on_target.txt)
+      count=$((n * 3 / 10))
+    
+      # Get loci that are both on target and match the GC content data
+      grep -xf chr${i}.txt chr${i}_on_target.txt > chr${i}.temp
+    
+      # Add random subset of on-target loci to the list
+      shuf -n $count chr${i}_on_target.txt >> chr${i}.temp
+    
+      # Sort, remove duplicates, and format output
+      sort -n -k2 -t '_' chr${i}.temp | uniq | awk 'BEGIN { FS="_" } ; { print $1 "\t" $2 }' > battenberg_loci_on_target_hg38_chr${i}.txt
+    done
+    
+    # Compress the resulting loci files into a zip archive
+    zip battenberg_loci_on_target_hg38.zip battenberg_loci_on_target_hg38_chr*.txt
+    
+    ```
 
-If using ASCAT provided references:
+4. Extract the alleles for the same set of SNPs.
 
-```bash
+    ```bash
+    cd ../battenberg_alleles_on_target_hg38/
+    rm 1kg.phase3.v5a_GRCh38nounref_allele_index_chr23.txt
+    ```
 
-cd .../G1000_lociAll_hg38_unzipped/G1000_lociAll_hg38
+    Copy paste the following contents into a file named `intersect_ascat_alleles.R` to create an Rscript.
 
-# Function to check and correct 'chr' prefix
-check_and_correct_chr_prefix() {
-    local file=$1
-    local chr_number=$2
+    ```bash
+    #!/usr/bin/env Rscript
+    
+    args = commandArgs(trailingOnly=TRUE)
+    
+    loci = read.table(args[1], header=F, sep="\t", stringsAsFactors=F)
+    alleles = read.table(args[2], header=T, sep="\t", stringsAsFactors=F)
+    
+    i = intersect(loci$V2, alleles$position)
+    
+    out = subset(alleles, alleles$position %in% i)
+    write.table(out, args[3], col.names=T, row.names=F, quote=F, sep="\t")
+    ```
 
-    # Check if file exists
-    if [ ! -f "$file" ]; then
-        echo "Error: File $file not found."
-        exit 1
-    fi
+    Next, run the following commands to extract the alleles using the Rscript.
 
-    # Check first line of the file
-    first_line=$(head -n 1 "$file")
-
-    if [[ $first_line == chr${chr_number}* ]]; then
-        echo "File $file already has correct 'chr' prefix. No changes needed."
-    elif [[ $first_line == chrchr${chr_number}* ]]; then
-        echo "File $file has duplicate 'chr' prefix. Correcting..."
-        sed -i 's/^chrchr/chr/' "$file"
-    elif [[ $first_line == ${chr_number}* ]]; then
-        echo "File $file is missing 'chr' prefix. Adding..."
-        sed -i 's/^/chr/' "$file"
-    else
-        echo "Error: Unexpected format in $file. Please check manually."
-        exit 1
-    fi
-}
-
-# Check and correct 'chr' prefix for each loci file
-for i in {1..22} X; do
-    check_and_correct_chr_prefix "G1000_loci_hg38_chr${i}.txt" "${i}"
-done
-
-for i in {1..22} X
-do
-  # Generate BED file from the tailored loci set
-  awk '{ print $1 "\t" $2-1 "\t" $2 }' G1000_loci_hg38_chr${i}.txt > chr${i}.bed
-
-  # Extract relevant GC content data for this chromosome
-  grep "^chr${i}_" GC_G1000_on_target_hg38.txt > chr${i}.txt
-
-  # Intersect BED file with target regions to find loci on target
-  bedtools intersect -a chr${i}.bed -b targets_with_chr.bed | awk '{ print $1 "_" $3 }' > chr${i}_on_target.txt
-
-  # Calculate the number of lines needed for random sampling (30% of total)
-  n=$(wc -l < chr${i}_on_target.txt)
-  count=$((n * 3 / 10))
-
-  # Get loci that are both on target and match the GC content data
-  grep -xf chr${i}.txt chr${i}_on_target.txt > chr${i}.temp
-
-  # Add random subset of on-target loci to the list
-  shuf -n $count chr${i}_on_target.txt >> chr${i}.temp
-
-  # Sort, remove duplicates, and format output
-  sort -n -k2 -t '_' chr${i}.temp | uniq | awk 'BEGIN { FS="_" } ; { print $1 "\t" $2 }' > battenberg_loci_on_target_hg38_chr${i}.txt
-done
-
-# Compress the resulting loci files into a zip archive
-zip battenberg_loci_on_target_hg38.zip battenberg_loci_on_target_hg38_chr*.txt
-
-```
-
-If using Battenberg provided references:
-
-```bash
-cd battenberg_loci_on_target_hg38/
-rm *chrstring*
-rm 1kg.phase3.v5a_GRCh38nounref_loci_chr23.txt
-for i in {1..22} X
-do
-  awk '{ print $1 "\t" $2-1 "\t" $2 }' 1kg.phase3.v5a_GRCh38nounref_loci_chr${i}.txt > chr${i}.bed
-  grep "^${i}_" GC_G1000_on_target_hg38.txt | awk '{ print "chr" $1 }' > chr${i}.txt
-  bedtools intersect -a chr${i}.bed -b targets_with_chr.bed | awk '{ print $1 "_" $3 }' > chr${i}_on_target.txt
-  n=`wc -l chr${i}_on_target.txt | awk '{ print $1 }'`
-  count=$((n * 3 / 10))
-  grep -xf chr${i}.txt chr${i}_on_target.txt > chr${i}.temp
-  shuf -n $count chr${i}_on_target.txt >> chr${i}.temp
-  sort -n -k2 -t '_' chr${i}.temp | uniq | awk 'BEGIN { FS="_" } ; { print $1 "\t" $2 }' > battenberg_loci_on_target_hg38_chr${i}.txt
-done
-zip battenberg_loci_on_target_hg38.zip battenberg_loci_on_target_hg38_chr*.txt
-```
-
-4. Extract the alleles for the same set of SNPs. Uses a short R script defined below.
-
-```bash
-cd ../battenberg_alleles_on_target_hg38/
-rm 1kg.phase3.v5a_GRCh38nounref_allele_index_chr23.txt
-for i in {1..22} X
-do
-  Rscript intersect_ascat_alleles.R ../battenberg_loci_on_target_hg38/battenberg_loci_on_target_hg38_chr${i}.txt \
-    1kg.phase3.v5a_GRCh38nounref_allele_index_chr${i}.txt battenberg_alleles_on_target_hg38_chr${i}.txt
-done
-zip battenberg_alleles_on_target_hg38.zip battenberg_alleles_on_target_hg38_chr*.txt
-```
-
-Rscript `intersect_ascat_alleles.R`
-
-```bash
-#!/usr/bin/env Rscript
-
-args = commandArgs(trailingOnly=TRUE)
-
-loci = read.table(args[1], header=F, sep="\t", stringsAsFactors=F)
-alleles = read.table(args[2], header=T, sep="\t", stringsAsFactors=F)
-
-i = intersect(loci$V2, alleles$position)
-
-out = subset(alleles, alleles$position %in% i)
-write.table(out, args[3], col.names=T, row.names=F, quote=F, sep="\t")
-```
+    ```bash
+    for i in {1..22} X
+    do
+      Rscript intersect_ascat_alleles.R ../battenberg_loci_on_target_hg38/battenberg_loci_on_target_hg38_chr${i}.txt \
+        1kg.phase3.v5a_GRCh38nounref_allele_index_chr${i}.txt battenberg_alleles_on_target_hg38_chr${i}.txt
+    done
+    
+    zip battenberg_alleles_on_target_hg38.zip battenberg_alleles_on_target_hg38_chr*.txt
+    ```
 
 5. Move or copy all of the zip files you've created to a suitable location. Specify these in your parameters, e.g.
 
-```json
-{
-  "ascat_alleles": "/path/to/battenberg_alleles_on_target_hg38.zip",
-  "ascat_loci": "/path/to/battenberg_loci_on_target_hg38.zip",
-  "ascat_loci_gc": "/path/to/GC_G1000_on_target_hg38.zip",
-  "ascat_loci_rt": "/path/to/RT_G1000_on_target_hg38.zip"
-}
-```
+    ```json
+    {
+      "ascat_alleles": "/path/to/battenberg_alleles_on_target_hg38.zip",
+      "ascat_loci": "/path/to/battenberg_loci_on_target_hg38.zip",
+      "ascat_loci_gc": "/path/to/GC_G1000_on_target_hg38.zip",
+      "ascat_loci_rt": "/path/to/RT_G1000_on_target_hg38.zip"
+    }
+    ```
 
 ## What are the bwa, bwa-mem2 and sentieon bwa mem parameters?
 
