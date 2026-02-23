@@ -67,16 +67,16 @@ sarek/
 ├── modules.json                # nf-core module tracking
 ├── modules/
 │   ├── local/                  # Pipeline-specific modules
-│   └── nf-core/                # Imported nf-core modules (120+)
+│   └── nf-core/                # Imported nf-core modules
 ├── subworkflows/
-│   ├── local/                  # Pipeline-specific subworkflows (66)
-│   └── nf-core/                # Imported nf-core subworkflows (6)
+│   ├── local/                  # Pipeline-specific subworkflows
+│   └── nf-core/                # Imported nf-core subworkflows
 ├── workflows/sarek/main.nf     # Main workflow orchestration
 ├── conf/
 │   ├── base.config             # Default resource allocations
-│   ├── modules/                # Module-specific configurations (41 files)
-│   └── test/                   # Test configurations (21 files)
-├── tests/                      # nf-test test files (57 tests)
+│   ├── modules/                # Module-specific configurations
+│   └── test/                   # Test configurations
+├── tests/                      # nf-test test files
 ├── docs/                       # Documentation
 └── assets/                     # MultiQC config, samplesheets, etc.
 ```
@@ -183,17 +183,7 @@ ch_multiqc_files = ch_multiqc_files.mix(TOOL_A.out.report)
    .map { it.baseName }
    ```
 
-2. **Use parentheses for all method calls:**
-
-   ```groovy
-   // CORRECT
-   channel.map({ meta, file -> [meta, file] })
-
-   // ALSO CORRECT (trailing closure)
-   channel.map { meta, file -> [meta, file] }
-   ```
-
-3. **Explicit type declarations where applicable:**
+2. **Explicit type declarations where applicable:**
 
    ```groovy
    // CORRECT
@@ -204,7 +194,7 @@ ch_multiqc_files = ch_multiqc_files.mix(TOOL_A.out.report)
    def prefix = "${meta.id}"
    ```
 
-4. **Use underscore prefix for unused/dropped variables:**
+3. **Use underscore prefix for unused/dropped variables:**
 
    The underscore prefix convention clearly indicates which variables from a closure are intentionally not used in the output. This makes code review easier and prevents confusion about whether a variable was accidentally omitted.
 
@@ -227,6 +217,7 @@ ch_multiqc_files = ch_multiqc_files.mix(TOOL_A.out.report)
    ```
 
    **When to use underscore prefix:**
+
    - Variable is received but not included in output
    - Variable is needed for destructuring but value is discarded
    - Makes intent clear during code review
