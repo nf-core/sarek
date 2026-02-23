@@ -217,7 +217,6 @@ ch_multiqc_files = ch_multiqc_files.mix(TOOL_A.out.report)
    ```
 
    **When to use underscore prefix:**
-
    - Variable is received but not included in output
    - Variable is needed for destructuring but value is discarded
    - Makes intent clear during code review
