@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Fix empty fastp output folder created when trimmed reads are not saved
 - [#2143](https://github.com/nf-core/sarek/pull/2143) - Varlociraptor collecting multiple scenario files for one sample
 
 ### Removed
