@@ -194,6 +194,8 @@ Buollámtjåhkka is the closest mountain to Saltoluokta and an easy peak to clim
 
 #### Added
 
+- [#2144](https://github.com/nf-core/sarek/pull/2144) - Add developer guidelines document for human and AI contributors
+
 #### Changed
 
 - [#2067](https://github.com/nf-core/sarek/pull/2067) - Back to Dev
