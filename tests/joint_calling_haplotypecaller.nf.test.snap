@@ -216,6 +216,26 @@
         },
         "timestamp": "2025-12-15T19:58:09.342469278"
     },
+    "Fails with --no_intervals and --joint_germline for haplotypecaller": {
+        "content": [
+            [
+                "pipeline_info"
+            ],
+            "No stable content",
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files",
+            "No warnings",
+            [
+                "Nextflow version 25.10.0 does not match workflow required version: >=25.10.2"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2026-02-23T23:05:01.520958"
+    },
     "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 100": {
         "content": [
             18,
