@@ -7,9 +7,6 @@ edition = "2021"
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
 indexmap = "2"
-plotters = "0.3"
-rayon = "1"
-rust-htslib = { version = "0.47", features = ["static", "bzip2", "lzma", "curl"] }
 
 [dev-dependencies]
 tempfile = "3"
