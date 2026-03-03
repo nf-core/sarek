@@ -178,7 +178,8 @@ docker run --rm -v "$PWD":"$PWD" -w "$PWD" biocontainers/goleft:0.2.4--h9ee0642_
   - scaffold created at `ironqc/` with requested dependencies and release profile
   - subcommands and placeholder output plumbing implemented for `stats`, `mosdepth`, `indexcov`, and `bundle`
   - integration test skeleton added in `ironqc/tests/integration_cli.rs`
-  - blocker: local environment lacks `cargo` and `rust-analyzer`, so `fmt/clippy/test` and LSP validation are pending until Rust toolchain is installed
+  - verification complete: `cargo fmt`, `cargo clippy -- -D warnings`, and `cargo test` all pass
+  - LSP diagnostics clean for all changed Rust files
 
 ### Phase 2: `samtools stats` core parity (SN + MultiQC-critical sections)
 

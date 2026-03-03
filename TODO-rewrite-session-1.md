@@ -38,21 +38,18 @@
 - Checked `modules/nf-core/mosdepth/main.nf` for argument semantics (`--by`, `-n`, `--fast-mode`).
 - Checked `modules/nf-core/goleft/indexcov/main.nf` and `conf/modules/indexcov.config` for indexcov output placement and naming.
 
-## Blockers
+## Verification
 
-- `cargo` is not installed in this environment (`command not found`), so these required checks could not be executed:
-  - `cargo fmt`
-  - `cargo clippy -- -D warnings`
-  - `cargo test`
-- `rust-analyzer` is not installed, so `lsp_diagnostics` could not run for changed Rust files.
+- Ran `cargo fmt && cargo clippy -- -D warnings && cargo test` in `ironqc/`.
+- Result: all checks pass; integration tests pass (`4 passed, 0 failed`).
+- Ran `lsp_diagnostics` for all changed Rust files.
+- Result: no diagnostics found.
 
 ## Next Steps
 
-1. Install Rust toolchain (`cargo`, `rustc`) and `rust-analyzer`.
-2. Run `cargo fmt && cargo clippy -- -D warnings && cargo test` in `ironqc/`.
-3. Fix any resulting issues and re-run until clean.
-4. Continue Phase 1 acceptance validation against invocation expectations.
+1. Add validation script scaffolding in `scripts/` for upcoming parity phases.
+2. Start Phase 2 accumulator design for `samtools stats` SN + MultiQC-critical sections.
 
 ## Remaining Estimate
 
-- Phase 1 remaining effort: ~1 session (toolchain setup + verification pass + final cleanup).
+- Phase 1 remaining effort: 0 sessions (completed).

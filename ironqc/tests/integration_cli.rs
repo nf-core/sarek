@@ -72,8 +72,14 @@ fn mosdepth_creates_expected_outputs() {
         tmp.path(),
     );
 
-    assert!(tmp.path().join("sample.md.mosdepth.global.dist.txt").exists());
-    assert!(tmp.path().join("sample.md.mosdepth.region.dist.txt").exists());
+    assert!(tmp
+        .path()
+        .join("sample.md.mosdepth.global.dist.txt")
+        .exists());
+    assert!(tmp
+        .path()
+        .join("sample.md.mosdepth.region.dist.txt")
+        .exists());
     assert!(tmp.path().join("sample.md.mosdepth.summary.txt").exists());
 }
 
@@ -104,10 +110,19 @@ fn indexcov_creates_expected_outputs() {
 
     assert!(tmp.path().join("indexcov/indexcov-indexcov.ped").exists());
     assert!(tmp.path().join("indexcov/indexcov-indexcov.roc").exists());
-    assert!(tmp.path().join("indexcov/indexcov-indexcov.bed.gz").exists());
+    assert!(tmp
+        .path()
+        .join("indexcov/indexcov-indexcov.bed.gz")
+        .exists());
     assert!(tmp.path().join("indexcov/indexcov-indexcov.html").exists());
-    assert!(tmp.path().join("indexcov/indexcov-indexcov.sex.png").exists());
-    assert!(tmp.path().join("indexcov/indexcov-indexcov.roc.png").exists());
+    assert!(tmp
+        .path()
+        .join("indexcov/indexcov-indexcov.sex.png")
+        .exists());
+    assert!(tmp
+        .path()
+        .join("indexcov/indexcov-indexcov.roc.png")
+        .exists());
 }
 
 #[test]
@@ -139,13 +154,40 @@ fn bundle_creates_union_of_outputs() {
     );
 
     assert!(tmp.path().join("sample.md.cram.stats").exists());
-    assert!(tmp.path().join("sample.md.cram.mosdepth.global.dist.txt").exists());
-    assert!(tmp.path().join("sample.md.cram.mosdepth.region.dist.txt").exists());
-    assert!(tmp.path().join("sample.md.cram.mosdepth.summary.txt").exists());
-    assert!(tmp.path().join("indexcov/sample.md.cram-indexcov.ped").exists());
-    assert!(tmp.path().join("indexcov/sample.md.cram-indexcov.roc").exists());
-    assert!(tmp.path().join("indexcov/sample.md.cram-indexcov.bed.gz").exists());
-    assert!(tmp.path().join("indexcov/sample.md.cram-indexcov.html").exists());
-    assert!(tmp.path().join("indexcov/sample.md.cram-indexcov.sex.png").exists());
-    assert!(tmp.path().join("indexcov/sample.md.cram-indexcov.roc.png").exists());
+    assert!(tmp
+        .path()
+        .join("sample.md.cram.mosdepth.global.dist.txt")
+        .exists());
+    assert!(tmp
+        .path()
+        .join("sample.md.cram.mosdepth.region.dist.txt")
+        .exists());
+    assert!(tmp
+        .path()
+        .join("sample.md.cram.mosdepth.summary.txt")
+        .exists());
+    assert!(tmp
+        .path()
+        .join("indexcov/sample.md.cram-indexcov.ped")
+        .exists());
+    assert!(tmp
+        .path()
+        .join("indexcov/sample.md.cram-indexcov.roc")
+        .exists());
+    assert!(tmp
+        .path()
+        .join("indexcov/sample.md.cram-indexcov.bed.gz")
+        .exists());
+    assert!(tmp
+        .path()
+        .join("indexcov/sample.md.cram-indexcov.html")
+        .exists());
+    assert!(tmp
+        .path()
+        .join("indexcov/sample.md.cram-indexcov.sex.png")
+        .exists());
+    assert!(tmp
+        .path()
+        .join("indexcov/sample.md.cram-indexcov.roc.png")
+        .exists());
 }

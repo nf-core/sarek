@@ -12,10 +12,10 @@ pub fn run(args: IndexcovArgs) -> Result<()> {
     let prefix = args.prefix.unwrap_or_else(|| "indexcov".to_string());
     let base = args.directory.join(format!("{prefix}-indexcov"));
     let outputs = [
-        base.with_extension("ped"),
-        base.with_extension("roc"),
-        base.with_extension("bed.gz"),
-        base.with_extension("html"),
+        PathBuf::from(format!("{}.ped", base.display())),
+        PathBuf::from(format!("{}.roc", base.display())),
+        PathBuf::from(format!("{}.bed.gz", base.display())),
+        PathBuf::from(format!("{}.html", base.display())),
         PathBuf::from(format!("{}.sex.png", base.display())),
         PathBuf::from(format!("{}.roc.png", base.display())),
     ];
