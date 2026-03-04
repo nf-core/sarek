@@ -28,11 +28,19 @@ pub fn run(args: BundleArgs) -> Result<()> {
 
     mosdepth_acc.write_outputs(&args.prefix)?;
 
+    // Extract just the filename stem from the full prefix path for indexcov,
+    // since indexcov joins directory + prefix internally.
+    let indexcov_prefix = std::path::Path::new(&args.prefix)
+        .file_name()
+        .and_then(|s| s.to_str())
+        .unwrap_or(&args.prefix)
+        .to_string();
+
     let indexcov_args = crate::cli::IndexcovArgs {
         bams: vec![args.bam],
         fai: args.fai,
         directory: args.indexcov_dir,
-        prefix: Some(args.prefix),
+        prefix: Some(indexcov_prefix),
     };
     indexcov::run(indexcov_args)?;
 
