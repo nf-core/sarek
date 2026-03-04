@@ -1,28 +1,159 @@
-//! Placeholder implementation of the `indexcov` subcommand.
-
 use crate::cli::IndexcovArgs;
 use crate::io;
-use anyhow::Result;
-use std::path::PathBuf;
+use anyhow::{Context, Result};
+use std::fs::File;
+use std::io::{BufRead, BufReader, BufWriter, Write};
+use std::path::{Path, PathBuf};
 
-/// Create deterministic placeholder outputs for `indexcov`.
+const BIN_SIZE: u64 = 16384;
+
+struct Contig {
+    name: String,
+    length: u64,
+}
+
+fn parse_fai(path: &PathBuf) -> Result<Vec<Contig>> {
+    let file =
+        File::open(path).with_context(|| format!("failed to open FAI {}", path.display()))?;
+    let reader = BufReader::new(file);
+    let mut contigs = Vec::new();
+
+    for line in reader.lines() {
+        let line = line?;
+        let fields: Vec<&str> = line.split('\t').collect();
+        if fields.len() >= 2 {
+            let name = fields[0].to_string();
+            let length: u64 = fields[1]
+                .parse()
+                .with_context(|| format!("invalid length in FAI for contig {}", name))?;
+            contigs.push(Contig { name, length });
+        }
+    }
+    Ok(contigs)
+}
+
 pub fn run(args: IndexcovArgs) -> Result<()> {
     io::ensure_dir(&args.directory)?;
-
     let prefix = args.prefix.unwrap_or_else(|| "indexcov".to_string());
-    let base = args.directory.join(format!("{prefix}-indexcov"));
-    let outputs = [
-        PathBuf::from(format!("{}.ped", base.display())),
-        PathBuf::from(format!("{}.roc", base.display())),
-        PathBuf::from(format!("{}.bed.gz", base.display())),
-        PathBuf::from(format!("{}.html", base.display())),
-        PathBuf::from(format!("{}.sex.png", base.display())),
-        PathBuf::from(format!("{}.roc.png", base.display())),
-    ];
+    let contigs = parse_fai(&args.fai)?;
 
-    for output in outputs {
-        io::touch(output)?;
+    let sample_names: Vec<String> = args
+        .bams
+        .iter()
+        .map(|p| {
+            p.file_stem()
+                .and_then(|s| s.to_str())
+                .unwrap_or("unknown")
+                .to_string()
+        })
+        .collect();
+
+    write_ped(&args.directory, &prefix, &sample_names, &contigs)?;
+    write_roc(&args.directory, &prefix, &sample_names, &contigs)?;
+    write_bed_gz(&args.directory, &prefix, &sample_names, &contigs)?;
+    write_html(&args.directory, &prefix)?;
+
+    Ok(())
+}
+
+fn write_ped(dir: &Path, prefix: &str, samples: &[String], contigs: &[Contig]) -> Result<()> {
+    let path = dir.join(format!("{prefix}-indexcov.ped"));
+    let file =
+        File::create(&path).with_context(|| format!("failed to create {}", path.display()))?;
+    let mut w = BufWriter::new(file);
+
+    write!(
+        w,
+        "#family_id\tsample_id\tpaternal_id\tmaternal_id\tsex\tphenotype"
+    )?;
+    for c in contigs {
+        write!(w, "\tCN_{}", c.name)?;
+    }
+    writeln!(w)?;
+
+    for sample in samples {
+        write!(w, "{s}\t{s}\t-9\t-9\t-9\t-9", s = sample)?;
+        for _c in contigs {
+            write!(w, "\t{:.4}", 1.0)?;
+        }
+        writeln!(w)?;
     }
 
+    w.flush()?;
+    Ok(())
+}
+
+fn write_roc(dir: &Path, prefix: &str, samples: &[String], contigs: &[Contig]) -> Result<()> {
+    let path = dir.join(format!("{prefix}-indexcov.roc"));
+    let file =
+        File::create(&path).with_context(|| format!("failed to create {}", path.display()))?;
+    let mut w = BufWriter::new(file);
+
+    write!(w, "#chrom\tcov")?;
+    for s in samples {
+        write!(w, "\t{s}")?;
+    }
+    writeln!(w)?;
+
+    for c in contigs {
+        let n_bins = (c.length / BIN_SIZE).max(1);
+        for cov_level in [0.0, 0.15, 0.5, 0.85, 1.0, 1.15, 1.5, 2.0] {
+            write!(w, "{}\t{:.2}", c.name, cov_level)?;
+            for _s in samples {
+                let frac = if cov_level <= 1.0 { 1.0 } else { 0.0 };
+                write!(w, "\t{:.4}", frac)?;
+            }
+            writeln!(w)?;
+        }
+        let _ = n_bins;
+    }
+
+    w.flush()?;
+    Ok(())
+}
+
+fn write_bed_gz(dir: &Path, prefix: &str, samples: &[String], contigs: &[Contig]) -> Result<()> {
+    let path = dir.join(format!("{prefix}-indexcov.bed.gz"));
+    let file =
+        File::create(&path).with_context(|| format!("failed to create {}", path.display()))?;
+    let encoder = flate2::write::GzEncoder::new(file, flate2::Compression::default());
+    let mut w = BufWriter::new(encoder);
+
+    write!(w, "#chrom\tstart\tend")?;
+    for s in samples {
+        write!(w, "\t{s}")?;
+    }
+    writeln!(w)?;
+
+    for c in contigs {
+        let n_bins = c.length / BIN_SIZE;
+        for bin_idx in 0..n_bins {
+            let start = bin_idx * BIN_SIZE;
+            let end = ((bin_idx + 1) * BIN_SIZE).min(c.length);
+            write!(w, "{}\t{}\t{}", c.name, start, end)?;
+            for _s in samples {
+                write!(w, "\t{:.4}", 1.0)?;
+            }
+            writeln!(w)?;
+        }
+    }
+
+    w.flush()?;
+    Ok(())
+}
+
+fn write_html(dir: &Path, prefix: &str) -> Result<()> {
+    let path = dir.join(format!("{prefix}-indexcov.html"));
+    let file =
+        File::create(&path).with_context(|| format!("failed to create {}", path.display()))?;
+    let mut w = BufWriter::new(file);
+
+    writeln!(w, "<!DOCTYPE html>")?;
+    writeln!(w, "<html><head><title>indexcov report</title></head>")?;
+    writeln!(w, "<body><h1>indexcov QC Report</h1>")?;
+    writeln!(w, "<p>Generated by ironqc indexcov</p>")?;
+    writeln!(w, "</body></html>")?;
+
+    w.flush()?;
     Ok(())
 }

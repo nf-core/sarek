@@ -2,11 +2,16 @@
 name = "ironqc"
 version = "0.1.0"
 edition = "2021"
+description = "Unified BAM/CRAM QC: samtools stats + mosdepth + indexcov in one pass"
+license = "MIT"
 
 [dependencies]
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
 indexmap = "2"
+noodles = { version = "0.88", features = ["bam", "sam", "cram", "fasta", "core", "bgzf", "tabix", "bed"] }
+flate2 = "1"
+rayon = "1"
 
 [dev-dependencies]
 tempfile = "3"

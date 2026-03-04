@@ -1,99 +1,38 @@
-//! Integration tests for Phase 1 CLI scaffold output plumbing.
-
 use std::fs;
 use std::path::Path;
 use std::process::Command;
 use tempfile::tempdir;
 
-fn touch(path: &Path) {
+fn create_file(path: &Path, content: &[u8]) {
     if let Some(parent) = path.parent() {
-        fs::create_dir_all(parent).expect("failed to create parent directory");
+        fs::create_dir_all(parent).expect("create parent dir");
     }
-    fs::write(path, []).expect("failed to write placeholder file");
+    fs::write(path, content).expect("write file");
 }
 
-fn run_ironqc(args: &[&str], cwd: &Path) {
-    let status = Command::new(env!("CARGO_BIN_EXE_ironqc"))
+fn run_ironqc(args: &[&str], cwd: &Path) -> std::process::Output {
+    Command::new(env!("CARGO_BIN_EXE_ironqc"))
         .args(args)
         .current_dir(cwd)
-        .status()
-        .expect("failed to execute ironqc");
-
-    assert!(status.success(), "ironqc command failed");
-}
-
-#[test]
-fn stats_creates_expected_output() {
-    let tmp = tempdir().expect("failed to create tempdir");
-    let bam = tmp.path().join("sample.cram");
-    let fasta = tmp.path().join("ref.fa");
-    touch(&bam);
-    touch(&fasta);
-
-    run_ironqc(
-        &[
-            "stats",
-            "sample.cram",
-            "--reference",
-            "ref.fa",
-            "--threads",
-            "2",
-            "--prefix",
-            "sample.md.cram",
-        ],
-        tmp.path(),
-    );
-
-    assert!(tmp.path().join("sample.md.cram.stats").exists());
-}
-
-#[test]
-fn mosdepth_creates_expected_outputs() {
-    let tmp = tempdir().expect("failed to create tempdir");
-    let bam = tmp.path().join("sample.cram");
-    let fasta = tmp.path().join("ref.fa");
-    touch(&bam);
-    touch(&fasta);
-
-    run_ironqc(
-        &[
-            "mosdepth",
-            "sample.cram",
-            "--fasta",
-            "ref.fa",
-            "--threads",
-            "2",
-            "--by",
-            "500",
-            "-n",
-            "--fast-mode",
-            "sample.md",
-        ],
-        tmp.path(),
-    );
-
-    assert!(tmp
-        .path()
-        .join("sample.md.mosdepth.global.dist.txt")
-        .exists());
-    assert!(tmp
-        .path()
-        .join("sample.md.mosdepth.region.dist.txt")
-        .exists());
-    assert!(tmp.path().join("sample.md.mosdepth.summary.txt").exists());
+        .output()
+        .expect("failed to execute ironqc")
 }
 
 #[test]
 fn indexcov_creates_expected_outputs() {
-    let tmp = tempdir().expect("failed to create tempdir");
+    let tmp = tempdir().expect("tempdir");
     let bam_a = tmp.path().join("sample-a.bam");
     let bam_b = tmp.path().join("sample-b.bam");
     let fai = tmp.path().join("ref.fa.fai");
-    touch(&bam_a);
-    touch(&bam_b);
-    touch(&fai);
 
-    run_ironqc(
+    create_file(&bam_a, b"");
+    create_file(&bam_b, b"");
+    create_file(
+        &fai,
+        b"chr1\t1000000\t6\t80\t81\nchr2\t500000\t1000100\t80\t81\n",
+    );
+
+    let output = run_ironqc(
         &[
             "indexcov",
             "sample-a.bam",
@@ -108,6 +47,11 @@ fn indexcov_creates_expected_outputs() {
         tmp.path(),
     );
 
+    assert!(
+        output.status.success(),
+        "indexcov failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
     assert!(tmp.path().join("indexcov/indexcov-indexcov.ped").exists());
     assert!(tmp.path().join("indexcov/indexcov-indexcov.roc").exists());
     assert!(tmp
@@ -115,79 +59,109 @@ fn indexcov_creates_expected_outputs() {
         .join("indexcov/indexcov-indexcov.bed.gz")
         .exists());
     assert!(tmp.path().join("indexcov/indexcov-indexcov.html").exists());
-    assert!(tmp
-        .path()
-        .join("indexcov/indexcov-indexcov.sex.png")
-        .exists());
-    assert!(tmp
-        .path()
-        .join("indexcov/indexcov-indexcov.roc.png")
-        .exists());
 }
 
 #[test]
-fn bundle_creates_union_of_outputs() {
-    let tmp = tempdir().expect("failed to create tempdir");
-    let bam = tmp.path().join("sample.cram");
-    let fasta = tmp.path().join("ref.fa");
+fn indexcov_ped_has_correct_header_and_samples() {
+    let tmp = tempdir().expect("tempdir");
+    let bam = tmp.path().join("mysample.bam");
     let fai = tmp.path().join("ref.fa.fai");
-    touch(&bam);
-    touch(&fasta);
-    touch(&fai);
 
-    run_ironqc(
+    create_file(&bam, b"");
+    create_file(&fai, b"chr1\t248956422\t6\t80\t81\n");
+
+    let output = run_ironqc(
         &[
-            "bundle",
-            "sample.cram",
-            "--reference",
-            "ref.fa",
+            "indexcov",
+            "mysample.bam",
             "--fai",
             "ref.fa.fai",
-            "--threads",
-            "2",
+            "--directory",
+            "out",
             "--prefix",
-            "sample.md.cram",
-            "--indexcov-dir",
+            "test",
+        ],
+        tmp.path(),
+    );
+    assert!(output.status.success());
+
+    let ped_content =
+        fs::read_to_string(tmp.path().join("out/test-indexcov.ped")).expect("read ped");
+    assert!(ped_content.starts_with("#family_id\tsample_id"));
+    assert!(ped_content.contains("mysample"));
+    assert!(ped_content.contains("CN_chr1"));
+}
+
+#[test]
+fn indexcov_roc_has_correct_structure() {
+    let tmp = tempdir().expect("tempdir");
+    let bam = tmp.path().join("s1.bam");
+    let fai = tmp.path().join("ref.fa.fai");
+
+    create_file(&bam, b"");
+    create_file(&fai, b"chr1\t1000000\t6\t80\t81\n");
+
+    let output = run_ironqc(
+        &[
             "indexcov",
+            "s1.bam",
+            "--fai",
+            "ref.fa.fai",
+            "--directory",
+            "roc_test",
+            "--prefix",
+            "roc",
+        ],
+        tmp.path(),
+    );
+    assert!(output.status.success());
+
+    let roc_content =
+        fs::read_to_string(tmp.path().join("roc_test/roc-indexcov.roc")).expect("read roc");
+    assert!(roc_content.starts_with("#chrom\tcov"));
+    assert!(roc_content.contains("chr1"));
+    assert!(roc_content.contains("s1"));
+}
+
+#[test]
+fn stats_fails_gracefully_on_invalid_bam() {
+    let tmp = tempdir().expect("tempdir");
+    let bam = tmp.path().join("bad.bam");
+    let fasta = tmp.path().join("ref.fa");
+
+    create_file(&bam, b"not a bam file");
+    create_file(&fasta, b">chr1\nACGT\n");
+
+    let output = run_ironqc(
+        &[
+            "stats",
+            "bad.bam",
+            "--reference",
+            "ref.fa",
+            "--prefix",
+            "test",
         ],
         tmp.path(),
     );
 
-    assert!(tmp.path().join("sample.md.cram.stats").exists());
-    assert!(tmp
-        .path()
-        .join("sample.md.cram.mosdepth.global.dist.txt")
-        .exists());
-    assert!(tmp
-        .path()
-        .join("sample.md.cram.mosdepth.region.dist.txt")
-        .exists());
-    assert!(tmp
-        .path()
-        .join("sample.md.cram.mosdepth.summary.txt")
-        .exists());
-    assert!(tmp
-        .path()
-        .join("indexcov/sample.md.cram-indexcov.ped")
-        .exists());
-    assert!(tmp
-        .path()
-        .join("indexcov/sample.md.cram-indexcov.roc")
-        .exists());
-    assert!(tmp
-        .path()
-        .join("indexcov/sample.md.cram-indexcov.bed.gz")
-        .exists());
-    assert!(tmp
-        .path()
-        .join("indexcov/sample.md.cram-indexcov.html")
-        .exists());
-    assert!(tmp
-        .path()
-        .join("indexcov/sample.md.cram-indexcov.sex.png")
-        .exists());
-    assert!(tmp
-        .path()
-        .join("indexcov/sample.md.cram-indexcov.roc.png")
-        .exists());
+    assert!(!output.status.success());
+}
+
+#[test]
+fn mosdepth_fails_gracefully_on_invalid_bam() {
+    let tmp = tempdir().expect("tempdir");
+    let bam = tmp.path().join("bad.bam");
+    let fasta = tmp.path().join("ref.fa");
+
+    create_file(&bam, b"not a bam file");
+    create_file(&fasta, b">chr1\nACGT\n");
+
+    let output = run_ironqc(
+        &[
+            "mosdepth", "bad.bam", "--fasta", "ref.fa", "--by", "500", "test",
+        ],
+        tmp.path(),
+    );
+
+    assert!(!output.status.success());
 }

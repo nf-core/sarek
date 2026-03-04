@@ -1,5 +1,3 @@
-//! Entry point for the `ironqc` command-line interface.
-
 mod bundle;
 mod cli;
 mod indexcov;

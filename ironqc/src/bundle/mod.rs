@@ -1,35 +1,40 @@
-//! Placeholder implementation of the `bundle` subcommand.
+use crate::cli::BundleArgs;
+use crate::indexcov;
+use crate::mosdepth::MosdepthAccumulator;
+use crate::stats::StatsAccumulator;
+use anyhow::{Context, Result};
+use noodles::bam;
+use std::path::PathBuf;
 
-use crate::cli::{BundleArgs, IndexcovArgs, MosdepthArgs, StatsArgs};
-use crate::{indexcov, mosdepth, stats};
-use anyhow::Result;
-
-/// Run all placeholder subcommands and create their expected outputs.
 pub fn run(args: BundleArgs) -> Result<()> {
-    let stats_args = StatsArgs {
-        bam: args.bam.clone(),
-        reference: args.reference.clone(),
-        threads: args.threads,
-        prefix: args.prefix.clone(),
-    };
-    stats::run(stats_args)?;
+    let mut reader = bam::io::reader::Builder
+        .build_from_path(&args.bam)
+        .with_context(|| format!("failed to open BAM {}", args.bam.display()))?;
 
-    let mosdepth_args = MosdepthArgs {
-        bam: args.bam.clone(),
-        fasta: args.reference.clone(),
-        threads: args.threads,
-        by: None,
-        no_per_base: false,
-        fast_mode: false,
-        prefix: args.prefix.clone(),
-    };
-    mosdepth::run(mosdepth_args)?;
+    let header = reader.read_header()?;
 
-    let indexcov_args = IndexcovArgs {
+    let mut stats_acc = StatsAccumulator::new();
+    let mut mosdepth_acc = MosdepthAccumulator::new(&header, 500, false, false);
+
+    for result in reader.records() {
+        let record = result.context("failed to read BAM record")?;
+        stats_acc.process_record(&record, &header);
+        mosdepth_acc.process_record(&record, &header);
+    }
+
+    let finalized = stats_acc.finalize();
+    let stats_output = PathBuf::from(format!("{}.stats", args.prefix));
+    finalized.write_output(&stats_output)?;
+
+    mosdepth_acc.write_outputs(&args.prefix)?;
+
+    let indexcov_args = crate::cli::IndexcovArgs {
         bams: vec![args.bam],
         fai: args.fai,
         directory: args.indexcov_dir,
         prefix: Some(args.prefix),
     };
-    indexcov::run(indexcov_args)
+    indexcov::run(indexcov_args)?;
+
+    Ok(())
 }
