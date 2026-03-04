@@ -1,0 +1,49 @@
+name: ironqc CI
+
+on:
+  pull_request:
+    paths:
+      - "ironqc/**"
+  push:
+    branches:
+      - feature/rewrite-tools
+    paths:
+      - "ironqc/**"
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ironqc
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            ironqc/target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('ironqc/Cargo.lock') }}
+
+      - name: Check formatting
+        run: cargo fmt --check
+
+      - name: Lint
+        run: cargo clippy -- -D warnings
+
+      - name: Run tests
+        run: cargo test
+
+      - name: Build release
+        run: cargo build --release
+
+      - name: Smoke test - help
+        run: ./target/release/ironqc --help

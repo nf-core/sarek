@@ -9,10 +9,17 @@ use std::path::PathBuf;
 
 struct ContigStats {
     length: u64,
+    summary_deltas: Option<Vec<i32>>,
+    dist_deltas: Option<Vec<i32>>,
+}
+
+struct ComputedContigStats {
+    length: u64,
     bases_covered: u64,
-    min_depth: u64,
-    max_depth: u64,
-    _depth_histogram: Vec<u64>,
+    min_depth: u32,
+    max_depth: u32,
+    global_histogram: Vec<u64>,
+    region_histogram: Vec<u64>,
 }
 
 pub struct MosdepthAccumulator {
@@ -35,23 +42,26 @@ impl MosdepthAccumulator {
                 name.to_string(),
                 ContigStats {
                     length,
-                    bases_covered: 0,
-                    min_depth: u64::MAX,
-                    max_depth: 0,
-                    _depth_histogram: vec![0u64; 1001],
+                    summary_deltas: None,
+                    dist_deltas: None,
                 },
             );
         }
         Self {
             contigs,
-            window_size,
+            window_size: window_size.max(1),
             fast_mode,
         }
     }
 
     pub fn process_record(&mut self, record: &bam::Record, header: &noodles::sam::Header) {
         let flags = record.flags();
-        if flags.is_unmapped() || flags.is_secondary() || flags.is_supplementary() {
+        if flags.is_unmapped()
+            || flags.is_secondary()
+            || flags.is_supplementary()
+            || flags.is_duplicate()
+            || flags.is_qc_fail()
+        {
             return;
         }
 
@@ -79,42 +89,63 @@ impl MosdepthAccumulator {
             None => return,
         };
 
+        let len = match usize::try_from(contig.length) {
+            Ok(v) => v,
+            Err(_) => return,
+        };
+
+        let summary_deltas = contig
+            .summary_deltas
+            .get_or_insert_with(|| vec![0; len.saturating_add(1)]);
+        let dist_deltas = contig
+            .dist_deltas
+            .get_or_insert_with(|| vec![0; len.saturating_add(1)]);
+
+        let dist_start = pos.min(contig.length);
+        let dist_end = pos
+            .saturating_add(record.sequence().len() as u64)
+            .min(contig.length);
+        Self::add_delta_interval(dist_deltas, dist_start, dist_end);
+
         if self.fast_mode {
-            let read_len = record.sequence().len() as u64;
-            let end = (pos + read_len).min(contig.length);
-            let start_bin = pos / self.window_size;
-            let end_bin = end.saturating_sub(1) / self.window_size;
-            for _bin in start_bin..=end_bin {
-                contig.bases_covered += self.window_size.min(end - pos);
-            }
-        } else {
-            let cigar = record.cigar();
-            let mut ref_pos = pos;
-            for op in cigar.iter().flatten() {
-                let len: u64 = op.len() as u64;
-                match op.kind() {
-                    Kind::Match | Kind::SequenceMatch | Kind::SequenceMismatch => {
-                        contig.bases_covered += len;
-                        ref_pos += len;
-                    }
-                    Kind::Deletion | Kind::Skip => {
-                        ref_pos += len;
-                    }
-                    Kind::Insertion | Kind::SoftClip | Kind::HardClip | Kind::Pad => {}
+            Self::add_delta_interval(summary_deltas, dist_start, dist_end);
+            return;
+        }
+
+        let cigar = record.cigar();
+        let mut ref_pos = pos;
+
+        for op in cigar.iter().flatten() {
+            let op_len = op.len() as u64;
+            match op.kind() {
+                Kind::Match | Kind::SequenceMatch | Kind::SequenceMismatch => {
+                    let start = ref_pos.min(contig.length);
+                    let end = ref_pos.saturating_add(op_len).min(contig.length);
+                    Self::add_delta_interval(summary_deltas, start, end);
+
+                    ref_pos = ref_pos.saturating_add(op_len);
                 }
+                Kind::Deletion | Kind::Skip => {
+                    let start = ref_pos.min(contig.length);
+                    let end = ref_pos.saturating_add(op_len).min(contig.length);
+                    Self::add_delta_interval(summary_deltas, start, end);
+
+                    ref_pos = ref_pos.saturating_add(op_len);
+                }
+                Kind::Insertion | Kind::SoftClip | Kind::HardClip | Kind::Pad => {}
             }
-            let _ = ref_pos;
         }
     }
 
     pub fn write_outputs(&self, prefix: &str) -> Result<()> {
-        self.write_summary(prefix)?;
-        self.write_global_dist(prefix)?;
-        self.write_region_dist(prefix)?;
+        let computed = self.computed_contigs();
+        self.write_summary(prefix, &computed)?;
+        self.write_global_dist(prefix, &computed)?;
+        self.write_region_dist(prefix, &computed)?;
         Ok(())
     }
 
-    fn write_summary(&self, prefix: &str) -> Result<()> {
+    fn write_summary(&self, prefix: &str, computed: &[(&str, ComputedContigStats)]) -> Result<()> {
         let path = PathBuf::from(format!("{prefix}.mosdepth.summary.txt"));
         let file =
             File::create(&path).with_context(|| format!("failed to create {}", path.display()))?;
@@ -124,25 +155,35 @@ impl MosdepthAccumulator {
 
         let mut total_length: u64 = 0;
         let mut total_bases: u64 = 0;
+        let mut total_min: Option<u32> = None;
+        let mut total_max: u32 = 0;
 
-        for (name, cs) in &self.contigs {
+        for (name, cs) in computed {
             let mean = if cs.length > 0 {
                 cs.bases_covered as f64 / cs.length as f64
             } else {
                 0.0
             };
-            let min_d = if cs.min_depth == u64::MAX {
-                0
-            } else {
-                cs.min_depth
-            };
+
             writeln!(
                 w,
                 "{}\t{}\t{}\t{:.2}\t{}\t{}",
-                name, cs.length, cs.bases_covered, mean, min_d, cs.max_depth
+                name, cs.length, cs.bases_covered, mean, cs.min_depth, cs.max_depth
             )?;
+
+            writeln!(
+                w,
+                "{}_region\t{}\t{}\t{:.2}\t{}\t{}",
+                name, cs.length, cs.bases_covered, mean, cs.min_depth, cs.max_depth
+            )?;
+
             total_length += cs.length;
             total_bases += cs.bases_covered;
+            total_min = Some(match total_min {
+                Some(current) => current.min(cs.min_depth),
+                None => cs.min_depth,
+            });
+            total_max = total_max.max(cs.max_depth);
         }
 
         let total_mean = if total_length > 0 {
@@ -150,88 +191,212 @@ impl MosdepthAccumulator {
         } else {
             0.0
         };
+
+        let total_min = total_min.unwrap_or(0);
         writeln!(
             w,
-            "total\t{}\t{}\t{:.2}\t0\t0",
-            total_length, total_bases, total_mean
+            "total\t{}\t{}\t{:.2}\t{}\t{}",
+            total_length, total_bases, total_mean, total_min, total_max
+        )?;
+
+        writeln!(
+            w,
+            "total_region\t{}\t{}\t{:.2}\t{}\t{}",
+            total_length, total_bases, total_mean, total_min, total_max
         )?;
 
         w.flush()?;
         Ok(())
     }
 
-    fn write_global_dist(&self, prefix: &str) -> Result<()> {
+    fn write_global_dist(
+        &self,
+        prefix: &str,
+        computed: &[(&str, ComputedContigStats)],
+    ) -> Result<()> {
         let path = PathBuf::from(format!("{prefix}.mosdepth.global.dist.txt"));
         let file =
             File::create(&path).with_context(|| format!("failed to create {}", path.display()))?;
         let mut w = BufWriter::new(file);
 
-        let mut total_length: u64 = self.contigs.values().map(|c| c.length).sum();
-        if total_length == 0 {
-            total_length = 1;
+        let mut total_length: u64 = 0;
+        let mut total_histogram: Vec<u64> = Vec::new();
+
+        for (name, cs) in computed {
+            total_length += cs.length;
+            Self::merge_histogram(&mut total_histogram, &cs.global_histogram);
+            Self::write_distribution_rows(&mut w, name, cs.length, &cs.global_histogram)?;
         }
 
-        for (name, cs) in &self.contigs {
-            let contig_len = if cs.length > 0 { cs.length } else { 1 };
-            let mean_depth = cs.bases_covered as f64 / contig_len as f64;
-            let max_cov = (mean_depth * 3.0).ceil() as usize;
-            let max_cov = max_cov.clamp(1, 1000);
-
-            for cov in 0..=max_cov {
-                let frac = if cov == 0 {
-                    1.0
-                } else {
-                    let above = cs.bases_covered as f64 / contig_len as f64;
-                    (above - cov as f64 / (max_cov as f64 + 1.0)).max(0.0)
-                };
-                writeln!(w, "{}\t{}\t{:.4}", name, cov, frac)?;
-            }
-        }
-
-        let total_bases: u64 = self.contigs.values().map(|c| c.bases_covered).sum();
-        let global_mean = total_bases as f64 / total_length as f64;
-        let max_cov = (global_mean * 3.0).ceil() as usize;
-        let max_cov = max_cov.clamp(1, 1000);
-
-        for cov in 0..=max_cov {
-            let frac = if cov == 0 {
-                1.0
-            } else {
-                (global_mean - cov as f64 / (max_cov as f64 + 1.0)).max(0.0) / global_mean.max(1.0)
-            };
-            writeln!(w, "total\t{}\t{:.4}", cov, frac)?;
+        if total_length > 0 {
+            Self::write_distribution_rows(&mut w, "total", total_length, &total_histogram)?;
         }
 
         w.flush()?;
         Ok(())
     }
 
-    fn write_region_dist(&self, prefix: &str) -> Result<()> {
+    fn write_region_dist(
+        &self,
+        prefix: &str,
+        computed: &[(&str, ComputedContigStats)],
+    ) -> Result<()> {
         let path = PathBuf::from(format!("{prefix}.mosdepth.region.dist.txt"));
         let file =
             File::create(&path).with_context(|| format!("failed to create {}", path.display()))?;
         let mut w = BufWriter::new(file);
 
-        let total_length: u64 = self.contigs.values().map(|c| c.length).sum();
-        let total_bases: u64 = self.contigs.values().map(|c| c.bases_covered).sum();
-        let global_mean = if total_length > 0 {
-            total_bases as f64 / total_length as f64
-        } else {
-            0.0
-        };
-        let max_cov = (global_mean * 3.0).ceil() as usize;
-        let max_cov = max_cov.clamp(1, 1000);
+        let mut total_length: u64 = 0;
+        let mut total_histogram: Vec<u64> = Vec::new();
 
-        for cov in 0..=max_cov {
-            let frac = if cov == 0 {
-                1.0
-            } else {
-                (global_mean - cov as f64 / (max_cov as f64 + 1.0)).max(0.0) / global_mean.max(1.0)
-            };
-            writeln!(w, "total\t{}\t{:.4}", cov, frac)?;
+        for (name, cs) in computed {
+            total_length += cs.length;
+            Self::merge_histogram(&mut total_histogram, &cs.region_histogram);
+            Self::write_distribution_rows(&mut w, name, cs.length, &cs.region_histogram)?;
+        }
+
+        if total_length > 0 {
+            Self::write_distribution_rows(&mut w, "total", total_length, &total_histogram)?;
         }
 
         w.flush()?;
+        Ok(())
+    }
+
+    fn computed_contigs(&self) -> Vec<(&str, ComputedContigStats)> {
+        let mut computed = Vec::new();
+
+        for (name, contig) in &self.contigs {
+            let Some(summary_deltas) = &contig.summary_deltas else {
+                continue;
+            };
+
+            let Some(dist_deltas) = &contig.dist_deltas else {
+                continue;
+            };
+
+            let length_usize = match usize::try_from(contig.length) {
+                Ok(v) => v,
+                Err(_) => continue,
+            };
+
+            if length_usize == 0 {
+                continue;
+            }
+
+            let mut summary_depth: i64 = 0;
+            let mut bases_covered: u64 = 0;
+            let mut min_depth: u32 = u32::MAX;
+            let mut max_depth: u32 = 0;
+
+            for delta in summary_deltas.iter().take(length_usize) {
+                summary_depth += i64::from(*delta);
+                let d = summary_depth.max(0) as u32;
+
+                bases_covered += u64::from(d);
+                min_depth = min_depth.min(d);
+                max_depth = max_depth.max(d);
+            }
+
+            let mut global_histogram: Vec<u64> = vec![0];
+            let mut region_histogram: Vec<u64> = vec![0];
+            let mut dist_depth: i64 = 0;
+
+            let mut window_sum: u64 = 0;
+            let mut window_bases: u64 = 0;
+
+            for delta in dist_deltas.iter().take(length_usize) {
+                dist_depth += i64::from(*delta);
+                let d = dist_depth.max(0) as u32;
+
+                let global_depth = d as usize;
+                if global_depth >= global_histogram.len() {
+                    global_histogram.resize(global_depth + 1, 0);
+                }
+                global_histogram[global_depth] += 1;
+
+                window_sum += u64::from(d);
+                window_bases += 1;
+
+                if window_bases == self.window_size {
+                    let region_depth =
+                        (window_sum as f64 / self.window_size as f64).floor() as usize;
+                    if region_depth >= region_histogram.len() {
+                        region_histogram.resize(region_depth + 1, 0);
+                    }
+                    region_histogram[region_depth] += window_bases;
+                    window_sum = 0;
+                    window_bases = 0;
+                }
+            }
+
+            if window_bases > 0 {
+                let region_depth = (window_sum as f64 / self.window_size as f64).floor() as usize;
+                if region_depth >= region_histogram.len() {
+                    region_histogram.resize(region_depth + 1, 0);
+                }
+                region_histogram[region_depth] += window_bases;
+            }
+
+            computed.push((
+                name.as_str(),
+                ComputedContigStats {
+                    length: contig.length,
+                    bases_covered,
+                    min_depth,
+                    max_depth,
+                    global_histogram,
+                    region_histogram,
+                },
+            ));
+        }
+
+        computed
+    }
+
+    fn add_delta_interval(deltas: &mut [i32], start: u64, end: u64) {
+        if start >= end {
+            return;
+        }
+
+        let start_idx = start as usize;
+        let end_idx = end as usize;
+        deltas[start_idx] += 1;
+        deltas[end_idx] -= 1;
+    }
+
+    fn merge_histogram(total: &mut Vec<u64>, histogram: &[u64]) {
+        if histogram.len() > total.len() {
+            total.resize(histogram.len(), 0);
+        }
+
+        for (idx, value) in histogram.iter().enumerate() {
+            total[idx] += value;
+        }
+    }
+
+    fn write_distribution_rows(
+        w: &mut BufWriter<File>,
+        label: &str,
+        length: u64,
+        histogram: &[u64],
+    ) -> Result<()> {
+        if length == 0 {
+            return Ok(());
+        }
+
+        let mut max_depth = histogram.len().saturating_sub(1);
+        while max_depth > 0 && histogram[max_depth] == 0 {
+            max_depth -= 1;
+        }
+
+        let mut cumulative: u64 = 0;
+        for depth in (0..=max_depth).rev() {
+            cumulative += histogram[depth];
+            let frac = cumulative as f64 / length as f64;
+            writeln!(w, "{label}\t{depth}\t{frac:.2}")?;
+        }
+
         Ok(())
     }
 }

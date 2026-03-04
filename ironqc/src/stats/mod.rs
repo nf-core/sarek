@@ -7,7 +7,8 @@ use std::path::PathBuf;
 
 use noodles::bam;
 use noodles::sam::alignment::record::cigar::op::Kind;
-use noodles::sam::alignment::record::Cigar as CigarTrait;
+use noodles::sam::alignment::record::data::field::Tag;
+
 use noodles::sam::alignment::record::QualityScores;
 
 macro_rules! sn {
@@ -29,7 +30,7 @@ pub struct StatsAccumulator {
     pub singletons: u64,
     pub bases_mapped: u64,
     pub bases_mapped_cigar: u64,
-    pub bases_trimmed: u64,
+
     pub bases_duplicated: u64,
     pub mismatches: u64,
     pub quality_sum: u64,
@@ -46,6 +47,10 @@ pub struct StatsAccumulator {
     pub max_length: u64,
     pub max_first_frag_length: u64,
     pub max_last_frag_length: u64,
+    pub inward_oriented_pairs: u64,
+    pub outward_oriented_pairs: u64,
+    pub other_oriented_pairs: u64,
+    pub different_chromosome_pairs: u64,
 }
 
 impl StatsAccumulator {
@@ -63,7 +68,7 @@ impl StatsAccumulator {
             singletons: 0,
             bases_mapped: 0,
             bases_mapped_cigar: 0,
-            bases_trimmed: 0,
+
             bases_duplicated: 0,
             mismatches: 0,
             quality_sum: 0,
@@ -80,11 +85,26 @@ impl StatsAccumulator {
             max_length: 0,
             max_first_frag_length: 0,
             max_last_frag_length: 0,
+            inward_oriented_pairs: 0,
+            outward_oriented_pairs: 0,
+            other_oriented_pairs: 0,
+            different_chromosome_pairs: 0,
         }
     }
 
     pub fn process_record(&mut self, record: &bam::Record, _header: &noodles::sam::Header) {
         let flags = record.flags();
+
+        if flags.is_secondary() {
+            self.secondary += 1;
+        }
+        if flags.is_supplementary() {
+            self.supplementary += 1;
+        }
+        if flags.is_secondary() || flags.is_supplementary() {
+            return;
+        }
+
         self.total_sequences += 1;
 
         let seq_len = record.sequence().len() as u64;
@@ -93,12 +113,6 @@ impl StatsAccumulator {
             self.max_length = seq_len;
         }
 
-        if flags.is_secondary() {
-            self.secondary += 1;
-        }
-        if flags.is_supplementary() {
-            self.supplementary += 1;
-        }
         if flags.is_duplicate() {
             self.duplicates += 1;
             self.bases_duplicated += seq_len;
@@ -138,31 +152,50 @@ impl StatsAccumulator {
             }
 
             if flags.is_segmented() {
-                self.reads_mapped_and_paired += 1;
                 if flags.is_mate_unmapped() {
                     self.singletons += 1;
+                } else {
+                    self.reads_mapped_and_paired += 1;
                 }
             }
 
+            self.mismatches += extract_nm(record);
+
             {
                 let cigar = record.cigar();
-                if let Ok(span) = cigar.alignment_span() {
-                    self.bases_mapped_cigar += span as u64;
-                }
                 for op in cigar.iter().flatten() {
                     match op.kind() {
-                        Kind::SoftClip | Kind::HardClip => {
-                            self.bases_trimmed += op.len() as u64;
+                        Kind::Match
+                        | Kind::Insertion
+                        | Kind::SequenceMatch
+                        | Kind::SequenceMismatch => {
+                            self.bases_mapped_cigar += op.len() as u64;
                         }
                         _ => {}
                     }
                 }
             }
 
-            if flags.is_segmented() && !flags.is_mate_unmapped() {
-                let tlen = record.template_length();
-                if tlen > 0 {
-                    self.insert_sizes.push(tlen as i64);
+            if flags.is_segmented() && flags.is_first_segment() && !flags.is_mate_unmapped() {
+                let reference_sequence_id = record.reference_sequence_id().and_then(Result::ok);
+                let mate_reference_sequence_id =
+                    record.mate_reference_sequence_id().and_then(Result::ok);
+                let same_reference = matches!(
+                    (reference_sequence_id, mate_reference_sequence_id),
+                    (Some(read_ref), Some(mate_ref)) if read_ref == mate_ref
+                );
+
+                if same_reference {
+                    classify_pair_orientation(self, record, flags);
+
+                    if flags.is_properly_segmented() {
+                        let tlen = record.template_length();
+                        if tlen > 0 {
+                            self.insert_sizes.push(tlen as i64);
+                        }
+                    }
+                } else if reference_sequence_id.is_some() && mate_reference_sequence_id.is_some() {
+                    self.different_chromosome_pairs += 1;
                 }
             }
         } else {
@@ -259,17 +292,17 @@ impl<'a> FinalizedStats<'a> {
         sn!(w, "total last fragment length:", a.total_last_frag_length);
         sn!(w, "bases mapped:", a.bases_mapped);
         sn!(w, "bases mapped (cigar):", a.bases_mapped_cigar);
-        sn!(w, "bases trimmed:", a.bases_trimmed);
+        sn!(w, "bases trimmed:", 0);
         sn!(w, "bases duplicated:", a.bases_duplicated);
         sn!(w, "mismatches:", a.mismatches);
-        sn!(w, "error rate:", format!("{:.6e}", self.error_rate));
-        sn!(w, "average length:", format!("{:.1}", self.average_length));
+        sn!(w, "error rate:", format_scientific(self.error_rate));
+        sn!(w, "average length:", format!("{:.0}", self.average_length));
         sn!(
             w,
             "average first fragment length:",
             if a.first_frag_count > 0 {
                 format!(
-                    "{:.1}",
+                    "{:.0}",
                     a.total_first_frag_length as f64 / a.first_frag_count as f64
                 )
             } else {
@@ -281,7 +314,7 @@ impl<'a> FinalizedStats<'a> {
             "average last fragment length:",
             if a.last_frag_count > 0 {
                 format!(
-                    "{:.1}",
+                    "{:.0}",
                     a.total_last_frag_length as f64 / a.last_frag_count as f64
                 )
             } else {
@@ -306,10 +339,14 @@ impl<'a> FinalizedStats<'a> {
             "insert size standard deviation:",
             format!("{:.1}", self.insert_size_stddev)
         );
-        sn!(w, "inward oriented pairs:", 0);
-        sn!(w, "outward oriented pairs:", 0);
-        sn!(w, "pairs with other orientation:", 0);
-        sn!(w, "pairs on different chromosomes:", 0);
+        sn!(w, "inward oriented pairs:", a.inward_oriented_pairs);
+        sn!(w, "outward oriented pairs:", a.outward_oriented_pairs);
+        sn!(w, "pairs with other orientation:", a.other_oriented_pairs);
+        sn!(
+            w,
+            "pairs on different chromosomes:",
+            a.different_chromosome_pairs
+        );
         sn!(
             w,
             "percentage of properly paired reads (%):",
@@ -326,6 +363,82 @@ impl<'a> FinalizedStats<'a> {
         w.flush()?;
         Ok(())
     }
+}
+
+fn extract_nm(record: &bam::Record) -> u64 {
+    record
+        .data()
+        .iter()
+        .find_map(|result| {
+            let (tag, value) = result.ok()?;
+            if tag != Tag::EDIT_DISTANCE {
+                return None;
+            }
+
+            value.as_int().and_then(|n| u64::try_from(n).ok())
+        })
+        .unwrap_or(0)
+}
+
+#[derive(Clone, Copy)]
+enum PairOrientation {
+    Inward,
+    Outward,
+    Other,
+}
+
+fn classify_pair_orientation(
+    acc: &mut StatsAccumulator,
+    record: &bam::Record,
+    flags: noodles::sam::alignment::record::Flags,
+) -> Option<PairOrientation> {
+    let read_is_reverse = flags.is_reverse_complemented();
+    let mate_is_reverse = flags.is_mate_reverse_complemented();
+
+    if read_is_reverse == mate_is_reverse {
+        acc.other_oriented_pairs += 1;
+        return Some(PairOrientation::Other);
+    }
+
+    let read_pos = record
+        .alignment_start()
+        .and_then(Result::ok)
+        .map(|pos| pos.get() as i64);
+    let mate_pos = record
+        .mate_alignment_start()
+        .and_then(Result::ok)
+        .map(|pos| pos.get() as i64);
+
+    let (Some(read_pos), Some(mate_pos)) = (read_pos, mate_pos) else {
+        return None;
+    };
+
+    let inward = if !read_is_reverse && mate_is_reverse {
+        read_pos <= mate_pos
+    } else {
+        read_pos >= mate_pos
+    };
+
+    if inward {
+        acc.inward_oriented_pairs += 1;
+        Some(PairOrientation::Inward)
+    } else {
+        acc.outward_oriented_pairs += 1;
+        Some(PairOrientation::Outward)
+    }
+}
+
+fn format_scientific(value: f64) -> String {
+    let raw = format!("{value:.6e}");
+    let Some((mantissa, exponent)) = raw.split_once('e') else {
+        return raw;
+    };
+
+    let Ok(exponent) = exponent.parse::<i32>() else {
+        return raw;
+    };
+
+    format!("{mantissa}e{exponent:+03}")
 }
 
 pub fn run(args: StatsArgs) -> Result<()> {
