@@ -31,7 +31,7 @@ workflow BAM_MARKDUPLICATES_SPARK {
     cram = GATK4SPARK_MARKDUPLICATES.out.output.join(INDEX_MARKDUPLICATES.out.crai, failOnDuplicate: true, failOnMismatch: true)
 
     // QC on CRAM
-    CRAM_QC_MOSDEPTH_SAMTOOLS(cram, fasta, intervals_bed_combined)
+    CRAM_QC_MOSDEPTH_SAMTOOLS(cram, fasta, fasta_fai, intervals_bed_combined)
 
     // When running Marduplicates spark, and saving reports
     GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta.map{ meta, fasta -> [ fasta ] }, fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] }, dict.map{ meta, dict -> [ dict ] })

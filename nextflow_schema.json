@@ -302,6 +302,13 @@
                     "help_text": "Multiple separated with commas.\n\n> The GATK4 Base Quality Score recalibration tools `Baserecalibrator` and `ApplyBQSR` are currently available as Beta release. Please be aware that `--use_gatk_spark` is not compatible with `--save_output_as_bam --save_mapped`. Use with caution!",
                     "pattern": "^((baserecalibrator|markduplicates)?,?)*(?<!,)$"
                 },
+                "use_ironqc": {
+                    "type": "boolean",
+                    "default": false,
+                    "fa_icon": "fas fa-bolt",
+                    "description": "Use ironqc (Rust) instead of samtools stats + mosdepth for BAM/CRAM QC",
+                    "help_text": "When enabled, the pipeline uses ironqc — a single-pass Rust tool that replaces both samtools stats and mosdepth. Requires Wave containers or a pre-built ironqc Docker image."
+                },
                 "markduplicates_pixel_distance": {
                     "type": "integer",
                     "help_text": "Pixel distance for GATK MarkDuplicates."

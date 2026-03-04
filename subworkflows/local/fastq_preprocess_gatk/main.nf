@@ -296,7 +296,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 cram_skip_markduplicates = Channel.empty().mix(input_sample)
             }
 
-            CRAM_QC_NO_MD(cram_skip_markduplicates, fasta, intervals_for_preprocessing)
+            CRAM_QC_NO_MD(cram_skip_markduplicates, fasta, fasta_fai, intervals_for_preprocessing)
 
             // Gather QC reports
             reports = reports.mix(CRAM_QC_NO_MD.out.reports.collect{ _meta, report -> [ report ] })

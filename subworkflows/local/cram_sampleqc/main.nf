@@ -6,6 +6,7 @@ workflow CRAM_SAMPLEQC {
     cram                        // channel: [ val(meta), cram, crai ]
     ngscheckmate_bed            // channel: [ ngscheckmate_bed ]
     fasta                       // channel: [ fasta ]
+    fasta_fai                   // channel: [ fasta_fai ]
     skip_baserecalibration      // boolean:
     intervals_for_preprocessing // channel:
 
@@ -19,6 +20,7 @@ workflow CRAM_SAMPLEQC {
         CRAM_QC_RECAL(
             cram,
             fasta,
+            fasta_fai,
             intervals_for_preprocessing,
         )
 

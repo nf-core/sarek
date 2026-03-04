@@ -2,20 +2,18 @@ process IRONQC {
     tag "$meta.id"
     label 'process_medium'
 
+    // Container built by Wave from co-located Dockerfile (no container directive needed)
+
     input:
-    tuple val(meta), path(cram), path(crai)
+    tuple val(meta), path(cram), path(crai), path(bed)
     tuple val(meta2), path(fasta)
     tuple val(meta3), path(fai)
 
     output:
     tuple val(meta), path("*.stats")                       , emit: stats
     tuple val(meta), path("*.mosdepth.global.dist.txt")    , emit: global_dist
-    tuple val(meta), path("*.mosdepth.region.dist.txt")    , emit: region_dist
+    tuple val(meta), path("*.mosdepth.region.dist.txt")    , optional: true, emit: region_dist
     tuple val(meta), path("*.mosdepth.summary.txt")        , emit: summary
-    tuple val(meta), path("indexcov/*-indexcov.ped")        , emit: ped
-    tuple val(meta), path("indexcov/*-indexcov.roc")        , emit: roc
-    tuple val(meta), path("indexcov/*-indexcov.bed.gz")     , emit: bed_gz
-    tuple val(meta), path("indexcov/*-indexcov.html")       , emit: html
     path "versions.yml"                                     , emit: versions
 
     when:
