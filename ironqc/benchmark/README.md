@@ -2,26 +2,56 @@
 
 ## Test Data
 
+### nf-core/test-datasets raredisease (primary benchmark)
+
+Source: [nf-core/test-datasets (raredisease branch)](https://github.com/nf-core/test-datasets/tree/raredisease/testdata)
+
+| File | Size | Reads | Contigs |
+|------|------|-------|---------|
+| `earlycasualcaiman_sorted_md.bam` | 69 MB | 1,351,181 | chr21 + MT + 22 stub contigs |
+| `hugelymodelbat_sorted_md.bam` | 56 MB | 1,048,330 | chr21 + MT + 22 stub contigs |
+| `slowlycivilbuck_sorted_md.bam` | 52 MB | 992,459 | chr21 + MT + 22 stub contigs |
+| `reference.fasta` | 47 MB | — | 24 contigs (chr21: 48M bases, MT: 16.5K bases) |
+
+### nf-core/test-datasets sarek3 (micro benchmark)
+
 Source: [nf-core/test-datasets (sarek3 branch)](https://github.com/nf-core/test-datasets/tree/sarek3/data/genomics/homo_sapiens/illumina/bam)
 
-| File | Size | Description |
-|------|------|-------------|
-| `test.paired_end.sorted.bam` | 175 KB | 5,644 reads, chr22, paired-end |
-| `test2.paired_end.sorted.bam` | 196 KB | 5,436 reads, chr22, paired-end |
-| `genome.fasta` | 40 KB | chr22, 40,001 bases |
+| File | Size | Reads |
+|------|------|-------|
+| `test.paired_end.sorted.bam` | 175 KB | 5,644 |
+| `test2.paired_end.sorted.bam` | 196 KB | 5,436 |
 
-## ironqc Performance (release build, macOS arm64)
+## Performance Results (release build, macOS arm64 — Apple Silicon)
 
-All timings measured with `/usr/bin/time -l`, median of 3 runs.
+All timings measured with `/usr/bin/time -l`.
 
-| Subcommand | Wall Time | User Time | RSS (MB) |
-|------------|-----------|-----------|----------|
-| `ironqc stats` | <10 ms | <10 ms | 2.4 |
-| `ironqc mosdepth` | <10 ms | <10 ms | 2.4 |
-| `ironqc bundle` (single-pass) | ~10 ms | <10 ms | 2.8 |
+### Raredisease BAMs (~1M reads each)
 
-Note: Test BAMs are very small (~5K reads). These timings confirm correctness and baseline overhead.
-For production-scale benchmarks, use WGS BAMs (30-50 GB, ~800M reads).
+| Sample | Subcommand | Wall Time | User Time | RSS (MB) |
+|--------|------------|-----------|-----------|----------|
+| earlycasualcaiman (69 MB, 1.35M reads) | `stats` | 1.02s | 0.98s | 10.6 |
+| earlycasualcaiman | `mosdepth` | 0.93s | 0.89s | 2.6 |
+| earlycasualcaiman | `bundle` | 1.06s | 1.02s | 9.9 |
+| hugelymodelbat (56 MB, 1.05M reads) | `stats` | 0.80s | 0.76s | 8.5 |
+| hugelymodelbat | `mosdepth` | 0.74s | 0.71s | 2.6 |
+| hugelymodelbat | `bundle` | 0.84s | 0.81s | 8.8 |
+| slowlycivilbuck (52 MB, 992K reads) | `stats` | 0.75s | 0.72s | 8.3 |
+| slowlycivilbuck | `mosdepth` | 0.69s | 0.66s | 2.6 |
+| slowlycivilbuck | `bundle` | 0.79s | 0.76s | 8.8 |
+
+**Key observations:**
+- **Bundle is faster than stats + mosdepth separately** (single BAM read pass vs two passes)
+- **Throughput**: ~1.3M reads/sec (stats), ~1.5M reads/sec (mosdepth), ~1.3M reads/sec (bundle)
+- **Memory**: stats ~9 MB (quality/cycle histograms), mosdepth ~2.6 MB (coverage arrays only), bundle ~9 MB (dominated by stats histograms)
+
+### Sarek3 BAMs (~5K reads, baseline overhead)
+
+| Subcommand | Wall Time | RSS (MB) |
+|------------|-----------|----------|
+| `stats` | <10 ms | 2.4 |
+| `mosdepth` | <10 ms | 2.4 |
+| `bundle` | ~10 ms | 2.8 |
 
 ## Output Verification
 
@@ -29,27 +59,25 @@ For production-scale benchmarks, use WGS BAMs (30-50 GB, ~800M reads).
 
 ```
 # This file was produced by samtools stats
-# The command line was: ironqc stats
-SN	raw total sequences:	5644
-SN	sequences:	5644
-SN	reads mapped:	5642
-SN	reads unmapped:	2
-SN	reads properly paired:	5640
-SN	total length:	672202
-SN	bases mapped (cigar):	671070
-SN	average length:	119.1
-SN	average quality:	40.9
-SN	insert size average:	125.7
+SN	raw total sequences:	1351181
+SN	reads mapped:	1347040
+SN	reads properly paired:	1342930
+SN	total length:	202104875
+SN	bases mapped (cigar):	198254694
+SN	average length:	149.6
+SN	average quality:	35.5
+SN	insert size average:	51802.9
 ```
 
-MultiQC compatibility: output starts with `# This file was produced by samtools stats` header (required trigger).
+MultiQC compatibility: output starts with `# This file was produced by samtools stats` (required trigger).
 
 ### mosdepth (mosdepth compatible)
 
 ```
 chrom	length	bases	mean	min	max
-chr22	40001	670989	16.77	0	0
-total	40001	670989	16.77	0	0
+21	48129895	52191506	1.08	0	0
+MT	16569	146179119	8822.45	0	0
+total	48168464	198370625	4.12	0	0
 ```
 
 Output files: `*.mosdepth.summary.txt`, `*.mosdepth.global.dist.txt`, `*.mosdepth.region.dist.txt`
@@ -60,31 +88,36 @@ Output files: `*-indexcov.ped`, `*-indexcov.roc`, `*-indexcov.bed.gz`, `*-indexc
 
 ### bundle (single-pass mode)
 
-Produces all stats + mosdepth + indexcov outputs in a single BAM read pass.
-Bundle outputs are byte-identical to individual subcommand outputs.
+Produces all stats + mosdepth + indexcov outputs in one BAM read pass.
+Bundle outputs are byte-identical to individual subcommand outputs (verified on sarek3 test data).
 
 ## Upstream Tool Comparison
 
 Upstream tools (samtools 1.21, mosdepth 0.3.10, goleft 0.2.4) were not available on the test system.
-For a full comparison, run:
+To generate reference outputs for numeric comparison:
 
 ```bash
-# Generate reference outputs with Docker
-docker run -v $(pwd)/input:/data quay.io/biocontainers/samtools:1.21--h50ea8bc_0 \
-  samtools stats /data/test.paired_end.sorted.bam > reference/test.samtools.stats
+docker run -v $(pwd)/input/raredisease:/data quay.io/biocontainers/samtools:1.21--h50ea8bc_0 \
+  samtools stats -r /data/reference.fasta /data/hugelymodelbat_sorted_md.bam \
+  > reference/hugelymodelbat.samtools.stats
 
-docker run -v $(pwd)/input:/data quay.io/biocontainers/mosdepth:0.3.10--hd299d5a_0 \
-  mosdepth --fasta /data/genome.fasta /data/test /data/test.paired_end.sorted.bam
+docker run -v $(pwd)/input/raredisease:/data quay.io/biocontainers/mosdepth:0.3.10--hd299d5a_0 \
+  mosdepth --fasta /data/reference.fasta /data/hugelymodelbat \
+  /data/hugelymodelbat_sorted_md.bam
 
-# Then validate with included scripts
-python3 ../scripts/validate_stats.py reference/test.samtools.stats output/stats/test.stats
-python3 ../scripts/validate_mosdepth.py reference/test output/mosdepth/test
+python3 ../scripts/validate_stats.py \
+  reference/hugelymodelbat.samtools.stats \
+  output/raredisease/stats/hugelymodelbat_sorted_md.stats
+
+python3 ../scripts/validate_mosdepth.py \
+  reference/hugelymodelbat \
+  output/raredisease/mosdepth/hugelymodelbat_sorted_md
 ```
 
 ## Build Information
 
-- Rust toolchain: stable
-- Key dependency: noodles 0.88 (pure Rust BAM/CRAM, zero C dependencies)
-- Build: `cargo build --release` (~18s)
-- Tests: 5/5 integration tests passing
-- Linting: `cargo clippy -- -D warnings` clean
+- **Rust toolchain**: stable
+- **Key dependency**: noodles 0.88 (pure Rust BAM/CRAM, zero C dependencies)
+- **Build time**: `cargo build --release` ~18s
+- **Tests**: 5/5 integration tests passing
+- **Linting**: `cargo clippy -- -D warnings` clean
