@@ -6,6 +6,7 @@ use std::path::PathBuf;
 /// Top-level CLI parser.
 #[derive(Debug, Parser)]
 #[command(name = "ironqc")]
+#[command(version)]
 #[command(about = "Unified QC scaffold for samtools stats, mosdepth, and indexcov")]
 pub struct Cli {
     /// Subcommand to execute.
