@@ -227,14 +227,14 @@
             "No VCF files",
             "No warnings",
             [
-                "Nextflow version 25.10.0 does not match workflow required version: >=25.10.2"
+                
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-23T23:05:01.520958"
+        "timestamp": "2026-03-06T10:54:11.276083"
     },
     "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 100": {
         "content": [
