@@ -103,7 +103,7 @@ jobs:
           run_name: sarek_${{ matrix.profile }}
           workspace_id: ${{ vars.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute_env: ${{ vars[matrix.compute_env] }}
+          compute_env: ${{ secrets[matrix.compute_env] }}
           revision: ${{ steps.revision.outputs.revision }}
           workdir: ${{ secrets[matrix.workdir] }}/work/sarek/work-${{ steps.revision.outputs.revision }}/${{ matrix.profile }}
           parameters: |
