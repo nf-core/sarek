@@ -402,7 +402,8 @@ workflow SAMPLESHEET_TO_CHANNEL {
     }
 
     if (tools && tools.split(',').contains('haplotypecaller') && joint_germline && no_intervals) {
-        error("Joint germline variant calling with GATK's HaplotypeCaller requires intervals because GenomicsDB cannot be used without them. Please provide intervals or remove `--no_intervals`.")
+        System.err.println("Joint germline variant calling with GATK's HaplotypeCaller requires intervals because GenomicsDB cannot be used without them. Please provide intervals or remove `--no_intervals`.")
+        error("Execution halted due to missing intervals.")
     }
 
     if (tools && (tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope')) && joint_germline && (!dbsnp || !known_indels || !known_snps)) {

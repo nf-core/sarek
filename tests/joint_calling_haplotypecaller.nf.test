@@ -52,7 +52,7 @@ nextflow_pipeline {
                 nucleotides_per_second: 20
             ],
             failure: true,
-            snapshot: 'stdout',
+            snapshot: 'stderr,stdout',
             snapshot_ignore: 'Downloading plugin',
             snapshot_include: 'requires intervals'
         ]
