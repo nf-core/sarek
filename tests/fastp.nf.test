@@ -22,6 +22,15 @@ nextflow_pipeline {
             ]
         ],
         [
+            name: "-profile test --trim_fastq (no save)",
+            params: [
+                tools: null,
+                trim_fastq: true,
+                input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
+                genome: 'testdata.nf-core.sarek'
+            ]
+        ],
+        [
             name: "-profile test --split_fastq 150000",
             params: [
                 save_split_fastqs: true,
