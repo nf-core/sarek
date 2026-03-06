@@ -1,0 +1,24 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+
+    def test_scenario = [
+        [
+            name: "-profile test --input tests/csv/3.0/fastq_multi_lane.csv --save_mapped --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools --tools null",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_multi_lane.csv",
+                save_mapped: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null
+            ]
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}
