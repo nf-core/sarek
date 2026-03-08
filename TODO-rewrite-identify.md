@@ -2,78 +2,162 @@
 
 ## Pipeline Summary
 
-- **Pipeline**: `nf-core/sarek` (tag `3.8.1`)
+- **Pipeline**: `nf-core/sarek` (commit `3880e26b` on `evanfloden/sarek`)
 - **Repository**: `https://github.com/nf-core/sarek`
-- **Data source**: repo inspection only (`main.nf`, `workflows/`, `subworkflows/`, `modules/`)
-- **Total pipeline runtime**: unknown (repo-only analysis)
-- **Sample count**: unknown (assumptions below use a representative 20-sample cohort = 10 tumor-normal pairs)
+- **Data source**: Seqera Platform run metadata (`run_id=4rk1M6nCGI6cYF`) and task export (`/tmp/seqera_tasks_4rk1M6nCGI6cYF.json`)
+- **Run name**: `sarek-germline-opt-v14-trial-0`
+- **Run status**: `SUCCEEDED`
+- **Total pipeline wall time**: ~1.5 hours
+- **Total tasks**: 117
+- **Total task-minutes**: 378.9
+- **Environment**: AWS Batch (`r5ad` family), `eu-west-1`
+- **Config context**: dragmap aligner, mpileup-only calling, GRCh38, 1 germline WGS sample split into 21 intervals
 
-### Runtime Assumptions Used For Scoring (Repo-only)
+### Scoring Method Used
 
-Because no trace file or Seqera run metadata was provided, ROI scoring uses normalized estimates:
-
-- `per-sample` task multiplier: **20**
-- `per-pair` task multiplier: **10**
-- `global` task multiplier: **1**
-- Difficulty mapping: **low=1, medium=3, high=9**
-- ROI formula: **(predicted_savings_per_task_minutes x task_count) / difficulty_score**
+- Difficulty mapping: `low=1`, `medium=3`, `high=9`
+- ROI formula: `(predicted_savings_per_task_minutes x task_count) / difficulty_score`
+- Ranking below uses measured runtime from this run only
+- A separate `N=20` projection (10 tumor-normal pairs) is included and clearly labeled as projection
 
 ## Tool Inventory
 
-| Tool | Language | Per-sample? | Mean runtime | Total runtime | Source URL | Notes |
-|------|----------|-------------|-------------|---------------|-----------|-------|
-| `bwa/bwamem2/dragmap/sentieon_bwamem/parabricks_fq2bam` | C/C++ or proprietary binaries | Yes | very high (120-300m) | very high | `http://bio-bwa.sourceforge.net/`, `https://github.com/bwa-mem2/bwa-mem2`, `https://github.com/Illumina/dragmap` | FASTQ -> BAM/CRAM alignment; bottleneck class; high rewrite difficulty; sentieon/parabricks closed-source binaries |
-| `gatk4*` (23 module processes) | Java | mixed (sample/pair/global) | low to very high (2-180m) | very high | `https://gatk.broadinstitute.org/` | Calling + recalibration + filtering; open-source but algorithmically complex; many scatter/gather tasks |
-| `samtools*` (9 module processes + local reindex) | C + shell wrappers | mostly per-sample | low to medium (1-25m) | high | `http://www.htslib.org/` | BAM/CRAM conversion/index/stats/mpileup; strong bundling potential with mosdepth/indexcov |
-| `mosdepth` | Rust | per-sample | medium (10-25m) | high | `https://github.com/brentp/mosdepth` | Coverage/QC; MultiQC-compatible outputs (`*.summary.txt`, dist files) |
-| `goleft indexcov` | Go | per-sample | medium (8-20m) | medium-high | `https://github.com/brentp/goleft` | Coverage QC from BAM index; can be fused with QC pass |
-| `fastqc` | Java | per-sample (mapping step) | medium (5-15m) | medium | `https://www.bioinformatics.babraham.ac.uk/projects/fastqc/` | MultiQC-compatible; rewriting likely low ROI vs established tool |
-| `fastp` | C++ | per-sample (mapping step) | medium (5-20m) | medium-high | `https://github.com/OpenGene/fastp` | Trimming/QC, emits HTML/JSON plots; rewrite risk from parity requirements |
-| `bbmap/bbsplit` | Java | per-sample if contamination removal enabled | medium-high (10-45m) | medium-high | `https://jgi.doe.gov/data-and-tools/software-tools/bbtools/` | Produces QC text used by MultiQC bbmap module |
-| `cnvkit*` (6 module processes) | Python | per-sample + global reference prep | medium-high (20-90m) | high when enabled | `https://cnvkit.readthedocs.io/` | Batch/call/export chain; Python stack = rewrite-friendly compared to C/Java callers |
-| `controlfreec*` (5 module processes) | C++ + Perl scripts | per-sample/per-pair | medium-high (20-90m) | medium-high | `http://boevalab.inf.ethz.ch/FREEC` | Includes plot generation (`makegraph2` PNG outputs); mixed language; medium complexity |
-| `ascat` | R | per-pair | high (40-120m) | medium-high | `https://github.com/VanLoo-lab/ascat` | Statistical model + plots; difficult output parity |
-| `deepvariant` | C++/TensorFlow | per-sample | very high (60-240m) | high | `https://github.com/google/deepvariant` | ML-heavy caller; high rewrite difficulty |
-| `freebayes` | C++ | sample/pair | medium-high (20-90m) | medium-high | `https://github.com/freebayes/freebayes` | Often followed by filter/merge/tabix |
-| `manta/strelka/tiddit/svdb` | C++ | sample/pair | medium-high to high | high | `https://github.com/Illumina/manta`, `https://github.com/Illumina/strelka`, `https://github.com/SciLifeLab/TIDDIT` | SV calling chain, difficult to faithfully reimplement |
-| `mutect2 auxiliary` (`getpileupsummaries`, `gatherpileupsummaries`, `calculatecontamination`, `learnreadorientationmodel`, `filtermutectcalls`) | Java | pair/tumor-only | medium (5-45m) | high combined | `https://gatk.broadinstitute.org/` | Strong chain/bundling candidate but high algorithmic risk |
-| `bcftools*` (annotate/concat/isec/merge/mpileup/norm/sort/stats/view) | C | sample/pair/global | low-medium (1-30m) | high in aggregate | `http://samtools.github.io/bcftools/` | Heavy VCF post-processing fan-out/fan-in; excellent workflow-level bundling target |
-| `vcftools` | C++ | sample/pair | low-medium (2-15m) | medium | `http://vcftools.sourceforge.net/` | VCF QC stats for MultiQC |
-| `snpeff/snpsift/vep` | Java + Java + Perl | sample/pair/global | medium-high (10-90m) | high if all enabled | `https://pcingola.github.io/SnpEff/`, `https://www.ensembl.org/info/docs/tools/vep/` | Annotation stack; formatting parity and plugin behavior are risks |
-| `varlociraptor*` + `yte` + `rbt_vcfsplit` | Rust + template engine | sample/pair | medium-high (15-90m) | medium-high | `https://varlociraptor.github.io/`, `https://github.com/rust-bio/rust-bio-tools` | Core caller already Rust (rewrite generally not needed) |
-| `msisensor2/msisensorpro` | C/C++ | sample/pair | medium (10-45m) | medium | `https://github.com/niu-lab/msisensor2`, `https://github.com/xjtu-omics/msisensor-pro` | Specialized MSI callers; limited benefit from rewrite |
-| `muse` | C++ | per-pair | medium-high (20-70m) | medium | `https://github.com/wwylab/MuSE` | Two-step call+sump chain |
-| `ngscheckmate` | Perl/R + binaries | per-pair/group | low-medium (5-20m) | medium | `https://github.com/parklab/NGSCheckMate` | Identity check from pileups/VCFs |
-| `utility processes` (`untar`, `unzip`, `gunzip`, `cat`, `tabix`, `gawk`, local awk helpers) | shell/C utilities | mostly global or per-file | low (seconds to minutes) | medium aggregated | mixed | Individually small, but many containerized steps add scheduling/staging overhead |
+### Processes Executed In This Run (real runtime data)
 
-### Complete Process Inventory (all process definitions)
+| Tool / Process | Language | Per-sample? | Mean runtime (min) | Total runtime (min) | Source URL | Notes |
+|---|---|---:|---:|---:|---|---|
+| `DRAGMAP_ALIGN` | C++ | Yes | 11.4 | 136.7 | `https://github.com/Illumina/dragmap` | Dominant wall time; already highly optimized native aligner |
+| `BCFTOOLS_MPILEUP` | C | Yes (interval-scattered) | 4.6 | 96.2 | `https://github.com/samtools/bcftools` | Reads 163.97 GB; I/O-heavy |
+| `GATK4_BASERECALIBRATOR` | Java | Yes (interval-scattered) | 4.2 | 87.9 | `https://github.com/broadinstitute/gatk` | BQSR modeling stage |
+| `GATK4_APPLYBQSR` | Java | Yes (interval-scattered) | 1.5 | 31.8 | `https://github.com/broadinstitute/gatk` | BQSR application stage |
+| `MOSDEPTH` | Rust | Yes | 3.0 | 5.9 | `https://github.com/brentp/mosdepth` | Already replaced by `ironqc` option in this repo |
+| `GATK4_MARKDUPLICATES` | Java | Yes | 5.0 | 5.0 | `https://github.com/broadinstitute/gatk` | Single task in this run |
+| `SAMTOOLS_STATS` | C | Yes | 2.4 | 4.9 | `https://github.com/samtools/samtools` | Already replaced by `ironqc` option in this repo |
+| `FASTQC` | Java | Yes | 2.0 | 2.0 | `https://www.bioinformatics.babraham.ac.uk/projects/fastqc/` | Small runtime in this config |
+| `FASTP` | C++ | Yes | 0.6 | 0.6 | `https://github.com/OpenGene/fastp` | Small runtime in this config |
+| `MULTIQC` | Python | Global | 0.7 | 0.7 | `https://github.com/MultiQC/MultiQC` | Aggregation only |
 
-Total process definitions found: **123** (`modules/**/main.nf`).
-No `process` blocks are defined in `workflows/**` or `subworkflows/**` (these compose modules).
+### Not Exercised In This Run (important caveat)
 
-- **GATK family (23)**: `GATK4_APPLYBQSR`, `GATK4_APPLYVQSR`, `GATK4_BASERECALIBRATOR`, `GATK4_CALCULATECONTAMINATION`, `GATK4_CNNSCOREVARIANTS`, `GATK4_CREATESEQUENCEDICTIONARY`, `GATK4_ESTIMATELIBRARYCOMPLEXITY`, `GATK4_FILTERMUTECTCALLS`, `GATK4_FILTERVARIANTTRANCHES`, `GATK4_GATHERBQSRREPORTS`, `GATK4_GATHERPILEUPSUMMARIES`, `GATK4_GENOMICSDBIMPORT`, `GATK4_GENOTYPEGVCFS`, `GATK4_GETPILEUPSUMMARIES`, `GATK4_HAPLOTYPECALLER`, `GATK4_INTERVALLISTTOBED`, `GATK4_LEARNREADORIENTATIONMODEL`, `GATK4_MARKDUPLICATES`, `GATK4_MERGEMUTECTSTATS`, `GATK4_MERGEVCFS`, `GATK4_MUTECT2`, `GATK4_VARIANTRECALIBRATOR`, `GATK4SPARK_*` trio.
-- **SAMtools family (10 including local wrapper)**: `SAMTOOLS_BAM2FQ`, `SAMTOOLS_COLLATEFASTQ`, `SAMTOOLS_CONVERT`, `SAMTOOLS_FAIDX`, `SAMTOOLS_INDEX`, `SAMTOOLS_MERGE`, `SAMTOOLS_MPILEUP`, `SAMTOOLS_STATS`, `SAMTOOLS_VIEW`, `SAMTOOLS_REINDEX_BAM`.
-- **Sentieon family (9)**: `SENTIEON_APPLYVARCAL`, `SENTIEON_BWAMEM`, `SENTIEON_DEDUP`, `SENTIEON_DNAMODELAPPLY`, `SENTIEON_DNASCOPE`, `SENTIEON_GVCFTYPER`, `SENTIEON_HAPLOTYPER`, `SENTIEON_TNSCOPE`, `SENTIEON_VARCAL`.
-- **BCFtools family (9)**: `BCFTOOLS_ANNOTATE`, `BCFTOOLS_CONCAT`, `BCFTOOLS_ISEC`, `BCFTOOLS_MERGE`, `BCFTOOLS_MPILEUP`, `BCFTOOLS_NORM`, `BCFTOOLS_SORT`, `BCFTOOLS_STATS`, `BCFTOOLS_VIEW`.
-- **CNVkit family (6)**: `CNVKIT_ANTITARGET`, `CNVKIT_BATCH`, `CNVKIT_CALL`, `CNVKIT_EXPORT`, `CNVKIT_GENEMETRICS`, `CNVKIT_REFERENCE`.
-- **Control-FREEC family (5)**: `CONTROLFREEC_FREEC`, `CONTROLFREEC_ASSESSSIGNIFICANCE`, `CONTROLFREEC_FREEC2BED`, `CONTROLFREEC_FREEC2CIRCOS`, `CONTROLFREEC_MAKEGRAPH2`.
-- **FGBIO family (4 including copy UMI)**: `FGBIO_FASTQTOBAM`, `FGBIO_GROUPREADSBYUMI`, `FGBIO_CALLMOLECULARCONSENSUSREADS`, `FGBIO_COPYUMIFROMREADNAME`.
-- **Alignment family**: `BWA_INDEX`, `BWA_MEM`, `BWAMEM2_INDEX`, `BWAMEM2_MEM`, `DRAGMAP_HASHTABLE`, `DRAGMAP_ALIGN`, `PARABRICKS_FQ2BAM`.
-- **SV/variant callers**: `FREEBAYES`, `DEEPVARIANT_RUNDEEPVARIANT`, `LOFREQ_CALLPARALLEL`, `MANTA_GERMLINE`, `MANTA_SOMATIC`, `MANTA_TUMORONLY`, `STRELKA_GERMLINE`, `STRELKA_SOMATIC`, `TIDDIT_SV`, `MUSE_CALL`, `MUSE_SUMP`, `ASCAT`, `MSISENSOR2_MSI`, `MSISENSORPRO_SCAN`, `MSISENSORPRO_MSISOMATIC`, `GOLEFT_INDEXCOV`, `SVDB_MERGE`, `NGSCHECKMATE_NCM`.
-- **Annotation and post-processing**: `SNPEFF_DOWNLOAD`, `SNPEFF_SNPEFF`, `SNPSIFT_ANNMEMCREATE`, `SNPSIFT_ANNMEM`, `ENSEMBLVEP_DOWNLOAD`, `ENSEMBLVEP_VEP`, `VCFTOOLS`, `VCFLIB_VCFFILTER`, `VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES`, `VARLOCIRAPTOR_PREPROCESS`, `VARLOCIRAPTOR_CALLVARIANTS`, `RBT_VCFSPLIT`, `YTE`.
-- **Utility and local glue**: `FASTQC`, `FASTP`, `MOSDEPTH`, `BBMAP_BBSPLIT`, `CAT_CAT`, `CAT_FASTQ`, `TABIX_TABIX`, `TABIX_BGZIPTABIX`, `GUNZIP`, `UNTAR`, `UNZIP`, `SPRING_DECOMPRESS`, `GAWK`, `MULTIQC`, `ADD_INFO_TO_VCF`, `CONSENSUS_FROM_SITES`, `CREATE_INTERVALS_BED`.
+This run did not execute tumor-normal, SV, CNV, annotation, or multi-caller paths (`Mutect2`, `HaplotypeCaller`, `DeepVariant`, `Manta`, `Strelka`, `SnpEff`, `VEP`, `CNVkit`, `Control-FREEC`, `ASCAT`, etc.). These remain in scope for future ranking once measured runtime is available from those modes.
 
-### Source availability and hosting risk
+## Completed Rewrites
+
+### `ironqc` (COMPLETED)
+
+- **Status**: Completed and integrated via `params.use_ironqc` in `subworkflows/local/cram_qc_mosdepth_samtools/main.nf`
+- **Bundle delivered**: `SAMTOOLS_STATS` + `MOSDEPTH` + `GOLEFT_INDEXCOV` in one Rust binary (`/Users/evan/projects/sarek-investigate/ironqc/`)
+- **Architecture**: single-pass BAM/CRAM iteration with `noodles` + `rayon` accumulators
+- **Current run impact (measured baseline replaced)**: `SAMTOOLS_STATS (4.9 min)` + `MOSDEPTH (5.9 min)` = **10.8 min**
+- **Share of total run**: `10.8 / 378.9 = 2.85%`
+- **N=20 projection**: ~216 task-minutes removed from baseline path (before accounting for second-order staging/container overhead)
+
+## Ranked Rewrite Targets
+
+### Target 1: GATK BQSR Chain Fusion (`BASERECALIBRATOR` + `APPLYBQSR`) (Priority: HIGH)
+
+- **Tools to bundle**: `GATK4_BASERECALIBRATOR`, `GATK4_APPLYBQSR` (optionally keep `GATK4_GATHERBQSRREPORTS` as compatibility shim)
+- **Current total runtime**: `119.7 min` (`87.9 + 31.8`), plus `2.4 min` gather
+- **Predicted savings**: `~47.8 min` total (`~40%` on the 119.7 min chain; conservative for high-complexity Java statistical model)
+- **Difficulty**: `high` (score `9`)
+- **Estimated token cost**: `$900-2000`
+- **Shared inputs**: recalibration BAM/CRAM, known-sites VCF, reference
+- **Source code**: `https://github.com/broadinstitute/gatk`
+- **Risk factors**: covariate table parity, floating-point reproducibility, read-group edge cases, strict report-format compatibility
+- **Bundling rationale**: same data path and tightly coupled stages; fusing can remove repeated serialization and task boundaries
+- **ROI score**: per-task savings `1.90 min` x `21` tasks / `9` = **4.43**
+- **N=20 projection**: `~956 min` saved (same % reduction applied to measured single-sample baseline)
+
+### Target 2: BCFTOOLS mpileup Modernization (`MPILEUP` + merge shim) (Priority: MEDIUM)
+
+- **Tools to bundle**: `BCFTOOLS_MPILEUP`, `MERGE_BCFTOOLS_MPILEUP`, and optional trivial QC emitters
+- **Current total runtime**: `96.4 min` (`96.2 + 0.2`)
+- **Predicted savings**: `~14.4 min` total (`~15%`, realistic upper bound for C-to-Rust rewrite on already optimized htslib stack)
+- **Difficulty**: `high` (score `9`)
+- **Estimated token cost**: `$700-1600`
+- **Shared inputs**: interval BAM/CRAM + reference + mpileup params
+- **Source code**: `https://github.com/samtools/bcftools`, `https://github.com/samtools/htslib`
+- **Risk factors**: mpileup edge-case parity, BAQ behavior, pileup filtering semantics, deep compatibility burden
+- **Bundling rationale**: little arithmetic speed gain expected; value is mostly reduced process handoff and minor I/O pipeline cleanup
+- **ROI score**: per-task savings `0.69 min` x `21` tasks / `9` = **1.61**
+- **N=20 projection**: `~288 min` saved
+
+### Target 3: MarkDuplicates + CRAM Finalization Chain (Priority: LOW-MEDIUM)
+
+- **Tools to bundle**: `GATK4_MARKDUPLICATES`, `MERGE_CRAM`, `INDEX_CRAM`
+- **Current total runtime**: `6.6 min` (`5.0 + 1.5 + 0.1`)
+- **Predicted savings**: `~2.0 min` total (`~30%`, conservative)
+- **Difficulty**: `high` (score `9`)
+- **Estimated token cost**: `$600-1400`
+- **Shared inputs**: post-alignment BAM/CRAM stream
+- **Source code**: `https://github.com/broadinstitute/gatk`, `https://github.com/samtools/samtools`
+- **Risk factors**: duplicate-marking equivalence and metrics parity are non-trivial; modest upside in this run configuration
+- **Bundling rationale**: mostly a DAG simplification play, not an algorithmic speedup play
+- **ROI score**: per-task savings `2.00 min` x `1` task / `9` = **0.22**
+- **N=20 projection**: `~40 min` saved
+
+### Target 4: FASTQ QC/Trim Consolidation (`FASTP` + `FASTQC`) (Priority: LOW)
+
+- **Tools to bundle**: `FASTP`, `FASTQC`
+- **Current total runtime**: `2.6 min`
+- **Predicted savings**: `~1.0 min` total (`~38%`)
+- **Difficulty**: `medium` (score `3`)
+- **Estimated token cost**: `$250-700`
+- **Shared inputs**: FASTQ reads
+- **Source code**: `https://github.com/OpenGene/fastp`, `https://www.bioinformatics.babraham.ac.uk/projects/fastqc/`
+- **Risk factors**: plot/report compatibility overhead dominates implementation effort
+- **Bundling rationale**: can remove one pass and one task, but impact is small in current profile
+- **ROI score**: per-task savings `1.00 min` x `1` task / `3` = **0.33**
+- **N=20 projection**: `~20 min` saved
+
+### Explicitly Not Recommended (despite high runtime)
+
+- **`DRAGMAP_ALIGN` rewrite**: huge runtime share, but C++ aligners are already near hardware limits; rewrite difficulty is extreme and expected gains are marginal.
+- **Already-Rust replacements**: do not target `varlociraptor` family or completed `ironqc` bundle.
+
+## Bundling Groups
+
+| Group | Tools | Shared input | Single-pass feasible? |
+|---|---|---|---|
+| `BAM-QC-COMPLETED` | `SAMTOOLS_STATS`, `MOSDEPTH`, `GOLEFT_INDEXCOV` via `IRONQC` | BAM/CRAM + index (+ optional BED) | Yes (already implemented) |
+| `BQSR-CHAIN` | `GATK4_BASERECALIBRATOR`, `GATK4_APPLYBQSR` | recalibration BAM/CRAM + known sites | Partial (same read traversal logic, but statistical/state model is complex) |
+| `MPILEUP-CHAIN` | `BCFTOOLS_MPILEUP`, `MERGE_BCFTOOLS_MPILEUP` | interval BAM/CRAM + reference | Partial (shared code path, limited upside) |
+| `DEDUP-FINALIZE` | `GATK4_MARKDUPLICATES`, `MERGE_CRAM`, `INDEX_CRAM` | post-alignment BAM/CRAM | Partial |
+| `FASTQ-QC` | `FASTP`, `FASTQC` | FASTQ | Yes |
+
+## Recommended Next Target
+
+`GATK BQSR Chain Fusion` - it is the best remaining measured ROI after `ironqc`, and unlike aligner/mpileup rewrites it has meaningful JVM overhead and workflow-boundary overhead that can plausibly be reduced despite high algorithmic complexity.
+
+## Data Limitations And Ranking Sensitivity
+
+- This dataset is **single-sample germline**; per-sample tasks only ran once.
+- Only **mpileup** calling was enabled; no HaplotypeCaller/Mutect2/DeepVariant/Manta/Strelka.
+- No annotation stack executed (`SnpEff`, `VEP`, `SnpSift`).
+- No CNV stack executed (`CNVkit`, `Control-FREEC`, `ASCAT`).
+- No SV stack executed (`Manta`, `Strelka`, `TIDDIT`, `SVDB`).
+- In full tumor-normal multi-caller runs, VCF post-processing and annotation bundles would likely move up significantly in absolute savings; this report does not assign them measured ROI without runtime evidence.
+
+## Methodology Notes
+
+- Runtime numbers are from the provided Seqera run summary and consistent with `/tmp/seqera_tasks_4rk1M6nCGI6cYF.json` task metadata.
+- Rankings use measured per-process totals from this run and conservative speedup assumptions by language class:
+  - C/C++ to Rust rewrites: generally `10-30%` (often closer to lower end for mature htslib-class tools)
+  - Java to Rust rewrites: potentially `2-5x` in favorable cases, but capped conservatively here due to statistical complexity and parity risk
+- Difficulty reflects implementation and parity burden, not just code volume.
+- Cost ranges include realism caveats: complex numerical parity, float/text formatting parity, and plot reproduction often expand effort by `3-5x` from optimistic first estimates.
+
+## Source Availability And Hosting Risk (preserved reference)
 
 - **Open-source, straightforward access (GitHub or project docs)**: bwa/bwamem2, samtools/bcftools/tabix, mosdepth, goleft, fastp, fastqc, cnvkit, freebayes, manta, strelka, tiddit, deepvariant, snpeff/snpsift, VEP, vcflib, vcftools, varlociraptor, rust-bio-tools.
 - **Closed/proprietary binaries (high rewrite risk due unavailable source or licensing constraints)**: Sentieon (`sentieon/*`), NVIDIA Parabricks (`parabricks/fq2bam`).
 - **Mixed script ecosystems (higher parity burden due plotting/format details)**: ASCAT (R), Control-FREEC ancillary scripts, MuSE, NGSCheckMate.
 
-### MultiQC compatibility (important for rewrite effort)
+## MultiQC Compatibility (preserved reference)
 
 From `assets/multiqc_config.yml`, primary modules consumed are: `fastqc`, `fastp`, `bbmap`, `picard`, `samtools`, `mosdepth`, `gatk`, `bcftools`, `vcftools`, `snpeff`, `vep`, plus custom `dedup_metrics` table.
 
-Implication: rewrites must preserve report file names/headers for these producers:
+Implication: rewrites must preserve report file names and headers for these producers:
 
 - `FASTQC`, `FASTP`, `BBMAP_BBSPLIT`
 - `GATK4_MARKDUPLICATES` or `GATK4_ESTIMATELIBRARYCOMPLEXITY`
@@ -82,97 +166,7 @@ Implication: rewrites must preserve report file names/headers for these producer
 - `SNPEFF_SNPEFF`, `ENSEMBLVEP_VEP`
 - `SENTIEON_DEDUP` custom metrics TSV
 
-## Ranked Rewrite Targets
-
-### Target 1: BAM/CRAM Single-pass QC Bundle (Priority: HIGH)
-
-- **Tools to bundle**: `SAMTOOLS_STATS`, `MOSDEPTH`, `SAMTOOLS_REINDEX_BAM`, `GOLEFT_INDEXCOV` (and optionally a light `flagstat`-style summary emitter)
-- **Current total runtime**: ~35 min per sample (repo-only estimate)
-- **Predicted savings**: ~22 min per sample (~63%); ~440 min across 20-sample run
-- **Difficulty**: `medium` (difficulty score 3)
-- **Estimated token cost**: `$250-600`
-- **Shared inputs**: BAM/CRAM + index (+ optional intervals)
-- **Source code**: `http://www.htslib.org/`, `https://github.com/brentp/mosdepth`, local wrappers in `modules/local/samtools/reindex_bam/main.nf`
-- **Risk factors**: matching mosdepth distributions exactly; preserving MultiQC-compatible output names/columns; CRAM reference edge cases
-- **Bundling rationale**: all stages reread the same alignment files; single-pass accumulator architecture removes repeated BAM I/O and several task/container boundaries
-- **ROI score**: `(22 x 20) / 3 = 146.7`
-
-### Target 2: VCF Post-processing Fusion (Priority: HIGH)
-
-- **Tools to bundle**: `BCFTOOLS_VIEW`, `BCFTOOLS_NORM`, `BCFTOOLS_SORT`, `BCFTOOLS_CONCAT`, `BCFTOOLS_ISEC`, `TABIX_BGZIPTABIX`, local `ADD_INFO_TO_VCF`, local `CONSENSUS_FROM_SITES`
-- **Current total runtime**: ~12 min per VCF stream
-- **Predicted savings**: ~6 min per VCF stream (~50%); ~720 min across ~120 VCF streams in 20-sample cohort (multi-caller)
-- **Difficulty**: `medium` (difficulty score 3)
-- **Estimated token cost**: `$300-700`
-- **Shared inputs**: VCF/BCF (+ reference for normalization)
-- **Source code**: `http://samtools.github.io/bcftools/`, local scripts under `modules/local/`
-- **Risk factors**: exact VCF normalization semantics and header ordering; tabix index parity; consensus-calling corner cases
-- **Bundling rationale**: mostly sequential transforms with repeated compress/decompress/index cycles; merge into one streaming VCF graph
-- **ROI score**: `(6 x 120) / 3 = 240.0`
-
-### Target 3: CNVkit Python Stack Rewrite (Priority: MEDIUM)
-
-- **Tools to bundle**: `CNVKIT_BATCH`, `CNVKIT_CALL`, `CNVKIT_EXPORT`, `CNVKIT_GENEMETRICS` (+ optionally `CNVKIT_ANTITARGET`/`CNVKIT_REFERENCE` prep)
-- **Current total runtime**: ~45 min per sample
-- **Predicted savings**: ~20 min per sample (~44%); ~400 min across 20 samples
-- **Difficulty**: `medium` (difficulty score 3)
-- **Estimated token cost**: `$250-650`
-- **Shared inputs**: BAM + target/antitarget BED + CNV reference
-- **Source code**: `https://cnvkit.readthedocs.io/`
-- **Risk factors**: segmentation/calling numerical parity; export format compatibility used downstream
-- **Bundling rationale**: Python-heavy multi-step chain with repeated I/O over same per-sample CNV intermediates
-- **ROI score**: `(20 x 20) / 3 = 133.3`
-
-### Target 4: Control-FREEC Postprocessing Bundle (Priority: MEDIUM)
-
-- **Tools to bundle**: `CONTROLFREEC_ASSESSSIGNIFICANCE`, `CONTROLFREEC_FREEC2BED`, `CONTROLFREEC_FREEC2CIRCOS`, `CONTROLFREEC_MAKEGRAPH2` (keep `CONTROLFREEC_FREEC` as upstream caller initially)
-- **Current total runtime**: ~30 min per tumor or pair output set
-- **Predicted savings**: ~12 min per task (~40%); ~360 min across ~30 tasks
-- **Difficulty**: `medium` (difficulty score 3)
-- **Estimated token cost**: `$200-500` (higher if plot replication required)
-- **Shared inputs**: FREEC ratio/CNV result tables
-- **Source code**: `http://boevalab.inf.ethz.ch/FREEC`
-- **Risk factors**: plot generation parity (PNG); undocumented script assumptions; coordinate formatting quirks
-- **Bundling rationale**: pure sequential post-processing chain over same FREEC outputs
-- **ROI score**: `(12 x 30) / 3 = 120.0`
-
-### Target 5: Interval and Staging Utility Consolidation (Priority: MEDIUM)
-
-- **Tools to bundle**: `CREATE_INTERVALS_BED`, `GAWK` interval splitter calls, `TABIX_BGZIPTABIX` for interval artifacts, selected `CAT_*` glue
-- **Current total runtime**: low per task, but many small tasks and container startups
-- **Predicted savings**: ~15 min per run from orchestration overhead reduction (compute + scheduling + staging)
-- **Difficulty**: `low` (difficulty score 1)
-- **Estimated token cost**: `$80-220`
-- **Shared inputs**: interval lists/BED files
-- **Source code**: local modules + GNU coreutils/gawk
-- **Risk factors**: minimal algorithmic risk; mostly file naming and exact split behavior
-- **Bundling rationale**: removes many tiny utility tasks and simplifies DAG fan-out
-- **ROI score**: `(15 x 1) / 1 = 15.0`
-
-## Bundling Groups
-
-| Group | Tools | Shared input | Single-pass feasible? |
-|-------|-------|-------------|----------------------|
-| BAM-QC-1 | `SAMTOOLS_STATS`, `MOSDEPTH`, `SAMTOOLS_REINDEX_BAM`, `GOLEFT_INDEXCOV` | BAM/CRAM + index | Yes |
-| VCF-POST-1 | `BCFTOOLS_VIEW/NORM/SORT/CONCAT/ISEC`, `TABIX_*`, `ADD_INFO_TO_VCF`, `CONSENSUS_FROM_SITES` | VCF/BCF streams | Yes (streaming transform pipeline) |
-| CNV-1 | `CNVKIT_BATCH/CALL/EXPORT/GENEMETRICS` | BAM + target BED + CNV reference | Partially (shared parse/cache; not pure one-pass BAM) |
-| FREEC-POST-1 | `FREEC2BED`, `FREEC2CIRCOS`, `ASSESSSIGNIFICANCE`, `MAKEGRAPH2` | FREEC ratio/CNV outputs | Yes |
-| VARLOCIRAPTOR-CHAIN | `RBT_VCFSPLIT`, `VARLOCIRAPTOR_PREPROCESS`, `VARLOCIRAPTOR_CALLVARIANTS`, `BCFTOOLS_CONCAT/SORT` | VCF/BCF chunks + alignment properties | Partial (already Rust-heavy; lower rewrite need) |
-
-## Recommended First Target
-
-`BAM/CRAM Single-pass QC Bundle` - highest practical payoff with moderate difficulty and immediate reduction of repeated BAM I/O, task submissions, container pulls, and staging overhead while preserving existing callers.
-
-## Methodology notes
-
-- Runtime data was inferred from repository structure and tool classes (no trace/run metadata available).
-- Process inventory was built by scanning all `process` definitions under `modules/**/main.nf`; workflow/subworkflow files contain orchestration only.
-- Bottleneck designation is estimated from expected WGS/WES behavior: aligners and large-file callers dominate; BAM/VCF utility chains dominate cumulative overhead through repetition.
-- Cost estimates include caveats from the skill guidance: numerical parity and plotting often take 3-5x longer than initial optimistic estimates.
-- Tools already in compiled languages were still considered for **bundling architecture gains** (single-pass + fewer tasks), but pure algorithm rewrites are deprioritized unless orchestration savings are large.
-- Closed-source/proprietary tools (`sentieon`, `parabricks`) are high-risk and were not selected as initial rewrite targets.
-
-## Appendix: Exhaustive Process-to-Module Mapping
+## Appendix: Exhaustive Process-to-Module Mapping (preserved)
 
 | Process | Module path |
 |---|---|
@@ -299,4 +293,3 @@ Implication: rewrites must preserve report file names/headers for these producer
 | `VCFLIB_VCFFILTER` | `modules/nf-core/vcflib/vcffilter/main.nf` |
 | `VCFTOOLS` | `modules/nf-core/vcftools/main.nf` |
 | `YTE` | `modules/nf-core/yte/main.nf` |
-
