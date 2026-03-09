@@ -28,7 +28,6 @@ include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING           } from '../../../mod
 
 // Convert CRAM files (optional)
 include { SAMTOOLS_CONVERT as CRAM_TO_BAM                   } from '../../../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL             } from '../../../modules/nf-core/samtools/convert/main'
 
 // Copy UMIs from read name to RX tag
 include { FGBIO_COPYUMIFROMREADNAME                         } from '../../../modules/nf-core/fgbio/copyumifromreadname/main'
@@ -361,16 +360,19 @@ workflow FASTQ_PREPROCESS_GATK {
             // Make sure correct data types are carried through
             .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
 
-        // If params.save_output_as_bam, then convert CRAM files to BAM
-        CRAM_TO_BAM(ch_md_cram_for_restart, fasta, fasta_fai)
-        versions = versions.mix(CRAM_TO_BAM.out.versions)
-
         // CSV should be written for the file actually out, either CRAM or BAM
         // Create CSV to restart from this step
         csv_subfolder = (params.tools && params.tools.split(',').contains('sentieon_dedup')) ? 'sentieon_dedup' : 'markduplicates'
 
-        if (params.save_output_as_bam) CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true), csv_subfolder, params.outdir, params.save_output_as_bam)
-        else CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir, params.save_output_as_bam)
+        if (params.save_output_as_bam) {
+            CRAM_TO_BAM(ch_md_cram_for_restart, fasta, fasta_fai)
+            versions = versions.mix(CRAM_TO_BAM.out.versions)
+            CHANNEL_MARKDUPLICATES_CREATE_CSV(
+                CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true),
+                csv_subfolder, params.outdir, params.save_output_as_bam)
+        } else {
+            CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir, params.save_output_as_bam)
+        }
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
@@ -472,7 +474,7 @@ workflow FASTQ_PREPROCESS_GATK {
                     fasta_fai,
                     intervals_and_num_intervals)
 
-                cram_variant_calling_spark = BAM_APPLYBQSR_SPARK.out.cram
+                cram_variant_calling_spark = BAM_APPLYBQSR_SPARK.out.alignment
 
                 // Gather used softwares versions
                 versions = versions.mix(BAM_APPLYBQSR_SPARK.out.versions)
@@ -486,7 +488,7 @@ workflow FASTQ_PREPROCESS_GATK {
                     fasta_fai,
                     intervals_and_num_intervals)
 
-                cram_variant_calling_no_spark = BAM_APPLYBQSR.out.cram
+                cram_variant_calling_no_spark = BAM_APPLYBQSR.out.alignment
 
                 // Gather used softwares versions
                 versions = versions.mix(BAM_APPLYBQSR.out.versions)
@@ -496,16 +498,8 @@ workflow FASTQ_PREPROCESS_GATK {
                 cram_variant_calling_no_spark,
                 cram_variant_calling_spark)
 
-            // If params.save_output_as_bam, then convert CRAM files to BAM
-            CRAM_TO_BAM_RECAL(cram_variant_calling, fasta, fasta_fai)
-            versions = versions.mix(CRAM_TO_BAM_RECAL.out.versions)
-
-            // CSV should be written for the file actually out out, either CRAM or BAM
-            csv_recalibration = Channel.empty()
-            csv_recalibration = params.save_output_as_bam ? CRAM_TO_BAM_RECAL.out.bam.join(CRAM_TO_BAM_RECAL.out.bai, failOnDuplicate: true, failOnMismatch: true) : cram_variant_calling
-
             // Create CSV to restart from this step
-            CHANNEL_APPLYBQSR_CREATE_CSV(csv_recalibration, params.outdir, params.save_output_as_bam)
+            CHANNEL_APPLYBQSR_CREATE_CSV(cram_variant_calling, params.outdir, params.save_output_as_bam)
 
         } else if (params.step == 'recalibrate') {
             // cram_variant_calling contains either:

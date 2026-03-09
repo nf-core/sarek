@@ -11,6 +11,13 @@ nextflow_pipeline {
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: ''
             ]
+        ],
+        [
+            name: "-profile test --save_output_as_bam with variant calling",
+            params: [
+                save_output_as_bam: true,
+                tools: 'strelka,cnvkit'
+            ]
         ]
     ]
 
