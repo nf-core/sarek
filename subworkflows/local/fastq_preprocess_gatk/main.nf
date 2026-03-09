@@ -517,10 +517,18 @@ workflow FASTQ_PREPROCESS_GATK {
             // - crams from markduplicates = ch_cram_for_bam_baserecalibrator if skip BQSR but not started from step recalibration
             cram_variant_calling = Channel.empty().mix(ch_cram_for_bam_baserecalibrator)
         }
+
+        // cram_markdup: markdup output before BQSR, for SV/CNV callers that should not use recalibrated reads
+        // When starting from step 'recalibrate', markdup CRAMs are not available — use cram_variant_calling as fallback
+        // TODO: warn users that SV/CNV callers will use recalibrated reads when starting from --step recalibrate
+        cram_markdup = (params.step == 'recalibrate')
+            ? cram_variant_calling
+            : ch_cram_for_bam_baserecalibrator
     }
 
     emit:
     cram_variant_calling
+    cram_markdup
     reports
     versions
 

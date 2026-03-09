@@ -23,8 +23,9 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
     tools                             // Mandatory, list of tools to apply
     skip_tools                        // Mandatory, list of tools to skip
-    bam                               // channel: [mandatory] meta, bam
-    cram                              // channel: [mandatory] meta, cram
+    bam                               // channel: [mandatory] meta, bam, bai — BQSR'd (or markdup if BQSR off)
+    cram                              // channel: [mandatory] meta, cram, crai — BQSR'd (or markdup if BQSR off), for SNV callers
+    cram_markdup                      // channel: [mandatory] meta, cram, crai — markdup output (before BQSR), for SV/CNV callers
     bwa                               // channel: [mandatory] meta, bwa
     cnvkit_reference                  // channel: [optional] cnvkit reference
     dbsnp                             // channel: [mandatory] meta, dbsnp
@@ -91,11 +92,11 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
     }
 
-    // CNVKIT
+    // CNVKIT — uses markdup output (before BQSR) to preserve coverage signal
     if (tools && tools.split(',').contains('cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT(
             // Remap channel to match module/subworkflow
-            cram.map{ meta, cram, crai -> [ meta, [], cram ] },
+            cram_markdup.map{ meta, cram, crai -> [ meta, [], cram ] },
             fasta,
             fasta_fai,
             intervals_bed_combined.map{it -> it ? [[id:it[0].baseName], it]: [[id:'no_intervals'], []]},
@@ -193,10 +194,10 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         }
     }
 
-    // MANTA
+    // MANTA — SV caller, uses markdup output (before BQSR)
     if (tools && tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_GERMLINE_MANTA (
-            cram,
+            cram_markdup,
             fasta,
             fasta_fai,
             intervals_bed_gz_tbi_combined
@@ -207,10 +208,10 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
     }
 
-    // INDEXCOV, for WGS only
+    // INDEXCOV — CNV caller, uses markdup output (before BQSR) to preserve coverage signal
     if (params.wes==false &&  tools.split(',').contains('indexcov')) {
         BAM_VARIANT_CALLING_INDEXCOV (
-            cram,
+            cram_markdup,
             fasta,
             fasta_fai
         )
@@ -361,10 +362,10 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
     }
 
-    // TIDDIT
+    // TIDDIT — SV caller, uses markdup output (before BQSR)
     if (tools && tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
-            cram,
+            cram_markdup,
             // Remap channel to match module/subworkflow
             fasta,
             bwa
