@@ -136,27 +136,17 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
         calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination.map { meta, cont -> [meta - meta.subMap('num_intervals'), cont] }
     }
 
-    // When no germline_resource is provided, contamination/segmentation channels are empty
-    // because GetPileupSummaries is skipped. Provide default empty values so FilterMutectCalls
-    // still runs — these inputs are optional for GATK FilterMutectCalls.
-    vcf_defaults = vcf.map { meta, _vcf -> [meta, []] }
-    seg_for_filter = calculatecontamination_out_seg
-        .mix(vcf_defaults)
-        .groupTuple()
-        .map { meta, seg_list -> [meta, seg_list.find { it -> it != [] } ?: []] }
-    cont_for_filter = calculatecontamination_out_cont
-        .mix(vcf_defaults)
-        .groupTuple()
-        .map { meta, cont_list -> [meta, cont_list.find { it -> it != [] } ?: []] }
-
     // Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables
+    // When no germline_resource is provided, seg/cont channels are empty because GetPileupSummaries
+    // is skipped. Use remainder: true so the join still passes items through, defaulting to [].
+    // These inputs are optional for GATK FilterMutectCalls.
     vcf_to_filter = vcf
         .join(tbi, failOnDuplicate: true, failOnMismatch: true)
         .join(stats, failOnDuplicate: true, failOnMismatch: true)
         .join(LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
-        .join(seg_for_filter, failOnDuplicate: true, failOnMismatch: true)
-        .join(cont_for_filter, failOnDuplicate: true, failOnMismatch: true)
-        .map { meta, vcf_, tbi_, stats_, artifactprior, seg, cont -> [meta, vcf_, tbi_, stats_, artifactprior, seg, cont, []] }
+        .join(calculatecontamination_out_seg, remainder: true)
+        .join(calculatecontamination_out_cont, remainder: true)
+        .map { meta, vcf_, tbi_, stats_, artifactprior, seg, cont -> [meta, vcf_, tbi_, stats_, artifactprior, seg ?: [], cont ?: [], []] }
 
     FILTERMUTECTCALLS(vcf_to_filter, fasta, fai, dict)
 
