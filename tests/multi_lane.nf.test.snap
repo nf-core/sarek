@@ -1,7 +1,7 @@
 {
     "-profile test --input tests/csv/3.0/fastq_multi_lane.csv --save_mapped --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools --tools null": {
         "content": [
-            13,
+            21,
             {
                 "BAM_TO_CRAM_MAPPING": {
                     "samtools": 1.21
@@ -16,13 +16,159 @@
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
+                "GATK4_APPLYBQSR": {
+                    "gatk4": "4.6.1.0"
+                },
+                "GATK4_BASERECALIBRATOR": {
+                    "gatk4": "4.6.1.0"
+                },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
+                },
+                "GATK4_MARKDUPLICATES": {
+                    "gatk4": "4.6.1.0",
+                    "samtools": 1.21
+                },
+                "INDEX_CRAM": {
+                    "samtools": 1.21
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
                 },
                 "MERGE_BAM": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
+                }
+            },
+            [
+                "csv",
+                "csv/mapped.csv",
+                "csv/markduplicates.csv",
+                "csv/markduplicates_no_table.csv",
+                "csv/recalibrated.csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/mapped",
+                "preprocessing/mapped/test",
+                "preprocessing/mapped/test/test.sorted.cram",
+                "preprocessing/mapped/test/test.sorted.cram.crai",
+                "preprocessing/mapped/test2",
+                "preprocessing/mapped/test2/test2.sorted.cram",
+                "preprocessing/mapped/test2/test2.sorted.cram.crai",
+                "preprocessing/markduplicates",
+                "preprocessing/markduplicates/test",
+                "preprocessing/markduplicates/test/test.md.cram",
+                "preprocessing/markduplicates/test/test.md.cram.crai",
+                "preprocessing/markduplicates/test2",
+                "preprocessing/markduplicates/test2/test2.md.cram",
+                "preprocessing/markduplicates/test2/test2.md.cram.crai",
+                "preprocessing/recal_table",
+                "preprocessing/recal_table/test",
+                "preprocessing/recal_table/test/test.recal.table",
+                "preprocessing/recal_table/test2",
+                "preprocessing/recal_table/test2/test2.recal.table",
+                "preprocessing/recalibrated",
+                "preprocessing/recalibrated/test",
+                "preprocessing/recalibrated/test/test.recal.cram",
+                "preprocessing/recalibrated/test/test.recal.cram.crai",
+                "preprocessing/recalibrated/test2",
+                "preprocessing/recalibrated/test2/test2.recal.cram",
+                "preprocessing/recalibrated/test2/test2.recal.cram.crai",
+                "reference",
+                "reports",
+                "reports/markduplicates",
+                "reports/markduplicates/test",
+                "reports/markduplicates/test/test.md.cram.metrics",
+                "reports/markduplicates/test2",
+                "reports/markduplicates/test2/test2.md.cram.metrics"
+            ],
+            "No stable content",
+            "No BAM files",
+            [
+                "test.sorted.cram:md5,5534c350547fd253f0f2b9450362bed",
+                "test2.sorted.cram:md5,bac87cf9290577fd9a4def63e046031f",
+                "test.md.cram:md5,724c601c9daf019d356a53a7d5e1c8b1",
+                "test2.md.cram:md5,bac87cf9290577fd9a4def63e046031f",
+                "test.recal.cram:md5,dbd6f40b1e6d72501dc034e62e9d54eb",
+                "test2.recal.cram:md5,f4205ab086600ba2927e1468dc732976"
+            ],
+            "No VCF files",
+            "No warnings"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-03-06T18:03:04.332516"
+    },
+    "-profile test --input tests/csv/3.0/fastq_umi_multi_lane.csv --umi_read_structure '+T 7M1S+T' --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools --tools null": {
+        "content": [
+            25,
+            {
+                "BAM2FASTQ": {
+                    "samtools": 1.21
+                },
+                "BAM_TO_CRAM_MAPPING": {
+                    "samtools": 1.21
+                },
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.18-r1243-dirty"
+                },
+                "BWAMEM1_MEM": {
+                    "bwa": "0.7.18-r1243-dirty",
+                    "samtools": 1.21
+                },
+                "CALLUMICONSENSUS": {
+                    "fgbio": "2.4.0"
+                },
+                "CAT_FASTQ": {
+                    "cat": 9.5
+                },
+                "COLLATE_FASTQ_MAP": {
+                    "samtools": 1.21
+                },
+                "COLLATE_FASTQ_UNMAP": {
+                    "samtools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "FASTQTOBAM": {
+                    "fgbio": "2.4.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
+                "GROUPREADSBYUMI": {
+                    "fgbio": "2.4.0"
+                },
+                "INDEX_MERGE_BAM": {
+                    "samtools": 1.21
+                },
+                "MERGE_CONSENSUS": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_MERGE_UNMAP": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_VIEW_MAP_MAP": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_VIEW_MAP_UNMAP": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_VIEW_UNMAP_MAP": {
+                    "samtools": 1.21
+                },
+                "SAMTOOLS_VIEW_UNMAP_UNMAP": {
                     "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
@@ -44,16 +190,22 @@
                 "preprocessing/mapped/test",
                 "preprocessing/mapped/test/test.sorted.cram",
                 "preprocessing/mapped/test/test.sorted.cram.crai",
-                "preprocessing/mapped/test2",
-                "preprocessing/mapped/test2/test2.sorted.cram",
-                "preprocessing/mapped/test2/test2.sorted.cram.crai",
-                "reference"
+                "preprocessing/umi",
+                "preprocessing/umi/test",
+                "preprocessing/umi/test/test_umi-consensus.bam",
+                "reference",
+                "reports",
+                "reports/umi",
+                "reports/umi/test_umi-grouped_histogram.txt"
             ],
-            "No stable content",
-            "No BAM files",
             [
-                "test.sorted.cram:md5,5534c350547fd253f0f2b9450362bed",
-                "test2.sorted.cram:md5,bac87cf9290577fd9a4def63e046031f"
+                "test_umi-grouped_histogram.txt:md5,47440eca0cc1e70be22fe2a2ce81dfbf"
+            ],
+            [
+                "test_umi-consensus.bam:md5,122d60b069b76a217b6fe91d1765dae3"
+            ],
+            [
+                "test.sorted.cram:md5,450f711661b0222e8496ea3140fe7fff"
             ],
             "No VCF files",
             "No warnings"
@@ -62,6 +214,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-03-06T17:12:21.060934"
+        "timestamp": "2026-03-11T11:53:37.119233"
     }
 }
