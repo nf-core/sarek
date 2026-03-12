@@ -575,7 +575,6 @@ Expected run output:
 [88/3af664] process > NFCORE_SAREK:SAREK:BAM_APPLYBQSR:CRAM_MERGE_INDEX_SAMTOOLS:INDEX_CRAM (test)                                  [100%] 1 of 1 ✔
 [f4/828fde] process > NFCORE_SAREK:SAREK:CRAM_QC_RECAL:SAMTOOLS_STATS (test)                                                        [100%] 1 of 1 ✔
 [fb/a9d66f] process > NFCORE_SAREK:SAREK:CRAM_QC_RECAL:MOSDEPTH (test)                                                              [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:CRAM_TO_BAM_RECAL                                                                          -
 [ef/026185] process > NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_SINGLE_STRELKA:STRELKA_SINGLE (test)  [100%] 1 of 1 ✔
 [-        ] process > NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_SINGLE_STRELKA:MERGE_STRELKA          -
 [-        ] process > NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_SINGLE_STRELKA:MERGE_STRELKA_GENOME   -
