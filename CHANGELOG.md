@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [#2117](https://github.com/nf-core/sarek/pull/2117) - Silent failure with multi-lane samples
 - [#2143](https://github.com/nf-core/sarek/pull/2143) - Varlociraptor collecting multiple scenario files for one sample
 - [#2146](https://github.com/nf-core/sarek/pull/2146) - Fail early when `--no_intervals` is used with joint germline HaplotypeCaller
 - [#2147](https://github.com/nf-core/sarek/pull/2147) - Fix empty fastp output folder created when trimmed reads are not saved
@@ -52,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Fixed
 
+- [#2117](https://github.com/nf-core/sarek/pull/2117) - Update alignment related files to strict syntax
 - [#2129](https://github.com/nf-core/sarek/pull/2129) - Fix MuSE timestamp, swap to topics and change to strict syntax
 
 #### Removed
