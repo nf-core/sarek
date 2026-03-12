@@ -1,11 +1,8 @@
 {
     "-profile test --save_output_as_bam skip QC/recal/md": {
         "content": [
-            10,
+            9,
             {
-                "BAM_TO_CRAM_MAPPING": {
-                    "samtools": 1.21
-                },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.18-r1243-dirty"
                 },
@@ -52,14 +49,12 @@
             ],
             "No CRAM files",
             "No VCF files",
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
-            ]
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T21:28:27.476637665"
+        "timestamp": "2026-03-12T13:56:26.640965"
     }
 }
