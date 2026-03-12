@@ -4,8 +4,9 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { CRAM_QC_MOSDEPTH_SAMTOOLS } from '../cram_qc_mosdepth_samtools/main'
-include { GATK4_MARKDUPLICATES      } from '../../../modules/nf-core/gatk4/markduplicates/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS                               } from '../cram_qc_mosdepth_samtools/main'
+include { GATK4_MARKDUPLICATES                                    } from '../../../modules/nf-core/gatk4/markduplicates/main'
+include { SAMTOOLS_INDEX                  as INDEX_MARKDUPLICATES } from '../../../modules/nf-core/samtools/index/main'
 
 workflow BAM_MARKDUPLICATES {
     take:
@@ -21,9 +22,12 @@ workflow BAM_MARKDUPLICATES {
     // RUN MARKUPDUPLICATES
     GATK4_MARKDUPLICATES(bam, fasta.map{ meta, fasta -> [ fasta ] }, fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] })
 
+    // BAM path: module does not auto-index BAM output, so index explicitly
+    INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES.out.bam)
+
     // Unified alignment output — BAM or CRAM depending on save_output_as_bam
     alignment = GATK4_MARKDUPLICATES.out.bam
-        .join(GATK4_MARKDUPLICATES.out.bai, failOnDuplicate: true, failOnMismatch: true)
+        .join(INDEX_MARKDUPLICATES.out.bai, failOnDuplicate: true, failOnMismatch: true)
         .mix(GATK4_MARKDUPLICATES.out.cram
             .join(GATK4_MARKDUPLICATES.out.crai, failOnDuplicate: true, failOnMismatch: true))
 
@@ -36,6 +40,7 @@ workflow BAM_MARKDUPLICATES {
 
     // Gather versions of all tools used
     versions = versions.mix(GATK4_MARKDUPLICATES.out.versions)
+    versions = versions.mix(INDEX_MARKDUPLICATES.out.versions)
     versions = versions.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.versions)
 
     emit:
