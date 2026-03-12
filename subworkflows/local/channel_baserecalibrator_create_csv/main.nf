@@ -4,11 +4,10 @@
 
 workflow CHANNEL_BASERECALIBRATOR_CREATE_CSV {
     take:
-        cram_table_bqsr         // channel: [mandatory] meta, cram, crai, table
+        cram_table_bqsr         // channel: [mandatory] meta, file, index, table
         tools                   //
         skip_tools              //
         outdir                  //
-        save_output_as_bam      //
 
     main:
         // Creating csv files to restart from this step
