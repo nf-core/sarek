@@ -19,8 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#2154](https://github.com/nf-core/sarek/pull/2154) - Fix `--save_output_as_bam` causing duplicate emission errors, silently skipping variant calling, and running unnecessary CRAM-to-BAM conversions
-- [#2152](https://github.com/nf-core/sarek/pull/2152) - Fix missing `params.` prefix for `umi_tag` in markduplicates config
+- [#2117](https://github.com/nf-core/sarek/pull/2117) - Silent failure with multi-lane samples
 - [#2143](https://github.com/nf-core/sarek/pull/2143) - Varlociraptor collecting multiple scenario files for one sample
+- [#2146](https://github.com/nf-core/sarek/pull/2146) - Fail early when `--no_intervals` is used with joint germline HaplotypeCaller
+- [#2147](https://github.com/nf-core/sarek/pull/2147) - Fix empty fastp output folder created when trimmed reads are not saved
+- [#2152](https://github.com/nf-core/sarek/pull/2152) - Fix missing `params.` prefix for `umi_tag` in markduplicates config
 
 ### Removed
 
@@ -51,6 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Fixed
 
+- [#2117](https://github.com/nf-core/sarek/pull/2117) - Update alignment related files to strict syntax
 - [#2129](https://github.com/nf-core/sarek/pull/2129) - Fix MuSE timestamp, swap to topics and change to strict syntax
 
 #### Removed
