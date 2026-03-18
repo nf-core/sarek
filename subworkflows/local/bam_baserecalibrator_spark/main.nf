@@ -23,7 +23,7 @@ workflow BAM_BASERECALIBRATOR_SPARK {
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
-        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ] }
+        .map{ meta, cram_, crai, intervals_, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram_, crai, intervals_ ] }
 
     // RUN BASERECALIBRATOR SPARK
     GATK4SPARK_BASERECALIBRATOR(cram_intervals, fasta.map{ meta, it -> [ it ] }, fasta_fai.map{ meta, it -> [ it ] }, dict.map{ meta, it -> [ it ] }, known_sites, known_sites_tbi)
