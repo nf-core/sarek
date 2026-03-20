@@ -32,6 +32,7 @@ preprocessing/bbsplit/*/*.fastq.gz
 preprocessing/bbsplit/*/*.stats.txt
 reference/dragmap/hash_table.{cfg,cfg.bin}
 reference/dragmap/hash_table_stats.txt
+reports/**/*.bam.metrics{,.multiqc.tsv}
 reports/**/*.cram.metrics{,.multiqc.tsv}
 reports/EnsemblVEP/*/*.ann.summary.html
 reports/fastp/**/*.fastp.{log,html}

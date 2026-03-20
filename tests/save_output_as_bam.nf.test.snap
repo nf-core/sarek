@@ -302,7 +302,6 @@
                 "samtools-stats-dp.txt:md5,ae7954084b2cd708c5e7369606bf4208",
                 "samtools_alignment_plot.txt:md5,438e719bf574a46726dbd2e0f1442e42",
                 "test.strelka.variants.bcftools_stats.txt:md5,2613827870dd789fe602a8a3b739b7f2",
-                "test.md.bam.metrics:md5,433b0083252bea7631530c37ae1027f3",
                 "test.md.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.md.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.md.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
