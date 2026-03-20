@@ -262,7 +262,7 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,ea167e1f03920b6214de041740ca3cd5",
                 "samtools_alignment_plot.txt:md5,7a727168e9bbb3f4c39894933438df98",
-                "test.md.bam.metrics:md5,0cb4004ddf334ee8b52a540ce2bdcae2",
+                "test.md.bam.metrics:md5,cf32a728def9e4c04eebc659f31f0b63",
                 "test.md.mosdepth.global.dist.txt:md5,9cb9b181119256ed17a77dcf44d58285",
                 "test.md.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.md.mosdepth.summary.txt:md5,dbe376360e437c89190139ef0ae6769a",
