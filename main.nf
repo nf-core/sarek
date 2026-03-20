@@ -125,6 +125,8 @@ workflow NFCORE_SAREK {
         params.step,
         params.tools ?: 'no_tools',
         params.vep_include_fasta,
+        params.xengsort_index,
+        params.xengsort_host_fasta,
     )
 
     // Build intervals if needed
@@ -285,6 +287,7 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.ascat_loci_gc,
         PREPARE_GENOME.out.ascat_loci_rt,
         PREPARE_GENOME.out.bbsplit_index,
+        PREPARE_GENOME.out.xengsort_index,
         PREPARE_GENOME.out.bcftools_annotations,
         PREPARE_GENOME.out.bcftools_annotations_tbi,
         params.bcftools_columns ? Channel.fromPath(params.bcftools_columns).collect() : Channel.value([]),

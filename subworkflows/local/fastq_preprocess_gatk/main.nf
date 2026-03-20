@@ -14,6 +14,9 @@ include { FASTP                                             } from '../../../mod
 include { BBMAP_BBSPLIT                                     } from '../../../modules/nf-core/bbmap/bbsplit'
 //TODO: WHAT ABOUT BBSPLIT RUNS WITH PARABRICKS?
 
+// Remove genome contaminant reads with xengsort
+include { XENGSORT_CLASSIFY                                } from '../../../modules/local/xengsort/classify/main'
+
 // Create umi consensus bams from fastq
 include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO                  } from '../../../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
 
@@ -62,6 +65,7 @@ workflow FASTQ_PREPROCESS_GATK {
         known_sites_indels
         known_sites_indels_tbi
         bbsplit_index
+        xengsort_index
 
     main:
 
@@ -152,6 +156,11 @@ workflow FASTQ_PREPROCESS_GATK {
 
             reports = reports.mix(BBMAP_BBSPLIT.out.stats.collect{ _meta, stats -> stats })
 
+        } else if (params.tools && params.tools.split(',').contains('xengsort')) {
+            reads_for_alignment = XENGSORT_CLASSIFY(
+                reads_for_bbsplit,
+                xengsort_index
+            ).graft_fastq
         } else {
             reads_for_alignment = reads_for_bbsplit
         }
