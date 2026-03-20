@@ -1,0 +1,155 @@
+// TODO nf-core: Once you have added the required tests, please run the following command to build this file:
+// nf-core modules test xengsort/classify
+nextflow_process {
+
+    name "Test Process XENGSORT_CLASSIFY"
+    script "../main.nf"
+    process "XENGSORT_CLASSIFY"
+    config "./nextflow.config"
+
+    tag "modules"
+    tag "modules_"
+    tag "xengsort"
+    tag "xengsort/classify"
+
+    test("human - paired_end") {
+
+        setup {
+            run("XENGSORT_INDEX") {
+                script "../../index/main.nf"
+                process {
+                    """
+                    input[0] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta')
+                    input[1] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta')
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ],
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz'),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz')
+                    ]
+                ]
+                input[1] = XENGSORT_INDEX.out.index
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.graft_fastq[0][1].size() == 2
+            assert process.out.host_fastq[0][1].size() == 2
+            assert process.out.both_fastq[0][1].size() == 2
+            assert process.out.neither_fastq[0][1].size() == 2
+            assert process.out.ambiguous_fastq[0][1].size() == 2
+            assert process.out.versions_xengsort_classify[0] == ["XENGSORT_CLASSIFY", "xengsort", "2.1.0"]
+        }
+
+    }
+
+    test("human - single_end") {
+
+        setup {
+            run("XENGSORT_INDEX") {
+                script "../../index/main.nf"
+                process {
+                    """
+                    input[0] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta')
+                    input[1] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta')
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:true ],
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz'),
+                    ]
+                ]
+                input[1] = XENGSORT_INDEX.out.index
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert file(process.out.graft_fastq[0][1]).exists()
+            assert file(process.out.host_fastq[0][1]).exists()
+            assert file(process.out.both_fastq[0][1]).exists()
+            assert file(process.out.neither_fastq[0][1]).exists()
+            assert file(process.out.ambiguous_fastq[0][1]).exists()
+            assert process.out.versions_xengsort_classify[0] == ["XENGSORT_CLASSIFY", "xengsort", "2.1.0"]
+        }
+    }
+
+    test("human - paired_end - stub") {
+
+        tag "stub"
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ],
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz'),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz')
+                    ]
+                ]
+                input[1] = file('.')
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.graft_fastq[0][1].size() == 2
+            assert process.out.host_fastq[0][1].size() == 2
+            assert process.out.both_fastq[0][1].size() == 2
+            assert process.out.neither_fastq[0][1].size() == 2
+            assert process.out.ambiguous_fastq[0][1].size() == 2
+            assert process.out.versions_xengsort_classify[0] == ["XENGSORT_CLASSIFY", "xengsort", "2.1.0"]
+        }
+    }
+
+   test("human - single_end - stub") {
+
+        tag "stub"
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:true ],
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz'),
+                    ]
+                ]
+                input[1] = file('.')
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert file(process.out.graft_fastq[0][1]).exists()
+            assert file(process.out.host_fastq[0][1]).exists()
+            assert file(process.out.both_fastq[0][1]).exists()
+            assert file(process.out.neither_fastq[0][1]).exists()
+            assert file(process.out.ambiguous_fastq[0][1]).exists()
+            assert process.out.versions_xengsort_classify[0] == ["XENGSORT_CLASSIFY", "xengsort", "2.1.0"]
+        }
+    }
+}
