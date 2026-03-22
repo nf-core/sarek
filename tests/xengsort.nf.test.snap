@@ -350,7 +350,7 @@
             ],
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1"
             ]
         ],
         "timestamp": "2026-03-21T15:03:50.866969",
