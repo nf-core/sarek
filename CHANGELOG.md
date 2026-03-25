@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#2087](https://github.com/nf-core/sarek/pull/2087) - Add `bam` as output format for parabricks/fq2bam, add multi lane support
+- Add `xengsort` as an additional contamination removal option, including index build/reuse support and workflow integration
 
 ### Changed
 
@@ -36,8 +37,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params | status |
-| ------ | ------ |
+| Params                  | status |
+| ----------------------- | ------ |
+| `--xengsort_host_fasta` | added  |
+| `--xengsort_index`      | added  |
+| `--xengsort_nobjects`   | added  |
+| `--xengsort_kmersize`   | added  |
+| `--save_xengsort_reads` | added  |
 
 ### Developer section
 

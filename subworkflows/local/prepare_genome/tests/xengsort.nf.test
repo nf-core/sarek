@@ -1,0 +1,168 @@
+nextflow_workflow {
+
+    name "Test Subworkflow PREPARE_GENOME - Xengsort functionality"
+    script "../main.nf"
+    workflow "PREPARE_GENOME"
+    config "./nextflow.config"
+
+    tag "subworkflows"
+    tag "subworkflows_local"
+    tag "prepare_genome"
+    tag "xengsort"
+
+    test("Xengsort - build index from host fasta") {
+
+        options "-stub"
+
+        when {
+            workflow {
+                """
+                input[0]  = null                                                                                                                                       // ascat_alleles
+                input[1]  = null                                                                                                                                       // ascat_loci
+                input[2]  = null                                                                                                                                       // ascat_loci_gc
+                input[3]  = null                                                                                                                                       // ascat_loci_rt
+                input[4]  = null                                                                                                                                       // bbsplit_fasta_list
+                input[5]  = null                                                                                                                                       // bbsplit_index
+                input[6]  = null                                                                                                                                       // bcftools_annotations
+                input[7]  = null                                                                                                                                       // bcftools_annotations_tbi
+                input[8]  = null                                                                                                                                       // bwa
+                input[9]  = null                                                                                                                                       // bwamem2
+                input[10] = null                                                                                                                                       // chr_dir
+                input[11] = null                                                                                                                                       // dbsnp
+                input[12] = null                                                                                                                                       // dbsnp_tbi
+                input[13] = null                                                                                                                                       // dict
+                input[14] = null                                                                                                                                       // dragmap
+                input[15] = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'                                                         // fasta
+                input[16] = null                                                                                                                                       // fasta_fai
+                input[17] = null                                                                                                                                       // germline_resource
+                input[18] = null                                                                                                                                       // germline_resource_tbi
+                input[19] = null                                                                                                                                       // known_indels
+                input[20] = null                                                                                                                                       // known_indels_tbi
+                input[21] = null                                                                                                                                       // known_snps
+                input[22] = null                                                                                                                                       // known_snps_tbi
+                input[23] = null                                                                                                                                       // msisensor2_models
+                input[24] = null                                                                                                                                       // msisensorpro_scan
+                input[25] = null                                                                                                                                       // pon
+                input[26] = null                                                                                                                                       // pon_tbi
+                input[27] = 'bwa-mem'                                                                                                                                  // aligner
+                input[28] = 'annotate'                                                                                                                                 // step
+                input[29] = 'xengsort'                                                                                                                                 // tools
+                input[30] = false                                                                                                                                      // vep_include_fasta
+                input[31] = null                                                                                                                                       // xengsort_index
+                input[32] = params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta'                                                             // xengsort_host_fasta
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.xengsort_index.size() == 1 }
+            )
+        }
+    }
+
+    test("Xengsort - use provided index") {
+
+        when {
+            workflow {
+                """
+                def mock_index_dir = file("${workDir}/mock_xengsort_index")
+                mock_index_dir.mkdirs()
+                file("${workDir}/mock_xengsort_index/index.info").text = 'dummy'
+
+                input[0]  = null                                                                                                                                       // ascat_alleles
+                input[1]  = null                                                                                                                                       // ascat_loci
+                input[2]  = null                                                                                                                                       // ascat_loci_gc
+                input[3]  = null                                                                                                                                       // ascat_loci_rt
+                input[4]  = null                                                                                                                                       // bbsplit_fasta_list
+                input[5]  = null                                                                                                                                       // bbsplit_index
+                input[6]  = null                                                                                                                                       // bcftools_annotations
+                input[7]  = null                                                                                                                                       // bcftools_annotations_tbi
+                input[8]  = null                                                                                                                                       // bwa
+                input[9]  = null                                                                                                                                       // bwamem2
+                input[10] = null                                                                                                                                       // chr_dir
+                input[11] = null                                                                                                                                       // dbsnp
+                input[12] = null                                                                                                                                       // dbsnp_tbi
+                input[13] = null                                                                                                                                       // dict
+                input[14] = null                                                                                                                                       // dragmap
+                input[15] = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'                                                         // fasta
+                input[16] = null                                                                                                                                       // fasta_fai
+                input[17] = null                                                                                                                                       // germline_resource
+                input[18] = null                                                                                                                                       // germline_resource_tbi
+                input[19] = null                                                                                                                                       // known_indels
+                input[20] = null                                                                                                                                       // known_indels_tbi
+                input[21] = null                                                                                                                                       // known_snps
+                input[22] = null                                                                                                                                       // known_snps_tbi
+                input[23] = null                                                                                                                                       // msisensor2_models
+                input[24] = null                                                                                                                                       // msisensorpro_scan
+                input[25] = null                                                                                                                                       // pon
+                input[26] = null                                                                                                                                       // pon_tbi
+                input[27] = 'bwa-mem'                                                                                                                                  // aligner
+                input[28] = 'annotate'                                                                                                                                 // step
+                input[29] = 'xengsort'                                                                                                                                 // tools
+                input[30] = false                                                                                                                                      // vep_include_fasta
+                input[31] = mock_index_dir.toString()                                                                                                                  // xengsort_index
+                input[32] = null                                                                                                                                       // xengsort_host_fasta
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.xengsort_index.size() == 1 }
+            )
+        }
+    }
+
+    test("Don't run Xengsort - tools without xengsort") {
+
+        when {
+            workflow {
+                """
+                input[0]  = null                                                                                                                                       // ascat_alleles
+                input[1]  = null                                                                                                                                       // ascat_loci
+                input[2]  = null                                                                                                                                       // ascat_loci_gc
+                input[3]  = null                                                                                                                                       // ascat_loci_rt
+                input[4]  = null                                                                                                                                       // bbsplit_fasta_list
+                input[5]  = null                                                                                                                                       // bbsplit_index
+                input[6]  = null                                                                                                                                       // bcftools_annotations
+                input[7]  = null                                                                                                                                       // bcftools_annotations_tbi
+                input[8]  = null                                                                                                                                       // bwa
+                input[9]  = null                                                                                                                                       // bwamem2
+                input[10] = null                                                                                                                                       // chr_dir
+                input[11] = null                                                                                                                                       // dbsnp
+                input[12] = null                                                                                                                                       // dbsnp_tbi
+                input[13] = null                                                                                                                                       // dict
+                input[14] = null                                                                                                                                       // dragmap
+                input[15] = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'                                                         // fasta
+                input[16] = null                                                                                                                                       // fasta_fai
+                input[17] = null                                                                                                                                       // germline_resource
+                input[18] = null                                                                                                                                       // germline_resource_tbi
+                input[19] = null                                                                                                                                       // known_indels
+                input[20] = null                                                                                                                                       // known_indels_tbi
+                input[21] = null                                                                                                                                       // known_snps
+                input[22] = null                                                                                                                                       // known_snps_tbi
+                input[23] = null                                                                                                                                       // msisensor2_models
+                input[24] = null                                                                                                                                       // msisensorpro_scan
+                input[25] = null                                                                                                                                       // pon
+                input[26] = null                                                                                                                                       // pon_tbi
+                input[27] = 'bwa-mem'                                                                                                                                  // aligner
+                input[28] = 'annotate'                                                                                                                                 // step
+                input[29] = 'no_tools'                                                                                                                                 // tools
+                input[30] = false                                                                                                                                      // vep_include_fasta
+                input[31] = null                                                                                                                                       // xengsort_index
+                input[32] = null                                                                                                                                       // xengsort_host_fasta
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.xengsort_index.size() == 0 }
+            )
+        }
+    }
+}

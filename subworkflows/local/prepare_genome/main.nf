@@ -18,6 +18,7 @@ include { UNZIP as UNZIP_ALLELES                    } from '../../../modules/nf-
 include { UNZIP as UNZIP_GC                         } from '../../../modules/nf-core/unzip'
 include { UNZIP as UNZIP_LOCI                       } from '../../../modules/nf-core/unzip'
 include { UNZIP as UNZIP_RT                         } from '../../../modules/nf-core/unzip'
+include { XENGSORT_INDEX                            } from '../../../modules/local/xengsort/index/main.nf'
 
 workflow PREPARE_GENOME {
     take:
@@ -52,6 +53,8 @@ workflow PREPARE_GENOME {
     step                        // params.step
     tools                       // params.tools
     vep_include_fasta           // params.vep_include_fasta
+    xengsort_index_in           // params.xengsort_index
+    xengsort_host_fasta_in      // params.xengsort_host_fasta
 
     main:
     versions = Channel.empty()
@@ -143,6 +146,25 @@ workflow PREPARE_GENOME {
                 fasta.map { _meta, fasta_ -> fasta_ },
                 ch_bbsplit_fasta_list,
                 true,
+            ).index
+        }
+    }
+
+    // Prepare genome for Xengsort contamination filtering
+    xengsort_index = Channel.empty()
+    if (tools && tools.split(',').contains('xengsort')) {
+        if (xengsort_index_in) {
+            // Use user-provided xengsort index
+                xengsort_index = Channel.value(file(xengsort_index_in, checkIfExists: true))
+        }
+        else {
+            if (!xengsort_host_fasta_in) {
+                error("Pipeline error: '--xengsort_host_fasta' is missing. Cannot build index.")
+            }
+            // Build index from scratch using main fasta as graft and xengsort_host_fasta as host
+            xengsort_index = XENGSORT_INDEX(
+                fasta.map { _meta, fasta_ -> fasta_ },
+                Channel.fromPath(xengsort_host_fasta_in, checkIfExists: true).collect()
             ).index
         }
     }
@@ -325,4 +347,5 @@ workflow PREPARE_GENOME {
     pon_tbi                  // Channel: [pon_tbi]
     vep_fasta                // Channel: [meta, vep_fasta]
     versions                 // Channel: [versions.yml]
+    xengsort_index           // Channel: [xengsort_index/]
 }

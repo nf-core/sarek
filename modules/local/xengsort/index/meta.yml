@@ -1,0 +1,71 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "xengsort_index"
+description: Indexing reference genomes for xenograft read sorting using Xengsort
+keywords:
+  - index
+  - xenograft
+  - k-mer
+  - reference
+tools:
+  - "xengsort":
+      description: "A fast xenograft read sorter based on space-efficient k-mer hashing."
+      homepage: "https://gitlab.com/genomeinformatics/xengsort"
+      documentation: "https://gitlab.com/genomeinformatics/xengsort"
+      tool_dev_url: "https://gitlab.com/genomeinformatics/xengsort"
+      doi: "10.4230/LIPIcs.WABI.2020.4"
+      licence: ["MIT"]
+      identifier: null
+
+input:
+  ### Add a description of all of the variables used as input
+  - graft_ref:
+      type: file
+      description: |
+        Graft (e.g. human tumour) reference genome FASTA file(s).
+        Multiple files are accepted.
+      pattern: "*.{fa,fasta,fa.gz,fasta.gz}"
+      ontologies:
+        - edam: "http://edamontology.org/format_1929" # FASTA
+        - edam: "http://edamontology.org/format_3989" # GZIP format
+  - host_ref:
+      type: file
+      description: |
+        Host (e.g. mouse) reference genome FASTA file(s).
+        Multiple files are accepted.
+      pattern: "*.{fa,fasta,fa.gz,fasta.gz}"
+      ontologies:
+        - edam: "http://edamontology.org/format_1929" # FASTA
+        - edam: "http://edamontology.org/format_3989" # GZIP format
+
+output:
+  index:
+    - xengsort_index:
+      type: directory
+      description: Directory containing the xengsort k-mer hash index files (index.hash, index.info)
+      pattern: "xengsort_index"
+  versions_xengsort_index:
+    - "${task.process}":
+      type: string
+      description: The process the versions were collected from
+    - "xengsort":
+      type: string
+      description: The name of the tool
+    - "xengsort --version":
+      type: eval
+      description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - xengsort:
+          type: string
+          description: The name of the tool
+      - xengsort --version:
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@xinghansun"
+maintainers:
+  - "@xinghansun"
