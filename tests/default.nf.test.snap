@@ -314,6 +314,9 @@
                 "  split_fastq                 : 0",
                 "  intervals                   : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data//genomics/homo_sapiens/genome/genome.interval_list",
                 "  tools                       : strelka",
+                "Unique Molecular Identifiers",
+                "  xengsort_nobjects           : 400000",
+                "  xengsort_kmersize           : 25",
                 "Annotation",
                 "  bcftools_annotations        : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data//genomics/sarscov2/illumina/vcf/test2.vcf.gz",
                 "  bcftools_annotations_tbi    : https://raw.githubusercontent.com/nf-core/test-datasets/modules/data//genomics/sarscov2/illumina/vcf/test2.vcf.gz.tbi",
@@ -395,7 +398,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T19:44:11.568889909"
+        "timestamp": "2026-03-27T09:42:05.764331126"
     },
     "-profile test -stub": {
         "content": [
