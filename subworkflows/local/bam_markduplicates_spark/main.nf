@@ -22,7 +22,7 @@ workflow BAM_MARKDUPLICATES_SPARK {
     reports = Channel.empty()
 
     // RUN MARKUPDUPLICATES SPARK
-    GATK4SPARK_MARKDUPLICATES(bam, fasta.map{ meta, fasta -> [ fasta ] }, fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] }, dict.map{ meta, dict -> [ dict ] })
+    GATK4SPARK_MARKDUPLICATES(bam, fasta.map{ meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ meta, fasta_fai_ -> [ fasta_fai_ ] }, dict.map{ meta, dict_ -> [ dict_ ] })
 
     // Index cram
     INDEX_MARKDUPLICATES(GATK4SPARK_MARKDUPLICATES.out.output)
@@ -34,7 +34,7 @@ workflow BAM_MARKDUPLICATES_SPARK {
     CRAM_QC_MOSDEPTH_SAMTOOLS(cram, fasta, intervals_bed_combined)
 
     // When running Marduplicates spark, and saving reports
-    GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta.map{ meta, fasta -> [ fasta ] }, fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] }, dict.map{ meta, dict -> [ dict ] })
+    GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta.map{ meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ meta, fasta_fai_ -> [ fasta_fai_ ] }, dict.map{ meta, dict_ -> [ dict_ ] })
 
     // Gather all reports generated
     reports = reports.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics)

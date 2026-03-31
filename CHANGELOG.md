@@ -50,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2087](https://github.com/nf-core/sarek/pull/2087) - Move parabricks config into its own, adhere to strict syntax, swap to topics
 - [#2139](https://github.com/nf-core/sarek/pull/2139) - Back to dev (3.9.0dev)
 - [#2141](https://github.com/nf-core/sarek/pull/2141) - Update vcf_annotate_snpeff subworkflow, swap tabix/bgziptabix and snpeff to topics, strict syntax
+- [#2159](https://github.com/nf-core/sarek/pull/2159) - Fix strict syntax errors
 
 #### Fixed
 
