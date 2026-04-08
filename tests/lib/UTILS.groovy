@@ -12,6 +12,16 @@ class UTILS {
         // Pass down workflow for std capture
         def workflow = args.workflow
 
+        // These strings are not stable and should be ignored
+        def snapshot_ignore_list = [
+            "Creating env using",
+            "Downloading plugin",
+            "Environment variable `SENTIEON",
+            "Pulling Singularity image",
+            "Staging foreign file",
+            "unable to stage foreign file",
+        ]
+
         // stable_name: All files + folders in ${outdir}/ with a stable name
         def stable_name = getAllFilesFromDir(outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
         // stable_content: All files in ${outdir}/ with stable content
@@ -66,29 +76,26 @@ class UTILS {
             }
         }
 
-        // Always capture stdout and stderr for any WARN message
-        if (scenario.snapshot_ignoreWarning) {
-            assertion.add(filterNextflowOutput(workflow.stderr + workflow.stdout, include: ["WARN"], ignore: ["Creating env using", "Pulling Singularity image", "unable to stage foreign file", scenario.snapshot_ignoreWarning] ) ?: "No warnings")
-        } else {
-            assertion.add(filterNextflowOutput(workflow.stderr + workflow.stdout, include: ["WARN"], ignore: ["Creating env using", "Pulling Singularity image", "unable to stage foreign file"] ) ?: "No warnings")
-        }
+        // If we have a snapshot options in scenario then we allow to capture either stderr, stdout or both
+        // With options to include specific stings
+        def workflow_std = []
+        // Otherwise, we always capture stdout and stderr for any WARN message
+        // Both have additional possibilities to ignore some strings
+        def filter_args = [ignore: snapshot_ignore_list + (scenario.snapshot_ignore ?: [])]
 
-        // Capture std for snapshot
-        // Allow to capture either stderr, stdout or both
-        // Additional possibilities to include and/or ignore some string
         if (scenario.snapshot) {
-            def workflow_std = []
+            workflow_std = scenario.snapshot.split(',')
+                .findAll { it in ['stderr', 'stdout'] }
+                .collect { workflow."$it" }
+                .flatten()
 
-            scenario.snapshot.split(',').each { std ->
-                if (std in ['stderr', 'stdout']) { workflow_std.add(workflow."$std") }
-            }
-
-            if (scenario.snapshot_include) {
-                assertion.add(filterNextflowOutput(workflow_std.flatten(), ignore: ["Creating env using", "Pulling Singularity image", "unable to stage foreign file", scenario.snapshot_ignore], include:[scenario.snapshot_include]))
-            } else {
-                assertion.add(filterNextflowOutput(workflow_std.flatten(), ignore: ["Creating env using", "Pulling Singularity image", "unable to stage foreign file", scenario.snapshot_ignore]))
-            }
+            if (scenario.snapshot_include) { filter_args.include = [scenario.snapshot_include] }
+        } else {
+            workflow_std = workflow.stderr + workflow.stdout
+            filter_args.include = ["WARN"]
         }
+
+        assertion.add(filterNextflowOutput(workflow_std, filter_args) ?: "No warnings")
 
         return assertion
     }
@@ -118,11 +125,7 @@ class UTILS {
             tag "pipeline"
             tag "pipeline_sarek"
 
-            if (scenario.stub) {
-                options "-stub"
-            }
-
-            options "-output-dir $outputDir"
+            options "-output-dir ${outputDir}${scenario.stub ? ' -stub' : ''}"
 
             if (scenario.gpu) {
                 tag "gpu${!scenario.no_conda ? '_conda' : ''}${scenario.stub ? '_stub' : ''}"
