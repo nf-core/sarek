@@ -16,7 +16,6 @@ class UTILS {
         def snapshot_ignore_list = [
             "Creating env using",
             "Downloading plugin",
-            "Environment variable `SENTIEON",
             "Pulling Singularity image",
             "Staging foreign file",
             "unable to stage foreign file",

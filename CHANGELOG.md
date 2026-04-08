@@ -57,6 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2117](https://github.com/nf-core/sarek/pull/2117) - Update alignment related files to strict syntax
 - [#2129](https://github.com/nf-core/sarek/pull/2129) - Fix MuSE timestamp, swap to topics and change to strict syntax
 - [#2165](https://github.com/nf-core/sarek/pull/2165) - Recover help message
+- [#2167](https://github.com/nf-core/sarek/pull/2167) - Fix and extend pipeline level stub tests
 
 #### Removed
 
