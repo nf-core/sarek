@@ -82,6 +82,11 @@ class UTILS {
         // Both have additional possibilities to ignore some strings
         def filter_args = [ignore: snapshot_ignore_list + (scenario.snapshot_ignore ?: [])]
 
+        workflow_std = workflow.stderr + workflow.stdout
+        filter_args.include = ["WARN"]
+
+        assertion.add(filterNextflowOutput(workflow_std, filter_args) ?: "No warnings")
+
         if (scenario.snapshot) {
             workflow_std = scenario.snapshot.split(',')
                 .findAll { it in ['stderr', 'stdout'] }
@@ -89,12 +94,9 @@ class UTILS {
                 .flatten()
 
             if (scenario.snapshot_include) { filter_args.include = [scenario.snapshot_include] }
-        } else {
-            workflow_std = workflow.stderr + workflow.stdout
-            filter_args.include = ["WARN"]
-        }
 
-        assertion.add(filterNextflowOutput(workflow_std, filter_args) ?: "No warnings")
+            assertion.add(filterNextflowOutput(workflow_std, filter_args) ?: "No warnings")
+        }
 
         return assertion
     }

@@ -10,14 +10,18 @@
             "No CRAM files",
             "No VCF files",
             [
+                "WARN: Failed to render execution report -- see the log file for details",
+                "WARN: Failed to render execution timeline -- see the log file for details"
+            ],
+            [
                 "Patient [test] has more than one sample [2] with normal status [0] and one sample with tumor status [1]."
             ]
         ],
-        "timestamp": "2026-04-08T17:11:50.135361476",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.2"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-06T13:52:36.729578236"
     },
     "-profile test --input tests/csv/3.0/fastq_sample_with_space.csv": {
         "content": [
@@ -28,6 +32,7 @@
             "No BAM files",
             "No CRAM files",
             "No VCF files",
+            "No warnings",
             [
                 "The following invalid input values have been detected:",
                 "* --input ([PATH]/./tests/csv/3.0/fastq_sample_with_space.csv): Validation of file failed:",
@@ -35,11 +40,11 @@
                 " -- Check script '[PATH]/subworkflows/nf-core/utils_nfschema_plugin/main.nf' at line: 68 or see '[PATH]/tests/[NFT_HASH]/meta/nextflow.log' file for more details"
             ]
         ],
-        "timestamp": "2026-04-08T17:11:01.241507732",
         "meta": {
-            "nf-test": "0.9.5",
+            "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        }
+        },
+        "timestamp": "2025-12-16T12:15:16.691338949"
     },
     "-profile test --input tests/csv/3.0/fastq_multiple_sample_ids.csv": {
         "content": [
@@ -52,14 +57,19 @@
             "No CRAM files",
             "No VCF files",
             [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
+                "WARN: Failed to render execution report -- see the log file for details",
+                "WARN: Failed to render execution timeline -- see the log file for details"
+            ],
+            [
                 "Sample ID 'test' is associated with multiple patient IDs: test, test2. Please ensure each sample ID is unique to a single patient."
             ]
         ],
-        "timestamp": "2026-04-08T17:14:12.382381174",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.2"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-06T13:54:49.322255498"
     },
     "-profile test --input tests/csv/3.0/fastq_multiple_lane_ids.csv": {
         "content": [
@@ -72,14 +82,19 @@
             "No CRAM files",
             "No VCF files",
             [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
+                "WARN: Failed to render execution report -- see the log file for details",
+                "WARN: Failed to render execution timeline -- see the log file for details"
+            ],
+            [
                 "Duplicate patient-sample-status-lane combination found: Patient 'test2', Sample 'test2', Status '0', Lane 'test_L1' appears 2 times. Please ensure each combination is unique."
             ]
         ],
-        "timestamp": "2026-04-08T17:13:22.915126515",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.2"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
+        },
+        "timestamp": "2026-02-06T13:54:04.695361045"
     },
     "-profile test,spark --input tests/csv/3.0/fastq_single.csv --use_gatk_spark baserecalibrator,markduplicates --save_mapped --save_output_as_bam": {
         "content": [
@@ -90,6 +105,7 @@
             "No BAM files",
             "No CRAM files",
             "No VCF files",
+            "No warnings",
             [
                 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
                 "  The --use_gatk_spark option is not compatible with --save_mapped and --save_output_as_bam.",
@@ -97,10 +113,10 @@
                 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             ]
         ],
-        "timestamp": "2026-04-08T17:12:33.473183463",
         "meta": {
-            "nf-test": "0.9.5",
+            "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        }
+        },
+        "timestamp": "2025-12-16T12:16:38.014556073"
     }
 }
