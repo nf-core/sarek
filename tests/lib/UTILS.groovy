@@ -18,7 +18,7 @@ class UTILS {
             "Downloading plugin",
             "Pulling Singularity image",
             "Staging foreign file",
-            "unable to stage foreign file",
+            "Unable to stage foreign file",
         ]
 
         // stable_name: All files + folders in ${outdir}/ with a stable name
