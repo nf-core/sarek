@@ -93,7 +93,7 @@ class UTILS {
                 .collect { workflow."$it" }
                 .flatten()
 
-            filter_args.include = [${scenario.snapshot_include ?: ''}]
+            filter_args.include = [scenario.snapshot_include ?: null]
 
             assertion.add(filterNextflowOutput(workflow_std, filter_args) ?: "No warnings")
         }
