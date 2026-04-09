@@ -19,6 +19,7 @@ class UTILS {
             "Got an interrupted  exception while taking agent result",
             "Pulling Singularity image",
             "Staging foreign file",
+            "Unable to resume cached task",
             "Unable to stage foreign file",
         ]
 
