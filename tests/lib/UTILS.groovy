@@ -47,7 +47,7 @@ class UTILS {
 
         if (!scenario.failure) {
             assertion.add(workflow.trace.succeeded().size())
-            assertion.add(removeFromYamlMap("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"))
+            assertion.add(removeFromYamlMap("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow")?: 'No versions')
         }
 
         // At least always pipeline_info/ is created and stable
