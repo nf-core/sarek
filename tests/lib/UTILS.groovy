@@ -16,6 +16,7 @@ class UTILS {
         def snapshot_ignore_list = [
             "Creating env using",
             "Downloading plugin",
+            "Got an interrupted  exception while taking agent result",
             "Pulling Singularity image",
             "Staging foreign file",
             "Unable to stage foreign file",
