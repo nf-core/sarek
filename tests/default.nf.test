@@ -8,13 +8,12 @@ nextflow_pipeline {
             name: "-profile test",
             params: [],
             snapshot: 'stderr,stdout',
-            snapshot_ignore: 'Downloading plugin|Staging foreign file',
         ],
         [
             name: "-profile test -stub",
             params: [],
-            stub: true
-        ]
+            stub: true,
+        ],
     ]
 
     // Generate tests for each scenario

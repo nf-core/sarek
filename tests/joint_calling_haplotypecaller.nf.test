@@ -53,7 +53,6 @@ nextflow_pipeline {
             ],
             failure: true,
             snapshot: 'stderr,stdout',
-            snapshot_ignore: 'Downloading plugin',
             snapshot_include: 'requires intervals'
         ]
     ]

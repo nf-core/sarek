@@ -384,14 +384,12 @@
             ],
             "No CRAM files",
             "No VCF files",
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
-            ]
+            "No warnings"
         ],
+        "timestamp": "2026-04-09T13:11:35.435247726",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T19:29:35.879909298"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

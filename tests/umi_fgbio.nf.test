@@ -23,7 +23,6 @@ nextflow_pipeline {
             ],
             failure: true,
             snapshot: 'stdout',
-            snapshot_ignore: 'Downloading plugin',
             snapshot_include: 'input UMI Read structure'
         ],
         [
@@ -36,7 +35,6 @@ nextflow_pipeline {
             ],
             failure: true,
             snapshot: 'stdout',
-            snapshot_ignore: 'Downloading plugin',
             snapshot_include: 'currently not compatible'
         ],
         [
@@ -49,7 +47,6 @@ nextflow_pipeline {
             ],
             failure: true,
             snapshot: 'stdout',
-            snapshot_ignore: 'Downloading plugin',
             snapshot_include: 'currently not compatible'
         ]
     ]
