@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev
+## [3.8.2](https://github.com/nf-core/sarek/releases/tag/3.8.2) - Rapaätno
+
+Rapaätno is a river in Sarek.
 
 ### Added
 
@@ -51,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2139](https://github.com/nf-core/sarek/pull/2139) - Back to dev (3.9.0dev)
 - [#2141](https://github.com/nf-core/sarek/pull/2141) - Update vcf_annotate_snpeff subworkflow, swap tabix/bgziptabix and snpeff to topics, strict syntax
 - [#2159](https://github.com/nf-core/sarek/pull/2159) - Fix strict syntax errors
+- [#2169](https://github.com/nf-core/sarek/pull/2169) - Prepare release 3.8.2
 
 #### Fixed
 
@@ -62,6 +65,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Removed
 
 ## [3.8.1](https://github.com/nf-core/sarek/releases/tag/3.8.1) - Laitaure
+
+Laitaure is a lake formed by the Rapaätno River in Sarek.
 
 ### Added
 
