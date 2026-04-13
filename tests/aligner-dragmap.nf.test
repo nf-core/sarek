@@ -10,8 +10,8 @@ nextflow_pipeline {
                 aligner: 'dragmap',
                 save_reference: true,
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
-                tools: ''
-            ]
+                tools: '',
+            ],
         ],
         [
             name: "-profile test --aligner dragmap --save_reference --build_only_index",
@@ -21,9 +21,31 @@ nextflow_pipeline {
                 input: false,
                 save_reference: true,
                 skip_tools: 'multiqc',
-                tools: ''
-            ]
-        ]
+                tools: '',
+            ],
+        ],
+        [
+            name: "-profile test --aligner dragmap --save_reference skip QC/recal/md - stub",
+            params: [
+                aligner: 'dragmap',
+                save_reference: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: '',
+            ],
+            stub: true
+        ],
+        [
+            name: "-profile test --aligner dragmap --save_reference --build_only_index - stub",
+            params: [
+                aligner: 'dragmap',
+                build_only_index: true,
+                input: false,
+                save_reference: true,
+                skip_tools: 'multiqc',
+                tools: '',
+            ],
+            stub: true
+        ],
     ]
 
     // Generate tests for each scenario

@@ -300,11 +300,11 @@
                 "  | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,",
                 "                                        `._,._,'",
                 "      ____",
-                "    .´ _  `.",
+                "    .\u00b4 _  `.",
                 "   /  |\\`-_ \\      __        __   ___     ",
                 "  |   | \\  `-|    |__`  /\\  |__) |__  |__/",
-                "   \\ |   \\  /     .__| /¯¯\\ |  \\ |___ |  \\",
-                "    `|____\\´",
+                "   \\ |   \\  /     .__| /\u00af\u00af\\ |  \\ |___ |  \\",
+                "    `|____\\\u00b4",
                 "  nf-core/sarek [VERSION]",
                 "------------------------------------------------------",
                 "Input/output options",
@@ -394,11 +394,11 @@
                 "[NXF_HASH] Submitted process > NFCORE_SAREK:SAREK:VCF_QC_BCFTOOLS_VCFTOOLS:VCFTOOLS_TSTV_QUAL (test)"
             ]
         ],
+        "timestamp": "2026-03-27T09:42:05.764331126",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-03-27T09:42:05.764331126"
+        }
     },
     "-profile test -stub": {
         "content": [
@@ -465,6 +465,7 @@
                 "csv/variantcalled.csv",
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
@@ -605,10 +606,10 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-04-08T12:07:08.143766252",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T16:45:00.369779623"
+        }
     }
 }

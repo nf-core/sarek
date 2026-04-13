@@ -31,6 +31,7 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
@@ -114,11 +115,11 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-04-08T12:11:32.12215582",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T21:22:15.656139037"
+        }
     },
     "-profile test --tools ngscheckmate": {
         "content": [
@@ -281,10 +282,10 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2025-09-30T21:27:36.837652254",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T21:27:36.837652254"
+        }
     }
 }

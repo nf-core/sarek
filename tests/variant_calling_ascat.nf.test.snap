@@ -22,6 +22,7 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
@@ -86,11 +87,11 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-04-08T12:14:36.857806635",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T22:02:07.62533634"
+        }
     },
     "-profile test --tools ascat --input ascat_somatic.csv -stub": {
         "content": [
@@ -115,6 +116,7 @@
                 "csv",
                 "multiqc",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
@@ -179,11 +181,11 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-04-08T12:14:00.856421629",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T22:01:28.930546109"
+        }
     },
     "-profile test --tools ascat --input ascat_somatic.csv --only_paired_variant_calling including gc and rt": {
         "content": [
@@ -324,11 +326,11 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2025-09-30T22:09:59.120270404",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T22:09:59.120270404"
+        }
     },
     "-profile test --tools ascat --input ascat_somatic.csv": {
         "content": [
@@ -469,10 +471,10 @@
                 "WARN: No LogRCorrection performed in ASCAT. For LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files."
             ]
         ],
+        "timestamp": "2025-12-15T22:00:03.974713999",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T22:00:03.974713999"
+        }
     }
 }

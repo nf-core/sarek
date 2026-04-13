@@ -22,7 +22,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
-        .map{ meta, cram, crai, intervals, intervals_index, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals, intervals_index ] }
+        .map{ meta, cram_, crai, intervals_, intervals_index, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram_, crai, intervals_, intervals_index ] }
 
     STRELKA_SINGLE(cram_intervals, fasta, fasta_fai)
 
