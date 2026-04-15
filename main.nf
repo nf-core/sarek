@@ -254,13 +254,15 @@ workflow NFCORE_SAREK {
             def tbi_file = tbi ? file(tbi, checkIfExists: true) : file("${vcf}.tbi", checkIfExists: true)
             def vardb_file = vardb ? file(vardb, checkIfExists: true) : null
 
-            snpsift_db_configs.add([
-                vcf: vcf_file,
-                tbi: tbi_file,
-                fields: fields ?: '',
-                prefix: prefix ?: '',
-                vardb: vardb_file
-            ])
+            snpsift_db_configs.add(
+                [
+                    vcf: vcf_file,
+                    tbi: tbi_file,
+                    fields: fields ?: '',
+                    prefix: prefix ?: '',
+                    vardb: vardb_file,
+                ]
+            )
         }
     }
 
@@ -386,6 +388,10 @@ workflow {
 output {
     multiqc {
         path "multiqc"
+        index {
+            path "multiqc/index.json"
+            sep ":"
+        }
     }
 }
 
