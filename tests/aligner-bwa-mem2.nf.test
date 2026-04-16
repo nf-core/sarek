@@ -18,7 +18,7 @@ nextflow_pipeline {
             params: [
                 aligner: 'bwa-mem2',
                 build_only_index: true,
-                input: false,
+                input: null,
                 save_reference: true,
                 skip_tools: 'multiqc',
                 tools: '',
@@ -39,7 +39,7 @@ nextflow_pipeline {
             params: [
                 aligner: 'bwa-mem2',
                 build_only_index: true,
-                input: false,
+                input: null,
                 save_reference: true,
                 skip_tools: 'multiqc',
                 tools: '',
