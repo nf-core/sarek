@@ -37,6 +37,8 @@
             [
                 "csv",
                 "csv/mapped.csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
@@ -231,6 +233,8 @@
             [
                 "csv",
                 "csv/mapped.csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
