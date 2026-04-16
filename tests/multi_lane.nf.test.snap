@@ -53,6 +53,7 @@
                 "csv/markduplicates.csv",
                 "csv/markduplicates_no_table.csv",
                 "csv/recalibrated.csv",
+                "multiqc",
                 "multiqc/index.json",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
