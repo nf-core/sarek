@@ -1,5 +1,5 @@
 {
-    "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 20": {
+    "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr null --known_snps_vqsr null --known_indels_vqsr null --nucleotides_per_second 20": {
         "content": [
             26,
             {
@@ -237,7 +237,7 @@
         },
         "timestamp": "2026-03-06T11:55:26.564281"
     },
-    "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 100": {
+    "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr null --known_snps_vqsr null --known_indels_vqsr null --nucleotides_per_second 100": {
         "content": [
             18,
             {
