@@ -39,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
 | nf-prov    | 1.2.2       | 1.7.0       |
-| nf-schema  | 2.6.1       | 2.7.1       |
+| nf-schema  | 2.6.1       | 2.7.2       |
 
 ### Parameters
 
