@@ -1,10 +1,13 @@
 {
     "-profile test --tools mutect2 --no_intervals tumoronly": {
         "content": [
-            11,
+            12,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
+                },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
@@ -63,56 +66,8 @@
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
-                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-pct.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_variant_depths.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
-                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
-                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
-                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
-                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
-                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/png",
-                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
-                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-pct.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_variant_depths.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
-                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
-                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
-                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
-                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
-                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
-                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
-                "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/svg",
-                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
-                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-pct.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_variant_depths.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
-                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
-                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
-                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
-                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
-                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
-                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
-                "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
                 "no_intervals.bed.gz",
@@ -125,7 +80,7 @@
                 "reports/bcftools",
                 "reports/bcftools/mutect2",
                 "reports/bcftools/mutect2/sample2",
-                "reports/bcftools/mutect2/sample2/sample2.mutect2.bcftools_stats.txt",
+                "reports/bcftools/mutect2/sample2/sample2.mutect2.filtered.bcftools_stats.txt",
                 "reports/mosdepth",
                 "reports/mosdepth/sample2",
                 "reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt",
@@ -138,13 +93,16 @@
                 "reports/vcftools",
                 "reports/vcftools/mutect2",
                 "reports/vcftools/mutect2/sample2",
-                "reports/vcftools/mutect2/sample2/sample2.mutect2.FILTER.summary",
-                "reports/vcftools/mutect2/sample2/sample2.mutect2.TsTv.count",
-                "reports/vcftools/mutect2/sample2/sample2.mutect2.TsTv.qual",
+                "reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.FILTER.summary",
+                "reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.TsTv.count",
+                "reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.TsTv.qual",
                 "variant_calling",
                 "variant_calling/mutect2",
                 "variant_calling/mutect2/sample2",
                 "variant_calling/mutect2/sample2/sample2.mutect2.artifactprior.tar.gz",
+                "variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz",
+                "variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.filteringStats.tsv",
+                "variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.tbi",
                 "variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz",
                 "variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.stats",
                 "variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.tbi"
@@ -156,30 +114,29 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
-                "sample2.mutect2.bcftools_stats.txt:md5,c275ee76762a37053d43f4e290485af8",
+                "sample2.mutect2.filtered.bcftools_stats.txt:md5,b204196dee0fc69cbdabc35c805f8b73",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
                 "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
-                "sample2.mutect2.FILTER.summary:md5,08f06620a8dcc70115bdde9137a91008",
-                "sample2.mutect2.TsTv.count:md5,0d59dcbdb127be60909111958ff7b5f5",
+                "sample2.mutect2.filtered.FILTER.summary:md5,ab6f85de19646115fb226a1b69cf47f1",
+                "sample2.mutect2.filtered.TsTv.count:md5,0d59dcbdb127be60909111958ff7b5f5",
+                "sample2.mutect2.filtered.vcf.gz.filteringStats.tsv:md5,1112e7ab1ede97f77561dae02e9f2af1",
                 "sample2.mutect2.vcf.gz.stats:md5,76f749c53212d72e98801f6030fbf8a6"
             ],
             "No BAM files",
             "No CRAM files",
             [
+                "sample2.mutect2.filtered.vcf.gz:md5,c5002fcbcf76c8af2593eb062487d0f4",
                 "sample2.mutect2.vcf.gz:md5,4a803cf2687fc368a8c4eef5e2fc8c9c"
             ],
-            [
-                "WARN: If Mutect2 is specified without a germline resource, no filtering will be done.",
-                "WARN: No Panel-of-normal was specified for Mutect2."
-            ]
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T23:34:19.18363343"
+        "timestamp": "2026-03-09T18:04:13.645477"
     },
     "-profile test --tools mutect2 somatic": {
         "content": [
@@ -585,7 +542,7 @@
     },
     "-profile test --tools mutect2 tumoronly": {
         "content": [
-            14,
+            15,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
@@ -595,6 +552,9 @@
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
+                },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
@@ -657,56 +617,8 @@
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
-                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-pct.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_variant_depths.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
-                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
-                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
-                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
-                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
-                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
-                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
-                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/png",
-                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
-                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-pct.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_variant_depths.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
-                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
-                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
-                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
-                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
-                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
-                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
-                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
-                "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/svg",
-                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
-                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-pct.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_variant_depths.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
-                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
-                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
-                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
-                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
-                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
-                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
-                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
-                "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
@@ -716,7 +628,7 @@
                 "reports/bcftools",
                 "reports/bcftools/mutect2",
                 "reports/bcftools/mutect2/sample2",
-                "reports/bcftools/mutect2/sample2/sample2.mutect2.bcftools_stats.txt",
+                "reports/bcftools/mutect2/sample2/sample2.mutect2.filtered.bcftools_stats.txt",
                 "reports/mosdepth",
                 "reports/mosdepth/sample2",
                 "reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt",
@@ -732,13 +644,16 @@
                 "reports/vcftools",
                 "reports/vcftools/mutect2",
                 "reports/vcftools/mutect2/sample2",
-                "reports/vcftools/mutect2/sample2/sample2.mutect2.FILTER.summary",
-                "reports/vcftools/mutect2/sample2/sample2.mutect2.TsTv.count",
-                "reports/vcftools/mutect2/sample2/sample2.mutect2.TsTv.qual",
+                "reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.FILTER.summary",
+                "reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.TsTv.count",
+                "reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.TsTv.qual",
                 "variant_calling",
                 "variant_calling/mutect2",
                 "variant_calling/mutect2/sample2",
                 "variant_calling/mutect2/sample2/sample2.mutect2.artifactprior.tar.gz",
+                "variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz",
+                "variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.filteringStats.tsv",
+                "variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.tbi",
                 "variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz",
                 "variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.stats",
                 "variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.tbi"
@@ -750,7 +665,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
-                "sample2.mutect2.bcftools_stats.txt:md5,c275ee76762a37053d43f4e290485af8",
+                "sample2.mutect2.filtered.bcftools_stats.txt:md5,b204196dee0fc69cbdabc35c805f8b73",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.region.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.summary.txt:md5,b0b47739dcafeeb1a9e6218b8abca1e0",
@@ -758,24 +673,23 @@
                 "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
                 "sample2.recal.regions.bed.gz:md5,fb0efeba20ea272b7b709cf65246689e",
                 "sample2.recal.regions.bed.gz.csi:md5,e8452848671e9e5c147ff4cceee944af",
-                "sample2.mutect2.FILTER.summary:md5,08f06620a8dcc70115bdde9137a91008",
-                "sample2.mutect2.TsTv.count:md5,0d59dcbdb127be60909111958ff7b5f5",
+                "sample2.mutect2.filtered.FILTER.summary:md5,ab6f85de19646115fb226a1b69cf47f1",
+                "sample2.mutect2.filtered.TsTv.count:md5,0d59dcbdb127be60909111958ff7b5f5",
+                "sample2.mutect2.filtered.vcf.gz.filteringStats.tsv:md5,1112e7ab1ede97f77561dae02e9f2af1",
                 "sample2.mutect2.vcf.gz.stats:md5,76f749c53212d72e98801f6030fbf8a6"
             ],
             "No BAM files",
             "No CRAM files",
             [
+                "sample2.mutect2.filtered.vcf.gz:md5,c5002fcbcf76c8af2593eb062487d0f4",
                 "sample2.mutect2.vcf.gz:md5,4a803cf2687fc368a8c4eef5e2fc8c9c"
             ],
-            [
-                "WARN: If Mutect2 is specified without a germline resource, no filtering will be done.",
-                "WARN: No Panel-of-normal was specified for Mutect2."
-            ]
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2025-12-15T23:30:58.725141411"
+        "timestamp": "2026-03-09T17:25:30.205556"
     }
 }

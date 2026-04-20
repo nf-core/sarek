@@ -137,13 +137,16 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     }
 
     // Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables
+    // When no germline_resource is provided, seg/cont channels are empty because GetPileupSummaries
+    // is skipped. Use remainder: true so the join still passes items through, defaulting to [].
+    // These inputs are optional for GATK FilterMutectCalls.
     vcf_to_filter = vcf
         .join(tbi, failOnDuplicate: true, failOnMismatch: true)
         .join(stats, failOnDuplicate: true, failOnMismatch: true)
         .join(LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
-        .join(calculatecontamination_out_seg)
-        .join(calculatecontamination_out_cont)
-        .map { meta, vcf_, tbi_, stats_, artifactprior, seg, cont -> [meta, vcf_, tbi_, stats_, artifactprior, seg, cont, []] }
+        .join(calculatecontamination_out_seg, remainder: true)
+        .join(calculatecontamination_out_cont, remainder: true)
+        .map { meta, vcf_, tbi_, stats_, artifactprior, seg, cont -> [meta, vcf_, tbi_, stats_, artifactprior, seg ?: [], cont ?: [], []] }
 
     FILTERMUTECTCALLS(vcf_to_filter, fasta, fai, dict)
 
