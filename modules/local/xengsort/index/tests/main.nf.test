@@ -1,0 +1,59 @@
+// TODO nf-core: Once you have added the required tests, please run the following command to build this file:
+// nf-core modules test xengsort/index
+nextflow_process {
+
+    name "Test Process XENGSORT_INDEX"
+    script "../main.nf"
+    process "XENGSORT_INDEX"
+
+    tag "modules"
+    tag "modules_"
+    tag "xengsort"
+    tag "xengsort/index"
+
+    config "./nextflow.config"
+
+    test("human_cov2 - fasta") {
+
+        when {
+            process {
+                """
+                input[0] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta')
+                input[1] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta')
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert new File("${process.out.index[0]}/index.hash").exists()
+            assert new File("${process.out.index[0]}/index.info").exists()
+            assert process.out.versions_xengsort_classify[0] == ["XENGSORT_CLASSIFY", "xengsort", "2.1.0"]
+        }
+
+    }
+
+    test("human_cov2 - fasta - stub") {
+
+        tag "stub"
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta')
+                input[1] = file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta')
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert new File("${process.out.index[0]}/index.hash").exists()
+            assert new File("${process.out.index[0]}/index.info").exists()
+            assert process.out.versions_xengsort_classify[0] == ["XENGSORT_CLASSIFY", "xengsort", "2.1.0"]
+        }
+
+    }
+
+}

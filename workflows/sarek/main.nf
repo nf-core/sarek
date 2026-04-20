@@ -72,6 +72,7 @@ workflow SAREK {
     ascat_loci_gc
     ascat_loci_rt
     bbsplit_index
+    xengsort_index
     bcftools_annotations
     bcftools_annotations_tbi
     bcftools_columns
@@ -246,6 +247,7 @@ workflow SAREK {
                 known_sites_indels,
                 known_sites_indels_tbi,
                 bbsplit_index,
+                xengsort_index,
             )
 
             // Gather preprocessing output

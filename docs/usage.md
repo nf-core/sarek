@@ -63,6 +63,39 @@ genome: 'GATK.GRCh38'
 
 You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
 
+## Optional contamination removal with xengsort
+
+`nf-core/sarek` supports host/graft read disambiguation with [xengsort](https://gitlab.com/genomeinformatics/xengsort).
+Enable it by adding `xengsort` to `--tools`.
+
+When building an index during the run, provide:
+
+- `--xengsort_host_fasta`: host FASTA (path or glob)
+- `--xengsort_nobjects`: value for `xengsort index --nobjects`
+- `--xengsort_kmersize`: value for `xengsort index --kmersize`
+
+Alternatively, reuse an existing index with `--xengsort_index`.
+For details about the appropriate nobjects and kmersize to use,
+see https://gitlab.com/genomeinformatics/xengsort.
+
+When Sarek builds a xengsort index, it is only published to `outdir/reference` if
+`--save_reference` or `--build_only_index` is enabled.
+
+Example:
+
+```bash
+nextflow run nf-core/sarek \
+  -profile docker \
+  --input samplesheet.csv \
+  --outdir results \
+  --tools xengsort,strelka \
+  --xengsort_host_fasta /path/to/host_reference.fasta \
+  --xengsort_nobjects 400000 \
+  --xengsort_kmersize 25
+```
+
+Set `--save_xengsort_reads` to publish xengsort-classified FASTQ files.
+
 ## Input: Sample sheet configurations
 
 You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use the parameter `--input` to specify its location. It has to be a comma-separated file with at least 3 columns, and a header row as shown in the examples below.
