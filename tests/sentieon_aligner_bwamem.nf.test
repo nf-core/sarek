@@ -21,7 +21,7 @@ nextflow_pipeline {
             params: [
                 aligner: 'sentieon-bwamem',
                 build_only_index: true,
-                input: false,
+                input: null,
                 save_reference: true,
                 skip_tools: 'multiqc',
                 tools: ''

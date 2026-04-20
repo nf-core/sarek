@@ -28,13 +28,20 @@ Rapaätno is a river in Sarek.
 
 ### Removed
 
-### Dependencies
+### Dependencies - modules
 
 | Dependency    | Old version | New version |
 | ------------- | ----------- | ----------- |
 | snpeff        | 5.3a        | 5.4a        |
 | varlociraptor | 8.7.4       | 8.9.3       |
 | yte           | 1.9.0       | 1.9.4       |
+
+### Dependencies - plugins
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| nf-prov    | 1.2.2       | 1.7.0       |
+| nf-schema  | 2.6.1       | 2.7.2       |
 
 ### Parameters
 
@@ -54,6 +61,7 @@ Rapaätno is a river in Sarek.
 - [#2141](https://github.com/nf-core/sarek/pull/2141) - Update vcf_annotate_snpeff subworkflow, swap tabix/bgziptabix and snpeff to topics, strict syntax
 - [#2159](https://github.com/nf-core/sarek/pull/2159) - Fix strict syntax errors
 - [#2169](https://github.com/nf-core/sarek/pull/2169) - Prepare release 3.8.2
+- [#2170](https://github.com/nf-core/sarek/pull/2170) - Update dependencies
 
 #### Fixed
 
@@ -61,6 +69,7 @@ Rapaätno is a river in Sarek.
 - [#2129](https://github.com/nf-core/sarek/pull/2129) - Fix MuSE timestamp, swap to topics and change to strict syntax
 - [#2165](https://github.com/nf-core/sarek/pull/2165) - Recover help message
 - [#2167](https://github.com/nf-core/sarek/pull/2167) - Fix and extend pipeline level stub tests
+- [#2170](https://github.com/nf-core/sarek/pull/2170) - Add index to workflow output for MultiQC
 
 #### Removed
 
