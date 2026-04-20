@@ -12,7 +12,7 @@ nextflow_pipeline {
                 input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
                 step: 'annotate',
                 snpeff_db: "na",
-                input: false,
+                input: null,
                 build_only_index: true,
                 tools: 'snpeff'
             ],

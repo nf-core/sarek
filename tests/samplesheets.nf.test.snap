@@ -3,6 +3,8 @@
         "content": [
             [
                 "csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info"
             ],
             "No stable content",
@@ -50,6 +52,8 @@
         "content": [
             [
                 "csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info"
             ],
             "No stable content",
@@ -75,6 +79,8 @@
         "content": [
             [
                 "csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info"
             ],
             "No stable content",
