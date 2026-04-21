@@ -588,7 +588,7 @@ workflow SAREK {
     def collated_versions = channel.empty()
     if (!(skip_tools.split(',').contains('versions'))) {
         collated_versions = softwareVersionsToYAML(
-            softwareVersions: channel.topic("versions"),
+            softwareVersions: versions.mix(channel.topic("versions")),
             nextflowVersion: workflow.nextflow.version,
         ).collectFile(
             storeDir: "${params.outdir}/pipeline_info",
