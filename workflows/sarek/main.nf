@@ -602,7 +602,7 @@ workflow SAREK {
     // MODULE: MultiQC
     //
     def collated_reports = channel.topic("multiqc_files")
-        .map { _meta, _process, _tool, _reports -> _reports }
+        .map { _meta, _process, _tool, reports_ -> reports_ }
 
     // MULTIQC
     def ch_multiqc_files = channel.empty()
@@ -635,7 +635,7 @@ workflow SAREK {
     )
 
     emit:
-    multiqc_report  = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    multiqc_report  = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
     multiqc_publish = MULTIQC.out.data.mix(MULTIQC.out.plots, MULTIQC.out.report)
     versions // channel: [ path(versions.yml) ]
 }
