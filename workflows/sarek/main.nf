@@ -602,7 +602,7 @@ workflow SAREK {
     // MODULE: MultiQC
     //
     def collated_reports = channel.topic("multiqc_files")
-        .map { _meta, _process, _tool, _reports -> reports }
+        .map { _meta, _process, _tool, _reports -> _reports }
 
     // MULTIQC
     def ch_multiqc_files = channel.empty()
@@ -622,7 +622,7 @@ workflow SAREK {
     MULTIQC(
         ch_multiqc_files.flatten().collect().map { files ->
             [
-                [id: 'rnavar'],
+                [id: 'sarek'],
                 files,
                 params.multiqc_config
                     ? file(params.multiqc_config, checkIfExists: true)
@@ -631,7 +631,7 @@ workflow SAREK {
                 [],
                 [],
             ]
-        }.filter { skip_tools.split(',').contains('multiqc') }
+        }.filter { !skip_tools.split(',').contains('multiqc') }
     )
 
     emit:
