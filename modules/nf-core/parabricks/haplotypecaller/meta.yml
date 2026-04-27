@@ -1,0 +1,102 @@
+name: "parabricks_haplotypecaller"
+description: NVIDIA Clara Parabricks GPU-accelerated germline variant calling, replicating
+  GATK haplotypecaller.
+keywords:
+  - variant
+  - vcf
+  - haplotypecaller
+  - germline
+tools:
+  - parabricks:
+      description: "NVIDIA Clara Parabricks GPU-accelerated genomics tools"
+      homepage: https://www.nvidia.com/en-us/clara/genomics/
+      documentation: https://docs.nvidia.com/clara/parabricks/latest/index.html
+      licence: ["custom"]
+      identifier: ""
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information.
+          [ id:'test']
+    - input:
+        type: file
+        description: bam file for sample to be variant called.
+        pattern: "*.bam"
+        ontologies: []
+    - input_index:
+        type: file
+        description: (Optional) bai index corresponding to input bam file. Only necessary
+          when using intervals.
+        pattern: "*.bai"
+        ontologies: []
+    - intervals:
+        type: file
+        description: file or files containing genomic intervals.
+        pattern: "*.{bed,interval_list,picard,list,intervals}"
+        ontologies: []
+  - - ref_meta:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          [ id:'test']
+    - fasta:
+        type: file
+        description: reference fasta - must be unzipped.
+        pattern: "*.fasta"
+        ontologies: []
+output:
+  vcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information.
+            e.g. [ id:'test' ]
+      - "*.vcf":
+          type: file
+          description: variant file.
+          pattern: "*.vcf"
+          ontologies: []
+  gvcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information.
+            e.g. [ id:'test' ]
+      - "*.g.vcf.gz":
+          type: file
+          description: genomic variant file, gzipped.
+          pattern: "*.g.vcf.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  compatible_versions:
+    - compatible_versions.yml:
+        type: file
+        description: File containing info on compatible CPU-based software versions.
+        pattern: "compatible_versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+  versions_parabricks:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - parabricks:
+          type: string
+          description: The tool name
+      - "pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'":
+          type: string
+          description: The command used to generate the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - parabricks:
+          type: string
+          description: The tool name
+      - "pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'":
+          type: string
+          description: The command used to generate the version of the tool
+authors:
+  - "@bsiranosian"
