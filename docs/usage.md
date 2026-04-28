@@ -208,6 +208,16 @@ process {
 }
 ```
 
+#### Using GPU accelerated variant calling (`--tools parabricks_deepvariant`)
+
+[Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html) provides GPU-accelerated germline variant calling equivalent to DeepVariant. It requires a GPU and does not support `--profile conda`.
+
+```bash
+nextflow run nf-core/sarek --tools parabricks_deepvariant --profile <docker/singularity>,gpu
+```
+
+Use `--wes` to switch from WGS to WES mode (passes `--mode wes` to pbrun).
+
 ### Start with duplicate marking (`--step markduplicates`)
 
 #### Duplicate Marking
@@ -640,6 +650,7 @@ This list is by no means exhaustive and it will depend on the specific analysis 
 | Tool                                                                                                    | WGS | WES |  Panel |  Germline | Tumor-Only | Somatic (Tumor-Normal) |
 | :------------------------------------------------------------------------------------------------------ | :-: | :-: | :----: | :-------: | :--------: | :--------------------: |
 | [DeepVariant](https://github.com/google/deepvariant)                                                    |  x  |  x  |   x    |     x     |     -      |           -            |
+| [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html) (GPU) |  x  |  x  |   x    |     x     |     -      |           -            |
 | [FreeBayes](https://github.com/ekg/freebayes)                                                           |  x  |  x  |   x    |     x     |     x      |           x            |
 | [GATK HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/5358864757787-HaplotypeCaller) |  x  |  x  |   x    |     x     |     -      |           -            |
 | [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2)                 |  x  |  x  |   x    |     -     |     x      |           x            |

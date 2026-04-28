@@ -54,6 +54,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `CNVkit`
   - `Control-FREEC`
   - `DeepVariant`
+  - `Parabricks DeepVariant` (GPU-accelerated, enabled by `--tools parabricks_deepvariant`)
   - `freebayes`
   - `GATK HaplotypeCaller`
   - `GATK Mutect2`
