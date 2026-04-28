@@ -23,7 +23,7 @@ jobs:
           echo "revision=${{ (github.event_name == 'workflow_dispatch' || github.event_name == 'release') && github.sha || 'dev' }}" >> "$GITHUB_OUTPUT"
 
       - name: Launch workflow via Seqera Platform
-        uses: seqeralabs/action-tower-launch@v2
+        uses: seqeralabs/action-tower-launch@51565b514bff1827cf34620de25d0055759f1fc9 # v2
         # TODO nf-core: You can customise AWS full pipeline tests as required
         # Add full size test data (but still relatively small datasets for few samples)
         # on the `test_full.config` test runs with only one set of parameters
@@ -33,14 +33,33 @@ jobs:
           compute_env: ${{ vars.TOWER_COMPUTE_ENV }}
           revision: ${{ steps.revision.outputs.revision }}
           workdir: s3://${{ vars.AWS_S3_BUCKET }}/work/sarek/work-${{ steps.revision.outputs.revision }}
+          nextflow_config: |
+            plugins {
+              id 'nf-slack@0.5.0'
+            }
+            slack {
+              enabled = true
+              bot {
+                token = '${{ secrets.NFSLACK_BOT_TOKEN }}'
+                channel = 'sarek'
+              }
+              onStart {
+                enabled = false
+              }
+              onComplete {
+                message = ':white_check_mark: *sarek/test_full* completed successfully! :tada:'
+              }
+              onError {
+                message = ':x: *sarek/test_full* failed :crying_cat_face:'
+              }
+            }
           parameters: |
             {
-              "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
               "outdir": "s3://${{ vars.AWS_S3_BUCKET }}/sarek/results-${{ steps.revision.outputs.revision }}"
             }
           profiles: test_full
 
-      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: Seqera Platform debug log file
           path: |

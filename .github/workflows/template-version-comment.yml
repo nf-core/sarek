@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
@@ -29,7 +29,7 @@ jobs:
         run: echo "OUTPUT=$(pip list --outdated | grep nf-core)" >> ${GITHUB_ENV}
 
       - name: Post nf-core template version comment
-        uses: mshick/add-pr-comment@b8f338c590a895d50bcbfa6c5859251edc8952fc # v2
+        uses: mshick/add-pr-comment@8e4927817251f1ff60c001f04568532b38e0b4a0 # v3
         if: |
           contains(env.OUTPUT, 'nf-core')
         with:
@@ -42,5 +42,5 @@ jobs:
             > Your pipeline is using an old version of the nf-core template: ${{ steps.read_yml.outputs['nf_core_version'] }}.
             > Please update your pipeline to the latest version.
             >
-            > For more documentation on how to update your pipeline, please see the [nf-core documentation](https://github.com/nf-core/tools?tab=readme-ov-file#sync-a-pipeline-with-the-template) and [Synchronisation documentation](https://nf-co.re/docs/contributing/sync).
+            > For more documentation on how to update your pipeline, please see the [Synchronisation documentation](https://nf-co.re/docs/developing/template-syncs/overview).
           #

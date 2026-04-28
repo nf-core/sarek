@@ -15,25 +15,84 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true))
-                input[1] = []
-                input[2] = []
-                input[3] = []
-                input[4] = []
-                input[5] = []
+                input[0] = channel.of([
+                    [ id: 'FASTQC' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true),
+                    [],
+                    [],
+                    [],
+                    []
+                ])
                 """
             }
         }
 
         then {
-            assertAll(
-                { assert process.success },
-                { assert process.out.report[0] ==~ ".*/multiqc_report.html" },
-                { assert process.out.data[0] ==~ ".*/multiqc_data" },
-                { assert snapshot(process.out.versions).match("multiqc_versions_single") }
-            )
+            assert process.success
+            assert snapshot(
+                sanitizeOutput(process.out).collectEntries { key, val ->
+                        if (key == "data") {
+                            return [key, val.collect { [path(it[1]).list().collect { file(it.toString()).name }] }]
+                        }
+                        else if (key == "plots") {
+                            return [key, val.collect { [
+                                "pdf",
+                                path("${it[1]}/pdf").list().collect { file(it.toString()).name },
+                                "png",
+                                path("${it[1]}/png").list().collect { file(it.toString()).name },
+                                "svg",
+                                path("${it[1]}/svg").list().collect { file(it.toString()).name }] }]
+                        }
+                        else if (key == "report") {
+                            return [key, file(val[0][1].toString()).name]
+                        }
+                        return [key, val]
+                    }
+            ).match()
+        }
+    }
+
+    test("sarscov2 single-end [fastqc] - custom prefix") {
+        config "./custom_prefix.config"
+
+        when {
+            process {
+                """
+                input[0] = channel.of([
+                    [ id: 'FASTQC' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true),
+                    [],
+                    [],
+                    [],
+                    []
+                ])
+                """
+            }
         }
 
+        then {
+            assert process.success
+            assert snapshot(
+                sanitizeOutput(process.out).collectEntries { key, val ->
+                        if (key == "data") {
+                            return [key, val.collect { [path(it[1]).list().collect { file(it.toString()).name }] }]
+                        }
+                        else if (key == "plots") {
+                            return [key, val.collect { [
+                                "pdf",
+                                path("${it[1]}/pdf").list().collect { file(it.toString()).name },
+                                "png",
+                                path("${it[1]}/png").list().collect { file(it.toString()).name },
+                                "svg",
+                                path("${it[1]}/svg").list().collect { file(it.toString()).name }] }]
+                        }
+                        else if (key == "report") {
+                            return [key, file(val[0][1].toString()).name]
+                        }
+                        return [key, val]
+                    }
+            ).match()
+        }
     }
 
     test("sarscov2 single-end [fastqc] [config]") {
@@ -41,23 +100,85 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true))
-                input[1] = Channel.of(file("https://github.com/nf-core/tools/raw/dev/nf_core/pipeline-template/assets/multiqc_config.yml", checkIfExists: true))
-                input[2] = []
-                input[3] = []
-                input[4] = []
-                input[5] = []
+                input[0] = channel.of([
+                    [ id: 'FASTQC' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true),
+                    file("https://raw.githubusercontent.com/nf-core/seqinspector/1.0.0/assets/multiqc_config.yml", checkIfExists: true),
+                    [],
+                    [],
+                    []
+                ])
                 """
             }
         }
 
         then {
-            assertAll(
-                { assert process.success },
-                { assert process.out.report[0] ==~ ".*/multiqc_report.html" },
-                { assert process.out.data[0] ==~ ".*/multiqc_data" },
-                { assert snapshot(process.out.versions).match("multiqc_versions_config") }
-            )
+            assert process.success
+            assert snapshot(
+                sanitizeOutput(process.out).collectEntries { key, val ->
+                        if (key == "data") {
+                            return [key, val.collect { [path(it[1]).list().collect { file(it.toString()).name }] }]
+                        }
+                        else if (key == "plots") {
+                            return [key, val.collect { [
+                                "pdf",
+                                path("${it[1]}/pdf").list().collect { file(it.toString()).name },
+                                "png",
+                                path("${it[1]}/png").list().collect { file(it.toString()).name },
+                                "svg",
+                                path("${it[1]}/svg").list().collect { file(it.toString()).name }] }]
+                        }
+                        else if (key == "report") {
+                            return [key, file(val[0][1].toString()).name]
+                        }
+                        return [key, val]
+                    }
+            ).match()
+        }
+    }
+
+    test("sarscov2 single-end [fastqc] [multiple configs]") {
+
+        when {
+            process {
+                """
+                input[0] = channel.of([
+                    [ id: 'FASTQC' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true),
+                    [
+                        file("https://raw.githubusercontent.com/nf-core/seqinspector/1.0.0/assets/multiqc_config.yml", checkIfExists: true),
+                        file("https://raw.githubusercontent.com/nf-core/seqinspector/1.0.0/assets/multiqc_config.yml", checkIfExists: true)
+                    ],
+                    [],
+                    [],
+                    []
+                ])
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(
+                sanitizeOutput(process.out).collectEntries { key, val ->
+                        if (key == "data") {
+                            return [key, val.collect { [path(it[1]).list().collect { file(it.toString()).name }] }]
+                        }
+                        else if (key == "plots") {
+                            return [key, val.collect { [
+                                "pdf",
+                                path("${it[1]}/pdf").list().collect { file(it.toString()).name },
+                                "png",
+                                path("${it[1]}/png").list().collect { file(it.toString()).name },
+                                "svg",
+                                path("${it[1]}/svg").list().collect { file(it.toString()).name }] }]
+                        }
+                        else if (key == "report") {
+                            return [key, file(val[0][1].toString()).name]
+                        }
+                        return [key, val]
+                    }
+            ).match()
         }
     }
 
@@ -68,25 +189,23 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of(file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true))
-                input[1] = []
-                input[2] = []
-                input[3] = []
-                input[4] = []
-                input[5] = []
+                input[0] = channel.of([
+                    [ id: 'FASTQC' ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastqc/test_fastqc.zip', checkIfExists: true),
+                    [],
+                    [],
+                    [],
+                    []
+                ])
                 """
             }
         }
 
         then {
+            assert process.success
             assertAll(
-                { assert process.success },
-                { assert snapshot(process.out.report.collect { file(it).getName() } +
-                                process.out.data.collect { file(it).getName() } +
-                                process.out.plots.collect { file(it).getName() } +
-                                process.out.versions ).match("multiqc_stub") }
+                { assert snapshot(sanitizeOutput(process.out)).match() }
             )
         }
-
     }
 }

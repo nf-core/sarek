@@ -1,6 +1,6 @@
 name: multiqc
-description: Aggregate results from bioinformatics analyses across many samples into
-  a single report
+description: Aggregate results from bioinformatics analyses across many samples
+  into a single report
 keywords:
   - QC
   - bioinformatics tools
@@ -12,74 +12,91 @@ tools:
         It's a general use tool, perfect for summarising the output from numerous bioinformatics tools.
       homepage: https://multiqc.info/
       documentation: https://multiqc.info/docs/
-      licence: ["GPL-3.0-or-later"]
+      licence:
+        - "GPL-3.0-or-later"
       identifier: biotools:multiqc
 input:
-  - multiqc_files:
-      type: file
-      description: |
-        List of reports / files recognised by MultiQC, for example the html and zip output of FastQC
-      ontologies: []
-  - multiqc_config:
-      type: file
-      description: Optional config yml for MultiQC
-      pattern: "*.{yml,yaml}"
-      ontologies:
-        - edam: http://edamontology.org/format_3750 # YAML
-  - extra_multiqc_config:
-      type: file
-      description: Second optional config yml for MultiQC. Will override common sections
-        in multiqc_config.
-      pattern: "*.{yml,yaml}"
-      ontologies:
-        - edam: http://edamontology.org/format_3750 # YAML
-  - multiqc_logo:
-      type: file
-      description: Optional logo file for MultiQC
-      pattern: "*.{png}"
-      ontologies: []
-  - replace_names:
-      type: file
-      description: |
-        Optional two-column sample renaming file. First column a set of
-        patterns, second column a set of corresponding replacements. Passed via
-        MultiQC's `--replace-names` option.
-      pattern: "*.{tsv}"
-      ontologies:
-        - edam: http://edamontology.org/format_3475 # TSV
-  - sample_names:
-      type: file
-      description: |
-        Optional TSV file with headers, passed to the MultiQC --sample_names
-        argument.
-      pattern: "*.{tsv}"
-      ontologies:
-        - edam: http://edamontology.org/format_3475 # TSV
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'sample1', single_end:false ]
+    - multiqc_files:
+        type: file
+        description: |
+          List of reports / files recognised by MultiQC, for example the html and zip output of FastQC
+        ontologies: []
+    - multiqc_config:
+        type: file
+        description: Optional config yml for MultiQC
+        pattern: "*.{yml,yaml}"
+        ontologies:
+          - edam: http://edamontology.org/format_3750
+    - multiqc_logo:
+        type: file
+        description: Optional logo file for MultiQC
+        pattern: "*.{png}"
+        ontologies: []
+    - replace_names:
+        type: file
+        description: |
+          Optional two-column sample renaming file. First column a set of
+          patterns, second column a set of corresponding replacements. Passed via
+          MultiQC's `--replace-names` option.
+        pattern: "*.{tsv}"
+        ontologies:
+          - edam: http://edamontology.org/format_3475
+    - sample_names:
+        type: file
+        description: |
+          Optional TSV file with headers, passed to the MultiQC --sample_names
+          argument.
+        pattern: "*.{tsv}"
+        ontologies:
+          - edam: http://edamontology.org/format_3475
 output:
   report:
-    - "*multiqc_report.html":
-        type: file
-        description: MultiQC report file
-        pattern: "multiqc_report.html"
-        ontologies: []
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'sample1', single_end:false ]
+      - "*.html":
+          type: file
+          description: MultiQC report file
+          pattern: ".html"
+          ontologies: []
   data:
-    - "*_data":
-        type: directory
-        description: MultiQC data dir
-        pattern: "multiqc_data"
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'sample1', single_end:false ]
+      - "*_data":
+          type: directory
+          description: MultiQC data dir
+          pattern: "multiqc_data"
   plots:
-    - "*_plots":
-        type: file
-        description: Plots created by MultiQC
-        pattern: "*_data"
-        ontologies: []
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'sample1', single_end:false ]
+      - "*_plots":
+          type: file
+          description: Plots created by MultiQC
+          pattern: "*_plots"
+          ontologies: []
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - multiqc:
+          type: string
+          description: The tool name
+      - multiqc --version | sed "s/.* //g":
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@abhi18av"
   - "@bunop"
@@ -90,3 +107,27 @@ maintainers:
   - "@bunop"
   - "@drpatelh"
   - "@jfy133"
+containers:
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/multiqc/.conda-lock/linux_amd64-bd-db7c73dae76bc9e6_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/multiqc/.conda-lock/linux_arm64-bd-d167b8012595a136_1.txt
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/multiqc:1.34--db7c73dae76bc9e6
+      build_id: bd-db7c73dae76bc9e6_1
+      scan_id: sc-66fc7138dbf1cf48_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/multiqc:1.34--d167b8012595a136
+      build_id: bd-d167b8012595a136_1
+      scan_id: sc-ac701dfa631a2af9_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/multiqc:1.34--4fc8657c816047c0
+      build_id: bd-4fc8657c816047c0_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/1b/1bef8af6be88c5733461959c46ac8ef73d18f65277f62a1695d0e1633054f9c2/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/multiqc:1.34--7fbd82d945c06726
+      build_id: bd-7fbd82d945c06726_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/9a/9a1fec9662a152683e6fcae440d0ce20920b3b89dc62d1e3a52e73f92eba0969/data

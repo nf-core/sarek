@@ -7,3 +7,4 @@ testing/
 testing*
 *.pyc
 null/
+.lineage/
