@@ -200,15 +200,13 @@
             "No BAM files",
             "No CRAM files",
             "No VCF files",
-            [
-                "WARN: The `file()` function was called with a glob pattern that matched a collection of files -- use `files()` instead."
-            ]
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "26.04.0"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-04-29T13:06:02.710067943"
+        "timestamp": "2026-04-29T13:49:15.305614305"
     },
     "-profile test --tools parabricks_deepvariant --input mapped_single_bam.csv --no_intervals -stub": {
         "content": [
@@ -259,15 +257,14 @@
                 "reports/samtools/test/test.recal.cram.stats"
             ],
             [
-                "WARN: The `file()` function was called with a glob pattern that matched a collection of files -- use `files()` instead.",
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "26.04.0"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-04-29T13:07:35.987735145"
+        "timestamp": "2026-04-29T13:51:07.021107353"
     },
     "-profile test --tools parabricks_deepvariant --input mapped_single_bam.csv -stub": {
         "content": [
