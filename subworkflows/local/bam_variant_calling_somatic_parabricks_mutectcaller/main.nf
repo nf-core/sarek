@@ -1,0 +1,210 @@
+//
+//
+// MUTECTCALLER (Parabricks): tumor-normal mode variantcalling: getpileupsummaries, calculatecontamination and filtermutectcalls
+//
+
+include { GATK4_CALCULATECONTAMINATION as CALCULATECONTAMINATION       } from '../../../modules/nf-core/gatk4/calculatecontamination'
+include { GATK4_FILTERMUTECTCALLS as FILTERMUTECTCALLS                 } from '../../../modules/nf-core/gatk4/filtermutectcalls'
+include { GATK4_GATHERPILEUPSUMMARIES as GATHERPILEUPSUMMARIES_NORMAL  } from '../../../modules/nf-core/gatk4/gatherpileupsummaries'
+include { GATK4_GATHERPILEUPSUMMARIES as GATHERPILEUPSUMMARIES_TUMOR   } from '../../../modules/nf-core/gatk4/gatherpileupsummaries'
+include { GATK4_GETPILEUPSUMMARIES as GETPILEUPSUMMARIES_NORMAL        } from '../../../modules/nf-core/gatk4/getpileupsummaries'
+include { GATK4_GETPILEUPSUMMARIES as GETPILEUPSUMMARIES_TUMOR         } from '../../../modules/nf-core/gatk4/getpileupsummaries'
+include { GATK4_MERGEMUTECTSTATS as MERGEMUTECTSTATS                   } from '../../../modules/nf-core/gatk4/mergemutectstats'
+include { GATK4_MERGEVCFS as MERGE_MUTECT2                             } from '../../../modules/nf-core/gatk4/mergevcfs'
+include { PARABRICKS_MUTECTCALLER                                      } from '../../../modules/nf-core/parabricks/mutectcaller'
+
+workflow BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER {
+    take:
+    input                 // channel: [ meta, [ input ], [ input_index ] ]
+    fasta                 // channel: [ meta, /path/to/reference/fasta ]
+    fai                   // channel: /path/to/reference/fasta/index
+    dict                  // channel: /path/to/reference/fasta/dictionary
+    germline_resource     // channel: /path/to/germline/resource
+    germline_resource_tbi // channel: /path/to/germline/index
+    panel_of_normals      // channel: /path/to/panel/of/normals
+    panel_of_normals_tbi  // channel: /path/to/panel/of/normals/index
+    intervals             // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
+
+    main:
+    versions = Channel.empty()
+
+    // If no germline resource is provided, then create an empty channel to avoid GetPileupsummaries from being run
+    // Handle Channel.value([]) input from prepare_genome by converting to proper empty channel
+    germline_resource_pileup = germline_resource.filter { it != [] }
+    germline_resource_pileup_tbi = germline_resource_tbi.filter { it != [] }
+
+    // Combine input and intervals for spread and gather strategy
+    //   Move num_intervals to meta map and reorganize channel for PARABRICKS_MUTECTCALLER module
+    //   PARABRICKS_MUTECTCALLER expects: [ meta, tumor_bam, tumor_bam_index, normal_bam, normal_bam_index, intervals ]
+    input_intervals = input
+        .combine(intervals)
+        .map { meta, input_list, input_index_list, intervals_, num_intervals ->
+            [
+                meta + [num_intervals: num_intervals],
+                input_list[1],        // tumor bam
+                input_index_list[1],  // tumor bai
+                input_list[0],        // normal bam
+                input_index_list[0],  // normal bai
+                intervals_
+            ]
+        }
+
+    // Perform variant calling using parabricks mutectcaller module in paired tumor-normal mode
+    // meta: [id:tumor_id_vs_normal_id, normal_id, num_intervals, patient, sex, tumor_id]
+    PARABRICKS_MUTECTCALLER(input_intervals, fasta, panel_of_normals, panel_of_normals_tbi)
+
+    // Figuring out if there is one or more vcf(s) from the same sample
+    vcf_branch = PARABRICKS_MUTECTCALLER.out.vcf.branch {
+        intervals: it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
+
+    // Figuring out if there is one or more vcf(s) from the same sample
+    stats_branch = PARABRICKS_MUTECTCALLER.out.stats.branch {
+        intervals: it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
+
+    // Only when using intervals
+    vcf_to_merge = vcf_branch.intervals.map { meta, vcf -> [groupKey(meta, meta.num_intervals), vcf] }.groupTuple()
+    stats_to_merge = stats_branch.intervals.map { meta, stats -> [groupKey(meta, meta.num_intervals), stats] }.groupTuple()
+
+    MERGE_MUTECT2(vcf_to_merge, dict)
+    MERGEMUTECTSTATS(stats_to_merge)
+
+    // Mix intervals and no_intervals channels together and remove no longer necessary field: normal_id, tumor_id, num_intervals
+    vcf = Channel.empty()
+        .mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals)
+        .map { meta, vcf ->
+            [meta - meta.subMap('num_intervals'), vcf]
+        }
+    tbi = Channel.empty()
+        .mix(MERGE_MUTECT2.out.tbi, vcf_branch.no_intervals.map { meta, vcf -> [meta, []] })
+        .map { meta, tbi ->
+            [meta - meta.subMap('num_intervals'), tbi]
+        }
+    stats = Channel.empty()
+        .mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals)
+        .map { meta, stats ->
+            [meta - meta.subMap('num_intervals'), stats]
+        }
+
+    // Parabricks mutectcaller does not produce f1r2, so LEARNREADORIENTATIONMODEL is skipped
+    // Use an empty channel for artifact_priors
+    artifact_priors = Channel.empty()
+
+    // Re-shape input_intervals for pileup summaries (original list-of-lists format)
+    pileup_input = input
+        .combine(intervals)
+        .map { meta, input_list, input_index_list, intervals_, num_intervals ->
+            [meta + [num_intervals: num_intervals], input_list, input_index_list, intervals_]
+        }
+
+    pileup = pileup_input.multiMap { meta, input_list, input_index_list, intervals_ ->
+        tumor: [meta, input_list[1], input_index_list[1], intervals_]
+        normal: [meta, input_list[0], input_index_list[0], intervals_]
+    }
+
+    // Prepare input channel for normal pileup summaries.
+    // Remember, the input channel contains tumor-normal pairs, so there will be multiple copies of the normal sample for each tumor for a given patient.
+    // Therefore, we use unique function to generate normal pileup summaries once for each patient for better efficiency.
+    pileup_normal = pileup.normal.map { meta, cram, crai, intervals_ -> [meta - meta.subMap('tumor_id') + [id: meta.normal_id], cram, crai, intervals_] }.unique()
+    // Prepare input channel for tumor pileup summaries.
+    pileup_tumor = pileup.tumor.map { meta, cram, crai, intervals_ -> [meta - meta.subMap('normal_id') + [id: meta.tumor_id], cram, crai, intervals_] }
+
+    // Generate pileup summary tables using getpileupsummaries. tumor sample should always be passed in as the first input and input list entries of vcf_to_filter,
+    GETPILEUPSUMMARIES_NORMAL(pileup_normal, fasta.map { _meta, fasta_ -> [[], fasta_] }, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
+    GETPILEUPSUMMARIES_TUMOR(pileup_tumor, fasta.map { _meta, fasta_ -> [[], fasta_] }, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
+
+    // Figuring out if there is one or more table(s) from the same sample
+    pileup_table_normal_branch = GETPILEUPSUMMARIES_NORMAL.out.table.branch {
+        intervals: it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
+
+    // Figuring out if there is one or more table(s) from the same sample
+    pileup_table_tumor_branch = GETPILEUPSUMMARIES_TUMOR.out.table.branch {
+        intervals: it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
+
+    // Only when using intervals
+    pileup_table_normal_to_merge = pileup_table_normal_branch.intervals.map { meta, table -> [groupKey(meta, meta.num_intervals), table] }.groupTuple()
+    pileup_table_tumor_to_merge = pileup_table_tumor_branch.intervals.map { meta, table -> [groupKey(meta, meta.num_intervals), table] }.groupTuple()
+
+    // Merge Pileup Summaries
+    GATHERPILEUPSUMMARIES_NORMAL(pileup_table_normal_to_merge, dict.map { _meta, dict_ -> [dict_] })
+    GATHERPILEUPSUMMARIES_TUMOR(pileup_table_tumor_to_merge, dict.map { _meta, dict_ -> [dict_] })
+
+    // Do some channel magic to generate tumor-normal pairs again.
+    // This is necessary because we generated one normal pileup summary for each patient but we need run calculate contamination for each tumor-normal pair.
+    pileup_table_tumor = Channel.empty().mix(GATHERPILEUPSUMMARIES_TUMOR.out.table, pileup_table_tumor_branch.no_intervals).map { meta, table -> [meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [id: meta.patient], meta.id, table] }
+    pileup_table_normal = Channel.empty().mix(GATHERPILEUPSUMMARIES_NORMAL.out.table, pileup_table_normal_branch.no_intervals).map { meta, table -> [meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [id: meta.patient], meta.id, table] }
+
+    ch_calculatecontamination_in_tables = pileup_table_tumor
+        .combine(
+            pileup_table_normal,
+            by: 0
+        )
+        .map { meta, tumor_id, tumor_table, normal_id, normal_table ->
+            // we need tumor and normal ID for further post processing
+            [meta + [id: tumor_id + "_vs_" + normal_id, normal_id: normal_id, tumor_id: tumor_id], tumor_table, normal_table]
+        }
+
+    CALCULATECONTAMINATION(ch_calculatecontamination_in_tables)
+
+    // Keep tumor_vs_normal ID
+    calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation
+    calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination
+
+    // Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables
+    // Parabricks does not produce f1r2/artifact priors, so we pass an empty list for orientation
+    // meta paired calling: [id:tumorID_vs_normalID, normal_ID, patient, sex, tumorID]
+    vcf_to_filter = vcf
+        .join(tbi, failOnDuplicate: true, failOnMismatch: true)
+        .join(stats, failOnDuplicate: true, failOnMismatch: true)
+        .join(calculatecontamination_out_seg)
+        .join(calculatecontamination_out_cont)
+        .map { meta, vcf_, tbi_, stats_, seg, cont -> [meta, vcf_, tbi_, stats_, [], seg, cont, []] }
+
+    FILTERMUTECTCALLS(vcf_to_filter, fasta.map { _meta, fasta_ -> [[], fasta_] }, fai, dict)
+
+    // Handle filtered vs unfiltered output
+    // vcf_mutect2 and tbi_mutect2 should always contain usable output:
+    // - If filtering happened (germline_resource provided): use filtered results
+    // - If filtering didn't happen: use unfiltered results with variantcaller metadata
+    // This ensures downstream processes always have mutect2 calls available for consensus calling
+    // Using concat() + unique() ensures filtered output takes precedence deterministically
+    // concat() preserves order (filtered first), unique() keeps first occurrence of each meta key
+    vcf_mutect2 = FILTERMUTECTCALLS.out.vcf
+        .map { meta, vcf_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], vcf_] }
+        .concat(vcf.map { meta, vcf_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], vcf_] })
+        .unique { it[0] }
+
+    tbi_mutect2 = FILTERMUTECTCALLS.out.tbi
+        .map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] }
+        .concat(tbi.map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] })
+        .unique { it[0] }
+
+    versions = versions.mix(MERGE_MUTECT2.out.versions)
+    versions = versions.mix(CALCULATECONTAMINATION.out.versions)
+    versions = versions.mix(FILTERMUTECTCALLS.out.versions)
+    versions = versions.mix(GETPILEUPSUMMARIES_NORMAL.out.versions)
+    versions = versions.mix(GETPILEUPSUMMARIES_TUMOR.out.versions)
+    versions = versions.mix(GATHERPILEUPSUMMARIES_NORMAL.out.versions)
+    versions = versions.mix(GATHERPILEUPSUMMARIES_TUMOR.out.versions)
+    versions = versions.mix(MERGEMUTECTSTATS.out.versions)
+    versions = versions.mix(PARABRICKS_MUTECTCALLER.out.versions)
+
+    emit:
+    vcf = vcf_mutect2   // channel: [ meta, vcf ] - filtered if germline_resource provided, otherwise unfiltered
+    tbi = tbi_mutect2   // channel: [ meta, tbi ] - filtered if germline_resource provided, otherwise unfiltered
+
+    stats_filtered      = FILTERMUTECTCALLS.out.stats // channel: [ meta, stats ]
+    artifact_priors                                   // channel: empty (parabricks does not produce f1r2)
+    pileup_table_normal // channel: [ meta, table_normal ]
+    pileup_table_tumor  // channel: [ meta, table_tumor ]
+    contamination_table = calculatecontamination_out_cont // channel: [ meta, contamination ]
+    segmentation_table  = calculatecontamination_out_seg  // channel: [ meta, segmentation ]
+    versions            // channel: [ versions.yml ]
+}
