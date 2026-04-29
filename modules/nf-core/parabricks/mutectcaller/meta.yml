@@ -1,0 +1,131 @@
+name: "parabricks_mutectcaller"
+description: NVIDIA Clara Parabricks GPU-accelerated somatic variant calling, replicating
+  GATK Mutect2.
+keywords:
+  - variant
+  - vcf
+  - mutect2
+  - mutect
+  - somatic
+tools:
+  - "parabricks":
+      description: "NVIDIA Clara Parabricks GPU-accelerated genomics tools"
+      homepage: https://www.nvidia.com/en-us/clara/genomics/
+      documentation: https://docs.nvidia.com/clara/parabricks/latest/index.html
+      licence: ["custom"]
+      identifier: ""
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information - tumor_id and normal_id must match read groups for the respective samples.
+          [ id:'test', tumor_id:'tumor', normal_id:'normal' ]
+    - tumor_bam:
+        type: file
+        description: bam file for tumor sample.
+        pattern: "*.bam"
+        ontologies:
+          - edam: "http://edamontology.org/format_2572" # BAM
+    - tumor_bam_index:
+        type: file
+        description: (Optional) bai index corresponding to tumor bam file. Only required
+          if intervals are provided.
+        pattern: "*.bam.bai"
+        ontologies: []
+    - normal_bam:
+        type: file
+        description: (Optional) bam file for normal sample in tumor-vs-normal calling.
+        pattern: "*.bam"
+        ontologies:
+          - edam: "http://edamontology.org/format_2572" # BAM
+    - normal_bam_index:
+        type: file
+        description: (Optional) bai index corresponding to normal bam file. Only required
+          if intervals are provided.
+        pattern: "*.bam.bai"
+        ontologies: []
+    - intervals:
+        type: file
+        description: (Optional) file or files containing genomic intervals for use in
+          base quality score recalibration.
+        pattern: "*.{bed,interval_list,picard,list,intervals}"
+        ontologies: []
+  - - ref_meta:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          [ id:'homo_sapiens' ]
+    - fasta:
+        type: file
+        description: reference fasta - must be unzipped.
+        pattern: "*.fasta"
+        ontologies: []
+  - panel_of_normals:
+      type: file
+      description: (Optional) panel of normals file.
+      pattern: "*.vcf.gz"
+      ontologies:
+        - edam: http://edamontology.org/format_3989 # GZIP format
+  - panel_of_normals_index:
+      type: file
+      description: (Optional) tbi index corresponding to panel of normals file.
+      pattern: "*.tbi"
+      ontologies: []
+output:
+  vcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test' ]
+      - "*.vcf.gz":
+          type: file
+          description: Compressed variants file. Will include an annotated vcf file
+            if panel of normals is used.
+          pattern: "*.vcf.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  stats:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test' ]
+      - "*.vcf.gz.stats":
+          type: file
+          description: Variant statistics.
+          pattern: "*.vcf.gz.stats"
+          ontologies: []
+  compatible_versions:
+    - compatible_versions.yml:
+        type: file
+        description: File containing info on compatible CPU-based software versions.
+        pattern: "compatible_versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+  versions_parabricks:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - parabricks:
+          type: string
+          description: The tool name
+      - "pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'":
+          type: string
+          description: The command used to generate the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - parabricks:
+          type: string
+          description: The tool name
+      - "pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'":
+          type: string
+          description: The command used to generate the version of the tool
+authors:
+  - "@bsiranosian"
+maintainers:
+  - "@famosab"
