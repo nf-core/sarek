@@ -5,6 +5,7 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
+    profile "test,gpu"
 
     def test_scenario = [
         [
@@ -15,6 +16,7 @@ nextflow_pipeline {
                 tools: "parabricks_haplotypecaller",
                 step: "variant_calling"
             ],
+            gpu: true,
             no_conda: true
         ]
     ]
