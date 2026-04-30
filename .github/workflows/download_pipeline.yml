@@ -38,6 +38,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: configure
     steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@b4ec1bc7c16a94435159de94a05253542fddf6ef # v3
 
@@ -55,10 +58,9 @@ jobs:
           apptainer-version: 1.3.4
 
       - name: Read .nf-core.yml
-        uses: pietrobolcato/action-read-yaml@9f13718d61111b69f30ab4ac683e67a56d254e1d # 1.1.0
         id: read_yml
-        with:
-          config: ${{ github.workspace }}/.nf-core.yml
+        run: |
+          echo "nf_core_version=$(yq '.nf_core_version' ${{ github.workspace }}/.nf-core.yml)" >> "$GITHUB_OUTPUT"
 
       - name: Install dependencies
         run: |
