@@ -36,6 +36,7 @@ process PARABRICKS_MUTECTCALLER {
     def postpon_command = panel_of_normals ? "pbrun postpon --in-vcf ${prefix}.vcf.gz --in-pon-file ${panel_of_normals} --out-vcf ${prefix}_annotated.vcf.gz" : ""
 
     def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ""
+    def normal_bam_flag = normal_bam ? "--in-normal-bam ${normal_bam}" : ""
     """
     # if panel of normals specified, run prepon
     ${prepon_command}
@@ -44,7 +45,7 @@ process PARABRICKS_MUTECTCALLER {
         mutectcaller \\
         --ref ${fasta} \\
         --in-tumor-bam ${tumor_bam} \\
-        --tumor-name ${meta.tumor_id} \\
+        ${normal_bam_flag} \\
         --out-vcf ${prefix}.vcf.gz \\
         ${intervals_command} \\
         ${num_gpus} \\
