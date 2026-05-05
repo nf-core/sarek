@@ -18,9 +18,17 @@ workflow BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER {
     versions = Channel.empty()
 
     // Rearrange to [ meta, tumor_bam, tumor_bai, normal_bam, normal_bai, intervals ]
+    // Use single-param closure: when no_intervals, intervals_bed_combined is Channel.value([])
+    // and combine passes the 5-element bam tuple as a single LinkedList item.
     ch_input = bam
         .combine(intervals_bed_combined)
-        .map { meta, normal_bam, normal_bai, tumor_bam, tumor_bai, intervals ->
+        .map { row ->
+            def meta       = row[0]
+            def normal_bam = row[1]
+            def normal_bai = row[2]
+            def tumor_bam  = row[3]
+            def tumor_bai  = row[4]
+            def intervals  = row.size() > 5 ? row[5] : []
             [ meta, tumor_bam, tumor_bai, normal_bam, normal_bai, intervals ]
         }
 

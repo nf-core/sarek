@@ -33,7 +33,10 @@ process PARABRICKS_MUTECTCALLER {
 
     def intervals_command  = intervals     ? (intervals instanceof List ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : "--interval-file ${intervals}") : ""
     def prepon_command = panel_of_normals ? "cp -L ${panel_of_normals_index} `readlink -f ${panel_of_normals}`.tbi && pbrun prepon --in-pon-file ${panel_of_normals}" : ""
-    def postpon_command = panel_of_normals ? "pbrun postpon --in-vcf ${prefix}.vcf.gz --in-pon-file ${panel_of_normals} --out-vcf ${prefix}_annotated.vcf.gz" : ""
+    // pbrun postpon requires uncompressed .vcf input; output uncompressed when PON is provided
+    def mutect_out     = panel_of_normals ? "${prefix}.vcf"    : "${prefix}.vcf.gz"
+    def stats_rename   = panel_of_normals ? "mv ${prefix}.vcf.stats ${prefix}.vcf.gz.stats" : ""
+    def postpon_command = panel_of_normals ? "pbrun postpon --in-vcf ${prefix}.vcf --in-pon-file ${panel_of_normals} --out-vcf ${prefix}.vcf.gz" : ""
 
     def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ""
     def normal_bam_flag = normal_bam ? "--in-normal-bam ${normal_bam}" : ""
@@ -46,22 +49,21 @@ process PARABRICKS_MUTECTCALLER {
         --ref ${fasta} \\
         --in-tumor-bam ${tumor_bam} \\
         ${normal_bam_flag} \\
-        --out-vcf ${prefix}.vcf.gz \\
+        --out-vcf ${mutect_out} \\
         ${intervals_command} \\
         ${num_gpus} \\
         ${args}
 
-    # if panel of normals specified, run postpon
+    # if panel of normals specified, rename stats and run postpon
+    ${stats_rename}
     ${postpon_command}
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def postpon_command = panel_of_normals ? "echo '' | gzip > ${prefix}_annotated.vcf.gz" : ""
     """
     echo "" | gzip > ${prefix}.vcf.gz
     touch ${prefix}.vcf.gz.stats
-    ${postpon_command}
 
     # Capture the full version output once and store it in a variable
     pbrun_version_output=\$(pbrun mutectcaller --version 2>&1)
