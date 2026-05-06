@@ -8,10 +8,8 @@ nextflow_pipeline {
     profile "test,gpu"
 
     def test_scenario = [
-        // Stub tests — process is never executed, so SM-tag mismatch in test CRAMs is irrelevant.
-        // Starting from variant_calling avoids the full alignment step and keeps stubs fast.
         [
-            name: "-profile test --tools parabricks_mutectcaller somatic -stub",
+            name: "-profile test --step variant_calling --tools parabricks_mutectcaller somatic -stub",
             params: [
                 genome: null,
                 igenomes_ignore: true,
@@ -28,7 +26,7 @@ nextflow_pipeline {
             stub: true
         ],
         [
-            name: "-profile test --tools parabricks_mutectcaller somatic --no_intervals -stub",
+            name: "-profile test --step variant_calling --tools parabricks_mutectcaller somatic --no_intervals -stub",
             params: [
                 genome: null,
                 igenomes_ignore: true,
@@ -44,9 +42,54 @@ nextflow_pipeline {
             no_conda: true,
             stub: true
         ],
-        // Real GPU tests — start from FASTQ with the parabricks aligner so that fq2bam
-        // produces BAMs with unique read-group IDs and SM tags matching the patient-prefixed
-        // names that the production ext.args closure generates.
+        [
+            name: "-profile test --aligner parabricks --tools parabricks_mutectcaller somatic -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                aligner: 'parabricks',
+                tools: 'parabricks_mutectcaller',
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true,
+            stub: true
+        ],
+        [
+            name: "-profile test --aligner parabricks --tools parabricks_mutectcaller somatic --no_intervals -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                aligner: 'parabricks',
+                tools: 'parabricks_mutectcaller',
+                no_intervals: true,
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true,
+            stub: true
+        ],
+        [
+            name: "-profile test --tools parabricks_mutectcaller somatic -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                tools: 'parabricks_mutectcaller',
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true,
+            stub: true
+        ],
+        [
+            name: "-profile test --tools parabricks_mutectcaller somatic --no_intervals -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                tools: 'parabricks_mutectcaller',
+                no_intervals: true,
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true,
+            stub: true
+        ],
         [
             name: "-profile test --aligner parabricks --tools parabricks_mutectcaller somatic",
             params: [
@@ -63,6 +106,27 @@ nextflow_pipeline {
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 aligner: 'parabricks',
+                tools: 'parabricks_mutectcaller',
+                no_intervals: true,
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true
+        ],
+        [
+            name: "-profile test --tools parabricks_mutectcaller somatic",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                tools: 'parabricks_mutectcaller',
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true
+        ],
+        [
+            name: "-profile test --tools parabricks_mutectcaller somatic --no_intervals",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 tools: 'parabricks_mutectcaller',
                 no_intervals: true,
                 wes: true
