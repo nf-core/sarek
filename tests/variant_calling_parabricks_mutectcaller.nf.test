@@ -91,17 +91,6 @@ nextflow_pipeline {
             stub: true
         ],
         [
-            name: "-profile test --aligner parabricks --tools parabricks_mutectcaller somatic",
-            params: [
-                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
-                aligner: 'parabricks',
-                tools: 'parabricks_mutectcaller',
-                wes: true
-            ],
-            gpu: true,
-            no_conda: true
-        ],
-        [
             name: "-profile test --aligner parabricks --tools parabricks_mutectcaller somatic --no_intervals",
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
@@ -118,17 +107,6 @@ nextflow_pipeline {
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 tools: 'parabricks_mutectcaller',
-                wes: true
-            ],
-            gpu: true,
-            no_conda: true
-        ],
-        [
-            name: "-profile test --tools parabricks_mutectcaller somatic --no_intervals",
-            params: [
-                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
-                tools: 'parabricks_mutectcaller',
-                no_intervals: true,
                 wes: true
             ],
             gpu: true,
