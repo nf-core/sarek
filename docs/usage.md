@@ -190,7 +190,7 @@ If you need to adapt parabricks to your hardware, please copy and adapt the `cus
 process {
     withName: 'PARABRICKS_FQ2BAM' {
         // Remove an executor if you do not want it to set the accelerator directive or change the number
-        accelerator = { task.executor in ['awsbatch','google-batch','hq','k8s'] ? 4 : null }
+        accelerator = 4
         ext.args    = { [
             // Using specific read group tags for mutect compability (keep if using mutect)
             "--read-group-id-prefix ${meta.sample_lane_id}",
