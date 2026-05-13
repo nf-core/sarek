@@ -284,8 +284,8 @@ workflow SAREK {
 
         bam_variant_calling = channel.empty()
 
-        //  For cnvkit, msisensor2, muse and parabricks_mutectcaller we need to use bam input and not cram
-        if (tools.split(',').contains('cnvkit') || tools.split(',').contains('msisensor2') || tools.split(',').contains('muse') || tools.split(',').contains('parabricks_mutectcaller')) {
+        //  For cnvkit, msisensor2 and muse we need to use bam input and not cram
+        if (tools.split(',').contains('cnvkit') || tools.split(',').contains('msisensor2') || tools.split(',').contains('muse')) {
 
             // Differentiate between bam and cram files
             cram_variant_calling_status_tmp = cram_variant_calling.branch { meta, file, index ->

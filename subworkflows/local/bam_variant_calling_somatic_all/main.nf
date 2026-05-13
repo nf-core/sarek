@@ -256,8 +256,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     // PARABRICKS MUTECTCALLER
     if (tools && tools.split(',').contains('parabricks_mutectcaller')) {
         BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER(
-            bam,
+            cram,
             fasta,
+            fasta_fai,
             panel_of_normals,
             panel_of_normals_tbi,
             intervals_bed_combined,

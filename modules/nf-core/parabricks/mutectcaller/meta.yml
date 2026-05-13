@@ -61,6 +61,16 @@ input:
         description: reference fasta - must be unzipped.
         pattern: "*.fasta"
         ontologies: []
+  - - fai_meta:
+        type: map
+        description: |
+          Groovy Map containing reference index information
+          [ id:'homo_sapiens' ]
+    - fasta_fai:
+        type: file
+        description: reference fasta index - required when input is in CRAM format.
+        pattern: "*.fai"
+        ontologies: []
   - panel_of_normals:
       type: file
       description: (Optional) panel of normals file.

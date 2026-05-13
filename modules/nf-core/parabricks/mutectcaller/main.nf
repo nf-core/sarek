@@ -10,6 +10,7 @@ process PARABRICKS_MUTECTCALLER {
     input:
     tuple val(meta), path(tumor_bam), path(tumor_bam_index), path(normal_bam), path(normal_bam_index), path(intervals)
     tuple val(ref_meta), path(fasta)
+    tuple val(fai_meta), path(fasta_fai)
     path panel_of_normals
     path panel_of_normals_index
 
