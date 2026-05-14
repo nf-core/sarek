@@ -155,14 +155,15 @@
                 "variant_calling/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.vcf.gz.tbi"
             ],
             [
+                "WARN: The `file()` function was called with a glob pattern that matched a collection of files -- use `files()` instead.",
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-05-13T20:24:30.843472992",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-05-08T13:19:43.5407573"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
     },
     "-profile test --tools parabricks_mutectcaller somatic --no_intervals -stub": {
         "content": [
@@ -402,14 +403,15 @@
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
+                "WARN: The `file()` function was called with a glob pattern that matched a collection of files -- use `files()` instead.",
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-05-13T20:32:14.880485243",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-05-08T13:25:32.977461842"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
     },
     "-profile test --tools parabricks_mutectcaller somatic -stub": {
         "content": [
@@ -659,11 +661,11 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-05-08T13:24:10.115287005",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-05-08T13:24:10.115287005"
+        }
     },
     "-profile test --aligner parabricks --tools parabricks_mutectcaller somatic --no_intervals -stub": {
         "content": [
@@ -706,14 +708,15 @@
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
+                "WARN: The `file()` function was called with a glob pattern that matched a collection of files -- use `files()` instead.",
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-05-13T20:27:49.485404437",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-05-08T13:22:43.884656821"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
     },
     "-profile test --aligner parabricks --tools parabricks_mutectcaller somatic --no_intervals": {
         "content": [
@@ -830,14 +833,15 @@
             "No VCF files",
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
+                "WARN: The `file()` function was called with a glob pattern that matched a collection of files -- use `files()` instead."
             ]
         ],
+        "timestamp": "2026-05-14T14:18:20.802877978",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-05-08T13:26:41.009075485"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
     },
     "-profile test --tools parabricks_mutectcaller somatic": {
         "content": [
@@ -1187,11 +1191,11 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-05-14T14:21:51.146850733",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-05-08T13:29:00.340935305"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.0"
+        }
     },
     "-profile test --step variant_calling --tools parabricks_mutectcaller somatic from cram input -stub": {
         "content": [
@@ -1356,11 +1360,11 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-05-08T13:18:44.375086133",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-05-08T13:18:44.375086133"
+        }
     },
     "-profile test --aligner parabricks --tools parabricks_mutectcaller somatic -stub": {
         "content": [
@@ -1549,10 +1553,10 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-05-08T13:21:50.692521062",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-05-08T13:21:50.692521062"
+        }
     }
 }
