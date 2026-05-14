@@ -155,14 +155,13 @@
                 "variant_calling/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.vcf.gz.tbi"
             ],
             [
-                "WARN: The `file()` function was called with a glob pattern that matched a collection of files -- use `files()` instead.",
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-05-13T20:24:30.843472992",
+        "timestamp": "2026-05-14T15:23:04.338089466",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "25.10.2"
         }
     },
     "-profile test --tools parabricks_mutectcaller somatic --no_intervals -stub": {
@@ -403,14 +402,13 @@
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
-                "WARN: The `file()` function was called with a glob pattern that matched a collection of files -- use `files()` instead.",
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-05-13T20:32:14.880485243",
+        "timestamp": "2026-05-14T15:29:37.378769859",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "25.10.2"
         }
     },
     "-profile test --tools parabricks_mutectcaller somatic -stub": {
@@ -708,14 +706,13 @@
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
-                "WARN: The `file()` function was called with a glob pattern that matched a collection of files -- use `files()` instead.",
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-05-13T20:27:49.485404437",
+        "timestamp": "2026-05-14T15:25:49.002398015",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "25.10.2"
         }
     },
     "-profile test --aligner parabricks --tools parabricks_mutectcaller somatic --no_intervals": {
@@ -833,14 +830,13 @@
             "No VCF files",
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
-                "WARN: The `file()` function was called with a glob pattern that matched a collection of files -- use `files()` instead."
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-05-14T14:18:20.802877978",
+        "timestamp": "2026-05-14T15:07:39.148427918",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "25.10.2"
         }
     },
     "-profile test --tools parabricks_mutectcaller somatic": {
