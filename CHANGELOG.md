@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency    | Old version | New version |
 | ------------- | ----------- | ----------- |
-| multiqc       | 1.33        | 1.34        |
+| multiqc       | 1.33        | 1.35        |
 | snpeff        | 5.3a        | 5.4a        |
 | varlociraptor | 8.7.4       | 8.9.3       |
 | yte           | 1.9.0       | 1.9.4       |
