@@ -610,6 +610,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,b446a47b182d93a9e7e74f5f7c8d41c2",
                 "samtools_alignment_plot.txt:md5,7138a2d29f515993e1df8d745e27b757",
+                "samtools_insert_size.txt:md5,e0c5f4ebb18a0e6bd437f0b919725b39",
                 "sample1.strelka.variants.bcftools_stats.txt:md5,7d091579d450a6f6d6e6ed9795dce0cb",
                 "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,62c6123f6494c3cdbd42dc7230e757b3",
                 "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,8404ea88658fbc41d447ba20bf46dd0a",

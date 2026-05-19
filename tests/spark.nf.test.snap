@@ -220,6 +220,7 @@
                 "multiqc_fastqc.txt:md5,d54614f8b2de16511949dbbde8f38a5d",
                 "samtools-stats-dp.txt:md5,440993b962f6c557cccfa2974648e1ec",
                 "samtools_alignment_plot.txt:md5,46e8824724863d243a01cc239a5eff15",
+                "samtools_insert_size.txt:md5,17c44517c58803f9c078f6d9b55aed00",
                 "test2.md.mosdepth.global.dist.txt:md5,85d38a74ce189b9110c57cd94bc26757",
                 "test2.md.mosdepth.region.dist.txt:md5,286d57b7d9b3a95ef18ab2eb7f913d81",
                 "test2.md.mosdepth.summary.txt:md5,04b69ef7f00199dcea7822a79d2c7bd7",

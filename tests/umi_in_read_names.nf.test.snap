@@ -594,6 +594,7 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,afe461017b5f2189651f29c79f6fee44",
                 "samtools_alignment_plot.txt:md5,9d6e0d529e64404f2c24e74285e242ee",
+                "samtools_insert_size.txt:md5,91c40430c1296fd8ce04788f2f528754",
                 "test.strelka.variants.bcftools_stats.txt:md5,3f4c40f17e956e4140a0432072a9dde0",
                 "test.md.mosdepth.global.dist.txt:md5,7b8a7773d5d854ae1b681b971d11bb34",
                 "test.md.mosdepth.region.dist.txt:md5,1dd626f6fef0d1ac29fd7ffb8b1bbd95",
