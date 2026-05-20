@@ -4,8 +4,8 @@ process CONTROLFREEC_FREEC2CIRCOS {
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://depot.galaxyproject.org/singularity/control-freec:11.6b--hdbdd923_0'
-        : 'biocontainers/control-freec:11.6b--hdbdd923_0'}"
+        ? 'https://depot.galaxyproject.org/singularity/control-freec:11.6b--hde5307d_3'
+        : 'biocontainers/control-freec:11.6b--hde5307d_3'}"
 
     input:
     tuple val(meta), path(ratio)
