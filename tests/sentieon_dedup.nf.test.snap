@@ -357,6 +357,7 @@
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "samtools-stats-dp.txt:md5,b7a972304062dab47bf1ef592defa909",
                 "samtools_alignment_plot.txt:md5,5c19e1b5d6980e773e9a182557ae20f8",
+                "samtools_insert_size.txt:md5,223fb9c7f62b54ffe8a820b09c21b89d",
                 "test.dedup.mosdepth.global.dist.txt:md5,cc38f46822141ac16b5025ac5d62d044",
                 "test.dedup.mosdepth.region.dist.txt:md5,86b78626070a52dbe36d952b85814921",
                 "test.dedup.mosdepth.summary.txt:md5,3cf3700ecd4ec08825ab33e8bcbc3206",

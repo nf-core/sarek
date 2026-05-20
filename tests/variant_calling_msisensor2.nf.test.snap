@@ -262,6 +262,7 @@
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,981afa05e418de2b371c8d568eccf6de",
                 "samtools_alignment_plot.txt:md5,f16cda6a9165b8427268555f0e3a3f7d",
+                "samtools_insert_size.txt:md5,5e3ceb1827c8d42ba697d8064a65e3f6",
                 "test.recal.mosdepth.global.dist.txt:md5,96d22fe7b6f5824cde06c98c96dec304",
                 "test.recal.mosdepth.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test.recal.mosdepth.summary.txt:md5,81c058bd237404d95b3f838bae176303",

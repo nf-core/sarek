@@ -40,6 +40,7 @@
                 "multiqc",
                 "multiqc/index.json",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
@@ -62,6 +63,8 @@
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
@@ -71,6 +74,8 @@
                 "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
                 "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
@@ -80,6 +85,8 @@
                 "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
@@ -124,7 +131,7 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,49fd828d21d79a5c9430cdb30d7f0126",
                 "mosdepth-cumcoverage-dist-id.txt:md5,edd8dfc8023e629e476e01c3a1448d30",
                 "mosdepth_perchrom.txt:md5,49fd828d21d79a5c9430cdb30d7f0126",
-                "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
+                "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,41d36c1a8413d565788a1a364b467606",
                 "samtools_alignment_plot.txt:md5,35f8fd2a557568b2237193f46afbab5c",
                 "samtools_insert_size.txt:md5,be7a60f43f0ca5238674cbf0f9d48917",
@@ -144,11 +151,11 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-05-20T09:36:34.643829502",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T23:54:42.930330768"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
+        }
     },
     "-profile test --tools tiddit tumoronly": {
         "content": [
@@ -191,6 +198,7 @@
                 "multiqc",
                 "multiqc/index.json",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
@@ -213,6 +221,8 @@
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
@@ -222,6 +232,8 @@
                 "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
                 "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
@@ -231,6 +243,8 @@
                 "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
@@ -275,7 +289,7 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,ff38f1e35ce12244c751921db673b23c",
                 "mosdepth-cumcoverage-dist-id.txt:md5,8398d1127a10d0c002831ddedfb9713b",
                 "mosdepth_perchrom.txt:md5,ff38f1e35ce12244c751921db673b23c",
-                "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
+                "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
                 "samtools_insert_size.txt:md5,5cb5779e1a7baf077b529af8c427147c",
@@ -295,11 +309,11 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-05-20T09:39:22.408315557",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T23:57:29.483541412"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
+        }
     },
     "-profile test --tools tiddit somatic": {
         "content": [
@@ -346,6 +360,7 @@
                 "multiqc",
                 "multiqc/index.json",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
                 "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
@@ -368,6 +383,8 @@
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
@@ -377,6 +394,8 @@
                 "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
                 "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
@@ -386,6 +405,8 @@
                 "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
@@ -451,7 +472,7 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,336d786b273c4d4e714d51c44207ff56",
                 "mosdepth-cumcoverage-dist-id.txt:md5,0cc87c596a0fc30ebb676c4587e986de",
                 "mosdepth_perchrom.txt:md5,336d786b273c4d4e714d51c44207ff56",
-                "multiqc_citations.txt:md5,e49571d90d78a0d1bc919b82d7dc48c6",
+                "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
                 "samtools_insert_size.txt:md5,8fa108dcbe0da42e9425dd125fe22905",
@@ -482,10 +503,10 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-05-20T09:38:11.731089821",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T23:56:22.640069514"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.1"
+        }
     }
 }
