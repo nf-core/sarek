@@ -19,7 +19,7 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_DNASCOPE": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -205,10 +205,10 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_DNAMODELAPPLY": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "SENTIEON_DNASCOPE": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -397,10 +397,10 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_DNASCOPE": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "SENTIEON_GVCFTYPER": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
