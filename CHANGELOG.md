@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2055](https://github.com/nf-core/sarek/pull/2055) - Sort final vcf in varlociraptor sbwfs and update varlociraptor
 - [#2141](https://github.com/nf-core/sarek/pull/2141) - Update snpeff
-- [#XXXX](https://github.com/nf-core/sarek/pull/XXXX) - Update all `sentieon/*` modules to `nf-core/modules@7ad1622c`. Brings in `--interval` honouring in `sentieon/gvcftyper`, multi-`--resource:` parsing in `sentieon/varcal`, and the new `topic: versions` emission across all sentieon modules. Removed the now-broken explicit `versions.mix(SENTIEON_*.out.versions)` calls; sarek's `softwareVersionsToYAML` picks up the topic emissions via `channel.topic("versions")`.
+- [#2188](https://github.com/nf-core/sarek/pull/2188) - Update all `sentieon/*` modules to `nf-core/modules@7ad1622c`. Brings in `--interval` honouring in `sentieon/gvcftyper`, multi-`--resource:` parsing in `sentieon/varcal`, and the new `topic: versions` emission across all sentieon modules. Removed the now-broken explicit `versions.mix(SENTIEON_*.out.versions)` calls; sarek's `softwareVersionsToYAML` picks up the topic emissions via `channel.topic("versions")`.
 
 ### Fixed
 
