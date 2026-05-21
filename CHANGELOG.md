@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [#XXXX](https://github.com/nf-core/sarek/pull/XXXX) - Preserve `groupKey` size hint into `groupTuple` in the sentieon haplotyper and dnascope subworkflows so per-sample MERGE_SENTIEON_*_VCFS / GVCFS emits progressively as each sample's intervals finish instead of bursting at end-of-haplotyper. Also fixes the `interval_name` → `intervals_name` typo in the branch step (was a silent no-op).
 - [#2117](https://github.com/nf-core/sarek/pull/2117) - Silent failure with multi-lane samples
 - [#2143](https://github.com/nf-core/sarek/pull/2143) - Varlociraptor collecting multiple scenario files for one sample
 - [#2146](https://github.com/nf-core/sarek/pull/2146) - Fail early when `--no_intervals` is used with joint germline HaplotypeCaller
