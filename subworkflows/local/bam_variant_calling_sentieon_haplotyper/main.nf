@@ -138,7 +138,6 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.tbi,
         haplotyper_gvcf_tbi_branch.no_intervals)
 
-    versions = versions.mix(SENTIEON_HAPLOTYPER.out.versions)
     versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_VCFS.out.versions)
     versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.versions)
 
