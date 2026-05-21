@@ -388,7 +388,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "9656d955b700a8707c4a67821ab056f8c1095675",
+                        "git_sha": "cd0ad387832473916b1f1c80c2ca673a7883bf94",
                         "installed_by": ["modules"]
                     },
                     "muse/call": {

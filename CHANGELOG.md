@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency    | Old version | New version |
 | ------------- | ----------- | ----------- |
+| multiqc       | 1.33        | 1.35        |
 | snpeff        | 5.3a        | 5.4a        |
 | varlociraptor | 8.7.4       | 8.9.3       |
 | yte           | 1.9.0       | 1.9.4       |
@@ -59,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2141](https://github.com/nf-core/sarek/pull/2141) - Update vcf_annotate_snpeff subworkflow, swap tabix/bgziptabix and snpeff to topics, strict syntax
 - [#2159](https://github.com/nf-core/sarek/pull/2159) - Fix strict syntax errors
 - [#2170](https://github.com/nf-core/sarek/pull/2170) - Update dependencies
+- [#2173](https://github.com/nf-core/sarek/pull/2173) - Update MultiQC
 
 #### Fixed
 
