@@ -1,6 +1,6 @@
 name: controlfreec_assesssignificance
-description: Add both Wilcoxon test and Kolmogorov-Smirnov test p-values to each CNV
-  output of FREEC
+description: Add both Wilcoxon test and Kolmogorov-Smirnov test p-values to each
+  CNV output of FREEC
 keywords:
   - cna
   - cnv
@@ -9,16 +9,16 @@ keywords:
   - tumor-only
 tools:
   - controlfreec/assesssignificance:
-      description: Copy number and genotype annotation from whole genome and whole exome
-        sequencing data.
+      description: Copy number and genotype annotation from whole genome and whole
+        exome sequencing data.
       homepage: http://boevalab.inf.ethz.ch/FREEC
       documentation: http://boevalab.inf.ethz.ch/FREEC/tutorial.html
       tool_dev_url: https://github.com/BoevaLab/FREEC/
       doi: "10.1093/bioinformatics/btq635"
-      licence: ["GPL >=2"]
+      licence:
+        - "GPL >=2"
       identifier: ""
 input:
-  # Only when we have meta
   - - meta:
         type: map
         description: |
@@ -46,13 +46,27 @@ output:
           description: CNV file containing p_values for each call
           pattern: "*.p.value.txt"
           ontologies: []
+  versions_controlfreec:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - controlfreec:
+          type: string
+          description: The name of the tool
+      - 11.6b:
+          type: string
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - controlfreec:
+          type: string
+          description: The name of the tool
+      - 11.6b:
+          type: string
+          description: The expression to obtain the version of the tool
 authors:
   - "@FriederikeHanssen"
 maintainers:
