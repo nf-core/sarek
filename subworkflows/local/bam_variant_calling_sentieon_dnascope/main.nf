@@ -142,7 +142,6 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
         MERGE_SENTIEON_DNASCOPE_GVCFS.out.tbi,
         haplotyper_gvcf_tbi_branch.no_intervals)
 
-    versions = versions.mix(SENTIEON_DNASCOPE.out.versions)
     versions = versions.mix(MERGE_SENTIEON_DNASCOPE_VCFS.out.versions)
     versions = versions.mix(MERGE_SENTIEON_DNASCOPE_GVCFS.out.versions)
 
