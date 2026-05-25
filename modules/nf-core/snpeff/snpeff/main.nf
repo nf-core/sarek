@@ -14,9 +14,9 @@ process SNPEFF_SNPEFF {
 
     output:
     tuple val(meta), path("*.ann.vcf"), emit: vcf
-    tuple val(meta), val("${task.process}"), val('snpeff'), path("*.csv"), topic: multiqc_files, emit: report
-    tuple val(meta), val("${task.process}"), val('snpeff'), path("*.html"), topic: multiqc_files, emit: summary_html
-    tuple val(meta), val("${task.process}"), val('snpeff'), path("*.genes.txt"), topic: multiqc_files, emit: genes_txt
+    tuple val(meta), path("*.csv"), emit: report
+    tuple val(meta), path("*.html"), emit: summary_html
+    tuple val(meta), path("*.genes.txt"), emit: genes_txt
     tuple val("${task.process}"), val('snpeff'), eval("snpEff -version 2>&1 | cut -f 2 -d '\t'"), topic: versions, emit: versions_snpeff
 
     when:
@@ -36,7 +36,6 @@ process SNPEFF_SNPEFF {
     """
     snpEff \\
         -Xmx${avail_mem}M \\
-        -XX:-UsePerfData \\
         ${db} \\
         ${args} \\
         -csvStats ${prefix}.csv \\
