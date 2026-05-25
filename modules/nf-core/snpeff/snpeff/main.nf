@@ -3,9 +3,9 @@ process SNPEFF_SNPEFF {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/30/30669e5208952f30d59d0d559928772f082830d01a140a853fff13a2283a17b0/data'
-        : 'community.wave.seqera.io/library/snpeff:5.4.0a--eaf6ce30125b2b17'}"
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/cb/cbd585b788eeafff9b9a018e8775de24eeb6b380d95bb22629a5f14ee3fff519/data'
+        : 'community.wave.seqera.io/library/snpeff:5.4.0c--e08ddc54579e82bd'}"
 
     input:
     tuple val(meta), path(vcf)
@@ -14,9 +14,9 @@ process SNPEFF_SNPEFF {
 
     output:
     tuple val(meta), path("*.ann.vcf"), emit: vcf
-    tuple val(meta), path("*.csv"), emit: report
-    tuple val(meta), path("*.html"), emit: summary_html
-    tuple val(meta), path("*.genes.txt"), emit: genes_txt
+    tuple val(meta), val("${task.process}"), val('snpeff'), path("*.csv"), topic: multiqc_files, emit: report
+    tuple val(meta), val("${task.process}"), val('snpeff'), path("*.html"), topic: multiqc_files, emit: summary_html
+    tuple val(meta), val("${task.process}"), val('snpeff'), path("*.genes.txt"), topic: multiqc_files, emit: genes_txt
     tuple val("${task.process}"), val('snpeff'), eval("snpEff -version 2>&1 | cut -f 2 -d '\t'"), topic: versions, emit: versions_snpeff
 
     when:
@@ -36,6 +36,7 @@ process SNPEFF_SNPEFF {
     """
     snpEff \\
         -Xmx${avail_mem}M \\
+        -XX:-UsePerfData \\
         ${db} \\
         ${args} \\
         -csvStats ${prefix}.csv \\

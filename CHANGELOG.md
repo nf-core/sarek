@@ -15,7 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2055](https://github.com/nf-core/sarek/pull/2055) - Sort final vcf in varlociraptor sbwfs and update varlociraptor
 - [#2141](https://github.com/nf-core/sarek/pull/2141) - Update snpeff
-- [#2188](https://github.com/nf-core/sarek/pull/2188) - Update all `sentieon/*` modules to `nf-core/modules@7ad1622c`. Brings in `--interval` honouring in `sentieon/gvcftyper`, multi-`--resource:` parsing in `sentieon/varcal`, and the new `topic: versions` emission across all sentieon modules. Removed the now-broken explicit `versions.mix(SENTIEON_*.out.versions)` calls; sarek's `softwareVersionsToYAML` picks up the topic emissions via `channel.topic("versions")`.
 
 ### Fixed
 
@@ -32,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency    | Old version | New version |
 | ------------- | ----------- | ----------- |
 | multiqc       | 1.33        | 1.35        |
-| snpeff        | 5.3a        | 5.4a        |
+| snpeff        | 5.3a        | 5.4c        |
 | varlociraptor | 8.7.4       | 8.9.3       |
 | yte           | 1.9.0       | 1.9.4       |
 
@@ -62,6 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2159](https://github.com/nf-core/sarek/pull/2159) - Fix strict syntax errors
 - [#2170](https://github.com/nf-core/sarek/pull/2170) - Update dependencies
 - [#2173](https://github.com/nf-core/sarek/pull/2173) - Update MultiQC
+- [#2188](https://github.com/nf-core/sarek/pull/2188) - Update all `sentieon/*` modules to `nf-core/modules@7ad1622c`. Brings in `--interval` honouring in `sentieon/gvcftyper`, multi-`--resource:` parsing in `sentieon/varcal`, and the new `topic: versions` emission across all sentieon modules. Removed the now-broken explicit `versions.mix(SENTIEON_*.out.versions)` calls; sarek's `softwareVersionsToYAML` picks up the topic emissions via `channel.topic("versions")`.
 
 #### Fixed
 

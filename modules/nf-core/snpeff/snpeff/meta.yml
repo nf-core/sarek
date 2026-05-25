@@ -61,6 +61,12 @@ output:
             annotated vcf
           pattern: "*.ann.vcf"
           ontologies: []
+      - ${task.process}:
+          type: string
+          description: The process
+      - snpeff:
+          type: string
+          description: The tool name
       - "*.csv":
           type: file
           description: snpEff report csv file
@@ -74,6 +80,12 @@ output:
             annotated vcf
           pattern: "*.ann.vcf"
           ontologies: []
+      - ${task.process}:
+          type: string
+          description: The process
+      - snpeff:
+          type: string
+          description: The tool name
       - "*.html":
           type: file
           description: snpEff summary statistics in html file
@@ -86,6 +98,12 @@ output:
             annotated vcf
           pattern: "*.ann.vcf"
           ontologies: []
+      - ${task.process}:
+          type: string
+          description: The process
+      - snpeff:
+          type: string
+          description: The tool name
       - "*.genes.txt":
           type: file
           description: txt (tab separated) file having counts of the number of variants
@@ -103,6 +121,60 @@ output:
           type: string
           description: The command used to generate the version of the tool
 topics:
+  multiqc_files:
+    - - meta:
+          type: file
+          description: |
+            annotated vcf
+          pattern: "*.ann.vcf"
+          ontologies: []
+      - ${task.process}:
+          type: string
+          description: The process
+      - snpeff:
+          type: string
+          description: The tool name
+      - "*.csv":
+          type: file
+          description: snpEff report csv file
+          pattern: "*.csv"
+          ontologies:
+            - edam: http://edamontology.org/format_3752 # CSV
+    - - meta:
+          type: file
+          description: |
+            annotated vcf
+          pattern: "*.ann.vcf"
+          ontologies: []
+      - ${task.process}:
+          type: string
+          description: The process
+      - snpeff:
+          type: string
+          description: The tool name
+      - "*.html":
+          type: file
+          description: snpEff summary statistics in html file
+          pattern: "*.html"
+          ontologies: []
+    - - meta:
+          type: file
+          description: |
+            annotated vcf
+          pattern: "*.ann.vcf"
+          ontologies: []
+      - ${task.process}:
+          type: string
+          description: The process
+      - snpeff:
+          type: string
+          description: The tool name
+      - "*.genes.txt":
+          type: file
+          description: txt (tab separated) file having counts of the number of variants
+            affecting each transcript and gene
+          pattern: "*.genes.txt"
+          ontologies: []
   versions:
     - - ${task.process}:
           type: string

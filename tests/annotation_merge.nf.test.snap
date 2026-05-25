@@ -9,7 +9,7 @@
                     "tabix": "1.21"
                 },
                 "SNPEFF_SNPEFF": {
-                    "snpeff": "5.4a"
+                    "snpeff": "5.4c"
                 },
                 "TABIX_BGZIPTABIX": {
                     "bgzip": "1.21",
@@ -109,18 +109,18 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-05-25T14:50:47.85261627",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-07T08:54:13.050728"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.2"
+        }
     },
     "-profile test --tools merge,snpsift": {
         "content": [
             6,
             {
                 "SNPEFF_SNPEFF": {
-                    "snpeff": "5.4a"
+                    "snpeff": "5.4c"
                 },
                 "SNPSIFT_ANNMEM": {
                     "snpsift": "5.4a"
@@ -220,18 +220,18 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-05-25T14:52:24.459648599",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-09T15:02:33.282539192"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.2"
+        }
     },
     "-profile test --tools merge": {
         "content": [
             4,
             {
                 "SNPEFF_SNPEFF": {
-                    "snpeff": "5.4a"
+                    "snpeff": "5.4c"
                 },
                 "TABIX_BGZIPTABIX": {
                     "bgzip": "1.21",
@@ -320,10 +320,10 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-05-25T14:47:20.388333013",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-07T08:52:33.470414"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.2"
+        }
     }
 }

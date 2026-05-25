@@ -508,12 +508,12 @@
                     },
                     "snpeff/download": {
                         "branch": "master",
-                        "git_sha": "ab50ae0a7c0714bf8b13918c1b7af732002c244d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "snpeff/snpeff": {
                         "branch": "master",
-                        "git_sha": "ab50ae0a7c0714bf8b13918c1b7af732002c244d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "snpsift/annmem": {
