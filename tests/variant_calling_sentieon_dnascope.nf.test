@@ -1,4 +1,5 @@
 def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
 
 nextflow_pipeline {
 
@@ -32,6 +33,21 @@ nextflow_pipeline {
                 joint_germline: true,
                 sentieon_dnascope_emit_mode: "gvcf"
             ]
+        ],
+        [
+            name: "-profile test --tools sentieon_dnascope --joint_germline --sentieon_dnascope_emit_mode gvcf --sentieon_joint_germline_batch_size 1",
+            params: [
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
+                tools: "sentieon_dnascope",
+                step: "variant_calling",
+                joint_germline: true,
+                sentieon_dnascope_emit_mode: "gvcf",
+                sentieon_joint_germline_batch_size: 1,
+                wes: true,
+                nucleotides_per_second: 20
+            ],
+            no_conda: true
         ]
     ]
 
