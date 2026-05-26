@@ -3,12 +3,21 @@
 //
 // Merge samples perform joint genotyping with SENTIEON_GVCFTYPER
 //
+// When batch_size is set, a two-pass sharded strategy is used to scale to
+// very large cohorts (>5k samples): pass 1 (SHARD) runs GVCFtyper per
+// (interval, batch) with --emit_mode all_samples; pass 2 (REDUCE) merges
+// batch intermediates per interval.  Sample→batch assignment is deterministic:
+// Math.abs(meta.patient.hashCode()) % n_batches, so a sample always lands in
+// the same batch across all intervals (required for correctness).
+//
 
 include { BCFTOOLS_SORT                                      } from '../../../modules/nf-core/bcftools/sort/main'
 include { GATK4_MERGEVCFS      as MERGE_GENOTYPEGVCFS        } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { SENTIEON_APPLYVARCAL as SENTIEON_APPLYVARCAL_INDEL } from '../../../modules/nf-core/sentieon/applyvarcal/main'
 include { SENTIEON_APPLYVARCAL as SENTIEON_APPLYVARCAL_SNP   } from '../../../modules/nf-core/sentieon/applyvarcal/main'
 include { SENTIEON_GVCFTYPER                                 } from '../../../modules/nf-core/sentieon/gvcftyper/main'
+include { SENTIEON_GVCFTYPER   as SENTIEON_GVCFTYPER_SHARD  } from '../../../modules/local/sentieon/gvcftyper/main'
+include { SENTIEON_GVCFTYPER   as SENTIEON_GVCFTYPER_REDUCE } from '../../../modules/local/sentieon/gvcftyper/main'
 include { SENTIEON_VARCAL      as SENTIEON_VARCAL_INDEL      } from '../../../modules/nf-core/sentieon/varcal/main'
 include { SENTIEON_VARCAL      as SENTIEON_VARCAL_SNP        } from '../../../modules/nf-core/sentieon/varcal/main'
 
@@ -28,22 +37,97 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     resource_snps_tbi
     known_snps_vqsr
     variant_caller
+    batch_size           // integer or null; when set, enables two-pass sharded GVCFtyper
 
     main:
     versions = Channel.empty()
 
-    sentieon_input = input
-        .map{ meta, gvcf, tbi, intervals -> [ [ id:'joint_variant_calling', intervals_name:intervals.baseName, num_intervals:meta.num_intervals ], gvcf, tbi, intervals ] }
-        .groupTuple(by:[0, 3])
+    if (batch_size) {
+        // --- Two-pass sharded GVCFtyper ---
 
-    SENTIEON_GVCFTYPER(
-        sentieon_input,
-        fasta,
-        fai,
-        dbsnp.map{ file -> [[id:'dbsnp'], file] },
-        dbsnp_tbi.map{ file -> [[id:'dbsnp'], file] })
+        // Collect all distinct patient IDs once so we can compute n_batches and
+        // the exact per-batch sample count (needed for groupKey size hints).
+        batch_info = input
+            .map{ meta, gvcf, tbi, intervals -> meta.patient }
+            .unique()
+            .collect()
+            .map{ patients ->
+                def n_b     = (int) Math.ceil(patients.size() as double / batch_size)
+                def counts  = new int[n_b]
+                patients.each{ p -> counts[ Math.abs(p.hashCode()) % n_b ]++ }
+                [ n_b, counts ]
+            }
 
-    BCFTOOLS_SORT(SENTIEON_GVCFTYPER.out.vcf_gz)
+        // One intervals file per unique interval — used to re-attach intervals
+        // to the REDUCE step after the SHARD step drops it.
+        intervals_for_reduce = input
+            .map{ meta, gvcf, tbi, intervals ->
+                [ [ id:'joint_variant_calling', intervals_name:intervals.baseName, num_intervals:meta.num_intervals ], intervals ]
+            }
+            .distinct()
+
+        // Pass 1 — SHARD: group gVCFs by (interval, batch).
+        // groupKey carries the exact per-batch sample count as the size hint so
+        // groupTuple can emit each shard progressively without waiting for the
+        // whole channel to close.
+        shard_input = input
+            .combine(batch_info)
+            .map{ meta, gvcf, tbi, intervals, n_b, counts ->
+                def batch_id   = Math.abs(meta.patient.hashCode()) % n_b
+                def shard_meta = groupKey(
+                    [ id:'joint_variant_calling', intervals_name:intervals.baseName, num_intervals:meta.num_intervals, batch_id:batch_id, n_batches:n_b ],
+                    counts[batch_id]
+                )
+                [ shard_meta, gvcf, tbi, intervals ]
+            }
+            .groupTuple(by:[0, 3])
+
+        SENTIEON_GVCFTYPER_SHARD(
+            shard_input,
+            fasta,
+            fai,
+            dbsnp.map{ file -> [[id:'dbsnp'], file] },
+            dbsnp_tbi.map{ file -> [[id:'dbsnp'], file] })
+
+        // Pass 2 — REDUCE: collect all batch intermediates per interval and
+        // run a final GVCFtyper to produce the joint-genotyped VCF.
+        // groupKey size = n_batches (constant per interval).
+        reduce_input = SENTIEON_GVCFTYPER_SHARD.out.vcf_gz
+            .join(SENTIEON_GVCFTYPER_SHARD.out.vcf_gz_tbi)
+            .map{ meta, vcf, tbi ->
+                def base_meta = [ id:'joint_variant_calling', intervals_name:meta.intervals_name, num_intervals:meta.num_intervals ]
+                [ groupKey(base_meta, meta.n_batches), vcf, tbi ]
+            }
+            .groupTuple()
+            .join(intervals_for_reduce)
+            .map{ meta, vcfs, tbis, intervals -> [ meta, vcfs, tbis, intervals ] }
+
+        SENTIEON_GVCFTYPER_REDUCE(
+            reduce_input,
+            fasta,
+            fai,
+            dbsnp.map{ file -> [[id:'dbsnp'], file] },
+            dbsnp_tbi.map{ file -> [[id:'dbsnp'], file] })
+
+        gvcftyper_out = SENTIEON_GVCFTYPER_REDUCE.out.vcf_gz
+
+    } else {
+        // --- Original single-pass GVCFtyper ---
+        sentieon_input = input
+            .map{ meta, gvcf, tbi, intervals -> [ [ id:'joint_variant_calling', intervals_name:intervals.baseName, num_intervals:meta.num_intervals ], gvcf, tbi, intervals ] }
+            .groupTuple(by:[0, 3])
+
+        SENTIEON_GVCFTYPER(
+            sentieon_input,
+            fasta,
+            fai,
+            dbsnp.map{ file -> [[id:'dbsnp'], file] },
+            dbsnp_tbi.map{ file -> [[id:'dbsnp'], file] })
+
+        gvcftyper_out = SENTIEON_GVCFTYPER.out.vcf_gz
+    }
+
+    BCFTOOLS_SORT(gvcftyper_out)
 
     gvcf_to_merge = BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [ meta.subMap('num_intervals') + [ id:'joint_variant_calling', patient:'all_samples', variantcaller:variant_caller ], vcf ]}.groupTuple()
 

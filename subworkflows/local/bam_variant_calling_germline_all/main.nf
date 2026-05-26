@@ -50,6 +50,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     sentieon_dnascope_emit_mode       // channel: [mandatory] value channel with string
     sentieon_dnascope_pcr_indel_model // channel: [mandatory] value channel with string
     sentieon_dnascope_model           // channel: [mandatory] value channel with string
+    sentieon_joint_germline_batch_size // integer or null: enables two-pass sharded GVCFtyper for large cohorts
 
     main:
     versions = Channel.empty()
@@ -257,7 +258,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 known_sites_snps,
                 known_sites_snps_tbi,
                 known_snps_vqsr,
-                'sentieon_dnascope')
+                'sentieon_dnascope',
+                sentieon_joint_germline_batch_size)
 
             vcf_sentieon_dnascope = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
             tbi_sentieon_dnascope = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_index
@@ -315,7 +317,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 known_sites_snps,
                 known_sites_snps_tbi,
                 known_snps_vqsr,
-                'sentieon_haplotyper')
+                'sentieon_haplotyper',
+                sentieon_joint_germline_batch_size)
 
             vcf_sentieon_haplotyper = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
             tbi_sentieon_haplotyper = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_index

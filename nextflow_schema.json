@@ -500,6 +500,12 @@
                     "type": "string",
                     "default": "CONSERVATIVE",
                     "help_text": "Option for selecting the PCR indel model used by GATK HaplotypeCaller."
+                },
+                "sentieon_joint_germline_batch_size": {
+                    "type": "integer",
+                    "description": "Enable two-pass sharded GVCFtyper for large cohorts.",
+                    "fa_icon": "fas fa-layer-group",
+                    "help_text": "When set, BAM_JOINT_CALLING_GERMLINE_SENTIEON uses a two-pass strategy: pass 1 runs GVCFtyper per (interval, batch) with `--emit_mode all_samples`; pass 2 reduces batch intermediates per interval. Batch assignment is deterministic via hashCode(meta.patient) % n_batches. Leave unset (default) for cohorts up to ~5k samples; set for >>10k sample cohorts."
                 }
             }
         },

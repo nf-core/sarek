@@ -431,6 +431,7 @@ workflow SAREK {
             params.sentieon_dnascope_emit_mode,
             params.sentieon_dnascope_pcr_indel_model,
             sentieon_dnascope_model,
+            params.sentieon_joint_germline_batch_size,
         )
 
         // TUMOR ONLY VARIANT CALLING
