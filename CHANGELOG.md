@@ -10,14 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#2087](https://github.com/nf-core/sarek/pull/2087) - Add `bam` as output format for parabricks/fq2bam, add multi lane support
-- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Add `--vep_cache_preflight_check` parameter to force preflight check for local VEP cache download
+- [#2194](https://github.com/nf-core/sarek/pull/2194) - Add `--vep_cache_preflight_check` parameter to force preflight check for local VEP cache download
 
 ### Changed
 
 - [#2055](https://github.com/nf-core/sarek/pull/2055) - Sort final vcf in varlociraptor sbwfs and update varlociraptor
 - [#2141](https://github.com/nf-core/sarek/pull/2141) - Update snpeff
-- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Replace local `annotation_cache_initialisation` and `download_cache_snpeff_vep` subworkflows with nf-core `utils_annotation_cache` and `cache_download_ensemblvep_snpeff`
-- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Update `ensemblvep/vep` module: add `htslib` dependency, support apptainer container engine, fix cache input signature, fix output path patterns
+- [#2194](https://github.com/nf-core/sarek/pull/2194) - Replace local `annotation_cache_initialisation` and `download_cache_snpeff_vep` subworkflows with nf-core `utils_annotation_cache` and `cache_download_ensemblvep_snpeff`
+- [#2194](https://github.com/nf-core/sarek/pull/2194) - Update `ensemblvep/vep` module: add `htslib` dependency, support apptainer container engine, fix cache input signature, fix output path patterns
 
 ### Fixed
 
@@ -57,7 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added
 
-- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Add nf-core subworkflows `utils_annotation_cache` and `cache_download_ensemblvep_snpeff`
+- [#2194](https://github.com/nf-core/sarek/pull/2194) - Add nf-core subworkflows `utils_annotation_cache` and `cache_download_ensemblvep_snpeff`
 
 #### Changed
 
@@ -65,7 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2055](https://github.com/nf-core/sarek/pull/2055) - Update varlociraptor to use only one input channel, swap to topics
 - [#2087](https://github.com/nf-core/sarek/pull/2087) - Move parabricks config into its own, adhere to strict syntax, swap to topics
 - [#2139](https://github.com/nf-core/sarek/pull/2139) - Back to dev (3.9.0dev)
-- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Update `main.nf` to use lowercase `channel.*` factory methods (strict syntax)
+- [#2194](https://github.com/nf-core/sarek/pull/2194) - Update `main.nf` to use lowercase `channel.*` factory methods (strict syntax)
 - [#2141](https://github.com/nf-core/sarek/pull/2141) - Update vcf_annotate_snpeff subworkflow, swap tabix/bgziptabix and snpeff to topics, strict syntax
 - [#2159](https://github.com/nf-core/sarek/pull/2159) - Fix strict syntax errors
 - [#2170](https://github.com/nf-core/sarek/pull/2170) - Update dependencies
