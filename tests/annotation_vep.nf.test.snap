@@ -13,11 +13,11 @@
                 "Execution halted due to dbnsfp inconsistency."
             ]
         ],
+        "timestamp": "2025-12-15T19:15:20.088754202",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T19:15:20.088754202"
+        }
     },
     "Fails with profile test --tools vep --vep_cache_version 1 --build_only_index": {
         "content": [
@@ -34,10 +34,10 @@
                 "Please check https://annotation-cache.github.io/ to create a request for it."
             ]
         ],
+        "timestamp": "2025-12-15T19:14:33.737947216",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T19:14:33.737947216"
+        }
     }
 }

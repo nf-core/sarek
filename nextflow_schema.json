@@ -1123,6 +1123,11 @@
                     "description": "Path to VEP cache.",
                     "help_text": "Path to VEP cache which should contain the relevant species, genome and build directories at the path ${vep_species}/${vep_genome}_${vep_cache_version}\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
                 },
+                "vep_cache_preflight_check": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-database",
+                    "description": "Force preflight check for local VEP cache download"
+                },
                 "vep_cache_version": {
                     "type": "string",
                     "fa_icon": "fas fa-tag",

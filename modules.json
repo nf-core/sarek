@@ -163,12 +163,12 @@
                     },
                     "ensemblvep/download": {
                         "branch": "master",
-                        "git_sha": "09ea5d9fcd6eda714f148e0f3b6a4920b2091f41",
-                        "installed_by": ["modules"]
+                        "git_sha": "251885fdb29eca03523d326aca5c827d1f6bdfeb",
+                        "installed_by": ["cache_download_ensemblvep_snpeff", "modules"]
                     },
                     "ensemblvep/vep": {
                         "branch": "master",
-                        "git_sha": "691bb6956ec56154b81ba5771641ca24443c4d17",
+                        "git_sha": "251885fdb29eca03523d326aca5c827d1f6bdfeb",
                         "installed_by": ["modules"]
                     },
                     "fastp": {
@@ -509,7 +509,7 @@
                     "snpeff/download": {
                         "branch": "master",
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
-                        "installed_by": ["modules"]
+                        "installed_by": ["cache_download_ensemblvep_snpeff", "modules"]
                     },
                     "snpeff/snpeff": {
                         "branch": "master",
@@ -608,6 +608,16 @@
                     "bam_ngscheckmate": {
                         "branch": "master",
                         "git_sha": "c9c3ef86c1892413b3c86fb38c4e39fd7288512f",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "cache_download_ensemblvep_snpeff": {
+                        "branch": "master",
+                        "git_sha": "09bae0b3db772c2d763e3cc1834c1370d0db1289",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "utils_annotation_cache": {
+                        "branch": "master",
+                        "git_sha": "4068160bf33db57f33793989e08cda44ba1fefbf",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {
