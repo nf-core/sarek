@@ -1,4 +1,65 @@
 {
+    "-profile test --tools vep --vep_loftee": {
+        "content": [
+            2,
+            {
+                "ENSEMBLVEP_VEP": {
+                    "ensemblvep": "115.2",
+                    "perl-math-cdf": "0.1",
+                    "tabix": "1.23.1"
+                }
+            },
+            [
+                "annotation",
+                "annotation/test",
+                "annotation/test/test_VEP.ann.vcf.gz",
+                "annotation/test/test_VEP.ann.vcf.gz.tbi",
+                "csv",
+                "multiqc",
+                "multiqc/index.json",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/vep-general-stats.txt",
+                "multiqc/multiqc_data/vep.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/vep-general-stats.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/vep-general-stats.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/vep-general-stats.svg",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reports",
+                "reports/EnsemblVEP",
+                "reports/EnsemblVEP/test",
+                "reports/EnsemblVEP/test/test_VEP.ann.summary.html"
+            ],
+            [
+                "multiqc_citations.txt:md5,afe6b13a9c0770828d9bc9515d6db802",
+                "vep-general-stats.txt:md5,2fca07ac5623e758cac3ce49d9f6e3b0",
+                "vep.txt:md5,60a5d57c60308aba2aa6206f903d27e9"
+            ],
+            "No BAM files",
+            "No CRAM files",
+            [
+                "test_VEP.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            "No warnings"
+        ],
+        "timestamp": "2026-05-27T13:40:41.25343459",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.2"
+        }
+    },
     "Fails with profile test --dbnsfp and no dbnsfp_tbi": {
         "content": [
             [
@@ -13,10 +74,10 @@
                 "Execution halted due to dbnsfp inconsistency."
             ]
         ],
-        "timestamp": "2025-12-15T19:15:20.088754202",
+        "timestamp": "2026-05-27T13:37:29.419583359",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.2"
         }
     },
     "Fails with profile test --tools vep --vep_cache_version 1 --build_only_index": {
@@ -34,10 +95,10 @@
                 "Please check https://annotation-cache.github.io/ to create a request for it."
             ]
         ],
-        "timestamp": "2025-12-15T19:14:33.737947216",
+        "timestamp": "2026-05-27T13:36:59.68443869",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.2"
         }
     }
 }
