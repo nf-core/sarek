@@ -760,7 +760,7 @@
                     "default": "115.2-1",
                     "fa_icon": "fas fa-toolbox",
                     "description": "Should reflect the VEP version used in the container.",
-                    "help_text": "Used by the loftee plugin which needs the full path to the VEP installation (e.g. \`/opt/conda/share/ensembl-vep-${vep_version}\`). Update this when the VEP container version changes."
+                    "help_text": "Used by the loftee plugin which needs the full path to the VEP installation (e.g. `/opt/conda/share/ensembl-vep-${vep_version}`). Update this when the VEP container version changes."
                 },
                 "outdir_cache": {
                     "type": "string",
