@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::control-freec=11.6
+  - bioconda::control-freec=11.6b
