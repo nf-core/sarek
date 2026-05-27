@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency    | Old version | New version |
 | ------------- | ----------- | ----------- |
 | ensemblvep    | 115.2       | 115.2       |
-| --htslib      |             | 1.21        |
+| --htslib      |             | 1.23        |
 | multiqc       | 1.33        | 1.35        |
 | snpeff        | 5.3a        | 5.4c        |
 | varlociraptor | 8.7.4       | 8.9.3       |
