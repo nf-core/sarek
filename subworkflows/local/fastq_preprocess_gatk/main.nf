@@ -324,7 +324,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 fasta_fai,
                 intervals_for_preprocessing)
 
-            cram_sentieon_dedup = BAM_SENTIEON_DEDUP.out.cram
+            cram_sentieon_dedup = BAM_SENTIEON_DEDUP.out.alignment
 
             // Gather QC reports
             reports = reports.mix(BAM_SENTIEON_DEDUP.out.reports.collect{ _meta, report -> [ report ] })
