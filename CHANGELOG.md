@@ -75,13 +75,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Fixed
 
-- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Fix controlfreec `versions` emission: swap to topics and remove explicit `versions.mix` wiring
 - [#2117](https://github.com/nf-core/sarek/pull/2117) - Update alignment related files to strict syntax
 - [#2129](https://github.com/nf-core/sarek/pull/2129) - Fix MuSE timestamp, swap to topics and change to strict syntax
 - [#2165](https://github.com/nf-core/sarek/pull/2165) - Recover help message
 - [#2167](https://github.com/nf-core/sarek/pull/2167) - Fix and extend pipeline level stub tests
 - [#2170](https://github.com/nf-core/sarek/pull/2170) - Add index to workflow output for MultiQC
 - [#2189](https://github.com/nf-core/sarek/pull/2189) - Preserve `groupKey` size hint into `groupTuple` in the sentieon haplotyper and dnascope subworkflows so per-sample MERGE*SENTIEON*\*\_VCFS / GVCFS emits progressively as each sample's intervals finish instead of bursting at end-of-haplotyper.
+- [#2197](https://github.com/nf-core/sarek/pull/2197) - Fix controlfreec `versions` emission: swap to topics and remove explicit `versions.mix` wiring
 
 #### Removed
 
