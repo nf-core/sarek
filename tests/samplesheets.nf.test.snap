@@ -3,6 +3,8 @@
         "content": [
             [
                 "csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info"
             ],
             "No stable content",
@@ -37,7 +39,7 @@
                 "The following invalid input values have been detected:",
                 "* --input ([PATH]/./tests/csv/3.0/fastq_sample_with_space.csv): Validation of file failed:",
                 "\t-> Entry 2: Error for field 'sample' (test 2): \"test 2\" does not match regular expression [^\\S+$] (Sample ID must be provided, cannot contain spaces and must be a string value)",
-                " -- Check script '[PATH]/subworkflows/nf-core/utils_nfschema_plugin/main.nf' at line: 68 or see '[PATH]/tests/[NFT_HASH]/meta/nextflow.log' file for more details"
+                " -- Check script '[PATH]/subworkflows/nf-core/utils_nfschema_plugin/main.nf' at line: 72 or see '[PATH]/tests/[NFT_HASH]/meta/nextflow.log' file for more details"
             ]
         ],
         "meta": {
@@ -50,6 +52,8 @@
         "content": [
             [
                 "csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info"
             ],
             "No stable content",
@@ -75,6 +79,8 @@
         "content": [
             [
                 "csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info"
             ],
             "No stable content",

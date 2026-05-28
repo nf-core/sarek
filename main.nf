@@ -67,16 +67,16 @@ params.vep_species             = getGenomeAttribute('vep_species')
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { SAREK                           } from './workflows/sarek'
-include { ANNOTATION_CACHE_INITIALISATION } from './subworkflows/local/annotation_cache_initialisation'
-include { DOWNLOAD_CACHE_SNPEFF_VEP       } from './subworkflows/local/download_cache_snpeff_vep'
-include { PIPELINE_COMPLETION             } from './subworkflows/local/utils_nfcore_sarek_pipeline'
-include { PIPELINE_INITIALISATION         } from './subworkflows/local/utils_nfcore_sarek_pipeline'
-include { PREPARE_GENOME                  } from './subworkflows/local/prepare_genome'
-include { PREPARE_INTERVALS               } from './subworkflows/local/prepare_intervals'
-include { PREPARE_REFERENCE_CNVKIT        } from './subworkflows/local/prepare_reference_cnvkit'
-include { PREPARE_SNPSIFT_DATABASES       } from './subworkflows/local/prepare_snpsift_databases'
-include { samplesheetToList               } from 'plugin/nf-schema'
+include { SAREK                            } from './workflows/sarek'
+include { PIPELINE_COMPLETION              } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { PIPELINE_INITIALISATION          } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { PREPARE_GENOME                   } from './subworkflows/local/prepare_genome'
+include { PREPARE_INTERVALS                } from './subworkflows/local/prepare_intervals'
+include { PREPARE_REFERENCE_CNVKIT         } from './subworkflows/local/prepare_reference_cnvkit'
+include { PREPARE_SNPSIFT_DATABASES        } from './subworkflows/local/prepare_snpsift_databases'
+include { CACHE_DOWNLOAD_ENSEMBLVEP_SNPEFF } from './subworkflows/nf-core/cache_download_ensemblvep_snpeff'
+include { UTILS_ANNOTATION_CACHE           } from './subworkflows/nf-core/utils_annotation_cache'
+include { samplesheetToList                } from 'plugin/nf-schema'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -90,7 +90,7 @@ workflow NFCORE_SAREK {
     samplesheet
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // build indexes if needed
     PREPARE_GENOME(
@@ -132,14 +132,14 @@ workflow NFCORE_SAREK {
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     // [interval.bed] all intervals in one file
-    intervals_bed_combined = params.no_intervals ? Channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_combined
-    intervals_bed_gz_tbi_combined = params.no_intervals ? Channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_gz_tbi_combined
+    intervals_bed_combined = params.no_intervals ? channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_combined
+    intervals_bed_gz_tbi_combined = params.no_intervals ? channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_gz_tbi_combined
     intervals_bed_combined_for_variant_calling = PREPARE_INTERVALS.out.intervals_bed_combined
 
     // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
     intervals_for_preprocessing = params.wes
         ? intervals_bed_combined.map { it -> [[id: it.baseName], it] }.collect()
-        : Channel.value([[id: 'null'], []])
+        : channel.value([[id: 'null'], []])
     // [ interval, num_intervals ] multiple interval.bed files, divided by useful intervals for scatter/gather
     intervals = PREPARE_INTERVALS.out.intervals_bed
     // [ interval_bed, tbi, num_intervals ] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
@@ -155,7 +155,7 @@ workflow NFCORE_SAREK {
 
     if (params.tools && params.tools.split(',').contains('cnvkit')) {
         if (params.cnvkit_reference) {
-            cnvkit_reference = Channel.fromPath(params.cnvkit_reference).collect()
+            cnvkit_reference = channel.fromPath(params.cnvkit_reference).collect()
         }
         else {
             PREPARE_REFERENCE_CNVKIT(PREPARE_GENOME.out.fasta, intervals_bed_combined)
@@ -164,7 +164,7 @@ workflow NFCORE_SAREK {
         }
     }
     else {
-        cnvkit_reference = Channel.value([])
+        cnvkit_reference = channel.value([])
     }
     // Gather used softwares versions
     versions = versions.mix(PREPARE_GENOME.out.versions)
@@ -179,29 +179,29 @@ workflow NFCORE_SAREK {
     // Download cache
     if (params.download_cache) {
         // Assuming that even if the cache is provided, if the user specify download_cache, sarek will download the cache
-        ensemblvep_info = Channel.of([[id: "${params.vep_cache_version}_${params.vep_genome}"], params.vep_genome, params.vep_species, params.vep_cache_version])
-        snpeff_info = Channel.of([[id: "${params.snpeff_db}"], params.snpeff_db])
-        DOWNLOAD_CACHE_SNPEFF_VEP(ensemblvep_info, snpeff_info)
-        snpeff_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.snpeff_cache
-        vep_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.ensemblvep_cache.map { _meta, cache -> [cache] }
+        ensemblvep_info = channel.of([[id: "${params.vep_cache_version}_${params.vep_genome}"], params.vep_genome, params.vep_species, params.vep_cache_version])
+        snpeff_info = channel.of([[id: "${params.snpeff_db}"], params.snpeff_db])
+        CACHE_DOWNLOAD_ENSEMBLVEP_SNPEFF(ensemblvep_info, snpeff_info, params.vep_cache_preflight_check)
+        snpeff_cache = CACHE_DOWNLOAD_ENSEMBLVEP_SNPEFF.out.snpeff_cache
+        vep_cache = CACHE_DOWNLOAD_ENSEMBLVEP_SNPEFF.out.ensemblvep_cache
     }
     else {
         // Looks for cache information either locally or on the cloud
-        ANNOTATION_CACHE_INITIALISATION(
-            (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
+        UTILS_ANNOTATION_CACHE(
+            params.vep_cache,
+            params.vep_cache_version,
+            params.vep_custom_args,
+            params.vep_genome,
+            params.vep_species,
+            (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))),
             params.snpeff_cache,
             params.snpeff_db,
-            (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))),
-            params.vep_cache,
-            params.vep_species,
-            params.vep_cache_version,
-            params.vep_genome,
-            params.vep_custom_args,
-            "Please refer to https://nf-co.re/sarek/usage#how-to-customise-snpeff-and-vep-annotation for more information.",
+            (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
+            "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.",
         )
 
-        snpeff_cache = ANNOTATION_CACHE_INITIALISATION.out.snpeff_cache
-        vep_cache = ANNOTATION_CACHE_INITIALISATION.out.ensemblvep_cache
+        snpeff_cache = UTILS_ANNOTATION_CACHE.out.snpeff_cache
+        vep_cache = UTILS_ANNOTATION_CACHE.out.ensemblvep_cache
     }
 
     vep_extra_files = []
@@ -254,18 +254,20 @@ workflow NFCORE_SAREK {
             def tbi_file = tbi ? file(tbi, checkIfExists: true) : file("${vcf}.tbi", checkIfExists: true)
             def vardb_file = vardb ? file(vardb, checkIfExists: true) : null
 
-            snpsift_db_configs.add([
-                vcf: vcf_file,
-                tbi: tbi_file,
-                fields: fields ?: '',
-                prefix: prefix ?: '',
-                vardb: vardb_file
-            ])
+            snpsift_db_configs.add(
+                [
+                    vcf: vcf_file,
+                    tbi: tbi_file,
+                    fields: fields ?: '',
+                    prefix: prefix ?: '',
+                    vardb: vardb_file,
+                ]
+            )
         }
     }
 
     // Prepare SnpSift databases (build if vardb not provided, returns tuple for SNPSIFT_ANNMEM)
-    ch_snpsift_db = Channel.value([[], [], [], [], []])
+    ch_snpsift_db = channel.value([[], [], [], [], []])
     if (params.tools && params.tools.split(',').contains('snpsift') && snpsift_db_configs) {
         PREPARE_SNPSIFT_DATABASES(snpsift_db_configs)
         ch_snpsift_db = PREPARE_SNPSIFT_DATABASES.out.db_tuple
@@ -287,14 +289,14 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.bbsplit_index,
         PREPARE_GENOME.out.bcftools_annotations,
         PREPARE_GENOME.out.bcftools_annotations_tbi,
-        params.bcftools_columns ? Channel.fromPath(params.bcftools_columns).collect() : Channel.value([]),
-        params.bcftools_header_lines ? Channel.fromPath(params.bcftools_header_lines).collect() : Channel.empty(),
-        params.cf_chrom_len ? Channel.fromPath(params.cf_chrom_len).collect() : [],
+        params.bcftools_columns ? channel.fromPath(params.bcftools_columns).collect() : channel.value([]),
+        params.bcftools_header_lines ? channel.fromPath(params.bcftools_header_lines).collect() : channel.empty(),
+        params.cf_chrom_len ? channel.fromPath(params.cf_chrom_len).collect() : [],
         PREPARE_GENOME.out.chr_dir,
         cnvkit_reference,
         PREPARE_GENOME.out.dbsnp,
         PREPARE_GENOME.out.dbsnp_tbi,
-        params.dbsnp_vqsr ? Channel.value(params.dbsnp_vqsr) : Channel.empty(),
+        params.dbsnp_vqsr ? channel.value(params.dbsnp_vqsr) : channel.empty(),
         PREPARE_GENOME.out.dict,
         PREPARE_GENOME.out.fasta,
         PREPARE_GENOME.out.fasta_fai,
@@ -307,22 +309,22 @@ workflow NFCORE_SAREK {
         intervals_bed_gz_tbi_and_num_intervals,
         intervals_bed_gz_tbi_combined,
         intervals_for_preprocessing,
-        params.known_indels_vqsr ? Channel.value(params.known_indels_vqsr) : Channel.empty(),
+        params.known_indels_vqsr ? channel.value(params.known_indels_vqsr) : channel.empty(),
         PREPARE_GENOME.out.known_sites_indels,
         PREPARE_GENOME.out.known_sites_indels_tbi,
         PREPARE_GENOME.out.known_sites_snps,
         PREPARE_GENOME.out.known_sites_snps_tbi,
-        params.known_snps_vqsr ? Channel.value(params.known_snps_vqsr) : Channel.empty(),
-        params.mappability ? Channel.fromPath(params.mappability).collect() : Channel.value([]),
+        params.known_snps_vqsr ? channel.value(params.known_snps_vqsr) : channel.empty(),
+        params.mappability ? channel.fromPath(params.mappability).collect() : channel.value([]),
         PREPARE_GENOME.out.msisensor2_models,
         PREPARE_GENOME.out.msisensorpro_scan,
-        params.ngscheckmate_bed ? Channel.value(params.ngscheckmate_bed) : Channel.empty(),
+        params.ngscheckmate_bed ? channel.value(params.ngscheckmate_bed) : channel.empty(),
         PREPARE_GENOME.out.pon,
         PREPARE_GENOME.out.pon_tbi,
-        params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect() : Channel.value([]),
-        params.varlociraptor_scenario_germline ? Channel.fromPath(params.varlociraptor_scenario_germline).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : Channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect(),
-        params.varlociraptor_scenario_somatic ? Channel.fromPath(params.varlociraptor_scenario_somatic).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : Channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect(),
-        params.varlociraptor_scenario_tumor_only ? Channel.fromPath(params.varlociraptor_scenario_tumor_only).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : Channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect(),
+        params.sentieon_dnascope_model ? channel.fromPath(params.sentieon_dnascope_model).collect() : channel.value([]),
+        params.varlociraptor_scenario_germline ? channel.fromPath(params.varlociraptor_scenario_germline).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect(),
+        params.varlociraptor_scenario_somatic ? channel.fromPath(params.varlociraptor_scenario_somatic).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect(),
+        params.varlociraptor_scenario_tumor_only ? channel.fromPath(params.varlociraptor_scenario_tumor_only).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect(),
         snpeff_cache,
         params.snpeff_db,
         vep_cache,
@@ -386,6 +388,10 @@ workflow {
 output {
     multiqc {
         path "multiqc"
+        index {
+            path "multiqc/index.json"
+            sep ":"
+        }
     }
 }
 

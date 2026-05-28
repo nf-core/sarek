@@ -6,10 +6,10 @@
                 "ENSEMBLVEP_VEP": {
                     "ensemblvep": "115.2",
                     "perl-math-cdf": "0.1",
-                    "tabix": "1.21"
+                    "tabix": "1.23.1"
                 },
                 "SNPEFF_SNPEFF": {
-                    "snpeff": "5.4a"
+                    "snpeff": "5.4c"
                 },
                 "TABIX_BGZIPTABIX": {
                     "bgzip": "1.21",
@@ -18,7 +18,7 @@
                 "VCF_ANNOTATE_MERGE": {
                     "ensemblvep": "115.2",
                     "perl-math-cdf": "0.1",
-                    "tabix": "1.21"
+                    "tabix": "1.23.1"
                 }
             },
             [
@@ -32,6 +32,7 @@
                 "annotation/test/test_snpEff_VEP.ann.vcf.gz.tbi",
                 "csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
@@ -108,18 +109,18 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-05-27T10:13:01.036308477",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-07T08:54:13.050728"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.2"
+        }
     },
     "-profile test --tools merge,snpsift": {
         "content": [
             6,
             {
                 "SNPEFF_SNPEFF": {
-                    "snpeff": "5.4a"
+                    "snpeff": "5.4c"
                 },
                 "SNPSIFT_ANNMEM": {
                     "snpsift": "5.4a"
@@ -134,7 +135,7 @@
                 "VCF_ANNOTATE_MERGE": {
                     "ensemblvep": "115.2",
                     "perl-math-cdf": "0.1",
-                    "tabix": "1.21"
+                    "tabix": "1.23.1"
                 }
             },
             [
@@ -146,6 +147,7 @@
                 "annotation/test/test_snpEff_VEP_snpSift.ann.vcf.gz.tbi",
                 "csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
@@ -218,18 +220,18 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-05-27T10:14:01.977520509",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-09T15:02:33.282539192"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.2"
+        }
     },
     "-profile test --tools merge": {
         "content": [
             4,
             {
                 "SNPEFF_SNPEFF": {
-                    "snpeff": "5.4a"
+                    "snpeff": "5.4c"
                 },
                 "TABIX_BGZIPTABIX": {
                     "bgzip": "1.21",
@@ -238,7 +240,7 @@
                 "VCF_ANNOTATE_MERGE": {
                     "ensemblvep": "115.2",
                     "perl-math-cdf": "0.1",
-                    "tabix": "1.21"
+                    "tabix": "1.23.1"
                 }
             },
             [
@@ -248,6 +250,7 @@
                 "annotation/test/test_snpEff_VEP.ann.vcf.gz.tbi",
                 "csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/multiqc.log",
@@ -317,10 +320,10 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-05-27T10:12:05.371914045",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-07T08:52:33.470414"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.2"
+        }
     }
 }

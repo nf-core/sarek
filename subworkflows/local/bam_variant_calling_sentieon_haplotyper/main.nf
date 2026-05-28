@@ -31,14 +31,14 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     // Combine cram and intervals for spread and gather strategy
     cram_intervals_for_sentieon = cram.combine(intervals)
         // Move num_intervals to meta map
-        .map{ meta, cram, crai, intervals, num_intervals -> [
+        .map{ meta, cram_, crai, intervals_, num_intervals -> [
             meta + [
                 num_intervals:num_intervals,
-                intervals_name:intervals.baseName,
+                intervals_name:intervals_.baseName,
                 variantcaller:'sentieon_haplotyper'],
-            cram,
+            cram_,
             crai,
-            intervals
+            intervals_
             ]
         }
 
@@ -47,7 +47,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     emit_vcf = lst.size() > 0 ? lst[0] : ''
 
     SENTIEON_HAPLOTYPER(
-        cram_intervals_for_sentieon.map{ meta, cram, crai, intervals -> [ meta, cram, crai, intervals, [] ]},
+        cram_intervals_for_sentieon.map{ meta, cram_, crai, intervals_ -> [ meta, cram_, crai, intervals_, [] ]},
         fasta,
         fasta_fai,
         dbsnp.map{file -> [[id:'dbsnp'], file]},
@@ -59,12 +59,14 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         genotype_intervals = SENTIEON_HAPLOTYPER.out.gvcf
             .join(SENTIEON_HAPLOTYPER.out.gvcf_tbi, failOnMismatch: true)
             .join(cram_intervals_for_sentieon, failOnMismatch: true)
-            .map{ meta, gvcf, tbi, cram, crai, intervals -> [ meta, gvcf, tbi, intervals ] }
+            .map{ meta, gvcf_, tbi, cram_, crai, intervals_ -> [ meta, gvcf_, tbi, intervals_ ] }
     }
 
-    // Figure out if using intervals or no_intervals
+    // Figure out if using intervals or no_intervals.
+    // Strip `intervals_name` here so the branch output meta is the same one we'll
+    // group on later — fixes the prior `interval_name` typo which was a no-op.
     haplotyper_vcf_branch = SENTIEON_HAPLOTYPER.out.vcf.map{
-            meta, vcf -> [ meta - meta.subMap('interval_name'), vcf]
+            meta, vcf_ -> [ meta - meta.subMap('intervals_name'), vcf_]
         }
         .branch{
             intervals:    it[0].num_intervals > 1
@@ -72,7 +74,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         }
 
     haplotyper_vcf_tbi_branch = SENTIEON_HAPLOTYPER.out.vcf_tbi.map{
-            meta, vcf_tbi -> [ meta - meta.subMap('interval_name'), vcf_tbi]
+            meta, vcf_tbi -> [ meta - meta.subMap('intervals_name'), vcf_tbi]
         }
         .branch{
             intervals:    it[0].num_intervals > 1
@@ -80,7 +82,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         }
 
     haplotyper_gvcf_branch = SENTIEON_HAPLOTYPER.out.gvcf.map{
-            meta, gvcf -> [ meta - meta.subMap('interval_name'), gvcf]
+            meta, gvcf_ -> [ meta - meta.subMap('intervals_name'), gvcf_]
         }
         .branch{
             intervals:    it[0].num_intervals > 1
@@ -88,20 +90,22 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         }
 
     haplotyper_gvcf_tbi_branch = SENTIEON_HAPLOTYPER.out.gvcf_tbi.map{
-            meta, gvcf_tbi -> [ meta - meta.subMap('interval_name'), gvcf_tbi]
+            meta, gvcf_tbi -> [ meta - meta.subMap('intervals_name'), gvcf_tbi]
         }
         .branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
         }
 
+    // Per-sample merge. Wrap the (already-`intervals_name`-stripped) meta in
+    // groupKey *inside* the map so the GroupKey survives into groupTuple —
+    // `groupKey` followed by a separate `meta - subMap(...)` step would unwrap
+    // it (Map.minus(Map) returns a plain LinkedHashMap), losing the size hint
+    // and forcing groupTuple to wait until the upstream channel closes. With
+    // it preserved, per-sample merges emit progressively.
     vcfs_for_merging = haplotyper_vcf_branch.intervals.map{
-        meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}
-
-    vcfs_for_merging = vcfs_for_merging.map{
-        meta, vcf -> [
-            meta - meta.subMap('intervals_name'),
-            vcf]}.groupTuple()
+        meta, vcf_ -> [ groupKey(meta, meta.num_intervals), vcf_ ]
+    }.groupTuple()
 
     // VCFs
     // Only when using intervals
@@ -116,16 +120,13 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         haplotyper_vcf_tbi_branch.no_intervals)
 
     // Remove no longer necessary field: num_intervals
-    vcf = haplotyper_vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ] }
+    vcf = haplotyper_vcf.map{ meta, vcf_ -> [ meta - meta.subMap('num_intervals'), vcf_ ] }
     vcf_tbi = haplotyper_tbi.map{ meta, tbi -> [ meta - meta.subMap('num_intervals'), tbi ] }
 
-    // GVFs
-    // Only when using intervals
+    // GVCFs — see vcfs_for_merging comment above for why the groupKey is built
+    // inside the same map (preserves size hint into groupTuple).
     gvcfs_for_merging = haplotyper_gvcf_branch.intervals.map{
-        meta, vcf -> [groupKey(meta, meta.num_intervals), vcf]}
-
-    gvcfs_for_merging = gvcfs_for_merging.map{
-        meta, vcf -> [ meta - meta.subMap('intervals_name'), vcf ]
+        meta, vcf_ -> [ groupKey(meta, meta.num_intervals), vcf_ ]
     }.groupTuple()
 
     MERGE_SENTIEON_HAPLOTYPER_GVCFS(gvcfs_for_merging, dict)
@@ -138,7 +139,6 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.tbi,
         haplotyper_gvcf_tbi_branch.no_intervals)
 
-    versions = versions.mix(SENTIEON_HAPLOTYPER.out.versions)
     versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_VCFS.out.versions)
     versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.versions)
 

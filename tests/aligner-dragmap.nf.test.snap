@@ -23,6 +23,8 @@
             },
             [
                 "csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
@@ -59,11 +61,11 @@
                 "WARN: DragMap was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using DragMap"
             ]
         ],
+        "timestamp": "2025-12-15T19:02:48.431048619",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T19:02:48.431048619"
+        }
     },
     "-profile test --aligner dragmap --save_reference skip QC/recal/md": {
         "content": [
@@ -104,6 +106,8 @@
             [
                 "csv",
                 "csv/mapped.csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
@@ -147,10 +151,124 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2025-12-15T19:01:59.187593488",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T19:01:59.187593488"
+        }
+    },
+    "-profile test --aligner dragmap --save_reference --build_only_index - stub": {
+        "content": [
+            5,
+            {
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "DRAGMAP_HASHTABLE": {
+                    "dragmap": "1.2.1"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
+                }
+            },
+            [
+                "csv",
+                "multiqc",
+                "multiqc/index.json",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/dragmap",
+                "reference/intervals",
+                "reference/intervals/genome.bed",
+                "reference/intervals/genome.bed.gz",
+                "reference/intervals/genome.stub.bed",
+                "reference/intervals/genome.stub.bed.gz"
+            ],
+            [
+                "WARN: DragMap was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using DragMap",
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
+        ],
+        "timestamp": "2026-04-08T12:04:22.190861311",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.2"
+        }
+    },
+    "-profile test --aligner dragmap --save_reference skip QC/recal/md - stub": {
+        "content": [
+            10,
+            {
+                "BAM_TO_CRAM_MAPPING": {
+                    "samtools": 1.21
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "DRAGMAP_ALIGN": {
+                    "dragmap": "1.2.1",
+                    "pigz": "2.3.4",
+                    "samtools": "1.19.2"
+                },
+                "DRAGMAP_HASHTABLE": {
+                    "dragmap": "1.2.1"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
+                "INDEX_MERGE_BAM": {
+                    "samtools": 1.21
+                },
+                "MERGE_BAM": {
+                    "samtools": 1.21
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
+                }
+            },
+            [
+                "csv",
+                "csv/mapped.csv",
+                "multiqc",
+                "multiqc/index.json",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/mapped",
+                "preprocessing/mapped/test",
+                "preprocessing/mapped/test/test.sorted.cram",
+                "preprocessing/mapped/test/test.sorted.cram.crai",
+                "reference",
+                "reference/dragmap",
+                "reference/intervals",
+                "reference/intervals/genome.bed",
+                "reference/intervals/genome.bed.gz",
+                "reference/intervals/genome.stub.bed",
+                "reference/intervals/genome.stub.bed.gz"
+            ],
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
+        ],
+        "timestamp": "2026-04-08T12:03:21.664791416",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.2"
+        }
     }
 }

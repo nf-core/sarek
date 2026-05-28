@@ -1,6 +1,7 @@
 .DS_Store
 annotation/**/*.vcf.{gz,gz.tbi}
 csv/*.csv
+multiqc/index.json
 multiqc/multiqc_data/bcftools*.txt
 multiqc/multiqc_data/bbmap*.txt
 multiqc/multiqc_data/bbsplit_stats_table.txt
