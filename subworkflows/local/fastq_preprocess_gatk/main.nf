@@ -487,7 +487,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 cram_variant_calling_spark)
 
             // Create CSV to restart from this step
-            CHANNEL_APPLYBQSR_CREATE_CSV(cram_variant_calling, params.outdir, params.save_output_as_bam)
+            CHANNEL_APPLYBQSR_CREATE_CSV(cram_variant_calling, params.outdir)
 
         } else if (params.step == 'recalibrate') {
             // cram_variant_calling contains either:
