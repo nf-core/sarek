@@ -54,13 +54,6 @@
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
                 "preprocessing/converted",
-                "preprocessing/converted/cram_to_bam",
-                "preprocessing/converted/cram_to_bam/sample3",
-                "preprocessing/converted/cram_to_bam/sample3/sample3.bam",
-                "preprocessing/converted/cram_to_bam/sample3/sample3.bam.bai",
-                "preprocessing/converted/cram_to_bam/sample4",
-                "preprocessing/converted/cram_to_bam/sample4/sample4.bam",
-                "preprocessing/converted/cram_to_bam/sample4/sample4.bam.bai",
                 "reference",
                 "reference/dict",
                 "reports",
@@ -289,13 +282,6 @@
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
                 "preprocessing/converted",
-                "preprocessing/converted/cram_to_bam",
-                "preprocessing/converted/cram_to_bam/sample3",
-                "preprocessing/converted/cram_to_bam/sample3/sample3.bam",
-                "preprocessing/converted/cram_to_bam/sample3/sample3.bam.bai",
-                "preprocessing/converted/cram_to_bam/sample4",
-                "preprocessing/converted/cram_to_bam/sample4/sample4.bam",
-                "preprocessing/converted/cram_to_bam/sample4/sample4.bam.bai",
                 "reference",
                 "reference/dict",
                 "reports",
@@ -364,17 +350,10 @@
                 "sample4_vs_sample3.muse.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample4_vs_sample3.muse.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
             ],
-            [
-                "sample3.bam:md5,891da60dc1cc5c6455bfc1442aea0982",
-                "sample4.bam:md5,36856b3e6dd1bc0f10688b9d8c02faa8"
-            ],
+            "No BAM files",
             "No CRAM files",
-            [
-                "sample4_vs_sample3.MuSE.txt:md5,32961f7d718b4a1114f168253e50ef9e"
-            ],
-            [
-                "sample4_vs_sample3.muse.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
-            ],
+            ["sample4_vs_sample3.MuSE.txt:md5,32961f7d718b4a1114f168253e50ef9e"],
+            ["sample4_vs_sample3.muse.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"],
             "No warnings"
         ],
         "timestamp": "2026-05-19T18:51:58.229719817",
