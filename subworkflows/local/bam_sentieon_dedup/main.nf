@@ -21,11 +21,13 @@ workflow BAM_SENTIEON_DEDUP {
     bam_bai = bam.join(bai, failOnMismatch:true, failOnDuplicate:true)
     SENTIEON_DEDUP(bam_bai, fasta, fasta_fai)
 
-    // Unified alignment output — BAM or CRAM depending on save_output_as_bam
-    alignment = SENTIEON_DEDUP.out.bam
-        .join(SENTIEON_DEDUP.out.bai, failOnDuplicate: true, failOnMismatch: true)
-        .mix(SENTIEON_DEDUP.out.cram
-            .join(SENTIEON_DEDUP.out.crai, failOnDuplicate: true, failOnMismatch: true))
+    // Unified alignment output — BAM or CRAM depending on save_output_as_bam.
+    // Branched rather than mixed because SENTIEON_DEDUP.out.bai is non-optional
+    // (sentieon driver always writes a .bai), so joining .out.bam (optional, empty in
+    // CRAM mode) with .out.bai would fail on the empty side.
+    alignment = params.save_output_as_bam
+        ? SENTIEON_DEDUP.out.bam.join(SENTIEON_DEDUP.out.bai, failOnDuplicate: true, failOnMismatch: true)
+        : SENTIEON_DEDUP.out.cram.join(SENTIEON_DEDUP.out.crai, failOnDuplicate: true, failOnMismatch: true)
 
     // QC on alignment
     CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, intervals_bed_combined)
