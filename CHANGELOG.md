@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2146](https://github.com/nf-core/sarek/pull/2146) - Fail early when `--no_intervals` is used with joint germline HaplotypeCaller
 - [#2147](https://github.com/nf-core/sarek/pull/2147) - Fix empty fastp output folder created when trimmed reads are not saved
 - [#2152](https://github.com/nf-core/sarek/pull/2152) - Fix missing `params.` prefix for `umi_tag` in markduplicates config
+- [#2184](https://github.com/nf-core/sarek/pull/2184) - Skip nf-schema path-existence validation for `snpeff_cache`, `vep_cache` and `igenomes_base` so pipeline launches succeed when the default S3 buckets are not accessible
 - [#2189](https://github.com/nf-core/sarek/pull/2189) - Fixes the `interval_name` → `intervals_name` typo in the branch step (was a silent no-op)
 - [#2190](https://github.com/nf-core/sarek/pull/2190) - Fix controlfreec crash in edge cases when no breakpoints are found
 

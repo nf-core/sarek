@@ -822,7 +822,6 @@
             "properties": {
                 "igenomes_base": {
                     "type": "string",
-                    "format": "directory-path",
                     "description": "The base path to the igenomes reference files",
                     "fa_icon": "fas fa-ban",
                     "default": "s3://ngi-igenomes/igenomes/"
@@ -1103,7 +1102,6 @@
                 },
                 "snpeff_cache": {
                     "type": "string",
-                    "format": "directory-path",
                     "fa_icon": "fas fa-cloud-download-alt",
                     "default": "s3://annotation-cache/snpeff_cache/",
                     "description": "Path to snpEff cache.",
@@ -1117,7 +1115,6 @@
                 },
                 "vep_cache": {
                     "type": "string",
-                    "format": "directory-path",
                     "fa_icon": "fas fa-cloud-download-alt",
                     "default": "s3://annotation-cache/vep_cache/",
                     "description": "Path to VEP cache.",
