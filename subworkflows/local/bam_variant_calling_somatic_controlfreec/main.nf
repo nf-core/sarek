@@ -23,8 +23,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
 
     main:
 
-    ch_versions = Channel.empty()
-
     FREEC_SOMATIC(controlfreec_input, fasta, fasta_fai, [], dbsnp, dbsnp_tbi, chr_files, mappability, intervals_bed, [])
 
     //Filter the files that come out of freec somatic as ASSESS_SIGNIFICANCE only takes one cnv and one ratio file
@@ -54,13 +52,4 @@ workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
     FREEC2BED(FREEC_SOMATIC.out.ratio)
     FREEC2CIRCOS(FREEC_SOMATIC.out.ratio)
     MAKEGRAPH2(FREEC_SOMATIC.out.ratio.join(FREEC_SOMATIC.out.BAF, failOnDuplicate: true, failOnMismatch: true))
-
-    ch_versions = ch_versions.mix(FREEC_SOMATIC.out.versions)
-    ch_versions = ch_versions.mix(ASSESS_SIGNIFICANCE.out.versions)
-    ch_versions = ch_versions.mix(FREEC2BED.out.versions)
-    ch_versions = ch_versions.mix(FREEC2CIRCOS.out.versions)
-    ch_versions = ch_versions.mix(MAKEGRAPH2.out.versions)
-
-    emit:
-    versions = ch_versions
 }

@@ -74,7 +74,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
 - Summarise and represent QC (`MultiQC`)
 
 <p align="center">
-    <img title="Sarek Workflow" src="docs/images/sarek_subway.png" width=60%>
+    <img title="Sarek Workflow" src="docs/images/sarek_subway_animated.svg" width=60%>
 </p>
 
 ## Usage

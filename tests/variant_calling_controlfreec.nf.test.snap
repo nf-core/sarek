@@ -4,7 +4,7 @@
             11,
             {
                 "ASSESS_SIGNIFICANCE": {
-                    "controlfreec": 11.6
+                    "controlfreec": "11.6b"
                 },
                 "FREEC2BED": {
                     "controlfreec": "11.6b"
@@ -143,18 +143,18 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-05-28T15:29:16.864765246",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T22:28:08.497498851"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.2"
+        }
     },
     "-profile test --tools controlfreec somatic": {
         "content": [
             16,
             {
                 "ASSESS_SIGNIFICANCE": {
-                    "controlfreec": 11.6
+                    "controlfreec": "11.6b"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -322,18 +322,18 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-05-28T15:27:36.537227044",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T22:26:38.500794704"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.2"
+        }
     },
     "-profile test --tools controlfreec --no_intervals somatic -stub": {
         "content": [
             14,
             {
                 "ASSESS_SIGNIFICANCE": {
-                    "controlfreec": 11.6
+                    "controlfreec": "11.6b"
                 },
                 "FREEC2BED": {
                     "controlfreec": "11.6b"
@@ -371,6 +371,7 @@
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/.stub",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
                 "no_intervals.bed.gz",
@@ -433,18 +434,18 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-05-28T15:30:21.092617766",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-18T13:14:28.699871503"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.2"
+        }
     },
     "-profile test --tools controlfreec tumoronly -stub": {
         "content": [
             13,
             {
                 "ASSESS_SIGNIFICANCE": {
-                    "controlfreec": 11.6
+                    "controlfreec": "11.6b"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -489,6 +490,7 @@
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/.stub",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
@@ -533,10 +535,10 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-05-28T15:31:24.029091171",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-18T13:15:24.776142198"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.2"
+        }
     }
 }
