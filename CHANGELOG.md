@@ -22,13 +22,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#2117](https://github.com/nf-core/sarek/pull/2117) - Silent failure with multi-lane samples
-- [#2196](https://github.com/nf-core/sarek/pull/2196) - Update `vep_version` from `115.0-0` to `115.2-1` and fix `loftee_path` from `/usr/local/share` to `/opt/conda/share` to match the container VEP installation path
 - [#2143](https://github.com/nf-core/sarek/pull/2143) - Varlociraptor collecting multiple scenario files for one sample
 - [#2146](https://github.com/nf-core/sarek/pull/2146) - Fail early when `--no_intervals` is used with joint germline HaplotypeCaller
 - [#2147](https://github.com/nf-core/sarek/pull/2147) - Fix empty fastp output folder created when trimmed reads are not saved
 - [#2152](https://github.com/nf-core/sarek/pull/2152) - Fix missing `params.` prefix for `umi_tag` in markduplicates config
 - [#2189](https://github.com/nf-core/sarek/pull/2189) - Fixes the `interval_name` → `intervals_name` typo in the branch step (was a silent no-op)
 - [#2190](https://github.com/nf-core/sarek/pull/2190) - Fix controlfreec crash in edge cases when no breakpoints are found
+- [#2196](https://github.com/nf-core/sarek/pull/2196) - Update `vep_version` parameter from `115.0-0` to `115.2-1` and fix `loftee_path` from `/usr/local/share` to `/opt/conda/share` to match the container VEP installation path
 
 ### Removed
 
@@ -72,8 +72,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2170](https://github.com/nf-core/sarek/pull/2170) - Update dependencies
 - [#2173](https://github.com/nf-core/sarek/pull/2173) - Update MultiQC
 - [#2188](https://github.com/nf-core/sarek/pull/2188) - Update all `sentieon/*` modules to `nf-core/modules@7ad1622c`. Brings in `--interval` honouring in `sentieon/gvcftyper`, multi-`--resource:` parsing in `sentieon/varcal`, and the new `topic: versions` emission across all sentieon modules. Removed the now-broken explicit `versions.mix(SENTIEON_*.out.versions)` calls; sarek's `softwareVersionsToYAML` picks up the topic emissions via `channel.topic("versions")`.
-- [#2194](https://github.com/nf-core/sarek/pull/2194) - Update `main.nf` to use lowercase `channel.*` factory methods (strict syntax)
 - [#2194](https://github.com/nf-core/sarek/pull/2194) - Update `ensemblvep/vep` module: add `htslib` dependency, support apptainer container engine, fix cache input signature, fix output path patterns
+- [#2194](https://github.com/nf-core/sarek/pull/2194) - Update `main.nf` to use lowercase `channel.*` factory methods (strict syntax)
 
 #### Fixed
 
