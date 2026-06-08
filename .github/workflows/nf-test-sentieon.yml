@@ -49,7 +49,7 @@ jobs:
         env:
           NFT_VER: ${{ env.NFT_VER }}
         with:
-          tags: "sentieon"
+          tags: "sentieon,sentieon_conda"
           max_shards: 10
 
       - name: debug

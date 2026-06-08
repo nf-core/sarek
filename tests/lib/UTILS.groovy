@@ -138,22 +138,17 @@ class UTILS {
 
             options "-output-dir ${outputDir}${scenario.stub ? ' -stub' : ''}"
 
-            if (scenario.gpu) {
-                tag "gpu${!scenario.no_conda ? '_conda' : ''}${scenario.stub ? '_stub' : ''}"
-            }
-
-            if (scenario.sentieon) {
-                tag "sentieon"
-                tag "sentieon${!scenario.no_conda ? '_conda' : ''}${scenario.stub ? '_stub' : ''}"
-            }
-
-            if (!scenario.gpu && !scenario.sentieon) {
-                tag "cpu${!scenario.no_conda ? '_conda' : ''}${scenario.stub ? '_stub' : ''}"
-            }
+            def tag_prefix = scenario.gpu ? "gpu" : scenario.sentieon ? "sentieon" : "cpu"
+            tag "${tag_prefix}${!scenario.no_conda ? '_conda' : ''}${scenario.stub ? '_stub' : ''}"
 
             // If a tag is provided, add it to the test
             if (scenario.tag) {
                 tag scenario.tag
+            }
+
+            // Add automatic failure tag if it's a scenario supposed to fail
+            if (scenario.failure) {
+                tag "failure"
             }
 
             when {
