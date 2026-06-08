@@ -1,4 +1,4 @@
-name: Run nf-test on Sentieon
+name: Run nf-test
 on:
   pull_request:
     paths-ignore:
