@@ -948,7 +948,7 @@ Command error:
   [E::sam_index] Read 'LH00271:69:2237HHLT4:7:1101:1000:11758' with ref_name='chr16', ref_length=90338345, flags=163, pos=58528490 cannot be indexed  samtools index: failed to create index for "sample_19.sorted.bam"
 ```
 
-Please be aware that `--use_gatk_spark markduplicates` is not compatible with `--save_mapped`, regardless of `--save_output_as_bam`. Spark MarkDuplicates requires name-sorted input, so the reads exiting the mapping stage are name-sorted. The saved mapped alignment (whether published as BAM or CRAM) is therefore name-sorted and cannot be indexed or used by downstream tools. Either drop `--save_mapped`, or switch to the non-Spark markduplicates path. The pipeline now errors out at parameter validation if this combination is requested.
+Please be aware that `--use_gatk_spark markduplicates` is not compatible with `--save_mapped`, regardless of `--save_output_as_bam`. Spark MarkDuplicates requires name-sorted input, so the reads exiting the mapping stage are name-sorted. The saved mapped alignment (whether published as BAM or CRAM) is therefore name-sorted and cannot be indexed or used by downstream tools. Either drop `--save_mapped`, or switch to the non-Spark markduplicates path. 
 
 ## How to handle Unique Molecular Identifiers (UMIs)
 
