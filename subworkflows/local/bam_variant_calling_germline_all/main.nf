@@ -290,8 +290,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
                 vcf_sentieon_dnascope = SENTIEON_DNAMODELAPPLY.out.vcf
                 tbi_sentieon_dnascope = SENTIEON_DNAMODELAPPLY.out.tbi
-                versions = versions.mix(SENTIEON_DNAMODELAPPLY.out.versions)
-
             }
 
         }
