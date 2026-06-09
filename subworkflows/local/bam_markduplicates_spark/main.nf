@@ -4,9 +4,10 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { CRAM_QC_MOSDEPTH_SAMTOOLS       } from '../cram_qc_mosdepth_samtools/main'
-include { GATK4_ESTIMATELIBRARYCOMPLEXITY } from '../../../modules/nf-core/gatk4/estimatelibrarycomplexity/main'
-include { GATK4SPARK_MARKDUPLICATES       } from '../../../modules/nf-core/gatk4spark/markduplicates/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS                               } from '../cram_qc_mosdepth_samtools/main'
+include { GATK4_ESTIMATELIBRARYCOMPLEXITY                         } from '../../../modules/nf-core/gatk4/estimatelibrarycomplexity/main'
+include { GATK4SPARK_MARKDUPLICATES                               } from '../../../modules/nf-core/gatk4spark/markduplicates/main'
+include { SAMTOOLS_INDEX                  as INDEX_MARKDUPLICATES } from '../../../modules/nf-core/samtools/index/main'
 
 workflow BAM_MARKDUPLICATES_SPARK {
     take:
@@ -21,13 +22,14 @@ workflow BAM_MARKDUPLICATES_SPARK {
     reports = Channel.empty()
 
     // RUN MARKUPDUPLICATES SPARK
-    // GATK4 MarkDuplicatesSpark indexes its output via --create-output-bam-index (default true);
-    // module emits both .bai (BAM) and .crai (CRAM) on the bam_index channel.
     GATK4SPARK_MARKDUPLICATES(bam, fasta.map{ meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ meta, fasta_fai_ -> [ fasta_fai_ ] }, dict.map{ meta, dict_ -> [ dict_ ] })
 
-    // Unified alignment output — BAM or CRAM depending on ext.prefix
+    // Index output (BAM or CRAM depending on ext.prefix)
+    INDEX_MARKDUPLICATES(GATK4SPARK_MARKDUPLICATES.out.output)
+
+    // Unified alignment output — join with the appropriate index
     alignment = GATK4SPARK_MARKDUPLICATES.out.output
-        .join(GATK4SPARK_MARKDUPLICATES.out.bam_index, failOnDuplicate: true, failOnMismatch: true)
+        .join(INDEX_MARKDUPLICATES.out.bai.mix(INDEX_MARKDUPLICATES.out.crai), failOnDuplicate: true, failOnMismatch: true)
 
     // QC on alignment
     CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, intervals_bed_combined)
@@ -42,6 +44,7 @@ workflow BAM_MARKDUPLICATES_SPARK {
     // Gather versions of all tools used
     versions = versions.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.versions)
     versions = versions.mix(GATK4SPARK_MARKDUPLICATES.out.versions)
+    versions = versions.mix(INDEX_MARKDUPLICATES.out.versions)
     versions = versions.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.versions)
 
     emit:
