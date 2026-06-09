@@ -5,6 +5,57 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev
+
+### Added
+
+- [#2087](https://github.com/nf-core/sarek/pull/2087) - Add `bam` as output format for parabricks/fq2bam, add multi lane support
+
+### Changed
+
+- [#2055](https://github.com/nf-core/sarek/pull/2055) - Sort final vcf in varlociraptor sbwfs and update varlociraptor
+- [#2141](https://github.com/nf-core/sarek/pull/2141) - Update snpeff
+
+### Fixed
+
+- [#2143](https://github.com/nf-core/sarek/pull/2143) - Varlociraptor collecting multiple scenario files for one sample
+- [#2146](https://github.com/nf-core/sarek/pull/2146) - Fail early when `--no_intervals` is used with joint germline HaplotypeCaller
+- [#2147](https://github.com/nf-core/sarek/pull/2147) - Fix empty fastp output folder created when trimmed reads are not saved
+- [#2152](https://github.com/nf-core/sarek/pull/2152) - Fix missing `params.` prefix for `umi_tag` in markduplicates config
+
+### Removed
+
+### Dependencies
+
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| snpeff        | 5.3a        | 5.4a        |
+| varlociraptor | 8.7.4       | 8.9.3       |
+| yte           | 1.9.0       | 1.9.4       |
+
+### Parameters
+
+| Params | status |
+| ------ | ------ |
+
+### Developer section
+
+#### Added
+
+#### Changed
+
+- [#2142](https://github.com/nf-core/sarek/pull/2142) - Replace custom Slack/Teams notifications with nf-slack plugin (v0.5.0) bot token auth, scoped entirely to CI cloud test workflow, Remove Azure cloud test profiles, use dynamic matrix for selective test dispatch, Fix cloud test to use secrets instead of vars for TOWER_BUCKET_AWS, TOWER_COMPUTE_ENV, and TOWER_WORKSPACE_ID
+- [#2055](https://github.com/nf-core/sarek/pull/2055) - Update varlociraptor to use only one input channel, swap to topics
+- [#2087](https://github.com/nf-core/sarek/pull/2087) - Move parabricks config into its own, adhere to strict syntax, swap to topics
+- [#2139](https://github.com/nf-core/sarek/pull/2139) - Back to dev (3.9.0dev)
+- [#2141](https://github.com/nf-core/sarek/pull/2141) - Update vcf_annotate_snpeff subworkflow, swap tabix/bgziptabix and snpeff to topics, strict syntax
+
+#### Fixed
+
+- [#2129](https://github.com/nf-core/sarek/pull/2129) - Fix MuSE timestamp, swap to topics and change to strict syntax
+
+#### Removed
+
 ## [3.8.1](https://github.com/nf-core/sarek/releases/tag/3.8.1) - Laitaure
 
 ### Added
@@ -150,6 +201,8 @@ Buollámtjåhkka is the closest mountain to Saltoluokta and an easy peak to clim
 
 #### Added
 
+- [#2144](https://github.com/nf-core/sarek/pull/2144) - Add developer guidelines document for human and AI contributors
+
 #### Changed
 
 - [#2067](https://github.com/nf-core/sarek/pull/2067) - Back to Dev
@@ -171,6 +224,7 @@ This release includes a bump to Nextflow 25.10.2.
 
 ### Changed
 
+- [#2045](https://github.com/nf-core/sarek/pull/2045) - Propagate fastp shard naming if exists through BBSplit to ensure unique naming in Markduplicates
 - [#2065](https://github.com/nf-core/sarek/pull/2065) - Bump minimal Nextflow version to 25.10.2
 
 ### Fixed

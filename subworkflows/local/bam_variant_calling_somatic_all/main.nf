@@ -21,8 +21,10 @@ include { MSISENSORPRO_MSISOMATIC                       } from '../../../modules
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     take:
     tools                         // Mandatory, list of tools to apply
-    bam                           // channel: [mandatory] bam
-    cram                          // channel: [mandatory] cram
+    bam                           // channel: [mandatory] bam — BQSR'd (or markdup if BQSR off), for SNV callers
+    cram                          // channel: [mandatory] cram — BQSR'd (or markdup if BQSR off), for SNV callers
+    cram_markdup                  // channel: [mandatory] cram — markdup output (before BQSR), for SV/CNV callers
+    bam_markdup                   // channel: [mandatory] bam — markdup output (before BQSR), for CNV callers needing BAM (cnvkit)
     bwa                           // channel: [optional] bwa
     cf_chrom_len                  // channel: [optional] controlfreec length file
     chr_files
@@ -49,32 +51,33 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
 
     main:
-    // Channels are often remapped to match module/subworkflow
+    // channels are often remapped to match module/subworkflow
 
     // Gather all versions
-    versions = Channel.empty()
+    versions = channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    out_indexcov     = Channel.empty()
-    out_msisensorpro = Channel.empty()
-    vcf_freebayes    = Channel.empty()
-    vcf_manta        = Channel.empty()
-    vcf_muse         = Channel.empty()
-    vcf_mutect2      = Channel.empty()
-    vcf_strelka      = Channel.empty()
-    vcf_tiddit       = Channel.empty()
-    vcf_tnscope      = Channel.empty()
-    tbi_freebayes    = Channel.empty()
-    tbi_manta        = Channel.empty()
-    tbi_muse         = Channel.empty()
-    tbi_mutect2      = Channel.empty()
-    tbi_strelka      = Channel.empty()
-    tbi_tiddit       = Channel.empty()
-    tbi_tnscope      = Channel.empty()
+    out_indexcov     = channel.empty()
+    out_msisensorpro = channel.empty()
+    vcf_freebayes    = channel.empty()
+    vcf_manta        = channel.empty()
+    vcf_muse         = channel.empty()
+    vcf_mutect2      = channel.empty()
+    vcf_strelka      = channel.empty()
+    vcf_tiddit       = channel.empty()
+    vcf_tnscope      = channel.empty()
+    tbi_freebayes    = channel.empty()
+    tbi_manta        = channel.empty()
+    tbi_muse         = channel.empty()
+    tbi_mutect2      = channel.empty()
+    tbi_strelka      = channel.empty()
+    tbi_tiddit       = channel.empty()
+    tbi_tnscope      = channel.empty()
 
+    // ASCAT — CNV caller, uses markdup output (before BQSR) to preserve coverage signal
     if (tools && tools.split(',').contains('ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
-            cram,
+            cram_markdup,
             allele_files,
             loci_files,
             (wes ? intervals_bed_combined : []),
@@ -86,10 +89,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ASCAT.out.versions)
     }
 
-    // CONTROLFREEC
+    // CONTROLFREEC — CNV caller, uses markdup output (before BQSR) to preserve coverage signal
     if (tools && tools.split(',').contains('controlfreec')) {
-        cram_normal = cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] }
-        cram_tumor = cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
+        cram_normal = cram_markdup.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] }
+        cram_tumor = cram_markdup.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
 
         MPILEUP_NORMAL(
             cram_normal,
@@ -125,10 +128,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC.out.versions)
     }
 
-    // CNVKIT
+    // CNVKIT — CNV caller, uses markdup BAM (before BQSR) to preserve coverage signal
     if (tools && tools.split(',').contains('cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT(
-            bam.map { meta, normal_bam, _normal_bai, tumor_bam, _tumor_bai -> [meta, tumor_bam, normal_bam] },
+            bam_markdup.map { meta, normal_bam, _normal_bai, tumor_bam, _tumor_bai -> [meta, tumor_bam, normal_bam] },
             fasta,
             fasta_fai,
             intervals_bed_combined.map { _intervals -> _intervals ? [[id: _intervals[0].baseName], _intervals] : [[id: 'no_intervals'], []] },
@@ -153,10 +156,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
-    // MANTA
+    // MANTA — SV caller, uses markdup output (before BQSR)
     if (tools && tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_SOMATIC_MANTA(
-            cram,
+            cram_markdup,
             fasta,
             fasta_fai,
             intervals_bed_gz_tbi_combined,
@@ -168,11 +171,11 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
 
-    // INDEXCOV
+    // INDEXCOV — CNV caller, uses markdup output (before BQSR) to preserve coverage signal
     //   WGS only
     if (params.wes == false && tools.split(',').contains('indexcov')) {
         BAM_VARIANT_CALLING_INDEXCOV(
-            cram,
+            cram_markdup,
             fasta,
             fasta_fai,
         )
@@ -216,11 +219,11 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             bam.map { meta, _normal_bam, _normal_bai, tumor_bam, tumor_bai -> [meta, tumor_bam, tumor_bai] },
             fasta,
             dbsnp,
+            dbsnp_tbi,
         )
 
         vcf_muse = BAM_VARIANT_CALLING_SOMATIC_MUSE.out.vcf
         tbi_muse = BAM_VARIANT_CALLING_SOMATIC_MUSE.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUSE.out.versions)
     }
 
     // MUTECT2
@@ -272,11 +275,11 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.versions)
     }
 
-    // TIDDIT
+    // TIDDIT — SV caller, uses markdup output (before BQSR)
     if (tools && tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SOMATIC_TIDDIT(
-            cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] },
-            cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] },
+            cram_markdup.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] },
+            cram_markdup.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] },
             fasta,
             bwa,
         )
@@ -286,7 +289,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.versions)
     }
 
-    vcf_all = Channel.empty()
+    vcf_all = channel.empty()
         .mix(
             vcf_freebayes,
             vcf_manta,
@@ -297,7 +300,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             vcf_tnscope,
         )
 
-    tbi_all = Channel.empty()
+    tbi_all = channel.empty()
         .mix(
             tbi_freebayes,
             tbi_manta,

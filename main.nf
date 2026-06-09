@@ -184,8 +184,6 @@ workflow NFCORE_SAREK {
         DOWNLOAD_CACHE_SNPEFF_VEP(ensemblvep_info, snpeff_info)
         snpeff_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.snpeff_cache
         vep_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.ensemblvep_cache.map { _meta, cache -> [cache] }
-
-        versions = versions.mix(DOWNLOAD_CACHE_SNPEFF_VEP.out.versions)
     }
     else {
         // Looks for cache information either locally or on the cloud
@@ -378,7 +376,6 @@ workflow {
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
-        params.hook_url,
         NFCORE_SAREK.out.multiqc_report,
     )
 

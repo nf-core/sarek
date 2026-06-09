@@ -32,6 +32,7 @@ include { FASTQ_PREPROCESS_PARABRICKS                       } from '../../subwor
 
 // CRAM_TO_BAM conversion
 include { SAMTOOLS_CONVERT as CRAM_TO_BAM                   } from '../../modules/nf-core/samtools/convert'
+include { SAMTOOLS_CONVERT as CRAM_TO_BAM_MARKDUP           } from '../../modules/nf-core/samtools/convert'
 
 // Variant calling on a single normal sample
 include { BAM_VARIANT_CALLING_GERMLINE_ALL                  } from '../../subworkflows/local/bam_variant_calling_germline_all'
@@ -214,10 +215,14 @@ workflow SAREK {
             FASTQ_PREPROCESS_PARABRICKS(
                 input_fastq,
                 fasta,
+                fasta_fai,
                 index_alignment,
                 intervals_bed_combined,
                 known_sites_indels,
                 channel.value("cram"),
+                params.save_mapped,
+                params.save_output_as_bam,
+                params.outdir,
             )
 
             // Gather preprocessing output
@@ -248,6 +253,10 @@ workflow SAREK {
             cram_variant_calling = channel.empty()
             cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_GATK.out.cram_variant_calling)
 
+            // Gather markdup output (before BQSR) for SV/CNV callers
+            cram_markdup = channel.empty()
+            cram_markdup = cram_markdup.mix(FASTQ_PREPROCESS_GATK.out.cram_markdup)
+
             // Gather used softwares versions
             reports = reports.mix(FASTQ_PREPROCESS_GATK.out.reports)
             versions = versions.mix(FASTQ_PREPROCESS_GATK.out.versions)
@@ -257,11 +266,14 @@ workflow SAREK {
     if (step == 'variant_calling') {
 
         cram_variant_calling = channel.empty().mix(input_sample)
+        // When starting from variant_calling, no markdup CRAMs are available — use the same input
+        cram_markdup = channel.empty().mix(input_sample)
     }
 
     if (step == 'annotate') {
 
         cram_variant_calling = channel.empty()
+        cram_markdup = channel.empty()
     }
 
     // RUN CRAM QC on the recalibrated CRAM files or when starting from step variant calling. NGSCheckmate should be run also on non-recalibrated CRAM files
@@ -279,6 +291,7 @@ workflow SAREK {
     if (tools) {
 
         bam_variant_calling = channel.empty()
+        bam_markdup = channel.empty()
 
         //  For cnvkit, msisensor2 and muse we need to use bam input and not cram
         if (tools.split(',').contains('cnvkit') || tools.split(',').contains('msisensor2') || tools.split(',').contains('muse')) {
@@ -303,6 +316,26 @@ workflow SAREK {
             versions = versions.mix(CRAM_TO_BAM.out.versions)
         }
 
+        // For cnvkit we also need markdup BAMs (before BQSR) to preserve coverage signal
+        if (tools.split(',').contains('cnvkit')) {
+
+            cram_markdup_status_tmp = cram_markdup.branch { meta, file, index ->
+                bam: file.toString().endsWith('.bam')
+                cram: file.toString().endsWith('.cram')
+            }
+
+            CRAM_TO_BAM_MARKDUP(cram_markdup_status_tmp.cram, fasta, fasta_fai)
+
+            bam_markdup = CRAM_TO_BAM_MARKDUP.out.bam
+                .join(CRAM_TO_BAM_MARKDUP.out.bai, by: [0])
+                .mix(cram_markdup_status_tmp.bam)
+                .map { meta, bam, bai ->
+                    [meta + [data_type: 'bam'], bam, bai]
+                }
+
+            versions = versions.mix(CRAM_TO_BAM_MARKDUP.out.versions)
+        }
+
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
         cram_variant_calling_status = cram_variant_calling.branch { meta, file, index ->
             normal: meta.status == 0
@@ -315,13 +348,29 @@ workflow SAREK {
             tumor: meta.status == 1
         }
 
+        // Same branching for markdup CRAMs (SV/CNV callers)
+        cram_markdup_status = cram_markdup.branch { meta, file, index ->
+            normal: meta.status == 0
+            tumor: meta.status == 1
+        }
+
+        // Same branching for markdup BAMs (CNV callers needing BAM, e.g. cnvkit)
+        bam_markdup_status = bam_markdup.branch { meta, file, index ->
+            normal: meta.status == 0
+            tumor: meta.status == 1
+        }
+
         // All Germline samples
         cram_variant_calling_normal_to_cross = cram_variant_calling_status.normal.map { meta, cram, crai -> [meta.patient, meta, cram, crai] }
         bam_variant_calling_normal_to_cross = bam_variant_calling_status.normal.map { meta, bam, bai -> [meta.patient, meta, bam, bai] }
+        cram_markdup_normal_to_cross = cram_markdup_status.normal.map { meta, cram, crai -> [meta.patient, meta, cram, crai] }
+        bam_markdup_normal_to_cross = bam_markdup_status.normal.map { meta, bam, bai -> [meta.patient, meta, bam, bai] }
 
         // All tumor samples
         cram_variant_calling_pair_to_cross = cram_variant_calling_status.tumor.map { meta, cram, crai -> [meta.patient, meta, cram, crai] }
         bam_variant_calling_pair_to_cross = bam_variant_calling_status.tumor.map { meta, bam, bai -> [meta.patient, meta, bam, bai] }
+        cram_markdup_pair_to_cross = cram_markdup_status.tumor.map { meta, cram, crai -> [meta.patient, meta, cram, crai] }
+        bam_markdup_pair_to_cross = bam_markdup_status.tumor.map { meta, bam, bai -> [meta.patient, meta, bam, bai] }
 
         // Tumor only samples
         // 1. Group together all tumor samples by patient ID [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ] ]
@@ -329,19 +378,27 @@ workflow SAREK {
         // Downside: this only works by waiting for all tumor samples to finish preprocessing, since no group size is provided
         cram_variant_calling_tumor_grouped = cram_variant_calling_pair_to_cross.groupTuple()
         bam_variant_calling_tumor_grouped = bam_variant_calling_pair_to_cross.groupTuple()
+        cram_markdup_tumor_grouped = cram_markdup_pair_to_cross.groupTuple()
+        bam_markdup_tumor_grouped = bam_markdup_pair_to_cross.groupTuple()
 
         // 2. Join with normal samples, in each channel there is one key per patient now. Patients without matched normal end up with: [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ], null ]
         cram_variant_calling_tumor_joined = cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_to_cross, failOnDuplicate: true, remainder: true)
         bam_variant_calling_tumor_joined = bam_variant_calling_tumor_grouped.join(bam_variant_calling_normal_to_cross, failOnDuplicate: true, remainder: true)
+        cram_markdup_tumor_joined = cram_markdup_tumor_grouped.join(cram_markdup_normal_to_cross, failOnDuplicate: true, remainder: true)
+        bam_markdup_tumor_joined = bam_markdup_tumor_grouped.join(bam_markdup_normal_to_cross, failOnDuplicate: true, remainder: true)
 
         // 3. Filter out entries with last entry null
         cram_variant_calling_tumor_filtered = cram_variant_calling_tumor_joined.filter { it -> !(it.last()) }
         bam_variant_calling_tumor_filtered = bam_variant_calling_tumor_joined.filter { it -> !(it.last()) }
+        cram_markdup_tumor_filtered = cram_markdup_tumor_joined.filter { it -> !(it.last()) }
+        bam_markdup_tumor_filtered = bam_markdup_tumor_joined.filter { it -> !(it.last()) }
 
         // 4. Transpose [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ] ] back to [ patient1, meta1, [ cram1, crai1 ], null ] [ patient1, meta2, [ cram2, crai2 ], null ]
         // and remove patient ID field & null value for further processing [ meta1, [ cram1, crai1 ] ] [ meta2, [ cram2, crai2 ] ]
         cram_variant_calling_tumor_only = cram_variant_calling_tumor_filtered.transpose().map { it -> [it[1], it[2], it[3]] }
         bam_variant_calling_tumor_only = bam_variant_calling_tumor_filtered.transpose().map { it -> [it[1], it[2], it[3]] }
+        cram_markdup_tumor_only = cram_markdup_tumor_filtered.transpose().map { it -> [it[1], it[2], it[3]] }
+        bam_markdup_tumor_only = bam_markdup_tumor_filtered.transpose().map { it -> [it[1], it[2], it[3]] }
 
         if (params.only_paired_variant_calling) {
             // Normal only samples
@@ -349,18 +406,26 @@ workflow SAREK {
             // 1. Join with tumor samples, in each channel there is one key per patient now. Patients without matched tumor end up with: [ patient1, [ meta1 ], [ cram1, crai1 ], null ] as there is only one matched normal possible
             cram_variant_calling_normal_joined = cram_variant_calling_normal_to_cross.join(cram_variant_calling_tumor_grouped, failOnDuplicate: true, remainder: true)
             bam_variant_calling_normal_joined = bam_variant_calling_normal_to_cross.join(bam_variant_calling_tumor_grouped, failOnDuplicate: true, remainder: true)
+            cram_markdup_normal_joined = cram_markdup_normal_to_cross.join(cram_markdup_tumor_grouped, failOnDuplicate: true, remainder: true)
+            bam_markdup_normal_joined = bam_markdup_normal_to_cross.join(bam_markdup_tumor_grouped, failOnDuplicate: true, remainder: true)
 
             // 2. Filter out entries with last entry null
             cram_variant_calling_normal_filtered = cram_variant_calling_normal_joined.filter { it -> !(it.last()) }
             bam_variant_calling_normal_filtered = bam_variant_calling_normal_joined.filter { it -> !(it.last()) }
+            cram_markdup_normal_filtered = cram_markdup_normal_joined.filter { it -> !(it.last()) }
+            bam_markdup_normal_filtered = bam_markdup_normal_joined.filter { it -> !(it.last()) }
 
             // 3. Remove patient ID field & null value for further processing [ meta1, [ cram1, crai1 ] ] [ meta2, [ cram2, crai2 ] ] (no transposing needed since only one normal per patient ID)
             cram_variant_calling_status_normal = cram_variant_calling_normal_filtered.map { it -> [it[1], it[2], it[3]] }
             bam_variant_calling_status_normal = bam_variant_calling_normal_filtered.map { it -> [it[1], it[2], it[3]] }
+            cram_markdup_status_normal = cram_markdup_normal_filtered.map { it -> [it[1], it[2], it[3]] }
+            bam_markdup_status_normal = bam_markdup_normal_filtered.map { it -> [it[1], it[2], it[3]] }
         }
         else {
             cram_variant_calling_status_normal = cram_variant_calling_status.normal
             bam_variant_calling_status_normal = bam_variant_calling_status.normal
+            cram_markdup_status_normal = cram_markdup_status.normal
+            bam_markdup_status_normal = bam_markdup_status.normal
         }
 
         // Tumor - normal pairs
@@ -392,6 +457,33 @@ workflow SAREK {
 
                 [meta, normal[2], normal[3], tumor[2], tumor[3]]
             }
+        cram_markdup_pair = cram_markdup_normal_to_cross
+            .cross(cram_markdup_pair_to_cross)
+            .map { normal, tumor ->
+                def meta = [:]
+
+                meta.id = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
+                meta.normal_id = normal[1].sample
+                meta.patient = normal[0]
+                meta.sex = normal[1].sex
+                meta.tumor_id = tumor[1].sample
+                meta.contamination = tumor[1].contamination
+
+                [meta, normal[2], normal[3], tumor[2], tumor[3]]
+            }
+        bam_markdup_pair = bam_markdup_normal_to_cross
+            .cross(bam_markdup_pair_to_cross)
+            .map { normal, tumor ->
+                def meta = [:]
+
+                meta.id = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
+                meta.normal_id = normal[1].sample
+                meta.patient = normal[0]
+                meta.sex = normal[1].sex
+                meta.tumor_id = tumor[1].sample
+
+                [meta, normal[2], normal[3], tumor[2], tumor[3]]
+            }
 
         // GERMLINE VARIANT CALLING
         //   No bwa index for TIDDIT
@@ -405,6 +497,7 @@ workflow SAREK {
             skip_tools,
             bam_variant_calling_status_normal,
             cram_variant_calling_status_normal,
+            cram_markdup_status_normal,
             [[id: 'bwa'], []],
             cnvkit_reference,
             dbsnp,
@@ -441,6 +534,8 @@ workflow SAREK {
             tools,
             bam_variant_calling_tumor_only,
             cram_variant_calling_tumor_only,
+            cram_markdup_tumor_only,
+            bam_markdup_tumor_only,
             [[id: 'bwa'], []],
             cf_chrom_len,
             chr_files,
@@ -473,6 +568,8 @@ workflow SAREK {
             tools,
             bam_variant_calling_pair,
             cram_variant_calling_pair,
+            cram_markdup_pair,
+            bam_markdup_pair,
             [[id: 'bwa'], []],
             cf_chrom_len,
             chr_files,
@@ -578,7 +675,6 @@ workflow SAREK {
 
             // Gather used softwares versions
             versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)
-            reports = reports.mix(VCF_ANNOTATE_ALL.out.reports)
         }
     }
 

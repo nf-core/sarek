@@ -10,21 +10,21 @@ include { SAMTOOLS_MERGE as MERGE_CRAM } from '../../../modules/nf-core/samtools
 workflow CRAM_MERGE_INDEX_SAMTOOLS {
     take:
     cram      // channel: [mandatory] meta, cram
-    fasta     // channel: [mandatory] fasta
-    fasta_fai // channel: [mandatory] fai for fasta
+    fasta     // channel: [mandatory] meta, fasta
+    fasta_fai // channel: [mandatory] meta, fai
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Figuring out if there is one or more cram(s) from the same sample
-    cram_to_merge = cram.branch { meta, cram ->
-        single: cram.size() <= 1
-        return [meta, cram[0]]
-        multiple: cram.size() > 1
+    cram_to_merge = cram.branch { meta, cram_file ->
+        single: cram_file.size() <= 1
+        return [meta, cram_file[0]]
+        multiple: cram_file.size() > 1
     }
 
     // Only when using intervals
-    MERGE_CRAM(cram_to_merge.multiple, fasta.map { it -> [[id: 'fasta'], it] }, fasta_fai.map { it -> [[id: 'fasta_fai'], it] })
+    MERGE_CRAM(cram_to_merge.multiple, fasta, fasta_fai)
 
     // Mix intervals and no_intervals channels together
     cram_all = MERGE_CRAM.out.cram.mix(cram_to_merge.single)

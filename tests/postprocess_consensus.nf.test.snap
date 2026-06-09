@@ -50,13 +50,16 @@
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_EXT_VCF": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFS_NORM": {
                     "bcftools": 1.21
@@ -404,13 +407,16 @@
                     "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_EXT_VCF": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFS_NORM": {
                     "bcftools": 1.21
@@ -724,13 +730,16 @@
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_EXT_VCF": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFS_NORM": {
                     "bcftools": 1.21
@@ -1017,9 +1026,10 @@
                     "0001.vcf.gz",
                     "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=70, phased=false, phasedAutodetect=false]"
                 ],
-                [   "sample4_vs_sample3.consensus.vcf.gz",                      
+                [
+                    "sample4_vs_sample3.consensus.vcf.gz",
                     "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=10, phased=true, phasedAutodetect=true]"
-                ],       
+                ],
                 [
                     "0001.vcf.gz",
                     "VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=10, phased=true, phasedAutodetect=true]"

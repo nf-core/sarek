@@ -1,5 +1,6 @@
 name: tabix_bgziptabix
-description: bgzip a sorted tab-delimited genome file and then create tabix index
+description: bgzip a sorted tab-delimited genome file and then create tabix
+  index
 keywords:
   - bgzip
   - compress
@@ -25,7 +26,7 @@ input:
         description: Sorted tab-delimited genome file
         ontologies: []
 output:
-  gz_tbi:
+  gz_index:
     - - meta:
           type: map
           description: |
@@ -37,35 +38,53 @@ output:
           pattern: "*.gz"
           ontologies:
             - edam: http://edamontology.org/format_3989 # GZIP format
-      - "*.tbi":
+      - "*.{tbi,csi}":
           type: file
-          description: tabix index file
-          pattern: "*.tbi"
+          description: Tabix index file (either tbi or csi)
+          pattern: "*.{tbi,csi}"
           ontologies: []
-  gz_csi:
-    - - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-      - "*.gz":
-          type: file
-          description: bgzipped tab-delimited genome file
-          pattern: "*.gz"
-          ontologies:
-            - edam: http://edamontology.org/format_3989 # GZIP format
-      - "*.csi":
-          type: file
-          description: csi index file
-          pattern: "*.csi"
-          ontologies: []
+  versions_tabix:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - tabix:
+          type: string
+          description: The tool name
+      - tabix -h 2>&1 | grep -oP 'Version:\s*\K[^\s]+':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_bgzip:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - bgzip:
+          type: string
+          description: The tool name
+      - bgzip --version | sed '1!d;s/.* //':
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - tabix:
+          type: string
+          description: The tool name
+      - tabix -h 2>&1 | grep -oP 'Version:\s*\K[^\s]+':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - bgzip:
+          type: string
+          description: The tool name
+      - bgzip --version | sed '1!d;s/.* //':
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@maxulysse"
   - "@DLBPointon"

@@ -14,23 +14,21 @@ workflow BAM_VARIANT_CALLING_SINGLE_TIDDIT {
     bwa
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     TIDDIT_SV(cram, fasta, bwa)
 
     TABIX_BGZIP_TIDDIT_SV(TIDDIT_SV.out.vcf)
 
     ploidy = TIDDIT_SV.out.ploidy
-    vcf    = TABIX_BGZIP_TIDDIT_SV.out.gz_tbi.map{ meta, gz, tbi -> [ meta + [ variantcaller: 'tiddit'], gz ] }
-    tbi    = TABIX_BGZIP_TIDDIT_SV.out.gz_tbi.map{ meta, gz, tbi -> [ meta + [ variantcaller: 'tiddit'], tbi ] }
+    vcf = TABIX_BGZIP_TIDDIT_SV.out.gz_index.map { meta, gz, tbi -> [meta + [variantcaller: 'tiddit'], gz] }
+    tbi = TABIX_BGZIP_TIDDIT_SV.out.gz_index.map { meta, gz, tbi -> [meta + [variantcaller: 'tiddit'], tbi] }
 
-    versions = versions.mix(TABIX_BGZIP_TIDDIT_SV.out.versions)
     versions = versions.mix(TIDDIT_SV.out.versions)
 
     emit:
     ploidy
     vcf
     tbi
-
     versions
 }

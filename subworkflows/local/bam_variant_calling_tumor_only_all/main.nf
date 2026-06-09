@@ -17,8 +17,10 @@ include { MSISENSOR2_MSI                              } from '../../../modules/n
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
     tools                         // Mandatory, list of tools to apply
-    bam                           // channel: [mandatory] bam
-    cram                          // channel: [mandatory] cram
+    bam                           // channel: [mandatory] bam — BQSR'd (or markdup if BQSR off), for SNV callers
+    cram                          // channel: [mandatory] cram — BQSR'd (or markdup if BQSR off), for SNV callers
+    cram_markdup                  // channel: [mandatory] cram — markdup output (before BQSR), for SV/CNV callers
+    bam_markdup                   // channel: [mandatory] bam — markdup output (before BQSR), for CNV callers needing BAM (cnvkit)
     bwa                           // channel: [optional] bwa
     cf_chrom_len                  // channel: [optional] controlfreec length file
     chr_files
@@ -95,10 +97,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC.out.versions)
     }
 
-    // CNVKIT
+    // CNVKIT — CNV caller, uses markdup BAM (before BQSR) to preserve coverage signal
     if (tools && tools.split(',').contains('cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT(
-            bam.map { meta_, bam_, _bai -> [meta_, bam_, []] },
+            bam_markdup.map { meta_, bam_, _bai -> [meta_, bam_, []] },
             fasta,
             fasta_fai,
             [[id: "null"], []],
@@ -172,10 +174,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.versions)
     }
 
-    // MANTA
+    // MANTA — SV caller, uses markdup output (before BQSR)
     if (tools && tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA(
-            cram,
+            cram_markdup,
             fasta,
             fasta_fai,
             intervals_bed_gz_tbi_combined,
@@ -186,10 +188,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.versions)
     }
 
-    // TIDDIT
+    // TIDDIT — SV caller, uses markdup output (before BQSR)
     if (tools && tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
-            cram,
+            cram_markdup,
             fasta,
             bwa,
         )

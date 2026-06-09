@@ -45,10 +45,12 @@
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -298,11 +300,11 @@
                 "  | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,",
                 "                                        `._,._,'",
                 "      ____",
-                "    .\u00b4 _  `.",
+                "    .´ _  `.",
                 "   /  |\\`-_ \\      __        __   ___     ",
                 "  |   | \\  `-|    |__`  /\\  |__) |__  |__/",
-                "   \\ |   \\  /     .__| /\u00af\u00af\\ |  \\ |___ |  \\",
-                "    `|____\\\u00b4",
+                "   \\ |   \\  /     .__| /¯¯\\ |  \\ |___ |  \\",
+                "    `|____\\´",
                 "  nf-core/sarek [VERSION]",
                 "------------------------------------------------------",
                 "Input/output options",
@@ -441,10 +443,12 @@
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
