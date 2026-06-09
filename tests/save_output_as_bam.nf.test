@@ -30,14 +30,6 @@ nextflow_pipeline {
                 skip_tools: 'baserecalibrator,fastqc,mosdepth,multiqc,samtools',
                 input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv"
             ]
-        ],
-        [
-            name: "-profile test --save_output_as_bam --use_gatk_spark markduplicates",
-            params: [
-                save_output_as_bam: true,
-                use_gatk_spark: 'markduplicates',
-                tools: ''
-            ]
         ]
     ]
 

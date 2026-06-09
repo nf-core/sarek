@@ -23,6 +23,14 @@ nextflow_pipeline {
                 use_gatk_spark: 'baserecalibrator,markduplicates',
                 skip_tools: 'fastqc,markduplicates_report,mosdepth,multiqc,samtools'
             ]
+        ],
+        [
+            name: "-profile test,spark --use_gatk_spark markduplicates --save_output_as_bam",
+            params: [
+                save_output_as_bam: true,
+                use_gatk_spark: 'markduplicates',
+                tools: null
+            ]
         ]
     ]
 

@@ -328,5 +328,22 @@
             "nextflow": "25.10.2"
         },
         "timestamp": "2025-12-15T21:33:59.148271232"
+    },
+    "-profile test,spark --use_gatk_spark markduplicates --save_output_as_bam": {
+        "content": [
+            0,
+            {},
+            [],
+            "No stable content",
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files",
+            "No warnings"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-06-09T00:00:00.000000"
     }
 }

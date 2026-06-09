@@ -47,7 +47,8 @@
                     "gatk4": "4.6.1.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.1.0",
+                    "samtools": 1.21
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
@@ -430,11 +431,49 @@
     },
     "-profile test --save_output_as_bam --tools sentieon_dedup": {
         "content": [
-            0,
-            {},
-            [],
+            5,
+            {
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.1.0"
+                },
+                "SENTIEON_DEDUP": {
+                    "sentieon": "202503.02"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
+                }
+            },
+            [
+                "csv",
+                "csv/markduplicates_no_table.csv",
+                "multiqc",
+                "multiqc/index.json",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/sentieon_dedup",
+                "preprocessing/sentieon_dedup/test",
+                "preprocessing/sentieon_dedup/test/test.dedup.bam",
+                "preprocessing/sentieon_dedup/test/test.dedup.bam.bai",
+                "reference",
+                "reports",
+                "reports/sentieon_dedup",
+                "reports/sentieon_dedup/test",
+                "reports/sentieon_dedup/test/test.dedup.bam.metrics",
+                "reports/sentieon_dedup/test/test.dedup.bam.metrics.multiqc.tsv"
+            ],
             "No stable content",
-            "No BAM files",
+            [
+                "test.dedup.bam:md5,2f11e4fe3390b8ad0a1852616fd1da04"
+            ],
             "No CRAM files",
             "No VCF files",
             "No warnings"
@@ -443,23 +482,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-06-09T00:00:00.000000"
-    },
-    "-profile test --save_output_as_bam --use_gatk_spark markduplicates": {
-        "content": [
-            0,
-            {},
-            [],
-            "No stable content",
-            "No BAM files",
-            "No CRAM files",
-            "No VCF files",
-            "No warnings"
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-06-09T00:00:00.000000"
+        "timestamp": "2026-06-09T14:40:13.000000"
     }
 }

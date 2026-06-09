@@ -35,7 +35,8 @@
                     "gatk4": "4.6.1.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.1.0",
+                    "samtools": 1.21
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
