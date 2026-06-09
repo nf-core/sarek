@@ -1,7 +1,7 @@
 {
     "-profile test --input bam_and_fastq_and_spring.csv --save_mapped --save_output_as_bam": {
         "content": [
-            65,
+            61,
             {
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.18-r1243-dirty"
@@ -35,11 +35,7 @@
                     "gatk4": "4.6.1.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
-                },
-                "INDEX_MARKDUPLICATES": {
-                    "samtools": 1.21
+                    "gatk4": "4.6.1.0"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
@@ -343,16 +339,16 @@
                 "reports/samtools",
                 "reports/samtools/test",
                 "reports/samtools/test/test.md.bam.stats",
-                "reports/samtools/test/test.recal.cram.stats",
+                "reports/samtools/test/test.recal.bam.stats",
                 "reports/samtools/test2",
                 "reports/samtools/test2/test2.md.bam.stats",
-                "reports/samtools/test2/test2.recal.cram.stats",
+                "reports/samtools/test2/test2.recal.bam.stats",
                 "reports/samtools/test3",
                 "reports/samtools/test3/test3.md.bam.stats",
-                "reports/samtools/test3/test3.recal.cram.stats",
+                "reports/samtools/test3/test3.recal.bam.stats",
                 "reports/samtools/test_bam",
                 "reports/samtools/test_bam/test_bam.md.bam.stats",
-                "reports/samtools/test_bam/test_bam.recal.cram.stats"
+                "reports/samtools/test_bam/test_bam.recal.bam.stats"
             ],
             [
                 "fastqc-status-check-heatmap.txt:md5,de62b83776610478e5d6a3adbc6a9bbc",
@@ -417,11 +413,7 @@
                 "test_bam.recal.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test_bam.recal.mosdepth.summary.txt:md5,dbe376360e437c89190139ef0ae6769a",
                 "test_bam.recal.regions.bed.gz:md5,0e5ed846b9b11717e42e93eec60f4ffc",
-                "test_bam.recal.regions.bed.gz.csi:md5,d0713716f63ac573f4a3385733e9a537",
-                "test.md.bam.stats:md5,5ba1f9e2fac8b0de9ef4a33706f24283",
-                "test2.md.bam.stats:md5,428675ba7f87cf43f0047fbb3ba4d2a7",
-                "test3.md.bam.stats:md5,8d2f060a92e66f5f98b870c343f32a5e",
-                "test_bam.md.bam.stats:md5,537a82c292a9459818d048993e36807d"
+                "test_bam.recal.regions.bed.gz.csi:md5,d0713716f63ac573f4a3385733e9a537"
             ],
             [
                 "test.sorted.bam:md5,59ecc5c82c7af1283eea7507c590c831",

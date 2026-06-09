@@ -1,7 +1,7 @@
 {
     "-profile test --save_output_as_bam with variant calling": {
         "content": [
-            30,
+            29,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
@@ -47,11 +47,7 @@
                     "gatk4": "4.6.1.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
-                },
-                "INDEX_MARKDUPLICATES": {
-                    "samtools": 1.21
+                    "gatk4": "4.6.1.0"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
@@ -276,7 +272,7 @@
                 "reports/samtools",
                 "reports/samtools/test",
                 "reports/samtools/test/test.md.bam.stats",
-                "reports/samtools/test/test.recal.cram.stats",
+                "reports/samtools/test/test.recal.bam.stats",
                 "reports/vcftools",
                 "reports/vcftools/strelka",
                 "reports/vcftools/strelka/test",
@@ -341,7 +337,6 @@
                 "test.recal.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
                 "test.recal.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
                 "test.recal.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
-                "test.md.bam.stats:md5,252c7236f87d41baad74f0d574bd849c",
                 "test.strelka.variants.FILTER.summary:md5,dd87f507da7de20d5318841af312493b",
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
                 "genome.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -432,5 +427,39 @@
             "nextflow": "25.10.2"
         },
         "timestamp": "2026-03-13T09:02:14.635985"
+    },
+    "-profile test --save_output_as_bam --tools sentieon_dedup": {
+        "content": [
+            0,
+            {},
+            [],
+            "No stable content",
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files",
+            "No warnings"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-06-09T00:00:00.000000"
+    },
+    "-profile test --save_output_as_bam --use_gatk_spark markduplicates": {
+        "content": [
+            0,
+            {},
+            [],
+            "No stable content",
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files",
+            "No warnings"
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-06-09T00:00:00.000000"
     }
 }

@@ -1,7 +1,7 @@
 {
     "-profile test --input bam_for_remapping.csv --save_mapped --save_output_as_bam": {
         "content": [
-            26,
+            25,
             {
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.18-r1243-dirty"
@@ -35,11 +35,7 @@
                     "gatk4": "4.6.1.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
-                },
-                "INDEX_MARKDUPLICATES": {
-                    "samtools": 1.21
+                    "gatk4": "4.6.1.0"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
@@ -243,7 +239,7 @@
                 "reports/samtools",
                 "reports/samtools/test",
                 "reports/samtools/test/test.md.bam.stats",
-                "reports/samtools/test/test.recal.cram.stats"
+                "reports/samtools/test/test.recal.bam.stats"
             ],
             [
                 "fastqc-status-check-heatmap.txt:md5,0c9e61033b0669f20e27dce8f4b3b25c",
@@ -277,8 +273,7 @@
                 "test.recal.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.recal.mosdepth.summary.txt:md5,dbe376360e437c89190139ef0ae6769a",
                 "test.recal.regions.bed.gz:md5,0e5ed846b9b11717e42e93eec60f4ffc",
-                "test.recal.regions.bed.gz.csi:md5,d0713716f63ac573f4a3385733e9a537",
-                "test.md.bam.stats:md5,8f78dea8142b94297d430c7cdb35a54e"
+                "test.recal.regions.bed.gz.csi:md5,d0713716f63ac573f4a3385733e9a537"
             ],
             [
                 "test.sorted.bam:md5,6934a96fff1eaa2f70b31ab7e11d3598",
