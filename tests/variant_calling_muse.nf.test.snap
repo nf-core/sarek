@@ -54,9 +54,6 @@
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
                 "preprocessing/converted",
-                "preprocessing/converted/cram_to_bam",
-                "preprocessing/converted/cram_to_bam/sample3",
-                "preprocessing/converted/cram_to_bam/sample4",
                 "reference",
                 "reference/dict",
                 "reports",
@@ -285,9 +282,6 @@
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
                 "preprocessing/converted",
-                "preprocessing/converted/cram_to_bam",
-                "preprocessing/converted/cram_to_bam/sample3",
-                "preprocessing/converted/cram_to_bam/sample4",
                 "reference",
                 "reference/dict",
                 "reports",
@@ -358,8 +352,12 @@
             ],
             "No BAM files",
             "No CRAM files",
-            ["sample4_vs_sample3.MuSE.txt:md5,32961f7d718b4a1114f168253e50ef9e"],
-            ["sample4_vs_sample3.muse.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"],
+            [
+                "sample4_vs_sample3.MuSE.txt:md5,32961f7d718b4a1114f168253e50ef9e"
+            ],
+            [
+                "sample4_vs_sample3.muse.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
             "No warnings"
         ],
         "timestamp": "2026-05-19T18:51:58.229719817",

@@ -95,9 +95,6 @@
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
                 "preprocessing/converted",
-                "preprocessing/converted/cram_to_bam",
-                "preprocessing/converted/cram_to_bam/sample3",
-                "preprocessing/converted/cram_to_bam/sample4",
                 "reference",
                 "reports",
                 "reports/mosdepth",
@@ -306,11 +303,6 @@
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
                 "preprocessing/converted",
-                "preprocessing/converted/cram_to_bam",
-                "preprocessing/converted/cram_to_bam/sample1",
-                "preprocessing/converted/cram_to_bam/sample2",
-                "preprocessing/converted/cram_to_bam/sample3",
-                "preprocessing/converted/cram_to_bam/sample4",
                 "reference",
                 "reports",
                 "reports/mosdepth",
@@ -570,8 +562,6 @@
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
                 "preprocessing/converted",
-                "preprocessing/converted/cram_to_bam",
-                "preprocessing/converted/cram_to_bam/sample1",
                 "reference",
                 "reports",
                 "reports/mosdepth",
@@ -629,7 +619,9 @@
             ],
             "No BAM files",
             "No CRAM files",
-            ["sample1.cnvcall.vcf:md5,6f8c517f62715c47674c79ffd1e9babb"],
+            [
+                "sample1.cnvcall.vcf:md5,6f8c517f62715c47674c79ffd1e9babb"
+            ],
             "No warnings"
         ],
         "meta": {
@@ -733,8 +725,6 @@
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
                 "preprocessing/converted",
-                "preprocessing/converted/cram_to_bam",
-                "preprocessing/converted/cram_to_bam/sample2",
                 "reference",
                 "reports",
                 "reports/mosdepth",
@@ -790,7 +780,9 @@
             ],
             "No BAM files",
             "No CRAM files",
-            ["sample2.cnvcall.vcf:md5,35662b51f071469c6227be15114eb824"],
+            [
+                "sample2.cnvcall.vcf:md5,35662b51f071469c6227be15114eb824"
+            ],
             "No warnings"
         ],
         "meta": {
@@ -872,8 +864,6 @@
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
                 "preprocessing/converted",
-                "preprocessing/converted/cram_to_bam",
-                "preprocessing/converted/cram_to_bam/sample2",
                 "reference",
                 "reports",
                 "reports/mosdepth",
@@ -998,9 +988,6 @@
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
                 "preprocessing/converted",
-                "preprocessing/converted/cram_to_bam",
-                "preprocessing/converted/cram_to_bam/sample3",
-                "preprocessing/converted/cram_to_bam/sample4",
                 "reference",
                 "reports",
                 "reports/mosdepth",
