@@ -25,10 +25,10 @@ nextflow_pipeline {
             ]
         ],
         [
-            name: "-profile test,spark --use_gatk_spark markduplicates --save_output_as_bam",
+            name: "-profile test,spark --use_gatk_spark baserecalibrator,markduplicates --save_output_as_bam",
             params: [
                 save_output_as_bam: true,
-                use_gatk_spark: 'markduplicates',
+                use_gatk_spark: 'baserecalibrator,markduplicates',
                 tools: null
             ]
         ]
