@@ -18,8 +18,14 @@ workflow CHANNEL_MARKDUPLICATES_CREATE_CSV {
             def is_bam       = file.name.endsWith('.bam')
             def type         = is_bam ? "bam" : "cram"
             def type_index   = is_bam ? "bai" : "crai"
+            // In BAM mode the upstream index is Picard's *.md.bai (from --CREATE_INDEX);
+            // GATK4_MARKDUPLICATES publishDir renames it to *.md.bam.bai on disk, so use
+            // the standard name in the restart CSV.
+            def index_name   = is_bam && index.name.endsWith('.bai') && !index.name.endsWith('.bam.bai')
+                ? "${file.name}.bai"
+                : index.name
             def align_file   = "${outdir}/preprocessing/${csv_subfolder}/${sample}/${file.name}"
-            def align_index  = "${outdir}/preprocessing/${csv_subfolder}/${sample}/${index.name}"
+            def align_index  = "${outdir}/preprocessing/${csv_subfolder}/${sample}/${index_name}"
 
             ["markduplicates_no_table.csv", "patient,sex,status,sample,${type},${type_index}\n${patient},${sex},${status},${sample},${align_file},${align_index}\n"]
         }

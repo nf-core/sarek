@@ -352,7 +352,10 @@
                 "test.germline.call.cns:md5,41095573157b8ee02082cad2327ea7b6",
                 "test.targetcoverage.cnn:md5,47c4b06de7ccdf854a836da493889ab0"
             ],
-            ["test.md.bam:md5,724c601c9daf019d356a53a7d5e1c8b1", "test.recal.bam:md5,dbd6f40b1e6d72501dc034e62e9d54eb"],
+            [
+                "test.md.bam:md5,724c601c9daf019d356a53a7d5e1c8b1",
+                "test.recal.bam:md5,dbd6f40b1e6d72501dc034e62e9d54eb"
+            ],
             "No CRAM files",
             [
                 "test.cnvcall.vcf:md5,ad603307280549c2053c2e3b57141c0a",
@@ -416,7 +419,9 @@
                 "reference"
             ],
             "No stable content",
-            ["test.sorted.bam:md5,5534c350547fd253f0f2b9450362bed"],
+            [
+                "test.sorted.bam:md5,5534c350547fd253f0f2b9450362bed"
+            ],
             "No CRAM files",
             "No VCF files",
             [
