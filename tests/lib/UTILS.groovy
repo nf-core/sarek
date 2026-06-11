@@ -122,29 +122,33 @@ class UTILS {
             // All options should be:
             // gpu (this is the default for gpu)
             // cpu (this is the default for tests without conda)
+            // sentieon (this is the default for sentieon without conda)
             // gpu_conda (this should never happen)
             // cpu_conda (this is the default for tests with conda compatibility)
+            // sentieon_conda (this is the default for sentieon with conda compatibility)
             // gpu_stub
             // cpu_stub
+            // sentieon_stub
             // gpu_conda_stub (this should never happen)
             // cpu_conda_stub
+            // sentieon_conda_stub
 
             tag "pipeline"
             tag "pipeline_sarek"
 
             options "-output-dir ${outputDir}${scenario.stub ? ' -stub' : ''}"
 
-            if (scenario.gpu) {
-                tag "gpu${!scenario.no_conda ? '_conda' : ''}${scenario.stub ? '_stub' : ''}"
-            }
-
-            if (!scenario.gpu) {
-                tag "cpu${!scenario.no_conda ? '_conda' : ''}${scenario.stub ? '_stub' : ''}"
-            }
+            def tag_prefix = scenario.gpu ? "gpu" : scenario.sentieon ? "sentieon" : "cpu"
+            tag "${tag_prefix}${!scenario.no_conda ? '_conda' : ''}${scenario.stub ? '_stub' : ''}"
 
             // If a tag is provided, add it to the test
             if (scenario.tag) {
                 tag scenario.tag
+            }
+
+            // Add automatic failure tag if it's a scenario supposed to fail
+            if (scenario.failure) {
+                tag "failure"
             }
 
             when {
