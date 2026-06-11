@@ -193,7 +193,7 @@ workflow NFCORE_SAREK {
             (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
             params.snpeff_cache,
             params.snpeff_db,
-            (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))),
+            (params.vep_cache && (params.joint_genotype || (params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))))),
             params.vep_cache,
             params.vep_species,
             params.vep_cache_version,

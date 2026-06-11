@@ -555,14 +555,19 @@ workflow SAREK {
             vcf_to_annotate = input_sample
         }
 
-        if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff') || tools.split(',').contains('vep') || tools.split(',').contains('bcfann') || tools.split(',').contains('snpsift')) {
+        // Joint genotyping always VEP-annotates the cohort VCF. 'merge' already implies SnpEff+VEP,
+        // so don't add a second VEP in that case. (Validation guarantees joint_genotype => deepvariant.)
+        def toolset = tools.split(',') as Set
+        def annotation_tools = (params.joint_genotype && !toolset.contains('vep') && !toolset.contains('merge')) ? "${tools},vep" : tools
+
+        if (annotation_tools.split(',').contains('merge') || annotation_tools.split(',').contains('snpeff') || annotation_tools.split(',').contains('vep') || annotation_tools.split(',').contains('bcfann') || annotation_tools.split(',').contains('snpsift')) {
 
             vep_fasta = params.vep_include_fasta ? fasta : [[id: 'null'], []]
 
             VCF_ANNOTATE_ALL(
                 vcf_to_annotate.map { meta, vcf -> [meta + [file_name: vcf.baseName], vcf] },
                 vep_fasta,
-                tools,
+                annotation_tools,
                 snpeff_db,
                 snpeff_cache,
                 vep_genome,
