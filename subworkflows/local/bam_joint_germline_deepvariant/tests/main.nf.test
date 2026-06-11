@@ -1,0 +1,44 @@
+nextflow_workflow {
+
+    name "Test Subworkflow BAM_JOINT_GERMLINE_DEEPVARIANT"
+    script "../main.nf"
+    workflow "BAM_JOINT_GERMLINE_DEEPVARIANT"
+    config "./nextflow.config"
+
+    tag "subworkflows"
+    tag "subworkflows_local"
+    tag "bam_joint_germline_deepvariant"
+
+    test("deepvariant gvcfs - joint genotyping") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of(
+                    [ [ id:'test',  sample:'test',  patient:'patientA', status:0, variantcaller:'deepvariant' ],
+                      file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gvcf/test.genome.vcf.gz', checkIfExists: true) ],
+                    [ [ id:'test2', sample:'test2', patient:'patientB', status:0, variantcaller:'deepvariant' ],
+                      file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gvcf/test2.genome.vcf.gz', checkIfExists: true) ]
+                )
+                input[1] = Channel.value([ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.bed', checkIfExists: true) ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                // exactly one cohort VCF + index for the whole cohort
+                { assert workflow.out.genotype_vcf.size() == 1 },
+                { assert workflow.out.genotype_index.size() == 1 },
+                // cohort VCF is multi-sample: #CHROM has 9 fixed columns + 2 sample columns
+                { def header = path(workflow.out.genotype_vcf[0][1]).linesGzip.find { it.startsWith('#CHROM') }
+                  assert header.split('\t').size() == 11 },
+                // meta is restamped for downstream post-processing/annotation
+                { assert workflow.out.genotype_vcf[0][0].variantcaller == 'deepvariant' },
+                { assert workflow.out.genotype_vcf[0][0].patient == 'all_samples' },
+                { assert workflow.out.versions.size() > 0 }
+            )
+        }
+    }
+}
