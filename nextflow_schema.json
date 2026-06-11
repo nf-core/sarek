@@ -443,6 +443,12 @@
                     "description": "Turn on the joint germline variant calling for GATK haplotypecaller",
                     "help_text": "Uses all normal germline samples (as designated by `status` in the input csv) in the joint germline variant calling process."
                 },
+                "joint_genotype": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toolbox",
+                    "description": "Turn on joint genotyping of the DeepVariant cohort with GLnexus",
+                    "help_text": "Runs GLnexus over the per-sample DeepVariant gVCFs of all germline samples to produce a single multi-sample (cohort) VCF. Requires `--tools deepvariant`; only annotators (vep, snpeff, snpsift, bcfann, merge) may be combined with it."
+                },
                 "joint_mutect2": {
                     "type": "boolean",
                     "fa_icon": "fas fa-angle-double-right",

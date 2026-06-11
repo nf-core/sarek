@@ -4,6 +4,7 @@
 
 include { BAM_JOINT_CALLING_GERMLINE_GATK                                              } from '../bam_joint_calling_germline_gatk/main'
 include { BAM_JOINT_CALLING_GERMLINE_SENTIEON                                          } from '../bam_joint_calling_germline_sentieon/main'
+include { BAM_JOINT_GERMLINE_DEEPVARIANT                                               } from '../bam_joint_germline_deepvariant/main'
 include { BAM_VARIANT_CALLING_CNVKIT                                                   } from '../bam_variant_calling_cnvkit/main'
 include { BAM_VARIANT_CALLING_DEEPVARIANT                                              } from '../bam_variant_calling_deepvariant/main'
 include { BAM_VARIANT_CALLING_FREEBAYES                                                } from '../bam_variant_calling_freebayes/main'
@@ -45,6 +46,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     known_sites_snps_tbi
     known_snps_vqsr
     joint_germline                    // boolean: [mandatory] [default: false] joint calling of germline variants
+    joint_genotype                    // boolean: [mandatory] [default: false] joint genotyping of the DeepVariant cohort with GLnexus
     skip_haplotypecaller_filter       // boolean: [mandatory] [default: false] whether to filter haplotypecaller single sample vcfs
     sentieon_haplotyper_emit_mode     // channel: [mandatory] value channel with string
     sentieon_dnascope_emit_mode       // channel: [mandatory] value channel with string
@@ -117,6 +119,18 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         vcf_deepvariant = BAM_VARIANT_CALLING_DEEPVARIANT.out.vcf
         tbi_deepvariant = BAM_VARIANT_CALLING_DEEPVARIANT.out.tbi
         versions = versions.mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.versions)
+
+        // Joint genotyping of the whole cohort with GLnexus
+        if (joint_genotype) {
+            BAM_JOINT_GERMLINE_DEEPVARIANT(
+                BAM_VARIANT_CALLING_DEEPVARIANT.out.gvcf,
+                intervals_bed_combined
+            )
+
+            vcf_deepvariant = BAM_JOINT_GERMLINE_DEEPVARIANT.out.genotype_vcf
+            tbi_deepvariant = BAM_JOINT_GERMLINE_DEEPVARIANT.out.genotype_index
+            versions = versions.mix(BAM_JOINT_GERMLINE_DEEPVARIANT.out.versions)
+        }
     }
 
     // FREEBAYES

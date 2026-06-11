@@ -425,6 +425,7 @@ workflow SAREK {
             known_sites_snps_tbi,
             known_snps_vqsr,
             params.joint_germline,
+            params.joint_genotype,
             skip_tools.split(',').contains('haplotypecaller_filter'),
             params.sentieon_haplotyper_emit_mode,
             params.sentieon_dnascope_emit_mode,

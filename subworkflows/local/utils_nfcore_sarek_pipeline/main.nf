@@ -248,6 +248,22 @@ workflow PIPELINE_COMPLETION {
 def validateInputParameters() {
     genomeExistsError()
     sparkAndBam()
+    jointGenotypeError()
+}
+
+// Exit if --joint_genotype is set without DeepVariant, or combined with non-annotator tools
+def jointGenotypeError() {
+    if (params.joint_genotype) {
+        def tools = params.tools ? params.tools.split(',') as List : []
+        if (!tools.contains('deepvariant')) {
+            error("--joint_genotype requires 'deepvariant' in --tools: joint genotyping is only implemented for the DeepVariant path.")
+        }
+        def allowed = ['deepvariant', 'vep', 'snpeff', 'snpsift', 'bcfann', 'merge']
+        def disallowed = tools.findAll { !allowed.contains(it) }
+        if (disallowed) {
+            error("--joint_genotype only supports 'deepvariant' plus annotators (vep, snpeff, snpsift, bcfann, merge). Incompatible tool(s) in --tools: ${disallowed.join(', ')}")
+        }
+    }
 }
 
 // Exit pipeline if incorrect --genome key provided
