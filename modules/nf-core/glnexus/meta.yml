@@ -1,0 +1,77 @@
+name: glnexus
+description: merge gVCF files and perform joint variant calling
+keywords:
+  - merge
+  - gvcf
+  - joint-variant-calling
+tools:
+  - glnexus:
+      description: scalable gVCF merging and joint variant calling for population sequencing
+        projects.
+      homepage: https://github.com/dnanexus-rnd/GLnexus
+      documentation: https://github.com/dnanexus-rnd/GLnexus/wiki/Getting-Started
+      doi: 10.1101/343970
+      licence: ["Apache-2.0"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test' ]
+    - gvcfs:
+        type: list
+        description: Input genomic vcf files
+        pattern: "*.{gvcf,gvcf.gz,g.vcf,g.vcf.gz}"
+    - custom_config:
+        type: file
+        description: Custom YML config for additional profiles
+        pattern: "*.{yml,yaml}"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing regions information
+          e.g. [ id:'test' ]
+    - bed:
+        type: list
+        description: Input BED file
+        pattern: "*.bed"
+output:
+  bcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test' ]
+      - "*.bcf":
+          type: file
+          description: merged BCF file
+          pattern: "*.bcf"
+          ontologies: []
+  versions_glnexus:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - glnexus:
+          type: string
+          description: The name of the tool
+      - glnexus_cli 2>&1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - glnexus:
+          type: string
+          description: The name of the tool
+      - glnexus_cli 2>&1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@ramprasadn"
+maintainers:
+  - "@ramprasadn"
