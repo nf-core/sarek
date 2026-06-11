@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2154](https://github.com/nf-core/sarek/pull/2154) - Fix `--save_output_as_bam` causing duplicate emission errors, silently skipping variant calling, and running unnecessary CRAM-to-BAM conversions; add BAM output support for the sentieon dedup path; stop publishing converted BAMs when `--save_output_as_bam` is not set; widen the `--use_gatk_spark markduplicates` + `--save_mapped` incompatibility check to error regardless of `--save_output_as_bam`
 - [#2189](https://github.com/nf-core/sarek/pull/2189) - Fixes the `interval_name` → `intervals_name` typo in the branch step (was a silent no-op)
 - [#2190](https://github.com/nf-core/sarek/pull/2190) - Fix controlfreec crash in edge cases when no breakpoints are found
+- [#2196](https://github.com/nf-core/sarek/pull/2196) - Update `vep_version` parameter from `115.0-0` to `115.2-1` and fix `loftee_path` from `/usr/local/share` to `/opt/conda/share` to match the container VEP installation path
 
 ### Removed
 
@@ -72,8 +73,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2170](https://github.com/nf-core/sarek/pull/2170) - Update dependencies
 - [#2173](https://github.com/nf-core/sarek/pull/2173) - Update MultiQC
 - [#2188](https://github.com/nf-core/sarek/pull/2188) - Update all `sentieon/*` modules to `nf-core/modules@7ad1622c`. Brings in `--interval` honouring in `sentieon/gvcftyper`, multi-`--resource:` parsing in `sentieon/varcal`, and the new `topic: versions` emission across all sentieon modules. Removed the now-broken explicit `versions.mix(SENTIEON_*.out.versions)` calls; sarek's `softwareVersionsToYAML` picks up the topic emissions via `channel.topic("versions")`.
-- [#2194](https://github.com/nf-core/sarek/pull/2194) - Update `main.nf` to use lowercase `channel.*` factory methods (strict syntax)
 - [#2194](https://github.com/nf-core/sarek/pull/2194) - Update `ensemblvep/vep` module: add `htslib` dependency, support apptainer container engine, fix cache input signature, fix output path patterns
+- [#2194](https://github.com/nf-core/sarek/pull/2194) - Update `main.nf` to use lowercase `channel.*` factory methods (strict syntax)
 
 #### Fixed
 

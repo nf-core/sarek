@@ -19,7 +19,7 @@ nextflow_pipeline {
             ],
             failure: true,
             snapshot: 'stdout',
-            snapshot_include: 'annotation-cache'
+            snapshot_include: 'annotation-cache',
         ],
         [
             name: "Fails with profile test --dbnsfp and no dbnsfp_tbi",
@@ -31,8 +31,17 @@ nextflow_pipeline {
             ],
             failure: true,
             snapshot: 'stdout',
-            snapshot_include: 'dbnsfp inconsistency'
-        ]
+            snapshot_include: 'dbnsfp inconsistency',
+        ],
+        [
+            name: "-profile test --tools vep --vep_loftee",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
+                step: 'annotate',
+                tools: 'vep',
+                vep_loftee: true,
+            ],
+        ],
     ]
 
     // Generate tests for each scenario
