@@ -1,0 +1,47 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline: DeepVariant joint genotyping with GLnexus"
+    script "../main.nf"
+
+    // Full-wiring stub test of the --joint_genotype path: DeepVariant -> GLnexus -> cohort VCF -> VEP.
+    // Real GLnexus joint genotyping (multi-sample output) is covered by the subworkflow nf-test
+    // (subworkflows/local/bam_joint_germline_deepvariant). Real VEP needs a cache (1000G review run).
+    // NOTE: a single `options "-stub"` is used on purpose - a second `options` call replaces it.
+    test("-profile test --tools deepvariant --joint_genotype --input joint_germline_deepvariant.csv -stub") {
+
+        tag "pipeline"
+        tag "pipeline_sarek"
+        options "-stub"
+
+        when {
+            params {
+                input          = "${projectDir}/tests/csv/3.0/joint_germline_deepvariant.csv"
+                step           = "variant_calling"
+                tools          = "deepvariant"
+                joint_genotype = true
+                // makes the auto-VEP leg self-contained in stub (no pre-staged cache needed)
+                download_cache = true
+                outdir         = "${outputDir}"
+            }
+        }
+
+        then {
+            // one cohort VCF + index from the joint genotyping step
+            def jointDir = file("${outputDir}/variant_calling/deepvariant/joint_variant_calling")
+            def jointVcf = jointDir.exists() ? jointDir.list().findAll { it.endsWith('.vcf.gz') } : []
+            def jointTbi = jointDir.exists() ? jointDir.list().findAll { it.endsWith('.vcf.gz.tbi') } : []
+            // VEP-annotated cohort VCF as the final output
+            def annDir = file("${outputDir}/annotation/deepvariant/joint_variant_calling")
+
+            assertAll(
+                { assert workflow.success },
+                { assert jointVcf.size() == 1 },
+                { assert jointTbi.size() == 1 },
+                { assert annDir.exists() },
+                { assert annDir.list().any { it.contains('VEP.ann') && it.endsWith('.vcf.gz') } }
+            )
+        }
+    }
+}

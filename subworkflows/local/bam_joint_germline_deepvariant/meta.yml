@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/meta-schema.json
+name: "bam_joint_germline_deepvariant"
+description: Joint genotyping of a germline cohort from per-sample DeepVariant gVCFs using GLnexus, returning one bgzipped, indexed multi-sample VCF
+keywords:
+  - deepvariant
+  - glnexus
+  - joint genotyping
+  - germline
+  - gvcf
+  - cohort
+components:
+  - glnexus
+  - bcftools/view
+input:
+  - gvcf:
+      type: channel
+      description: |
+        Per-sample DeepVariant gVCFs, one entry per sample
+        Structure: [ val(meta), path(gvcf) ]
+  - intervals_bed_combined:
+      type: channel
+      description: |
+        Single combined intervals BED restricting the joint call, or [] if no intervals
+        Structure: [ path(bed) ]
+output:
+  - genotype_vcf:
+      type: channel
+      description: |
+        Multi-sample (cohort) VCF for the whole germline cohort
+        Structure: [ val(meta), path(vcf.gz) ]
+  - genotype_index:
+      type: channel
+      description: |
+        Tabix index for the cohort VCF
+        Structure: [ val(meta), path(vcf.gz.tbi) ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@lpaluch"
+maintainers:
+  - "@lpaluch"
