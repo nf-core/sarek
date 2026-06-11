@@ -4,6 +4,7 @@ include { BCFTOOLS_SORT as SORT_FINAL_VCF           } from '../../../modules/nf-
 include { RBT_VCFSPLIT                              } from '../../../modules/nf-core/rbt/vcfsplit'
 include { VARLOCIRAPTOR_CALLVARIANTS                } from '../../../modules/nf-core/varlociraptor/callvariants'
 include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES } from '../../../modules/nf-core/varlociraptor/estimatealignmentproperties'
+include { VARLOCIRAPTOR_FILTERFDR                   } from '../../../modules/nf-core/varlociraptor/filterfdr'
 include { VARLOCIRAPTOR_PREPROCESS                  } from '../../../modules/nf-core/varlociraptor/preprocess'
 include { YTE as FILL_SCENARIO_FILE                 } from '../../../modules/nf-core/yte'
 
@@ -16,6 +17,8 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     ch_vcf
     val_num_chunks
     val_sampletype
+    val_events
+    val_fdr
 
     main:
     ch_versions = channel.empty()
@@ -101,11 +104,15 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
         ch_vcfs_for_callvariants
     )
 
+    VARLOCIRAPTOR_FILTERFDR(
+        VARLOCIRAPTOR_CALLVARIANTS.out.bcf.map { meta, vcf -> [ meta, vcf, val_events, val_fdr ] }
+    )
+
     //
     // SORT AND MERGE CALLED VARIANTS
     //
     SORT_CALLED_CHUNKS(
-        VARLOCIRAPTOR_CALLVARIANTS.out.bcf
+        VARLOCIRAPTOR_FILTERFDR.out.bcf
     )
     ch_versions = ch_versions.mix(SORT_CALLED_CHUNKS.out.versions)
 

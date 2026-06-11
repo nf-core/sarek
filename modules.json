@@ -573,17 +573,22 @@
                     },
                     "varlociraptor/callvariants": {
                         "branch": "master",
-                        "git_sha": "5ae3c74e09c529c5c768aa89397e490ba4728219",
+                        "git_sha": "289374af2f576e1040db10c42759c4a4804ffeb5",
                         "installed_by": ["modules"]
                     },
                     "varlociraptor/estimatealignmentproperties": {
                         "branch": "master",
-                        "git_sha": "5ae3c74e09c529c5c768aa89397e490ba4728219",
+                        "git_sha": "289374af2f576e1040db10c42759c4a4804ffeb5",
+                        "installed_by": ["modules"]
+                    },
+                    "varlociraptor/filterfdr": {
+                        "branch": "master",
+                        "git_sha": "289374af2f576e1040db10c42759c4a4804ffeb5",
                         "installed_by": ["modules"]
                     },
                     "varlociraptor/preprocess": {
                         "branch": "master",
-                        "git_sha": "5ae3c74e09c529c5c768aa89397e490ba4728219",
+                        "git_sha": "289374af2f576e1040db10c42759c4a4804ffeb5",
                         "installed_by": ["modules"]
                     },
                     "vcflib/vcffilter": {

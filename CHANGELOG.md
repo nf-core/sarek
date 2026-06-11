@@ -40,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | --htslib      |             | 1.23.1      |
 | multiqc       | 1.33        | 1.35        |
 | snpeff        | 5.3a        | 5.4c        |
-| varlociraptor | 8.7.4       | 8.9.3       |
+| varlociraptor | 8.7.4       | 8.9.5       |
 | yte           | 1.9.0       | 1.9.4       |
 
 ### Dependencies - plugins
