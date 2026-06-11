@@ -1,12 +1,7 @@
 {
     "-profile test --step variant_calling --input tests/csv/3.0/recalibrated_somatic_two_normal_one_sample.csv": {
         "content": [
-            [
-                "csv",
-                "multiqc",
-                "multiqc/index.json",
-                "pipeline_info"
-            ],
+            ["csv", "multiqc", "multiqc/index.json", "pipeline_info"],
             "No stable content",
             "No BAM files",
             "No CRAM files",
@@ -15,9 +10,7 @@
                 "WARN: Failed to render execution report -- see the log file for details",
                 "WARN: Failed to render execution timeline -- see the log file for details"
             ],
-            [
-                "Patient [test] has more than one sample [2] with normal status [0] and one sample with tumor status [1]."
-            ]
+            ["Patient [test] has more than one sample [2] with normal status [0] and one sample with tumor status [1]."]
         ],
         "meta": {
             "nf-test": "0.9.3",
@@ -27,9 +20,7 @@
     },
     "-profile test --input tests/csv/3.0/fastq_sample_with_space.csv": {
         "content": [
-            [
-                "pipeline_info"
-            ],
+            ["pipeline_info"],
             "No stable content",
             "No BAM files",
             "No CRAM files",
@@ -50,12 +41,7 @@
     },
     "-profile test --input tests/csv/3.0/fastq_multiple_sample_ids.csv": {
         "content": [
-            [
-                "csv",
-                "multiqc",
-                "multiqc/index.json",
-                "pipeline_info"
-            ],
+            ["csv", "multiqc", "multiqc/index.json", "pipeline_info"],
             "No stable content",
             "No BAM files",
             "No CRAM files",
@@ -77,12 +63,7 @@
     },
     "-profile test --input tests/csv/3.0/fastq_multiple_lane_ids.csv": {
         "content": [
-            [
-                "csv",
-                "multiqc",
-                "multiqc/index.json",
-                "pipeline_info"
-            ],
+            ["csv", "multiqc", "multiqc/index.json", "pipeline_info"],
             "No stable content",
             "No BAM files",
             "No CRAM files",
@@ -104,9 +85,7 @@
     },
     "-profile test,spark --input tests/csv/3.0/fastq_single.csv --use_gatk_spark baserecalibrator,markduplicates --save_mapped --save_output_as_bam": {
         "content": [
-            [
-                "pipeline_info"
-            ],
+            ["pipeline_info"],
             "No stable content",
             "No BAM files",
             "No CRAM files",
@@ -114,8 +93,10 @@
             "No warnings",
             [
                 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-                "  The --use_gatk_spark option is not compatible with --save_mapped and --save_output_as_bam.",
-                "  If you want to save your bam files please swap to the normal gatk implementation.",
+                "  --use_gatk_spark with 'markduplicates' is not compatible with --save_mapped.",
+                "  Spark markduplicates requires name-sorted input, so the saved mapped",
+                "  alignment (BAM or CRAM) would be name-sorted and cannot be indexed.",
+                "  Either drop --save_mapped, or switch to the non-Spark markduplicates path.",
                 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             ]
         ],

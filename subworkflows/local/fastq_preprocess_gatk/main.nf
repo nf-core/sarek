@@ -26,10 +26,6 @@ include { BAM_MERGE_INDEX_SAMTOOLS                          } from '../../../sub
 // Convert BAM files
 include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING           } from '../../../modules/nf-core/samtools/convert/main'
 
-// Convert CRAM files (optional)
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM                   } from '../../../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL             } from '../../../modules/nf-core/samtools/convert/main'
-
 // Copy UMIs from read name to RX tag
 include { FGBIO_COPYUMIFROMREADNAME                         } from '../../../modules/nf-core/fgbio/copyumifromreadname/main'
 
@@ -310,7 +306,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
-            cram_markduplicates_spark = BAM_MARKDUPLICATES_SPARK.out.cram
+            cram_markduplicates_spark = BAM_MARKDUPLICATES_SPARK.out.alignment
 
             // Gather QC reports
             reports = reports.mix(BAM_MARKDUPLICATES_SPARK.out.reports.collect{ _meta, report -> [ report ] })
@@ -328,7 +324,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 fasta_fai,
                 intervals_for_preprocessing)
 
-            cram_sentieon_dedup = BAM_SENTIEON_DEDUP.out.cram
+            cram_sentieon_dedup = BAM_SENTIEON_DEDUP.out.alignment
 
             // Gather QC reports
             reports = reports.mix(BAM_SENTIEON_DEDUP.out.reports.collect{ _meta, report -> [ report ] })
@@ -343,7 +339,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 fasta_fai,
                 intervals_for_preprocessing)
 
-            cram_markduplicates_no_spark = BAM_MARKDUPLICATES.out.cram
+            cram_markduplicates_no_spark = BAM_MARKDUPLICATES.out.alignment
 
             // Gather QC reports
             reports = reports.mix(BAM_MARKDUPLICATES.out.reports.collect{ _meta, report -> [ report ] })
@@ -353,24 +349,18 @@ workflow FASTQ_PREPROCESS_GATK {
         }
 
         // ch_md_cram_for_restart contains either:
-        // - crams from markduplicates
-        // - crams from sentieon_dedup
-        // - crams from markduplicates_spark
-        // - crams from input step markduplicates --> from the converted ones only?
+        // - alignment (BAM or CRAM) from markduplicates
+        // - alignment from sentieon_dedup
+        // - alignment from markduplicates_spark
         ch_md_cram_for_restart = channel.empty().mix(cram_markduplicates_no_spark, cram_markduplicates_spark, cram_sentieon_dedup)
             // Make sure correct data types are carried through
-            .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
+            .map{ meta, file, index -> [ meta + [data_type: file.name.endsWith('.cram') ? 'cram' : 'bam'], file, index ] }
 
-        // If params.save_output_as_bam, then convert CRAM files to BAM
-        CRAM_TO_BAM(ch_md_cram_for_restart, fasta, fasta_fai)
-        versions = versions.mix(CRAM_TO_BAM.out.versions)
-
-        // CSV should be written for the file actually out, either CRAM or BAM
+        // CSV should be written for the file actually output, either CRAM or BAM
         // Create CSV to restart from this step
         csv_subfolder = (params.tools && params.tools.split(',').contains('sentieon_dedup')) ? 'sentieon_dedup' : 'markduplicates'
 
-        if (params.save_output_as_bam) CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true), csv_subfolder, params.outdir, params.save_output_as_bam)
-        else CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir, params.save_output_as_bam)
+        CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir)
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
@@ -392,7 +382,7 @@ workflow FASTQ_PREPROCESS_GATK {
             // - input cram files, when start from step markduplicates
             ch_cram_for_bam_baserecalibrator = channel.empty().mix(ch_md_cram_for_restart, cram_skip_markduplicates )
                 // Make sure correct data types are carried through
-                .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
+                .map{ meta, file, index -> [ meta + [data_type: file.name.endsWith('.cram') ? 'cram' : 'bam'], file, index ] }
 
         }
 
@@ -445,7 +435,7 @@ workflow FASTQ_PREPROCESS_GATK {
             cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
 
             // Create CSV to restart from this step
-            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), params.tools, params.skip_tools, params.outdir, params.save_output_as_bam)
+            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), params.tools, params.skip_tools, params.outdir)
         }
     }
 
@@ -472,7 +462,7 @@ workflow FASTQ_PREPROCESS_GATK {
                     fasta_fai,
                     intervals_and_num_intervals)
 
-                cram_variant_calling_spark = BAM_APPLYBQSR_SPARK.out.cram
+                cram_variant_calling_spark = BAM_APPLYBQSR_SPARK.out.alignment
 
                 // Gather used softwares versions
                 versions = versions.mix(BAM_APPLYBQSR_SPARK.out.versions)
@@ -486,7 +476,7 @@ workflow FASTQ_PREPROCESS_GATK {
                     fasta_fai,
                     intervals_and_num_intervals)
 
-                cram_variant_calling_no_spark = BAM_APPLYBQSR.out.cram
+                cram_variant_calling_no_spark = BAM_APPLYBQSR.out.alignment
 
                 // Gather used softwares versions
                 versions = versions.mix(BAM_APPLYBQSR.out.versions)
@@ -496,16 +486,8 @@ workflow FASTQ_PREPROCESS_GATK {
                 cram_variant_calling_no_spark,
                 cram_variant_calling_spark)
 
-            // If params.save_output_as_bam, then convert CRAM files to BAM
-            CRAM_TO_BAM_RECAL(cram_variant_calling, fasta, fasta_fai)
-            versions = versions.mix(CRAM_TO_BAM_RECAL.out.versions)
-
-            // CSV should be written for the file actually out out, either CRAM or BAM
-            csv_recalibration = channel.empty()
-            csv_recalibration = params.save_output_as_bam ? CRAM_TO_BAM_RECAL.out.bam.join(CRAM_TO_BAM_RECAL.out.bai, failOnDuplicate: true, failOnMismatch: true) : cram_variant_calling
-
             // Create CSV to restart from this step
-            CHANNEL_APPLYBQSR_CREATE_CSV(csv_recalibration, params.outdir, params.save_output_as_bam)
+            CHANNEL_APPLYBQSR_CREATE_CSV(cram_variant_calling, params.outdir)
 
         } else if (params.step == 'recalibrate') {
             // cram_variant_calling contains either:
