@@ -1,7 +1,7 @@
 {
     "-profile test --tools strelka,varlociraptor --input recalibrated_somatic.csv": {
         "content": [
-            181,
+            153,
             {
                 "ALIGNMENTPROPERTIES_NORMAL": {
                     "varlociraptor": "8.9.5"
@@ -317,11 +317,11 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-06-12T11:12:39.10653745"
+        "timestamp": "2026-06-12T14:56:17.705455093"
     },
     "-profile test --tools mutect2,varlociraptor --input recalibrated_tumoronly.csv": {
         "content": [
-            72,
+            73,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
@@ -386,13 +386,16 @@
                     "tabix": "1.21"
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
+                },
+                "VARLOCIRAPTOR_FILTERFDR": {
+                    "varlociraptor": "8.9.5"
                 },
                 "VARLOCIRAPTOR_PREPROCESS": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -566,7 +569,7 @@
                 "sample2.mutect2.vcf.gz:md5,a53450657afc33f2a7b87fd75bf24267"
             ],
             [
-                "sample2.mutect2.tumor_only.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=1258, phased=true, phasedAutodetect=false]"
+                "sample2.mutect2.tumor_only.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[], sampleCount=2, variantCount=0, phased=true, phasedAutodetect=true]"
             ],
             "No warnings"
         ],
@@ -574,11 +577,11 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2025-11-04T11:46:27.501146"
+        "timestamp": "2026-06-12T15:01:23.802458652"
     },
     "-profile test --tools strelka,varlociraptor --input recalibrated_germline.csv": {
         "content": [
-            82,
+            68,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
@@ -810,6 +813,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-06-12T11:08:04.556876986"
+        "timestamp": "2026-06-12T14:45:50.699233572"
     }
 }
