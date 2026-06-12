@@ -255,15 +255,11 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         ch_vcf_for_callvariants
     )
 
-    VARLOCIRAPTOR_FILTERFDR(
-        VARLOCIRAPTOR_CALLVARIANTS.out.bcf.map { meta, vcf -> [ meta, vcf, val_events, val_fdr ] }
-    )
-
     //
     // SORT AND MERGE CALLED VARIANTS
     //
     SORT_CALLED_CHUNKS(
-        VARLOCIRAPTOR_FILTERFDR.out.bcf
+        VARLOCIRAPTOR_CALLVARIANTS.out.bcf
     )
     ch_versions = ch_versions.mix(SORT_CALLED_CHUNKS.out.versions)
 
@@ -290,7 +286,11 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     ch_final_vcf = ch_sort_called_chunks_vcf.single.mix(CONCAT_CALLED_CHUNKS.out.vcf)
 
-    SORT_FINAL_VCF(ch_final_vcf)
+    VARLOCIRAPTOR_FILTERFDR(
+        ch_final_vcf.map { meta, vcf -> [ meta, vcf, val_events, val_fdr ] }
+    )
+
+    SORT_FINAL_VCF(VARLOCIRAPTOR_FILTERFDR.out.bcf)
 
     ch_versions = ch_versions.mix(SORT_FINAL_VCF.out.versions)
 
