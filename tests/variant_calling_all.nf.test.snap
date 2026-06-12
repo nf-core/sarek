@@ -535,7 +535,7 @@
                 "test.bcftools.bcftools_stats.txt:md5,4b2997064fb500f090639edca1ccaa6e",
                 "test.deepvariant.bcftools_stats.txt:md5,61ab450ed778088b9c879b8dcbbb9db8",
                 "test.freebayes.filtered.bcftools_stats.txt:md5,dde124ceaf6f109cd274b837b950096b",
-                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,6f942caec2f4f02c69e1216226fa44a9",
+                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,189bc07d38c2a9ae34b141cff402bda6",
                 "test.strelka.variants.bcftools_stats.txt:md5,2613827870dd789fe602a8a3b739b7f2",
                 "test2_vs_test.strelka.somatic_indels.bcftools_stats.txt:md5,5e8f9a8fdbc765ced736d0c8c7dd3a52",
                 "test2_vs_test.strelka.somatic_snvs.bcftools_stats.txt:md5,edb7763fad7b6f825e47e01ffa70adbc",
@@ -567,7 +567,7 @@
                 "test.deepvariant.TsTv.count:md5,d3c138521fd95eb45f6e495f39d47404",
                 "test.freebayes.filtered.FILTER.summary:md5,87e753ba2ad969475fb55661852f75e0",
                 "test.freebayes.filtered.TsTv.count:md5,845f64e5bb4224af98f3a47294cd5483",
-                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,126e83dcd37b82420f7c5d7b235479f1",
+                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,1f06f857e3576c6a98c32d1e7f51f456",
                 "test2_vs_test.freebayes.filtered.TsTv.count:md5,28919c7d29c998681391d2027af3e0f9",
                 "test.strelka.variants.FILTER.summary:md5,dd87f507da7de20d5318841af312493b",
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
@@ -623,7 +623,7 @@
                 ],
                 [
                     "test2_vs_test.freebayes.vcf.gz",
-                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=1447, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=1453, phased=false, phasedAutodetect=false]"
                 ]
             ],
             [
@@ -641,16 +641,13 @@
                 "test2_vs_test.tiddit.tumor.vcf.gz:md5,a4a162ddf9a49df61c62abbf704e2d19",
                 "test2_vs_test.tiddit_sv_merge.vcf.gz:md5,9105fb1263deef2521b302b38d77cad7"
             ],
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
-            ]
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-01-08T16:27:17.419740053"
+        "timestamp": "2026-06-12T16:20:15.694178204"
     },
     "-profile test --input tests/csv/3.0/fastq_single.csv --tools cnvkit,deepvariant,freebayes,mpileup,strelka,tiddit": {
         "content": [
@@ -1144,15 +1141,13 @@
                 "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565",
                 "test.tiddit.vcf.gz:md5,ac44cc2f44ebec84f5377e3274131876"
             ],
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
-            ]
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-01-08T12:49:19.475669979"
+        "timestamp": "2026-06-12T16:23:41.706393706"
     },
     "-profile test --input tests/csv/3.0/fastq_tumor_only.csv --tools cnvkit,freebayes,mpileup,mutect2,tiddit": {
         "content": [
@@ -1608,15 +1603,12 @@
                 "test2.mutect2.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2.tiddit.vcf.gz:md5,a4a162ddf9a49df61c62abbf704e2d19"
             ],
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
-                "WARN: No Panel-of-normal was specified for Mutect2."
-            ]
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2026-01-08T14:32:16.644778218"
+        "timestamp": "2026-06-12T16:16:13.675589663"
     }
 }
