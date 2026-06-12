@@ -10,10 +10,10 @@
                     "varlociraptor": "8.9.3"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.23.1
                 },
                 "CONCAT_CALLED_CHUNKS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.23.1
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -55,10 +55,10 @@
                     "samtools": 1.21
                 },
                 "SORT_CALLED_CHUNKS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.23.1
                 },
                 "SORT_FINAL_VCF": {
-                    "bcftools": 1.21
+                    "bcftools": 1.23.1
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -321,13 +321,13 @@
             72,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.23.1
                 },
                 "CALCULATECONTAMINATION": {
                     "gatk4": "4.6.1.0"
                 },
                 "CONCAT_CALLED_CHUNKS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.23.1
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -369,10 +369,10 @@
                     "samtools": 1.21
                 },
                 "SORT_CALLED_CHUNKS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.23.1
                 },
                 "SORT_FINAL_VCF": {
-                    "bcftools": 1.21
+                    "bcftools": 1.23.1
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -578,10 +578,10 @@
             67,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.23.1
                 },
                 "CONCAT_CALLED_CHUNKS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.23.1
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -608,10 +608,10 @@
                     "samtools": 1.21
                 },
                 "SORT_CALLED_CHUNKS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.23.1
                 },
                 "SORT_FINAL_VCF": {
-                    "bcftools": 1.21
+                    "bcftools": 1.23.1
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"

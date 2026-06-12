@@ -104,14 +104,10 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     MERGE_GERMLINE_SOMATIC_VCFS(
         branched.matched.map { _key, meta_somatic, somatic_vcf, somatic_tbi, _meta_germline, germline_vcf, germline_tbi ->
-            [meta_somatic, [somatic_vcf, germline_vcf], [somatic_tbi, germline_tbi]]
+            [meta_somatic, [somatic_vcf, germline_vcf], [somatic_tbi, germline_tbi], []]
         },
-        ch_fasta,
-        ch_fasta_fai,
-        [[], []],
+        ch_fasta.combine(ch_fasta_fai).map{fasta, fai -> [["id":"fasta"], fasta, fai]}
     )
-
-    ch_versions = ch_versions.mix(MERGE_GERMLINE_SOMATIC_VCFS.out.versions)
 
     // Combine merged VCFs with unmatched somatic VCFs
     ch_vcf = MERGE_GERMLINE_SOMATIC_VCFS.out.vcf.mix(
@@ -258,7 +254,6 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     SORT_CALLED_CHUNKS(
         VARLOCIRAPTOR_CALLVARIANTS.out.bcf
     )
-    ch_versions = ch_versions.mix(SORT_CALLED_CHUNKS.out.versions)
 
     ch_sort_called_chunks_vcf = SORT_CALLED_CHUNKS.out.vcf.branch {
         single: val_num_chunks <= 1
@@ -279,13 +274,9 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     CONCAT_CALLED_CHUNKS(ch_vcf_tbi_chunks)
 
-    ch_versions = ch_versions.mix(CONCAT_CALLED_CHUNKS.out.versions)
-
     ch_final_vcf = ch_sort_called_chunks_vcf.single.mix(CONCAT_CALLED_CHUNKS.out.vcf)
 
     SORT_FINAL_VCF(ch_final_vcf)
-
-    ch_versions = ch_versions.mix(SORT_FINAL_VCF.out.versions)
 
     emit:
     vcf      = SORT_FINAL_VCF.out.vcf

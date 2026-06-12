@@ -34,14 +34,10 @@ workflow VCF_ANNOTATE_ALL {
 
     if (tools.split(',').contains('bcfann')) {
         BCFTOOLS_ANNOTATE(
-            vcf.map { meta, vcf_ -> [meta, vcf_, []] }.combine(bcftools_annotations).combine(bcftools_annotations_index),
-            bcftools_columns,
-            bcftools_header_lines,
-            [],
+            vcf.map { meta, vcf_ -> [meta, vcf_, []] }.combine(bcftools_annotations).combine(bcftools_annotations_index).combine(bcftools_columns).combine(bcftools_header_lines).map{meta, vcf_, index, ann, ann_index, cols, header -> [meta, vcf_, index, ann, ann_index, cols, header, []]}
         )
 
-        vcf_ann = vcf_ann.mix(BCFTOOLS_ANNOTATE.out.vcf.join(BCFTOOLS_ANNOTATE.out.tbi, failOnDuplicate: true, failOnMismatch: true))
-        versions = versions.mix(BCFTOOLS_ANNOTATE.out.versions)
+        vcf_ann = vcf_ann.mix(BCFTOOLS_ANNOTATE.out.vcf.join(BCFTOOLS_ANNOTATE.out.index, failOnDuplicate: true, failOnMismatch: true))
     }
 
     if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff')) {

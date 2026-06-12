@@ -38,7 +38,7 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
     }
 
     // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_mpileup = BCFTOOLS_MPILEUP.out.tbi.branch {
+    tbi_mpileup = BCFTOOLS_MPILEUP.out.index.branch {
         intervals: it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
     }
@@ -69,7 +69,6 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
         .map { meta, tbi -> [meta - meta.subMap('num_intervals') + [variantcaller: 'bcftools'], tbi] }
 
     versions = versions.mix(SAMTOOLS_MPILEUP.out.versions)
-    versions = versions.mix(BCFTOOLS_MPILEUP.out.versions)
     versions = versions.mix(CAT_MPILEUP.out.versions)
     versions = versions.mix(MERGE_BCFTOOLS_MPILEUP.out.versions)
 
