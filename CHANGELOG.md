@@ -53,9 +53,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params                        | status |
-| ----------------------------- | ------ |
-| `--vep_cache_preflight_check` | New    |
+| Params                              | status |
+| ----------------------------------- | ------ |
+| `--vep_cache_preflight_check`       | New    |
+| `--varlociraptor_events_germline`   | New    |
+| `--varlociraptor_events_somatic,`   | New    |
+| `--varlociraptor_events_tumor_only` | New    |
+| `--varlociraptor_fdr`               | New    |
 
 ### Developer section
 
@@ -96,6 +100,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#2128](https://github.com/nf-core/sarek/pull/2128) - Fix `bcftools concat` failing on Strelka somatic VCFs with non-contiguous chromosome blocks by adding `--allow-overlaps`
+- [#2208](https://github.com/nf-core/sarek/pull/2208) - Update freebayes params, move chunk_size
 
 ### Removed
 
