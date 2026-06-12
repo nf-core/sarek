@@ -1410,6 +1410,32 @@ Sentieon's function `TNscope` can also be used by adding `--tools sentieon_tnsco
 
 Sentieon's [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) does not support the [GenomicsDB](https://gatk.broadinstitute.org/hc/en-us/articles/5358869876891-GenomicsDBImport) datastore format. This means that, in contrast to the GATK based joint germline variant calling subworkflow in Sarek, the Sentieon/DNAseq based joint germline variant calling subworkflow does not use the GenomicsDB datastore format.
 
+### Joint genotyping of DeepVariant cohorts with GLnexus
+
+By default DeepVariant produces one VCF/gVCF per sample. For population-scale germline studies you usually want a single, jointly-genotyped, multi-sample (cohort) VCF instead. Add `--joint_genotype` to run [GLnexus](https://github.com/dnanexus-rnd/GLnexus) over the per-sample DeepVariant gVCFs of all germline samples and produce one cohort VCF.
+
+```bash
+nextflow run nf-core/sarek -profile docker \
+    --input samplesheet.csv \
+    --step variant_calling \
+    --tools deepvariant \
+    --joint_genotype \
+    --outdir results
+```
+
+Notes:
+
+- `--joint_genotype` requires `deepvariant` in `--tools`, and at least two germline samples (`status` `0`). It may only be combined with `deepvariant` and annotation tools (`vep`, `snpeff`, `snpsift`, `bcfann`, `merge`); combining it with another variant caller is rejected, to keep the cohort VCF as the single, unambiguous output.
+- The cohort VCF is always **VEP-annotated** — `--joint_genotype` enables VEP automatically, so you do not need to add `vep` to `--tools`. As for any VEP run, a VEP cache must be available (provide one with `--vep_cache`, or let the pipeline fetch it with `--download_cache`; see [How to customise SnpEff and VEP annotation](#how-to-customise-snpeff-and-vep-annotation)).
+- GLnexus selects the `DeepVariantWGS` configuration by default, or `DeepVariantWES` when `--wes` is set.
+
+Outputs (the final, annotated cohort VCF is the deliverable):
+
+- Raw joint (GLnexus) cohort VCF: `variant_calling/deepvariant/joint_variant_calling/`
+- Final VEP-annotated cohort VCF: `annotation/deepvariant/joint_variant_calling/` (`*_VEP.ann.vcf.gz`)
+
+To try it on a small cohort, run `-profile test_joint_genotype,docker`. A larger review dataset (three 1000 Genomes Phase 3 samples, subset to a single chromosome) can be created with `tests/scripts/download_joint_test_data.sh` — no data is committed to the repository.
+
 ### QualCal (BQSR)
 
 Currently, Sentieon's version of BQSR, QualCal, is not available in Sarek. Recent Illumina sequencers tend to provide well-calibrated BQs, so BQSR may not provide much benefit. By default Sarek runs GATK's BQSR; that can be skipped by adding the option `--skip_tools baserecalibrator`.

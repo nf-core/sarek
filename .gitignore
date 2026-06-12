@@ -8,6 +8,7 @@ testing*
 *.pyc
 null/
 *.code-workspace
+.idea/
 .nf-test*
 .nf-test/
 test-datasets/
