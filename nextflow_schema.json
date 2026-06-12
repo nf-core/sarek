@@ -554,6 +554,26 @@
                     "description": "Number of chunks to split the vcf-files for varlociraptor. Minimum 1, indicates no splitting",
                     "hidden": true
                 },
+                "varlociraptor_events_tumor_only": {
+                    "type": "string",
+                    "default": "somatic_tumor_high somatic_tumor_low",
+                    "description": "Events to consider for FDR filtering for tumor only samples, must match events described in scenario file."
+                },
+                "varlociraptor_events_somatic": {
+                    "type": "string",
+                    "default": "somatic_tumor_high somatic_tumor_low somatic_normal",
+                    "description": "Events to consider for FDR filtering for somatic samples, must match events described in scenario file."
+                },
+                "varlociraptor_events_germline": {
+                    "type": "string",
+                    "default": "germline",
+                    "description": "Events to consider for FDR filtering for germline samples, must match events described in scenario file."
+                },
+                "varlociraptor_fdr": {
+                    "type": "number",
+                    "default": 0.05,
+                    "description": "The probability to be a false discovery may not exceed the given threshold."
+                },
                 "varlociraptor_scenario_tumor_only": {
                     "type": "string",
                     "description": "Yte compatible scenario file for tumor only samples. Defaults to assets/varlociraptor_tumor_only.yte.yaml"

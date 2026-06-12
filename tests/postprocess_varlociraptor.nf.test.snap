@@ -1,13 +1,13 @@
 {
     "-profile test --tools strelka,varlociraptor --input recalibrated_somatic.csv": {
         "content": [
-            151,
+            181,
             {
                 "ALIGNMENTPROPERTIES_NORMAL": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "ALIGNMENTPROPERTIES_TUMOR": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
@@ -43,10 +43,10 @@
                     "mosdepth": "0.3.10"
                 },
                 "PREPROCESS_NORMAL": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "PREPROCESS_TUMOR": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "RBT_VCFSPLIT": {
                     "rbt": "0.42.2"
@@ -81,13 +81,16 @@
                     "tabix": 1.21
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
+                },
+                "VARLOCIRAPTOR_FILTERFDR": {
+                    "varlociraptor": "8.9.5"
                 },
                 "VARLOCIRAPTOR_PREPROCESS": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -305,8 +308,8 @@
                 "sample4_vs_sample3.strelka.merged.vcf.gz:md5,ecbb04bc2a4f802cac75f232d263ebe8"
             ],
             [
-                "sample3.strelka.germline.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=53245, phased=true, phasedAutodetect=false]",
-                "sample4_vs_sample3.strelka.somatic.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=54634, phased=true, phasedAutodetect=false]"
+                "sample3.strelka.germline.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=65, phased=true, phasedAutodetect=false]",
+                "sample4_vs_sample3.strelka.somatic.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=404, phased=true, phasedAutodetect=false]"
             ],
             "No warnings"
         ],
@@ -314,7 +317,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2025-11-02T16:48:49.54626"
+        "timestamp": "2026-06-12T11:12:39.10653745"
     },
     "-profile test --tools mutect2,varlociraptor --input recalibrated_tumoronly.csv": {
         "content": [
@@ -575,7 +578,7 @@
     },
     "-profile test --tools strelka,varlociraptor --input recalibrated_germline.csv": {
         "content": [
-            67,
+            82,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.21
@@ -628,13 +631,16 @@
                     "tabix": 1.21
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
+                },
+                "VARLOCIRAPTOR_FILTERFDR": {
+                    "varlociraptor": "8.9.5"
                 },
                 "VARLOCIRAPTOR_PREPROCESS": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -796,7 +802,7 @@
                 "sample1.strelka.variants.vcf.gz:md5,5af34e7b632f604dc7a224f977fc2898"
             ],
             [
-                "sample1.strelka.germline.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=53245, phased=true, phasedAutodetect=false]"
+                "sample1.strelka.germline.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=65, phased=true, phasedAutodetect=false]"
             ],
             "No warnings"
         ],
@@ -804,6 +810,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2025-11-01T23:04:58.277878"
+        "timestamp": "2026-06-12T11:08:04.556876986"
     }
 }
