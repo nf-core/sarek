@@ -555,8 +555,8 @@ workflow SAREK {
             vcf_to_annotate = input_sample
         }
 
-        // Joint genotyping always VEP-annotates the cohort VCF. 'merge' already implies SnpEff+VEP,
-        // so don't add a second VEP in that case. (Validation guarantees joint_genotype => deepvariant.)
+        // Joint genotyping adds VEP annotation of the cohort VCF. 'merge' already runs SnpEff+VEP,
+        // so it is left unchanged; otherwise 'vep' is added to the annotation tool set.
         def toolset = tools.split(',') as Set
         def annotation_tools = (params.joint_genotype && !toolset.contains('vep') && !toolset.contains('merge')) ? "${tools},vep" : tools
 

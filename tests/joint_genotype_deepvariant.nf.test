@@ -8,7 +8,7 @@ nextflow_pipeline {
     // Full-wiring stub test of the --joint_genotype path: DeepVariant -> GLnexus -> cohort VCF -> VEP.
     // Real GLnexus joint genotyping (multi-sample output) is covered by the subworkflow nf-test
     // (subworkflows/local/bam_joint_germline_deepvariant). Real VEP needs a cache (1000G review run).
-    // NOTE: a single `options "-stub"` is used on purpose - a second `options` call replaces it.
+    // nf-test keeps the last options declaration, so keep all Nextflow options in one statement.
     test("-profile test --tools deepvariant --joint_genotype --input joint_germline_deepvariant.csv -stub") {
 
         tag "pipeline"
@@ -21,7 +21,7 @@ nextflow_pipeline {
                 step           = "variant_calling"
                 tools          = "deepvariant"
                 joint_genotype = true
-                // makes the auto-VEP leg self-contained in stub (no pre-staged cache needed)
+                // Validate the auto-VEP leg in stub mode without requiring a pre-staged cache.
                 download_cache = true
                 outdir         = "${outputDir}"
             }
