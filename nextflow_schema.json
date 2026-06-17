@@ -561,7 +561,7 @@
                 },
                 "varlociraptor_events_somatic": {
                     "type": "string",
-                    "default": "somatic_tumor_high somatic_tumor_low somatic_normal",
+                    "default": "somatic_tumor_high somatic_tumor_low",
                     "description": "Events to consider for FDR filtering for somatic samples, must match events described in scenario file."
                 },
                 "varlociraptor_events_germline": {
