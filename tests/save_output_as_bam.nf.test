@@ -29,7 +29,8 @@ nextflow_pipeline {
                 step: 'markduplicates',
                 skip_tools: 'baserecalibrator,fastqc,mosdepth,multiqc,samtools',
                 input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv"
-            ]
+            ],
+            sentieon: true,
         ]
     ]
 
