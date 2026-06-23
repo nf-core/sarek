@@ -83,8 +83,6 @@ Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
 
 #### Fixed
 
-- [#2217](https://github.com/nf-core/sarek/pull/2217) - Mark sentieon_dedup scenario in `save_output_as_bam` test with `sentieon: true` flag
-
 - [#2117](https://github.com/nf-core/sarek/pull/2117) - Update alignment related files to strict syntax
 - [#2129](https://github.com/nf-core/sarek/pull/2129) - Fix MuSE timestamp, swap to topics and change to strict syntax
 - [#2165](https://github.com/nf-core/sarek/pull/2165) - Recover help message
@@ -92,6 +90,7 @@ Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
 - [#2170](https://github.com/nf-core/sarek/pull/2170) - Add index to workflow output for MultiQC
 - [#2189](https://github.com/nf-core/sarek/pull/2189) - Preserve `groupKey` size hint into `groupTuple` in the sentieon haplotyper and dnascope subworkflows so per-sample MERGE*SENTIEON*\*\_VCFS / GVCFS emits progressively as each sample's intervals finish instead of bursting at end-of-haplotyper.
 - [#2197](https://github.com/nf-core/sarek/pull/2197) - Fix controlfreec `versions` emission: swap to topics and remove explicit `versions.mix` wiring
+- [#2217](https://github.com/nf-core/sarek/pull/2217) - Mark sentieon_dedup scenario in `save_output_as_bam` test with `sentieon: true` flag
 
 #### Removed
 
