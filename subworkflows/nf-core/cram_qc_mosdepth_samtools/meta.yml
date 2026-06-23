@@ -58,6 +58,6 @@ output:
       pattern: "*{.stats,.txt,.bed.gz,.bed.gz.csi}"
 
 authors:
-  - "@__"
+  - "@agrima2010"
 maintainers:
-  - "@__"
+  - "@agrima2010"
