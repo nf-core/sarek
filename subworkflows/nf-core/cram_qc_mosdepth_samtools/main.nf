@@ -2,8 +2,8 @@
 // QC on CRAM
 //
 
-include { SAMTOOLS_STATS } from '../../../modules/nf-core/samtools/stats/main'
-include { MOSDEPTH       } from '../../../modules/nf-core/mosdepth/main'
+include { MOSDEPTH       } from '../../../modules/nf-core/mosdepth'
+include { SAMTOOLS_STATS } from '../../../modules/nf-core/samtools/stats'
 
 workflow CRAM_QC_MOSDEPTH_SAMTOOLS {
     take:
