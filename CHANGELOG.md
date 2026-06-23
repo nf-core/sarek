@@ -5,34 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Added
-
-### Changed
-
-### Fixed
-
-### Removed
-
-### Dependencies - modules
-
-### Dependencies - plugins
-
-### Parameters
-
-### Developer section
-
-#### Added
-
-#### Changed
-
-- Mark sentieon_dedup scenario in `save_output_as_bam` test with `sentieon: true` flag
-
-#### Fixed
-
-#### Removed
-
 ## [3.9.0](https://github.com/nf-core/sarek/releases/tag/3.9.0) - Sarvesjåhkå
 
 Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
@@ -108,6 +80,7 @@ Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
 - [#2194](https://github.com/nf-core/sarek/pull/2194) - Update `ensemblvep/vep` module: add `htslib` dependency, support apptainer container engine, fix cache input signature, fix output path patterns
 - [#2194](https://github.com/nf-core/sarek/pull/2194) - Update `main.nf` to use lowercase `channel.*` factory methods (strict syntax)
 - [#2203](https://github.com/nf-core/sarek/pull/2203) - Dedicated GHA for `Sentieon`
+- [#2217](https://github.com/nf-core/sarek/pull/2217) - Mark sentieon_dedup scenario in `save_output_as_bam` test with `sentieon: true` flag
 
 #### Fixed
 
