@@ -122,7 +122,7 @@
                     },
                     "controlfreec/assesssignificance": {
                         "branch": "master",
-                        "git_sha": "8f6fc518531291208e7a665f6e8bcbeb1f05f49e",
+                        "git_sha": "8a34a4cc59c480816e45d3b68ca11b8eab2edff1",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/controlfreec/assesssignificance/controlfreec-assesssignificance.diff"
                     },
