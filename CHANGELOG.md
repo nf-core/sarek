@@ -33,6 +33,7 @@ Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
 - [#2189](https://github.com/nf-core/sarek/pull/2189) - Fixes the `interval_name` → `intervals_name` typo in the branch step (was a silent no-op)
 - [#2190](https://github.com/nf-core/sarek/pull/2190) - Fix controlfreec crash in edge cases when no breakpoints are found
 - [#2196](https://github.com/nf-core/sarek/pull/2196) - Update `vep_version` parameter from `115.0-0` to `115.2-1` and fix `loftee_path` from `/usr/local/share` to `/opt/conda/share` to match the container VEP installation path
+- [#2216](https://github.com/nf-core/sarek/pull/2216) - Fix `--normalize_vcfs` dropping a real ALT allele of `1/2` multiallelic sites (`bcftools norm --rm-dup all` → `--rm-dup exact`)
 
 ### Removed
 
