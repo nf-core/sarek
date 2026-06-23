@@ -80,9 +80,10 @@ Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
 - [#2194](https://github.com/nf-core/sarek/pull/2194) - Update `ensemblvep/vep` module: add `htslib` dependency, support apptainer container engine, fix cache input signature, fix output path patterns
 - [#2194](https://github.com/nf-core/sarek/pull/2194) - Update `main.nf` to use lowercase `channel.*` factory methods (strict syntax)
 - [#2203](https://github.com/nf-core/sarek/pull/2203) - Dedicated GHA for `Sentieon`
-- [#2217](https://github.com/nf-core/sarek/pull/2217) - Mark sentieon_dedup scenario in `save_output_as_bam` test with `sentieon: true` flag
 
 #### Fixed
+
+- [#2217](https://github.com/nf-core/sarek/pull/2217) - Mark sentieon_dedup scenario in `save_output_as_bam` test with `sentieon: true` flag
 
 - [#2117](https://github.com/nf-core/sarek/pull/2117) - Update alignment related files to strict syntax
 - [#2129](https://github.com/nf-core/sarek/pull/2129) - Fix MuSE timestamp, swap to topics and change to strict syntax
