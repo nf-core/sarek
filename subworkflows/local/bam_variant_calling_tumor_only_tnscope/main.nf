@@ -37,8 +37,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE {
         [[],[]], // cosmic
         [[],[]] // cosmic_tbi
     )
-    versions = versions.mix(SENTIEON_TNSCOPE.out.versions)
-
     // Figuring out if there is one or more vcf(s) from the same sample
     vcf_branch = SENTIEON_TNSCOPE.out.vcf.branch{
         // Use meta.num_intervals to asses number of intervals

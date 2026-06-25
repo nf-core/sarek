@@ -13,7 +13,8 @@ nextflow_pipeline {
                 aligner: 'sentieon-bwamem',
                 tools: "sentieon_dedup,sentieon_tnscope",
                 skip_tools : 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools,bcftools'
-            ]
+            ],
+            sentieon: true
         ],
         [
             name: "-profile test --input fastq_pair.csv --tools sentieon_tnscope --no_intervals",
@@ -23,7 +24,8 @@ nextflow_pipeline {
                 tools: "sentieon_dedup,sentieon_tnscope",
                 skip_tools : 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools,bcftools',
                 no_intervals: true
-            ]
+            ],
+            sentieon: true
         ],
         [
             name: "-profile test --input fastq_tumor_only.csv --tools sentieon_tnscope",
@@ -32,7 +34,8 @@ nextflow_pipeline {
                 aligner: 'sentieon-bwamem',
                 tools: "sentieon_dedup,sentieon_tnscope",
                 skip_tools : 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools,bcftools'
-            ]
+            ],
+            sentieon: true
         ],
         [
             name: "-profile test --input fastq_triple_two_tumor.csv --tools sentieon_tnscope",
@@ -41,7 +44,8 @@ nextflow_pipeline {
                 aligner: 'sentieon-bwamem',
                 tools: "sentieon_dedup,sentieon_tnscope",
                 skip_tools : 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools,bcftools'
-            ]
+            ],
+            sentieon: true
         ]
     ]
 

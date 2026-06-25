@@ -35,15 +35,18 @@
                     "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
                 "csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
@@ -61,6 +64,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
@@ -69,6 +73,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
@@ -76,6 +81,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
@@ -83,18 +89,10 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "preprocessing",
-                "preprocessing/converted",
-                "preprocessing/converted/cram_to_bam",
-                "preprocessing/converted/cram_to_bam/sample3",
-                "preprocessing/converted/cram_to_bam/sample3/sample3.bam",
-                "preprocessing/converted/cram_to_bam/sample3/sample3.bam.bai",
-                "preprocessing/converted/cram_to_bam/sample4",
-                "preprocessing/converted/cram_to_bam/sample4/sample4.bam",
-                "preprocessing/converted/cram_to_bam/sample4/sample4.bam.bai",
                 "reference",
                 "reports",
                 "reports/mosdepth",
@@ -157,6 +155,7 @@
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
+                "samtools_insert_size.txt:md5,8fa108dcbe0da42e9425dd125fe22905",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -192,10 +191,7 @@
                 "sample4.somatic.call.cns:md5,1cb4febd5c88d306277f3c4c3117d68c",
                 "sample4.targetcoverage.cnn:md5,62c2d1f8765618c454bf4455c2298344"
             ],
-            [
-                "sample3.bam:md5,891da60dc1cc5c6455bfc1442aea0982",
-                "sample4.bam:md5,36856b3e6dd1bc0f10688b9d8c02faa8"
-            ],
+            "No BAM files",
             "No CRAM files",
             [
                 "sample3.cnvcall.vcf:md5,6f8c517f62715c47674c79ffd1e9babb",
@@ -245,15 +241,18 @@
                     "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
                 "csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
@@ -271,6 +270,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
@@ -279,6 +279,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
@@ -286,6 +287,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
@@ -293,24 +295,10 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "preprocessing",
-                "preprocessing/converted",
-                "preprocessing/converted/cram_to_bam",
-                "preprocessing/converted/cram_to_bam/sample1",
-                "preprocessing/converted/cram_to_bam/sample1/sample1.bam",
-                "preprocessing/converted/cram_to_bam/sample1/sample1.bam.bai",
-                "preprocessing/converted/cram_to_bam/sample2",
-                "preprocessing/converted/cram_to_bam/sample2/sample2.bam",
-                "preprocessing/converted/cram_to_bam/sample2/sample2.bam.bai",
-                "preprocessing/converted/cram_to_bam/sample3",
-                "preprocessing/converted/cram_to_bam/sample3/sample3.bam",
-                "preprocessing/converted/cram_to_bam/sample3/sample3.bam.bai",
-                "preprocessing/converted/cram_to_bam/sample4",
-                "preprocessing/converted/cram_to_bam/sample4/sample4.bam",
-                "preprocessing/converted/cram_to_bam/sample4/sample4.bam.bai",
                 "reference",
                 "reports",
                 "reports/mosdepth",
@@ -403,6 +391,7 @@
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,b446a47b182d93a9e7e74f5f7c8d41c2",
                 "samtools_alignment_plot.txt:md5,7138a2d29f515993e1df8d745e27b757",
+                "samtools_insert_size.txt:md5,e0c5f4ebb18a0e6bd437f0b919725b39",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -458,12 +447,7 @@
                 "sample4.somatic.call.cns:md5,1cb4febd5c88d306277f3c4c3117d68c",
                 "sample4.targetcoverage.cnn:md5,62c2d1f8765618c454bf4455c2298344"
             ],
-            [
-                "sample1.bam:md5,891da60dc1cc5c6455bfc1442aea0982",
-                "sample2.bam:md5,36856b3e6dd1bc0f10688b9d8c02faa8",
-                "sample3.bam:md5,891da60dc1cc5c6455bfc1442aea0982",
-                "sample4.bam:md5,36856b3e6dd1bc0f10688b9d8c02faa8"
-            ],
+            "No BAM files",
             "No CRAM files",
             [
                 "sample1.cnvcall.vcf:md5,6f8c517f62715c47674c79ffd1e9babb",
@@ -514,15 +498,18 @@
                     "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
                 "csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
@@ -540,6 +527,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
@@ -548,6 +536,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
@@ -555,6 +544,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
@@ -562,15 +552,10 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "preprocessing",
-                "preprocessing/converted",
-                "preprocessing/converted/cram_to_bam",
-                "preprocessing/converted/cram_to_bam/sample1",
-                "preprocessing/converted/cram_to_bam/sample1/sample1.bam",
-                "preprocessing/converted/cram_to_bam/sample1/sample1.bam.bai",
                 "reference",
                 "reports",
                 "reports/mosdepth",
@@ -608,6 +593,7 @@
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,41d36c1a8413d565788a1a364b467606",
                 "samtools_alignment_plot.txt:md5,35f8fd2a557568b2237193f46afbab5c",
+                "samtools_insert_size.txt:md5,be7a60f43f0ca5238674cbf0f9d48917",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -625,9 +611,7 @@
                 "test.paired_end.recalibrated.sorted.germline.call.cns:md5,5bba48aecc2282971b9d4c562bec4591",
                 "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,4153756b30abc934f10717c023bd262f"
             ],
-            [
-                "sample1.bam:md5,891da60dc1cc5c6455bfc1442aea0982"
-            ],
+            "No BAM files",
             "No CRAM files",
             [
                 "sample1.cnvcall.vcf:md5,6f8c517f62715c47674c79ffd1e9babb"
@@ -675,15 +659,18 @@
                     "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
                 "csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
@@ -701,6 +688,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
@@ -709,6 +697,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
@@ -716,6 +705,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
@@ -723,15 +713,10 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "preprocessing",
-                "preprocessing/converted",
-                "preprocessing/converted/cram_to_bam",
-                "preprocessing/converted/cram_to_bam/sample2",
-                "preprocessing/converted/cram_to_bam/sample2/sample2.bam",
-                "preprocessing/converted/cram_to_bam/sample2/sample2.bam.bai",
                 "reference",
                 "reports",
                 "reports/mosdepth",
@@ -768,6 +753,7 @@
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
+                "samtools_insert_size.txt:md5,5cb5779e1a7baf077b529af8c427147c",
                 "sample2.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
@@ -784,9 +770,7 @@
                 "sample2.targetcoverage.cnn:md5,e6d0190c1c37ce6e41f76ca5b24ccca3",
                 "sample2.tumor_only.call.cns:md5,70a308c6db7acf1a5fd623936cac6412"
             ],
-            [
-                "sample2.bam:md5,36856b3e6dd1bc0f10688b9d8c02faa8"
-            ],
+            "No BAM files",
             "No CRAM files",
             [
                 "sample2.cnvcall.vcf:md5,35662b51f071469c6227be15114eb824"
@@ -813,12 +797,14 @@
                     "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
                 "csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
@@ -836,6 +822,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
@@ -844,6 +831,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
@@ -851,6 +839,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
@@ -858,18 +847,13 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
                 "no_intervals.bed.gz",
                 "no_intervals.bed.gz.tbi",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "preprocessing",
-                "preprocessing/converted",
-                "preprocessing/converted/cram_to_bam",
-                "preprocessing/converted/cram_to_bam/sample2",
-                "preprocessing/converted/cram_to_bam/sample2/sample2.bam",
-                "preprocessing/converted/cram_to_bam/sample2/sample2.bam.bai",
                 "reference",
                 "reports",
                 "reports/mosdepth",
@@ -890,15 +874,14 @@
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
+                "samtools_insert_size.txt:md5,5cb5779e1a7baf077b529af8c427147c",
                 "sample2.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
                 "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd"
             ],
-            [
-                "sample2.bam:md5,36856b3e6dd1bc0f10688b9d8c02faa8"
-            ],
+            "No BAM files",
             "No CRAM files",
             "No VCF files",
             "No warnings"
@@ -936,12 +919,14 @@
                     "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
                 "csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/llms-full.txt",
                 "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
@@ -959,6 +944,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
@@ -967,6 +953,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
@@ -974,6 +961,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
@@ -981,21 +969,13 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
                 "no_intervals.bed.gz",
                 "no_intervals.bed.gz.tbi",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "preprocessing",
-                "preprocessing/converted",
-                "preprocessing/converted/cram_to_bam",
-                "preprocessing/converted/cram_to_bam/sample3",
-                "preprocessing/converted/cram_to_bam/sample3/sample3.bam",
-                "preprocessing/converted/cram_to_bam/sample3/sample3.bam.bai",
-                "preprocessing/converted/cram_to_bam/sample4",
-                "preprocessing/converted/cram_to_bam/sample4/sample4.bam",
-                "preprocessing/converted/cram_to_bam/sample4/sample4.bam.bai",
                 "reference",
                 "reports",
                 "reports/mosdepth",
@@ -1060,6 +1040,7 @@
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
+                "samtools_insert_size.txt:md5,8fa108dcbe0da42e9425dd125fe22905",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -1097,10 +1078,7 @@
                 "sample4.somatic.call.cns:md5,5e4d472294661d2010e13deefe5ae4f5",
                 "sample4.targetcoverage.cnn:md5,1e1012812eb893afd931485cb760294e"
             ],
-            [
-                "sample3.bam:md5,891da60dc1cc5c6455bfc1442aea0982",
-                "sample4.bam:md5,36856b3e6dd1bc0f10688b9d8c02faa8"
-            ],
+            "No BAM files",
             "No CRAM files",
             [
                 "sample3.cnvcall.vcf:md5,172e25057fc6cab0a0b325c55bfacc2a",

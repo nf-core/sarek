@@ -134,12 +134,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
             [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"sentieon_haplotyper"], tbi_out]
         }
 
-        versions = versions.mix(SENTIEON_VARCAL_SNP.out.versions)
-        versions = versions.mix(SENTIEON_VARCAL_INDEL.out.versions)
-        versions = versions.mix(SENTIEON_APPLYVARCAL_INDEL.out.versions)
     }
-
-    versions = versions.mix(SENTIEON_GVCFTYPER.out.versions)
 
     emit:
     genotype_index  // channel: [ val(meta), [ tbi ] ]

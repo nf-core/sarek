@@ -1,6 +1,7 @@
 .DS_Store
 annotation/**/*.vcf.{gz,gz.tbi}
 csv/*.csv
+multiqc/index.json
 multiqc/multiqc_data/bcftools*.txt
 multiqc/multiqc_data/bbmap*.txt
 multiqc/multiqc_data/bbsplit_stats_table.txt
@@ -32,13 +33,13 @@ preprocessing/bbsplit/*/*.fastq.gz
 preprocessing/bbsplit/*/*.stats.txt
 reference/dragmap/hash_table.{cfg,cfg.bin}
 reference/dragmap/hash_table_stats.txt
-reports/**/*.cram.metrics{,.multiqc.tsv}
+reports/**/*.*am.metrics{,.multiqc.tsv}
 reports/EnsemblVEP/*/*.ann.summary.html
 reports/fastp/**/*.fastp.{log,html}
 reports/fastqc/**/*_fastqc.{html,zip}
 reports/ngscheckmate/ngscheckmate.pdf
 reports/ngscheckmate/vcfs/*.ngscheckmate.vcf.gz
-reports/samtools/**/**.cram.stats
+reports/samtools/**/**.*am.stats
 reports/snpeff/*/*_snpEff.csv
 reports/snpeff/*/snpEff_summary.html
 reports/vcftools/**/*.TsTv.qual

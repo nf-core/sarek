@@ -29,15 +29,15 @@ input:
         ontologies:
           - edam: http://edamontology.org/format_3016 # VCF
           - edam: http://edamontology.org/format_3020 # BCF
-  - scenario:
-      type: file
-      description: Yaml file containing scenario information (optional)
-      pattern: "*.{yml,yaml}"
-      ontologies:
-        - edam: http://edamontology.org/format_3750 # YAML
-  - scenario_aliases:
-      type: list
-      description: List of aliases for the scenario (optional)
+    - scenario:
+        type: file
+        description: Yaml file containing scenario information (optional)
+        pattern: "*.{yml,yaml}"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+    - scenario_aliases:
+        type: list
+        description: List of aliases for the scenario (optional)
 output:
   bcf:
     - - meta:
@@ -51,13 +51,27 @@ output:
           pattern: "*.bcf"
           ontologies:
             - edam: http://edamontology.org/format_3020 # BCF
+  versions_varlociraptor:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - varlociraptor:
+          type: string
+          description: The tool name
+      - "varlociraptor --version | sed 's/^varlociraptor //'":
+          type: string
+          description: The command used to generate the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - varlociraptor:
+          type: string
+          description: The tool name
+      - "varlociraptor --version | sed 's/^varlociraptor //'":
+          type: string
+          description: The command used to generate the version of the tool
 authors:
   - "@FriederikeHanssen"
 maintainers:

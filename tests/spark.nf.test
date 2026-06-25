@@ -24,6 +24,11 @@ nextflow_pipeline {
                 skip_tools: 'fastqc,markduplicates_report,mosdepth,multiqc,samtools'
             ]
         ]
+        // NOTE: not adding a --save_output_as_bam scenario here yet. Combining
+        // --use_gatk_spark baserecalibrator,markduplicates with --save_output_as_bam
+        // on the multi-lane test input exposes an upstream GATK bug —
+        // GATK4SPARK_APPLYBQSR fails with "covariates table is missing ReadGroup
+        // test_L2 in RecalTable0". Out of scope for this PR; file separately.
     ]
 
     // Generate tests for each scenario

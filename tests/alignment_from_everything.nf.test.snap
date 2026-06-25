@@ -1,7 +1,7 @@
 {
     "-profile test --input bam_and_fastq_and_spring.csv --save_mapped --save_output_as_bam": {
         "content": [
-            53,
+            61,
             {
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.18-r1243-dirty"
@@ -17,9 +17,6 @@
                     "samtools": 1.21
                 },
                 "COLLATE_FASTQ_UNMAP": {
-                    "samtools": 1.21
-                },
-                "CRAM_TO_BAM": {
                     "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
@@ -75,10 +72,12 @@
                     "spring": "1.1.1"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
@@ -86,7 +85,9 @@
                 "csv/mapped.csv",
                 "csv/markduplicates.csv",
                 "csv/markduplicates_no_table.csv",
+                "csv/recalibrated.csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/fastqc-status-check-heatmap.txt",
                 "multiqc/multiqc_data/fastqc_adapter_content_plot.txt",
@@ -127,6 +128,7 @@
                 "multiqc/multiqc_data/picard_deduplication.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-status-check-heatmap.pdf",
@@ -153,6 +155,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/png",
                 "multiqc/multiqc_plots/png/fastqc-status-check-heatmap.png",
                 "multiqc/multiqc_plots/png/fastqc_adapter_content_plot.png",
@@ -178,6 +181,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/svg",
                 "multiqc/multiqc_plots/svg/fastqc-status-check-heatmap.svg",
                 "multiqc/multiqc_plots/svg/fastqc_adapter_content_plot.svg",
@@ -203,6 +207,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
@@ -280,13 +285,13 @@
                 "reports/fastqc/test_bam-test_bam_L1/test_bam-test_bam_L1_2_fastqc.zip",
                 "reports/markduplicates",
                 "reports/markduplicates/test",
-                "reports/markduplicates/test/test.md.cram.metrics",
+                "reports/markduplicates/test/test.md.bam.metrics",
                 "reports/markduplicates/test2",
-                "reports/markduplicates/test2/test2.md.cram.metrics",
+                "reports/markduplicates/test2/test2.md.bam.metrics",
                 "reports/markduplicates/test3",
-                "reports/markduplicates/test3/test3.md.cram.metrics",
+                "reports/markduplicates/test3/test3.md.bam.metrics",
                 "reports/markduplicates/test_bam",
-                "reports/markduplicates/test_bam/test_bam.md.cram.metrics",
+                "reports/markduplicates/test_bam/test_bam.md.bam.metrics",
                 "reports/mosdepth",
                 "reports/mosdepth/test",
                 "reports/mosdepth/test/test.md.mosdepth.global.dist.txt",
@@ -294,33 +299,57 @@
                 "reports/mosdepth/test/test.md.mosdepth.summary.txt",
                 "reports/mosdepth/test/test.md.regions.bed.gz",
                 "reports/mosdepth/test/test.md.regions.bed.gz.csi",
+                "reports/mosdepth/test/test.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/test/test.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/test/test.recal.mosdepth.summary.txt",
+                "reports/mosdepth/test/test.recal.regions.bed.gz",
+                "reports/mosdepth/test/test.recal.regions.bed.gz.csi",
                 "reports/mosdepth/test2",
                 "reports/mosdepth/test2/test2.md.mosdepth.global.dist.txt",
                 "reports/mosdepth/test2/test2.md.mosdepth.region.dist.txt",
                 "reports/mosdepth/test2/test2.md.mosdepth.summary.txt",
                 "reports/mosdepth/test2/test2.md.regions.bed.gz",
                 "reports/mosdepth/test2/test2.md.regions.bed.gz.csi",
+                "reports/mosdepth/test2/test2.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/test2/test2.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/test2/test2.recal.mosdepth.summary.txt",
+                "reports/mosdepth/test2/test2.recal.regions.bed.gz",
+                "reports/mosdepth/test2/test2.recal.regions.bed.gz.csi",
                 "reports/mosdepth/test3",
                 "reports/mosdepth/test3/test3.md.mosdepth.global.dist.txt",
                 "reports/mosdepth/test3/test3.md.mosdepth.region.dist.txt",
                 "reports/mosdepth/test3/test3.md.mosdepth.summary.txt",
                 "reports/mosdepth/test3/test3.md.regions.bed.gz",
                 "reports/mosdepth/test3/test3.md.regions.bed.gz.csi",
+                "reports/mosdepth/test3/test3.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/test3/test3.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/test3/test3.recal.mosdepth.summary.txt",
+                "reports/mosdepth/test3/test3.recal.regions.bed.gz",
+                "reports/mosdepth/test3/test3.recal.regions.bed.gz.csi",
                 "reports/mosdepth/test_bam",
                 "reports/mosdepth/test_bam/test_bam.md.mosdepth.global.dist.txt",
                 "reports/mosdepth/test_bam/test_bam.md.mosdepth.region.dist.txt",
                 "reports/mosdepth/test_bam/test_bam.md.mosdepth.summary.txt",
                 "reports/mosdepth/test_bam/test_bam.md.regions.bed.gz",
                 "reports/mosdepth/test_bam/test_bam.md.regions.bed.gz.csi",
+                "reports/mosdepth/test_bam/test_bam.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/test_bam/test_bam.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/test_bam/test_bam.recal.mosdepth.summary.txt",
+                "reports/mosdepth/test_bam/test_bam.recal.regions.bed.gz",
+                "reports/mosdepth/test_bam/test_bam.recal.regions.bed.gz.csi",
                 "reports/samtools",
                 "reports/samtools/test",
-                "reports/samtools/test/test.md.cram.stats",
+                "reports/samtools/test/test.md.bam.stats",
+                "reports/samtools/test/test.recal.bam.stats",
                 "reports/samtools/test2",
-                "reports/samtools/test2/test2.md.cram.stats",
+                "reports/samtools/test2/test2.md.bam.stats",
+                "reports/samtools/test2/test2.recal.bam.stats",
                 "reports/samtools/test3",
-                "reports/samtools/test3/test3.md.cram.stats",
+                "reports/samtools/test3/test3.md.bam.stats",
+                "reports/samtools/test3/test3.recal.bam.stats",
                 "reports/samtools/test_bam",
-                "reports/samtools/test_bam/test_bam.md.cram.stats"
+                "reports/samtools/test_bam/test_bam.md.bam.stats",
+                "reports/samtools/test_bam/test_bam.recal.bam.stats"
             ],
             [
                 "fastqc-status-check-heatmap.txt:md5,de62b83776610478e5d6a3adbc6a9bbc",
@@ -334,37 +363,58 @@
                 "fastqc_sequence_counts_plot.txt:md5,674147ee973b56cff1a8bed894d18d3f",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,5dbfcf6fcbbd054e17fb460985b078c2",
                 "fastqc_sequence_length_distribution_plot.txt:md5,893426c7b64f5fe3279733eb63c6abf9",
-                "mosdepth-coverage-per-contig-single.txt:md5,7c01ea3a011867911ed0b612acb42007",
-                "mosdepth-cumcoverage-dist-id.txt:md5,c013414788f3acfff722a725b5c4938e",
-                "mosdepth_perchrom.txt:md5,7c01ea3a011867911ed0b612acb42007",
+                "mosdepth-coverage-per-contig-single.txt:md5,3b95b22f8731d90e62619a81edc74c89",
+                "mosdepth-cumcoverage-dist-id.txt:md5,25645f26d5a929588803422d825e9c92",
+                "mosdepth_perchrom.txt:md5,3b95b22f8731d90e62619a81edc74c89",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
                 "multiqc_fastqc.txt:md5,ae908328010c1f8a5eb15ca080b92993",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,1dc593231b888b9f832e61dd71e0161b",
-                "samtools_alignment_plot.txt:md5,35a1db2ce8dbe1b59576cc8edb57095e",
+                "samtools-stats-dp.txt:md5,63dfeeafbef0aa87f48ab923402dcaed",
+                "samtools_alignment_plot.txt:md5,7c53a04c42499c92735d947bc8417dd6",
+                "samtools_insert_size.txt:md5,5a1a7d2501dbb68ff13f4b7e79b63e8c",
                 "test.md.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test.md.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test.md.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
                 "test.md.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
                 "test.md.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
+                "test.recal.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
+                "test.recal.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
+                "test.recal.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
+                "test.recal.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
+                "test.recal.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
                 "test2.md.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test2.md.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test2.md.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
                 "test2.md.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
                 "test2.md.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
+                "test2.recal.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
+                "test2.recal.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
+                "test2.recal.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
+                "test2.recal.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
+                "test2.recal.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
                 "test3.md.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test3.md.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test3.md.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
                 "test3.md.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
                 "test3.md.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
+                "test3.recal.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
+                "test3.recal.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
+                "test3.recal.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
+                "test3.recal.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
+                "test3.recal.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
                 "test_bam.md.mosdepth.global.dist.txt:md5,9cb9b181119256ed17a77dcf44d58285",
                 "test_bam.md.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test_bam.md.mosdepth.summary.txt:md5,dbe376360e437c89190139ef0ae6769a",
                 "test_bam.md.regions.bed.gz:md5,0e5ed846b9b11717e42e93eec60f4ffc",
-                "test_bam.md.regions.bed.gz.csi:md5,d0713716f63ac573f4a3385733e9a537"
+                "test_bam.md.regions.bed.gz.csi:md5,d0713716f63ac573f4a3385733e9a537",
+                "test_bam.recal.mosdepth.global.dist.txt:md5,9cb9b181119256ed17a77dcf44d58285",
+                "test_bam.recal.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
+                "test_bam.recal.mosdepth.summary.txt:md5,dbe376360e437c89190139ef0ae6769a",
+                "test_bam.recal.regions.bed.gz:md5,0e5ed846b9b11717e42e93eec60f4ffc",
+                "test_bam.recal.regions.bed.gz.csi:md5,d0713716f63ac573f4a3385733e9a537"
             ],
             [
                 "test.sorted.bam:md5,59ecc5c82c7af1283eea7507c590c831",
@@ -382,14 +432,12 @@
             ],
             "No CRAM files",
             "No VCF files",
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
-            ]
+            "No warnings"
         ],
+        "timestamp": "2026-04-09T13:11:35.435247726",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T19:29:35.879909298"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

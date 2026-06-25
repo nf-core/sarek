@@ -23,18 +23,22 @@
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
                 "csv",
                 "csv/mapped.csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
@@ -102,21 +106,25 @@
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "SENTIEON_DEDUP": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
                 "csv",
                 "csv/markduplicates_no_table.csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
@@ -168,14 +176,18 @@
                     "gatk4": "4.6.1.0"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
                 "csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",

@@ -332,15 +332,15 @@ The resulting recalibrated CRAM files are delivered to the user. Recalibrated CR
 
 [Parabricks FQ2BAM](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html) runs as alternative to GATK preprocessing, enables by `--aligner parabricks --profile <docker/singularity>,gpu`.
 
-The resulting recalibrated CRAM files are delivered to the user.
+The resulting recalibrated BAM (if `--save_output_as_bam`) or CRAM files are delivered to the user (if `--save_reference`).
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
 
 **Output directory: `{outdir}/preprocessing/parabricks/<sample>/`**
 
-- `<sample>.cram` and `<sample>.cram.crai`
-  - CRAM file and index
+- `<sample>.{bam,cram}` and `<sample>.{bam.bai,cram.crai}`
+  - BAM or CRAM file and index
   </details>
 
 ### CSV files

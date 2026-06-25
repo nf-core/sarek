@@ -33,10 +33,10 @@ input:
         ontologies: []
     - intervals:
         type: file
-        description: Interval file with the genomic regions included in the library
-          (optional)
+        description: Interval file with the genomic regions included in the
+          library (optional)
         ontologies: []
-  - - meta1:
+  - - meta2:
         type: map
         description: |
           Groovy Map containing sample information
@@ -46,7 +46,7 @@ input:
         description: Reference fasta file
         pattern: "*.fasta"
         ontologies: []
-  - - meta2:
+  - - meta3:
         type: map
         description: |
           Groovy Map containing sample information
@@ -56,7 +56,7 @@ input:
         description: Reference fasta index file
         pattern: "*.fai"
         ontologies: []
-  - - meta3:
+  - - meta4:
         type: map
         description: |
           Groovy Map containing sample information
@@ -66,8 +66,8 @@ input:
         description: dbSNP VCF file
         pattern: "*.vcf.gz"
         ontologies:
-          - edam: http://edamontology.org/format_3989 # GZIP format
-  - - meta4:
+          - edam: http://edamontology.org/format_3989
+  - - meta5:
         type: map
         description: |
           Groovy Map containing sample information
@@ -89,7 +89,7 @@ output:
           description: VCF file
           pattern: "*.vcf.gz"
           ontologies:
-            - edam: http://edamontology.org/format_3989 # GZIP format
+            - edam: http://edamontology.org/format_3989
   vcf_gz_tbi:
     - - meta:
           type: map
@@ -101,13 +101,27 @@ output:
           description: VCF index file
           pattern: "*.vcf.gz.tbi"
           ontologies: []
+  versions_sentieon:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - sentieon:
+          type: string
+          description: The tool name
+      - sentieon driver --version | sed "s/.*-//g":
+          type: eval
+          description: The command used to generate the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - sentieon:
+          type: string
+          description: The tool name
+      - sentieon driver --version | sed "s/.*-//g":
+          type: eval
+          description: The command used to generate the version of the tool
 authors:
   - "@asp8200"
 maintainers:
