@@ -56,7 +56,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE {
 
     // Merge if required
     MERGE_TNSCOPE(vcf_to_merge, dict)
-    versions = versions.mix(MERGE_TNSCOPE.out.versions)
 
     // Mix intervals and no_intervals channels together
     // Remove unnecessary metadata and add variantcaller

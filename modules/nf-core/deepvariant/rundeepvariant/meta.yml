@@ -1,14 +1,14 @@
 name: deepvariant_rundeepvariant
-description: DeepVariant is an analysis pipeline that uses a deep neural network to
-  call genetic variants from next-generation DNA sequencing data
+description: DeepVariant is an analysis pipeline that uses a deep neural network
+  to call genetic variants from next-generation DNA sequencing data
 keywords:
   - variant calling
   - machine learning
   - neural network
 tools:
   - deepvariant:
-      description: DeepVariant is an analysis pipeline that uses a deep neural network
-        to call genetic variants from next-generation DNA sequencing data
+      description: DeepVariant is an analysis pipeline that uses a deep neural
+        network to call genetic variants from next-generation DNA sequencing data
       homepage: https://github.com/google/deepvariant
       documentation: https://github.com/google/deepvariant
       tool_dev_url: https://github.com/google/deepvariant
@@ -122,13 +122,41 @@ output:
           description: Tabix index file of compressed GVCF
           pattern: "*.g.vcf.gz.{tbi,csi}"
           ontologies: []
+  report:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.visual_report.html:
+          type: file
+          description: Visual report in HTML format
+          pattern: "*.html"
+          optional: true
+          ontologies: []
+  versions_deepvariant:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - deepvariant:
+          type: string
+          description: The tool name
+      - /opt/deepvariant/bin/run_deepvariant --version | sed 's/^.*version //':
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - deepvariant:
+          type: string
+          description: The tool name
+      - /opt/deepvariant/bin/run_deepvariant --version | sed 's/^.*version //':
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@abhi18av"
   - "@ramprasadn"

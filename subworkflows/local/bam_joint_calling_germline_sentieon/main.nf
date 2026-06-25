@@ -51,8 +51,8 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     // Rework meta for variantscalled.csv and annotation tools
     MERGE_GENOTYPEGVCFS(gvcf_to_merge, dict)
 
-    merged_vcf = MERGE_GENOTYPEGVCFS.out.vcf.map{meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
-    merged_tbi = MERGE_GENOTYPEGVCFS.out.tbi.map{meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
+    merged_vcf = MERGE_GENOTYPEGVCFS.out.vcf.map{_meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
+    merged_tbi = MERGE_GENOTYPEGVCFS.out.tbi.map{_meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
 
     if (variant_caller == 'sentieon_dnascope') {
         // As advised by Don Freed (Sentieon), VQSR is skipped for DnaScope
@@ -73,16 +73,16 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
             resource_indels_vcf,
             resource_indels_tbi,
             indels_resource_label,
-            fasta.map{meta, it -> [ it ]},
-            fai.map{meta, it -> [ it ]})
+            fasta.map{_meta, it -> [ it ]},
+            fai.map{_meta, it -> [ it ]})
 
         SENTIEON_VARCAL_SNP(
             vqsr_input,
             resource_snps_vcf,
             resource_snps_tbi,
             snps_resource_label,
-            fasta.map{meta, it -> [ it ]},
-            fai.map{meta, it -> [ it ]})
+            fasta.map{_meta, it -> [ it ]},
+            fai.map{_meta, it -> [ it ]})
 
         //Prepare SNPs and INDELs for Sentieon's applyvarcal
         // Step 1. : applyvarcal to SNPs
@@ -112,25 +112,25 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
         // When MERGE_GENOTYPEGVCFS and NOT SENTIEON_APPLYVARCAL, then use the output from MERGE_GENOTYPEGVCFS
 
         // Remap for both to have the same key, if ApplyBQSR is not run, the channel is empty --> populate with empty elements
-        vqsr_vcf_for_join = SENTIEON_APPLYVARCAL_INDEL.out.vcf.ifEmpty([[:], []]).map{meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
-        vqsr_tbi_for_join = SENTIEON_APPLYVARCAL_INDEL.out.tbi.ifEmpty([[:], []]).map{meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
+        vqsr_vcf_for_join = SENTIEON_APPLYVARCAL_INDEL.out.vcf.ifEmpty([[:], []]).map{_meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
+        vqsr_tbi_for_join = SENTIEON_APPLYVARCAL_INDEL.out.tbi.ifEmpty([[:], []]).map{_meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
 
         // Join on metamap
         // If both --> meta, vcf_merged, vcf_bqsr
         // If not VQSR --> meta, vcf_merged, []
         // if the second is empty, use the first
         genotype_vcf = merged_vcf.join(vqsr_vcf_for_join, remainder: true).map{
-            meta, joint_vcf, recal_vcf ->
+            _meta, joint_vcf, recal_vcf ->
 
-            vcf_out = recal_vcf ?: joint_vcf
+            def vcf_out = recal_vcf ?: joint_vcf
 
             [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"sentieon_haplotyper"], vcf_out]
         }
 
         genotype_index = merged_tbi.join(vqsr_tbi_for_join, remainder: true).map{
-            meta, joint_tbi, recal_tbi ->
+            _meta, joint_tbi, recal_tbi ->
 
-            tbi_out = recal_tbi ?: joint_tbi
+            def tbi_out = recal_tbi ?: joint_tbi
             [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"sentieon_haplotyper"], tbi_out]
         }
 

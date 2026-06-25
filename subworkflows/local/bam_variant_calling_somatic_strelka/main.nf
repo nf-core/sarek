@@ -22,7 +22,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
-        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, intervals, intervals_index, num_intervals -> [ meta + [ num_intervals:num_intervals ], normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, intervals, intervals_index ] }
+        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, intervals_, intervals_index, num_intervals -> [ meta + [ num_intervals:num_intervals ], normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, intervals_, intervals_index ] }
 
     STRELKA_SOMATIC(cram_intervals, fasta, fasta_fai )
 
@@ -70,8 +70,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], tbi ] }
 
-    versions = versions.mix(MERGE_STRELKA_SNVS.out.versions)
-    versions = versions.mix(MERGE_STRELKA_INDELS.out.versions)
     versions = versions.mix(STRELKA_SOMATIC.out.versions)
 
     emit:
