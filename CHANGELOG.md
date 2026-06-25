@@ -21,6 +21,7 @@ Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
 - [#2141](https://github.com/nf-core/sarek/pull/2141) - Update snpeff
 - [#2194](https://github.com/nf-core/sarek/pull/2194) - Replace local `annotation_cache_initialisation` and `download_cache_snpeff_vep` subworkflows with nf-core `utils_annotation_cache` and `cache_download_ensemblvep_snpeff`
 - [#2209](https://github.com/nf-core/sarek/pull/2209) - Add flowing dots for the additional `bam/cram` and `vcf` entry points on the core line and the `cram` entry on the germline line in the animated metro map
+- [#2220](https://github.com/nf-core/sarek/pull/2220) - Update DeepVariant to `1.10.0` and sync `gatk4/mergevcfs`; both modules now report tool versions via the `versions` topic
 
 ### Fixed
 
@@ -39,15 +40,17 @@ Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
 
 ### Dependencies - modules
 
-| Dependency    | Old version | New version |
-| ------------- | ----------- | ----------- |
-| controlfreec  | 11.6        | 11.6b       |
-| ensemblvep    | 115.2       | 115.2       |
-| --htslib      |             | 1.23.1      |
-| multiqc       | 1.33        | 1.35        |
-| snpeff        | 5.3a        | 5.4c        |
-| varlociraptor | 8.7.4       | 8.9.3       |
-| yte           | 1.9.0       | 1.9.4       |
+| Dependency                   | Old version | New version |
+| ---------------------------- | ----------- | ----------- |
+| controlfreec                 | 11.6        | 11.6b       |
+| deepvariant                  | 1.9.0       | 1.10.0      |
+| ensemblvep                   | 115.2       | 115.2       |
+| gatk4 (in `GATK4_MERGEVCFS`) | 4.6.1.0     | 4.6.2.0     |
+| --htslib                     |             | 1.23.1      |
+| multiqc                      | 1.33        | 1.35        |
+| snpeff                       | 5.3a        | 5.4c        |
+| varlociraptor                | 8.7.4       | 8.9.3       |
+| yte                          | 1.9.0       | 1.9.4       |
 
 ### Dependencies - plugins
 
