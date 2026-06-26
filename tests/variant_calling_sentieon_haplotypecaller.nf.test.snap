@@ -12,6 +12,9 @@
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
                 },
+                "MERGE_GENOTYPEGVCFS": {
+                    "gatk4": "4.6.2.0"
+                },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },

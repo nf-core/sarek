@@ -19,7 +19,7 @@
                     "gatk4": "4.6.1.0"
                 },
                 "MERGE_FREEBAYES": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -661,7 +661,7 @@
                     "samtools": 1.21
                 },
                 "MERGE_FREEBAYES": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -1582,7 +1582,7 @@
                     "samtools": 1.21
                 },
                 "MERGE_FREEBAYES": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"

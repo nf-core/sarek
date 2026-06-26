@@ -59,7 +59,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         genotype_intervals = SENTIEON_HAPLOTYPER.out.gvcf
             .join(SENTIEON_HAPLOTYPER.out.gvcf_tbi, failOnMismatch: true)
             .join(cram_intervals_for_sentieon, failOnMismatch: true)
-            .map{ meta, gvcf_, tbi, cram_, crai, intervals_ -> [ meta, gvcf_, tbi, intervals_ ] }
+            .map{ meta, gvcf_, tbi, _cram, _crai, intervals_ -> [ meta, gvcf_, tbi, intervals_ ] }
     }
 
     // Figure out if using intervals or no_intervals.
@@ -139,8 +139,6 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.tbi,
         haplotyper_gvcf_tbi_branch.no_intervals)
 
-    versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_VCFS.out.versions)
-    versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.versions)
 
     emit:
     versions
