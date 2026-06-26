@@ -42,7 +42,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     gvcf_tbi_intervals = GATK4_HAPLOTYPECALLER.out.vcf
         .join(GATK4_HAPLOTYPECALLER.out.tbi, failOnMismatch: true)
         .join(cram_intervals, failOnMismatch: true)
-        .map{ meta, gvcf, tbi, cram_, crai, intervals_, dragstr_model -> [ meta, gvcf, tbi, intervals_ ] }
+        .map{ meta, gvcf, tbi, _cram, _crai, intervals_, dragstr_model -> [ meta, gvcf, tbi, intervals_ ] }
 
     // Figuring out if there is one or more vcf(s) from the same sample
     haplotypecaller_vcf = GATK4_HAPLOTYPECALLER.out.vcf.map{
@@ -92,7 +92,6 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     realigned_bam = BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai
 
     versions = versions.mix(GATK4_HAPLOTYPECALLER.out.versions)
-    versions = versions.mix(MERGE_HAPLOTYPECALLER.out.versions)
 
     // Remove no longer necessary field: num_intervals
     vcf = haplotypecaller_vcf.map{ meta, vcf_ -> [ meta - meta.subMap('num_intervals'), vcf_ ] }

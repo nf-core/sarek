@@ -70,7 +70,6 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
 
     versions = versions.mix(SAMTOOLS_MPILEUP.out.versions)
     versions = versions.mix(CAT_MPILEUP.out.versions)
-    versions = versions.mix(MERGE_BCFTOOLS_MPILEUP.out.versions)
 
     emit:
     mpileup

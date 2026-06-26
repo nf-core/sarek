@@ -45,7 +45,7 @@
                     "gawk": "5.3.0"
                 },
                 "DEEPVARIANT_RUNDEEPVARIANT": {
-                    "deepvariant": "1.9.0"
+                    "deepvariant": "1.10.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -555,7 +555,7 @@
                 "test2.recal.regions.bed.gz.csi:md5,d5f1c9389ecf52ba839e834780a94549",
                 "test.bcftools.FILTER.summary:md5,2c7c195b18f335698bae9619280492e8",
                 "test.bcftools.TsTv.count:md5,9748f609e7b83855e75804191c935ab3",
-                "test.deepvariant.FILTER.summary:md5,4908d916a23384a3b253d17b2ae784d7",
+                "test.deepvariant.FILTER.summary:md5,45b02f546c5f8a1365343130497190fa",
                 "test.deepvariant.TsTv.count:md5,d3c138521fd95eb45f6e495f39d47404",
                 "test.freebayes.filtered.FILTER.summary:md5,87e753ba2ad969475fb55661852f75e0",
                 "test.freebayes.filtered.TsTv.count:md5,845f64e5bb4224af98f3a47294cd5483",
@@ -619,8 +619,8 @@
                 "test.bcftools.vcf.gz:md5,f627b06200401f34e124810ec89fde7c",
                 "test.cnvcall.vcf:md5,fa78210d08001ce5cecb67d8d1f1c9a0",
                 "test2_vs_test.cnvcall.vcf:md5,b65c037ec53243a3038b6c2e9c4a1b4b",
-                "test.deepvariant.g.vcf.gz:md5,c29fb457bb32ab95580d45e20048fc25",
-                "test.deepvariant.vcf.gz:md5,e6f8bbd0bc7a977f3af578e347f2cce6",
+                "test.deepvariant.g.vcf.gz:md5,3799a0388658bd57fee677dd848dee05",
+                "test.deepvariant.vcf.gz:md5,e2f95a96dd1267c3c6677f359030fd71",
                 "test.strelka.genome.vcf.gz:md5,16437a040679d88b7d84a9276f793d6c",
                 "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565",
                 "test2_vs_test.strelka.somatic_indels.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -687,7 +687,7 @@
                     "gawk": "5.3.0"
                 },
                 "DEEPVARIANT_RUNDEEPVARIANT": {
-                    "deepvariant": "1.9.0"
+                    "deepvariant": "1.10.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -1085,7 +1085,7 @@
                 "test.recal.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
                 "test.bcftools.FILTER.summary:md5,2c7c195b18f335698bae9619280492e8",
                 "test.bcftools.TsTv.count:md5,9748f609e7b83855e75804191c935ab3",
-                "test.deepvariant.FILTER.summary:md5,4908d916a23384a3b253d17b2ae784d7",
+                "test.deepvariant.FILTER.summary:md5,45b02f546c5f8a1365343130497190fa",
                 "test.deepvariant.TsTv.count:md5,d3c138521fd95eb45f6e495f39d47404",
                 "test.freebayes.filtered.FILTER.summary:md5,9ae0931339e231f90a4b5c330f7f6d55",
                 "test.freebayes.filtered.TsTv.count:md5,845f64e5bb4224af98f3a47294cd5483",
@@ -1119,8 +1119,8 @@
             [
                 "test.bcftools.vcf.gz:md5,f627b06200401f34e124810ec89fde7c",
                 "test.cnvcall.vcf:md5,ad603307280549c2053c2e3b57141c0a",
-                "test.deepvariant.g.vcf.gz:md5,c29fb457bb32ab95580d45e20048fc25",
-                "test.deepvariant.vcf.gz:md5,e6f8bbd0bc7a977f3af578e347f2cce6",
+                "test.deepvariant.g.vcf.gz:md5,3799a0388658bd57fee677dd848dee05",
+                "test.deepvariant.vcf.gz:md5,e2f95a96dd1267c3c6677f359030fd71",
                 "test.freebayes.filtered.vcf.gz:md5,bf085c88aa26191a55fbd23bff6a498f",
                 "test.strelka.genome.vcf.gz:md5,16437a040679d88b7d84a9276f793d6c",
                 "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565",
