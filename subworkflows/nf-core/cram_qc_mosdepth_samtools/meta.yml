@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: cram_qc_mosdepth_samtools
+description: Comprehensive QC analysis on CRAM files using mosdepth and samtools
+keywords:
+  - qc
+  - cram
+  - quality-control
+  - mosdepth
+  - samtools
+  - coverage
+  - statistics
+components:
+  - samtools/stats
+  - mosdepth
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'sample1', single_end:false ]
+  - cram:
+      type: file
+      description: CRAM file
+      pattern: "*.cram"
+  - crai:
+      type: file
+      description: CRAM file index
+      pattern: "*.crai"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
+  - fasta:
+      type: file
+      description: Reference genome FASTA file
+      pattern: "*.{fasta,fa,fna}"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing interval information
+        e.g. [ id:'intervals' ]
+  - intervals:
+      type: optional file
+      description: BED file containing genomic intervals
+      pattern: "*.bed"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'sample1', single_end:false ]
+  - reports:
+      type: file
+      description: QC report files (samtools stats and mosdepth outputs)
+      pattern: "*{.stats,.txt,.bed.gz,.bed.gz.csi}"
+
+authors:
+  - "@agrima2010"
+maintainers:
+  - "@agrima2010"
