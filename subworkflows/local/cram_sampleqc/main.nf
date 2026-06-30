@@ -30,7 +30,6 @@ workflow CRAM_SAMPLEQC {
     }
 
     BAM_NGSCHECKMATE(cram.map { meta, cram_, _crai -> [meta, cram_] }, ngscheckmate_bed.map { bed -> [[id: "ngscheckmate"], bed] }, fasta)
-    versions = versions.mix(BAM_NGSCHECKMATE.out.versions)
 
     emit:
     corr_matrix = BAM_NGSCHECKMATE.out.corr_matrix // channel: [ meta, corr_matrix ]

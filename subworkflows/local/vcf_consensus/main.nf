@@ -32,7 +32,6 @@ workflow CONSENSUS {
         .groupTuple(size: 2)
 
     BCFTOOLS_CONCAT(ch_strelka_grouped)// somatic strelkas have two vcf files: SNPs and indels
-    ch_versions = ch_versions.mix(BCFTOOLS_CONCAT.out.versions)
 
     // Combine concat strelka with remaining VCFs
     // Bundle each VCF with its caller to preserve association through grouping
@@ -58,7 +57,6 @@ workflow CONSENSUS {
 
 
     BCFTOOLS_ISEC(ch_consensus_in)
-    ch_versions = ch_versions.mix(BCFTOOLS_ISEC.out.versions)
 
     // Filter out empty isec results (no consensus variants found)
     ch_isec_with_results = BCFTOOLS_ISEC.out.results

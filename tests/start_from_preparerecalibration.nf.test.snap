@@ -151,7 +151,7 @@
             10,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.23.1
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -279,7 +279,7 @@
             10,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": 1.23.1
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
