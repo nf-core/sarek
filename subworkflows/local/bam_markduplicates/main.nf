@@ -19,13 +19,18 @@ workflow BAM_MARKDUPLICATES {
     reports  = Channel.empty()
 
     // RUN MARKUPDUPLICATES
+    // --CREATE_INDEX true is set via ext.args when --save_output_as_bam, so the
+    // module emits .bai inline; CRAM mode emits .crai via samtools post-conversion.
     GATK4_MARKDUPLICATES(bam, fasta.map{ meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ meta, fasta_fai_ -> [ fasta_fai_ ] })
 
-    // Join with the crai file
-    cram = GATK4_MARKDUPLICATES.out.cram.join(GATK4_MARKDUPLICATES.out.crai, failOnDuplicate: true, failOnMismatch: true)
+    // Unified alignment output — BAM or CRAM depending on save_output_as_bam
+    alignment = GATK4_MARKDUPLICATES.out.bam
+        .join(GATK4_MARKDUPLICATES.out.bai, failOnDuplicate: true, failOnMismatch: true)
+        .mix(GATK4_MARKDUPLICATES.out.cram
+            .join(GATK4_MARKDUPLICATES.out.crai, failOnDuplicate: true, failOnMismatch: true))
 
-    // QC on CRAM
-    CRAM_QC_MOSDEPTH_SAMTOOLS(cram, fasta, intervals_bed_combined)
+    // QC on alignment
+    CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, intervals_bed_combined)
 
     // Gather all reports generated
     reports = reports.mix(GATK4_MARKDUPLICATES.out.metrics)
@@ -36,7 +41,7 @@ workflow BAM_MARKDUPLICATES {
     versions = versions.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.versions)
 
     emit:
-    cram
+    alignment   // channel: [ meta, file, index ] — BAM or CRAM
     reports
 
     versions    // channel: [ versions.yml ]

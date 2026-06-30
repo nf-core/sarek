@@ -67,6 +67,9 @@ For further information/help, please consult the [nf-core/sarek documentation](h
 
 To make the `nf-core/sarek` code and processing logic more understandable for new contributors and to ensure quality, we semi-standardise the way the code and other contributions are written.
 
+> [!NOTE]
+> For comprehensive, sarek-specific guidance (codebase architecture, channel operations and gotchas, meta map handling, module/subworkflow conventions, and more) see the [Developer Guidelines](../docs/DEVELOPER_GUIDELINES.md). These guidelines are written for both human developers and AI agents.
+
 ### Adding a new step
 
 If you wish to contribute a new step, please use the following coding standards:

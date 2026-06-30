@@ -1,4 +1,4 @@
-name: Run nf-test on GPU
+name: Run nf-test with Sentieon
 on:
   pull_request:
     paths-ignore:
@@ -23,10 +23,10 @@ env:
   NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
   NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
 jobs:
-  nf-test-gpu-changes:
-    name: nf-test-gpu-changes
+  nf-test-sentieon-changes:
+    name: nf-test-sentieon-changes
     runs-on: # use self-hosted runners
-      - runs-on=${{ github.run_id }}-nf-test-gpu-changes
+      - runs-on=${{ github.run_id }}-nf-test-sentieon-changes
       - runner=4cpu-linux-x64
     outputs:
       shard: ${{ steps.set-shards.outputs.shard }}
@@ -48,26 +48,27 @@ jobs:
         env:
           NFT_VER: ${{ env.NFT_VER }}
         with:
-          tags: "gpu"
-          max_shards: 2
+          tags: "sentieon,sentieon_conda"
+          max_shards: 10
 
       - name: debug
         run: |
           echo ${{ steps.set-shards.outputs.shard }}
           echo ${{ steps.set-shards.outputs.total_shards }}
 
-  nf-test-gpu:
-    name: "GPU | ${{ matrix.profile }} | ${{ matrix.NXF_VER }} | ${{ matrix.shard }}/${{ needs.nf-test-gpu-changes.outputs.total_shards }}"
-    needs: [nf-test-gpu-changes]
-    if: ${{ needs.nf-test-gpu-changes.outputs.total_shards != '0' }}
-    runs-on: "runs-on=${{ github.run_id }}/family=g4dn.xlarge/image=ubuntu24-gpu-x64"
+  nf-test-sentieon:
+    name: "${{ matrix.profile }} | ${{ matrix.NXF_VER }} | ${{ matrix.shard }}/${{ needs.nf-test-sentieon-changes.outputs.total_shards }}"
+    needs: [nf-test-sentieon-changes]
+    if: ${{ needs.nf-test-sentieon-changes.outputs.total_shards != '0' }}
+    runs-on: # use self-hosted runners
+      - runs-on=${{ github.run_id }}-nf-test-sentieon
+      - runner=4cpu-linux-x64
+      - volume=80gb
     strategy:
       fail-fast: false
       matrix:
-        shard: ${{ fromJson(needs.nf-test-gpu-changes.outputs.shard) }}
-        # Note: at the moment, in sarek no processes using gpu are supported with conda
-        # Which is why the profile matrix is limited to docker and singularity
-        profile: [docker, singularity]
+        shard: ${{ fromJson(needs.nf-test-sentieon-changes.outputs.shard) }}
+        profile: [conda, docker, singularity]
         isMain:
           - ${{ github.base_ref == 'master' || github.base_ref == 'main' }}
         # Exclude conda and singularity on dev
@@ -81,36 +82,36 @@ jobs:
           - latest-everything
     env:
       NXF_ANSI_LOG: false
-      TOTAL_SHARDS: ${{ needs.nf-test-gpu-changes.outputs.total_shards }}
+      TOTAL_SHARDS: ${{ needs.nf-test-sentieon-changes.outputs.total_shards }}
 
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
 
-      - name: Test CUDA
-        run: |
-          nvidia-smi -L
-
       - name: Set NFT_WORKDIR dynamically
         run: echo "NFT_WORKDIR=$HOME" >> $GITHUB_ENV
 
-      - name: Run nf-test on GPU
-        id: run_nf_test_gpu
+      - name: Run nf-test on Sentieon
+        id: run_nf_test_sentieon
         uses: ./.github/actions/nf-test
         continue-on-error: ${{ matrix.NXF_VER == 'latest-everything' }}
         env:
           NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
           NXF_VERSION: ${{ matrix.NXF_VER }}
+          SENTIEON_AUTH_MECH: "GitHub Actions - token"
+          SENTIEON_ENCRYPTION_KEY: ${{ secrets.SENTIEON_ENCRYPTION_KEY }}
+          SENTIEON_LICENSE_MESSAGE: ${{ secrets.SENTIEON_LICENSE_MESSAGE }}
+          SENTIEON_LICSRVR_IP: ${{ secrets.SENTIEON_LICSRVR_IP }}
         with:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
-          tags: ${{ matrix.profile == 'conda' && 'gpu_conda' || 'gpu,gpu_conda' }}
+          tags: ${{ matrix.profile == 'conda' && 'sentieon_conda' || 'sentieon,sentieon_conda' }}
       - name: Report test status
         if: ${{ always() }}
         run: |
-          if [[ "${{ steps.run_nf_test_gpu.outcome }}" == "failure" ]]; then
+          if [[ "${{ steps.run_nf_test_sentieon.outcome }}" == "failure" ]]; then
             echo "::error::Test with ${{ matrix.NXF_VER }} failed"
             # Add to workflow summary
             echo "## ❌ Test failed: ${{ matrix.profile }} | ${{ matrix.NXF_VER }} | Shard ${{ matrix.shard }}/${{ env.TOTAL_SHARDS }}" >> $GITHUB_STEP_SUMMARY
@@ -122,7 +123,7 @@ jobs:
             fi
           fi
   confirm-pass:
-    needs: [nf-test-gpu]
+    needs: [nf-test-sentieon]
     if: always()
     runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-confirm-pass

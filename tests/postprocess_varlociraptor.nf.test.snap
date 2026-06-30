@@ -28,16 +28,16 @@
                     "bcftools": 1.22
                 },
                 "MERGE_STRELKA": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MERGE_STRELKA_GENOME": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MERGE_STRELKA_INDELS": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MERGE_STRELKA_SNVS": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -357,7 +357,7 @@
                     "gatk4": "4.6.1.0"
                 },
                 "MERGE_MUTECT2": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -599,10 +599,10 @@
                     "gatk4": "4.6.1.0"
                 },
                 "MERGE_STRELKA": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MERGE_STRELKA_GENOME": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"

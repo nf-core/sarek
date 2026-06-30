@@ -122,7 +122,7 @@
                     },
                     "controlfreec/assesssignificance": {
                         "branch": "master",
-                        "git_sha": "8f6fc518531291208e7a665f6e8bcbeb1f05f49e",
+                        "git_sha": "8a34a4cc59c480816e45d3b68ca11b8eab2edff1",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/controlfreec/assesssignificance/controlfreec-assesssignificance.diff"
                     },
@@ -148,7 +148,7 @@
                     },
                     "deepvariant/rundeepvariant": {
                         "branch": "master",
-                        "git_sha": "dd78204eb24332ec3cdd512fa9a83898f9728842",
+                        "git_sha": "29031bf70ae8117b235400aca32796a433c733f2",
                         "installed_by": ["modules"]
                     },
                     "dragmap/align": {
@@ -303,7 +303,7 @@
                     },
                     "gatk4/mergevcfs": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/mutect2": {

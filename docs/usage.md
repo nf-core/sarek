@@ -575,7 +575,6 @@ Expected run output:
 [88/3af664] process > NFCORE_SAREK:SAREK:BAM_APPLYBQSR:CRAM_MERGE_INDEX_SAMTOOLS:INDEX_CRAM (test)                                  [100%] 1 of 1 ✔
 [f4/828fde] process > NFCORE_SAREK:SAREK:CRAM_QC_RECAL:SAMTOOLS_STATS (test)                                                        [100%] 1 of 1 ✔
 [fb/a9d66f] process > NFCORE_SAREK:SAREK:CRAM_QC_RECAL:MOSDEPTH (test)                                                              [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:CRAM_TO_BAM_RECAL                                                                          -
 [ef/026185] process > NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_SINGLE_STRELKA:STRELKA_SINGLE (test)  [100%] 1 of 1 ✔
 [-        ] process > NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_SINGLE_STRELKA:MERGE_STRELKA          -
 [-        ] process > NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_SINGLE_STRELKA:MERGE_STRELKA_GENOME   -
@@ -951,7 +950,7 @@ Command error:
   [E::sam_index] Read 'LH00271:69:2237HHLT4:7:1101:1000:11758' with ref_name='chr16', ref_length=90338345, flags=163, pos=58528490 cannot be indexed  samtools index: failed to create index for "sample_19.sorted.bam"
 ```
 
-Please be aware that `--use_gatk_spark` is not compatible with `--save_output_as_bam --save_mapped` because merging the reads to export them to bam files only works when they are coordinate sorted - spark works with name-sorting the reads.
+Please be aware that `--use_gatk_spark markduplicates` is not compatible with `--save_mapped`, regardless of `--save_output_as_bam`. Spark MarkDuplicates requires name-sorted input, so the reads exiting the mapping stage are name-sorted. The saved mapped alignment (whether published as BAM or CRAM) is therefore name-sorted and cannot be indexed or used by downstream tools. Either drop `--save_mapped`, or switch to the non-Spark markduplicates path.
 
 ## How to handle Unique Molecular Identifiers (UMIs)
 
