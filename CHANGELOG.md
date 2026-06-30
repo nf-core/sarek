@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency    | Old version | New version |
 | ------------- | ----------- | ----------- |
-| varlociraptor | 8.7.4       | 8.9.5       |
+| varlociraptor | 8.9.3       | 8.9.5       |
 
 ### Dependencies - plugins
 
@@ -110,10 +110,9 @@ Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
 
 ### Parameters
 
-| Params                              | status |
-| ----------------------------------- | ------ |
-| `--vep_cache_preflight_check`       | New    |
-
+| Params                        | status |
+| ----------------------------- | ------ |
+| `--vep_cache_preflight_check` | New    |
 ### Developer section
 
 #### Added
