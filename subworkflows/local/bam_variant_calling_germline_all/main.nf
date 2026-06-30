@@ -6,6 +6,7 @@ include { BAM_JOINT_CALLING_GERMLINE_GATK                                       
 include { BAM_JOINT_CALLING_GERMLINE_SENTIEON                                          } from '../bam_joint_calling_germline_sentieon/main'
 include { BAM_VARIANT_CALLING_CNVKIT                                                   } from '../bam_variant_calling_cnvkit/main'
 include { BAM_VARIANT_CALLING_DEEPVARIANT                                              } from '../bam_variant_calling_deepvariant/main'
+include { BAM_VARIANT_CALLING_PARABRICKS_DEEPVARIANT                                   } from '../bam_variant_calling_parabricks_deepvariant/main'
 include { BAM_VARIANT_CALLING_FREEBAYES                                                } from '../bam_variant_calling_freebayes/main'
 include { BAM_VARIANT_CALLING_GERMLINE_MANTA                                           } from '../bam_variant_calling_germline_manta/main'
 include { BAM_VARIANT_CALLING_HAPLOTYPECALLER                                          } from '../bam_variant_calling_haplotypecaller/main'
@@ -58,25 +59,27 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     gvcf_sentieon_dnascope   = Channel.empty()
     gvcf_sentieon_haplotyper = Channel.empty()
 
-    out_indexcov             = Channel.empty()
-    vcf_deepvariant          = Channel.empty()
-    vcf_freebayes            = Channel.empty()
-    vcf_haplotypecaller      = Channel.empty()
-    vcf_manta                = Channel.empty()
-    vcf_mpileup              = Channel.empty()
-    vcf_sentieon_dnascope    = Channel.empty()
-    vcf_sentieon_haplotyper  = Channel.empty()
-    vcf_strelka              = Channel.empty()
-    vcf_tiddit               = Channel.empty()
-    tbi_deepvariant          = Channel.empty()
-    tbi_freebayes            = Channel.empty()
-    tbi_haplotypecaller      = Channel.empty()
-    tbi_manta                = Channel.empty()
-    tbi_mpileup              = Channel.empty()
-    tbi_sentieon_dnascope    = Channel.empty()
-    tbi_sentieon_haplotyper  = Channel.empty()
-    tbi_strelka              = Channel.empty()
-    tbi_tiddit               = Channel.empty()
+    out_indexcov                     = Channel.empty()
+    vcf_deepvariant                  = Channel.empty()
+    vcf_parabricks_deepvariant       = Channel.empty()
+    vcf_freebayes                    = Channel.empty()
+    vcf_haplotypecaller              = Channel.empty()
+    vcf_manta                        = Channel.empty()
+    vcf_mpileup                      = Channel.empty()
+    vcf_sentieon_dnascope            = Channel.empty()
+    vcf_sentieon_haplotyper          = Channel.empty()
+    vcf_strelka                      = Channel.empty()
+    vcf_tiddit                       = Channel.empty()
+    tbi_deepvariant                  = Channel.empty()
+    tbi_parabricks_deepvariant       = Channel.empty()
+    tbi_freebayes                    = Channel.empty()
+    tbi_haplotypecaller              = Channel.empty()
+    tbi_manta                        = Channel.empty()
+    tbi_mpileup                      = Channel.empty()
+    tbi_sentieon_dnascope            = Channel.empty()
+    tbi_sentieon_haplotyper          = Channel.empty()
+    tbi_strelka                      = Channel.empty()
+    tbi_tiddit                       = Channel.empty()
 
     // BCFTOOLS MPILEUP
     if (tools && tools.split(',').contains('mpileup')) {
@@ -116,6 +119,18 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         vcf_deepvariant = BAM_VARIANT_CALLING_DEEPVARIANT.out.vcf
         tbi_deepvariant = BAM_VARIANT_CALLING_DEEPVARIANT.out.tbi
+    }
+
+    // PARABRICKS DEEPVARIANT
+    if (tools && tools.split(',').contains('parabricks_deepvariant')) {
+        BAM_VARIANT_CALLING_PARABRICKS_DEEPVARIANT(
+            bam,
+            fasta
+        )
+
+        vcf_parabricks_deepvariant = BAM_VARIANT_CALLING_PARABRICKS_DEEPVARIANT.out.vcf
+        tbi_parabricks_deepvariant = BAM_VARIANT_CALLING_PARABRICKS_DEEPVARIANT.out.tbi
+        versions = versions.mix(BAM_VARIANT_CALLING_PARABRICKS_DEEPVARIANT.out.versions)
     }
 
     // FREEBAYES
@@ -374,6 +389,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
     vcf_all = Channel.empty().mix(
         vcf_deepvariant,
+        vcf_parabricks_deepvariant,
         vcf_freebayes,
         vcf_sentieon_dnascope,
         vcf_haplotypecaller,
@@ -386,6 +402,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
     tbi_all = Channel.empty().mix(
         tbi_deepvariant,
+        tbi_parabricks_deepvariant,
         tbi_freebayes,
         tbi_sentieon_dnascope,
         tbi_haplotypecaller,
@@ -402,6 +419,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     out_indexcov
     vcf_all
     vcf_deepvariant
+    vcf_parabricks_deepvariant
     vcf_freebayes
     vcf_haplotypecaller
     vcf_manta
@@ -412,6 +430,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_tiddit
     tbi_all
     tbi_deepvariant
+    tbi_parabricks_deepvariant
     tbi_freebayes
     tbi_haplotypecaller
     tbi_manta
