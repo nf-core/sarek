@@ -10,20 +10,42 @@ nextflow_pipeline {
                 aligner: 'bwa-mem2',
                 save_reference: true,
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
-                tools: ''
-            ]
+                tools: '',
+            ],
         ],
         [
             name: "-profile test --aligner bwa-mem2 --save_reference --build_only_index",
             params: [
                 aligner: 'bwa-mem2',
                 build_only_index: true,
-                input: false,
+                input: null,
                 save_reference: true,
                 skip_tools: 'multiqc',
-                tools: ''
-            ]
-        ]
+                tools: '',
+            ],
+        ],
+        [
+            name: "-profile test --aligner bwa-mem2 --save_reference skip QC/recal/md - stub",
+            params: [
+                aligner: 'bwa-mem2',
+                save_reference: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: '',
+            ],
+            stub: true,
+        ],
+        [
+            name: "-profile test --aligner bwa-mem2 --save_reference --build_only_index - stub",
+            params: [
+                aligner: 'bwa-mem2',
+                build_only_index: true,
+                input: null,
+                save_reference: true,
+                skip_tools: 'multiqc',
+                tools: '',
+            ],
+            stub: true,
+        ],
     ]
 
     // Generate tests for each scenario

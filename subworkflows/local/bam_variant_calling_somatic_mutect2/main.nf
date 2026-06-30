@@ -227,7 +227,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         .concat(tbi.map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] })
         .unique { it[0] }
 
-    versions = versions.mix(MERGE_MUTECT2.out.versions)
     versions = versions.mix(CALCULATECONTAMINATION.out.versions)
     versions = versions.mix(FILTERMUTECTCALLS.out.versions)
     versions = versions.mix(GETPILEUPSUMMARIES_NORMAL.out.versions)

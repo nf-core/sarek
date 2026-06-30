@@ -14,7 +14,7 @@ nextflow_pipeline {
                 save_mapped: true,
                 save_output_as_bam: true
             ],
-            snapshot_ignoreWarning: 'runner'
+            snapshot_ignore: 'Cannot extract flowcell ID'
         ]
     ]
 

@@ -13,7 +13,7 @@ nextflow_pipeline {
             ],
             failure: true,
             snapshot: 'stderr',
-            snapshot_ignore: 'Downloading plugin'
+
         ],
         [
             name: "-profile test --step variant_calling --input tests/csv/3.0/recalibrated_somatic_two_normal_one_sample.csv",
@@ -23,7 +23,7 @@ nextflow_pipeline {
             ],
             failure: true,
             snapshot: 'stderr',
-            snapshot_ignore: 'Downloading plugin'
+
         ],
         [
             name: "-profile test,spark --input tests/csv/3.0/fastq_single.csv --use_gatk_spark baserecalibrator,markduplicates --save_mapped --save_output_as_bam",
@@ -35,7 +35,7 @@ nextflow_pipeline {
             ],
             failure: true,
             snapshot: 'stderr',
-            snapshot_ignore: 'Downloading plugin'
+
         ],
         [
             name: "-profile test --input tests/csv/3.0/fastq_multiple_lane_ids.csv",
@@ -44,7 +44,7 @@ nextflow_pipeline {
             ],
             failure: true,
             snapshot: 'stderr',
-            snapshot_ignore: 'Downloading plugin'
+
         ],
         [
             name: "-profile test --input tests/csv/3.0/fastq_multiple_sample_ids.csv",
@@ -53,7 +53,7 @@ nextflow_pipeline {
             ],
             failure: true,
             snapshot: 'stderr',
-            snapshot_ignore: 'Downloading plugin'
+
         ]
     ]
 

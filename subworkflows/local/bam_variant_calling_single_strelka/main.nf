@@ -22,7 +22,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
-        .map{ meta, cram, crai, intervals, intervals_index, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals, intervals_index ] }
+        .map{ meta, cram_, crai, intervals_, intervals_index, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram_, crai, intervals_, intervals_index ] }
 
     STRELKA_SINGLE(cram_intervals, fasta, fasta_fai)
 
@@ -64,8 +64,6 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], tbi ] }
 
-    versions = versions.mix(MERGE_STRELKA.out.versions)
-    versions = versions.mix(MERGE_STRELKA_GENOME.out.versions)
     versions = versions.mix(STRELKA_SINGLE.out.versions)
 
     emit:

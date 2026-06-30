@@ -12,6 +12,9 @@
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
                 },
+                "MERGE_GENOTYPEGVCFS": {
+                    "gatk4": "4.6.2.0"
+                },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
@@ -19,25 +22,30 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_APPLYVARCAL_INDEL": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
+                },
+                "SENTIEON_APPLYVARCAL_SNP": {
+                    "sentieon": "202503.02"
                 },
                 "SENTIEON_GVCFTYPER": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "SENTIEON_HAPLOTYPER": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "SENTIEON_VARCAL_INDEL": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "SENTIEON_VARCAL_SNP": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -47,6 +55,7 @@
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
                 "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
@@ -72,6 +81,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -91,6 +101,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -109,6 +120,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -127,6 +139,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -172,6 +185,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
+                "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
                 "joint_germline_recalibrated_indel.bcftools_stats.txt:md5,f223948705dd87d2edcc6a44ca72df64",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
@@ -218,10 +232,11 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_HAPLOTYPER": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -231,6 +246,7 @@
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
                 "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
@@ -256,6 +272,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -275,6 +292,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -293,6 +311,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -311,6 +330,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -356,6 +376,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
+                "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
                 "test.haplotyper.filtered.bcftools_stats.txt:md5,178ef0aeaef94b9de01a44d833823918",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
@@ -399,13 +420,15 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_HAPLOTYPER": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -415,6 +438,7 @@
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
                 "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
@@ -440,6 +464,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -459,6 +484,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -477,6 +503,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -495,6 +522,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -535,6 +563,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
+                "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
                 "test.haplotyper.unfiltered.bcftools_stats.txt:md5,a486e123a1466777f49bab8c854f0e55",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
@@ -583,13 +612,15 @@
                     "samtools": 1.21
                 },
                 "SENTIEON_HAPLOTYPER": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -599,6 +630,7 @@
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
                 "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
@@ -624,6 +656,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -643,6 +676,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -661,6 +695,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -679,6 +714,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -721,6 +757,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
+                "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
                 "test.haplotyper.filtered.bcftools_stats.txt:md5,178ef0aeaef94b9de01a44d833823918",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",

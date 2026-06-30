@@ -14,19 +14,21 @@
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "SENTIEON_DEDUP": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "SENTIEON_TNSCOPE": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -36,6 +38,8 @@
                 "csv",
                 "csv/markduplicates_no_table.csv",
                 "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
@@ -97,19 +101,21 @@
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "SENTIEON_DEDUP": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "SENTIEON_TNSCOPE": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -119,6 +125,8 @@
                 "csv",
                 "csv/markduplicates_no_table.csv",
                 "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
@@ -200,16 +208,17 @@
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "SENTIEON_DEDUP": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "SENTIEON_TNSCOPE": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -219,6 +228,8 @@
                 "csv",
                 "csv/markduplicates_no_table.csv",
                 "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/index.json",
                 "no_intervals.bed",
                 "no_intervals.bed.gz",
                 "no_intervals.bed.gz.tbi",
@@ -291,19 +302,21 @@
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "SENTIEON_DEDUP": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "SENTIEON_TNSCOPE": {
-                    "sentieon": 202503.01
+                    "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -313,6 +326,8 @@
                 "csv",
                 "csv/markduplicates_no_table.csv",
                 "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",

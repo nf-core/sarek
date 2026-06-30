@@ -1,5 +1,5 @@
 {
-    "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 20": {
+    "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr null --known_snps_vqsr null --known_indels_vqsr null --nucleotides_per_second 20": {
         "content": [
             26,
             {
@@ -18,8 +18,11 @@
                 "GATK4_HAPLOTYPECALLER": {
                     "gatk4": "4.6.1.0"
                 },
+                "MERGE_GENOTYPEGVCFS": {
+                    "gatk4": "4.6.2.0"
+                },
                 "MERGE_HAPLOTYPECALLER": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -28,10 +31,12 @@
                     "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -41,6 +46,7 @@
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
                 "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
@@ -66,6 +72,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -85,6 +92,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -103,6 +111,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -121,6 +130,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -179,6 +189,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,a0c101497a0566f60b9e8388207944ab",
                 "samtools_alignment_plot.txt:md5,563784066de81f3bc8ccf5fbbe82b3d5",
+                "samtools_insert_size.txt:md5,f3dd80e14876d827eb924c6cc888c782",
                 "joint_germline.bcftools_stats.txt:md5,1e0bcb3e7dc0e812371e4609f477569c",
                 "testN.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "testN.recal.mosdepth.region.dist.txt:md5,3a2030e5e8af7bc12720c3a5592bf921",
@@ -214,7 +225,27 @@
         },
         "timestamp": "2025-12-15T19:58:09.342469278"
     },
-    "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 100": {
+    "Fails with --no_intervals and --joint_germline for haplotypecaller": {
+        "content": [
+            [
+                "pipeline_info"
+            ],
+            "No stable content",
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files",
+            "No warnings",
+            [
+                "Joint germline variant calling with GATK's HaplotypeCaller requires intervals because GenomicsDB cannot be used without them. Please provide intervals or remove `--no_intervals`."
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-03-06T11:55:26.564281"
+    },
+    "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr null --known_snps_vqsr null --known_indels_vqsr null --nucleotides_per_second 100": {
         "content": [
             18,
             {
@@ -233,6 +264,9 @@
                 "GATK4_HAPLOTYPECALLER": {
                     "gatk4": "4.6.1.0"
                 },
+                "MERGE_GENOTYPEGVCFS": {
+                    "gatk4": "4.6.2.0"
+                },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
@@ -240,10 +274,12 @@
                     "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "tabix": 1.21
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -253,6 +289,7 @@
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
+                "multiqc/index.json",
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
                 "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
@@ -278,6 +315,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -297,6 +335,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -315,6 +354,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -333,6 +373,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -391,6 +432,7 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,a0c101497a0566f60b9e8388207944ab",
                 "samtools_alignment_plot.txt:md5,563784066de81f3bc8ccf5fbbe82b3d5",
+                "samtools_insert_size.txt:md5,f3dd80e14876d827eb924c6cc888c782",
                 "joint_germline.bcftools_stats.txt:md5,1e0bcb3e7dc0e812371e4609f477569c",
                 "testN.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "testN.recal.mosdepth.region.dist.txt:md5,3a2030e5e8af7bc12720c3a5592bf921",

@@ -37,8 +37,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_TNSCOPE {
         [[],[]], // cosmic
         [[],[]] // cosmic_tbi
     )
-    versions = versions.mix(SENTIEON_TNSCOPE.out.versions)
-
     // Figuring out if there is one or more vcf(s) from the same sample
     vcf_branch = SENTIEON_TNSCOPE.out.vcf.branch{
         // Use meta.num_intervals to asses number of intervals
@@ -56,7 +54,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_TNSCOPE {
 
     // Merge if required
     MERGE_TNSCOPE(vcf_to_merge, dict)
-    versions = versions.mix(MERGE_TNSCOPE.out.versions)
 
     // Mix intervals and no_intervals channels together
     // Remove unnecessary metadata and add variantcaller

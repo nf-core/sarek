@@ -12,6 +12,17 @@ class UTILS {
         // Pass down workflow for std capture
         def workflow = args.workflow
 
+        // These strings are not stable and should be ignored
+        def snapshot_ignore_list = [
+            "Creating env using",
+            "Downloading plugin",
+            "Got an interrupted  exception while taking agent result",
+            "Pulling Singularity image",
+            "Staging foreign file",
+            "Unable to resume cached task",
+            "Unable to stage foreign file",
+        ]
+
         // stable_name: All files + folders in ${outdir}/ with a stable name
         def stable_name = getAllFilesFromDir(outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
         // stable_content: All files in ${outdir}/ with stable content
@@ -36,7 +47,7 @@ class UTILS {
 
         if (!scenario.failure) {
             assertion.add(workflow.trace.succeeded().size())
-            assertion.add(removeFromYamlMap("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow"))
+            assertion.add(removeFromYamlMap("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow")?: 'No versions')
         }
 
         // At least always pipeline_info/ is created and stable
@@ -66,28 +77,31 @@ class UTILS {
             }
         }
 
-        // Always capture stdout and stderr for any WARN message
-        if (scenario.snapshot_ignoreWarning) {
-            assertion.add(filterNextflowOutput(workflow.stderr + workflow.stdout, include: ["WARN"], ignore: ["Creating env using", "Pulling Singularity image", "unable to stage foreign file", scenario.snapshot_ignoreWarning] ) ?: "No warnings")
-        } else {
-            assertion.add(filterNextflowOutput(workflow.stderr + workflow.stdout, include: ["WARN"], ignore: ["Creating env using", "Pulling Singularity image", "unable to stage foreign file"] ) ?: "No warnings")
-        }
+        // If we have a snapshot options in scenario then we allow to capture either stderr, stdout or both
+        // With options to include specific stings
+        def workflow_std = []
+        // Otherwise, we always capture stdout and stderr for any WARN message
+        // Both have additional possibilities to ignore some strings
+        def filter_args = [ignore: snapshot_ignore_list + (scenario.snapshot_ignore ?: [])]
 
-        // Capture std for snapshot
-        // Allow to capture either stderr, stdout or both
-        // Additional possibilities to include and/or ignore some string
+        workflow_std = workflow.stderr + workflow.stdout
+        filter_args.include = ["WARN"]
+
+        assertion.add(filterNextflowOutput(workflow_std, filter_args) ?: "No warnings")
+
         if (scenario.snapshot) {
-            def workflow_std = []
+            workflow_std = scenario.snapshot.split(',')
+                .findAll { it in ['stderr', 'stdout'] }
+                .collect { workflow."$it" }
+                .flatten()
 
-            scenario.snapshot.split(',').each { std ->
-                if (std in ['stderr', 'stdout']) { workflow_std.add(workflow."$std") }
-            }
+            filter_args.remove('include')
 
             if (scenario.snapshot_include) {
-                assertion.add(filterNextflowOutput(workflow_std.flatten(), ignore: ["Creating env using", "Pulling Singularity image", "unable to stage foreign file", scenario.snapshot_ignore], include:[scenario.snapshot_include]))
-            } else {
-                assertion.add(filterNextflowOutput(workflow_std.flatten(), ignore: ["Creating env using", "Pulling Singularity image", "unable to stage foreign file", scenario.snapshot_ignore]))
+                filter_args.include = [scenario.snapshot_include]
             }
+
+            assertion.add(filterNextflowOutput(workflow_std, filter_args) ?: "No content")
         }
 
         return assertion
@@ -108,33 +122,33 @@ class UTILS {
             // All options should be:
             // gpu (this is the default for gpu)
             // cpu (this is the default for tests without conda)
+            // sentieon (this is the default for sentieon without conda)
             // gpu_conda (this should never happen)
             // cpu_conda (this is the default for tests with conda compatibility)
+            // sentieon_conda (this is the default for sentieon with conda compatibility)
             // gpu_stub
             // cpu_stub
+            // sentieon_stub
             // gpu_conda_stub (this should never happen)
             // cpu_conda_stub
+            // sentieon_conda_stub
 
             tag "pipeline"
             tag "pipeline_sarek"
 
-            if (scenario.stub) {
-                options "-stub"
-            }
+            options "-output-dir ${outputDir}${scenario.stub ? ' -stub' : ''}"
 
-            options "-output-dir $outputDir"
-
-            if (scenario.gpu) {
-                tag "gpu${!scenario.no_conda ? '_conda' : ''}${scenario.stub ? '_stub' : ''}"
-            }
-
-            if (!scenario.gpu) {
-                tag "cpu${!scenario.no_conda ? '_conda' : ''}${scenario.stub ? '_stub' : ''}"
-            }
+            def tag_prefix = scenario.gpu ? "gpu" : scenario.sentieon ? "sentieon" : "cpu"
+            tag "${tag_prefix}${!scenario.no_conda ? '_conda' : ''}${scenario.stub ? '_stub' : ''}"
 
             // If a tag is provided, add it to the test
             if (scenario.tag) {
                 tag scenario.tag
+            }
+
+            // Add automatic failure tag if it's a scenario supposed to fail
+            if (scenario.failure) {
+                tag "failure"
             }
 
             when {

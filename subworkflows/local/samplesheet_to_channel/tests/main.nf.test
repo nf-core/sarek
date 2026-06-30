@@ -56,7 +56,5 @@ nextflow_workflow {
             assert workflow.success
             assert snapshot(workflow.out).match()
         }
-
     }
-
 }
