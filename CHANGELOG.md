@@ -34,10 +34,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added
 
+- [#2225](https://github.com/nf-core/sarek/pull/2225) - Add contributor ORCIDs to `nextflow.config`
+
 #### Changed
 
 - [#2225](https://github.com/nf-core/sarek/pull/2225) - Back to dev (3.9.1dev)
-- [#2225](https://github.com/nf-core/sarek/pull/2225) - Add contributor ORCIDs to `nextflow.config`
 
 #### Fixed
 
