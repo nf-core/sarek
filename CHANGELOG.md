@@ -17,7 +17,7 @@ Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
 
 ### Changed
 
-- [#2055](https://github.com/nf-core/sarek/pull/2055) - Sort final vcf in varlociraptor sbwfs and update varlociraptor
+- [#2055](https://github.com/nf-core/sarek/pull/2055) - Sort final vcf in varlociraptor sbwfs, update varlociraptor, and add `--force-samples` to the `bcftools merge` of germline/somatic VCFs so the merge proceeds (renaming colliding columns) instead of failing when sample names collide
 - [#2141](https://github.com/nf-core/sarek/pull/2141) - Update snpeff
 - [#2194](https://github.com/nf-core/sarek/pull/2194) - Replace local `annotation_cache_initialisation` and `download_cache_snpeff_vep` subworkflows with nf-core `utils_annotation_cache` and `cache_download_ensemblvep_snpeff`
 - [#2209](https://github.com/nf-core/sarek/pull/2209) - Add flowing dots for the additional `bam/cram` and `vcf` entry points on the core line and the `cram` entry on the germline line in the animated metro map
@@ -25,7 +25,7 @@ Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
 
 ### Fixed
 
-- [#2117](https://github.com/nf-core/sarek/pull/2117) - Silent failure with multi-lane samples
+- [#2117](https://github.com/nf-core/sarek/pull/2117) - Silent failure with multi-lane samples, including stripping `sample_lane_id` in the UMI consensus `groupKey` so `groupTuple` can merge lanes from the same sample (previously blocked by the retained per-lane `sample_lane_id`)
 - [#2143](https://github.com/nf-core/sarek/pull/2143) - Varlociraptor collecting multiple scenario files for one sample
 - [#2146](https://github.com/nf-core/sarek/pull/2146) - Fail early when `--no_intervals` is used with joint germline HaplotypeCaller
 - [#2147](https://github.com/nf-core/sarek/pull/2147) - Fix empty fastp output folder created when trimmed reads are not saved
@@ -48,6 +48,7 @@ Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
 | gatk4 (in `GATK4_MERGEVCFS`) | 4.6.1.0     | 4.6.2.0     |
 | --htslib                     |             | 1.23.1      |
 | multiqc                      | 1.33        | 1.35        |
+| sentieon                     | 202503.01   | 202503.02   |
 | snpeff                       | 5.3a        | 5.4c        |
 | varlociraptor                | 8.7.4       | 8.9.3       |
 | yte                          | 1.9.0       | 1.9.4       |
