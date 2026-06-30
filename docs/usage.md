@@ -208,6 +208,17 @@ process {
 }
 ```
 
+#### Using GPU accelerated variant calling (`--tools parabricks_haplotypecaller`)
+
+> [!NOTE]
+> This is an experimental addition to the pipeline which requires a GPU and does not support `--profile conda`.
+
+To use NVIDIA Clara Parabricks' GPU-accelerated HaplotypeCaller for germline variant calling, add `--tools parabricks_haplotypecaller --profile <docker/singularity>,gpu` to your run command. This replicates GATK HaplotypeCaller germline SNP and indel calling with GPU acceleration.
+
+Parabricks HaplotypeCaller takes a CRAM file as input and outputs a single VCF per sample (no scatter/gather over intervals). Intervals can be provided via `--intervals` to restrict calling to specific regions.
+
+For more details on available arguments, see the [Parabricks HaplotypeCaller documentation](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html).
+
 ### Start with duplicate marking (`--step markduplicates`)
 
 #### Duplicate Marking

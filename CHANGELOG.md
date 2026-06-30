@@ -12,6 +12,7 @@ Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
 ### Added
 
 - [#2087](https://github.com/nf-core/sarek/pull/2087) - Add `bam` as output format for parabricks/fq2bam, add multi lane support
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Add Parabricks HaplotypeCaller as GPU-accelerated germline variant caller (`--tools parabricks_haplotypecaller`)
 - [#2194](https://github.com/nf-core/sarek/pull/2194) - Add `--vep_cache_preflight_check` parameter to force preflight check for local VEP cache download
 - [#2199](https://github.com/nf-core/sarek/pull/2199) - Add animated metro map (`docs/images/sarek_subway_animated.svg`) with dots flowing through the workflow
 

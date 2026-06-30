@@ -411,6 +411,11 @@
                         "git_sha": "f0b0dc3c3f001b1b7bf814a3c353baecbab17ea1",
                         "installed_by": ["modules"]
                     },
+                    "parabricks/haplotypecaller": {
+                        "branch": "master",
+                        "git_sha": "f0b0dc3c3f001b1b7bf814a3c353baecbab17ea1",
+                        "installed_by": ["modules"]
+                    },
                     "rbt/vcfsplit": {
                         "branch": "master",
                         "git_sha": "117bda90be326bcff5cb2286c7988a4caa588b5d",
