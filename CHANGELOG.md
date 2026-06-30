@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#2208](https://github.com/nf-core/sarek/pull/2208) - Add varlociraptor/filterfdr
+
 ### Changed
 
 ### Fixed
@@ -17,8 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies - modules
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| varlociraptor | 8.9.3       | 8.9.5       |
 
 ### Dependencies - plugins
 
@@ -27,8 +30,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params | status |
-| ------ | ------ |
+| Params                              | status |
+| ----------------------------------- | ------ |
+| `--varlociraptor_events_germline`   | New    |
+| `--varlociraptor_events_somatic,`   | New    |
+| `--varlociraptor_events_tumor_only` | New    |
+| `--varlociraptor_fdr`               | New    |
 
 ### Developer section
 
@@ -41,6 +48,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2225](https://github.com/nf-core/sarek/pull/2225) - Back to dev (3.9.1dev)
 
 #### Fixed
+
+- [#2208](https://github.com/nf-core/sarek/pull/2208) - Update freebayes params, move chunk_size
 
 #### Removed
 

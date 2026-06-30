@@ -652,7 +652,7 @@ This list is by no means exhaustive and it will depend on the specific analysis 
 | [ASCAT](https://github.com/VanLoo-lab/ascat)                                                            |  x  |  x  |   -    |     -     |     -      |           x            |
 | [CNVKit](https://cnvkit.readthedocs.io/en/stable/)                                                      |  x  |  x  |   -    |     x     |     x      |           x            |
 | [Control-FREEC](https://github.com/BoevaLab/FREEC)                                                      |  x  |  x  |   x    |     -     |     x      |           x            |
-| [MSIsensor2](https://github.com/niu-lab/msisensor2)                                                     |  x  |  x  |   x    |     -     |     X      |           -            |
+| [MSIsensor2](https://github.com/niu-lab/msisensor2)                                                     |  x  |  x  |   x    |     -     |     x      |           -            |
 | [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro)                                             |  x  |  x  |   x    |     -     |     -      |           x            |
 | [Varlociraptor](https://varlociraptor.github.io/landing/)                                               |  x  |  x  |   x    |     x     |     x      |           x            |
 
@@ -903,6 +903,8 @@ You will need to add another column called `contamination` to the samplesheet fo
 Varlociraptor allows the usage of different scenario files, a few examples can be found in the [scenario catalog](https://varlociraptor.github.io/varlociraptor-scenarios/landing/). Currently only scenarios that have information on "normal" (germline case), "normal" and "tumor" (somatic and tumor-only case) are supported. You can use your own scenario file by adding it to the run command with `--varlociraptor_scenario_germline <path/to/germline/scenario/file>`, `--varlociraptor_scenario_somatic <path/to/somatic/scenario/file>` or `--varlociraptor_scenario_tumor_only <path/to/tumor_only/scenario/file>`.
 
 You can control the number of chunks that the candidate VCF file is split into by `--varlociraptor_chunk_size <integer>`, it is set to reasonable default (15) but more chunks might aid in accelerating your workflow run if you can run more processes in parallel.
+
+Varlociraptor by default just returns all candidate variants annotated with probabilities. The variants need to be filtered to yield a representativ result, see the [docs](https://varlociraptor.github.io/docs/filtering/) for more info. In sarek this is implemented with default set events related to the scenario files which used by default. If you use your own scenario file please adapt the events accordingly by using the flags `--varlociraptor_events_tumor_only`, `--varlociraptor_events_somatic` and `--varlociraptor_events_germline`. The events need to be supplied as a list with spaces between the events. Filtering also depends on the False Discovery Rate (FDR) in sarek we opted for a default of filtering in `--mode local-smart` to a FDR of 5% with `--fdr 0.05`. The FDR can be controlled by `--varlociraptor_fdr`.
 
 ## Spark related issues
 

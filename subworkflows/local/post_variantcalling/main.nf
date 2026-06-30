@@ -28,35 +28,39 @@ workflow POST_VARIANTCALLING {
     snv_consensus_calling
     normalize_vcfs
     varlociraptor_chunk_size // integer: [mandatory] [default: 15] number of chunks to split BCF files when preprocessing and calling variants
+    varlociraptor_events_germline
+    varlociraptor_events_somatic
+    varlociraptor_events_tumor_only
+    varlociraptor_fdr
     varlociraptor_scenario_germline
     varlociraptor_scenario_somatic
     varlociraptor_scenario_tumor_only
 
     main:
-    versions = Channel.empty()
-    vcfs = Channel.empty()
-    tbis = Channel.empty()
+    versions = channel.empty()
+    vcfs = channel.empty()
+    tbis = channel.empty()
 
     //
     // VARLOCIRAPTOR
     //
     if (tools && tools.split(',').contains('varlociraptor')) {
         // GERMLINE
-        VCF_VARLOCIRAPTOR_GERMLINE(cram_germline, fasta, fai, varlociraptor_scenario_germline, germline_vcfs, varlociraptor_chunk_size, 'normal')
+        VCF_VARLOCIRAPTOR_GERMLINE(cram_germline, fasta, fai, varlociraptor_scenario_germline, germline_vcfs, varlociraptor_chunk_size, 'normal', varlociraptor_events_germline, varlociraptor_fdr)
 
         vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.vcf)
         tbis = tbis.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.tbi)
         versions = versions.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.versions)
 
         // SOMATIC
-        VCF_VARLOCIRAPTOR_SOMATIC(cram_somatic, fasta, fai, varlociraptor_scenario_somatic, somatic_vcfs, germline_vcfs, varlociraptor_chunk_size)
+        VCF_VARLOCIRAPTOR_SOMATIC(cram_somatic, fasta, fai, varlociraptor_scenario_somatic, somatic_vcfs, germline_vcfs, varlociraptor_chunk_size, varlociraptor_events_somatic, varlociraptor_fdr)
 
         vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.vcf)
         tbis = tbis.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.tbi)
         versions = versions.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.versions)
 
         // TUMOR ONLY
-        VCF_VARLOCIRAPTOR_TUMOR_ONLY(cram_tumor_only, fasta, fai, varlociraptor_scenario_tumor_only, tumor_only_vcfs, varlociraptor_chunk_size, 'tumor')
+        VCF_VARLOCIRAPTOR_TUMOR_ONLY(cram_tumor_only, fasta, fai, varlociraptor_scenario_tumor_only, tumor_only_vcfs, varlociraptor_chunk_size, 'tumor', varlociraptor_events_tumor_only, varlociraptor_fdr)
 
         vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.vcf)
         tbis = tbis.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.tbi)
@@ -81,20 +85,20 @@ workflow POST_VARIANTCALLING {
 
         def excluded_variantcallers = ['manta', 'tiddit', 'samtools']
 
-        all_vcfs = Channel.empty().mix(germline_vcfs, tumor_only_vcfs, somatic_vcfs)
-                                .branch{ meta, vcf ->
+        all_vcfs = channel.empty().mix(germline_vcfs, tumor_only_vcfs, somatic_vcfs)
+                                .branch{ meta, _vcf ->
                                     small: small_variantcallers.contains(meta.variantcaller)
                                     other: true
                                 }
 
-        all_tbis = Channel.empty().mix(germline_tbis, tumor_only_tbis, somatic_tbis)
-                                .branch{ meta, tbi ->
+        all_tbis = channel.empty().mix(germline_tbis, tumor_only_tbis, somatic_tbis)
+                                .branch{ meta, _tbi ->
                                     small: small_variantcallers.contains(meta.variantcaller)
                                     other: true
                                 }
 
         // Validate that we're not silently excluding unknown variant callers
-        all_vcfs.other.subscribe { meta, vcf ->
+        all_vcfs.other.subscribe { meta, _vcf ->
             if (!excluded_variantcallers.contains(meta.variantcaller)) {
                 error("Variant caller '${meta.variantcaller}' is not in the small_variantcallers list and will be excluded from normalization/filtering/consensus. If this is a new SNV caller, please add it to the list in subworkflows/local/post_variantcalling/main.nf:78-80")
             }

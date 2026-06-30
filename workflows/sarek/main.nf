@@ -107,6 +107,11 @@ workflow SAREK {
     pon
     pon_tbi
     sentieon_dnascope_model
+    varlociraptor_chunk_size
+    varlociraptor_events_germline
+    varlociraptor_events_somatic
+    varlociraptor_events_tumor_only
+    varlociraptor_fdr
     varlociraptor_scenario_germline
     varlociraptor_scenario_somatic
     varlociraptor_scenario_tumor_only
@@ -531,7 +536,11 @@ workflow SAREK {
             params.filter_vcfs,
             params.snv_consensus_calling,
             params.normalize_vcfs,
-            params.varlociraptor_chunk_size,
+            varlociraptor_chunk_size,
+            varlociraptor_events_germline,
+            varlociraptor_events_somatic,
+            varlociraptor_events_tumor_only,
+            varlociraptor_fdr,
             varlociraptor_scenario_germline,
             varlociraptor_scenario_somatic,
             varlociraptor_scenario_tumor_only,

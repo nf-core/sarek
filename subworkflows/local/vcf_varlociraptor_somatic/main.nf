@@ -9,6 +9,7 @@ include { RBT_VCFSPLIT                                                          
 include { VARLOCIRAPTOR_CALLVARIANTS                                              } from '../../../modules/nf-core/varlociraptor/callvariants'
 include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES as ALIGNMENTPROPERTIES_NORMAL } from '../../../modules/nf-core/varlociraptor/estimatealignmentproperties'
 include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES as ALIGNMENTPROPERTIES_TUMOR  } from '../../../modules/nf-core/varlociraptor/estimatealignmentproperties'
+include { VARLOCIRAPTOR_FILTERFDR                                                 } from '../../../modules/nf-core/varlociraptor/filterfdr'
 include { VARLOCIRAPTOR_PREPROCESS as PREPROCESS_NORMAL                           } from '../../../modules/nf-core/varlociraptor/preprocess'
 include { VARLOCIRAPTOR_PREPROCESS as PREPROCESS_TUMOR                            } from '../../../modules/nf-core/varlociraptor/preprocess'
 include { YTE as FILL_SCENARIO_FILE                                               } from '../../../modules/nf-core/yte'
@@ -22,6 +23,8 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_somatic_vcf
     ch_germline_vcf
     val_num_chunks
+    val_events
+    val_fdr
 
     main:
     ch_versions = channel.empty()
@@ -283,7 +286,11 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     ch_final_vcf = ch_sort_called_chunks_vcf.single.mix(CONCAT_CALLED_CHUNKS.out.vcf)
 
-    SORT_FINAL_VCF(ch_final_vcf)
+    VARLOCIRAPTOR_FILTERFDR(
+        ch_final_vcf.map { meta, vcf -> [ meta, vcf, val_events, val_fdr ] }
+    )
+
+    SORT_FINAL_VCF(VARLOCIRAPTOR_FILTERFDR.out.bcf)
 
     ch_versions = ch_versions.mix(SORT_FINAL_VCF.out.versions)
 
