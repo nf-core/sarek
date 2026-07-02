@@ -112,7 +112,7 @@ workflow POST_VARIANTCALLING {
             FILTER_VCFS( small_variant_vcfs.join(small_variant_tbis, failOnDuplicate: true, failOnMismatch: true), [], [], [])
 
             small_variant_vcfs = FILTER_VCFS.out.vcf
-            small_variant_tbis = FILTER_VCFS.out.tbi
+            small_variant_tbis = FILTER_VCFS.out.index
             versions = versions.mix(FILTER_VCFS.out.versions)
         }
 

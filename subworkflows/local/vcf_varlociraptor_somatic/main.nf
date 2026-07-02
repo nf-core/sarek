@@ -76,7 +76,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     // Use concatenated Strelka VCFs for somatic and germline calling, mix with other variant callers
     ch_somatic_vcf_conc = CONCAT_SOMATIC_STRELKA.out.vcf
-        .join(CONCAT_SOMATIC_STRELKA.out.tbi, by: [0])
+        .join(CONCAT_SOMATIC_STRELKA.out.index, by: [0])
         .mix(ch_somatic_branched.other)
 
     //
@@ -260,7 +260,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         multiple: val_num_chunks > 1
     }
 
-    ch_sort_called_chunks_tbi = SORT_CALLED_CHUNKS.out.tbi.branch {
+    ch_sort_called_chunks_tbi = SORT_CALLED_CHUNKS.out.index.branch {
         single: val_num_chunks <= 1
         multiple: val_num_chunks > 1
     }
@@ -280,6 +280,6 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     emit:
     vcf      = SORT_FINAL_VCF.out.vcf
-    tbi      = SORT_FINAL_VCF.out.tbi
+    tbi      = SORT_FINAL_VCF.out.index
     versions = ch_versions
 }

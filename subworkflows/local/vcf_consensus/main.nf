@@ -36,7 +36,7 @@ workflow CONSENSUS {
     // Combine concat strelka with remaining VCFs
     // Bundle each VCF with its caller to preserve association through grouping
     ch_consensus_in = ch_vcfs.other
-                        .mix(BCFTOOLS_CONCAT.out.vcf.join(BCFTOOLS_CONCAT.out.tbi))
+                        .mix(BCFTOOLS_CONCAT.out.vcf.join(BCFTOOLS_CONCAT.out.index))
                         .map { meta, vcf, tbi ->
                                     def caller = meta.variantcaller
                                     def groupKey = meta - meta.subMap('variantcaller', 'contamination', 'filename', 'data_type', 'num_intervals')

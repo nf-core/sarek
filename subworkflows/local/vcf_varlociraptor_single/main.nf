@@ -111,7 +111,7 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
         multiple: val_num_chunks > 1
     }
 
-    ch_sort_called_chunks_tbi = SORT_CALLED_CHUNKS.out.tbi.branch {
+    ch_sort_called_chunks_tbi = SORT_CALLED_CHUNKS.out.index.branch {
         single: val_num_chunks <= 1
         multiple: val_num_chunks > 1
     }
@@ -131,5 +131,5 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
 
     emit:
     vcf      = SORT_FINAL_VCF.out.vcf
-    tbi      = SORT_FINAL_VCF.out.tbi
+    tbi      = SORT_FINAL_VCF.out.index
 }
