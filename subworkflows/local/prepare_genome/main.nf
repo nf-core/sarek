@@ -57,7 +57,7 @@ workflow PREPARE_GENOME {
     versions = Channel.empty()
 
     // TODO: EXTRACT FASTA FILE?
-    fasta = fasta_in ? Channel.fromPath(fasta_in).map { fasta -> [[id: fasta.baseName], fasta] }.collect() : Channel.empty()
+    fasta = fasta_in ? Channel.fromPath(fasta_in).map { fasta -> [[id: fasta.baseName], fasta] } : Channel.empty()
     vep_fasta = vep_include_fasta ? fasta : [[id: 'null'], []]
 
     if (step == 'mapping') {
