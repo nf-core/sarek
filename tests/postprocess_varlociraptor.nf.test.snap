@@ -309,7 +309,7 @@
             ],
             [
                 "sample3.strelka.germline.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=65, phased=true, phasedAutodetect=false]",
-                "sample4_vs_sample3.strelka.somatic.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=404, phased=true, phasedAutodetect=false]"
+                "sample4_vs_sample3.strelka.somatic.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=122, phased=true, phasedAutodetect=false]"
             ],
             "No warnings"
         ],
