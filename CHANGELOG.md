@@ -49,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Fixed
 
-- [#2208](https://github.com/nf-core/sarek/pull/2208) - Update freebayes params, move chunk_size
+- [#2208](https://github.com/nf-core/sarek/pull/2208) - Update freebayes params (remove `--pooled-discrete` and change `--min-alternate-fraction` from 0.03 to 0.01), move chunk_size param
 
 #### Removed
 
