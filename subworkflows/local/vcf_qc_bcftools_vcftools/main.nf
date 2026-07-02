@@ -17,7 +17,7 @@ workflow VCF_QC_BCFTOOLS_VCFTOOLS {
     VCFTOOLS_TSTV_QUAL(vcf, target_bed, [])
     VCFTOOLS_SUMMARY(vcf, target_bed, [])
 
-    versions = versions.mix(BCFTOOLS_STATS.out.versions)
+    versions = versions.mix(BCFTOOLS_STATS.out.versions_bcftools)
     versions = versions.mix(VCFTOOLS_TSTV_COUNT.out.versions)
 
     emit:
