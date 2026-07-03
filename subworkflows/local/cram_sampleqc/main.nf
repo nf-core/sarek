@@ -10,17 +10,14 @@ workflow CRAM_SAMPLEQC {
     intervals_for_preprocessing // channel:
 
     main:
-    versions = Channel.empty()
-    reports = Channel.empty()
-    // Split fasta channel into [fasta] for QC and [meta, fasta, fai] for BAM_NGSCHECKMATE
-    fasta_ch  = fasta_fai.map { f, f_ -> [f] }
-    fasta_fai_ch = fasta_fai.map { _f, f_ -> [[id: 'fasta_fai'], f_] }
+    versions = channel.empty()
+    reports = channel.empty()
 
     if (!skip_baserecalibration) {
 
         CRAM_QC_RECAL(
             cram,
-            fasta_ch,
+            fasta_fai.map{meta, fasta, _fai -> [meta, fasta]},
             intervals_for_preprocessing,
         )
 
@@ -31,7 +28,7 @@ workflow CRAM_SAMPLEQC {
         versions = versions.mix(CRAM_QC_RECAL.out.versions)
     }
 
-    BAM_NGSCHECKMATE(cram.map { meta, cram_, _crai -> [meta, cram_] }, ngscheckmate_bed.map { bed -> [[id: "ngscheckmate"], bed] }, fasta_fai_ch)
+    BAM_NGSCHECKMATE(cram.map { meta, cram_, _crai -> [meta, cram_] }, ngscheckmate_bed.map { bed -> [[id: "ngscheckmate"], bed] }, fasta_fai)
 
     emit:
     corr_matrix = BAM_NGSCHECKMATE.out.corr_matrix // channel: [ meta, corr_matrix ]
