@@ -7,4 +7,12 @@ testing/
 testing*
 *.pyc
 null/
-.lineage/
+*.code-workspace
+.nf-test*
+.nf-test/
+test-datasets/
+test.tap
+test.xml
+.vscode/mcp.json
+modules/nf-core/**/tests/
+subworkflows/nf-core/**/tests/

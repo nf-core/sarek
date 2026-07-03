@@ -1,0 +1,38 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    profile "test,spark"
+
+    def test_scenario = [
+        [
+            name: "-profile test,spark --input tests/csv/3.0/fastq_tumor_only.csv --use_gatk_spark baserecalibrator,markduplicates",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_tumor_only.csv",
+                tools: null,
+                use_gatk_spark: 'baserecalibrator,markduplicates'
+            ]
+        ],
+        [
+            name: "-profile test,spark --input tests/csv/3.0/fastq_tumor_only.csv --use_gatk_spark baserecalibrator,markduplicates --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_tumor_only.csv",
+                tools: null,
+                use_gatk_spark: 'baserecalibrator,markduplicates',
+                skip_tools: 'fastqc,markduplicates_report,mosdepth,multiqc,samtools'
+            ]
+        ]
+        // NOTE: not adding a --save_output_as_bam scenario here yet. Combining
+        // --use_gatk_spark baserecalibrator,markduplicates with --save_output_as_bam
+        // on the multi-lane test input exposes an upstream GATK bug —
+        // GATK4SPARK_APPLYBQSR fails with "covariates table is missing ReadGroup
+        // test_L2 in RecalTable0". Out of scope for this PR; file separately.
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}

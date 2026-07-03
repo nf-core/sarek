@@ -1,0 +1,54 @@
+//
+// MAPPING
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
+include { BWAMEM2_MEM            } from '../../../modules/nf-core/bwamem2/mem/main'
+include { BWA_MEM as BWAMEM1_MEM } from '../../../modules/nf-core/bwa/mem/main'
+include { DRAGMAP_ALIGN          } from '../../../modules/nf-core/dragmap/align/main'
+include { SENTIEON_BWAMEM        } from '../../../modules/nf-core/sentieon/bwamem/main'
+
+workflow FASTQ_ALIGN {
+    take:
+    reads // channel: [mandatory] meta, reads
+    index // channel: [mandatory] index
+    sort  // boolean: [mandatory] true -> sort, false -> don't sort
+    fasta
+    fasta_fai
+
+    main:
+
+    versions = channel.empty()
+    reports = channel.empty()
+
+    // Only one of the following should be run
+    BWAMEM1_MEM(reads, index, [[id:'no_fasta'], []], sort) // If aligner is bwa-mem
+    BWAMEM2_MEM(reads, index, [[id:'no_fasta'], []], sort) // If aligner is bwa-mem2
+    DRAGMAP_ALIGN(reads, index, [[id:'no_fasta'], []], sort) // If aligner is dragmap
+    // The sentieon-bwamem-module does sorting as part of the conversion from sam to bam.
+    SENTIEON_BWAMEM(reads, index, fasta, fasta_fai) // If aligner is sentieon-bwamem
+
+    // Get the bam files from the aligner
+    // Only one aligner is run
+    bam = channel.empty()
+    bam = bam.mix(BWAMEM1_MEM.out.bam)
+    bam = bam.mix(BWAMEM2_MEM.out.bam)
+    bam = bam.mix(DRAGMAP_ALIGN.out.bam)
+    bam = bam.mix(SENTIEON_BWAMEM.out.bam_and_bai.map{ meta, bam_file, _bai -> [ meta, bam_file ] })
+
+    bai = SENTIEON_BWAMEM.out.bam_and_bai.map{ meta, _bam_file, bai -> [ meta, bai ] }
+
+    // Gather reports of all tools used
+    reports = reports.mix(DRAGMAP_ALIGN.out.log)
+
+    // Gather versions of all tools used
+    versions = versions.mix(BWAMEM1_MEM.out.versions)
+    versions = versions.mix(BWAMEM2_MEM.out.versions)
+    versions = versions.mix(DRAGMAP_ALIGN.out.versions)
+    emit:
+    bam      // channel: [ [meta], bam ]
+    bai      // channel: [ [meta], bai ]
+    reports
+    versions // channel: [ versions.yml ]
+}

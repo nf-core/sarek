@@ -1,0 +1,165 @@
+name: ascat
+description: copy number profiles of tumour cells.
+keywords:
+  - bam
+  - copy number
+  - cram
+tools:
+  - ascat:
+      description: ASCAT is a method to derive copy number profiles of tumour cells,
+        accounting for normal cell admixture and tumour aneuploidy. ASCAT infers tumour
+        purity (the fraction of tumour cells) and ploidy (the amount of DNA per tumour
+        cell), expressed as multiples of haploid genomes from SNP array or massively
+        parallel sequencing data, and calculates whole-genome allele-specific copy number
+        profiles (the number of copies of both parental alleles for all SNP loci across
+        the genome).
+      documentation: https://github.com/VanLoo-lab/ascat/tree/master/man
+      tool_dev_url: https://github.com/VanLoo-lab/ascat
+      doi: "10.1093/bioinformatics/btaa538"
+      licence: ["GPL v3"]
+      identifier: biotools:ascat
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input_normal:
+        type: file
+        description: BAM/CRAM file, must adhere to chr1, chr2, ...chrX notation For
+          modifying chromosome notation in bam files please follow
+          https://josephcckuo.wordpress.com/2016/11/17/modify-chromosome-notation-in-bam-file/.
+        pattern: "*.{bam,cram}"
+    - index_normal:
+        type: file
+        description: index for normal_bam/cram
+        pattern: "*.{bai,crai}"
+    - input_tumor:
+        type: file
+        description: BAM/CRAM file, must adhere to chr1, chr2, ...chrX notation
+        pattern: "*.{bam,cram}"
+    - index_tumor:
+        type: file
+        description: index for tumor_bam/cram
+        pattern: "*.{bai,crai}"
+  - - allele_files:
+        type: file
+        description: allele files for ASCAT WGS. Can be downloaded here https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS
+  - - loci_files:
+        type: file
+        description: loci files for ASCAT WGS. Loci files without chromosome notation
+          can be downloaded here https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS
+          Make sure the chromosome notation matches the bam/cram input files. To add
+          the chromosome notation to loci files (hg19/hg38) if necessary, you can run
+          this command `if [[ $(samtools view <your_bam_file.bam> | head -n1 | cut -f3)\"
+          == *\"chr\"* ]]; then for i in {1..22} X; do sed -i 's/^/chr/' G1000_loci_hg19_chr_${i}.txt;
+          done; fi`
+  - - bed_file:
+        type: file
+        description: Bed file for ASCAT WES (optional, but recommended for WES)
+  - - fasta:
+        type: file
+        description: Reference fasta file (optional)
+  - - gc_file:
+        type: file
+        description: GC correction file (optional) - Used to do logR correction of the
+          tumour sample(s) with genomic GC content
+  - - rt_file:
+        type: file
+        description: replication timing correction file (optional, provide only in combination
+          with gc_file)
+output:
+  - allelefreqs:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*alleleFrequencies_chr*.txt":
+          type: file
+          description: Files containing allee frequencies per chromosome
+          pattern: "*{alleleFrequencies_chr*.txt}"
+  - bafs:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*BAF.txt":
+          type: file
+          description: BAF file
+  - cnvs:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*cnvs.txt":
+          type: file
+          description: CNV file
+  - logrs:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*LogR.txt":
+          type: file
+          description: LogR file
+  - metrics:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*metrics.txt":
+          type: file
+          description: File containing quality metrics
+          pattern: "*.{metrics.txt}"
+  - png:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*png":
+          type: file
+          description: ASCAT plots
+          pattern: "*.{png}"
+  - purityploidy:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*purityploidy.txt":
+          type: file
+          description: File with purity and ploidy data
+          pattern: "*.{purityploidy.txt}"
+  - segments:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*segments.txt":
+          type: file
+          description: File with segments data
+          pattern: "*.{segments.txt}"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@aasNGC"
+  - "@lassefolkersen"
+  - "@FriederikeHanssen"
+  - "@maxulysse"
+  - "@SusiJo"
+maintainers:
+  - "@aasNGC"
+  - "@lassefolkersen"
+  - "@FriederikeHanssen"
+  - "@maxulysse"
+  - "@SusiJo"

@@ -1,0 +1,459 @@
+{
+    "POST_VARIANTCALLING - concatenation only": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test_sample",
+                        "num": "1"
+                    },
+                    "test_sample.germline.vcf.gz:md5,64dc493e217ce2c6124c464fc5349e21"
+                ],
+                [
+                    {
+                        "id": "test_sample",
+                        "num": "2"
+                    },
+                    "test_sample.germline.vcf.gz:md5,64dc493e217ce2c6124c464fc5349e21"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test_sample",
+                        "num": "1"
+                    },
+                    "test_sample.germline.vcf.gz.tbi:md5,eda316880fe501671a66e26aefa7abf6"
+                ],
+                [
+                    {
+                        "id": "test_sample",
+                        "num": "2"
+                    },
+                    "test_sample.germline.vcf.gz.tbi:md5,eda316880fe501671a66e26aefa7abf6"
+                ]
+            ],
+            [
+                "versions.yml:md5,047305afd4d6a35ccc6c8cae2d0de0cb",
+                "versions.yml:md5,047305afd4d6a35ccc6c8cae2d0de0cb",
+                "versions.yml:md5,594bb4ec971ba178d11d6f4c32fa5398",
+                "versions.yml:md5,594bb4ec971ba178d11d6f4c32fa5398",
+                "versions.yml:md5,b5b952ec9c95cc575f4305901a4af77c",
+                "versions.yml:md5,b5b952ec9c95cc575f4305901a4af77c",
+                "versions.yml:md5,eeffdab3a5d087ebcc8fe19bd27c900f",
+                "versions.yml:md5,eeffdab3a5d087ebcc8fe19bd27c900f",
+                "versions.yml:md5,f9826bc6c76002549649f51bda91a223",
+                "versions.yml:md5,f9826bc6c76002549649f51bda91a223"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-03T15:20:03.460554"
+    },
+    "POST_VARIANTCALLING - normalization and concatenation": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test_sample",
+                        "num": "1"
+                    },
+                    "test_sample.germline.vcf.gz:md5,28c41b6f6a4856cbdace4242fb0f7f36"
+                ],
+                [
+                    {
+                        "id": "test_sample",
+                        "num": "1"
+                    },
+                    "test_sample.null.norm.vcf.gz:md5,85763328c6ca66c55fe00a4496705b48"
+                ],
+                [
+                    {
+                        "id": "test_sample",
+                        "num": "2"
+                    },
+                    "test_sample.germline.vcf.gz:md5,28c41b6f6a4856cbdace4242fb0f7f36"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test_sample",
+                        "num": "1"
+                    },
+                    "test_sample.germline.vcf.gz.tbi:md5,eda316880fe501671a66e26aefa7abf6"
+                ],
+                [
+                    {
+                        "id": "test_sample",
+                        "num": "1"
+                    },
+                    "test_sample.null.norm.vcf.gz.tbi:md5,4331f1e4e2ba3cd35241c62e6a3e3a69"
+                ],
+                [
+                    {
+                        "id": "test_sample",
+                        "num": "2"
+                    },
+                    "test_sample.germline.vcf.gz.tbi:md5,eda316880fe501671a66e26aefa7abf6"
+                ]
+            ],
+            [
+                "versions.yml:md5,047305afd4d6a35ccc6c8cae2d0de0cb",
+                "versions.yml:md5,047305afd4d6a35ccc6c8cae2d0de0cb",
+                "versions.yml:md5,594bb4ec971ba178d11d6f4c32fa5398",
+                "versions.yml:md5,594bb4ec971ba178d11d6f4c32fa5398",
+                "versions.yml:md5,6ea9087108ce40c482f810d350240e2e",
+                "versions.yml:md5,8e5af507f2006539314960cc13610d2c",
+                "versions.yml:md5,af9213a1434d504b9b19d0236f508046",
+                "versions.yml:md5,af9213a1434d504b9b19d0236f508046",
+                "versions.yml:md5,b5b952ec9c95cc575f4305901a4af77c",
+                "versions.yml:md5,b5b952ec9c95cc575f4305901a4af77c",
+                "versions.yml:md5,dee58c88dd03c46f90d7b83578b4ae82",
+                "versions.yml:md5,dee58c88dd03c46f90d7b83578b4ae82",
+                "versions.yml:md5,e79c4d48ba8ecd05bbd54969fa63fd0a",
+                "versions.yml:md5,eeffdab3a5d087ebcc8fe19bd27c900f",
+                "versions.yml:md5,eeffdab3a5d087ebcc8fe19bd27c900f",
+                "versions.yml:md5,f9826bc6c76002549649f51bda91a223",
+                "versions.yml:md5,f9826bc6c76002549649f51bda91a223"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-03T15:20:28.455488"
+    },
+    "POST_VARIANTCALLING - concatenation only - stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test_sample"
+                    },
+                    "test_sample.germline.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test_sample"
+                    },
+                    "test_sample.germline.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
+            [
+                "versions.yml:md5,047305afd4d6a35ccc6c8cae2d0de0cb",
+                "versions.yml:md5,594bb4ec971ba178d11d6f4c32fa5398",
+                "versions.yml:md5,b5b952ec9c95cc575f4305901a4af77c",
+                "versions.yml:md5,eeffdab3a5d087ebcc8fe19bd27c900f",
+                "versions.yml:md5,f9826bc6c76002549649f51bda91a223"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-03T13:52:44.472169"
+    },
+    "POST_VARIANTCALLING - varlociraptor tumor-only": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "tumor_sample",
+                        "patient": "test",
+                        "sample": "tumor",
+                        "sex": "XY",
+                        "status": 1,
+                        "contamination": 0.0,
+                        "variantcaller": "strelka",
+                        "postprocess": "varlociraptor",
+                        "chunk": "0"
+                    },
+                    "tumor_sample.strelka.tumor_only.varlociraptor.vcf.gz:md5,5f66b36044623154851ebc745607a0aa"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "tumor_sample",
+                        "patient": "test",
+                        "sample": "tumor",
+                        "sex": "XY",
+                        "status": 1,
+                        "contamination": 0.0,
+                        "variantcaller": "strelka",
+                        "postprocess": "varlociraptor",
+                        "chunk": "0"
+                    },
+                    "tumor_sample.strelka.tumor_only.varlociraptor.vcf.gz.tbi:md5,6f17310cd152968349269107e53371c2"
+                ]
+            ],
+            [
+                "versions.yml:md5,2944a0f9af0e3918bb9833c87df1ebb6",
+                "versions.yml:md5,29f73f6b28ae158785ebea38843af786",
+                "versions.yml:md5,5d2a1f6080254676bff1ef3b27ab641f",
+                "versions.yml:md5,c35cd6c1892a24d29169bc79e7623bd9",
+                "versions.yml:md5,dc55a53ff7729dc648ac35db31ec5656",
+                "versions.yml:md5,faeabb0df6266c84e0fcd7f39d60b759"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-03T17:16:36.709315"
+    },
+    "POST_VARIANTCALLING - varlociraptor somatic": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "tumor_sample",
+                        "patient": "test",
+                        "sample": "tumor",
+                        "sex": "XX",
+                        "status": 1,
+                        "normal_id": "normal_sample",
+                        "contamination": 0.0,
+                        "variantcaller": "strelka",
+                        "postprocess": "varlociraptor",
+                        "chunk": "0"
+                    },
+                    "tumor_sample.strelka.somatic.varlociraptor.vcf.gz:md5,8714f2326fad338b964dd3ff5628785d"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "tumor_sample",
+                        "patient": "test",
+                        "sample": "tumor",
+                        "sex": "XX",
+                        "status": 1,
+                        "normal_id": "normal_sample",
+                        "contamination": 0.0,
+                        "variantcaller": "strelka",
+                        "postprocess": "varlociraptor",
+                        "chunk": "0"
+                    },
+                    "tumor_sample.strelka.somatic.varlociraptor.vcf.gz.tbi:md5,25d0445f304a4e9db421b880f866cc2c"
+                ]
+            ],
+            [
+                "versions.yml:md5,106dcb110a6d3d094298500f4030ef8f",
+                "versions.yml:md5,1b666f0fbac8556cef352a3a4fa60dbe",
+                "versions.yml:md5,1bca8763ec1f55aa5987e4f4301ed8cf",
+                "versions.yml:md5,26d247da3c326a0b09dff1bea9c55c52",
+                "versions.yml:md5,31e8ad0d1040730aceafc75e5c9fedac",
+                "versions.yml:md5,3aa2ccd7a5a2d5ecf2afff04a39e0f55",
+                "versions.yml:md5,641cf79d74888d2838e17449cfb5a98c",
+                "versions.yml:md5,65c36101acc269f90fcc762f4c515073",
+                "versions.yml:md5,6b1c3a74fcd23a4a7f78ddf4ef6c6f99",
+                "versions.yml:md5,ae66ca7ac06bbe30c3534b20ade99b48",
+                "versions.yml:md5,d28b191a8b7e7f1db9f269fc372d950e",
+                "versions.yml:md5,e75820d6c821e7da2cd08f5e42c9139e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-03T18:17:55.714344"
+    },
+    "POST_VARIANTCALLING - normalization only": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test_tumor"
+                    },
+                    "test_tumor.null.norm.vcf.gz:md5,8850056529ea417dd7906110b6008852"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test_tumor"
+                    },
+                    "test_tumor.null.norm.vcf.gz.tbi:md5,4331f1e4e2ba3cd35241c62e6a3e3a69"
+                ]
+            ],
+            [
+                "versions.yml:md5,6ea9087108ce40c482f810d350240e2e",
+                "versions.yml:md5,8e5af507f2006539314960cc13610d2c",
+                "versions.yml:md5,af9213a1434d504b9b19d0236f508046",
+                "versions.yml:md5,af9213a1434d504b9b19d0236f508046",
+                "versions.yml:md5,af9213a1434d504b9b19d0236f508046",
+                "versions.yml:md5,dee58c88dd03c46f90d7b83578b4ae82",
+                "versions.yml:md5,dee58c88dd03c46f90d7b83578b4ae82",
+                "versions.yml:md5,dee58c88dd03c46f90d7b83578b4ae82",
+                "versions.yml:md5,e79c4d48ba8ecd05bbd54969fa63fd0a"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-03T13:51:32.78009"
+    },
+    "POST_VARIANTCALLING - varlociraptor germline - stub": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,1bca8763ec1f55aa5987e4f4301ed8cf",
+                "versions.yml:md5,25260e5ecf0e3f964c7e68c7eaa01d52",
+                "versions.yml:md5,45997f1ffe1a1c5fceda0f00b670faa8",
+                "versions.yml:md5,5a1892540eb326a685a22f9bc6f6a6b6",
+                "versions.yml:md5,9185ef5a5fa1849e93823a668c488c5c",
+                "versions.yml:md5,97327c4f942c0205e15b8cb4e363825b",
+                "versions.yml:md5,d28b191a8b7e7f1db9f269fc372d950e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-03T13:53:27.063259"
+    },
+    "POST_VARIANTCALLING - varlociraptor somatic - stub": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,106dcb110a6d3d094298500f4030ef8f",
+                "versions.yml:md5,1b666f0fbac8556cef352a3a4fa60dbe",
+                "versions.yml:md5,1bca8763ec1f55aa5987e4f4301ed8cf",
+                "versions.yml:md5,26d247da3c326a0b09dff1bea9c55c52",
+                "versions.yml:md5,31e8ad0d1040730aceafc75e5c9fedac",
+                "versions.yml:md5,3aa2ccd7a5a2d5ecf2afff04a39e0f55",
+                "versions.yml:md5,641cf79d74888d2838e17449cfb5a98c",
+                "versions.yml:md5,65c36101acc269f90fcc762f4c515073",
+                "versions.yml:md5,6b1c3a74fcd23a4a7f78ddf4ef6c6f99",
+                "versions.yml:md5,ae66ca7ac06bbe30c3534b20ade99b48",
+                "versions.yml:md5,d28b191a8b7e7f1db9f269fc372d950e",
+                "versions.yml:md5,e75820d6c821e7da2cd08f5e42c9139e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-03T18:19:33.661409"
+    },
+    "POST_VARIANTCALLING - varlociraptor germline": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test_sample",
+                        "patient": "test",
+                        "sample": "test",
+                        "sex": "XX",
+                        "status": 0,
+                        "variantcaller": "strelka",
+                        "postprocess": "varlociraptor",
+                        "chunk": "0"
+                    },
+                    "test_sample.strelka.germline.varlociraptor.vcf.gz:md5,4a28a6ca6dc8329c5df79fcd801e7d7c"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test_sample",
+                        "patient": "test",
+                        "sample": "test",
+                        "sex": "XX",
+                        "status": 0,
+                        "variantcaller": "strelka",
+                        "postprocess": "varlociraptor",
+                        "chunk": "0"
+                    },
+                    "test_sample.strelka.germline.varlociraptor.vcf.gz.tbi:md5,9e063f81e588cb3f7ad883463c230153"
+                ]
+            ],
+            [
+                "versions.yml:md5,1bca8763ec1f55aa5987e4f4301ed8cf",
+                "versions.yml:md5,25260e5ecf0e3f964c7e68c7eaa01d52",
+                "versions.yml:md5,45997f1ffe1a1c5fceda0f00b670faa8",
+                "versions.yml:md5,5a1892540eb326a685a22f9bc6f6a6b6",
+                "versions.yml:md5,9185ef5a5fa1849e93823a668c488c5c",
+                "versions.yml:md5,97327c4f942c0205e15b8cb4e363825b",
+                "versions.yml:md5,d28b191a8b7e7f1db9f269fc372d950e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-03T17:16:13.83981"
+    },
+    "POST_VARIANTCALLING - normalization only - stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test_sample"
+                    },
+                    "test_sample.null.norm.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test_sample"
+                    },
+                    "test_sample.null.norm.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
+            [
+                "versions.yml:md5,6ea9087108ce40c482f810d350240e2e",
+                "versions.yml:md5,8e5af507f2006539314960cc13610d2c",
+                "versions.yml:md5,af9213a1434d504b9b19d0236f508046",
+                "versions.yml:md5,dee58c88dd03c46f90d7b83578b4ae82",
+                "versions.yml:md5,e79c4d48ba8ecd05bbd54969fa63fd0a"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-03T13:52:26.532241"
+    },
+    "POST_VARIANTCALLING - varlociraptor tumor-only - stub": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,2944a0f9af0e3918bb9833c87df1ebb6",
+                "versions.yml:md5,29f73f6b28ae158785ebea38843af786",
+                "versions.yml:md5,5d2a1f6080254676bff1ef3b27ab641f",
+                "versions.yml:md5,c35cd6c1892a24d29169bc79e7623bd9",
+                "versions.yml:md5,dc55a53ff7729dc648ac35db31ec5656",
+                "versions.yml:md5,faeabb0df6266c84e0fcd7f39d60b759"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-03T16:51:00.574162"
+    }
+}
