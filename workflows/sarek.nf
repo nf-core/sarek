@@ -197,7 +197,6 @@ workflow SAREK {
             FASTQC(input_fastq)
 
             reports = reports.mix(FASTQC.out.zip.collect { _meta, logs -> logs })
-            versions = versions.mix(FASTQC.out.versions)
         }
     }
     else {
