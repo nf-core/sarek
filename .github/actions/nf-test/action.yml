@@ -20,24 +20,24 @@ runs:
   using: "composite"
   steps:
     - name: Setup Nextflow
-      uses: nf-core/setup-nextflow@b4ec1bc7c16a94435159de94a05253542fddf6ef # v3
+      uses: nf-core/setup-nextflow@v2
       with:
         version: "${{ env.NXF_VERSION }}"
 
     - name: Set up Python
-      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
+      uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6
       with:
         python-version: "3.14"
 
     - name: Install nf-test
-      uses: nf-core/setup-nf-test@4069fbbaabe94c08faba4ad261bfa88225ba133f # v2
+      uses: nf-core/setup-nf-test@v1
       with:
         version: "${{ env.NFT_VER }}"
         install-pdiff: true
 
     - name: Setup apptainer
       if: contains(inputs.profile, 'singularity')
-      uses: eWaterCycle/setup-apptainer@3f706d898c9db585b1d741b4692e66755f3a1b40 # v2
+      uses: eWaterCycle/setup-apptainer@main
 
     - name: Set up Singularity
       if: contains(inputs.profile, 'singularity')
@@ -48,18 +48,28 @@ runs:
 
     - name: Conda setup
       if: contains(inputs.profile, 'conda')
-      uses: conda-incubator/setup-miniconda@8ee1f361103df19b6f8c8655fd3967a8ecb162d5 # v4
+      uses: conda-incubator/setup-miniconda@505e6394dae86d6a5c7fbb6e3fb8938e3e863830 # v3
       with:
         auto-update-conda: true
         conda-solver: libmamba
-        channels: conda-forge
+        channels: conda-forge,bioconda
         channel-priority: strict
         conda-remove-defaults: true
+
+    # Set up secrets
+    - name: Set up Nextflow secrets
+      if: env.SENTIEON_ENCRYPTION_KEY != '' && env.SENTIEON_LICENSE_MESSAGE != ''
+      shell: bash
+      run: |
+        python -m pip install cryptography
+        nextflow secrets set SENTIEON_AUTH_DATA $(python3 bin/license_message.py encrypt --key "$SENTIEON_ENCRYPTION_KEY" --message "$SENTIEON_LICENSE_MESSAGE")
 
     - name: Run nf-test
       shell: bash
       env:
         NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
+        SENTIEON_LICSRVR_IP: ${{ env.SENTIEON_LICSRVR_IP }}
+        SENTIEON_AUTH_MECH: "GitHub Actions - token"
       run: |
         nf-test test \
           --profile=+${{ inputs.profile }} \

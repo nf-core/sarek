@@ -18,7 +18,7 @@ concurrency:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  NFT_VER: "0.9.4"
+  NFT_VER: "0.9.5"
   NFT_WORKDIR: "~"
   NXF_ANSI_LOG: false
   NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
@@ -50,7 +50,8 @@ jobs:
         env:
           NFT_VER: ${{ env.NFT_VER }}
         with:
-          max_shards: 7
+          max_shards: 15
+          tags: "cpu,cpu_conda"
 
       - name: debug
         run: |
@@ -64,6 +65,7 @@ jobs:
     runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-nf-test
       - runner=4cpu-linux-x64
+      - volume=80gb
     strategy:
       fail-fast: false
       matrix:
@@ -100,6 +102,7 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
+          tags: ${{ matrix.profile == 'conda' && 'cpu_conda' || 'cpu,cpu_conda' }}
 
       - name: Report test status
         if: ${{ always() }}
