@@ -62,7 +62,7 @@ class UTILS {
             assertion.add(cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.tokenize('/').last() + ":md5," + cram(absolutePath(file), fasta).readsMD5 })
             if (scenario.include_muse_txt) {
                 // It will skip the first line of the txt file
-                assertion.add(txt_files.isEmpty() ? 'No TXT files' : txt_files.collect { file -> file.tokenize('/').last() + ":md5," + absolutePath(file).readLines()[2..-1].join('\n').md5() })
+                assertion.add(txt_files.isEmpty() ? 'No TXT files' : txt_files.collect { file -> file.tokenize('/').last() + ":md5," + new File(absolutePath(file)).readLines()[2..-1].join('\n').md5() })
             }
             if (scenario.include_freebayes_unfiltered) {
                 // It will only print the vcf summary to avoid differing md5sums because of small differences in QUAL score
