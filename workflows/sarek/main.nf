@@ -269,7 +269,7 @@ workflow SAREK {
     CRAM_SAMPLEQC(
         cram_variant_calling,
         ngscheckmate_bed,
-        fasta.combine(fasta_fai).map { meta, fasta, fai -> [fasta, fai] },
+        fasta.combine(fasta_fai).map { _meta, fasta, _fai, fai -> [fasta, fai] },
         skip_tools.split(',').contains('baserecalibrator'),
         intervals_for_preprocessing,
     )
