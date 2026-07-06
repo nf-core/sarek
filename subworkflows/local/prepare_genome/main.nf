@@ -57,7 +57,7 @@ workflow PREPARE_GENOME {
     versions = Channel.empty()
 
     // TODO: EXTRACT FASTA FILE?
-    fasta = fasta_in ? Channel.fromPath(fasta_in).map { fasta -> [[id: fasta.baseName], fasta] } : Channel.empty()
+    fasta = fasta_in ? Channel.fromPath(fasta_in).map { fasta -> [[id: fasta.baseName], fasta] }.collect() : Channel.empty()
     vep_fasta = vep_include_fasta ? fasta : [[id: 'null'], []]
 
     if (step == 'mapping') {
@@ -104,11 +104,11 @@ workflow PREPARE_GENOME {
 
     if (!fasta_fai_in && step != "annotate") {
         SAMTOOLS_FAIDX(fasta, [[id: 'no_fai'], []], false)
-        fasta_fai = SAMTOOLS_FAIDX.out.fai
+        fasta_fai = SAMTOOLS_FAIDX.out.fai.collect()
         versions = versions.mix(SAMTOOLS_FAIDX.out.versions)
     }
     else if (fasta_fai_in) {
-        fasta_fai = Channel.fromPath(fasta_fai_in).map { it -> [[id: 'fai'], it] }
+        fasta_fai = Channel.fromPath(fasta_fai_in).map { it -> [[id: 'fai'], it] }.collect()
     }
     else {
         fasta_fai = Channel.empty()
