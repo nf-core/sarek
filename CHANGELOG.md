@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added
 
-- [#XXXX](https://github.com/nf-core/sarek/pull/XXXX) - Add `AGENTS.md` file with nf-core agent instructions
+- [#2228](https://github.com/nf-core/sarek/pull/2228) - Add `AGENTS.md` file with nf-core agent instructions
 - [#2225](https://github.com/nf-core/sarek/pull/2225) - Add contributor ORCIDs to `nextflow.config`
 
 #### Changed
