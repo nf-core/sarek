@@ -1,4 +1,4 @@
-process VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES {
+process VARLOCIRAPTOR_FILTERFDR {
     tag "${meta.id}"
     label 'process_single'
 
@@ -8,10 +8,10 @@ process VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES {
         : 'quay.io/biocontainers/varlociraptor:8.9.5--h24073b4_0'}"
 
     input:
-    tuple val(meta), path(bam), path(bai), path(fasta), path(fai)
+    tuple val(meta), path(vcf), val(events), val(fdr)
 
     output:
-    tuple val(meta), path("*.alignment-properties.json"), emit: alignment_properties_json
+    tuple val(meta), path("*.bcf"), emit: bcf
     tuple val("${task.process}"), val('varlociraptor'), eval("varlociraptor --version | sed 's/^varlociraptor //'"), topic: versions, emit: versions_varlociraptor
 
     when:
@@ -19,18 +19,22 @@ process VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}.fdr-controlled"
+    def mode = args.contains("--mode global-smart") ? "global-smart" : "local-smart"
+    def args_corrected = args.replace('--mode global-smart', '').replace('--mode local-smart', '').trim()
     """
-    varlociraptor estimate alignment-properties \\
-        ${fasta} \\
-        --bams ${bam} \\
-        ${args} \\
-        > ${prefix}.alignment-properties.json
+    varlociraptor filter-calls control-fdr \\
+        --mode ${mode} \\
+        ${vcf} \\
+        --events ${events} \\
+        --fdr ${fdr} \\
+        ${args_corrected} \\
+        > ${prefix}.bcf
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}.fdr-controlled"
     """
-    touch ${prefix}.alignment-properties.json
+    touch ${prefix}.bcf
     """
 }
