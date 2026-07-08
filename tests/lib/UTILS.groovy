@@ -14,6 +14,7 @@ class UTILS {
 
         // These strings are not stable and should be ignored
         def snapshot_ignore_list = [
+            "Check script",
             "Creating env using",
             "Downloading plugin",
             "Got an interrupted  exception while taking agent result",
@@ -61,7 +62,7 @@ class UTILS {
             assertion.add(cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.tokenize('/').last() + ":md5," + cram(absolutePath(file), fasta).readsMD5 })
             if (scenario.include_muse_txt) {
                 // It will skip the first line of the txt file
-                assertion.add(txt_files.isEmpty() ? 'No TXT files' : txt_files.collect{ file -> file.getName() + ":md5," + file.readLines()[2..-1].join('\n').md5() })
+                assertion.add(txt_files.isEmpty() ? 'No TXT files' : txt_files.collect { file -> file.tokenize('/').last() + ":md5," + path(absolutePath(file)).readLines().drop(2).join('\n').md5() })
             }
             if (scenario.include_freebayes_unfiltered) {
                 // It will only print the vcf summary to avoid differing md5sums because of small differences in QUAL score
