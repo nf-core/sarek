@@ -66,11 +66,11 @@ class UTILS {
             }
             if (scenario.include_freebayes_unfiltered) {
                 // It will only print the vcf summary to avoid differing md5sums because of small differences in QUAL score
-                assertion.add(freebayes_unfiltered.isEmpty() ? 'No Freebayes unfiltered VCF files' : freebayes_unfiltered.collect { file -> [ file.getName(), path(absolutePath(file)).vcf.summary ] })
+                assertion.add(freebayes_unfiltered.isEmpty() ? 'No Freebayes unfiltered VCF files' : freebayes_unfiltered.collect { file -> [ file.tokenize('/').last(), path(absolutePath(file)).vcf.summary ] })
             }
             if (scenario.no_vcf_md5sum) {
                 // Will print the summary instead of the md5sum for vcf files
-                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [ file.getName(), path(absolutePath(file)).vcf.summary ] })
+                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [ file.tokenize('/').last(), path(absolutePath(file)).vcf.summary ] })
             } else {
                 assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.tokenize('/').last() + ":md5," + path(absolutePath(file)).vcf.variantsMD5 })
                 if (scenario.include_varlociraptor_vcf) {
