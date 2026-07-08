@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [#XXXX](https://github.com/nf-core/sarek/pull/XXXX) - Update EnsemblVEP to 116.0
+- [#2229](https://github.com/nf-core/sarek/pull/2229) - Update EnsemblVEP to 116.0
 
 ### Fixed
 
@@ -53,12 +53,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Changed
 
 - [#2225](https://github.com/nf-core/sarek/pull/2225) - Back to dev (3.9.1dev)
-- [#XXXX](https://github.com/nf-core/sarek/pull/XXXX) - Update nft-utils to 1.0.0, migrate `getAllFilesFromDir` to `getAllFilesFromPath` in test utilities
+- [#2229](https://github.com/nf-core/sarek/pull/2229) - Update nft-utils to 1.0.0, migrate `getAllFilesFromDir` to `getAllFilesFromPath` in test utilities
 
 #### Fixed
 
 - [#2208](https://github.com/nf-core/sarek/pull/2208) - Update freebayes params (remove `--pooled-discrete` and change `--min-alternate-fraction` from 0.03 to 0.01), move chunk_size param
-- [#XXXX](https://github.com/nf-core/sarek/pull/XXXX) - Fix LoFTEE test to validate CSQ fields instead of asserting nothing
+- [#2229](https://github.com/nf-core/sarek/pull/2229) - Fix LoFTEE test to validate CSQ fields instead of asserting nothing
 
 #### Removed
 
