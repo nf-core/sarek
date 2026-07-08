@@ -489,6 +489,12 @@ nf-core modules update <tool>/<subcommand>
 nf-core modules list local
 ```
 
+### Updating VEP modules
+
+When updating `ensemblvep/vep` module, always update the `vep_version` parameter to match the new VEP version. This parameter is used by the LoFTEE plugin to locate the VEP installation path (e.g. `/opt/conda/share/ensembl-vep-${vep_version}`).
+
+Also update `vep_cache_version` in `conf/igenomes.config` for available genomes, based on what's available on [annotation-cache](https://annotation-cache.github.io/ensemblvep/). Not all genomes may have a cache for the new version — only update those that do.
+
 ---
 
 ## Subworkflows

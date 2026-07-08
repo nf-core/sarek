@@ -163,12 +163,12 @@
                     },
                     "ensemblvep/download": {
                         "branch": "master",
-                        "git_sha": "251885fdb29eca03523d326aca5c827d1f6bdfeb",
+                        "git_sha": "db055f5f8c726a924bf51dadce3978da3bbdad7e",
                         "installed_by": ["cache_download_ensemblvep_snpeff", "modules"]
                     },
                     "ensemblvep/vep": {
                         "branch": "master",
-                        "git_sha": "251885fdb29eca03523d326aca5c827d1f6bdfeb",
+                        "git_sha": "db055f5f8c726a924bf51dadce3978da3bbdad7e",
                         "installed_by": ["modules"]
                     },
                     "fastp": {

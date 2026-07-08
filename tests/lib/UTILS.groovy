@@ -78,6 +78,11 @@ class UTILS {
                     assertion.add(varlociraptor_vcf.isEmpty() ? 'No Varlociraptor VCF files' : varlociraptor_vcf.collect { file -> file.tokenize('/').last() + ":summary," + path(absolutePath(file)).vcf.summary })
                 }
             }
+
+            // Check for specific VCF header fields if requested
+            if (scenario.vcf_header_check) {
+                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.tokenize('/').last() + ":header.contains(${scenario.vcf_header_check})," + path(absolutePath(file)).vcf.header.toString().contains(scenario.vcf_header_check) })
+            }
         }
 
         // If we have a snapshot options in scenario then we allow to capture either stderr, stdout or both
