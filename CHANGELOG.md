@@ -5,6 +5,65 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev - unreleased
+
+### Added
+
+- [#2208](https://github.com/nf-core/sarek/pull/2208) - Add varlociraptor/filterfdr
+
+### Changed
+
+- [#2229](https://github.com/nf-core/sarek/pull/2229) - Update EnsemblVEP to 116.0
+
+### Fixed
+
+- [#2216](https://github.com/nf-core/sarek/pull/2216) - Fix `--normalize_vcfs` dropping a real ALT allele of `1/2` multiallelic sites (`bcftools norm --rm-dup all` → `--rm-dup exact`)
+
+### Removed
+
+### Dependencies - modules
+
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| varlociraptor | 8.9.3       | 8.9.5       |
+| ensembl-vep   | 115.2       | 116.0       |
+
+### Dependencies - plugins
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
+| Params                              | status |
+| ----------------------------------- | ------ |
+| `--varlociraptor_events_germline`   | New    |
+| `--varlociraptor_events_somatic,`   | New    |
+| `--varlociraptor_events_tumor_only` | New    |
+| `--varlociraptor_fdr`               | New    |
+
+| Parameter   | Old default | New default |
+| ----------- | ----------- | ----------- |
+| vep_version | 115.2-1     | 116.0-0     |
+
+### Developer section
+
+#### Added
+
+- [#2225](https://github.com/nf-core/sarek/pull/2225) - Add contributor ORCIDs to `nextflow.config`
+
+#### Changed
+
+- [#2225](https://github.com/nf-core/sarek/pull/2225) - Back to dev (3.9.1dev)
+- [#2229](https://github.com/nf-core/sarek/pull/2229) - Update nft-utils to 1.0.0, migrate `getAllFilesFromDir` to `getAllFilesFromPath` in test utilities
+
+#### Fixed
+
+- [#2208](https://github.com/nf-core/sarek/pull/2208) - Update freebayes params (remove `--pooled-discrete` and change `--min-alternate-fraction` from 0.03 to 0.01), move chunk_size param
+- [#2229](https://github.com/nf-core/sarek/pull/2229) - Fix LoFTEE test to validate CSQ fields instead of asserting nothing
+
+#### Removed
+
 ## [3.9.0](https://github.com/nf-core/sarek/releases/tag/3.9.0) - Sarvesjåhkå
 
 Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
@@ -17,14 +76,15 @@ Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
 
 ### Changed
 
-- [#2055](https://github.com/nf-core/sarek/pull/2055) - Sort final vcf in varlociraptor sbwfs and update varlociraptor
+- [#2055](https://github.com/nf-core/sarek/pull/2055) - Sort final vcf in varlociraptor sbwfs, update varlociraptor, and add `--force-samples` to the `bcftools merge` of germline/somatic VCFs so the merge proceeds (renaming colliding columns) instead of failing when sample names collide
 - [#2141](https://github.com/nf-core/sarek/pull/2141) - Update snpeff
 - [#2194](https://github.com/nf-core/sarek/pull/2194) - Replace local `annotation_cache_initialisation` and `download_cache_snpeff_vep` subworkflows with nf-core `utils_annotation_cache` and `cache_download_ensemblvep_snpeff`
 - [#2209](https://github.com/nf-core/sarek/pull/2209) - Add flowing dots for the additional `bam/cram` and `vcf` entry points on the core line and the `cram` entry on the germline line in the animated metro map
+- [#2220](https://github.com/nf-core/sarek/pull/2220) - Update DeepVariant to `1.10.0` and sync `gatk4/mergevcfs`; both modules now report tool versions via the `versions` topic
 
 ### Fixed
 
-- [#2117](https://github.com/nf-core/sarek/pull/2117) - Silent failure with multi-lane samples
+- [#2117](https://github.com/nf-core/sarek/pull/2117) - Silent failure with multi-lane samples, including stripping `sample_lane_id` in the UMI consensus `groupKey` so `groupTuple` can merge lanes from the same sample (previously blocked by the retained per-lane `sample_lane_id`)
 - [#2143](https://github.com/nf-core/sarek/pull/2143) - Varlociraptor collecting multiple scenario files for one sample
 - [#2146](https://github.com/nf-core/sarek/pull/2146) - Fail early when `--no_intervals` is used with joint germline HaplotypeCaller
 - [#2147](https://github.com/nf-core/sarek/pull/2147) - Fix empty fastp output folder created when trimmed reads are not saved
@@ -33,21 +93,24 @@ Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
 - [#2189](https://github.com/nf-core/sarek/pull/2189) - Fixes the `interval_name` → `intervals_name` typo in the branch step (was a silent no-op)
 - [#2190](https://github.com/nf-core/sarek/pull/2190) - Fix controlfreec crash in edge cases when no breakpoints are found
 - [#2196](https://github.com/nf-core/sarek/pull/2196) - Update `vep_version` parameter from `115.0-0` to `115.2-1` and fix `loftee_path` from `/usr/local/share` to `/opt/conda/share` to match the container VEP installation path
-- [#2216](https://github.com/nf-core/sarek/pull/2216) - Fix `--normalize_vcfs` dropping a real ALT allele of `1/2` multiallelic sites (`bcftools norm --rm-dup all` → `--rm-dup exact`)
+- [#2219](https://github.com/nf-core/sarek/pull/2219) - Downgrade `controlfreec/assesssignificance` from `control-freec` 11.6b (`hde5307d_3`) back to 11.6 (`h1b792b2_1`)
 
 ### Removed
 
 ### Dependencies - modules
 
-| Dependency    | Old version | New version |
-| ------------- | ----------- | ----------- |
-| controlfreec  | 11.6        | 11.6b       |
-| ensemblvep    | 115.2       | 115.2       |
-| --htslib      |             | 1.23.1      |
-| multiqc       | 1.33        | 1.35        |
-| snpeff        | 5.3a        | 5.4c        |
-| varlociraptor | 8.7.4       | 8.9.3       |
-| yte           | 1.9.0       | 1.9.4       |
+| Dependency                   | Old version | New version |
+| ---------------------------- | ----------- | ----------- |
+| controlfreec                 | 11.6        | 11.6b       |
+| deepvariant                  | 1.9.0       | 1.10.0      |
+| ensemblvep                   | 115.2       | 115.2       |
+| gatk4 (in `GATK4_MERGEVCFS`) | 4.6.1.0     | 4.6.2.0     |
+| --htslib                     |             | 1.23.1      |
+| multiqc                      | 1.33        | 1.35        |
+| sentieon                     | 202503.01   | 202503.02   |
+| snpeff                       | 5.3a        | 5.4c        |
+| varlociraptor                | 8.7.4       | 8.9.3       |
+| yte                          | 1.9.0       | 1.9.4       |
 
 ### Dependencies - plugins
 
@@ -91,6 +154,7 @@ Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
 - [#2170](https://github.com/nf-core/sarek/pull/2170) - Add index to workflow output for MultiQC
 - [#2189](https://github.com/nf-core/sarek/pull/2189) - Preserve `groupKey` size hint into `groupTuple` in the sentieon haplotyper and dnascope subworkflows so per-sample MERGE*SENTIEON*\*\_VCFS / GVCFS emits progressively as each sample's intervals finish instead of bursting at end-of-haplotyper.
 - [#2197](https://github.com/nf-core/sarek/pull/2197) - Fix controlfreec `versions` emission: swap to topics and remove explicit `versions.mix` wiring
+- [#2217](https://github.com/nf-core/sarek/pull/2217) - Mark sentieon_dedup scenario in `save_output_as_bam` test with `sentieon: true` flag
 
 #### Removed
 
