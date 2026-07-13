@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "varlociraptor_filterfdr"
+description: Filter Varlociraptor variant calls using FDR control.
+keywords:
+  - varlociraptor
+  - vcf
+  - bcf
+  - fdr
+  - variant filtering
+tools:
+  - "varlociraptor":
+      description: "Flexible, uncertainty-aware variant calling with parameter free
+        filtration via FDR control."
+      homepage: "https://varlociraptor.github.io/docs/estimating/"
+      documentation: "https://varlociraptor.github.io/docs/estimating/"
+      tool_dev_url: "https://github.com/varlociraptor/varlociraptor"
+      doi: "10.1186/s13059-020-01993-6"
+      licence: ["GPL v3"]
+      identifier: biotools:varlociraptor
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information.
+          e.g. `[ id:'sample1' ]`
+    - vcf:
+        type: file
+        description: Variant calls to be filtered.
+        pattern: "*.{vcf,vcf.gz,bcf}"
+        ontologies:
+          - edam: "http://edamontology.org/format_3016" # VCF
+          - edam: "http://edamontology.org/format_2572" # BCF
+    - events:
+        type: string
+        description: Event(s) of interest passed to `--events`.
+    - fdr:
+        type: float
+        description: False discovery rate threshold passed to `--fdr`.
+output:
+  bcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bcf":
+          type: file
+          description: BCF file containing fdr-controlled calls
+          pattern: "*.bcf"
+          ontologies:
+            - edam: http://edamontology.org/format_3020 # BCF
+  versions_varlociraptor:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - varlociraptor:
+          type: string
+          description: The tool name
+      - "varlociraptor --version | sed 's/^varlociraptor //'":
+          type: eval
+          description: The command used to generate the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - varlociraptor:
+          type: string
+          description: The tool name
+      - "varlociraptor --version | sed 's/^varlociraptor //'":
+          type: eval
+          description: The command used to generate the version of the tool
+authors:
+  - "@famosab"
+maintainers:
+  - "@famosab"

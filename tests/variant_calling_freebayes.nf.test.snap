@@ -555,7 +555,7 @@
                 "samtools_alignment_plot.txt:md5,8e6178a26fe2a4fc4f45fac3175ba6c6",
                 "samtools_insert_size.txt:md5,c4b5c78eeb30a8c926d1bd9506882516",
                 "test.freebayes.filtered.bcftools_stats.txt:md5,dde124ceaf6f109cd274b837b950096b",
-                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,6f942caec2f4f02c69e1216226fa44a9",
+                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,189bc07d38c2a9ae34b141cff402bda6",
                 "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.md.mosdepth.summary.txt:md5,0010c2396a3173c7cf4983abe2eb6a4c",
                 "test.md.per-base.bed.gz:md5,34dfe443c0a0767562dd65272e3310ef",
@@ -574,7 +574,7 @@
                 "test2.recal.per-base.bed.gz.csi:md5,4205a09ede17cdbdaad45e3553f73105",
                 "test.freebayes.filtered.FILTER.summary:md5,87e753ba2ad969475fb55661852f75e0",
                 "test.freebayes.filtered.TsTv.count:md5,845f64e5bb4224af98f3a47294cd5483",
-                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,126e83dcd37b82420f7c5d7b235479f1",
+                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,1f06f857e3576c6a98c32d1e7f51f456",
                 "test2_vs_test.freebayes.filtered.TsTv.count:md5,28919c7d29c998681391d2027af3e0f9"
             ],
             "No BAM files",
@@ -591,7 +591,7 @@
                 ],
                 [
                     "test2_vs_test.freebayes.vcf.gz",
-                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=1447, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=1453, phased=false, phasedAutodetect=false]"
                 ]
             ],
             [
@@ -601,7 +601,7 @@
                 ],
                 [
                     "test2_vs_test.freebayes.filtered.vcf.gz",
-                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=137, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=125, phased=false, phasedAutodetect=false]"
                 ]
             ],
             [
@@ -611,9 +611,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-12-15T22:43:02.382544129"
+        "timestamp": "2026-06-12T11:36:14.240620697"
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20": {
         "content": [
@@ -980,9 +980,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-12-15T22:35:44.029764132"
+        "timestamp": "2026-06-12T11:27:28.609439333"
     },
     "-profile test --tools freebayes --no_intervals": {
         "content": [
@@ -1331,9 +1331,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-12-15T22:38:03.564960868"
+        "timestamp": "2026-06-12T11:30:11.341607202"
     },
     "-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv": {
         "content": [
@@ -1903,7 +1903,7 @@
                 "samtools_alignment_plot.txt:md5,89d0a6e7076223e9feadbecd794948d5",
                 "samtools_insert_size.txt:md5,ca54b785b1d63edd61cef58cd5558aa2",
                 "test.freebayes.filtered.bcftools_stats.txt:md5,b313075b3e9854e0b561dd8d754bf097",
-                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,17df64b64f9235afa93aae6bbe08e283",
+                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,42d0644fc84df43b26e8de1ad427b446",
                 "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.md.mosdepth.region.dist.txt:md5,835fdc6fa52cc33e6fb76c0c20a8a6c3",
                 "test.md.mosdepth.summary.txt:md5,dcc9ab2bf3248903e02d8da87e678977",
@@ -1934,7 +1934,7 @@
                 "test2.recal.regions.bed.gz.csi:md5,c6d1ac97ef4dfe43731c8368d8391cab",
                 "test.freebayes.filtered.FILTER.summary:md5,449597c35ada505b4cb2530d5260e9d5",
                 "test.freebayes.filtered.TsTv.count:md5,162253eb6c406300678985b3ac7dc868",
-                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,0ae7467f2311c1382173d70d8d7efb0b",
+                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,b3cdcab0fb3a666b40ef76c4193ff7f8",
                 "test2_vs_test.freebayes.filtered.TsTv.count:md5,9dc940f98dae9c0b49c9468a491836d4"
             ],
             "No BAM files",
@@ -1951,12 +1951,12 @@
                 ],
                 [
                     "test2_vs_test.freebayes.vcf.gz",
-                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=966, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=988, phased=false, phasedAutodetect=false]"
                 ]
             ],
             [
                 "test.freebayes.filtered.vcf.gz:md5,c4793897a38d6781dc512a52d9046be5",
-                "test2_vs_test.freebayes.filtered.vcf.gz:md5,d1d0916fc56a666bd7637792047b82f8"
+                "test2_vs_test.freebayes.filtered.vcf.gz:md5,6da8e1304355fedec62419d5ae1a402c"
             ],
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
@@ -1965,8 +1965,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-12-15T22:40:36.195304962"
+        "timestamp": "2026-06-12T11:33:20.327931788"
     }
 }
