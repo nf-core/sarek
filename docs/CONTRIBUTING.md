@@ -781,6 +781,9 @@ Use standard nf-core labels in `conf/base.config`:
 #### Running Tests
 
 ```bash
+# Run all tests
+nf-test test --profile+=debug,docker --verbose
+
 # Run specific test
 nf-test test tests/variant_calling_haplotypecaller.nf.test --profile+=debug,docker
 
@@ -1065,15 +1068,56 @@ Any PR that changes output files (new files, renamed files, changed content):
 
 ### Common Gotchas
 
-1. **Forgetting `failOnDuplicate`/`failOnMismatch` on Joins** — Always use `join(..., failOnDuplicate: true, failOnMismatch: true)`
-2. **Strelka Produces Two VCFs** — Use `groupTuple(size: 2)` then `BCFTOOLS_CONCAT` before downstream processing
-3. **Blocking GroupTuple** — Use `groupKey(meta, meta.num_intervals)` when size is known
-4. **Meta Fields Persisting** — Clean up with `meta - meta.subMap('field_name')` before emit
-5. **DeepVariant Conda** — DeepVariant doesn't support Conda; note in module: `// FIXME Conda is not supported at the moment`
-6. **BWA Memory Requirements** — BWA requires ~5.37N memory, BWA-MEM2 requires ~28N GB where N = reference size
-7. **Using Deprecated `ext.when` Pattern** — When touching this code, refactor to use channel operations (`filter`, `branch`) to control dataflow
-8. **Forgetting to Register a New Variant Caller** — Must update all 6 registration points; the most commonly missed is `post_variantcalling/main.nf`'s `small_variantcallers` list
-9. **Implicit Variables in Closures** — Always use explicit named parameters: `.map { meta, vcf -> ... }` not `.map { it[0], it[1] -> ... }`
+#### 1. Forgetting `failOnDuplicate`/`failOnMismatch` on Joins
+
+**Problem:** Silent data loss or incorrect pairing
+**Solution:** Always use `join(..., failOnDuplicate: true, failOnMismatch: true)`
+
+#### 2. Strelka Produces Two VCFs
+
+**Problem:** Strelka outputs SNV and Indel VCFs separately
+**Solution:** Use `groupTuple(size: 2)` then `BCFTOOLS_CONCAT` before downstream processing
+
+#### 3. Blocking GroupTuple
+
+**Problem:** `groupTuple()` without size blocks pipeline
+**Solution:** Use `groupKey(meta, meta.num_intervals)` when size is known
+
+#### 4. Meta Fields Persisting
+
+**Problem:** Temporary meta fields (like `num_intervals`) persist in output
+**Solution:** Clean up with `meta - meta.subMap('field_name')` before emit
+
+#### 5. DeepVariant Conda
+
+**Problem:** DeepVariant doesn't support Conda
+**Solution:** Note in module: `// FIXME Conda is not supported at the moment`
+
+#### 6. BWA Memory Requirements
+
+**Problem:** Unexpected OOM errors
+**Solution:** BWA requires ~5.37N memory, BWA-MEM2 requires ~28N GB where N = reference size
+
+#### 7. Using Deprecated `ext.when` Pattern
+
+**Problem:** Old code uses `ext.when` in config to control module execution
+**Solution:** When touching this code, refactor to use channel operations (`filter`, `branch`) to control dataflow. Avoid both `ext.when` AND `if` statements where possible.
+
+#### 8. Forgetting to Register a New Variant Caller
+
+**Problem:** New variant caller runs and produces VCFs, but is silently excluded from normalization, filtering, and consensus calling
+**Solution:** Must update all 6 registration points — see [For New Variant Callers](#for-new-variant-callers) checklist. The most commonly missed is `post_variantcalling/main.nf`'s `small_variantcallers` list.
+
+#### 9. Implicit Variables in Closures
+
+**Problem:** Using implicit `it` makes code harder to read and review
+**Solution:** Always use explicit named parameters in closures: `.map { meta, vcf -> ... }` not `.map { it[0], it[1] -> ... }`
+
+### Getting Help
+
+- **Slack:** [#sarek channel](https://nfcore.slack.com/channels/sarek)
+- **GitHub Issues:** [nf-core/sarek/issues](https://github.com/nf-core/sarek/issues)
+- **Documentation:** [nf-co.re/sarek](https://nf-co.re/sarek)
 
 ### Quick Reference
 
