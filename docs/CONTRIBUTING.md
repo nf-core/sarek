@@ -14,7 +14,7 @@ This page describes the recommended nf-core way to contribute to both nf-core/sa
 - [Pipeline-specific contribution guidelines](#pipeline-specific-contribution-guidelines): procedures or guides specific to the development conventions of nf-core/sarek.
 
 > [!NOTE]
-> If you need help using or modifying sarek, ask on the nf-core Slack [#sarek](https://nfcore.slack.com/channels/sarek) channel ([join our Slack here](https://nf-co.re/join/slack)).
+> If you need help using or modifying nf-core/sarek, ask on the nf-core Slack [#sarek](https://nfcore.slack.com/channels/sarek) channel ([join our Slack here](https://nf-co.re/join/slack)).
 
 ## General contribution guidelines
 
@@ -124,7 +124,7 @@ Please also refer to the [pipeline-specific contribution guidelines](#pipeline-s
 - [ ] Define the output channel if needed. Mix the version output channel into `ch_versions` and relevant files into `ch_multiqc`.
 - [ ] Add new or updated parameters to `nextflow.config` with a [default value](#default-parameter-values).
 - [ ] Add new or updated parameters and relevant help text to `nextflow_schema.json` with [nf-core/tools](#default-parameter-values).
-- [ ] Add validation for relevant parameters to the pipeline utilisation section of `utils_nfcore_{{ shortname }}\_pipeline/main.nf` subworkflow.
+- [ ] Add validation for relevant parameters to the pipeline utilisation section of `utils_nfcore_sarek_pipeline/main.nf` subworkflow.
 - [ ] Perform local tests to validate that the new code works as expected.
   - [ ] If applicable, add a new test in the `tests` directory.
 - [ ] Update `usage.md`, `output.md`, and `citation.md` as appropriate.
