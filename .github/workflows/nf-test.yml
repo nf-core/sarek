@@ -18,10 +18,12 @@ concurrency:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  NFT_VER: "0.9.3"
+  NFT_VER: "0.9.5"
+  NFT_WORKDIR: "~"
   NXF_ANSI_LOG: false
   NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
   NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
+
 jobs:
   nf-test-changes:
     name: nf-test-changes
@@ -38,7 +40,7 @@ jobs:
           rm -rf ./* || true
           rm -rf ./.??* || true
           ls -la ./
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
 
@@ -48,8 +50,8 @@ jobs:
         env:
           NFT_VER: ${{ env.NFT_VER }}
         with:
-          tags: "cpu,cpu_conda"
           max_shards: 15
+          tags: "cpu,cpu_conda"
 
       - name: debug
         run: |
@@ -78,19 +80,16 @@ jobs:
           - isMain: false
             profile: "singularity"
         NXF_VER:
-          - 25.10.2
-          - latest-everything
+          - "25.10.4"
+          - "latest-everything"
     env:
       NXF_ANSI_LOG: false
       TOTAL_SHARDS: ${{ needs.nf-test-changes.outputs.total_shards }}
 
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
-
-      - name: Set NFT_WORKDIR dynamically
-        run: echo "NFT_WORKDIR=$HOME" >> $GITHUB_ENV
 
       - name: Run nf-test
         id: run_nf_test
@@ -104,6 +103,7 @@ jobs:
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
           tags: ${{ matrix.profile == 'conda' && 'cpu_conda' || 'cpu,cpu_conda' }}
+
       - name: Report test status
         if: ${{ always() }}
         run: |
@@ -118,6 +118,7 @@ jobs:
               exit 1
             fi
           fi
+
   confirm-pass:
     needs: [nf-test]
     if: always()

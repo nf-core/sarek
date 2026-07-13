@@ -1,8 +1,7 @@
-name: nf-core cloud tests (both full size and smaller)
+name: nf-core AWS full size tests
 # This workflow is triggered on PRs opened against the main/master branch.
 # It can be additionally triggered manually with GitHub actions workflow dispatch button.
-# It runs the -profile 'test_full' on cloud
-# or the -profile 'test' on cloud (smaller tests)
+# It runs the -profile 'test_full' on AWS batch
 
 on:
   pull_request_review:
@@ -11,10 +10,6 @@ on:
     types: [published]
   workflow_dispatch:
     inputs:
-      test:
-        description: "-profile test (smaller)"
-        type: boolean
-        default: true
       somatic:
         description: "Somatic full test"
         type: boolean
@@ -42,12 +37,6 @@ jobs:
           # All available profiles
           all='[
             {
-              "profile": "test_aws",
-              "test": "test",
-              "compute_env": "TOWER_COMPUTE_ENV",
-              "workdir": "TOWER_BUCKET_AWS"
-            },
-            {
               "profile": "test_full_aws",
               "test": "somatic",
               "compute_env": "TOWER_COMPUTE_ENV",
@@ -70,7 +59,6 @@ jobs:
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             # Filter to only selected profiles
             matrix=$(echo "$all" | jq -c '[.[] | select(
-              (.test == "test" and ${{ inputs.test }}) or
               (.test == "somatic" and ${{ inputs.somatic }}) or
               (.test == "germline" and ${{ inputs.germline }}) or
               (.test == "germline_ncbench_agilent" and ${{ inputs.germline_ncbench_agilent }})
