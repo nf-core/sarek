@@ -4,7 +4,7 @@
             5,
             {
                 "ENSEMBLVEP_VEP": {
-                    "ensemblvep": "115.2",
+                    "ensemblvep": "116.0",
                     "perl-math-cdf": "0.1",
                     "tabix": "1.23.1"
                 },
@@ -16,7 +16,7 @@
                     "tabix": "1.21"
                 },
                 "VCF_ANNOTATE_MERGE": {
-                    "ensemblvep": "115.2",
+                    "ensemblvep": "116.0",
                     "perl-math-cdf": "0.1",
                     "tabix": "1.23.1"
                 }
@@ -109,10 +109,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-27T10:13:01.036308477",
+        "timestamp": "2026-07-08T10:14:04.788318141",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
+            "nextflow": "26.04.4"
         }
     },
     "-profile test --tools merge,snpsift": {
@@ -133,7 +133,7 @@
                     "tabix": "1.21"
                 },
                 "VCF_ANNOTATE_MERGE": {
-                    "ensemblvep": "115.2",
+                    "ensemblvep": "116.0",
                     "perl-math-cdf": "0.1",
                     "tabix": "1.23.1"
                 }
@@ -220,10 +220,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-27T10:14:01.977520509",
+        "timestamp": "2026-07-08T10:15:44.567611717",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
+            "nextflow": "26.04.4"
         }
     },
     "-profile test --tools merge": {
@@ -238,7 +238,7 @@
                     "tabix": "1.21"
                 },
                 "VCF_ANNOTATE_MERGE": {
-                    "ensemblvep": "115.2",
+                    "ensemblvep": "116.0",
                     "perl-math-cdf": "0.1",
                     "tabix": "1.23.1"
                 }
@@ -320,10 +320,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-27T10:12:05.371914045",
+        "timestamp": "2026-07-08T10:12:53.660022078",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
+            "nextflow": "26.04.4"
         }
     }
 }

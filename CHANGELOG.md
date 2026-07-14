@@ -9,16 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#2208](https://github.com/nf-core/sarek/pull/2208) - Add varlociraptor/filterfdr
+
 ### Changed
 
+- [#2229](https://github.com/nf-core/sarek/pull/2229) - Update EnsemblVEP to 116.0
+
 ### Fixed
+
+- [#2216](https://github.com/nf-core/sarek/pull/2216) - Fix `--normalize_vcfs` dropping a real ALT allele of `1/2` multiallelic sites (`bcftools norm --rm-dup all` → `--rm-dup exact`)
 
 ### Removed
 
 ### Dependencies - modules
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| varlociraptor | 8.9.3       | 8.9.5       |
+| ensembl-vep   | 115.2       | 116.0       |
 
 ### Dependencies - plugins
 
@@ -27,20 +35,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params | status |
-| ------ | ------ |
+| Params                              | status |
+| ----------------------------------- | ------ |
+| `--varlociraptor_events_germline`   | New    |
+| `--varlociraptor_events_somatic,`   | New    |
+| `--varlociraptor_events_tumor_only` | New    |
+| `--varlociraptor_fdr`               | New    |
+
+| Parameter   | Old default | New default |
+| ----------- | ----------- | ----------- |
+| vep_version | 115.2-1     | 116.0-0     |
 
 ### Developer section
 
 #### Added
 
 - [#2225](https://github.com/nf-core/sarek/pull/2225) - Add contributor ORCIDs to `nextflow.config`
+- [#2228](https://github.com/nf-core/sarek/pull/2228) - Add `AGENTS.md` file with nf-core agent instructions
 
 #### Changed
 
+- [#2178](https://github.com/nf-core/sarek/pull/2178) - Template update for nf-core/tools v4.0.2
 - [#2225](https://github.com/nf-core/sarek/pull/2225) - Back to dev (3.9.1dev)
+- [#2229](https://github.com/nf-core/sarek/pull/2229) - Update nft-utils to 1.0.0, migrate `getAllFilesFromDir` to `getAllFilesFromPath` in test utilities
 
 #### Fixed
+
+- [#2208](https://github.com/nf-core/sarek/pull/2208) - Update freebayes params (remove `--pooled-discrete` and change `--min-alternate-fraction` from 0.03 to 0.01), move chunk_size param
+- [#2229](https://github.com/nf-core/sarek/pull/2229) - Fix LoFTEE test to validate CSQ fields instead of asserting nothing
 
 #### Removed
 
