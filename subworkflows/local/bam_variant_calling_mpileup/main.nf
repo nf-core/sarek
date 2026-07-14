@@ -13,7 +13,8 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
     take:
     cram      // channel: [mandatory] [ meta, cram, crai ]
     dict      // channel: [mandatory] [ meta, dict ]
-    fasta     // channel: [mandatory] [ fasta ]
+    fasta     // channel: [mandatory] [ meta, fasta ]
+    fai       // channel: [mandatory] [ meta, fasta_fai ]
     intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
@@ -24,9 +25,14 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
         .combine(intervals)
         .map { meta, cram_, _crai, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], cram_, intervals_] }
 
+    // per-chunk bed restricts mpileup only; intervals_call left empty
+    cram_intervals_bcftools = cram_intervals.map { meta, cram_, intervals_ -> [meta, cram_, intervals_, []] }
+    // .first() keeps this a value channel so it broadcasts across every interval chunk (combine would otherwise make it a single-item queue)
+    fasta_fai = fasta.combine(fai).map { meta, fasta_, _meta2, fai_ -> [meta, fasta_, fai_] }.first()
+
     // Run, if --tools mpileup
     keep_bcftools_mpileup = false
-    BCFTOOLS_MPILEUP(cram_intervals, fasta, keep_bcftools_mpileup)
+    BCFTOOLS_MPILEUP(cram_intervals_bcftools, fasta_fai, keep_bcftools_mpileup)
 
     //Only run, if --tools ControlFreec
     SAMTOOLS_MPILEUP(cram_intervals, fasta)

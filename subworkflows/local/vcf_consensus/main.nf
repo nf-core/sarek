@@ -52,7 +52,9 @@ workflow CONSENSUS {
                             def sorted_pairs = vcf_caller_pairs.sort { a, b -> a[0].name <=> b[0].name }
                             def sorted_vcfs = sorted_pairs.collect { it[0] }
                             def callers = sorted_pairs.collect { it[1] }
-                            [meta + [callers: callers], sorted_vcfs, tbis]
+                            // file_list, targets_file, regions_file are unused: VCFs are passed positionally
+                            // and consensus is computed genome-wide (no region/target restriction)
+                            [meta + [callers: callers], sorted_vcfs, tbis, [], [], []]
                         }
 
 
