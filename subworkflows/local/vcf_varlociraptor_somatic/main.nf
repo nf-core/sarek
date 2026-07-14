@@ -109,7 +109,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
         branched.matched.map { _key, meta_somatic, somatic_vcf, somatic_tbi, _meta_germline, germline_vcf, germline_tbi ->
             [meta_somatic, [somatic_vcf, germline_vcf], [somatic_tbi, germline_tbi], []]
         },
-        ch_fasta.combine(ch_fasta_fai).map{fasta, fai -> [["id":"fasta"], fasta, fai]}
+        ch_fasta.combine(ch_fasta_fai).map{ _meta_fasta, fasta, _meta_fai, fai -> [["id":"fasta"], fasta, fai]}
     )
 
     // Combine merged VCFs with unmatched somatic VCFs
