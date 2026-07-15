@@ -206,7 +206,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         vcf_parabricks_haplotypecaller = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.vcf
         tbi_parabricks_haplotypecaller = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.versions)
     }
 
     // MANTA

@@ -12,8 +12,6 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER {
     intervals_bed_combined  // channel: [optional]  [] or [ intervals.bed ]
 
     main:
-    versions = Channel.empty()
-
     // Combine each sample with the (optional) intervals list
     // intervals_bed_combined emits [] (no intervals) or [file] (one combined BED)
     // When no_intervals, the empty list contributes 0 elements to the combined tuple,
@@ -37,5 +35,4 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER {
     emit:
     vcf      // channel: [ val(meta), vcf.gz ]
     tbi      // channel: [ val(meta), vcf.gz.tbi ]
-    versions // channel: versions.yml
 }
