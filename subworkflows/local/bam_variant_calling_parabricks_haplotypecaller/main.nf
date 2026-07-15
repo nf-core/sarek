@@ -16,9 +16,13 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER {
 
     // Combine each sample with the (optional) intervals list
     // intervals_bed_combined emits [] (no intervals) or [file] (one combined BED)
+    // When no_intervals, the empty list contributes 0 elements to the combined tuple,
+    // so use it.size() to safely extract the optional 4th element.
     cram_intervals = cram
         .combine(intervals_bed_combined)
-        .map { meta, cram_, crai, intervals_ ->
+        .map { it ->
+            def (meta, cram_, crai) = it
+            def intervals_ = it.size() > 3 ? it[3] : []
             [ meta + [ variantcaller:'parabricks_haplotypecaller' ], cram_, crai, intervals_ ]
         }
 

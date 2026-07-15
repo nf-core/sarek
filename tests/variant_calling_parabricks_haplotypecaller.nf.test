@@ -18,6 +18,17 @@ nextflow_pipeline {
             ],
             gpu: true,
             no_conda: true
+        ],
+        [
+            name: "-profile test --tools parabricks_haplotypecaller --no_intervals -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
+                tools: "parabricks_haplotypecaller",
+                step: "variant_calling",
+                no_intervals: true
+            ],
+            stub: true,
+            no_conda: true
         ]
     ]
 
