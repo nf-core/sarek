@@ -88,7 +88,7 @@
                     "strelka": "2.9.10"
                 },
                 "SVDB_MERGE": {
-                    "bcftools": "1.23.1",
+                    "bcftools": 1.21,
                     "svdb": "2.8.2"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
@@ -531,8 +531,8 @@
                 "test.strelka.variants.bcftools_stats.txt:md5,6efa6598982c21c544d1833dca632b62",
                 "test2_vs_test.strelka.somatic_indels.bcftools_stats.txt:md5,b5d3cad82f19dd86895f5b7b38034bd2",
                 "test2_vs_test.strelka.somatic_snvs.bcftools_stats.txt:md5,08b597e1002f482dc549044c500eb60a",
-                "test.tiddit.bcftools_stats.txt:md5,2b96446a75e1ec5d5f1310a934c0dd4c",
-                "test2_vs_test.tiddit_sv_merge.bcftools_stats.txt:md5,a6c45b2a2b7d8844e5536deee5c77af5",
+                "test.tiddit.bcftools_stats.txt:md5,c4cb4e484f95c7dbdaa3d08f0704f7b5",
+                "test2_vs_test.tiddit_sv_merge.bcftools_stats.txt:md5,7c527e6b2eeb8d08c37898a305f32b92",
                 "test.md.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test.md.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test.md.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
@@ -1072,7 +1072,7 @@
                 "test.deepvariant.bcftools_stats.txt:md5,67f779dde7f1c6b6ca5cf48f8c24ba02",
                 "test.freebayes.filtered.bcftools_stats.txt:md5,60f55a391db494db3e95bd69b6b36fa3",
                 "test.strelka.variants.bcftools_stats.txt:md5,6efa6598982c21c544d1833dca632b62",
-                "test.tiddit.bcftools_stats.txt:md5,2b96446a75e1ec5d5f1310a934c0dd4c",
+                "test.tiddit.bcftools_stats.txt:md5,c4cb4e484f95c7dbdaa3d08f0704f7b5",
                 "test.md.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.md.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.md.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
@@ -1542,7 +1542,7 @@
                 "test2.bcftools.bcftools_stats.txt:md5,fa4bd52259a3400e5d21c43b570e40a5",
                 "test2.freebayes.filtered.bcftools_stats.txt:md5,9bb83f7b4cad18474e47b5cee9160a32",
                 "test2.mutect2.filtered.bcftools_stats.txt:md5,cb2c8f2f4b0ceee60fb1243191d4f429",
-                "test2.tiddit.bcftools_stats.txt:md5,1122042610f0aed654c8d8b817fd1c50",
+                "test2.tiddit.bcftools_stats.txt:md5,346588891b9ab59af56f44649421b424",
                 "test2.md.mosdepth.global.dist.txt:md5,2020cf6dfc7ddca020c921dd9f0549b7",
                 "test2.md.mosdepth.region.dist.txt:md5,38ff8b38c33b9231f047fea8ea830aae",
                 "test2.md.mosdepth.summary.txt:md5,8b991358768cade225470a07cd34f573",

@@ -350,7 +350,7 @@
                 "sample4_vs_sample3.strelka.somatic_indels.bcftools_filtered.vcf.gz:md5,a7861b539e2cfd4429a02757bc9845e9",
                 "sample4_vs_sample3.strelka.somatic_snvs.bcftools_filtered.vcf.gz:md5,973d0ca572b2c94e18279a3c7694d934",
                 "sample4_vs_sample3.mutect2.vcf.gz:md5,f2c46d0dae1b1a59180c0b9e595993d2",
-                "sample3.bcftools.bcftools_filtered.norm.sorted.vcf.gz:md5,ff4832fed7bffc1b53254f635ddb8a95",
+                "sample3.bcftools.bcftools_filtered.norm.sorted.vcf.gz:md5,611a523c501d43f1810f4191267693fb",
                 "sample3.strelka.variants.bcftools_filtered.norm.sorted.vcf.gz:md5,e3f3390321c8693afd777202e15e9b5e",
                 "sample4_vs_sample3.mutect2.bcftools_filtered.norm.sorted.vcf.gz:md5,8826a34d4c7a004750b8a56fee56dcbb",
                 "sample4_vs_sample3.strelka.somatic_indels.bcftools_filtered.norm.sorted.vcf.gz:md5,e60a2a65edfea45253619ccd5c6054f0",
@@ -648,7 +648,7 @@
                 ],
                 [
                     "0002.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=55, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=56, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "sample2.lofreq.vcf.gz",
@@ -660,7 +660,7 @@
                 ],
                 [
                     "sample2.bcftools.norm.sorted.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=132, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=133, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "sample2.lofreq.norm.sorted.vcf.gz",
@@ -668,7 +668,7 @@
                 ],
                 [
                     "sample2.mutect2.norm.sorted.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=1261, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=1262, phased=false, phasedAutodetect=false]"
                 ]
             ],
             [

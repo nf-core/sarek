@@ -747,7 +747,7 @@
                 "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
                 "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
-                "test2_vs_test.mutect2.filtered.bcftools_stats.txt:md5,46384bbd90894ff023684d88df891fd6",
+                "test2_vs_test.mutect2.filtered.bcftools_stats.txt:md5,bd7378d60c4466257489fae86e9de3da",
                 "test.recal.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.recal.mosdepth.region.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.recal.mosdepth.summary.txt:md5,2ea3534987f28b3ed0b64a8e7986b442",
