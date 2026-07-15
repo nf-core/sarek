@@ -151,7 +151,7 @@
             10,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -256,7 +256,7 @@
             ],
             [
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "test.strelka.variants.bcftools_stats.txt:md5,bffd4c0cf553a42c5b183220d71a1466",
+                "test.strelka.variants.bcftools_stats.txt:md5,e59e1411514a692fddeea663e3d1c3a5",
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],
@@ -279,7 +279,7 @@
             10,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -384,7 +384,7 @@
             ],
             [
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "test.strelka.variants.bcftools_stats.txt:md5,bffd4c0cf553a42c5b183220d71a1466",
+                "test.strelka.variants.bcftools_stats.txt:md5,e59e1411514a692fddeea663e3d1c3a5",
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],

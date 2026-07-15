@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [#2210](https://github.com/nf-core/sarek/pull/2210) - Update bcftools to 1.23.1
 - [#2229](https://github.com/nf-core/sarek/pull/2229) - Update EnsemblVEP to 116.0
 
 ### Fixed
@@ -26,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency    | Old version | New version |
 | ------------- | ----------- | ----------- |
+| bcftools      | 1.21        | 1.23.1      |
+| htslib        | 1.21        | 1.23.1      |
 | varlociraptor | 8.9.3       | 8.9.5       |
 | ensembl-vep   | 115.2       | 116.0       |
 

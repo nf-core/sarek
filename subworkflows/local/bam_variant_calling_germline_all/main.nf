@@ -84,6 +84,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             cram,
             dict,
             fasta,
+            fasta_fai,
             intervals
         )
         vcf_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.vcf

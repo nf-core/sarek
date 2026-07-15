@@ -153,7 +153,7 @@ workflow PREPARE_GENOME {
     if (!bcftools_annotations_tbi_in && bcftools_annotations_in) {
         TABIX_BCFTOOLS_ANNOTATIONS(bcftools_annotations.flatten().map { vcf -> [[id: vcf.baseName], vcf] })
         bcftools_annotations_tbi = TABIX_BCFTOOLS_ANNOTATIONS.out.tbi.map { _meta, tbi -> [tbi] }.collect()
-        versions = versions.mix(TABIX_BCFTOOLS_ANNOTATIONS.out.versions)
+
     }
 
     dbsnp = dbsnp_in ? Channel.fromPath(dbsnp_in).collect() : Channel.value([])

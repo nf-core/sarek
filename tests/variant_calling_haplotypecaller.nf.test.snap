@@ -4,7 +4,7 @@
             9,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "GATK4_HAPLOTYPECALLER": {
                     "gatk4": "4.6.1.0"
@@ -155,7 +155,7 @@
                 "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
-                "test.haplotypecaller.bcftools_stats.txt:md5,1497941f37b14c39a24490a50a97e365",
+                "test.haplotypecaller.bcftools_stats.txt:md5,b9b8c3cb422534bdb7a45d884c121af8",
                 "test.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "test.recal.mosdepth.summary.txt:md5,4f0d231060cbde4efdd673863bd2fb59",
                 "test.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
@@ -181,7 +181,7 @@
             14,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -342,7 +342,7 @@
                 "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
-                "test.haplotypecaller.bcftools_stats.txt:md5,1497941f37b14c39a24490a50a97e365",
+                "test.haplotypecaller.bcftools_stats.txt:md5,b9b8c3cb422534bdb7a45d884c121af8",
                 "test.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "test.recal.mosdepth.region.dist.txt:md5,3a2030e5e8af7bc12720c3a5592bf921",
                 "test.recal.mosdepth.summary.txt:md5,615c5c5019d88045a9ff5bbe6e63d270",
@@ -371,7 +371,7 @@
             11,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CNNSCOREVARIANTS": {
                     "gatk4": "4.5.0.0"
@@ -530,7 +530,7 @@
                 "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
-                "test.haplotypecaller.filtered.bcftools_stats.txt:md5,bfdbcc0c0513be1e223434eefee3b90b",
+                "test.haplotypecaller.filtered.bcftools_stats.txt:md5,5debbaa917411dda07c7972272a95f38",
                 "test.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "test.recal.mosdepth.summary.txt:md5,4f0d231060cbde4efdd673863bd2fb59",
                 "test.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
@@ -557,7 +557,7 @@
             16,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CNNSCOREVARIANTS": {
                     "gatk4": "4.5.0.0"
@@ -726,7 +726,7 @@
                 "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
-                "test.haplotypecaller.filtered.bcftools_stats.txt:md5,bfdbcc0c0513be1e223434eefee3b90b",
+                "test.haplotypecaller.filtered.bcftools_stats.txt:md5,5debbaa917411dda07c7972272a95f38",
                 "test.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "test.recal.mosdepth.region.dist.txt:md5,3a2030e5e8af7bc12720c3a5592bf921",
                 "test.recal.mosdepth.summary.txt:md5,615c5c5019d88045a9ff5bbe6e63d270",

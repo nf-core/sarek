@@ -4,7 +4,7 @@
             19,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -230,7 +230,7 @@
                 "samtools-stats-dp.txt:md5,175b0442368f03294ef9ce9e73172c7b",
                 "samtools_alignment_plot.txt:md5,6555bbf8c1ef12058e9a050545a9fa41",
                 "samtools_insert_size.txt:md5,164be68813f2cb96462c152743b95cae",
-                "test.strelka.variants.bcftools_stats.txt:md5,5b7cff7b17c5bcde6177a188b1511986",
+                "test.strelka.variants.bcftools_stats.txt:md5,f4f3355bc1f101411c2fed6cf77d478e",
                 "test.md.mosdepth.global.dist.txt:md5,0c795eadf5e5a8ea8469ba8c0ece9bdd",
                 "test.md.mosdepth.region.dist.txt:md5,54273a37adf55f8cee822aaf92a4c321",
                 "test.md.mosdepth.summary.txt:md5,bb12489d3d44c4e44eb5dcc8fdef636c",
@@ -266,7 +266,7 @@
             30,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.18-r1243-dirty"
@@ -596,7 +596,7 @@
                 "samtools-stats-dp.txt:md5,afe461017b5f2189651f29c79f6fee44",
                 "samtools_alignment_plot.txt:md5,9d6e0d529e64404f2c24e74285e242ee",
                 "samtools_insert_size.txt:md5,91c40430c1296fd8ce04788f2f528754",
-                "test.strelka.variants.bcftools_stats.txt:md5,3f4c40f17e956e4140a0432072a9dde0",
+                "test.strelka.variants.bcftools_stats.txt:md5,a1500be145d3bd8a1e643c8772c4406d",
                 "test.md.mosdepth.global.dist.txt:md5,7b8a7773d5d854ae1b681b971d11bb34",
                 "test.md.mosdepth.region.dist.txt:md5,1dd626f6fef0d1ac29fd7ffb8b1bbd95",
                 "test.md.mosdepth.summary.txt:md5,25af78b074abf710ddd9c90cba1928bc",
