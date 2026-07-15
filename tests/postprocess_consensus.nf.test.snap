@@ -10,7 +10,7 @@
                     "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_ISEC": {
-                    "bcftools": 1.22
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_MPILEUP": {
                     "bcftools": "1.23.1"
@@ -26,7 +26,7 @@
                     "gawk": "5.3.0"
                 },
                 "FILTER_VCFS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.23.1"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.6.1.0"
@@ -304,11 +304,11 @@
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
                 "samtools_insert_size.txt:md5,8fa108dcbe0da42e9425dd125fe22905",
-                "sample3.bcftools.bcftools_stats.txt:md5,bd86ded3843a217d429b34edd22a9a4e",
-                "sample4_vs_sample3.mutect2.bcftools_stats.txt:md5,65bc65858d3dfa1d8913119850626823",
-                "sample3.strelka.variants.bcftools_stats.txt:md5,6d4d032ba146941cb226765aaed9d67f",
-                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,62c6123f6494c3cdbd42dc7230e757b3",
-                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,8404ea88658fbc41d447ba20bf46dd0a",
+                "sample3.bcftools.bcftools_stats.txt:md5,bb4018e2ec62ab957867c4f55ce626b8",
+                "sample4_vs_sample3.mutect2.bcftools_stats.txt:md5,c802eeeaa4ab6531bdb5d8c0b583f8b6",
+                "sample3.strelka.variants.bcftools_stats.txt:md5,2c40e667f6ee75761fe6c3b33dda0679",
+                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,0092bfd1833160732c4e3180a2a8d54d",
+                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,91f318ab5e6b017554f8f72866c6a5bd",
                 "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
                 "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
                 "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
@@ -379,7 +379,7 @@
                     "gawk": "5.3.0"
                 },
                 "BCFTOOLS_ISEC": {
-                    "bcftools": 1.22
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_MPILEUP": {
                     "bcftools": "1.23.1"
@@ -613,9 +613,9 @@
                 "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
                 "samtools_insert_size.txt:md5,5cb5779e1a7baf077b529af8c427147c",
-                "sample2.bcftools.bcftools_stats.txt:md5,3299f97352e32c873c95e43922c79147",
-                "sample2.lofreq.bcftools_stats.txt:md5,a8a850fdd11644fa4b770971dfe37194",
-                "sample2.mutect2.bcftools_stats.txt:md5,846b97f3763c5316f2b7e76962d80be9",
+                "sample2.bcftools.bcftools_stats.txt:md5,47ce340432efdbb38a86d8b7c3d0c2d4",
+                "sample2.lofreq.bcftools_stats.txt:md5,064a0729f34ff2b74a1ea619cc47ecb6",
+                "sample2.mutect2.bcftools_stats.txt:md5,be37ecb07e10f0a3ea082e3fab5226fd",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample2.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
@@ -693,7 +693,7 @@
                     "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_ISEC": {
-                    "bcftools": 1.22
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_MPILEUP": {
                     "bcftools": "1.23.1"
@@ -992,11 +992,11 @@
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
                 "samtools_insert_size.txt:md5,8fa108dcbe0da42e9425dd125fe22905",
-                "sample3.bcftools.bcftools_stats.txt:md5,bd86ded3843a217d429b34edd22a9a4e",
-                "sample4_vs_sample3.mutect2.filtered.bcftools_stats.txt:md5,91e802a68f9d8da14bb3dcf784f0810d",
-                "sample3.strelka.variants.bcftools_stats.txt:md5,6d4d032ba146941cb226765aaed9d67f",
-                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,62c6123f6494c3cdbd42dc7230e757b3",
-                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,8404ea88658fbc41d447ba20bf46dd0a",
+                "sample3.bcftools.bcftools_stats.txt:md5,bb4018e2ec62ab957867c4f55ce626b8",
+                "sample4_vs_sample3.mutect2.filtered.bcftools_stats.txt:md5,ef2f52e9bd9793547bb43a3828f8304c",
+                "sample3.strelka.variants.bcftools_stats.txt:md5,2c40e667f6ee75761fe6c3b33dda0679",
+                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,0092bfd1833160732c4e3180a2a8d54d",
+                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,91f318ab5e6b017554f8f72866c6a5bd",
                 "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
                 "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
                 "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",

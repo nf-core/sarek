@@ -16,7 +16,7 @@
                     "gawk": "5.3.0"
                 },
                 "FILTER_VCFS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.23.1"
                 },
                 "FREEBAYES": {
                     "freebayes": "1.3.10"
@@ -275,10 +275,10 @@
                 "samtools-stats-dp.txt:md5,a0c101497a0566f60b9e8388207944ab",
                 "samtools_alignment_plot.txt:md5,563784066de81f3bc8ccf5fbbe82b3d5",
                 "samtools_insert_size.txt:md5,f3dd80e14876d827eb924c6cc888c782",
-                "testN.freebayes.filtered.bcftools_stats.txt:md5,96c5e6b9e55f1bb67fca7886fb322b67",
-                "testT.freebayes.filtered.bcftools_stats.txt:md5,ce8b7afaace836b6a00bd8ccdc980500",
-                "testN.strelka.variants.bcftools_stats.txt:md5,f11c9e5e9820868809b5465970c7cc06",
-                "testT.strelka.variants.bcftools_stats.txt:md5,ac070b6cf4de7540a227265971244b31",
+                "testN.freebayes.filtered.bcftools_stats.txt:md5,2429f8a81b14bcc4ac07fccd75c2f837",
+                "testT.freebayes.filtered.bcftools_stats.txt:md5,a5beebaf9e38ab8e3e9c332c46dd9ae1",
+                "testN.strelka.variants.bcftools_stats.txt:md5,fcc53db2f8001b3a68673a9e0802e06c",
+                "testT.strelka.variants.bcftools_stats.txt:md5,d8dd5a46552458e72ea9963e948a377c",
                 "testN.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "testN.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "testN.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
@@ -592,10 +592,10 @@
                 "samtools-stats-dp.txt:md5,a0c101497a0566f60b9e8388207944ab",
                 "samtools_alignment_plot.txt:md5,563784066de81f3bc8ccf5fbbe82b3d5",
                 "samtools_insert_size.txt:md5,f3dd80e14876d827eb924c6cc888c782",
-                "testN.freebayes.filtered.bcftools_stats.txt:md5,96c5e6b9e55f1bb67fca7886fb322b67",
-                "testT.freebayes.filtered.bcftools_stats.txt:md5,ce8b7afaace836b6a00bd8ccdc980500",
-                "testN.strelka.variants.bcftools_stats.txt:md5,f11c9e5e9820868809b5465970c7cc06",
-                "testT.strelka.variants.bcftools_stats.txt:md5,ac070b6cf4de7540a227265971244b31",
+                "testN.freebayes.filtered.bcftools_stats.txt:md5,2429f8a81b14bcc4ac07fccd75c2f837",
+                "testT.freebayes.filtered.bcftools_stats.txt:md5,a5beebaf9e38ab8e3e9c332c46dd9ae1",
+                "testN.strelka.variants.bcftools_stats.txt:md5,fcc53db2f8001b3a68673a9e0802e06c",
+                "testT.strelka.variants.bcftools_stats.txt:md5,d8dd5a46552458e72ea9963e948a377c",
                 "testN.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "testN.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "testN.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
@@ -633,7 +633,7 @@
                 "testN.freebayes.filtered.norm.sorted.vcf.gz:md5,18992a755b06d72374bb072cc8af86f9",
                 "testN.strelka.variants.norm.sorted.vcf.gz:md5,ba9aabddec39a8bcbdb38c46f7a26515",
                 "testT.freebayes.filtered.norm.sorted.vcf.gz:md5,574d3d9e73986d07839d5e720c3ea929",
-                "testT.strelka.variants.norm.sorted.vcf.gz:md5,2dd9f7f6dac9c10afcf01f148a486799",
+                "testT.strelka.variants.norm.sorted.vcf.gz:md5,3c0fb37b3523c7f7555e7cc139a1adb1",
                 "testN.strelka.genome.vcf.gz:md5,325ea84ccf1ec1cf7a6c5c4aae1c0d1",
                 "testN.strelka.variants.vcf.gz:md5,3a3b3e67614ec91f4f0b88999dff454b",
                 "testT.strelka.genome.vcf.gz:md5,ece653410947a3ace10296c2cc5ff095",
