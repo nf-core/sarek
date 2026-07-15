@@ -15,6 +15,9 @@
                 "CONCAT_CALLED_CHUNKS": {
                     "bcftools": "1.23.1"
                 },
+                "CONCAT_SOMATIC_STRELKA": {
+                    "bcftools": "1.23.1"
+                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },

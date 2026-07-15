@@ -3,6 +3,9 @@
         "content": [
             26,
             {
+                "BCFTOOLS_SORT": {
+                    "bcftools": "1.23.1"
+                },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
                 },
@@ -249,6 +252,9 @@
         "content": [
             18,
             {
+                "BCFTOOLS_SORT": {
+                    "bcftools": "1.23.1"
+                },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
                 },

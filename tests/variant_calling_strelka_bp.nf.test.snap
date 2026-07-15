@@ -222,7 +222,7 @@
                 "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,7d7b08cfb7b97ef4949d909d3ed04e88",
                 "sample3.strelka.variants.bcftools_stats.txt:md5,9a87ae32f97121c0e033043cd6605f67",
                 "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,0092bfd1833160732c4e3180a2a8d54d",
-                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,eec9d410eb24068b9a67be417c41d54e",
+                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,3cc8ac7236cc77f857f6e56a3efa27f5",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",

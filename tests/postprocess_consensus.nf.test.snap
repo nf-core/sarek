@@ -1038,11 +1038,11 @@
                 ],
                 [
                     "sample3.consensus.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=70, phased=true, phasedAutodetect=true]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=71, phased=true, phasedAutodetect=true]"
                 ],
                 [
                     "0001.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=70, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=71, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "sample4_vs_sample3.consensus.vcf.gz",
@@ -1062,11 +1062,11 @@
                 ],
                 [
                     "sample3.bcftools.norm.sorted.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=123, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=124, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "sample3.strelka.variants.norm.sorted.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=52656, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=53245, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "sample4_vs_sample3.mutect2.filtered.norm.sorted.vcf.gz",
