@@ -13,7 +13,8 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
     take:
     cram      // channel: [mandatory] [ meta, cram, crai ]
     dict      // channel: [mandatory] [ meta, dict ]
-    fasta     // channel: [mandatory] [ fasta ]
+    fasta     // channel: [mandatory] [ meta, fasta ]
+    fai       // channel: [mandatory] [ meta, fasta_fai ]
     intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
@@ -24,9 +25,14 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
         .combine(intervals)
         .map { meta, cram_, _crai, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], cram_, intervals_] }
 
+    // per-chunk bed restricts mpileup only; intervals_call left empty
+    cram_intervals_bcftools = cram_intervals.map { meta, cram_, intervals_ -> [meta, cram_, intervals_, []] }
+
+    fasta_fai = fasta.combine(fai).map { meta, fasta_, _meta2, fai_ -> [meta, fasta_, fai_] }.collect()
+
     // Run, if --tools mpileup
     keep_bcftools_mpileup = false
-    BCFTOOLS_MPILEUP(cram_intervals, fasta, keep_bcftools_mpileup)
+    BCFTOOLS_MPILEUP(cram_intervals_bcftools, fasta_fai, keep_bcftools_mpileup)
 
     //Only run, if --tools ControlFreec
     SAMTOOLS_MPILEUP(cram_intervals, fasta)
@@ -38,7 +44,7 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
     }
 
     // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_mpileup = BCFTOOLS_MPILEUP.out.tbi.branch {
+    tbi_mpileup = BCFTOOLS_MPILEUP.out.index.branch {
         intervals: it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
     }
@@ -69,9 +75,7 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
         .map { meta, tbi -> [meta - meta.subMap('num_intervals') + [variantcaller: 'bcftools'], tbi] }
 
     versions = versions.mix(SAMTOOLS_MPILEUP.out.versions)
-    versions = versions.mix(BCFTOOLS_MPILEUP.out.versions)
     versions = versions.mix(CAT_MPILEUP.out.versions)
-    versions = versions.mix(MERGE_BCFTOOLS_MPILEUP.out.versions)
 
     emit:
     mpileup

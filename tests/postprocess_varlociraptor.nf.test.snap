@@ -1,19 +1,22 @@
 {
     "-profile test --tools strelka,varlociraptor --input recalibrated_somatic.csv": {
         "content": [
-            151,
+            153,
             {
                 "ALIGNMENTPROPERTIES_NORMAL": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "ALIGNMENTPROPERTIES_TUMOR": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CONCAT_CALLED_CHUNKS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
+                },
+                "CONCAT_SOMATIC_STRELKA": {
+                    "bcftools": "1.23.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -25,28 +28,28 @@
                     "gatk4": "4.6.1.0"
                 },
                 "MERGE_GERMLINE_SOMATIC_VCFS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.23.1"
                 },
                 "MERGE_STRELKA": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MERGE_STRELKA_GENOME": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MERGE_STRELKA_INDELS": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MERGE_STRELKA_SNVS": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
                 "PREPROCESS_NORMAL": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "PREPROCESS_TUMOR": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "RBT_VCFSPLIT": {
                     "rbt": "0.42.2"
@@ -55,10 +58,10 @@
                     "samtools": 1.21
                 },
                 "SORT_CALLED_CHUNKS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "SORT_FINAL_VCF": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -81,13 +84,16 @@
                     "tabix": 1.21
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
+                },
+                "VARLOCIRAPTOR_FILTERFDR": {
+                    "varlociraptor": "8.9.5"
                 },
                 "VARLOCIRAPTOR_PREPROCESS": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -123,6 +129,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -142,6 +149,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -160,6 +168,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -178,6 +187,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -263,9 +273,10 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
-                "sample3.strelka.variants.bcftools_stats.txt:md5,6d4d032ba146941cb226765aaed9d67f",
-                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,62c6123f6494c3cdbd42dc7230e757b3",
-                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,8404ea88658fbc41d447ba20bf46dd0a",
+                "samtools_insert_size.txt:md5,8fa108dcbe0da42e9425dd125fe22905",
+                "sample3.strelka.variants.bcftools_stats.txt:md5,2c40e667f6ee75761fe6c3b33dda0679",
+                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,0092bfd1833160732c4e3180a2a8d54d",
+                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,91f318ab5e6b017554f8f72866c6a5bd",
                 "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
                 "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
                 "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
@@ -300,8 +311,8 @@
                 "sample4_vs_sample3.strelka.merged.vcf.gz:md5,ecbb04bc2a4f802cac75f232d263ebe8"
             ],
             [
-                "sample3.strelka.germline.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=53245, phased=true, phasedAutodetect=false]",
-                "sample4_vs_sample3.strelka.somatic.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=54634, phased=true, phasedAutodetect=false]"
+                "sample3.strelka.germline.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=65, phased=true, phasedAutodetect=false]",
+                "sample4_vs_sample3.strelka.somatic.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=122, phased=true, phasedAutodetect=false]"
             ],
             "No warnings"
         ],
@@ -309,20 +320,20 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2025-11-02T16:48:49.54626"
+        "timestamp": "2026-06-12T14:56:17.705455093"
     },
     "-profile test --tools mutect2,varlociraptor --input recalibrated_tumoronly.csv": {
         "content": [
-            72,
+            73,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CALCULATECONTAMINATION": {
                     "gatk4": "4.6.1.0"
                 },
                 "CONCAT_CALLED_CHUNKS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -349,7 +360,7 @@
                     "gatk4": "4.6.1.0"
                 },
                 "MERGE_MUTECT2": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -364,10 +375,10 @@
                     "samtools": 1.21
                 },
                 "SORT_CALLED_CHUNKS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "SORT_FINAL_VCF": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -378,13 +389,16 @@
                     "tabix": "1.21"
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
+                },
+                "VARLOCIRAPTOR_FILTERFDR": {
+                    "varlociraptor": "8.9.5"
                 },
                 "VARLOCIRAPTOR_PREPROCESS": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -420,6 +434,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -439,6 +454,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/png",
                 "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
@@ -456,6 +472,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/svg",
                 "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
@@ -473,6 +490,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
@@ -529,7 +547,8 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
-                "sample2.mutect2.filtered.bcftools_stats.txt:md5,5327cede1f3ad2139945607f66264928",
+                "samtools_insert_size.txt:md5,5cb5779e1a7baf077b529af8c427147c",
+                "sample2.mutect2.filtered.bcftools_stats.txt:md5,30c32a41d08f8ae7227521beae37dc62",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample2.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
@@ -553,7 +572,7 @@
                 "sample2.mutect2.vcf.gz:md5,a53450657afc33f2a7b87fd75bf24267"
             ],
             [
-                "sample2.mutect2.tumor_only.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=1258, phased=true, phasedAutodetect=false]"
+                "sample2.mutect2.tumor_only.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[], sampleCount=2, variantCount=0, phased=true, phasedAutodetect=true]"
             ],
             "No warnings"
         ],
@@ -561,17 +580,17 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2025-11-04T11:46:27.501146"
+        "timestamp": "2026-06-12T15:01:23.802458652"
     },
     "-profile test --tools strelka,varlociraptor --input recalibrated_germline.csv": {
         "content": [
-            67,
+            68,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CONCAT_CALLED_CHUNKS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -583,10 +602,10 @@
                     "gatk4": "4.6.1.0"
                 },
                 "MERGE_STRELKA": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MERGE_STRELKA_GENOME": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -598,10 +617,10 @@
                     "samtools": 1.21
                 },
                 "SORT_CALLED_CHUNKS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "SORT_FINAL_VCF": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -618,13 +637,16 @@
                     "tabix": 1.21
                 },
                 "VARLOCIRAPTOR_CALLVARIANTS": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
+                },
+                "VARLOCIRAPTOR_FILTERFDR": {
+                    "varlociraptor": "8.9.5"
                 },
                 "VARLOCIRAPTOR_PREPROCESS": {
-                    "varlociraptor": "8.9.3"
+                    "varlociraptor": "8.9.5"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -659,6 +681,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -677,6 +700,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -694,6 +718,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -711,6 +736,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -762,7 +788,8 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,41d36c1a8413d565788a1a364b467606",
                 "samtools_alignment_plot.txt:md5,35f8fd2a557568b2237193f46afbab5c",
-                "sample1.strelka.variants.bcftools_stats.txt:md5,7d091579d450a6f6d6e6ed9795dce0cb",
+                "samtools_insert_size.txt:md5,be7a60f43f0ca5238674cbf0f9d48917",
+                "sample1.strelka.variants.bcftools_stats.txt:md5,bcb50cfcfefdce0d203aff1d054d9f24",
                 "sample1.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
                 "sample1.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
                 "sample1.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
@@ -781,7 +808,7 @@
                 "sample1.strelka.variants.vcf.gz:md5,5af34e7b632f604dc7a224f977fc2898"
             ],
             [
-                "sample1.strelka.germline.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=53245, phased=true, phasedAutodetect=false]"
+                "sample1.strelka.germline.varlociraptor.vcf.gz:summary,VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=65, phased=true, phasedAutodetect=false]"
             ],
             "No warnings"
         ],
@@ -789,6 +816,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2025-11-01T23:04:58.277878"
+        "timestamp": "2026-06-12T14:45:50.699233572"
     }
 }

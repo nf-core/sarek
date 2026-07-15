@@ -4,9 +4,9 @@ process SENTIEON_DEDUP {
     label 'sentieon'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/0f/0f1dfe59ef66d7326b43db9ab1f39ce6220b358a311078c949a208f9c9815d4e/data'
-        : 'community.wave.seqera.io/library/sentieon:202503.01--1863def31ed8e4d5'}"
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/73/73e9111552beb76e2ad3ad89eb75bed162d7c5b85b2433723ecb4fc96a02674a/data'
+        : 'community.wave.seqera.io/library/sentieon:202503.02--def60555294d04fa'}"
 
     input:
     tuple val(meta), path(bam), path(bai)
@@ -21,7 +21,7 @@ process SENTIEON_DEDUP {
     tuple val(meta), path("*.score"),               emit: score
     tuple val(meta), path("*.metrics"),             emit: metrics
     tuple val(meta), path("*.metrics.multiqc.tsv"), emit: metrics_multiqc_tsv
-    path "versions.yml",                            emit: versions
+    tuple val("${task.process}"), val('sentieon'), eval('sentieon driver --version | sed "s/.*-//g"'), topic: versions, emit: versions_sentieon
 
     when:
     task.ext.when == null || task.ext.when
@@ -32,8 +32,8 @@ process SENTIEON_DEDUP {
     def args3 = task.ext.args3 ?: ''
     def args4 = task.ext.args4 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}.cram"
-    def metrics = task.ext.metrics ?: "${prefix}.metrics"
-    def input_list = bam.collect { "-i ${it}" }.join(' ')
+    def metrics = "${prefix}.metrics"
+    def input_list = bam.collect {input -> "-i ${input}" }.join(' ')
     def prefix_basename = prefix.substring(0, prefix.lastIndexOf("."))
     def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64
         ? "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; "
@@ -47,16 +47,11 @@ process SENTIEON_DEDUP {
     # This following tsv-file is produced in order to get a proper tsv-file with Dedup-metrics for importing in MultiQC as "custom content".
     # It should be removed once MultiQC has a module for displaying Dedup-metrics.
     head -3 ${metrics} > ${metrics}.multiqc.tsv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
-    END_VERSIONS
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}.cram"
-    def metrics = task.ext.metrics ?: "${prefix}.metrics"
+    def metrics = "${prefix}.metrics"
     def prefix_basename = prefix.substring(0, prefix.lastIndexOf("."))
 
     """
@@ -66,10 +61,5 @@ process SENTIEON_DEDUP {
     touch "${metrics}"
     touch "${metrics}.multiqc.tsv"
     touch "${prefix_basename}.score"
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
-    END_VERSIONS
     """
 }

@@ -2,7 +2,6 @@ nextflow_pipeline {
 
     name "Test sentieon"
     script "../main.nf"
-    tag "sentieon"
 
     def test_scenario = [
         [
@@ -11,7 +10,8 @@ nextflow_pipeline {
                 aligner: "sentieon-bwamem",
                 tools: ''
             ],
-            stub: true
+            stub: true,
+            sentieon: true
         ]
     ]
 

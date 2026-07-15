@@ -95,6 +95,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             cram_normal,
             dict,
             fasta,
+            fasta_fai,
             intervals,
         )
 
@@ -102,6 +103,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             cram_tumor,
             dict,
             fasta,
+            fasta_fai,
             intervals,
         )
 
@@ -122,7 +124,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         versions = versions.mix(MPILEUP_NORMAL.out.versions)
         versions = versions.mix(MPILEUP_TUMOR.out.versions)
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC.out.versions)
     }
 
     // CNVKIT

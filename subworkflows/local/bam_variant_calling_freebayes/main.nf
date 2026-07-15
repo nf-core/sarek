@@ -64,9 +64,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     // Index the filtered VCFs
     TABIX_VC_FREEBAYES_FILT(vcf_filtered)
 
-    versions = versions.mix(BCFTOOLS_SORT.out.versions)
     versions = versions.mix(FREEBAYES.out.versions)
-    versions = versions.mix(MERGE_FREEBAYES.out.versions)
     versions = versions.mix(TABIX_VC_FREEBAYES.out.versions)
     versions = versions.mix(TABIX_VC_FREEBAYES_FILT.out.versions)
     versions = versions.mix(VCFLIB_VCFFILTER.out.versions)

@@ -46,8 +46,6 @@ workflow FASTQ_ALIGN {
     versions = versions.mix(BWAMEM1_MEM.out.versions)
     versions = versions.mix(BWAMEM2_MEM.out.versions)
     versions = versions.mix(DRAGMAP_ALIGN.out.versions)
-    versions = versions.mix(SENTIEON_BWAMEM.out.versions)
-
     emit:
     bam      // channel: [ [meta], bam ]
     bai      // channel: [ [meta], bai ]

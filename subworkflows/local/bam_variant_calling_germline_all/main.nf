@@ -87,6 +87,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             cram,
             dict,
             fasta,
+            fasta_fai,
             intervals
         )
         vcf_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.vcf
@@ -119,7 +120,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         vcf_deepvariant = BAM_VARIANT_CALLING_DEEPVARIANT.out.vcf
         tbi_deepvariant = BAM_VARIANT_CALLING_DEEPVARIANT.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.versions)
     }
 
     // PARABRICKS DEEPVARIANT
@@ -289,8 +289,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
                 vcf_sentieon_dnascope = SENTIEON_DNAMODELAPPLY.out.vcf
                 tbi_sentieon_dnascope = SENTIEON_DNAMODELAPPLY.out.tbi
-                versions = versions.mix(SENTIEON_DNAMODELAPPLY.out.versions)
-
             }
 
         }

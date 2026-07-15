@@ -7,16 +7,16 @@
                     "gawk": "5.3.0"
                 },
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "FILTER_VCFS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.23.1"
                 },
                 "FREEBAYES": {
                     "freebayes": "1.3.10"
@@ -25,10 +25,10 @@
                     "gatk4": "4.6.1.0"
                 },
                 "GERMLINE_VCFS_CONCAT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "GERMLINE_VCFS_CONCAT_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -61,10 +61,10 @@
                     "vcflib": "1.0.14"
                 },
                 "VCFS_NORM": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "VCFS_NORM_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -100,6 +100,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -119,6 +120,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -137,6 +139,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -155,6 +158,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -270,10 +274,11 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,a0c101497a0566f60b9e8388207944ab",
                 "samtools_alignment_plot.txt:md5,563784066de81f3bc8ccf5fbbe82b3d5",
-                "testN.freebayes.filtered.bcftools_stats.txt:md5,96c5e6b9e55f1bb67fca7886fb322b67",
-                "testT.freebayes.filtered.bcftools_stats.txt:md5,ce8b7afaace836b6a00bd8ccdc980500",
-                "testN.strelka.variants.bcftools_stats.txt:md5,f11c9e5e9820868809b5465970c7cc06",
-                "testT.strelka.variants.bcftools_stats.txt:md5,ac070b6cf4de7540a227265971244b31",
+                "samtools_insert_size.txt:md5,f3dd80e14876d827eb924c6cc888c782",
+                "testN.freebayes.filtered.bcftools_stats.txt:md5,2429f8a81b14bcc4ac07fccd75c2f837",
+                "testT.freebayes.filtered.bcftools_stats.txt:md5,a5beebaf9e38ab8e3e9c332c46dd9ae1",
+                "testN.strelka.variants.bcftools_stats.txt:md5,fcc53db2f8001b3a68673a9e0802e06c",
+                "testT.strelka.variants.bcftools_stats.txt:md5,d8dd5a46552458e72ea9963e948a377c",
                 "testN.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "testN.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "testN.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
@@ -333,10 +338,10 @@
                     "gawk": "5.3.0"
                 },
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -348,10 +353,10 @@
                     "gatk4": "4.6.1.0"
                 },
                 "GERMLINE_VCFS_CONCAT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "GERMLINE_VCFS_CONCAT_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -384,10 +389,10 @@
                     "vcflib": "1.0.14"
                 },
                 "VCFS_NORM": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "VCFS_NORM_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
                     "vcftools": "0.1.16"
@@ -423,6 +428,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -442,6 +448,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -460,6 +467,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -478,6 +486,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -582,10 +591,11 @@
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,a0c101497a0566f60b9e8388207944ab",
                 "samtools_alignment_plot.txt:md5,563784066de81f3bc8ccf5fbbe82b3d5",
-                "testN.freebayes.filtered.bcftools_stats.txt:md5,96c5e6b9e55f1bb67fca7886fb322b67",
-                "testT.freebayes.filtered.bcftools_stats.txt:md5,ce8b7afaace836b6a00bd8ccdc980500",
-                "testN.strelka.variants.bcftools_stats.txt:md5,f11c9e5e9820868809b5465970c7cc06",
-                "testT.strelka.variants.bcftools_stats.txt:md5,ac070b6cf4de7540a227265971244b31",
+                "samtools_insert_size.txt:md5,f3dd80e14876d827eb924c6cc888c782",
+                "testN.freebayes.filtered.bcftools_stats.txt:md5,2429f8a81b14bcc4ac07fccd75c2f837",
+                "testT.freebayes.filtered.bcftools_stats.txt:md5,a5beebaf9e38ab8e3e9c332c46dd9ae1",
+                "testN.strelka.variants.bcftools_stats.txt:md5,fcc53db2f8001b3a68673a9e0802e06c",
+                "testT.strelka.variants.bcftools_stats.txt:md5,d8dd5a46552458e72ea9963e948a377c",
                 "testN.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "testN.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "testN.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
@@ -623,7 +633,7 @@
                 "testN.freebayes.filtered.norm.sorted.vcf.gz:md5,18992a755b06d72374bb072cc8af86f9",
                 "testN.strelka.variants.norm.sorted.vcf.gz:md5,ba9aabddec39a8bcbdb38c46f7a26515",
                 "testT.freebayes.filtered.norm.sorted.vcf.gz:md5,574d3d9e73986d07839d5e720c3ea929",
-                "testT.strelka.variants.norm.sorted.vcf.gz:md5,2dd9f7f6dac9c10afcf01f148a486799",
+                "testT.strelka.variants.norm.sorted.vcf.gz:md5,3c0fb37b3523c7f7555e7cc139a1adb1",
                 "testN.strelka.genome.vcf.gz:md5,325ea84ccf1ec1cf7a6c5c4aae1c0d1",
                 "testN.strelka.variants.vcf.gz:md5,3a3b3e67614ec91f4f0b88999dff454b",
                 "testT.strelka.genome.vcf.gz:md5,ece653410947a3ace10296c2cc5ff095",
