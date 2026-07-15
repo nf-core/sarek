@@ -122,7 +122,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         versions = versions.mix(MPILEUP_NORMAL.out.versions)
         versions = versions.mix(MPILEUP_TUMOR.out.versions)
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC.out.versions)
     }
 
     // CNVKIT

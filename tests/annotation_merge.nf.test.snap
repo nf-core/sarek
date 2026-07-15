@@ -4,9 +4,9 @@
             5,
             {
                 "ENSEMBLVEP_VEP": {
-                    "ensemblvep": "115.2",
+                    "ensemblvep": "116.0",
                     "perl-math-cdf": "0.1",
-                    "tabix": "1.21"
+                    "tabix": "1.23.1"
                 },
                 "SNPEFF_SNPEFF": {
                     "snpeff": "5.4c"
@@ -16,9 +16,9 @@
                     "tabix": "1.21"
                 },
                 "VCF_ANNOTATE_MERGE": {
-                    "ensemblvep": "115.2",
+                    "ensemblvep": "116.0",
                     "perl-math-cdf": "0.1",
-                    "tabix": "1.21"
+                    "tabix": "1.23.1"
                 }
             },
             [
@@ -109,10 +109,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-25T14:50:47.85261627",
+        "timestamp": "2026-07-08T10:14:04.788318141",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
+            "nextflow": "26.04.4"
         }
     },
     "-profile test --tools merge,snpsift": {
@@ -133,9 +133,9 @@
                     "tabix": "1.21"
                 },
                 "VCF_ANNOTATE_MERGE": {
-                    "ensemblvep": "115.2",
+                    "ensemblvep": "116.0",
                     "perl-math-cdf": "0.1",
-                    "tabix": "1.21"
+                    "tabix": "1.23.1"
                 }
             },
             [
@@ -220,10 +220,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-25T14:52:24.459648599",
+        "timestamp": "2026-07-08T10:15:44.567611717",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
+            "nextflow": "26.04.4"
         }
     },
     "-profile test --tools merge": {
@@ -238,9 +238,9 @@
                     "tabix": "1.21"
                 },
                 "VCF_ANNOTATE_MERGE": {
-                    "ensemblvep": "115.2",
+                    "ensemblvep": "116.0",
                     "perl-math-cdf": "0.1",
-                    "tabix": "1.21"
+                    "tabix": "1.23.1"
                 }
             },
             [
@@ -320,10 +320,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-25T14:47:20.388333013",
+        "timestamp": "2026-07-08T10:12:53.660022078",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
+            "nextflow": "26.04.4"
         }
     }
 }

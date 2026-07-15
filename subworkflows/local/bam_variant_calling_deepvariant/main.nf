@@ -18,7 +18,6 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
     intervals     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
-    versions = Channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
@@ -69,14 +68,9 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'deepvariant' ], tbi ] }
 
-    versions = versions.mix(DEEPVARIANT_RUNDEEPVARIANT.out.versions)
-    versions = versions.mix(MERGE_DEEPVARIANT_GVCF.out.versions)
-    versions = versions.mix(MERGE_DEEPVARIANT_VCF.out.versions)
 
     emit:
     gvcf
     vcf
     tbi
-
-    versions
 }

@@ -179,7 +179,7 @@
                 "reports/mosdepth/test/test.recal.regions.bed.gz.csi",
                 "reports/samtools",
                 "reports/samtools/test",
-                "reports/samtools/test/test.recal.cram.stats"
+                "reports/samtools/test/test.recal.bam.stats"
             ],
             [
                 "fastqc-status-check-heatmap.txt:md5,a020b9689ddeb4abec16b4854fe452f1",
