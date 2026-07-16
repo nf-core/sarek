@@ -129,7 +129,7 @@ workflow PREPARE_GENOME {
         }
         else if (bbsplit_fasta_list_in) {
             // Build it from scratch if we have FASTA
-            channel.from(file(bbsplit_fasta_list_in, checkIfExists: true))
+            channel.of(file(bbsplit_fasta_list_in, checkIfExists: true))
                 .splitCsv(header: false, sep: ',')
                 .flatMap { id, fafile -> [['id', id], ['fasta', file(fafile, checkIfExists: true)]] }
                 .groupTuple()
