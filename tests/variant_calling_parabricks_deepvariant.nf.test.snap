@@ -45,6 +45,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
@@ -53,6 +54,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
@@ -60,6 +62,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
@@ -67,6 +70,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
@@ -90,6 +94,7 @@
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
+                "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
@@ -105,7 +110,7 @@
             "nf-test": "0.9.3",
             "nextflow": "26.04.0"
         },
-        "timestamp": "2026-04-29T13:05:12.859481861"
+        "timestamp": "2026-07-16T12:25:02.942316038"
     },
     "-profile test --tools parabricks_deepvariant --input mapped_single_bam.csv --no_intervals": {
         "content": [
@@ -143,6 +148,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
                 "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
@@ -151,6 +157,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
                 "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
@@ -158,6 +165,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
                 "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
@@ -165,6 +173,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
                 "no_intervals.bed.gz",
@@ -191,6 +200,7 @@
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
+                "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
@@ -204,9 +214,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "26.04.0"
         },
-        "timestamp": "2026-04-29T13:49:15.305614305"
+        "timestamp": "2026-07-16T12:25:51.237111005"
     },
     "-profile test --tools parabricks_deepvariant --input mapped_single_bam.csv --no_intervals -stub": {
         "content": [
