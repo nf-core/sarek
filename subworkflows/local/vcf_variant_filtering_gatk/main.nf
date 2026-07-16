@@ -14,7 +14,7 @@ workflow VCF_VARIANT_FILTERING_GATK {
 
     main:
 
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Don't scatter/gather by intervals, because especially for small regions (targeted or WGS), it easily fails with 0 SNPS in region
     cnn_in = vcf.combine(intervals_bed_combined).map{ meta, vcf_, tbi, intervals -> [ meta, vcf_, tbi, [], intervals ] }

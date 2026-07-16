@@ -18,8 +18,8 @@ workflow BAM_MARKDUPLICATES_SPARK {
     intervals_bed_combined        // channel: [optional]  intervals_bed
 
     main:
-    versions = Channel.empty()
-    reports = Channel.empty()
+    versions = channel.empty()
+    reports = channel.empty()
 
     // RUN MARKUPDUPLICATES SPARK
     GATK4SPARK_MARKDUPLICATES(bam, fasta.map{ meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ meta, fasta_fai_ -> [ fasta_fai_ ] }, dict.map{ meta, dict_ -> [ dict_ ] })

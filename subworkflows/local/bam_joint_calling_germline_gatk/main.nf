@@ -31,7 +31,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     known_snps_vqsr
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Map input for GenomicsDBImport
     // Rename based on num_intervals, group all samples by their interval_name/interval_file and restructure for channel

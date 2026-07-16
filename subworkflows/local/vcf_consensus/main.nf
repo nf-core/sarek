@@ -12,7 +12,7 @@ workflow CONSENSUS {
     vcfs     // [meta, vcf ,tbi]
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     ch_vcfs = vcfs
         .branch{ meta, vcf, tbi ->

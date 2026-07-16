@@ -52,31 +52,31 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     sentieon_dnascope_model           // channel: [mandatory] value channel with string
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    gvcf_sentieon_dnascope   = Channel.empty()
-    gvcf_sentieon_haplotyper = Channel.empty()
+    gvcf_sentieon_dnascope   = channel.empty()
+    gvcf_sentieon_haplotyper = channel.empty()
 
-    out_indexcov             = Channel.empty()
-    vcf_deepvariant          = Channel.empty()
-    vcf_freebayes            = Channel.empty()
-    vcf_haplotypecaller      = Channel.empty()
-    vcf_manta                = Channel.empty()
-    vcf_mpileup              = Channel.empty()
-    vcf_sentieon_dnascope    = Channel.empty()
-    vcf_sentieon_haplotyper  = Channel.empty()
-    vcf_strelka              = Channel.empty()
-    vcf_tiddit               = Channel.empty()
-    tbi_deepvariant          = Channel.empty()
-    tbi_freebayes            = Channel.empty()
-    tbi_haplotypecaller      = Channel.empty()
-    tbi_manta                = Channel.empty()
-    tbi_mpileup              = Channel.empty()
-    tbi_sentieon_dnascope    = Channel.empty()
-    tbi_sentieon_haplotyper  = Channel.empty()
-    tbi_strelka              = Channel.empty()
-    tbi_tiddit               = Channel.empty()
+    out_indexcov             = channel.empty()
+    vcf_deepvariant          = channel.empty()
+    vcf_freebayes            = channel.empty()
+    vcf_haplotypecaller      = channel.empty()
+    vcf_manta                = channel.empty()
+    vcf_mpileup              = channel.empty()
+    vcf_sentieon_dnascope    = channel.empty()
+    vcf_sentieon_haplotyper  = channel.empty()
+    vcf_strelka              = channel.empty()
+    vcf_tiddit               = channel.empty()
+    tbi_deepvariant          = channel.empty()
+    tbi_freebayes            = channel.empty()
+    tbi_haplotypecaller      = channel.empty()
+    tbi_manta                = channel.empty()
+    tbi_mpileup              = channel.empty()
+    tbi_sentieon_dnascope    = channel.empty()
+    tbi_sentieon_haplotyper  = channel.empty()
+    tbi_strelka              = channel.empty()
+    tbi_tiddit               = channel.empty()
 
     // BCFTOOLS MPILEUP
     if (tools && tools.split(',').contains('mpileup')) {
@@ -372,7 +372,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
     }
 
-    vcf_all = Channel.empty().mix(
+    vcf_all = channel.empty().mix(
         vcf_deepvariant,
         vcf_freebayes,
         vcf_sentieon_dnascope,
@@ -384,7 +384,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         vcf_tiddit
     )
 
-    tbi_all = Channel.empty().mix(
+    tbi_all = channel.empty().mix(
         tbi_deepvariant,
         tbi_freebayes,
         tbi_sentieon_dnascope,

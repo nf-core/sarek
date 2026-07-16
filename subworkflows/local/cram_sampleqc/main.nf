@@ -11,8 +11,8 @@ workflow CRAM_SAMPLEQC {
 
     main:
 
-    versions = Channel.empty()
-    reports = Channel.empty()
+    versions = channel.empty()
+    reports = channel.empty()
 
     if (!skip_baserecalibration) {
 

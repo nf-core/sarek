@@ -15,8 +15,8 @@ workflow BAM_MARKDUPLICATES {
     intervals_bed_combined // channel: [optional]  [ intervals_bed ]
 
     main:
-    versions = Channel.empty()
-    reports  = Channel.empty()
+    versions = channel.empty()
+    reports  = channel.empty()
 
     // RUN MARKUPDUPLICATES
     // --CREATE_INDEX true is set via ext.args when --save_output_as_bam, so the

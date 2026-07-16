@@ -30,7 +30,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     variant_caller
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     sentieon_input = input
         .map{ meta, gvcf, tbi, intervals -> [ [ id:'joint_variant_calling', intervals_name:intervals.baseName, num_intervals:meta.num_intervals ], gvcf, tbi, intervals ] }
