@@ -4,7 +4,7 @@
             12,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -164,7 +164,7 @@
                 "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
-                "test.parabricks_haplotypecaller.bcftools_stats.txt:md5,9192e24c4af16d6b87426a78bac4b45e",
+                "test.parabricks_haplotypecaller.bcftools_stats.txt:md5,b4f8cb62900cbf17e8ecda9d66efee58",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
@@ -184,7 +184,7 @@
             "nf-test": "0.9.3",
             "nextflow": "26.04.0"
         },
-        "timestamp": "2026-07-16T11:38:29.388864669"
+        "timestamp": "2026-07-16T12:36:40.194731454"
     },
     "-profile test --tools parabricks_haplotypecaller --no_intervals -stub": {
         "content": [
