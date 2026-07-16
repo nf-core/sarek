@@ -5,7 +5,7 @@ process PARABRICKS_HAPLOTYPECALLER {
     // needed by the module to work properly can be removed when fixed upstream - see: https://github.com/nf-core/modules/issues/7226
     stageInMode 'copy'
 
-    container "nvcr.io/nvidia/clara/clara-parabricks:4.6.0-1"
+    container "nvcr.io/nvidia/clara/clara-parabricks:4.7.0-1"
 
     input:
     tuple val(meta), path(input), path(input_index), path(intervals)
@@ -23,7 +23,7 @@ process PARABRICKS_HAPLOTYPECALLER {
     script:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error("Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
+        exit(1, "Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
     def args   = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
