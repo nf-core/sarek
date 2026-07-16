@@ -13,7 +13,7 @@
                     "mosdepth": "0.3.10"
                 },
                 "PARABRICKS_HAPLOTYPECALLER": {
-                    "parabricks": "4.6.0-1"
+                    "parabricks": "4.7.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
@@ -184,20 +184,20 @@
             "nf-test": "0.9.3",
             "nextflow": "26.04.0"
         },
-        "timestamp": "2026-07-16T12:36:40.194731454"
+        "timestamp": "2026-07-16T13:40:46.225702528"
     },
     "-profile test --tools parabricks_haplotypecaller --no_intervals -stub": {
         "content": [
             10,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
                 "PARABRICKS_HAPLOTYPECALLER": {
-                    "parabricks": "4.6.0-1"
+                    "parabricks": "4.7.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
@@ -329,6 +329,6 @@
             "nf-test": "0.9.3",
             "nextflow": "26.04.0"
         },
-        "timestamp": "2026-07-15T11:11:29.363523191"
+        "timestamp": "2026-07-16T13:38:52.902603029"
     }
 }
