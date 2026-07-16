@@ -18,7 +18,7 @@ workflow BAM_BASERECALIBRATOR_SPARK {
     known_sites_tbi // channel: [optional]  [ known_sites_tbi ]
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)

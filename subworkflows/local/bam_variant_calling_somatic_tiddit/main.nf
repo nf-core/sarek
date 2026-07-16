@@ -17,7 +17,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_TIDDIT {
 
     main:
 
-    versions = Channel.empty()
+    versions = channel.empty()
 
     TIDDIT_NORMAL(cram_normal, fasta, bwa)
     TIDDIT_TUMOR(cram_tumor, fasta, bwa)

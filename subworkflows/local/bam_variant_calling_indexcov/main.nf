@@ -15,7 +15,7 @@ workflow BAM_VARIANT_CALLING_INDEXCOV {
     fasta_fai     // channel: [mandatory] [ meta, fasta_fai ]
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // generate a cleaner bam index without duplicate, supplementary, etc. (Small workload because the bam itself is not re-generated)
     reindex_ch = SAMTOOLS_REINDEX_BAM(

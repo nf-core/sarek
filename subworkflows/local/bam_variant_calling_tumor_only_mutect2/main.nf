@@ -27,10 +27,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     joint_mutect2         // boolean: [mandatory] [default: false] run mutect2 in joint mode
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // If no germline resource is provided, then create an empty channel to avoid GetPileupsummaries from being run
-    // Handle Channel.value([]) input from prepare_genome by converting to proper empty channel
+    // Handle channel.value([]) input from prepare_genome by converting to proper empty channel
     germline_resource_pileup = germline_resource.filter { it != [] }
     germline_resource_pileup_tbi = germline_resource_tbi.filter { it != [] }
 
@@ -91,10 +91,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
 
     // Mix intervals and no_intervals channels together
     // Remove unnecessary metadata
-    vcf = Channel.empty().mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals).map { meta, vcf -> [meta - meta.subMap('num_intervals'), vcf] }
-    tbi = Channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals).map { meta, tbi -> [meta - meta.subMap('num_intervals'), tbi] }
-    stats = Channel.empty().mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals).map { meta, stats -> [meta - meta.subMap('num_intervals'), stats] }
-    f1r2 = Channel.empty().mix(f1r2_to_merge, f1r2_branch.no_intervals).map { meta, f1r2 -> [meta - meta.subMap('num_intervals'), f1r2] }
+    vcf = channel.empty().mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals).map { meta, vcf -> [meta - meta.subMap('num_intervals'), vcf] }
+    tbi = channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals).map { meta, tbi -> [meta - meta.subMap('num_intervals'), tbi] }
+    stats = channel.empty().mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals).map { meta, stats -> [meta - meta.subMap('num_intervals'), stats] }
+    f1r2 = channel.empty().mix(f1r2_to_merge, f1r2_branch.no_intervals).map { meta, f1r2 -> [meta - meta.subMap('num_intervals'), f1r2] }
 
     // Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2
     LEARNREADORIENTATIONMODEL(f1r2)
@@ -116,14 +116,14 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     GATHERPILEUPSUMMARIES(pileup_table_to_merge, dict.map { _meta, dict_ -> [dict_] })
 
     // Mix intervals and no_intervals channels together
-    pileup_table = Channel.empty().mix(GATHERPILEUPSUMMARIES.out.table, pileup_table_branch.no_intervals).map { meta, table -> [meta - meta.subMap('num_intervals') + [id: meta.sample], table] }
+    pileup_table = channel.empty().mix(GATHERPILEUPSUMMARIES.out.table, pileup_table_branch.no_intervals).map { meta, table -> [meta - meta.subMap('num_intervals') + [id: meta.sample], table] }
 
     // Contamination and segmentation tables created using calculatecontamination on the pileup summary table
     CALCULATECONTAMINATION(pileup_table.map { meta, table -> [meta, table, []] })
 
     // Initialize empty channel: Contamination calculation is run on pileup table, pileup is not run if germline resource is not provided
-    calculatecontamination_out_seg = Channel.empty()
-    calculatecontamination_out_cont = Channel.empty()
+    calculatecontamination_out_seg = channel.empty()
+    calculatecontamination_out_cont = channel.empty()
 
     if (joint_mutect2) {
         // Group tables by samples
