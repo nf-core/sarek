@@ -50,7 +50,6 @@ workflow POST_VARIANTCALLING {
 
         vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.vcf)
         tbis = tbis.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.tbi)
-        versions = versions.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.versions)
 
         // SOMATIC
         VCF_VARLOCIRAPTOR_SOMATIC(cram_somatic, fasta, fai, varlociraptor_scenario_somatic, somatic_vcfs, germline_vcfs, varlociraptor_chunk_size, varlociraptor_events_somatic, varlociraptor_fdr)
@@ -64,7 +63,6 @@ workflow POST_VARIANTCALLING {
 
         vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.vcf)
         tbis = tbis.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.tbi)
-        versions = versions.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.versions)
 
     } else if (filter_vcfs || normalize_vcfs || concatenate_vcfs ) {
 
@@ -118,8 +116,7 @@ workflow POST_VARIANTCALLING {
             FILTER_VCFS( small_variant_vcfs.join(small_variant_tbis, failOnDuplicate: true, failOnMismatch: true), [], [], [])
 
             small_variant_vcfs = FILTER_VCFS.out.vcf
-            small_variant_tbis = FILTER_VCFS.out.tbi
-            versions = versions.mix(FILTER_VCFS.out.versions)
+            small_variant_tbis = FILTER_VCFS.out.index
         }
 
         if (normalize_vcfs) {

@@ -4,7 +4,7 @@
             17,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": 1.21
@@ -178,7 +178,7 @@
             18,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": 1.21
@@ -328,7 +328,7 @@
                 "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
                 "samtools_insert_size.txt:md5,8fa108dcbe0da42e9425dd125fe22905",
-                "sample4_vs_sample3.muse.bcftools_stats.txt:md5,09a0d72425a3638cbe8f1cbd254e66f3",
+                "sample4_vs_sample3.muse.bcftools_stats.txt:md5,78caff99ab648b7191fd74954713aef9",
                 "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
                 "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
                 "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",

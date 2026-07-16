@@ -289,7 +289,7 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.bbsplit_index,
         PREPARE_GENOME.out.bcftools_annotations,
         PREPARE_GENOME.out.bcftools_annotations_tbi,
-        params.bcftools_columns ? channel.fromPath(params.bcftools_columns).collect() : channel.value([]),
+        params.bcftools_columns ? channel.fromPath(params.bcftools_columns).collect() : channel.value([[]]),
         params.bcftools_header_lines ? channel.fromPath(params.bcftools_header_lines).collect() : channel.empty(),
         params.cf_chrom_len ? channel.fromPath(params.cf_chrom_len).collect() : [],
         PREPARE_GENOME.out.chr_dir,

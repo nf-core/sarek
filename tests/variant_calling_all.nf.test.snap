@@ -4,13 +4,13 @@
             97,
             {
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.18-r1243-dirty"
@@ -524,15 +524,15 @@
                 "samtools-stats-dp.txt:md5,13dab249f7bef935dfef234299550db8",
                 "samtools_alignment_plot.txt:md5,44149e0c5cc4bfa58242824b300219a2",
                 "samtools_insert_size.txt:md5,c4b5c78eeb30a8c926d1bd9506882516",
-                "test.bcftools.bcftools_stats.txt:md5,4b2997064fb500f090639edca1ccaa6e",
-                "test.deepvariant.bcftools_stats.txt:md5,61ab450ed778088b9c879b8dcbbb9db8",
-                "test.freebayes.filtered.bcftools_stats.txt:md5,dde124ceaf6f109cd274b837b950096b",
-                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,189bc07d38c2a9ae34b141cff402bda6",
-                "test.strelka.variants.bcftools_stats.txt:md5,2613827870dd789fe602a8a3b739b7f2",
-                "test2_vs_test.strelka.somatic_indels.bcftools_stats.txt:md5,5e8f9a8fdbc765ced736d0c8c7dd3a52",
-                "test2_vs_test.strelka.somatic_snvs.bcftools_stats.txt:md5,edb7763fad7b6f825e47e01ffa70adbc",
-                "test.tiddit.bcftools_stats.txt:md5,2b96446a75e1ec5d5f1310a934c0dd4c",
-                "test2_vs_test.tiddit_sv_merge.bcftools_stats.txt:md5,a6c45b2a2b7d8844e5536deee5c77af5",
+                "test.bcftools.bcftools_stats.txt:md5,9213504c6b04c6c3cdf308ad3e8b4c3a",
+                "test.deepvariant.bcftools_stats.txt:md5,67f779dde7f1c6b6ca5cf48f8c24ba02",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,5b0bc956256ff340d4f7409769fa9924",
+                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,47f9e44efca5ebdc059866e6bfbb0564",
+                "test.strelka.variants.bcftools_stats.txt:md5,6efa6598982c21c544d1833dca632b62",
+                "test2_vs_test.strelka.somatic_indels.bcftools_stats.txt:md5,b5d3cad82f19dd86895f5b7b38034bd2",
+                "test2_vs_test.strelka.somatic_snvs.bcftools_stats.txt:md5,08b597e1002f482dc549044c500eb60a",
+                "test.tiddit.bcftools_stats.txt:md5,c4cb4e484f95c7dbdaa3d08f0704f7b5",
+                "test2_vs_test.tiddit_sv_merge.bcftools_stats.txt:md5,7c527e6b2eeb8d08c37898a305f32b92",
                 "test.md.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test.md.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test.md.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
@@ -646,13 +646,13 @@
             55,
             {
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.18-r1243-dirty"
@@ -1068,11 +1068,11 @@
                 "samtools-stats-dp.txt:md5,ae7954084b2cd708c5e7369606bf4208",
                 "samtools_alignment_plot.txt:md5,438e719bf574a46726dbd2e0f1442e42",
                 "samtools_insert_size.txt:md5,73b933a27800b86a4012c2d525870796",
-                "test.bcftools.bcftools_stats.txt:md5,4b2997064fb500f090639edca1ccaa6e",
-                "test.deepvariant.bcftools_stats.txt:md5,61ab450ed778088b9c879b8dcbbb9db8",
-                "test.freebayes.filtered.bcftools_stats.txt:md5,c6b6e221504c69ee75b209f4a0b2506a",
-                "test.strelka.variants.bcftools_stats.txt:md5,2613827870dd789fe602a8a3b739b7f2",
-                "test.tiddit.bcftools_stats.txt:md5,2b96446a75e1ec5d5f1310a934c0dd4c",
+                "test.bcftools.bcftools_stats.txt:md5,9213504c6b04c6c3cdf308ad3e8b4c3a",
+                "test.deepvariant.bcftools_stats.txt:md5,67f779dde7f1c6b6ca5cf48f8c24ba02",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,60f55a391db494db3e95bd69b6b36fa3",
+                "test.strelka.variants.bcftools_stats.txt:md5,6efa6598982c21c544d1833dca632b62",
+                "test.tiddit.bcftools_stats.txt:md5,c4cb4e484f95c7dbdaa3d08f0704f7b5",
                 "test.md.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.md.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.md.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
@@ -1141,13 +1141,13 @@
             49,
             {
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.18-r1243-dirty"
@@ -1539,10 +1539,10 @@
                 "samtools-stats-dp.txt:md5,157a95de8aa4dd8947bb965f0c9ae3c7",
                 "samtools_alignment_plot.txt:md5,46e8824724863d243a01cc239a5eff15",
                 "samtools_insert_size.txt:md5,17c44517c58803f9c078f6d9b55aed00",
-                "test2.bcftools.bcftools_stats.txt:md5,c61cda67fa314ecdeac858599ce732ee",
-                "test2.freebayes.filtered.bcftools_stats.txt:md5,57082cdcbbe9ffb4c63b314912227afb",
-                "test2.mutect2.filtered.bcftools_stats.txt:md5,3ecb2b3bb668d9f808787ffaa780fc03",
-                "test2.tiddit.bcftools_stats.txt:md5,1122042610f0aed654c8d8b817fd1c50",
+                "test2.bcftools.bcftools_stats.txt:md5,fa4bd52259a3400e5d21c43b570e40a5",
+                "test2.freebayes.filtered.bcftools_stats.txt:md5,9bb83f7b4cad18474e47b5cee9160a32",
+                "test2.mutect2.filtered.bcftools_stats.txt:md5,cb2c8f2f4b0ceee60fb1243191d4f429",
+                "test2.tiddit.bcftools_stats.txt:md5,346588891b9ab59af56f44649421b424",
                 "test2.md.mosdepth.global.dist.txt:md5,2020cf6dfc7ddca020c921dd9f0549b7",
                 "test2.md.mosdepth.region.dist.txt:md5,38ff8b38c33b9231f047fea8ea830aae",
                 "test2.md.mosdepth.summary.txt:md5,8b991358768cade225470a07cd34f573",
