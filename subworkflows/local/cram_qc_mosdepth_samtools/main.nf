@@ -14,8 +14,8 @@ workflow CRAM_QC_MOSDEPTH_SAMTOOLS {
     intervals
 
     main:
-    versions = Channel.empty()
-    reports = Channel.empty()
+    versions = channel.empty()
+    reports = channel.empty()
 
     // Reports run on cram
     SAMTOOLS_STATS(cram, fasta)

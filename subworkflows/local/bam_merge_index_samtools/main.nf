@@ -12,7 +12,7 @@ workflow BAM_MERGE_INDEX_SAMTOOLS {
     bam // channel: [mandatory] meta, bam
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Figuring out if there is one or more bam(s) from the same sample
     bam_to_merge = bam.branch{ meta, bam_ ->

@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2210](https://github.com/nf-core/sarek/pull/2210) - Update bcftools to 1.23.1
 - [#2229](https://github.com/nf-core/sarek/pull/2229) - Update EnsemblVEP to 116.0
+- [#2232](https://github.com/nf-core/sarek/pull/2232) - Migrate local code to the lowercase `channel` factory for Nextflow strict-syntax / 26.x readiness
 
 ### Fixed
 
@@ -62,6 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2178](https://github.com/nf-core/sarek/pull/2178) - Template update for nf-core/tools v4.0.2
 - [#2225](https://github.com/nf-core/sarek/pull/2225) - Back to dev (3.9.1dev)
 - [#2229](https://github.com/nf-core/sarek/pull/2229) - Update nft-utils to 1.0.0, migrate `getAllFilesFromDir` to `getAllFilesFromPath` in test utilities
+- [#2233](https://github.com/nf-core/sarek/pull/2233) - Replace the last remaining deprecated `channel.from` with `channel.of` in `prepare_genome`
 
 #### Fixed
 

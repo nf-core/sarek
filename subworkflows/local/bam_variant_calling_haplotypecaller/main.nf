@@ -19,10 +19,10 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     intervals                    // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
-    vcf           = Channel.empty()
-    realigned_bam = Channel.empty()
+    vcf           = channel.empty()
+    realigned_bam = channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
@@ -75,11 +75,11 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     // Only when using intervals
     MERGE_HAPLOTYPECALLER(haplotypecaller_vcf.intervals.map{ meta, vcf_ -> [ groupKey(meta, meta.num_intervals), vcf_ ] }.groupTuple(), dict)
 
-    haplotypecaller_vcf = Channel.empty().mix(
+    haplotypecaller_vcf = channel.empty().mix(
             MERGE_HAPLOTYPECALLER.out.vcf,
             haplotypecaller_vcf.no_intervals)
 
-    haplotypecaller_tbi = Channel.empty().mix(
+    haplotypecaller_tbi = channel.empty().mix(
             MERGE_HAPLOTYPECALLER.out.tbi,
             haplotypecaller_tbi.no_intervals)
 

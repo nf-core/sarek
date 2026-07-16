@@ -14,7 +14,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
     intervals     // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi ] or [ [], [] ] if no intervals
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Combine cram and intervals, account for 0 intervals
     cram_intervals = cram.combine(intervals).map{ it ->
@@ -36,8 +36,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
 
     // Only diploid and somatic SV should get annotated
     // add variantcaller to meta map
-    vcf = Channel.empty().mix(diploid_sv_vcf, somatic_sv_vcf).map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
-    tbi = Channel.empty().mix(diploid_sv_vcf_tbi, somatic_sv_vcf_tbi).map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
+    vcf = channel.empty().mix(diploid_sv_vcf, somatic_sv_vcf).map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
+    tbi = channel.empty().mix(diploid_sv_vcf_tbi, somatic_sv_vcf_tbi).map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
 
     versions = versions.mix(MANTA_SOMATIC.out.versions)
 

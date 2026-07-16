@@ -17,7 +17,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
     intervals     // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi, num_intervals ] or [ [], [], 0 ] if no intervals
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
@@ -62,11 +62,11 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
     }
 
     // Mix intervals and no_intervals channels together
-    vcf = Channel.empty().mix(MERGE_STRELKA_INDELS.out.vcf, MERGE_STRELKA_SNVS.out.vcf, vcf_indels.no_intervals, vcf_snvs.no_intervals)
+    vcf = channel.empty().mix(MERGE_STRELKA_INDELS.out.vcf, MERGE_STRELKA_SNVS.out.vcf, vcf_indels.no_intervals, vcf_snvs.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], vcf ] }
 
-    tbi = Channel.empty().mix(MERGE_STRELKA_INDELS.out.tbi, MERGE_STRELKA_SNVS.out.tbi, tbi_indels.no_intervals, tbi_snvs.no_intervals)
+    tbi = channel.empty().mix(MERGE_STRELKA_INDELS.out.tbi, MERGE_STRELKA_SNVS.out.tbi, tbi_indels.no_intervals, tbi_snvs.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], tbi ] }
 

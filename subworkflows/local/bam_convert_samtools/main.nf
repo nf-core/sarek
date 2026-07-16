@@ -19,7 +19,7 @@ workflow BAM_CONVERT_SAMTOOLS {
     interleaved // value: true/false
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Index File if not PROVIDED -> this also requires updates to samtools view possibly URGH
 

@@ -53,7 +53,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     sentieon_dnascope_model           // channel: [mandatory] value channel with string
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     gvcf_sentieon_dnascope   = Channel.empty()
@@ -388,7 +388,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
     }
 
-    vcf_all = Channel.empty().mix(
+    vcf_all = channel.empty().mix(
         vcf_deepvariant,
         vcf_parabricks_deepvariant,
         vcf_freebayes,
@@ -401,7 +401,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         vcf_tiddit
     )
 
-    tbi_all = Channel.empty().mix(
+    tbi_all = channel.empty().mix(
         tbi_deepvariant,
         tbi_parabricks_deepvariant,
         tbi_freebayes,

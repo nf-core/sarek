@@ -7,7 +7,7 @@ workflow PREPARE_REFERENCE_CNVKIT {
     intervals_bed_combined // channel: []
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // prepare a antitarget reference files for tumor_only mode of cnvkit
     CNVKIT_ANTITARGET(intervals_bed_combined.flatten().map { it -> [[id: 'intervals'], it] })
