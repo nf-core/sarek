@@ -413,7 +413,7 @@
                     },
                     "parabricks/haplotypecaller": {
                         "branch": "master",
-                        "git_sha": "f0b0dc3c3f001b1b7bf814a3c353baecbab17ea1",
+                        "git_sha": "bc68bb41998c9fc2d311f313bb3babf8327a2c01",
                         "installed_by": ["modules"]
                     },
                     "rbt/vcfsplit": {
