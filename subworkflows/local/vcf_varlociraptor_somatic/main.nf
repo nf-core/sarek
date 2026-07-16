@@ -9,6 +9,7 @@ include { RBT_VCFSPLIT                                                          
 include { VARLOCIRAPTOR_CALLVARIANTS                                              } from '../../../modules/nf-core/varlociraptor/callvariants'
 include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES as ALIGNMENTPROPERTIES_NORMAL } from '../../../modules/nf-core/varlociraptor/estimatealignmentproperties'
 include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES as ALIGNMENTPROPERTIES_TUMOR  } from '../../../modules/nf-core/varlociraptor/estimatealignmentproperties'
+include { VARLOCIRAPTOR_FILTERFDR                                                 } from '../../../modules/nf-core/varlociraptor/filterfdr'
 include { VARLOCIRAPTOR_PREPROCESS as PREPROCESS_NORMAL                           } from '../../../modules/nf-core/varlociraptor/preprocess'
 include { VARLOCIRAPTOR_PREPROCESS as PREPROCESS_TUMOR                            } from '../../../modules/nf-core/varlociraptor/preprocess'
 include { YTE as FILL_SCENARIO_FILE                                               } from '../../../modules/nf-core/yte'
@@ -22,6 +23,8 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_somatic_vcf
     ch_germline_vcf
     val_num_chunks
+    val_events
+    val_fdr
 
     main:
     ch_versions = channel.empty()
@@ -76,7 +79,7 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     // Use concatenated Strelka VCFs for somatic and germline calling, mix with other variant callers
     ch_somatic_vcf_conc = CONCAT_SOMATIC_STRELKA.out.vcf
-        .join(CONCAT_SOMATIC_STRELKA.out.tbi, by: [0])
+        .join(CONCAT_SOMATIC_STRELKA.out.index, by: [0])
         .mix(ch_somatic_branched.other)
 
     //
@@ -104,14 +107,10 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     MERGE_GERMLINE_SOMATIC_VCFS(
         branched.matched.map { _key, meta_somatic, somatic_vcf, somatic_tbi, _meta_germline, germline_vcf, germline_tbi ->
-            [meta_somatic, [somatic_vcf, germline_vcf], [somatic_tbi, germline_tbi]]
+            [meta_somatic, [somatic_vcf, germline_vcf], [somatic_tbi, germline_tbi], []]
         },
-        ch_fasta,
-        ch_fasta_fai,
-        [[], []],
+        ch_fasta.combine(ch_fasta_fai).map{ meta_fasta_, fasta, _meta_fai, fai -> [meta_fasta_, fasta, fai]}.collect()
     )
-
-    ch_versions = ch_versions.mix(MERGE_GERMLINE_SOMATIC_VCFS.out.versions)
 
     // Combine merged VCFs with unmatched somatic VCFs
     ch_vcf = MERGE_GERMLINE_SOMATIC_VCFS.out.vcf.mix(
@@ -258,14 +257,13 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     SORT_CALLED_CHUNKS(
         VARLOCIRAPTOR_CALLVARIANTS.out.bcf
     )
-    ch_versions = ch_versions.mix(SORT_CALLED_CHUNKS.out.versions)
 
     ch_sort_called_chunks_vcf = SORT_CALLED_CHUNKS.out.vcf.branch {
         single: val_num_chunks <= 1
         multiple: val_num_chunks > 1
     }
 
-    ch_sort_called_chunks_tbi = SORT_CALLED_CHUNKS.out.tbi.branch {
+    ch_sort_called_chunks_tbi = SORT_CALLED_CHUNKS.out.index.branch {
         single: val_num_chunks <= 1
         multiple: val_num_chunks > 1
     }
@@ -279,16 +277,16 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
 
     CONCAT_CALLED_CHUNKS(ch_vcf_tbi_chunks)
 
-    ch_versions = ch_versions.mix(CONCAT_CALLED_CHUNKS.out.versions)
-
     ch_final_vcf = ch_sort_called_chunks_vcf.single.mix(CONCAT_CALLED_CHUNKS.out.vcf)
 
-    SORT_FINAL_VCF(ch_final_vcf)
+    VARLOCIRAPTOR_FILTERFDR(
+        ch_final_vcf.map { meta, vcf -> [ meta, vcf, val_events, val_fdr ] }
+    )
 
-    ch_versions = ch_versions.mix(SORT_FINAL_VCF.out.versions)
+    SORT_FINAL_VCF(VARLOCIRAPTOR_FILTERFDR.out.bcf)
 
     emit:
     vcf      = SORT_FINAL_VCF.out.vcf
-    tbi      = SORT_FINAL_VCF.out.tbi
+    tbi      = SORT_FINAL_VCF.out.index
     versions = ch_versions
 }

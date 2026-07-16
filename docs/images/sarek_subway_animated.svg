@@ -3507,6 +3507,14 @@
   <path id="route_germline_floatup" style="fill:none;stroke:none" d="M 53.300,120.577 L 56.978,120.577 L 59.019,120.577 C 60.033,120.577 61.023,119.920 61.740,119.189 L 68.242,113.114 C 68.990,112.414 69.949,111.726 70.963,111.726 L 73.004,111.726 L 247.735,111.726 C 248.749,111.726 249.739,112.382 250.456,113.114 L 256.957,119.189 C 257.706,119.888 258.665,120.577 259.679,120.577 L 261.720,120.577" />
   <path id="route_tumor_a" style="fill:none;stroke:none" d="M 53.300,121.635 L 261.720,121.635" />
   <path id="route_tumor_b" style="fill:none;stroke:none" d="M 53.300,130.486 L 247.735,130.486 C 248.749,130.486 249.739,129.830 250.456,129.098 L 256.957,123.023 C 257.706,122.324 258.665,121.635 259.679,121.635 L 261.720,121.635" />
+  <!-- additional bam/cram + vcf entry points dropping onto the core (green) line -->
+  <path id="route_core_bamcram_b" style="fill:none;stroke:none" d="M 96.500,20.925 L 96.500,37.064 C 96.500,38.311 97.900,40.239 99.150,40.239 L 218.097,40.116 L 235.655,40.170 L 294.771,40.239" />
+  <path id="route_core_bamcram_c" style="fill:none;stroke:none" d="M 133.200,20.925 L 133.200,37.064 C 133.200,38.311 134.600,40.239 135.850,40.239 L 218.097,40.116 L 235.655,40.170 L 294.771,40.239" />
+  <path id="route_core_bamcram_d" style="fill:none;stroke:none" d="M 149.200,20.925 L 149.200,37.064 C 149.200,38.311 150.600,40.239 151.850,40.239 L 218.097,40.116 L 235.655,40.170 L 294.771,40.239" />
+  <path id="route_core_bamcram_e" style="fill:none;stroke:none" d="M 172.700,20.925 L 172.700,37.064 C 172.700,38.311 174.100,40.239 175.350,40.239 L 218.097,40.116 L 235.655,40.170 L 294.771,40.239" />
+  <path id="route_core_vcf" style="fill:none;stroke:none" d="M 244.500,20.925 L 244.500,37.064 C 244.500,38.311 245.900,40.239 247.150,40.239 L 294.771,40.239" />
+  <!-- germline (blue) line: dot entering from cram along the upper express track -->
+  <path id="route_germline_entry" style="fill:none;stroke:none" d="M 53.300,111.726 L 247.735,111.726 C 248.749,111.726 249.739,112.382 250.456,113.114 L 256.957,119.189 C 257.706,119.888 258.665,120.577 259.679,120.577 L 261.720,120.577" />
   <!-- flowing dots -->
   <circle id="dot1" r="1.5" cx="0" cy="0" style="fill:#ffffff;stroke:none">
     <animateMotion dur="12s" begin="0s" repeatCount="indefinite" calcMode="linear">
@@ -3591,6 +3599,43 @@
   <circle id="dot17" r="1.5" cx="0" cy="0" style="fill:#ffffff;stroke:none">
     <animateMotion dur="9s" begin="-7.5s" repeatCount="indefinite" calcMode="linear">
       <mpath href="#route_tumor_b" />
+    </animateMotion>
+  </circle>
+  <!-- dots for additional bam/cram + vcf entry points on the core (green) line -->
+  <circle id="dot18" r="1.5" cx="0" cy="0" style="fill:#ffffff;stroke:none">
+    <animateMotion dur="10s" begin="-2s" repeatCount="indefinite" calcMode="linear">
+      <mpath href="#route_core_bamcram_b" />
+    </animateMotion>
+  </circle>
+  <circle id="dot19" r="1.5" cx="0" cy="0" style="fill:#ffffff;stroke:none">
+    <animateMotion dur="8s" begin="-5s" repeatCount="indefinite" calcMode="linear">
+      <mpath href="#route_core_bamcram_c" />
+    </animateMotion>
+  </circle>
+  <circle id="dot20" r="1.5" cx="0" cy="0" style="fill:#ffffff;stroke:none">
+    <animateMotion dur="7s" begin="-1s" repeatCount="indefinite" calcMode="linear">
+      <mpath href="#route_core_bamcram_d" />
+    </animateMotion>
+  </circle>
+  <circle id="dot21" r="1.5" cx="0" cy="0" style="fill:#ffffff;stroke:none">
+    <animateMotion dur="6s" begin="-3.5s" repeatCount="indefinite" calcMode="linear">
+      <mpath href="#route_core_bamcram_e" />
+    </animateMotion>
+  </circle>
+  <circle id="dot22" r="1.5" cx="0" cy="0" style="fill:#ffffff;stroke:none">
+    <animateMotion dur="3s" begin="-1.5s" repeatCount="indefinite" calcMode="linear">
+      <mpath href="#route_core_vcf" />
+    </animateMotion>
+  </circle>
+  <!-- dots entering the germline (blue) line from cram -->
+  <circle id="dot23" r="1.5" cx="0" cy="0" style="fill:#ffffff;stroke:none">
+    <animateMotion dur="9s" begin="0s" repeatCount="indefinite" calcMode="linear">
+      <mpath href="#route_germline_entry" />
+    </animateMotion>
+  </circle>
+  <circle id="dot24" r="1.5" cx="0" cy="0" style="fill:#ffffff;stroke:none">
+    <animateMotion dur="9s" begin="-4.5s" repeatCount="indefinite" calcMode="linear">
+      <mpath href="#route_germline_entry" />
     </animateMotion>
   </circle>
 </g>

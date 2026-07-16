@@ -12,7 +12,7 @@ workflow CONSENSUS {
     vcfs     // [meta, vcf ,tbi]
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     ch_vcfs = vcfs
         .branch{ meta, vcf, tbi ->
@@ -32,12 +32,11 @@ workflow CONSENSUS {
         .groupTuple(size: 2)
 
     BCFTOOLS_CONCAT(ch_strelka_grouped)// somatic strelkas have two vcf files: SNPs and indels
-    ch_versions = ch_versions.mix(BCFTOOLS_CONCAT.out.versions)
 
     // Combine concat strelka with remaining VCFs
     // Bundle each VCF with its caller to preserve association through grouping
     ch_consensus_in = ch_vcfs.other
-                        .mix(BCFTOOLS_CONCAT.out.vcf.join(BCFTOOLS_CONCAT.out.tbi))
+                        .mix(BCFTOOLS_CONCAT.out.vcf.join(BCFTOOLS_CONCAT.out.index))
                         .map { meta, vcf, tbi ->
                                     def caller = meta.variantcaller
                                     def groupKey = meta - meta.subMap('variantcaller', 'contamination', 'filename', 'data_type', 'num_intervals')
@@ -53,12 +52,13 @@ workflow CONSENSUS {
                             def sorted_pairs = vcf_caller_pairs.sort { a, b -> a[0].name <=> b[0].name }
                             def sorted_vcfs = sorted_pairs.collect { it[0] }
                             def callers = sorted_pairs.collect { it[1] }
-                            [meta + [callers: callers], sorted_vcfs, tbis]
+                            // file_list, targets_file, regions_file are unused: VCFs are passed positionally
+                            // and consensus is computed genome-wide (no region/target restriction)
+                            [meta + [callers: callers], sorted_vcfs, tbis, [], [], []]
                         }
 
 
     BCFTOOLS_ISEC(ch_consensus_in)
-    ch_versions = ch_versions.mix(BCFTOOLS_ISEC.out.versions)
 
     // Filter out empty isec results (no consensus variants found)
     ch_isec_with_results = BCFTOOLS_ISEC.out.results

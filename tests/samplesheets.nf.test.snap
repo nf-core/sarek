@@ -19,11 +19,11 @@
                 "Patient [test] has more than one sample [2] with normal status [0] and one sample with tumor status [1]."
             ]
         ],
+        "timestamp": "2026-02-06T13:52:36.729578236",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-06T13:52:36.729578236"
+        }
     },
     "-profile test --input tests/csv/3.0/fastq_sample_with_space.csv": {
         "content": [
@@ -38,15 +38,14 @@
             [
                 "The following invalid input values have been detected:",
                 "* --input ([PATH]/./tests/csv/3.0/fastq_sample_with_space.csv): Validation of file failed:",
-                "\t-> Entry 2: Error for field 'sample' (test 2): \"test 2\" does not match regular expression [^\\S+$] (Sample ID must be provided, cannot contain spaces and must be a string value)",
-                " -- Check script '[PATH]/subworkflows/nf-core/utils_nfschema_plugin/main.nf' at line: 72 or see '[PATH]/tests/[NFT_HASH]/meta/nextflow.log' file for more details"
+                "\t-> Entry 2: Error for field 'sample' (test 2): \"test 2\" does not match regular expression [^\\S+$] (Sample ID must be provided, cannot contain spaces and must be a string value)"
             ]
         ],
+        "timestamp": "2026-07-03T12:29:12.419007781",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-16T12:15:16.691338949"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.4"
+        }
     },
     "-profile test --input tests/csv/3.0/fastq_multiple_sample_ids.csv": {
         "content": [
@@ -69,11 +68,11 @@
                 "Sample ID 'test' is associated with multiple patient IDs: test, test2. Please ensure each sample ID is unique to a single patient."
             ]
         ],
+        "timestamp": "2026-02-06T13:54:49.322255498",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-06T13:54:49.322255498"
+        }
     },
     "-profile test --input tests/csv/3.0/fastq_multiple_lane_ids.csv": {
         "content": [
@@ -96,11 +95,11 @@
                 "Duplicate patient-sample-status-lane combination found: Patient 'test2', Sample 'test2', Status '0', Lane 'test_L1' appears 2 times. Please ensure each combination is unique."
             ]
         ],
+        "timestamp": "2026-02-06T13:54:04.695361045",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-06T13:54:04.695361045"
+        }
     },
     "-profile test,spark --input tests/csv/3.0/fastq_single.csv --use_gatk_spark baserecalibrator,markduplicates --save_mapped --save_output_as_bam": {
         "content": [
@@ -114,15 +113,17 @@
             "No warnings",
             [
                 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
-                "  The --use_gatk_spark option is not compatible with --save_mapped and --save_output_as_bam.",
-                "  If you want to save your bam files please swap to the normal gatk implementation.",
+                "  --use_gatk_spark with 'markduplicates' is not compatible with --save_mapped.",
+                "  Spark markduplicates requires name-sorted input, so the saved mapped",
+                "  alignment (BAM or CRAM) would be name-sorted and cannot be indexed.",
+                "  Either drop --save_mapped, or switch to the non-Spark markduplicates path.",
                 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             ]
         ],
+        "timestamp": "2025-12-16T12:16:38.014556073",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-16T12:16:38.014556073"
+        }
     }
 }

@@ -15,7 +15,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
     intervals     // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi] or [ [], []] if no intervals; intervals file contains all intervals
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Combine cram and intervals, account for 0 intervals
     cram_intervals = cram.combine(intervals).map{ it ->

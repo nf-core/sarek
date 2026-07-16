@@ -288,7 +288,7 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-download",
                     "description": "Save mapped files.",
-                    "help_text": "If the parameter `--split-fastq` is used, the sharded bam files are merged and converted to CRAM before saving them."
+                    "help_text": "If the parameter `--split-fastq` is used, the sharded bam files are merged and converted to CRAM before saving them.\n\nNot compatible with `--use_gatk_spark markduplicates`: Spark markduplicates requires name-sorted input, so the saved mapped alignment would be name-sorted and cannot be indexed."
                 },
                 "save_output_as_bam": {
                     "type": "boolean",
@@ -299,7 +299,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-forward",
                     "description": "Enable usage of GATK Spark implementation for duplicate marking and/or base quality score recalibration",
-                    "help_text": "Multiple separated with commas.\n\n> The GATK4 Base Quality Score recalibration tools `Baserecalibrator` and `ApplyBQSR` are currently available as Beta release. Please be aware that `--use_gatk_spark` is not compatible with `--save_output_as_bam --save_mapped`. Use with caution!",
+                    "help_text": "Multiple separated with commas.\n\n> The GATK4 Base Quality Score recalibration tools `Baserecalibrator` and `ApplyBQSR` are currently available as Beta release. Please be aware that `--use_gatk_spark markduplicates` is not compatible with `--save_mapped` (regardless of `--save_output_as_bam`), because Spark requires name-sorted input and the saved mapped alignment cannot be indexed. Use with caution!",
                     "pattern": "^((baserecalibrator|markduplicates)?,?)*(?<!,)$"
                 },
                 "markduplicates_pixel_distance": {
@@ -554,6 +554,26 @@
                     "description": "Number of chunks to split the vcf-files for varlociraptor. Minimum 1, indicates no splitting",
                     "hidden": true
                 },
+                "varlociraptor_events_tumor_only": {
+                    "type": "string",
+                    "default": "somatic_tumor_high somatic_tumor_low",
+                    "description": "Events to consider for FDR filtering for tumor only samples, must match events described in scenario file."
+                },
+                "varlociraptor_events_somatic": {
+                    "type": "string",
+                    "default": "somatic_tumor_high somatic_tumor_low",
+                    "description": "Events to consider for FDR filtering for somatic samples, must match events described in scenario file."
+                },
+                "varlociraptor_events_germline": {
+                    "type": "string",
+                    "default": "germline",
+                    "description": "Events to consider for FDR filtering for germline samples, must match events described in scenario file."
+                },
+                "varlociraptor_fdr": {
+                    "type": "number",
+                    "default": 0.05,
+                    "description": "The probability to be a false discovery may not exceed the given threshold."
+                },
                 "varlociraptor_scenario_tumor_only": {
                     "type": "string",
                     "description": "Yte compatible scenario file for tumor only samples. Defaults to assets/varlociraptor_tumor_only.yte.yaml"
@@ -757,10 +777,10 @@
                 },
                 "vep_version": {
                     "type": "string",
-                    "default": "115.0-0",
+                    "default": "116.0-0",
                     "fa_icon": "fas fa-toolbox",
                     "description": "Should reflect the VEP version used in the container.",
-                    "help_text": "Used by the loftee plugin that need the full path."
+                    "help_text": "Used by the loftee plugin which needs the full path to the VEP installation (e.g. `/opt/conda/share/ensembl-vep-${vep_version}`). Update this when the VEP container version changes."
                 },
                 "outdir_cache": {
                     "type": "string",
@@ -822,7 +842,6 @@
             "properties": {
                 "igenomes_base": {
                     "type": "string",
-                    "format": "directory-path",
                     "description": "The base path to the igenomes reference files",
                     "fa_icon": "fas fa-ban",
                     "default": "s3://ngi-igenomes/igenomes/"
@@ -1103,7 +1122,6 @@
                 },
                 "snpeff_cache": {
                     "type": "string",
-                    "format": "directory-path",
                     "fa_icon": "fas fa-cloud-download-alt",
                     "default": "s3://annotation-cache/snpeff_cache/",
                     "description": "Path to snpEff cache.",
@@ -1117,7 +1135,6 @@
                 },
                 "vep_cache": {
                     "type": "string",
-                    "format": "directory-path",
                     "fa_icon": "fas fa-cloud-download-alt",
                     "default": "s3://annotation-cache/vep_cache/",
                     "description": "Path to VEP cache.",

@@ -22,11 +22,11 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     sentieon_haplotyper_emit_mode
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
-    gvcf               = Channel.empty()
-    vcf                = Channel.empty()
-    genotype_intervals = Channel.empty()
+    gvcf               = channel.empty()
+    vcf                = channel.empty()
+    genotype_intervals = channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     cram_intervals_for_sentieon = cram.combine(intervals)
@@ -59,7 +59,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         genotype_intervals = SENTIEON_HAPLOTYPER.out.gvcf
             .join(SENTIEON_HAPLOTYPER.out.gvcf_tbi, failOnMismatch: true)
             .join(cram_intervals_for_sentieon, failOnMismatch: true)
-            .map{ meta, gvcf_, tbi, cram_, crai, intervals_ -> [ meta, gvcf_, tbi, intervals_ ] }
+            .map{ meta, gvcf_, tbi, _cram, _crai, intervals_ -> [ meta, gvcf_, tbi, intervals_ ] }
     }
 
     // Figure out if using intervals or no_intervals.
@@ -111,11 +111,11 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     // Only when using intervals
     MERGE_SENTIEON_HAPLOTYPER_VCFS(vcfs_for_merging, dict)
 
-    haplotyper_vcf = Channel.empty().mix(
+    haplotyper_vcf = channel.empty().mix(
         MERGE_SENTIEON_HAPLOTYPER_VCFS.out.vcf,
         haplotyper_vcf_branch.no_intervals)
 
-    haplotyper_tbi = Channel.empty().mix(
+    haplotyper_tbi = channel.empty().mix(
         MERGE_SENTIEON_HAPLOTYPER_VCFS.out.tbi,
         haplotyper_vcf_tbi_branch.no_intervals)
 
@@ -131,16 +131,14 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
 
     MERGE_SENTIEON_HAPLOTYPER_GVCFS(gvcfs_for_merging, dict)
 
-    gvcf = Channel.empty().mix(
+    gvcf = channel.empty().mix(
         MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.vcf,
         haplotyper_gvcf_branch.no_intervals)
 
-    gvcf_tbi = Channel.empty().mix(
+    gvcf_tbi = channel.empty().mix(
         MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.tbi,
         haplotyper_gvcf_tbi_branch.no_intervals)
 
-    versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_VCFS.out.versions)
-    versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.versions)
 
     emit:
     versions

@@ -17,7 +17,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     intervals     // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi, num_intervals ] or [ [], [], 0 ] if no intervals
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
@@ -56,16 +56,14 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
 
     // Mix intervals and no_intervals channels together
     // Only strelka variant vcf should get annotated
-    vcf = Channel.empty().mix(MERGE_STRELKA.out.vcf, vcf_out.no_intervals)
+    vcf = channel.empty().mix(MERGE_STRELKA.out.vcf, vcf_out.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], vcf ] }
 
-    tbi = Channel.empty().mix(MERGE_STRELKA.out.tbi, tbi_out.no_intervals)
+    tbi = channel.empty().mix(MERGE_STRELKA.out.tbi, tbi_out.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], tbi ] }
 
-    versions = versions.mix(MERGE_STRELKA.out.versions)
-    versions = versions.mix(MERGE_STRELKA_GENOME.out.versions)
     versions = versions.mix(STRELKA_SINGLE.out.versions)
 
     emit:

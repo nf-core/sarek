@@ -5,7 +5,7 @@ channels:
   - bioconda
 dependencies:
   # renovate: datasource=conda depName=bioconda/ensembl-vep
-  - bioconda::ensembl-vep=115.2
+  - bioconda::ensembl-vep=116.0
   # renovate: datasource=conda depName=bioconda/perl-math-cdf
   - bioconda::perl-math-cdf=0.1
   # renovate: datasource=conda depName=bioconda/htslib

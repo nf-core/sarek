@@ -4,13 +4,13 @@
             12,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "DEEPVARIANT_RUNDEEPVARIANT": {
-                    "deepvariant": "1.9.0"
+                    "deepvariant": "1.10.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
@@ -161,20 +161,20 @@
                 "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
-                "test.deepvariant.bcftools_stats.txt:md5,a19ff85c0bc9796ace876f3a9c34c6ce",
+                "test.deepvariant.bcftools_stats.txt:md5,c784614aec9ed43f1d4a6149c8ae8bf3",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
                 "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
-                "test.deepvariant.FILTER.summary:md5,d0fe196a8062d7d67d9018cb40f5490c",
+                "test.deepvariant.FILTER.summary:md5,533b6a6a8eb84238b2d7ac6c229c1a7f",
                 "test.deepvariant.TsTv.count:md5,2851ce55f9813280515c2fdcacb86844"
             ],
             "No BAM files",
             "No CRAM files",
             [
-                "test.deepvariant.g.vcf.gz:md5,706cb23dc04a7e1055f3e5739666615",
-                "test.deepvariant.vcf.gz:md5,dc50f0a5b27f3ade02c745e69e69ad29"
+                "test.deepvariant.g.vcf.gz:md5,645c5efceea18bf43d677a8d9f988e1f",
+                "test.deepvariant.vcf.gz:md5,1ad21e8a7a72da9cc7d91a7b5e21ccc1"
             ],
             "No warnings"
         ],
@@ -189,13 +189,13 @@
             12,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "DEEPVARIANT_RUNDEEPVARIANT": {
-                    "deepvariant": "1.9.0"
+                    "deepvariant": "1.10.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.1.0"
@@ -340,10 +340,10 @@
             9,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "DEEPVARIANT_RUNDEEPVARIANT": {
-                    "deepvariant": "1.9.0"
+                    "deepvariant": "1.10.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -484,10 +484,10 @@
             9,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "DEEPVARIANT_RUNDEEPVARIANT": {
-                    "deepvariant": "1.9.0"
+                    "deepvariant": "1.10.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -634,20 +634,20 @@
                 "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
-                "test.deepvariant.bcftools_stats.txt:md5,a19ff85c0bc9796ace876f3a9c34c6ce",
+                "test.deepvariant.bcftools_stats.txt:md5,c784614aec9ed43f1d4a6149c8ae8bf3",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
                 "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
-                "test.deepvariant.FILTER.summary:md5,d0fe196a8062d7d67d9018cb40f5490c",
+                "test.deepvariant.FILTER.summary:md5,533b6a6a8eb84238b2d7ac6c229c1a7f",
                 "test.deepvariant.TsTv.count:md5,2851ce55f9813280515c2fdcacb86844"
             ],
             "No BAM files",
             "No CRAM files",
             [
-                "test.deepvariant.g.vcf.gz:md5,706cb23dc04a7e1055f3e5739666615",
-                "test.deepvariant.vcf.gz:md5,dc50f0a5b27f3ade02c745e69e69ad29"
+                "test.deepvariant.g.vcf.gz:md5,645c5efceea18bf43d677a8d9f988e1f",
+                "test.deepvariant.vcf.gz:md5,1ad21e8a7a72da9cc7d91a7b5e21ccc1"
             ],
             "No warnings"
         ],

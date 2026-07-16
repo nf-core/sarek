@@ -29,11 +29,9 @@ workflow NORMALIZE_VCFS {
 
     // Gather versions of all tools used
     versions = versions.mix(ADD_INFO_TO_VCF.out.versions)
-    versions = versions.mix(VCFS_NORM.out.versions)
-    versions = versions.mix(VCFS_NORM_SORT.out.versions)
 
     emit:
-    vcfs     = VCFS_NORM_SORT.out.vcf // normalized vcfs
-    tbis     = VCFS_NORM_SORT.out.tbi // matching tbis
+    vcfs     = VCFS_NORM_SORT.out.vcf   // normalized vcfs
+    tbis     = VCFS_NORM_SORT.out.index // matching tbis
     versions // Channel: [versions.yml]
 }

@@ -19,7 +19,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_TNSCOPE {
     intervals                 // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Combine input and intervals for spread and gather strategy
     input_intervals = input.combine(intervals)
@@ -54,15 +54,14 @@ workflow BAM_VARIANT_CALLING_SOMATIC_TNSCOPE {
 
     // Merge if required
     MERGE_TNSCOPE(vcf_to_merge, dict)
-    versions = versions.mix(MERGE_TNSCOPE.out.versions)
 
     // Mix intervals and no_intervals channels together
     // Remove unnecessary metadata and add variantcaller
-    vcf   = Channel.empty()
+    vcf   = channel.empty()
         .mix(MERGE_TNSCOPE.out.vcf, vcf_branch.no_intervals)
         .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'sentieon_tnscope' ], vcf ] }
 
-    index = Channel.empty()
+    index = channel.empty()
         .mix(MERGE_TNSCOPE.out.tbi, tbi_branch.no_intervals)
         .map{ meta, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'sentieon_tnscope' ], tbi ] }
 

@@ -20,7 +20,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     ch_intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = ch_cram.combine(ch_intervals)
@@ -64,9 +64,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     // Index the filtered VCFs
     TABIX_VC_FREEBAYES_FILT(vcf_filtered)
 
-    versions = versions.mix(BCFTOOLS_SORT.out.versions)
     versions = versions.mix(FREEBAYES.out.versions)
-    versions = versions.mix(MERGE_FREEBAYES.out.versions)
     versions = versions.mix(TABIX_VC_FREEBAYES.out.versions)
     versions = versions.mix(TABIX_VC_FREEBAYES_FILT.out.versions)
     versions = versions.mix(VCFLIB_VCFFILTER.out.versions)

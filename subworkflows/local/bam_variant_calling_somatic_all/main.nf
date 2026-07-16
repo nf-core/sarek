@@ -95,6 +95,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             cram_normal,
             dict,
             fasta,
+            fasta_fai,
             intervals,
         )
 
@@ -102,6 +103,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             cram_tumor,
             dict,
             fasta,
+            fasta_fai,
             intervals,
         )
 
