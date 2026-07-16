@@ -10,7 +10,6 @@ workflow CRAM_SAMPLEQC {
     intervals_for_preprocessing // channel:
 
     main:
-
     versions = channel.empty()
     reports = channel.empty()
 
