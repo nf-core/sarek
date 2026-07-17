@@ -30,7 +30,7 @@ nextflow_pipeline {
             stub: true,
             no_conda: true
         ],
-        // This test runs out of memory on the CI runners. 
+        // This test runs out of memory on the CI runners.
         // [
         //     name: "-profile test --tools parabricks_haplotypecaller --joint_germline",
         //     params: [
