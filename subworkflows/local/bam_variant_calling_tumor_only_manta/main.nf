@@ -27,8 +27,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
 
     MANTA_TUMORONLY(cram_intervals, fasta, fasta_fai, [])
 
-    small_indels_vcf = MANTA_TUMORONLY.out.candidate_small_indels_vcf
+    candidate_small_indels_vcf = MANTA_TUMORONLY.out.candidate_small_indels_vcf
+    candidate_small_indels_vcf_tbi = MANTA_TUMORONLY.out.candidate_small_indels_vcf_tbi
     candidate_sv_vcf = MANTA_TUMORONLY.out.candidate_sv_vcf
+    candidate_sv_vcf_tbi = MANTA_TUMORONLY.out.candidate_sv_vcf_tbi
     tumor_sv_vcf = MANTA_TUMORONLY.out.tumor_sv_vcf
     tumor_sv_vcf_tbi = MANTA_TUMORONLY.out.tumor_sv_vcf_tbi
 
@@ -40,8 +42,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
     versions = versions.mix(MANTA_TUMORONLY.out.versions)
 
     emit:
-    small_indels_vcf
+    candidate_small_indels_vcf
+    candidate_small_indels_vcf_tbi
     candidate_sv_vcf
+    candidate_sv_vcf_tbi
     vcf
     tbi
 

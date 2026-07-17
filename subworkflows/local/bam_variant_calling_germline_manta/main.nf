@@ -27,10 +27,12 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
 
     MANTA_GERMLINE(cram_intervals, fasta, fasta_fai, [])
 
-    small_indels_vcf     = MANTA_GERMLINE.out.candidate_small_indels_vcf
-    sv_vcf               = MANTA_GERMLINE.out.candidate_sv_vcf
-    diploid_sv_vcf       = MANTA_GERMLINE.out.diploid_sv_vcf
-    diploid_sv_vcf_tbi   = MANTA_GERMLINE.out.diploid_sv_vcf_tbi
+    candidate_small_indels_vcf     = MANTA_GERMLINE.out.candidate_small_indels_vcf
+    candidate_small_indels_vcf_tbi = MANTA_GERMLINE.out.candidate_small_indels_vcf_tbi
+    candidate_sv_vcf               = MANTA_GERMLINE.out.candidate_sv_vcf
+    candidate_sv_vcf_tbi           = MANTA_GERMLINE.out.candidate_sv_vcf_tbi
+    diploid_sv_vcf                 = MANTA_GERMLINE.out.diploid_sv_vcf
+    diploid_sv_vcf_tbi             = MANTA_GERMLINE.out.diploid_sv_vcf_tbi
 
     // Only diploid SV should get annotated
     // add variantcaller to meta map
@@ -40,8 +42,10 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
     versions = versions.mix(MANTA_GERMLINE.out.versions)
 
     emit:
-    small_indels_vcf
-    sv_vcf
+    candidate_small_indels_vcf
+    candidate_small_indels_vcf_tbi
+    candidate_sv_vcf
+    candidate_sv_vcf_tbi
     vcf
     tbi
 
