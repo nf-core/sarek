@@ -181,8 +181,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             intervals_bed_gz_tbi_combined,
         )
 
-        vcf_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.vcf
-        tbi_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.tbi
+        vcf_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.tumor_sv_vcf
+        tbi_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.tumor_sv_vcf_tbi
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.versions)
     }
 

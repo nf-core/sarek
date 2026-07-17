@@ -26,19 +26,15 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
 
     MANTA_SOMATIC(cram_intervals, fasta, fasta_fai, [])
 
-    candidate_small_indels_vcf = MANTA_SOMATIC.out.candidate_small_indels_vcf
-    candidate_small_indels_vcf_tbi = MANTA_SOMATIC.out.candidate_small_indels_vcf_tbi
-    candidate_sv_vcf = MANTA_SOMATIC.out.candidate_sv_vcf
-    candidate_sv_vcf_tbi = MANTA_SOMATIC.out.candidate_sv_vcf_tbi
-    diploid_sv_vcf = MANTA_SOMATIC.out.diploid_sv_vcf
-    diploid_sv_vcf_tbi = MANTA_SOMATIC.out.diploid_sv_vcf_tbi
-    somatic_sv_vcf = MANTA_SOMATIC.out.somatic_sv_vcf
-    somatic_sv_vcf_tbi = MANTA_SOMATIC.out.somatic_sv_vcf_tbi
-
-    // Only diploid and somatic SV should get annotated
     // add variantcaller to meta map
-    vcf = channel.empty().mix(diploid_sv_vcf, somatic_sv_vcf).map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
-    tbi = channel.empty().mix(diploid_sv_vcf_tbi, somatic_sv_vcf_tbi).map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
+    candidate_small_indels_vcf = MANTA_SOMATIC.out.candidate_small_indels_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
+    candidate_small_indels_vcf_tbi = MANTA_SOMATIC.out.candidate_small_indels_vcf_tbi.map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
+    candidate_sv_vcf = MANTA_SOMATIC.out.candidate_sv_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
+    candidate_sv_vcf_tbi = MANTA_SOMATIC.out.candidate_sv_vcf_tbi.map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
+    diploid_sv_vcf = MANTA_SOMATIC.out.diploid_sv_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
+    diploid_sv_vcf_tbi = MANTA_SOMATIC.out.diploid_sv_vcf_tbi.map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
+    somatic_sv_vcf = MANTA_SOMATIC.out.somatic_sv_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
+    somatic_sv_vcf_tbi = MANTA_SOMATIC.out.somatic_sv_vcf_tbi.map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
 
     versions = versions.mix(MANTA_SOMATIC.out.versions)
 
@@ -47,8 +43,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
     candidate_small_indels_vcf_tbi
     candidate_sv_vcf
     candidate_sv_vcf_tbi
-    vcf
-    tbi
+    diploid_sv_vcf
+    diploid_sv_vcf_tbi
+    somatic_sv_vcf
+    somatic_sv_vcf_tbi
 
     versions
 }

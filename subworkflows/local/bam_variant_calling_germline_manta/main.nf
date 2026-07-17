@@ -27,17 +27,13 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
 
     MANTA_GERMLINE(cram_intervals, fasta, fasta_fai, [])
 
-    candidate_small_indels_vcf     = MANTA_GERMLINE.out.candidate_small_indels_vcf
-    candidate_small_indels_vcf_tbi = MANTA_GERMLINE.out.candidate_small_indels_vcf_tbi
-    candidate_sv_vcf               = MANTA_GERMLINE.out.candidate_sv_vcf
-    candidate_sv_vcf_tbi           = MANTA_GERMLINE.out.candidate_sv_vcf_tbi
-    diploid_sv_vcf                 = MANTA_GERMLINE.out.diploid_sv_vcf
-    diploid_sv_vcf_tbi             = MANTA_GERMLINE.out.diploid_sv_vcf_tbi
-
-    // Only diploid SV should get annotated
     // add variantcaller to meta map
-    vcf = diploid_sv_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
-    tbi = diploid_sv_vcf_tbi.map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
+    candidate_small_indels_vcf     = MANTA_GERMLINE.out.candidate_small_indels_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
+    candidate_small_indels_vcf_tbi = MANTA_GERMLINE.out.candidate_small_indels_vcf_tbi.map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
+    candidate_sv_vcf               = MANTA_GERMLINE.out.candidate_sv_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
+    candidate_sv_vcf_tbi           = MANTA_GERMLINE.out.candidate_sv_vcf_tbi.map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
+    diploid_sv_vcf                 = MANTA_GERMLINE.out.diploid_sv_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
+    diploid_sv_vcf_tbi             = MANTA_GERMLINE.out.diploid_sv_vcf_tbi.map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
 
     versions = versions.mix(MANTA_GERMLINE.out.versions)
 
@@ -46,8 +42,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
     candidate_small_indels_vcf_tbi
     candidate_sv_vcf
     candidate_sv_vcf_tbi
-    vcf
-    tbi
+    diploid_sv_vcf
+    diploid_sv_vcf_tbi
 
     versions
 }

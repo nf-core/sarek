@@ -204,8 +204,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             intervals_bed_gz_tbi_combined
         )
 
-        vcf_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.vcf
-        tbi_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.tbi
+        vcf_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.diploid_sv_vcf
+        tbi_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.diploid_sv_vcf_tbi
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
     }
 
