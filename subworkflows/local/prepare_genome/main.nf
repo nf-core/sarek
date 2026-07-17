@@ -129,13 +129,12 @@ workflow PREPARE_GENOME {
         }
         else if (bbsplit_fasta_list_in) {
             // Build it from scratch if we have FASTA
-            channel.of(file(bbsplit_fasta_list_in, checkIfExists: true))
+            ch_bbsplit_fasta_list = channel.of(file(bbsplit_fasta_list_in, checkIfExists: true))
                 .splitCsv(header: false, sep: ',')
                 .flatMap { id, fafile -> [['id', id], ['fasta', file(fafile, checkIfExists: true)]] }
                 .groupTuple()
                 .map { group -> group[1] }
                 .collect { fasta_group -> [fasta_group] }
-                .set { ch_bbsplit_fasta_list }
 
             bbsplit_index = BBMAP_INDEX(
                 [[id: "build_index"], []],

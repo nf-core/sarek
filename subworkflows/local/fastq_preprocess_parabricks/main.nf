@@ -21,13 +21,13 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     ch_versions = channel.empty()
     ch_reports  = channel.empty()
 
-    ch_reads.map { meta, reads ->
+    reads_grouping_key = ch_reads.map { meta, reads ->
             [ meta.subMap('patient', 'sample', 'sex', 'status'), reads ]
         }
         .groupTuple()
         .map { meta, reads ->
             meta + [ n_fastq: reads.size() ] // We can drop the FASTQ files now that we know how many there are
-        }.set { reads_grouping_key }
+        }
 
     ch_reads = ch_reads.map{ meta, reads ->
         // Update meta.id to meta.sample no multiple lanes or splitted fastqs
