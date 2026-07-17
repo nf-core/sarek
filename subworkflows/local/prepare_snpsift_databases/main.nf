@@ -12,10 +12,10 @@ workflow PREPARE_SNPSIFT_DATABASES {
     ch_configs = channel.fromList(val_db_configs)
 
     // Branch: create vardb if not provided
-    ch_configs.branch {
+    ch_branched = ch_configs.branch {
         has_vardb: it.vardb != null
         needs_vardb: true
-    }.set { ch_branched }
+    }
 
     // Create vardbs for databases that need them
     // Convert semicolon-separated fields to comma-separated (SnpSift expects commas)

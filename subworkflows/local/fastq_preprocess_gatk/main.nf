@@ -157,14 +157,13 @@ workflow FASTQ_PREPROCESS_GATK {
         // First, we must calculate number of lanes for each sample (meta.n_fastq)
         // This is needed to group reads from the same sample together using groupKey to avoid stalling the workflow
         // when reads from different samples are mixed together
-        reads_for_alignment.map { meta, reads ->
+        reads_grouping_key = reads_for_alignment.map { meta, reads ->
                 [ meta.subMap('patient', 'sample', 'sex', 'status'), reads ]
             }
             .groupTuple()
             .map { meta, reads ->
                 meta + [ n_fastq: reads.size() ] // We can drop the FASTQ files now that we know how many there are
             }
-            .set { reads_grouping_key }
 
         reads_for_alignment = reads_for_alignment.map{ meta, reads ->
             // Update meta.id to meta.sample no multiple lanes or splitted fastqs
