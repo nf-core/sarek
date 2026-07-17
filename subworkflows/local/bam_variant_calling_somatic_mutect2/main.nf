@@ -32,8 +32,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
 
     // If no germline resource is provided, then create an empty channel to avoid GetPileupsummaries from being run
     // Handle channel.value([]) input from prepare_genome by converting to proper empty channel
-    germline_resource_pileup = germline_resource.filter { resource -> resource != [] }
-    germline_resource_pileup_tbi = germline_resource_tbi.filter { index -> index != [] }
+    germline_resource_pileup = germline_resource.filter { germline_resource_ -> germline_resource_ != [] }
+    germline_resource_pileup_tbi = germline_resource_tbi.filter { germline_resource_tbi_ -> germline_resource_tbi_ != [] }
 
     // Combine input and intervals for spread and gather strategy
     //   Move num_intervals to meta map and reorganize channel for MUTECT2_PAIRED module

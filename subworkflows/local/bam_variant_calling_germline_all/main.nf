@@ -23,7 +23,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
     tools                             // Mandatory, list of tools to apply
     skip_tools                        // Mandatory, list of tools to skip
-    _bam                              // channel: [mandatory] meta, bam
+    bam                               // channel: [mandatory] meta, bam
     cram                              // channel: [mandatory] meta, cram
     bwa                               // channel: [mandatory] meta, bwa
     cnvkit_reference                  // channel: [optional] cnvkit reference
@@ -55,8 +55,10 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     versions = channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    gvcf_sentieon_dnascope   = channel.empty()
-    gvcf_sentieon_haplotyper = channel.empty()
+    gvcf_sentieon_dnascope       = channel.empty()
+    gvcf_sentieon_haplotyper     = channel.empty()
+    gvcf_tbi_sentieon_dnascope   = channel.empty()
+    gvcf_tbi_sentieon_haplotyper = channel.empty()
 
     out_indexcov             = channel.empty()
     vcf_deepvariant          = channel.empty()
@@ -143,8 +145,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             fasta,
             fasta_fai,
             dict,
-            dbsnp.map{file -> [[:], file]},
-            dbsnp_tbi.map{index -> [[:], index]},
+            dbsnp.map{dbsnp_ -> [[:], dbsnp_]},
+            dbsnp_tbi.map{dbsnp_tbi_ -> [[:], dbsnp_tbi_]},
             intervals)
 
         vcf_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf
@@ -240,6 +242,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         vcf_sentieon_dnascope      = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.vcf
         tbi_sentieon_dnascope      = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.vcf_tbi
         gvcf_sentieon_dnascope     = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.gvcf
+        gvcf_tbi_sentieon_dnascope = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.gvcf_tbi
 
         if (joint_germline) {
             BAM_JOINT_CALLING_GERMLINE_SENTIEON(
@@ -297,6 +300,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         vcf_sentieon_haplotyper      = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf
         tbi_sentieon_haplotyper      = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf_tbi
         gvcf_sentieon_haplotyper     = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.gvcf
+        gvcf_tbi_sentieon_haplotyper = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.gvcf_tbi
 
         if (joint_germline) {
             BAM_JOINT_CALLING_GERMLINE_SENTIEON(
@@ -398,6 +402,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     emit:
     gvcf_sentieon_dnascope
     gvcf_sentieon_haplotyper
+    gvcf_tbi_sentieon_dnascope
+    gvcf_tbi_sentieon_haplotyper
     out_indexcov
     vcf_all
     vcf_deepvariant

@@ -10,7 +10,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
     ascat_loci_rt                 // Path: ascat loci rt
     bcftools_annotations          // Path: bcftools annotations
     bcftools_annotations_tbi      // Path: bcftools annotations tbi
-    _bcftools_columns             // Path: bcftools columns
+    bcftools_columns              // Path: bcftools columns
     bcftools_header_lines         // Path: bcftools header lines
     build_only_index              // Boolean: build only index
     dbsnp                         // Path: dbsnp

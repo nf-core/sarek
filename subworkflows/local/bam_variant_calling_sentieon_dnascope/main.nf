@@ -16,7 +16,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
     dict                              // channel: [mandatory]
     dbsnp                             // channel: [optional]
     dbsnp_tbi                         // channel: [optional]
-    _dbsnp_vqsr                       // channel: [optional]
+    dbsnp_vqsr                        // channel: [optional]
     intervals                         // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     joint_germline                    // boolean: [mandatory] [default: false] joint calling of germline variants
     sentieon_dnascope_emit_mode       // string
@@ -52,9 +52,9 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
         cram_intervals_for_sentieon,
         fasta,
         fasta_fai,
-        dbsnp.map{file -> [[:], file]},
-        dbsnp_tbi.map{index -> [[:], index]},
-        sentieon_dnascope_model.map{model -> [[:], model]},
+        dbsnp.map{dbsnp_ -> [[:], dbsnp_]},
+        dbsnp_tbi.map{dbsnp_tbi_ -> [[:], dbsnp_tbi_]},
+        sentieon_dnascope_model.map{sentieon_dnascope_model_ -> [[:], sentieon_dnascope_model_]},
         sentieon_dnascope_pcr_indel_model,
         emit_vcf,
         emit_mode_items.any{ mode -> mode.equals('gvcf') })
