@@ -20,17 +20,17 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ {
     LOFREQ(input_intervals, fasta, fai) // Call variants with LoFreq
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    vcf_branch = LOFREQ.out.vcf.branch{
+    vcf_branch = LOFREQ.out.vcf.branch{ items ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+        intervals:    items[0].num_intervals > 1
+        no_intervals: items[0].num_intervals <= 1
     }
 
     // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_branch = LOFREQ.out.tbi.branch{
+    tbi_branch = LOFREQ.out.tbi.branch{ items ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+        intervals:    items[0].num_intervals > 1
+        no_intervals: items[0].num_intervals <= 1
     }
 
     // Only when using intervals

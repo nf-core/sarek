@@ -27,7 +27,7 @@ workflow BAM_VARIANT_CALLING_INDEXCOV {
     versions = versions.mix(reindex_ch.versions)
 
     // create [ [id:directory], bams, bais ]
-    indexcov_input_ch = reindex_ch.output.map{[[id:"indexcov"], it[1], it[2]]}.groupTuple()
+    indexcov_input_ch = reindex_ch.output.map{ _meta, bam, bai -> [[id:"indexcov"], bam, bai]}.groupTuple()
 
     goleft_ch = GOLEFT_INDEXCOV(
         indexcov_input_ch,

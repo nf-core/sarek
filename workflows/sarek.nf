@@ -139,11 +139,11 @@ workflow SAREK {
     // PREPROCESSING
     if (step == 'mapping') {
         // Figure out if input is bam, fastq, or spring
-        input_sample_type = input_sample.branch {
-            bam: it[0].data_type == "bam"
-            fastq_gz: it[0].data_type == "fastq_gz"
-            one_fastq_gz_spring: it[0].data_type == "one_fastq_gz_spring"
-            two_fastq_gz_spring: it[0].data_type == "two_fastq_gz_spring"
+        input_sample_type = input_sample.branch { items ->
+            bam: items[0].data_type == "bam"
+            fastq_gz: items[0].data_type == "fastq_gz"
+            one_fastq_gz_spring: items[0].data_type == "one_fastq_gz_spring"
+            two_fastq_gz_spring: items[0].data_type == "two_fastq_gz_spring"
         }
 
         // Two fastq.gz-files
@@ -289,7 +289,7 @@ workflow SAREK {
         if (tools.split(',').contains('cnvkit') || tools.split(',').contains('msisensor2') || tools.split(',').contains('muse')) {
 
             // Differentiate between bam and cram files
-            cram_variant_calling_status_tmp = cram_variant_calling.branch { meta, file, index ->
+            cram_variant_calling_status_tmp = cram_variant_calling.branch { _meta, file, _index ->
                 bam: file.toString().endsWith('.bam')
                 cram: file.toString().endsWith('.cram')
             }
@@ -309,13 +309,13 @@ workflow SAREK {
         }
 
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
-        cram_variant_calling_status = cram_variant_calling.branch { meta, file, index ->
+        cram_variant_calling_status = cram_variant_calling.branch { meta, _file, _index ->
             normal: meta.status == 0
             tumor: meta.status == 1
         }
 
         // Follow the same logic with bam as we have with cram
-        bam_variant_calling_status = bam_variant_calling.branch { meta, file, index ->
+        bam_variant_calling_status = bam_variant_calling.branch { meta, _file, _index ->
             normal: meta.status == 0
             tumor: meta.status == 1
         }
@@ -708,8 +708,8 @@ def flowcellLaneFromFastq(path) {
 def readFirstLineOfFastq(path) {
     def line = null
     try {
-        path.withInputStream {
-            def InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
+        path.withInputStream { stream ->
+            def InputStream gzipStream = new java.util.zip.GZIPInputStream(stream)
             def Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
             def BufferedReader buffered = new BufferedReader(decoder)
             line = buffered.readLine()

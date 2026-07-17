@@ -23,7 +23,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
     tools                             // Mandatory, list of tools to apply
     skip_tools                        // Mandatory, list of tools to skip
-    bam                               // channel: [mandatory] meta, bam
+    _bam                              // channel: [mandatory] meta, bam
     cram                              // channel: [mandatory] meta, cram
     bwa                               // channel: [mandatory] meta, bwa
     cnvkit_reference                  // channel: [optional] cnvkit reference
@@ -96,7 +96,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools && tools.split(',').contains('cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT(
             // Remap channel to match module/subworkflow
-            cram.map{ meta, cram_, crai -> [ meta, [], cram_ ] },
+            cram.map{ meta, cram_, _crai -> [ meta, [], cram_ ] },
             fasta,
             fasta_fai,
             intervals_bed_combined.map{_intervals -> _intervals ? [[id:_intervals[0].baseName], _intervals]: [[id:'no_intervals'], []]},
@@ -178,9 +178,9 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
                 VCF_VARIANT_FILTERING_GATK(
                     vcf_haplotypecaller.join(tbi_haplotypecaller, failOnDuplicate: true, failOnMismatch: true),
-                    fasta.map{ meta, fasta_ -> [ fasta_ ] },
-                    fasta_fai.map{ meta, fasta_fai_ -> [ fasta_fai_ ] },
-                    dict.map{ meta, dict_ -> [ dict_ ] },
+                    fasta.map{ _meta, fasta_ -> [ fasta_ ] },
+                    fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] },
+                    dict.map{ _meta, dict_ -> [ dict_ ] },
                     intervals_bed_combined_haplotypec,
                     known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
                     known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
@@ -240,7 +240,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         vcf_sentieon_dnascope      = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.vcf
         tbi_sentieon_dnascope      = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.vcf_tbi
         gvcf_sentieon_dnascope     = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.gvcf
-        gvcf_tbi_sentieon_dnascope = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.gvcf_tbi
 
         if (joint_germline) {
             BAM_JOINT_CALLING_GERMLINE_SENTIEON(
@@ -298,7 +297,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         vcf_sentieon_haplotyper      = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf
         tbi_sentieon_haplotyper      = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf_tbi
         gvcf_sentieon_haplotyper     = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.gvcf
-        gvcf_tbi_sentieon_haplotyper = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.gvcf_tbi
 
         if (joint_germline) {
             BAM_JOINT_CALLING_GERMLINE_SENTIEON(
@@ -327,9 +325,9 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
                 SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK(
                     vcf_sentieon_haplotyper.join(tbi_sentieon_haplotyper, failOnDuplicate: true, failOnMismatch: true),
-                    fasta.map{ meta, it -> [ it ] },
-                    fasta_fai.map{ meta, it -> [ it ] },
-                    dict.map{ meta, dict_ -> [ dict_ ] },
+                    fasta.map{ _meta, fasta_ -> [ fasta_ ] },
+                    fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] },
+                    dict.map{ _meta, dict_ -> [ dict_ ] },
                     intervals_bed_combined_haplotypec,
                     known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
                     known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
@@ -349,8 +347,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         BAM_VARIANT_CALLING_SINGLE_STRELKA(
             cram,
             dict,
-            fasta.map{ meta, fasta_ -> [ fasta_ ] },
-            fasta_fai.map{ meta, fasta_fai_ -> [ fasta_fai_ ] },
+            fasta.map{ _meta, fasta_ -> [ fasta_ ] },
+            fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] },
             intervals_bed_gz_tbi
         )
 

@@ -10,7 +10,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
     ascat_loci_rt                 // Path: ascat loci rt
     bcftools_annotations          // Path: bcftools annotations
     bcftools_annotations_tbi      // Path: bcftools annotations tbi
-    bcftools_columns              // Path: bcftools columns
+    _bcftools_columns             // Path: bcftools columns
     bcftools_header_lines         // Path: bcftools header lines
     build_only_index              // Boolean: build only index
     dbsnp                         // Path: dbsnp
@@ -50,8 +50,8 @@ workflow SAMPLESHEET_TO_CHANNEL {
         .groupTuple()
         .map { patient, samples ->
             // Count samples with status 0 and status 1
-            def status0_count = samples.count { it.status == 0 }
-            def status1_count = samples.count { it.status == 1 }
+            def status0_count = samples.count { sample -> sample.status == 0 }
+            def status1_count = samples.count { sample -> sample.status == 1 }
 
             // Check the condition and exit with an error if met
             if (status1_count == 1 && status0_count > 1) {
@@ -67,7 +67,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
             [combination_key, [meta.patient, meta.sample, meta.status, meta.lane]]
         }
         .groupTuple()
-        .map { combination_key, combination_list ->
+        .map { _combination_key, combination_list ->
             if (combination_list.size() > 1) {
                 def patient = combination_list[0][0]
                 def sample = combination_list[0][1]
@@ -87,7 +87,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
         .groupTuple()
         .map { patient, samples ->
             // Return the patient and the list of sample ids
-            [patient, samples.collect { it.sample }]
+            [patient, samples.collect { sample -> sample.sample }]
         }
         // Flatten to [sample_id, patient] pairs
         .flatMap { patient, sample_ids -> sample_ids.collect { sample_id -> [sample_id, patient] } }
@@ -242,7 +242,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
         // 1. the sample-sheet only contains normal-samples, but some of the requested tools require tumor-samples, and
         // 2. the sample-sheet only contains tumor-samples, but some of the requested tools require normal-samples.
         input_sample
-            .filter { it[0].status == 1 }
+            .filter { sample -> sample[0].status == 1 }
             .ifEmpty {
                 // In this case, the sample-sheet contains no tumor-samples
                 if (!build_only_index) {
@@ -260,7 +260,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
             }
 
         input_sample
-            .filter { it[0].status == 0 }
+            .filter { sample -> sample[0].status == 0 }
             .ifEmpty {
                 // In this case, the sample-sheet contains no normal/germline-samples
                 def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller', 'msisensorpro']
@@ -433,8 +433,8 @@ workflow SAMPLESHEET_TO_CHANNEL {
 
     // Fails when missing sex information for CNV tools or varlociraptor
     if (tools && (tools.split(',').contains('ascat') || tools.split(',').contains('controlfreec') || tools.split(',').contains('varlociraptor'))) {
-        input_sample.map {
-            if (it[0].sex == 'NA') {
+        input_sample.map { sample ->
+            if (sample[0].sex == 'NA') {
                 error("Please specify sex information for each sample in your samplesheet when using '--tools' with 'ascat' or 'controlfreec' or 'varlociraptor'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
             }
         }
@@ -442,8 +442,8 @@ workflow SAMPLESHEET_TO_CHANNEL {
 
     // Fails when varlociraptor is enable for tumor samples but no contamination is provided
     if (tools && tools.split(',').contains('varlociraptor')) {
-        input_sample.map {
-            if (it[0].status == 1 && !it[0].containsKey('contamination')) {
+        input_sample.map { sample ->
+            if (sample[0].status == 1 && !sample[0].containsKey('contamination')) {
                 error("Please specify contamination information for each tumor sample in your samplesheet when using '--tools' with 'varlociraptor'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
             }
         }

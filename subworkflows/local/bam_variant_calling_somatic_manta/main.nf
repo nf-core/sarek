@@ -28,7 +28,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
 
     candidate_small_indels_vcf = MANTA_SOMATIC.out.candidate_small_indels_vcf
     candidate_small_indels_vcf_tbi = MANTA_SOMATIC.out.candidate_small_indels_vcf_tbi
-    candidate_sv_vcf = MANTA_SOMATIC.out.candidate_sv_vcf
     diploid_sv_vcf = MANTA_SOMATIC.out.diploid_sv_vcf
     diploid_sv_vcf_tbi = MANTA_SOMATIC.out.diploid_sv_vcf_tbi
     somatic_sv_vcf = MANTA_SOMATIC.out.somatic_sv_vcf

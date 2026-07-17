@@ -134,7 +134,7 @@ workflow PREPARE_GENOME {
                 .flatMap { id, fafile -> [['id', id], ['fasta', file(fafile, checkIfExists: true)]] }
                 .groupTuple()
                 .map { group -> group[1] }
-                .collect { [it] }
+                .collect { fasta_group -> [fasta_group] }
                 .set { ch_bbsplit_fasta_list }
 
             bbsplit_index = BBMAP_INDEX(
