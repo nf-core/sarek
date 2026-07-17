@@ -33,9 +33,9 @@ workflow PREPARE_INTERVALS {
         file("${outdir}/no_intervals.bed.gz").text     = "no_intervals\n"
         file("${outdir}/no_intervals.bed.gz.tbi").text = "no_intervals\n"
 
-        intervals_bed        = channel.fromPath(file("${outdir}/no_intervals.bed")).map{ it -> [ it, 0 ] }
-        intervals_bed_gz_tbi = channel.fromPath(file("${outdir}/no_intervals.bed.{gz,gz.tbi}")).collect().map{ it -> [ it, 0 ] }
-        intervals_combined   = channel.fromPath(file("${outdir}/no_intervals.bed")).map{ it -> [ [ id:it.simpleName ], it ] }
+        intervals_bed        = channel.fromPath(file("${outdir}/no_intervals.bed")).map{ bed -> [ bed, 0 ] }
+        intervals_bed_gz_tbi = channel.fromPath(file("${outdir}/no_intervals.bed.{gz,gz.tbi}")).collect().map{ files -> [ files, 0 ] }
+        intervals_combined   = channel.fromPath(file("${outdir}/no_intervals.bed")).map{ bed -> [ [ id:bed.simpleName ], bed ] }
     } else if (step != 'annotate' && step != 'controlfreec') {
         // If no interval/target file is provided, then generated intervals from FASTA file
         if (!intervals) {
@@ -50,7 +50,7 @@ workflow PREPARE_INTERVALS {
             versions = versions.mix(BUILD_INTERVALS.out.versions)
             versions = versions.mix(CREATE_INTERVALS_BED.out.versions)
         } else {
-            intervals_combined = channel.fromPath(file(intervals)).map{it -> [ [ id:it.baseName ], it ] }
+            intervals_combined = channel.fromPath(file(intervals)).map{bed -> [ [ id:bed.baseName ], bed ] }
             CREATE_INTERVALS_BED(file(intervals), nucleotides_per_second)
 
             intervals_bed = CREATE_INTERVALS_BED.out.bed
@@ -86,7 +86,7 @@ workflow PREPARE_INTERVALS {
             }.toSortedList({ a, b -> b[0] <=> a[0] })
             .flatten().collate(2).map{ duration, intervalFile -> intervalFile }.collect()
             // Adding number of intervals as elements
-            .map{ it -> [ it, it.size() ] }
+            .map{ files -> [ files, files.size() ] }
             .transpose()
 
         // 2. Create bed.gz and bed.gz.tbi for each interval file. They are split by region (see above)
@@ -94,7 +94,7 @@ workflow PREPARE_INTERVALS {
 
         intervals_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_index.map{ meta, bed, tbi -> [ bed, tbi ] }.toList()
             // Adding number of intervals as elements
-            .map{ it -> [ it, it.size() ] }
+            .map{ files -> [ files, files.size() ] }
             .transpose()
     }
 

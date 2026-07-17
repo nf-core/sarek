@@ -42,7 +42,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
             ]
         }
 
-    emit_mode_items = sentieon_haplotyper_emit_mode.split(',').each{ it -> it.toLowerCase().trim() }
+    emit_mode_items = sentieon_haplotyper_emit_mode.split(',').each{ mode -> mode.toLowerCase().trim() }
     lst = emit_mode_items - 'gvcf'
     emit_vcf = lst.size() > 0 ? lst[0] : ''
 

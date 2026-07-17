@@ -102,7 +102,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             fasta,
             fasta_fai,
             [[id: "null"], []],
-            cnvkit_reference.map { it -> [[id: it[0].baseName], it] },
+            cnvkit_reference.map { reference -> [[id: reference[0].baseName], reference] },
         )
 
         versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)

@@ -18,11 +18,11 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
     versions = channel.empty()
 
     // Combine cram and intervals, account for 0 intervals
-    cram_intervals = cram.combine(intervals).map{ it ->
-        def bed_gz = it.size() > 3 ? it[3] : []
-        def bed_tbi = it.size() > 3 ? it[4] : []
+    cram_intervals = cram.combine(intervals).map{ combined ->
+        def bed_gz = combined.size() > 3 ? combined[3] : []
+        def bed_tbi = combined.size() > 3 ? combined[4] : []
 
-        [it[0], it[1], it[2], bed_gz, bed_tbi]
+        [combined[0], combined[1], combined[2], bed_gz, bed_tbi]
     }
 
     MANTA_TUMORONLY(cram_intervals, fasta, fasta_fai, [])

@@ -99,8 +99,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             cram.map{ meta, cram_, crai -> [ meta, [], cram_ ] },
             fasta,
             fasta_fai,
-            intervals_bed_combined.map{it -> it ? [[id:it[0].baseName], it]: [[id:'no_intervals'], []]},
-            params.cnvkit_reference ? cnvkit_reference.map{ it -> [[id:it[0].baseName], it] } : [[:],[]]
+            intervals_bed_combined.map{_intervals -> _intervals ? [[id:_intervals[0].baseName], _intervals]: [[id:'no_intervals'], []]},
+            params.cnvkit_reference ? cnvkit_reference.map{ reference -> [[id:reference[0].baseName], reference] } : [[:],[]]
         )
         versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
@@ -143,8 +143,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             fasta,
             fasta_fai,
             dict,
-            dbsnp.map{it -> [[:], it]},
-            dbsnp_tbi.map{it -> [[:], it]},
+            dbsnp.map{file -> [[:], file]},
+            dbsnp_tbi.map{index -> [[:], index]},
             intervals)
 
         vcf_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf

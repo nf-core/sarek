@@ -96,7 +96,7 @@ workflow PREPARE_GENOME {
         versions = versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
     }
     else if (dict_in) {
-        dict = channel.fromPath(dict_in).map { it -> [[id: 'dict'], it] }.collect()
+        dict = channel.fromPath(dict_in).map { dict_ -> [[id: 'dict'], dict_] }.collect()
     }
     else {
         dict = channel.empty()
@@ -108,7 +108,7 @@ workflow PREPARE_GENOME {
         versions = versions.mix(SAMTOOLS_FAIDX.out.versions)
     }
     else if (fasta_fai_in) {
-        fasta_fai = channel.fromPath(fasta_fai_in).map { it -> [[id: 'fai'], it] }.collect()
+        fasta_fai = channel.fromPath(fasta_fai_in).map { fai -> [[id: 'fai'], fai] }.collect()
     }
     else {
         fasta_fai = channel.empty()
@@ -133,7 +133,7 @@ workflow PREPARE_GENOME {
                 .splitCsv(header: false, sep: ',')
                 .flatMap { id, fafile -> [['id', id], ['fasta', file(fafile, checkIfExists: true)]] }
                 .groupTuple()
-                .map { it -> it[1] }
+                .map { group -> group[1] }
                 .collect { [it] }
                 .set { ch_bbsplit_fasta_list }
 

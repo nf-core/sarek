@@ -340,13 +340,13 @@ workflow SAREK {
         bam_variant_calling_tumor_joined = bam_variant_calling_tumor_grouped.join(bam_variant_calling_normal_to_cross, failOnDuplicate: true, remainder: true)
 
         // 3. Filter out entries with last entry null
-        cram_variant_calling_tumor_filtered = cram_variant_calling_tumor_joined.filter { it -> !(it.last()) }
-        bam_variant_calling_tumor_filtered = bam_variant_calling_tumor_joined.filter { it -> !(it.last()) }
+        cram_variant_calling_tumor_filtered = cram_variant_calling_tumor_joined.filter { joined -> !(joined.last()) }
+        bam_variant_calling_tumor_filtered = bam_variant_calling_tumor_joined.filter { joined -> !(joined.last()) }
 
         // 4. Transpose [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ] ] back to [ patient1, meta1, [ cram1, crai1 ], null ] [ patient1, meta2, [ cram2, crai2 ], null ]
         // and remove patient ID field & null value for further processing [ meta1, [ cram1, crai1 ] ] [ meta2, [ cram2, crai2 ] ]
-        cram_variant_calling_tumor_only = cram_variant_calling_tumor_filtered.transpose().map { it -> [it[1], it[2], it[3]] }
-        bam_variant_calling_tumor_only = bam_variant_calling_tumor_filtered.transpose().map { it -> [it[1], it[2], it[3]] }
+        cram_variant_calling_tumor_only = cram_variant_calling_tumor_filtered.transpose().map { record -> [record[1], record[2], record[3]] }
+        bam_variant_calling_tumor_only = bam_variant_calling_tumor_filtered.transpose().map { record -> [record[1], record[2], record[3]] }
 
         if (params.only_paired_variant_calling) {
             // Normal only samples
@@ -356,12 +356,12 @@ workflow SAREK {
             bam_variant_calling_normal_joined = bam_variant_calling_normal_to_cross.join(bam_variant_calling_tumor_grouped, failOnDuplicate: true, remainder: true)
 
             // 2. Filter out entries with last entry null
-            cram_variant_calling_normal_filtered = cram_variant_calling_normal_joined.filter { it -> !(it.last()) }
-            bam_variant_calling_normal_filtered = bam_variant_calling_normal_joined.filter { it -> !(it.last()) }
+            cram_variant_calling_normal_filtered = cram_variant_calling_normal_joined.filter { joined -> !(joined.last()) }
+            bam_variant_calling_normal_filtered = bam_variant_calling_normal_joined.filter { joined -> !(joined.last()) }
 
             // 3. Remove patient ID field & null value for further processing [ meta1, [ cram1, crai1 ] ] [ meta2, [ cram2, crai2 ] ] (no transposing needed since only one normal per patient ID)
-            cram_variant_calling_status_normal = cram_variant_calling_normal_filtered.map { it -> [it[1], it[2], it[3]] }
-            bam_variant_calling_status_normal = bam_variant_calling_normal_filtered.map { it -> [it[1], it[2], it[3]] }
+            cram_variant_calling_status_normal = cram_variant_calling_normal_filtered.map { record -> [record[1], record[2], record[3]] }
+            bam_variant_calling_status_normal = bam_variant_calling_normal_filtered.map { record -> [record[1], record[2], record[3]] }
         }
         else {
             cram_variant_calling_status_normal = cram_variant_calling_status.normal

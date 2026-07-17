@@ -17,11 +17,11 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
     versions = channel.empty()
 
     // Combine cram and intervals, account for 0 intervals
-    cram_intervals = cram.combine(intervals).map{ it ->
-        def bed_gz = it.size() > 5 ? it[5] : []
-        def bed_tbi = it.size() > 5 ? it[6] : []
+    cram_intervals = cram.combine(intervals).map{ combined ->
+        def bed_gz = combined.size() > 5 ? combined[5] : []
+        def bed_tbi = combined.size() > 5 ? combined[6] : []
 
-        [it[0], it[1], it[2], it[3], it[4], bed_gz, bed_tbi]
+        [combined[0], combined[1], combined[2], combined[3], combined[4], bed_gz, bed_tbi]
     }
 
     MANTA_SOMATIC(cram_intervals, fasta, fasta_fai, [])

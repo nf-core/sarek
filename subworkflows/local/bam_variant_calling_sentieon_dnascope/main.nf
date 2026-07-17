@@ -44,7 +44,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
             ]
         }
 
-    emit_mode_items = sentieon_dnascope_emit_mode.split(',').each{ it -> it.toLowerCase().trim() }
+    emit_mode_items = sentieon_dnascope_emit_mode.split(',').each{ mode -> mode.toLowerCase().trim() }
     lst = emit_mode_items - 'gvcf'
     emit_vcf = lst.size() > 0 ? lst[0] : ''
 
@@ -52,9 +52,9 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
         cram_intervals_for_sentieon,
         fasta,
         fasta_fai,
-        dbsnp.map{it -> [[:], it]},
-        dbsnp_tbi.map{it -> [[:], it]},
-        sentieon_dnascope_model.map{it -> [[:], it]},
+        dbsnp.map{file -> [[:], file]},
+        dbsnp_tbi.map{index -> [[:], index]},
+        sentieon_dnascope_model.map{model -> [[:], model]},
         sentieon_dnascope_pcr_indel_model,
         emit_vcf,
         emit_mode_items.any{ it.equals('gvcf') })

@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2210](https://github.com/nf-core/sarek/pull/2210) - Update bcftools to 1.23.1
 - [#2229](https://github.com/nf-core/sarek/pull/2229) - Update EnsemblVEP to 116.0
 - [#2232](https://github.com/nf-core/sarek/pull/2232) - Migrate local code to the lowercase `channel` factory for Nextflow strict-syntax / 26.x readiness
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Replace explicit implicit-`it` closure parameters (`{ it -> ... }`) with descriptive named parameters for Nextflow strict-syntax / 26.x readiness
 
 ### Fixed
 
