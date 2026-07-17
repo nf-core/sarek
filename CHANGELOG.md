@@ -64,6 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2225](https://github.com/nf-core/sarek/pull/2225) - Back to dev (3.9.1dev)
 - [#2229](https://github.com/nf-core/sarek/pull/2229) - Update nft-utils to 1.0.0, migrate `getAllFilesFromDir` to `getAllFilesFromPath` in test utilities
 - [#2233](https://github.com/nf-core/sarek/pull/2233) - Replace the last remaining deprecated `channel.from` with `channel.of` in `prepare_genome`
+- [#2234](https://github.com/nf-core/sarek/pull/2234) - Replace deprecated `.set {}` channel terminator with plain assignment in local subworkflows for Nextflow strict-syntax / 26.x readiness
 
 #### Fixed
 
