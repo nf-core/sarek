@@ -38,16 +38,16 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE {
         [[],[]] // cosmic_tbi
     )
     // Figuring out if there is one or more vcf(s) from the same sample
-    vcf_branch = SENTIEON_TNSCOPE.out.vcf.branch{ items ->
+    vcf_branch = SENTIEON_TNSCOPE.out.vcf.branch{ meta, _vcf ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    items[0].num_intervals > 1
-        no_intervals: items[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
     // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_branch = SENTIEON_TNSCOPE.out.index.branch{ items ->
+    tbi_branch = SENTIEON_TNSCOPE.out.index.branch{ meta, _tbi ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    items[0].num_intervals > 1
-        no_intervals: items[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     vcf_to_merge = vcf_branch.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ] }.groupTuple()

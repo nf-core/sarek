@@ -32,10 +32,10 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     BCFTOOLS_SORT(FREEBAYES.out.vcf)
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    bcftools_vcf_out = BCFTOOLS_SORT.out.vcf.branch{ items ->
+    bcftools_vcf_out = BCFTOOLS_SORT.out.vcf.branch{ meta, _vcf ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    items[0].num_intervals > 1
-        no_intervals: items[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Only when using intervals

@@ -48,28 +48,28 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     haplotypecaller_vcf = GATK4_HAPLOTYPECALLER.out.vcf.map{
             meta, vcf_ -> [ meta - meta.subMap('interval_name'), vcf_]
         }
-        .branch{ items ->
+        .branch{ meta, _vcf ->
         // Use meta.num_intervals to asses number of intervals
-            intervals:    items[0].num_intervals > 1
-            no_intervals: items[0].num_intervals <= 1
+            intervals:    meta.num_intervals > 1
+            no_intervals: meta.num_intervals <= 1
         }
 
     // Figuring out if there is one or more tbi(s) from the same sample
     haplotypecaller_tbi = GATK4_HAPLOTYPECALLER.out.tbi.map{
             meta, tbi -> [ meta - meta.subMap('interval_name'), tbi]
-        }.branch{ items ->
+        }.branch{ meta, _tbi ->
         // Use meta.num_intervals to asses number of intervals
-            intervals:    items[0].num_intervals > 1
-            no_intervals: items[0].num_intervals <= 1
+            intervals:    meta.num_intervals > 1
+            no_intervals: meta.num_intervals <= 1
         }
 
     // Figuring out if there is one or more bam(s) from the same sample
     haplotypecaller_bam = GATK4_HAPLOTYPECALLER.out.bam.map{
             meta, bam -> [ meta - meta.subMap('interval_name'), bam]
-        }.branch{ items ->
+        }.branch{ meta, _bam ->
         // Use meta.num_intervals to asses number of intervals
-            intervals:    items[0].num_intervals > 1
-            no_intervals: items[0].num_intervals <= 1
+            intervals:    meta.num_intervals > 1
+            no_intervals: meta.num_intervals <= 1
         }
 
     // Only when using intervals

@@ -27,17 +27,17 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
     DEEPVARIANT_RUNDEEPVARIANT(cram_intervals, fasta, fasta_fai, [ [ id:'null' ], [] ], [ [ id:'null' ], [] ])
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    vcf_out = DEEPVARIANT_RUNDEEPVARIANT.out.vcf.branch{ items ->
+    vcf_out = DEEPVARIANT_RUNDEEPVARIANT.out.vcf.branch{ meta, _vcf ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    items[0].num_intervals > 1
-        no_intervals: items[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Figuring out if there is one or more gvcf(s) from the same sample
-    gvcf_out = DEEPVARIANT_RUNDEEPVARIANT.out.gvcf.branch{ items ->
+    gvcf_out = DEEPVARIANT_RUNDEEPVARIANT.out.gvcf.branch{ meta, _gvcf ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    items[0].num_intervals > 1
-        no_intervals: items[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Only when using intervals
@@ -48,10 +48,10 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
     MERGE_DEEPVARIANT_VCF(vcf_to_merge, dict)
 
     // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_out = DEEPVARIANT_RUNDEEPVARIANT.out.vcf_index.branch{ items ->
+    tbi_out = DEEPVARIANT_RUNDEEPVARIANT.out.vcf_index.branch{ meta, _tbi ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    items[0].num_intervals > 1
-        no_intervals: items[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Mix intervals and no_intervals channels together

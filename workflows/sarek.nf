@@ -139,11 +139,11 @@ workflow SAREK {
     // PREPROCESSING
     if (step == 'mapping') {
         // Figure out if input is bam, fastq, or spring
-        input_sample_type = input_sample.branch { items ->
-            bam: items[0].data_type == "bam"
-            fastq_gz: items[0].data_type == "fastq_gz"
-            one_fastq_gz_spring: items[0].data_type == "one_fastq_gz_spring"
-            two_fastq_gz_spring: items[0].data_type == "two_fastq_gz_spring"
+        input_sample_type = input_sample.branch { meta, _files ->
+            bam: meta.data_type == "bam"
+            fastq_gz: meta.data_type == "fastq_gz"
+            one_fastq_gz_spring: meta.data_type == "one_fastq_gz_spring"
+            two_fastq_gz_spring: meta.data_type == "two_fastq_gz_spring"
         }
 
         // Two fastq.gz-files

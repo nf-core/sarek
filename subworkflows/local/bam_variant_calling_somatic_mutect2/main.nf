@@ -68,27 +68,27 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    vcf_branch = MUTECT2_PAIRED.out.vcf.branch { items ->
-        intervals: items[0].num_intervals > 1
-        no_intervals: items[0].num_intervals <= 1
+    vcf_branch = MUTECT2_PAIRED.out.vcf.branch { meta, _vcf ->
+        intervals: meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_branch = MUTECT2_PAIRED.out.tbi.branch { items ->
-        intervals: items[0].num_intervals > 1
-        no_intervals: items[0].num_intervals <= 1
+    tbi_branch = MUTECT2_PAIRED.out.tbi.branch { meta, _tbi ->
+        intervals: meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    stats_branch = MUTECT2_PAIRED.out.stats.branch { items ->
-        intervals: items[0].num_intervals > 1
-        no_intervals: items[0].num_intervals <= 1
+    stats_branch = MUTECT2_PAIRED.out.stats.branch { meta, _stats ->
+        intervals: meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    f1r2_branch = MUTECT2_PAIRED.out.f1r2.branch { items ->
-        intervals: items[0].num_intervals > 1
-        no_intervals: items[0].num_intervals <= 1
+    f1r2_branch = MUTECT2_PAIRED.out.f1r2.branch { meta, _f1r2 ->
+        intervals: meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Only when using intervals
@@ -141,15 +141,15 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     GETPILEUPSUMMARIES_TUMOR(pileup_tumor, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
 
     // Figuring out if there is one or more table(s) from the same sample
-    pileup_table_normal_branch = GETPILEUPSUMMARIES_NORMAL.out.table.branch { items ->
-        intervals: items[0].num_intervals > 1
-        no_intervals: items[0].num_intervals <= 1
+    pileup_table_normal_branch = GETPILEUPSUMMARIES_NORMAL.out.table.branch { meta, _table ->
+        intervals: meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Figuring out if there is one or more table(s) from the same sample
-    pileup_table_tumor_branch = GETPILEUPSUMMARIES_TUMOR.out.table.branch { items ->
-        intervals: items[0].num_intervals > 1
-        no_intervals: items[0].num_intervals <= 1
+    pileup_table_tumor_branch = GETPILEUPSUMMARIES_TUMOR.out.table.branch { meta, _table ->
+        intervals: meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Only when using intervals
@@ -220,12 +220,12 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     vcf_mutect2 = FILTERMUTECTCALLS.out.vcf
         .map { meta, vcf_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], vcf_] }
         .concat(vcf.map { meta, vcf_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], vcf_] })
-        .unique { items -> items[0] }
+        .unique { meta, _vcf -> meta }
 
     tbi_mutect2 = FILTERMUTECTCALLS.out.tbi
         .map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] }
         .concat(tbi.map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] })
-        .unique { items -> items[0] }
+        .unique { meta, _tbi -> meta }
 
     versions = versions.mix(CALCULATECONTAMINATION.out.versions)
     versions = versions.mix(FILTERMUTECTCALLS.out.versions)
