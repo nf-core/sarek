@@ -16,7 +16,6 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     dict                           // channel: [mandatory]
     dbsnp                          // channel: [optional]
     dbsnp_tbi                      // channel: [optional]
-    dbsnp_vqsr                     // channel: [optional]
     intervals                      // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     joint_germline                 // boolean: [mandatory] [default: false] joint calling of germline variants
     sentieon_haplotyper_emit_mode

@@ -458,7 +458,6 @@ workflow SAREK {
             germline_resource,
             germline_resource_tbi,
             intervals_and_num_intervals,
-            intervals_bed_gz_tbi_and_num_intervals,
             intervals_bed_combined,
             intervals_bed_gz_tbi_combined,
             mappability,

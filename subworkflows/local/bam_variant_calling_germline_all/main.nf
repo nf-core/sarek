@@ -230,7 +230,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             dict,
             dbsnp,
             dbsnp_tbi,
-            dbsnp_vqsr,
             intervals,
             joint_germline,
             sentieon_dnascope_emit_mode,
@@ -290,7 +289,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             dict,
             dbsnp,
             dbsnp_tbi,
-            dbsnp_vqsr,
             intervals,
             joint_germline,
             sentieon_haplotyper_emit_mode)
