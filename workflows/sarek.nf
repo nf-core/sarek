@@ -353,19 +353,15 @@ workflow SAREK {
 
             // 1. Join with tumor samples, in each channel there is one key per patient now. Patients without matched tumor end up with: [ patient1, [ meta1 ], [ cram1, crai1 ], null ] as there is only one matched normal possible
             cram_variant_calling_normal_joined = cram_variant_calling_normal_to_cross.join(cram_variant_calling_tumor_grouped, failOnDuplicate: true, remainder: true)
-            bam_variant_calling_normal_joined = bam_variant_calling_normal_to_cross.join(bam_variant_calling_tumor_grouped, failOnDuplicate: true, remainder: true)
 
             // 2. Filter out entries with last entry null
             cram_variant_calling_normal_filtered = cram_variant_calling_normal_joined.filter { joined -> !(joined.last()) }
-            bam_variant_calling_normal_filtered = bam_variant_calling_normal_joined.filter { joined -> !(joined.last()) }
 
             // 3. Remove patient ID field & null value for further processing [ meta1, [ cram1, crai1 ] ] [ meta2, [ cram2, crai2 ] ] (no transposing needed since only one normal per patient ID)
             cram_variant_calling_status_normal = cram_variant_calling_normal_filtered.map { record -> [record[1], record[2], record[3]] }
-            bam_variant_calling_status_normal = bam_variant_calling_normal_filtered.map { record -> [record[1], record[2], record[3]] }
         }
         else {
             cram_variant_calling_status_normal = cram_variant_calling_status.normal
-            bam_variant_calling_status_normal = bam_variant_calling_status.normal
         }
 
         // Tumor - normal pairs
@@ -408,7 +404,6 @@ workflow SAREK {
         BAM_VARIANT_CALLING_GERMLINE_ALL(
             tools,
             skip_tools,
-            bam_variant_calling_status_normal,
             cram_variant_calling_status_normal,
             [[id: 'bwa'], []],
             cnvkit_reference,
