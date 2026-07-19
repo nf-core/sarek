@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2229](https://github.com/nf-core/sarek/pull/2229) - Update EnsemblVEP to 116.0
 - [#2232](https://github.com/nf-core/sarek/pull/2232) - Migrate local code to the lowercase `channel` factory for Nextflow strict-syntax / 26.x readiness
 - [#2235](https://github.com/nf-core/sarek/pull/2235) - Clean up local code for Nextflow strict-syntax / 26.x readiness: give all closures explicit, descriptively-named parameters (replacing implicit and generic `it`, naming single-channel closures after the source channel, and `publishDir` `saveAs` closures in `conf/modules/*.config` as `{ filename -> ... }`) and prefix unused closure parameters with `_`. Previously-unused Manta candidate VCFs and Sentieon gVCF-index channels are now exposed via `emit` rather than dropped.
-- [#2235](https://github.com/nf-core/sarek/pull/2235) - germline CNVKIT now uses the shared BAM input (consistent with tumor-only and somatic CNVKIT), reusing the single normal→BAM conversion for paired analyses instead of reading CRAM while the converted BAM went unused.
+- [#2235](https://github.com/nf-core/sarek/pull/2235) - germline CNVKIT now uses the shared BAM input (consistent with tumor-only and somatic CNVKIT). Previously germline CNVKIT was handed CRAM and re-converted it to BAM inside `CNVKIT_BATCH` (samtools), duplicating the pipeline-level `CRAM_TO_BAM` conversion of the normal; it now reuses that single conversion.
 
 ### Fixed
 
