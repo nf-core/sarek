@@ -186,7 +186,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     // STRELKA
     if (tools && tools.split(',').contains('strelka')) {
         cram_strelka = tools.split(',').contains('manta')
-            ? cram.join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf, failOnDuplicate: true, failOnMismatch: true).join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf_tbi, failOnDuplicate: true, failOnMismatch: true)
+            // Manta's candidate small indels feed Strelka; strip the manta variantcaller tag so the meta matches cram for the join
+            ? cram.join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf.map { meta, vcf -> [meta - meta.subMap('variantcaller'), vcf] }, failOnDuplicate: true, failOnMismatch: true).join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf_tbi.map { meta, tbi -> [meta - meta.subMap('variantcaller'), tbi] }, failOnDuplicate: true, failOnMismatch: true)
             : cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], []] }
 
         BAM_VARIANT_CALLING_SOMATIC_STRELKA(
