@@ -23,6 +23,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
     tools                             // Mandatory, list of tools to apply
     skip_tools                        // Mandatory, list of tools to skip
+    bam                               // channel: [mandatory] meta, bam
     cram                              // channel: [mandatory] meta, cram
     bwa                               // channel: [mandatory] meta, bwa
     cnvkit_reference                  // channel: [optional] cnvkit reference
@@ -97,7 +98,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools && tools.split(',').contains('cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT(
             // Remap channel to match module/subworkflow
-            cram.map{ meta, cram_, _crai -> [ meta, [], cram_ ] },
+            // Use the already-converted BAM (shared with somatic/tumor-only) instead of CRAM
+            bam.map{ meta, bam_, _bai -> [ meta, [], bam_ ] },
             fasta,
             fasta_fai,
             intervals_bed_combined.map{_intervals -> _intervals ? [[id:_intervals[0].baseName], _intervals]: [[id:'no_intervals'], []]},
