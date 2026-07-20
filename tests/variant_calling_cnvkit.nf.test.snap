@@ -7,8 +7,7 @@
                     "cnvkit": "0.9.11"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10",
-                    "samtools": 1.17
+                    "cnvkit": "0.9.10"
                 },
                 "CNVKIT_CALL": {
                     "cnvkit": "0.9.10"
@@ -119,17 +118,17 @@
                 "variant_calling/cnvkit/sample3/multi_intervals.antitarget.bed",
                 "variant_calling/cnvkit/sample3/multi_intervals.target.bed",
                 "variant_calling/cnvkit/sample3/reference.cnn",
+                "variant_calling/cnvkit/sample3/sample3-diagram.pdf",
+                "variant_calling/cnvkit/sample3/sample3-scatter.png",
+                "variant_calling/cnvkit/sample3/sample3.antitargetcoverage.cnn",
+                "variant_calling/cnvkit/sample3/sample3.bintest.cns",
+                "variant_calling/cnvkit/sample3/sample3.call.cns",
+                "variant_calling/cnvkit/sample3/sample3.cnr",
+                "variant_calling/cnvkit/sample3/sample3.cns",
                 "variant_calling/cnvkit/sample3/sample3.cnvcall.vcf",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted-diagram.pdf",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted-scatter.png",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.bintest.cns",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.call.cns",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.cnr",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.cns",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.genemetrics.tsv",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.germline.call.cns",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn",
+                "variant_calling/cnvkit/sample3/sample3.genemetrics.tsv",
+                "variant_calling/cnvkit/sample3/sample3.germline.call.cns",
+                "variant_calling/cnvkit/sample3/sample3.targetcoverage.cnn",
                 "variant_calling/cnvkit/sample4_vs_sample3",
                 "variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.antitarget.bed",
                 "variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.target.bed",
@@ -169,14 +168,14 @@
                 "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multi_intervals.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
                 "reference.cnn:md5,891454915f82d0eeda0be13d71e0d5d7",
-                "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
-                "test.paired_end.recalibrated.sorted.bintest.cns:md5,8d0301673b584a6a8d88bdaad87ba09d",
-                "test.paired_end.recalibrated.sorted.call.cns:md5,9254686f5d1a2718cc2a20f28d0ef3d7",
-                "test.paired_end.recalibrated.sorted.cnr:md5,da3986c5e7a9c655ce7300062cfc00fa",
-                "test.paired_end.recalibrated.sorted.cns:md5,e25853dfbbb65f5294a45a2530cded76",
-                "test.paired_end.recalibrated.sorted.genemetrics.tsv:md5,5ec3555520f502f00f551ae7900a3824",
-                "test.paired_end.recalibrated.sorted.germline.call.cns:md5,5bba48aecc2282971b9d4c562bec4591",
-                "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,4153756b30abc934f10717c023bd262f",
+                "sample3.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
+                "sample3.bintest.cns:md5,8d0301673b584a6a8d88bdaad87ba09d",
+                "sample3.call.cns:md5,9254686f5d1a2718cc2a20f28d0ef3d7",
+                "sample3.cnr:md5,da3986c5e7a9c655ce7300062cfc00fa",
+                "sample3.cns:md5,e25853dfbbb65f5294a45a2530cded76",
+                "sample3.genemetrics.tsv:md5,5ec3555520f502f00f551ae7900a3824",
+                "sample3.germline.call.cns:md5,5bba48aecc2282971b9d4c562bec4591",
+                "sample3.targetcoverage.cnn:md5,4153756b30abc934f10717c023bd262f",
                 "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multi_intervals.target.bed:md5,f9e727147a7cbca46c2b9b2de3ecae91",
                 "reference.cnn:md5,e0aefc1c8a40e6919dc9cfb686e51f7c",
@@ -201,9 +200,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-09-30T22:16:22.938969536"
+        "timestamp": "2026-07-20T10:09:45.402105"
     },
     "-profile test --tools cnvkit --input recalibrated.csv --only_paired_variant_calling": {
         "content": [
@@ -213,8 +212,7 @@
                     "cnvkit": "0.9.11"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10",
-                    "samtools": 1.17
+                    "cnvkit": "0.9.10"
                 },
                 "CNVKIT_CALL": {
                     "cnvkit": "0.9.10"
@@ -341,17 +339,17 @@
                 "variant_calling/cnvkit/sample1/multi_intervals.antitarget.bed",
                 "variant_calling/cnvkit/sample1/multi_intervals.target.bed",
                 "variant_calling/cnvkit/sample1/reference.cnn",
+                "variant_calling/cnvkit/sample1/sample1-diagram.pdf",
+                "variant_calling/cnvkit/sample1/sample1-scatter.png",
+                "variant_calling/cnvkit/sample1/sample1.antitargetcoverage.cnn",
+                "variant_calling/cnvkit/sample1/sample1.bintest.cns",
+                "variant_calling/cnvkit/sample1/sample1.call.cns",
+                "variant_calling/cnvkit/sample1/sample1.cnr",
+                "variant_calling/cnvkit/sample1/sample1.cns",
                 "variant_calling/cnvkit/sample1/sample1.cnvcall.vcf",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted-diagram.pdf",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted-scatter.png",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.bintest.cns",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.call.cns",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.cnr",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.cns",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.genemetrics.tsv",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.germline.call.cns",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.targetcoverage.cnn",
+                "variant_calling/cnvkit/sample1/sample1.genemetrics.tsv",
+                "variant_calling/cnvkit/sample1/sample1.germline.call.cns",
+                "variant_calling/cnvkit/sample1/sample1.targetcoverage.cnn",
                 "variant_calling/cnvkit/sample2",
                 "variant_calling/cnvkit/sample2/cnvkit.reference.antitarget-tmp.bed",
                 "variant_calling/cnvkit/sample2/cnvkit.reference.target-tmp.bed",
@@ -415,14 +413,14 @@
                 "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multi_intervals.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
                 "reference.cnn:md5,891454915f82d0eeda0be13d71e0d5d7",
-                "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
-                "test.paired_end.recalibrated.sorted.bintest.cns:md5,8d0301673b584a6a8d88bdaad87ba09d",
-                "test.paired_end.recalibrated.sorted.call.cns:md5,9254686f5d1a2718cc2a20f28d0ef3d7",
-                "test.paired_end.recalibrated.sorted.cnr:md5,da3986c5e7a9c655ce7300062cfc00fa",
-                "test.paired_end.recalibrated.sorted.cns:md5,e25853dfbbb65f5294a45a2530cded76",
-                "test.paired_end.recalibrated.sorted.genemetrics.tsv:md5,5ec3555520f502f00f551ae7900a3824",
-                "test.paired_end.recalibrated.sorted.germline.call.cns:md5,5bba48aecc2282971b9d4c562bec4591",
-                "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,4153756b30abc934f10717c023bd262f",
+                "sample1.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
+                "sample1.bintest.cns:md5,8d0301673b584a6a8d88bdaad87ba09d",
+                "sample1.call.cns:md5,9254686f5d1a2718cc2a20f28d0ef3d7",
+                "sample1.cnr:md5,da3986c5e7a9c655ce7300062cfc00fa",
+                "sample1.cns:md5,e25853dfbbb65f5294a45a2530cded76",
+                "sample1.genemetrics.tsv:md5,5ec3555520f502f00f551ae7900a3824",
+                "sample1.germline.call.cns:md5,5bba48aecc2282971b9d4c562bec4591",
+                "sample1.targetcoverage.cnn:md5,4153756b30abc934f10717c023bd262f",
                 "cnvkit.reference.antitarget-tmp.bed:md5,3d4d20f9f23b39970865d29ef239d20b",
                 "cnvkit.reference.target-tmp.bed:md5,657b25dbda8516624efa8cb2cf3716ca",
                 "sample2.antitargetcoverage.cnn:md5,067115082c4af4b64d58c0dc3a3642e4",
@@ -458,9 +456,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-09-30T22:19:35.224650709"
+        "timestamp": "2026-07-20T10:18:52.335661"
     },
     "-profile test --tools cnvkit --input recalibrated_germline.csv": {
         "content": [
@@ -470,8 +468,7 @@
                     "cnvkit": "0.9.11"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10",
-                    "samtools": 1.17
+                    "cnvkit": "0.9.10"
                 },
                 "CNVKIT_CALL": {
                     "cnvkit": "0.9.10"
@@ -574,17 +571,17 @@
                 "variant_calling/cnvkit/sample1/multi_intervals.antitarget.bed",
                 "variant_calling/cnvkit/sample1/multi_intervals.target.bed",
                 "variant_calling/cnvkit/sample1/reference.cnn",
+                "variant_calling/cnvkit/sample1/sample1-diagram.pdf",
+                "variant_calling/cnvkit/sample1/sample1-scatter.png",
+                "variant_calling/cnvkit/sample1/sample1.antitargetcoverage.cnn",
+                "variant_calling/cnvkit/sample1/sample1.bintest.cns",
+                "variant_calling/cnvkit/sample1/sample1.call.cns",
+                "variant_calling/cnvkit/sample1/sample1.cnr",
+                "variant_calling/cnvkit/sample1/sample1.cns",
                 "variant_calling/cnvkit/sample1/sample1.cnvcall.vcf",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted-diagram.pdf",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted-scatter.png",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.bintest.cns",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.call.cns",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.cnr",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.cns",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.genemetrics.tsv",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.germline.call.cns",
-                "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.targetcoverage.cnn"
+                "variant_calling/cnvkit/sample1/sample1.genemetrics.tsv",
+                "variant_calling/cnvkit/sample1/sample1.germline.call.cns",
+                "variant_calling/cnvkit/sample1/sample1.targetcoverage.cnn"
             ],
             [
                 "mosdepth-coverage-per-contig-single.txt:md5,49fd828d21d79a5c9430cdb30d7f0126",
@@ -602,14 +599,14 @@
                 "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multi_intervals.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
                 "reference.cnn:md5,891454915f82d0eeda0be13d71e0d5d7",
-                "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
-                "test.paired_end.recalibrated.sorted.bintest.cns:md5,8d0301673b584a6a8d88bdaad87ba09d",
-                "test.paired_end.recalibrated.sorted.call.cns:md5,9254686f5d1a2718cc2a20f28d0ef3d7",
-                "test.paired_end.recalibrated.sorted.cnr:md5,da3986c5e7a9c655ce7300062cfc00fa",
-                "test.paired_end.recalibrated.sorted.cns:md5,e25853dfbbb65f5294a45a2530cded76",
-                "test.paired_end.recalibrated.sorted.genemetrics.tsv:md5,5ec3555520f502f00f551ae7900a3824",
-                "test.paired_end.recalibrated.sorted.germline.call.cns:md5,5bba48aecc2282971b9d4c562bec4591",
-                "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,4153756b30abc934f10717c023bd262f"
+                "sample1.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
+                "sample1.bintest.cns:md5,8d0301673b584a6a8d88bdaad87ba09d",
+                "sample1.call.cns:md5,9254686f5d1a2718cc2a20f28d0ef3d7",
+                "sample1.cnr:md5,da3986c5e7a9c655ce7300062cfc00fa",
+                "sample1.cns:md5,e25853dfbbb65f5294a45a2530cded76",
+                "sample1.genemetrics.tsv:md5,5ec3555520f502f00f551ae7900a3824",
+                "sample1.germline.call.cns:md5,5bba48aecc2282971b9d4c562bec4591",
+                "sample1.targetcoverage.cnn:md5,4153756b30abc934f10717c023bd262f"
             ],
             "No BAM files",
             "No CRAM files",
@@ -620,9 +617,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-09-30T22:14:57.81598857"
+        "timestamp": "2026-07-20T10:05:28.442046"
     },
     "-profile test --tools cnvkit --input recalibrated_tumoronly.csv": {
         "content": [
@@ -779,9 +776,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-09-30T22:17:53.424126221"
+        "timestamp": "2026-07-20T10:13:42.841328"
     },
     "-profile test --tools cnvkit --input recalibrated_tumoronly.csv --no_intervals": {
         "content": [
@@ -888,17 +885,16 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-09-30T22:21:53.321675509"
+        "timestamp": "2026-07-20T10:24:27.668069"
     },
     "-profile test --tools cnvkit --input recalibrated_somatic.csv --no_intervals": {
         "content": [
             16,
             {
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10",
-                    "samtools": 1.17
+                    "cnvkit": "0.9.10"
                 },
                 "CNVKIT_CALL": {
                     "cnvkit": "0.9.10"
@@ -1003,17 +999,17 @@
                 "variant_calling/cnvkit/sample3/genome.bed",
                 "variant_calling/cnvkit/sample3/genome.target.bed",
                 "variant_calling/cnvkit/sample3/reference.cnn",
+                "variant_calling/cnvkit/sample3/sample3-diagram.pdf",
+                "variant_calling/cnvkit/sample3/sample3-scatter.png",
+                "variant_calling/cnvkit/sample3/sample3.antitargetcoverage.cnn",
+                "variant_calling/cnvkit/sample3/sample3.bintest.cns",
+                "variant_calling/cnvkit/sample3/sample3.call.cns",
+                "variant_calling/cnvkit/sample3/sample3.cnr",
+                "variant_calling/cnvkit/sample3/sample3.cns",
                 "variant_calling/cnvkit/sample3/sample3.cnvcall.vcf",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted-diagram.pdf",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted-scatter.png",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.bintest.cns",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.call.cns",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.cnr",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.cns",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.genemetrics.tsv",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.germline.call.cns",
-                "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn",
+                "variant_calling/cnvkit/sample3/sample3.genemetrics.tsv",
+                "variant_calling/cnvkit/sample3/sample3.germline.call.cns",
+                "variant_calling/cnvkit/sample3/sample3.targetcoverage.cnn",
                 "variant_calling/cnvkit/sample4_vs_sample3",
                 "variant_calling/cnvkit/sample4_vs_sample3/genome.antitarget.bed",
                 "variant_calling/cnvkit/sample4_vs_sample3/genome.bed",
@@ -1055,14 +1051,14 @@
                 "genome.bed:md5,9c6cc178da8c2c27364be9f25c9df96d",
                 "genome.target.bed:md5,d6bb0e93de375af227a800a032f08f03",
                 "reference.cnn:md5,3fa091a8b523751440fcd28dbf8a07ad",
-                "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
-                "test.paired_end.recalibrated.sorted.bintest.cns:md5,0eee70a9c66e9fe98deb5ca66b7bced5",
-                "test.paired_end.recalibrated.sorted.call.cns:md5,2613ce28533ce6b6a81a9225cc3ad498",
-                "test.paired_end.recalibrated.sorted.cnr:md5,e22929e0f8a30753574952190262878c",
-                "test.paired_end.recalibrated.sorted.cns:md5,5e89aee43d651ab25f917355c9da259f",
-                "test.paired_end.recalibrated.sorted.genemetrics.tsv:md5,5ec3555520f502f00f551ae7900a3824",
-                "test.paired_end.recalibrated.sorted.germline.call.cns:md5,9c4487e30c8f435d62da9aa978d9e792",
-                "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,cb12dff55cceeec41a4c14787d4cf62a",
+                "sample3.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
+                "sample3.bintest.cns:md5,0eee70a9c66e9fe98deb5ca66b7bced5",
+                "sample3.call.cns:md5,2613ce28533ce6b6a81a9225cc3ad498",
+                "sample3.cnr:md5,e22929e0f8a30753574952190262878c",
+                "sample3.cns:md5,5e89aee43d651ab25f917355c9da259f",
+                "sample3.genemetrics.tsv:md5,5ec3555520f502f00f551ae7900a3824",
+                "sample3.germline.call.cns:md5,9c4487e30c8f435d62da9aa978d9e792",
+                "sample3.targetcoverage.cnn:md5,cb12dff55cceeec41a4c14787d4cf62a",
                 "genome.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "genome.bed:md5,9c6cc178da8c2c27364be9f25c9df96d",
                 "genome.target.bed:md5,ee8081becc36524d35889e3b5f70961b",
@@ -1088,8 +1084,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
+            "nextflow": "25.10.4"
         },
-        "timestamp": "2025-09-30T22:20:58.031095995"
+        "timestamp": "2026-07-20T10:22:29.609745"
     }
 }
