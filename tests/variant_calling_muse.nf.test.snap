@@ -349,7 +349,7 @@
             "No BAM files",
             "No CRAM files",
             [
-                "sample4_vs_sample3.MuSE.txt:md5,32961f7d718b4a1114f168253e50ef9e"
+                "sample4_vs_sample3.MuSE.txt:md5,015deb2b6fba5916733b16d51f5ee63b"
             ],
             [
                 "sample4_vs_sample3.muse.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
