@@ -393,12 +393,12 @@
                     },
                     "muse/call": {
                         "branch": "master",
-                        "git_sha": "2ae2df92d6f5ac2d54058d0cece928e13d241912",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "muse/sump": {
                         "branch": "master",
-                        "git_sha": "2ae2df92d6f5ac2d54058d0cece928e13d241912",
+                        "git_sha": "e8c96d814d65d575a840063c90905e44ac5ecc12",
                         "installed_by": ["modules"]
                     },
                     "ngscheckmate/ncm": {
