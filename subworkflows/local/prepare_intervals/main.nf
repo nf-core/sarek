@@ -47,14 +47,11 @@ workflow PREPARE_INTERVALS {
 
             intervals_bed = CREATE_INTERVALS_BED.out.bed
 
-            versions = versions.mix(CREATE_INTERVALS_BED.out.versions)
         } else {
             intervals_combined = channel.fromPath(file(intervals)).map{bed -> [ [ id:bed.baseName ], bed ] }
             CREATE_INTERVALS_BED(file(intervals), nucleotides_per_second)
 
             intervals_bed = CREATE_INTERVALS_BED.out.bed
-
-            versions = versions.mix(CREATE_INTERVALS_BED.out.versions)
 
             // If interval file is not provided as .bed, but e.g. as .interval_list then convert to BED format
             if (intervals.endsWith(".interval_list")) {
