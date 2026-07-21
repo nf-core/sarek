@@ -203,7 +203,7 @@
                     },
                     "freebayes": {
                         "branch": "master",
-                        "git_sha": "d04951ee68e3e8b875ebf5ddb7ba6e05233624c1",
+                        "git_sha": "6fd0d62609c3a24b08c9df3df45857f974efc7ad",
                         "installed_by": ["modules"]
                     },
                     "gatk4/applybqsr": {
@@ -348,22 +348,22 @@
                     },
                     "lofreq/callparallel": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "9707facbacc9c5c02ecf0b192f0604a29351b00a",
                         "installed_by": ["modules"]
                     },
                     "manta/germline": {
                         "branch": "master",
-                        "git_sha": "ae6b18e8930fe66595c8b08633b484d42970a564",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "manta/somatic": {
                         "branch": "master",
-                        "git_sha": "ae6b18e8930fe66595c8b08633b484d42970a564",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "manta/tumoronly": {
                         "branch": "master",
-                        "git_sha": "ae6b18e8930fe66595c8b08633b484d42970a564",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "mosdepth": {
@@ -533,17 +533,17 @@
                     },
                     "strelka/germline": {
                         "branch": "master",
-                        "git_sha": "039730fab3f0150585ad46c402c6bf95396d88b5",
+                        "git_sha": "db2491458130c466967c4e9b44686314c3f37141",
                         "installed_by": ["modules"]
                     },
                     "strelka/somatic": {
                         "branch": "master",
-                        "git_sha": "039730fab3f0150585ad46c402c6bf95396d88b5",
+                        "git_sha": "db2491458130c466967c4e9b44686314c3f37141",
                         "installed_by": ["modules"]
                     },
                     "svdb/merge": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6bc8ff03ace2cb373f683b9502ce79930c8a07f0",
                         "installed_by": ["modules"]
                     },
                     "tabix/bgziptabix": {
@@ -558,7 +558,7 @@
                     },
                     "tiddit/sv": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "untar": {
@@ -593,12 +593,12 @@
                     },
                     "vcflib/vcffilter": {
                         "branch": "master",
-                        "git_sha": "401ec2b2b8d0938d12ae4f9e25819e14596b8f83",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "vcftools": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "094186cc8b196ebdded57d596d741611ff571cf3",
                         "installed_by": ["modules"]
                     },
                     "yte": {

@@ -36,7 +36,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
     somatic_sv_vcf = MANTA_SOMATIC.out.somatic_sv_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
     somatic_sv_vcf_tbi = MANTA_SOMATIC.out.somatic_sv_vcf_tbi.map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
 
-    versions = versions.mix(MANTA_SOMATIC.out.versions)
 
     emit:
     candidate_small_indels_vcf

@@ -3,9 +3,9 @@ process FREEBAYES {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
         ? 'https://depot.galaxyproject.org/singularity/freebayes:1.3.10--hbefcdb2_0'
-        : 'biocontainers/freebayes:1.3.10--hbefcdb2_0'}"
+        : 'quay.io/biocontainers/freebayes:1.3.10--hbefcdb2_0'}"
 
     input:
     tuple val(meta), path(input_1), path(input_1_index), path(input_2), path(input_2_index), path(target_bed)
@@ -17,7 +17,8 @@ process FREEBAYES {
 
     output:
     tuple val(meta), path("*.vcf.gz"), emit: vcf
-    path "versions.yml"              , emit: versions
+    tuple val("${task.process}"), val('freebayes'), eval('freebayes --version 2>&1 | sed "s/version:\s*v//g"'), emit: versions_freebayes, topic: versions
+
 
     when:
     task.ext.when == null || task.ext.when
@@ -41,21 +42,11 @@ process FREEBAYES {
         ${input} > ${prefix}.vcf
 
     bgzip ${prefix}.vcf
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        freebayes: \$(echo \$(freebayes --version 2>&1) | sed 's/version:\s*v//g' )
-    END_VERSIONS
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    echo | gzip > ${prefix}.vcf.gz
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        freebayes: \$(echo \$(freebayes --version 2>&1) | sed 's/version:\s*v//g' )
-    END_VERSIONS
+    echo "" | gzip > ${prefix}.vcf.gz
     """
 }

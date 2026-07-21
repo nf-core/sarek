@@ -35,7 +35,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
     diploid_sv_vcf                 = MANTA_GERMLINE.out.diploid_sv_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
     diploid_sv_vcf_tbi             = MANTA_GERMLINE.out.diploid_sv_vcf_tbi.map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
 
-    versions = versions.mix(MANTA_GERMLINE.out.versions)
 
     emit:
     candidate_small_indels_vcf

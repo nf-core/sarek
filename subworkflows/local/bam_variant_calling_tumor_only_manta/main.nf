@@ -35,7 +35,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
     tumor_sv_vcf = MANTA_TUMORONLY.out.tumor_sv_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
     tumor_sv_vcf_tbi = MANTA_TUMORONLY.out.tumor_sv_vcf_tbi.map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
 
-    versions = versions.mix(MANTA_TUMORONLY.out.versions)
 
     emit:
     candidate_small_indels_vcf
