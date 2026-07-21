@@ -249,7 +249,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         // vcf_mutect2 and tbi_mutect2 always contain usable output (filtered if available, otherwise unfiltered)
         vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.vcf
         tbi_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
     }
 
     // TNSCOPE

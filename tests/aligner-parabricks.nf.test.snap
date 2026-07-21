@@ -16,7 +16,7 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
@@ -246,7 +246,7 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
@@ -479,7 +479,7 @@
                     "bwa": "0.7.18-r1243-dirty"
                 },
                 "CALCULATECONTAMINATION": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -488,28 +488,28 @@
                     "fastqc": "0.12.1"
                 },
                 "FILTERMUTECTCALLS": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
                 },
                 "LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
                 "MUTECT2_PAIRED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "PARABRICKS_FQ2BAM": {
                     "parabricks": "4.6.0-1"

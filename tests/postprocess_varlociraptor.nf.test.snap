@@ -25,7 +25,7 @@
                     "yte": "1.9.4"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MERGE_GERMLINE_SOMATIC_VCFS": {
                     "bcftools": "1.23.1"
@@ -330,7 +330,7 @@
                     "bcftools": "1.23.1"
                 },
                 "CALCULATECONTAMINATION": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "CONCAT_CALLED_CHUNKS": {
                     "bcftools": "1.23.1"
@@ -342,22 +342,22 @@
                     "yte": "1.9.4"
                 },
                 "FILTERMUTECTCALLS": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATHERPILEUPSUMMARIES": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GETPILEUPSUMMARIES": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MERGEMUTECTSTATS": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MERGE_MUTECT2": {
                     "gatk4": "4.6.2.0"
@@ -366,7 +366,7 @@
                     "mosdepth": "0.3.10"
                 },
                 "MUTECT2": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "RBT_VCFSPLIT": {
                     "rbt": "0.42.2"
@@ -599,7 +599,7 @@
                     "yte": "1.9.4"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MERGE_STRELKA": {
                     "gatk4": "4.6.2.0"

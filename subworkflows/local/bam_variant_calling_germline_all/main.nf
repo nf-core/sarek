@@ -153,7 +153,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         vcf_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf
         tbi_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.tbi
 
-        versions = versions.mix(BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.versions)
 
         if (joint_germline) {
             BAM_JOINT_CALLING_GERMLINE_GATK(
@@ -173,7 +172,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
             vcf_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_vcf
             tbi_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_index
-            versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_GATK.out.versions)
         } else {
 
             // If single sample track, check if filtering should be done
@@ -191,7 +189,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 vcf_haplotypecaller = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
                 tbi_haplotypecaller = VCF_VARIANT_FILTERING_GATK.out.filtered_tbi
 
-                versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
             }
         }
     }
@@ -337,8 +334,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
                 vcf_sentieon_haplotyper = SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
                 tbi_sentieon_haplotyper = SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK.out.filtered_tbi
-
-                versions = versions.mix(SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK.out.versions)
             }
         }
     }

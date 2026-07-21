@@ -61,7 +61,6 @@ workflow PREPARE_INTERVALS {
             if (intervals.endsWith(".interval_list")) {
                 GATK4_INTERVALLISTTOBED(intervals_combined)
                 intervals_combined = GATK4_INTERVALLISTTOBED.out.bed
-                versions = versions.mix(GATK4_INTERVALLISTTOBED.out.versions)
             }
         }
 

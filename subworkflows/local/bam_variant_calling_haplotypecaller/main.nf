@@ -19,7 +19,6 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     intervals                    // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
-    versions = channel.empty()
 
     vcf           = channel.empty()
     realigned_bam = channel.empty()
@@ -91,7 +90,6 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
 
     realigned_bam = BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai
 
-    versions = versions.mix(GATK4_HAPLOTYPECALLER.out.versions)
 
     // Remove no longer necessary field: num_intervals
     vcf = haplotypecaller_vcf.map{ meta, vcf_ -> [ meta - meta.subMap('num_intervals'), vcf_ ] }
@@ -103,5 +101,4 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     vcf                // vcf
     tbi                // tbi
 
-    versions
 }

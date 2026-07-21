@@ -93,7 +93,6 @@ workflow PREPARE_GENOME {
     if (!dict_in && step != "annotate") {
         GATK4_CREATESEQUENCEDICTIONARY(fasta)
         dict = GATK4_CREATESEQUENCEDICTIONARY.out.dict.collect()
-        versions = versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
     }
     else if (dict_in) {
         dict = channel.fromPath(dict_in).map { dict_ -> [[id: 'dict'], dict_] }.collect()
