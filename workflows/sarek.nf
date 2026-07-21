@@ -139,9 +139,6 @@ workflow SAREK {
     // PREPROCESSING
     if (step == 'mapping') {
         // Figure out if input is bam, fastq, or spring
-        // NB: single explicit param + index (not destructured): input_sample has
-        // variable arity (fastq = [meta, files]; bam = [meta, bam, bai]), so a
-        // multi-param closure would fail arity under strict syntax on the bam case.
         input_sample_type = input_sample.branch { sample ->
             bam: sample[0].data_type == "bam"
             fastq_gz: sample[0].data_type == "fastq_gz"
