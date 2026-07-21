@@ -139,11 +139,11 @@ workflow SAREK {
     // PREPROCESSING
     if (step == 'mapping') {
         // Figure out if input is bam, fastq, or spring
-        input_sample_type = input_sample.branch {
-            bam: it[0].data_type == "bam"
-            fastq_gz: it[0].data_type == "fastq_gz"
-            one_fastq_gz_spring: it[0].data_type == "one_fastq_gz_spring"
-            two_fastq_gz_spring: it[0].data_type == "two_fastq_gz_spring"
+        input_sample_type = input_sample.branch { sample ->
+            bam: sample[0].data_type == "bam"
+            fastq_gz: sample[0].data_type == "fastq_gz"
+            one_fastq_gz_spring: sample[0].data_type == "one_fastq_gz_spring"
+            two_fastq_gz_spring: sample[0].data_type == "two_fastq_gz_spring"
         }
 
         // Two fastq.gz-files
@@ -289,7 +289,7 @@ workflow SAREK {
         if (tools.split(',').contains('cnvkit') || tools.split(',').contains('msisensor2') || tools.split(',').contains('muse')) {
 
             // Differentiate between bam and cram files
-            cram_variant_calling_status_tmp = cram_variant_calling.branch { meta, file, index ->
+            cram_variant_calling_status_tmp = cram_variant_calling.branch { _meta, file, _index ->
                 bam: file.toString().endsWith('.bam')
                 cram: file.toString().endsWith('.cram')
             }
@@ -309,13 +309,13 @@ workflow SAREK {
         }
 
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
-        cram_variant_calling_status = cram_variant_calling.branch { meta, file, index ->
+        cram_variant_calling_status = cram_variant_calling.branch { meta, _file, _index ->
             normal: meta.status == 0
             tumor: meta.status == 1
         }
 
         // Follow the same logic with bam as we have with cram
-        bam_variant_calling_status = bam_variant_calling.branch { meta, file, index ->
+        bam_variant_calling_status = bam_variant_calling.branch { meta, _file, _index ->
             normal: meta.status == 0
             tumor: meta.status == 1
         }
@@ -340,13 +340,13 @@ workflow SAREK {
         bam_variant_calling_tumor_joined = bam_variant_calling_tumor_grouped.join(bam_variant_calling_normal_to_cross, failOnDuplicate: true, remainder: true)
 
         // 3. Filter out entries with last entry null
-        cram_variant_calling_tumor_filtered = cram_variant_calling_tumor_joined.filter { it -> !(it.last()) }
-        bam_variant_calling_tumor_filtered = bam_variant_calling_tumor_joined.filter { it -> !(it.last()) }
+        cram_variant_calling_tumor_filtered = cram_variant_calling_tumor_joined.filter { joined -> !(joined.last()) }
+        bam_variant_calling_tumor_filtered = bam_variant_calling_tumor_joined.filter { joined -> !(joined.last()) }
 
         // 4. Transpose [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ] ] back to [ patient1, meta1, [ cram1, crai1 ], null ] [ patient1, meta2, [ cram2, crai2 ], null ]
         // and remove patient ID field & null value for further processing [ meta1, [ cram1, crai1 ] ] [ meta2, [ cram2, crai2 ] ]
-        cram_variant_calling_tumor_only = cram_variant_calling_tumor_filtered.transpose().map { it -> [it[1], it[2], it[3]] }
-        bam_variant_calling_tumor_only = bam_variant_calling_tumor_filtered.transpose().map { it -> [it[1], it[2], it[3]] }
+        cram_variant_calling_tumor_only = cram_variant_calling_tumor_filtered.transpose().map { record -> [record[1], record[2], record[3]] }
+        bam_variant_calling_tumor_only = bam_variant_calling_tumor_filtered.transpose().map { record -> [record[1], record[2], record[3]] }
 
         if (params.only_paired_variant_calling) {
             // Normal only samples
@@ -356,12 +356,12 @@ workflow SAREK {
             bam_variant_calling_normal_joined = bam_variant_calling_normal_to_cross.join(bam_variant_calling_tumor_grouped, failOnDuplicate: true, remainder: true)
 
             // 2. Filter out entries with last entry null
-            cram_variant_calling_normal_filtered = cram_variant_calling_normal_joined.filter { it -> !(it.last()) }
-            bam_variant_calling_normal_filtered = bam_variant_calling_normal_joined.filter { it -> !(it.last()) }
+            cram_variant_calling_normal_filtered = cram_variant_calling_normal_joined.filter { joined -> !(joined.last()) }
+            bam_variant_calling_normal_filtered = bam_variant_calling_normal_joined.filter { joined -> !(joined.last()) }
 
             // 3. Remove patient ID field & null value for further processing [ meta1, [ cram1, crai1 ] ] [ meta2, [ cram2, crai2 ] ] (no transposing needed since only one normal per patient ID)
-            cram_variant_calling_status_normal = cram_variant_calling_normal_filtered.map { it -> [it[1], it[2], it[3]] }
-            bam_variant_calling_status_normal = bam_variant_calling_normal_filtered.map { it -> [it[1], it[2], it[3]] }
+            cram_variant_calling_status_normal = cram_variant_calling_normal_filtered.map { record -> [record[1], record[2], record[3]] }
+            bam_variant_calling_status_normal = bam_variant_calling_normal_filtered.map { record -> [record[1], record[2], record[3]] }
         }
         else {
             cram_variant_calling_status_normal = cram_variant_calling_status.normal
@@ -458,7 +458,6 @@ workflow SAREK {
             germline_resource,
             germline_resource_tbi,
             intervals_and_num_intervals,
-            intervals_bed_gz_tbi_and_num_intervals,
             intervals_bed_combined,
             intervals_bed_gz_tbi_combined,
             mappability,
@@ -708,8 +707,8 @@ def flowcellLaneFromFastq(path) {
 def readFirstLineOfFastq(path) {
     def line = null
     try {
-        path.withInputStream {
-            def InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
+        path.withInputStream { stream ->
+            def InputStream gzipStream = new java.util.zip.GZIPInputStream(stream)
             def Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
             def BufferedReader buffered = new BufferedReader(decoder)
             line = buffered.readLine()

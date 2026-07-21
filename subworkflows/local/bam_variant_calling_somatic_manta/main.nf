@@ -17,35 +17,36 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
     versions = channel.empty()
 
     // Combine cram and intervals, account for 0 intervals
-    cram_intervals = cram.combine(intervals).map{ it ->
-        def bed_gz = it.size() > 5 ? it[5] : []
-        def bed_tbi = it.size() > 5 ? it[6] : []
+    cram_intervals = cram.combine(intervals).map{ combined ->
+        def bed_gz = combined.size() > 5 ? combined[5] : []
+        def bed_tbi = combined.size() > 5 ? combined[6] : []
 
-        [it[0], it[1], it[2], it[3], it[4], bed_gz, bed_tbi]
+        [combined[0], combined[1], combined[2], combined[3], combined[4], bed_gz, bed_tbi]
     }
 
     MANTA_SOMATIC(cram_intervals, fasta, fasta_fai, [])
 
-    candidate_small_indels_vcf = MANTA_SOMATIC.out.candidate_small_indels_vcf
-    candidate_small_indels_vcf_tbi = MANTA_SOMATIC.out.candidate_small_indels_vcf_tbi
-    candidate_sv_vcf = MANTA_SOMATIC.out.candidate_sv_vcf
-    diploid_sv_vcf = MANTA_SOMATIC.out.diploid_sv_vcf
-    diploid_sv_vcf_tbi = MANTA_SOMATIC.out.diploid_sv_vcf_tbi
-    somatic_sv_vcf = MANTA_SOMATIC.out.somatic_sv_vcf
-    somatic_sv_vcf_tbi = MANTA_SOMATIC.out.somatic_sv_vcf_tbi
-
-    // Only diploid and somatic SV should get annotated
     // add variantcaller to meta map
-    vcf = channel.empty().mix(diploid_sv_vcf, somatic_sv_vcf).map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
-    tbi = channel.empty().mix(diploid_sv_vcf_tbi, somatic_sv_vcf_tbi).map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
+    candidate_small_indels_vcf = MANTA_SOMATIC.out.candidate_small_indels_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
+    candidate_small_indels_vcf_tbi = MANTA_SOMATIC.out.candidate_small_indels_vcf_tbi.map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
+    candidate_sv_vcf = MANTA_SOMATIC.out.candidate_sv_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
+    candidate_sv_vcf_tbi = MANTA_SOMATIC.out.candidate_sv_vcf_tbi.map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
+    diploid_sv_vcf = MANTA_SOMATIC.out.diploid_sv_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
+    diploid_sv_vcf_tbi = MANTA_SOMATIC.out.diploid_sv_vcf_tbi.map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
+    somatic_sv_vcf = MANTA_SOMATIC.out.somatic_sv_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
+    somatic_sv_vcf_tbi = MANTA_SOMATIC.out.somatic_sv_vcf_tbi.map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
 
     versions = versions.mix(MANTA_SOMATIC.out.versions)
 
     emit:
     candidate_small_indels_vcf
     candidate_small_indels_vcf_tbi
-    vcf
-    tbi
+    candidate_sv_vcf
+    candidate_sv_vcf_tbi
+    diploid_sv_vcf
+    diploid_sv_vcf_tbi
+    somatic_sv_vcf
+    somatic_sv_vcf_tbi
 
     versions
 }

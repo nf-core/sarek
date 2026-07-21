@@ -31,8 +31,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
 
     // If no germline resource is provided, then create an empty channel to avoid GetPileupsummaries from being run
     // Handle channel.value([]) input from prepare_genome by converting to proper empty channel
-    germline_resource_pileup = germline_resource.filter { it != [] }
-    germline_resource_pileup_tbi = germline_resource_tbi.filter { it != [] }
+    germline_resource_pileup = germline_resource.filter { germline_resource_ -> germline_resource_ != [] }
+    germline_resource_pileup_tbi = germline_resource_tbi.filter { germline_resource_tbi_ -> germline_resource_tbi_ != [] }
 
     // Combine input and intervals for spread and gather strategy
     input_intervals = input
@@ -58,27 +58,27 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    vcf_branch = MUTECT2.out.vcf.branch {
-        intervals: it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+    vcf_branch = MUTECT2.out.vcf.branch { meta, _vcf ->
+        intervals: meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_branch = MUTECT2.out.tbi.branch {
-        intervals: it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+    tbi_branch = MUTECT2.out.tbi.branch { meta, _tbi ->
+        intervals: meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Figuring out if there is one or more stats(s) from the same sample
-    stats_branch = MUTECT2.out.stats.branch {
-        intervals: it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+    stats_branch = MUTECT2.out.stats.branch { meta, _stats ->
+        intervals: meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Figuring out if there is one or more f1r2(s) from the same sample
-    f1r2_branch = MUTECT2.out.f1r2.branch {
-        intervals: it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+    f1r2_branch = MUTECT2.out.f1r2.branch { meta, _f1r2 ->
+        intervals: meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Only when using intervals
@@ -105,9 +105,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     GETPILEUPSUMMARIES(pileup_input, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
 
     // Figuring out if there is one or more table(s) from the same sample
-    pileup_table_branch = GETPILEUPSUMMARIES.out.table.branch {
-        intervals: it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+    pileup_table_branch = GETPILEUPSUMMARIES.out.table.branch { meta, _table ->
+        intervals: meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Only when using intervals
@@ -157,12 +157,12 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     vcf_mutect2 = FILTERMUTECTCALLS.out.vcf
         .map { meta, vcf_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], vcf_] }
         .concat(vcf.map { meta, vcf_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], vcf_] })
-        .unique { it[0] }
+        .unique { meta, _vcf -> meta }
 
     tbi_mutect2 = FILTERMUTECTCALLS.out.tbi
         .map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] }
         .concat(tbi.map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] })
-        .unique { it[0] }
+        .unique { meta, _tbi -> meta }
 
     versions = versions.mix(CALCULATECONTAMINATION.out.versions)
     versions = versions.mix(FILTERMUTECTCALLS.out.versions)

@@ -27,24 +27,24 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     STRELKA_SINGLE(cram_intervals, fasta, fasta_fai)
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    genome_vcf = STRELKA_SINGLE.out.genome_vcf.branch{
+    genome_vcf = STRELKA_SINGLE.out.genome_vcf.branch{ meta, _vcf ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    vcf_out = STRELKA_SINGLE.out.vcf.branch{
+    vcf_out = STRELKA_SINGLE.out.vcf.branch{ meta, _vcf ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_out = STRELKA_SINGLE.out.vcf_tbi.branch{
+    tbi_out = STRELKA_SINGLE.out.vcf_tbi.branch{ meta, _tbi ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Only when using intervals

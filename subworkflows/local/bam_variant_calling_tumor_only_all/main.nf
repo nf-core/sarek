@@ -31,7 +31,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     germline_resource             // channel: [optional]  germline_resource
     germline_resource_tbi         // channel: [optional]  germline_resource_tbi
     intervals                     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
-    intervals_bed_gz_tbi          // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi, num_intervals ] or [ [], [], 0 ] if no intervals
     intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
     intervals_bed_gz_tbi_combined // channel: [mandatory] intervals/target regions in one file zipped
     mappability
@@ -102,7 +101,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             fasta,
             fasta_fai,
             [[id: "null"], []],
-            cnvkit_reference.map { it -> [[id: it[0].baseName], it] },
+            cnvkit_reference.map { reference -> [[id: reference[0].baseName], reference] },
         )
 
         versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
@@ -181,8 +180,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             intervals_bed_gz_tbi_combined,
         )
 
-        vcf_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.vcf
-        tbi_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.tbi
+        vcf_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.tumor_sv_vcf
+        tbi_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.tumor_sv_vcf_tbi
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.versions)
     }
 

@@ -15,7 +15,7 @@ workflow CONSENSUS {
     ch_versions = channel.empty()
 
     ch_vcfs = vcfs
-        .branch{ meta, vcf, tbi ->
+        .branch{ meta, _vcf, _tbi ->
             // Somatic Strelka samples have tumor_id field (tumor-normal pairs)
             // This is semantically equivalent to checking status == '1' (tumor) but more explicit
             strelka_somatic: meta.variantcaller == 'strelka' && meta.tumor_id
@@ -50,8 +50,8 @@ workflow CONSENSUS {
                             // Sort by vcf name for predictable isec input order
                             // callers list will match isec output order in sites.txt
                             def sorted_pairs = vcf_caller_pairs.sort { a, b -> a[0].name <=> b[0].name }
-                            def sorted_vcfs = sorted_pairs.collect { it[0] }
-                            def callers = sorted_pairs.collect { it[1] }
+                            def sorted_vcfs = sorted_pairs.collect { pair -> pair[0] }
+                            def callers = sorted_pairs.collect { pair -> pair[1] }
                             // file_list, targets_file, regions_file are unused: VCFs are passed positionally
                             // and consensus is computed genome-wide (no region/target restriction)
                             [meta + [callers: callers], sorted_vcfs, tbis, [], [], []]
@@ -62,7 +62,7 @@ workflow CONSENSUS {
 
     // Filter out empty isec results (no consensus variants found)
     ch_isec_with_results = BCFTOOLS_ISEC.out.results
-        .filter { meta, dir ->
+        .filter { _meta, dir ->
             def sites_file = dir.resolve('sites.txt')
             sites_file.exists() && sites_file.size() > 0
         }

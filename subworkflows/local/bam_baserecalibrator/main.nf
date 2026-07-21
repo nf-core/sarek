@@ -36,10 +36,10 @@ workflow BAM_BASERECALIBRATOR {
     )
 
     // Figuring out if there is one or more table(s) from the same sample
-    table_to_merge = GATK4_BASERECALIBRATOR.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple().branch{
+    table_to_merge = GATK4_BASERECALIBRATOR.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple().branch{ meta, _table ->
         // Use meta.num_intervals to asses number of intervals
-        single:   it[0].num_intervals <= 1
-        multiple: it[0].num_intervals > 1
+        single:   meta.num_intervals <= 1
+        multiple: meta.num_intervals > 1
     }
 
     // Only when using intervals

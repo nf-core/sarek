@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2210](https://github.com/nf-core/sarek/pull/2210) - Update bcftools to 1.23.1
 - [#2229](https://github.com/nf-core/sarek/pull/2229) - Update EnsemblVEP to 116.0
 - [#2232](https://github.com/nf-core/sarek/pull/2232) - Migrate local code to the lowercase `channel` factory for Nextflow strict-syntax / 26.x readiness
+- [#2235](https://github.com/nf-core/sarek/pull/2235) - Nextflow strict-syntax / 26.x readiness for local code: explicit, named closure parameters (replacing implicit/generic `it`), `_`-prefixed unused parameters, and removal of unused `take:` inputs. Previously-dropped Manta candidate VCFs and Sentieon gVCF indices are now emitted.
+- [#2235](https://github.com/nf-core/sarek/pull/2235) - germline CNVKIT reuses the shared `CRAM_TO_BAM` conversion instead of re-converting CRAM internally, avoiding a duplicate conversion. Side effect: with `--step variant_calling` (user-supplied CRAM/BAM), CNVKit output files are named after the input file rather than the sample; runs from FASTQ are unaffected.
 
 ### Fixed
 
