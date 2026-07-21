@@ -126,7 +126,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
         MSISENSOR2_MSI(bam, msisensor2_models)
 
-        versions = versions.mix(MSISENSOR2_MSI.out.versions)
         out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.distribution)
         out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.somatic)
     }
