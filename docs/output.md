@@ -827,28 +827,31 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
 
 [CNVKit](https://cnvkit.readthedocs.io/en/stable/) is a toolkit to infer and visualize copy number from high-throughput DNA sequencing data. It is designed for use with hybrid capture, including both whole-exome and custom target panels, and short-read sequencing platforms such as Illumina. For further reading and documentation, see the [CNVKit Documentation](https://cnvkit.readthedocs.io/en/stable/plots.html)
 
+> [!NOTE]
+> CNVKit output **file names** are derived from the input alignment file, not the sample name. For the default workflow (samples recalibrated within the pipeline) the prefix is `<sample>.recal` — e.g. `<sample>.recal.cnr`. When starting from `--step variant_calling`, the prefix matches the base name of the CRAM/BAM you provide. The output **directories** are still named after the sample (`<sample>` and `<tumorsample>_vs_<normalsample>`). The `.recal` prefix shown in the file lists below reflects this default workflow.
+
 <details markdown="1">
 <summary>Output files for normal and tumor-only samples</summary>
 
 **Output directory: `{outdir}/variant_calling/cnvkit/<sample>/`**
 
-- `<sample>.antitargetcoverage.cnn`
+- `<sample>.recal.antitargetcoverage.cnn`
   - file containing coverage information
-- `<sample>.targetcoverage.cnn`
+- `<sample>.recal.targetcoverage.cnn`
   - file containing coverage information
-- `<sample>-diagram.pdf`
+- `<sample>.recal-diagram.pdf`
   - file with plot of copy numbers or segments on chromosomes
-- `<sample>-scatter.png`
+- `<sample>.recal-scatter.png`
   - file with plot of bin-level log2 coverages and segmentation calls
-- `<sample>.bintest.cns`
+- `<sample>.recal.bintest.cns`
   - file containing copy number segment information
-- `<sample>.cnr`
+- `<sample>.recal.cnr`
   - file containing copy number ratio information
-- `<sample>.cns`
+- `<sample>.recal.cns`
   - file containing copy number segment information
-- `<sample>.call.cns`
+- `<sample>.recal.call.cns`
   - file containing copy number segment information
-- `<sample>.genemetrics.tsv`
+- `<sample>.recal.genemetrics.tsv`
   - file containing per gene copy number information (if input files are annotated)
   </details>
 
@@ -857,27 +860,27 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
 
 **Output directory: `{outdir}/variant_calling/cnvkit/<tumorsample_vs_normalsample>/`**
 
-- `<normalsample>.antitargetcoverage.cnn`
+- `<normalsample>.recal.antitargetcoverage.cnn`
   - file containing coverage information
-- `<normalsample>.targetcoverage.cnn`
+- `<normalsample>.recal.targetcoverage.cnn`
   - file containing coverage information
-- `<tumorsample>.antitargetcoverage.cnn`
+- `<tumorsample>.recal.antitargetcoverage.cnn`
   - file containing coverage information
-- `<tumorsample>.targetcoverage.cnn`
+- `<tumorsample>.recal.targetcoverage.cnn`
   - file containing coverage information
-- `<tumorsample>.bintest.cns`
+- `<tumorsample>.recal.bintest.cns`
   - file containing copy number segment information
-- `<tumorsample>-scatter.png`
+- `<tumorsample>.recal-scatter.png`
   - file with plot of bin-level log2 coverages and segmentation calls
-- `<tumorsample>-diagram.pdf`
+- `<tumorsample>.recal-diagram.pdf`
   - file with plot of copy numbers or segments on chromosomes
-- `<tumorsample>.cnr`
+- `<tumorsample>.recal.cnr`
   - file containing copy number ratio information
-- `<tumorsample>.cns`
+- `<tumorsample>.recal.cns`
   - file containing copy number segment information
-- `<tumorsample>.call.cns`
+- `<tumorsample>.recal.call.cns`
   - file containing copy number segment information
-- `<tumorsample>.genemetrics.tsv`
+- `<tumorsample>.recal.genemetrics.tsv`
   - file containing per gene copy number information (if input files are annotated)
   </details>
 
