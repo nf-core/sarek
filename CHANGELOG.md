@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2240](https://github.com/nf-core/sarek/pull/2240) - Migrate variant-calling modules (`freebayes`, `strelka`, `manta`, `tiddit`, `lofreq`, `svdb`, `vcflib`, `vcftools`) to the versions topic channel
 - [#2241](https://github.com/nf-core/sarek/pull/2241) - Migrate `samtools/*` and `mosdepth` modules to the versions topic channel
 - [#2242](https://github.com/nf-core/sarek/pull/2242) - Migrate QC/coverage modules (`fastqc`, `ngscheckmate`, `goleft`, `msisensor2`, `msisensorpro`, `ascat`) to the versions topic channel
+- [#2243](https://github.com/nf-core/sarek/pull/2243) - Migrate `cnvkit/*` modules to the versions topic channel (rewires `cnvkit/batch` for its new input signature)
 
 ### Fixed
 
@@ -53,6 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | vcftools      | 0.1.16      | 0.1.17      |
 | samtools      | 1.21        | 1.24        |
 | mosdepth      | 0.3.10      | 0.3.14      |
+| cnvkit        | 0.9.11      | 0.9.12      |
 
 ### Dependencies - plugins
 
