@@ -21,19 +21,22 @@ workflow BAM_CONVERT_SAMTOOLS {
     main:
     versions = channel.empty()
 
+    // Combined [ meta, fasta, fai ] channel for the updated samtools modules
+    fasta_and_fai = fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai ] }
+
     // Index File if not PROVIDED -> this also requires updates to samtools view possibly URGH
 
     // MAP - MAP
-    SAMTOOLS_VIEW_MAP_MAP(input, fasta, [], [])
+    SAMTOOLS_VIEW_MAP_MAP(input, fasta_and_fai, [[], []], [[], []], [])
 
     // UNMAP - UNMAP
-    SAMTOOLS_VIEW_UNMAP_UNMAP(input, fasta, [], [])
+    SAMTOOLS_VIEW_UNMAP_UNMAP(input, fasta_and_fai, [[], []], [[], []], [])
 
     // UNMAP - MAP
-    SAMTOOLS_VIEW_UNMAP_MAP(input, fasta, [], [])
+    SAMTOOLS_VIEW_UNMAP_MAP(input, fasta_and_fai, [[], []], [[], []], [])
 
     // MAP - UNMAP
-    SAMTOOLS_VIEW_MAP_UNMAP(input, fasta, [], [])
+    SAMTOOLS_VIEW_MAP_UNMAP(input, fasta_and_fai, [[], []], [[], []], [])
 
     // Merge UNMAP
     all_unmapped_bam = SAMTOOLS_VIEW_UNMAP_UNMAP.out.bam
@@ -41,7 +44,7 @@ workflow BAM_CONVERT_SAMTOOLS {
         .join(SAMTOOLS_VIEW_MAP_UNMAP.out.bam, failOnDuplicate: true, remainder: true)
         .map{ meta, unmap_unmap, unmap_map, map_unmap -> [ meta, [ unmap_unmap, unmap_map, map_unmap ] ] }
 
-    SAMTOOLS_MERGE_UNMAP(all_unmapped_bam, fasta, fasta_fai)
+    SAMTOOLS_MERGE_UNMAP(all_unmapped_bam.map { meta, bams -> [ meta, bams, [] ] }, fasta_and_fai.map { meta, fasta_, fai -> [ meta, fasta_, fai, [] ] })
 
     // Collate & convert unmapped
     COLLATE_FASTQ_UNMAP(SAMTOOLS_MERGE_UNMAP.out.bam, fasta, interleaved)
@@ -60,13 +63,6 @@ workflow BAM_CONVERT_SAMTOOLS {
     reads = CAT_FASTQ.out.reads
 
     // Gather versions of all tools used
-    versions = versions.mix(COLLATE_FASTQ_MAP.out.versions)
-    versions = versions.mix(COLLATE_FASTQ_UNMAP.out.versions)
-    versions = versions.mix(SAMTOOLS_MERGE_UNMAP.out.versions)
-    versions = versions.mix(SAMTOOLS_VIEW_MAP_MAP.out.versions)
-    versions = versions.mix(SAMTOOLS_VIEW_MAP_UNMAP.out.versions)
-    versions = versions.mix(SAMTOOLS_VIEW_UNMAP_MAP.out.versions)
-    versions = versions.mix(SAMTOOLS_VIEW_UNMAP_UNMAP.out.versions)
 
     emit:
     reads

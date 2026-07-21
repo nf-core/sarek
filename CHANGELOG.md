@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2238](https://github.com/nf-core/sarek/pull/2238) - Migrate `gatk4`/`gatk4spark` modules to the versions topic channel (bumps gatk4spark 4.6.1.0 → 4.6.2.0)
 - [#2239](https://github.com/nf-core/sarek/pull/2239) - Migrate alignment/UMI/utility modules (`bwa`, `bwamem2`, `dragmap`, `fgbio`, `fastp`, `cat`, `gawk`, `gunzip`, `untar`, `unzip`, `spring`) to the versions topic channel (fastp 0.24.0 → 1.1.0)
 - [#2240](https://github.com/nf-core/sarek/pull/2240) - Migrate variant-calling modules (`freebayes`, `strelka`, `manta`, `tiddit`, `lofreq`, `svdb`, `vcflib`, `vcftools`) to the versions topic channel
+- [#2241](https://github.com/nf-core/sarek/pull/2241) - Migrate `samtools/*` modules to the versions topic channel
 
 ### Fixed
 
@@ -48,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | svdb          | 2.8.2       | 2.8.4       |
 | tiddit        | 3.6.1       | 3.9.5       |
 | vcftools      | 0.1.16      | 0.1.17      |
+| samtools      | 1.21        | 1.24        |
 
 ### Dependencies - plugins
 

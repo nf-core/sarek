@@ -87,8 +87,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
 
     if (val_save_output_as_bam) {
         // Convert CRAM files to BAM
-        CRAM_TO_BAM(cram_variant_calling, ch_fasta, ch_fasta_fai)
-        ch_versions = ch_versions.mix(CRAM_TO_BAM.out.versions)
+        CRAM_TO_BAM(cram_variant_calling, ch_fasta.combine(ch_fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai ] })
         CHANNEL_ALIGN_CREATE_CSV(CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true), val_outdir, val_save_output_as_bam)
     } else if (val_save_mapped) {
         CHANNEL_ALIGN_CREATE_CSV(cram_variant_calling, val_outdir, val_save_output_as_bam)

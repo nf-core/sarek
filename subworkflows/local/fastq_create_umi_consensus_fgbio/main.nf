@@ -57,7 +57,7 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
         }
 
     // Merge across runs/lanes for the same sample
-    MERGE_CONSENSUS(bams_to_merge.multiple, [[], []], [[], []])
+    MERGE_CONSENSUS(bams_to_merge.multiple.map { meta, bams -> [ meta, bams, [] ] }, [[], [], [], []])
 
     bams_all = MERGE_CONSENSUS.out.bam.mix(bams_to_merge.single)
 
@@ -72,8 +72,6 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     call_min_baseq = 10
     CALLUMICONSENSUS(GROUPREADSBYUMI.out.bam, call_min_reads, call_min_baseq)
 
-    ch_versions = ch_versions.mix(BAM2FASTQ.out.versions)
-    ch_versions = ch_versions.mix(MERGE_CONSENSUS.out.versions)
 
     emit:
     umibam         = FASTQTOBAM.out.bam             // channel: [ val(meta), [ bam ] ]

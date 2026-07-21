@@ -29,7 +29,6 @@ workflow CRAM_QC_MOSDEPTH_SAMTOOLS {
 
     // Gather versions of all tools used
     versions = versions.mix(MOSDEPTH.out.versions)
-    versions = versions.mix(SAMTOOLS_STATS.out.versions)
 
     emit:
     reports

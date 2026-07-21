@@ -292,7 +292,7 @@ workflow SAREK {
             }
 
             // convert cram files
-            CRAM_TO_BAM(cram_variant_calling_status_tmp.cram, fasta, fasta_fai)
+            CRAM_TO_BAM(cram_variant_calling_status_tmp.cram, fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai ] })
 
             // gather all bam files
             bam_variant_calling = CRAM_TO_BAM.out.bam
@@ -301,8 +301,6 @@ workflow SAREK {
                 .map { meta, bam, bai ->
                     [meta + [data_type: 'bam'], bam, bai]
                 }
-
-            versions = versions.mix(CRAM_TO_BAM.out.versions)
         }
 
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs

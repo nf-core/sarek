@@ -1,5 +1,6 @@
 name: samtools_faidx
-description: Index FASTA file, and optionally generate a file of chromosome sizes
+description: Index FASTA file, and optionally generate a file of chromosome
+  sizes
 keywords:
   - index
   - fasta
@@ -14,7 +15,8 @@ tools:
       homepage: http://www.htslib.org/
       documentation: http://www.htslib.org/doc/samtools.html
       doi: 10.1093/bioinformatics/btp352
-      licence: ["MIT"]
+      licence:
+        - "MIT"
       identifier: biotools:samtools
 input:
   - - meta:
@@ -27,11 +29,6 @@ input:
         description: FASTA file
         pattern: "*.{fa,fasta}"
         ontologies: []
-  - - meta2:
-        type: map
-        description: |
-          Groovy Map containing reference information
-          e.g. [ id:'test' ]
     - fai:
         type: file
         description: FASTA index file
@@ -40,7 +37,6 @@ input:
   - get_sizes:
       type: boolean
       description: use cut to get the sizes of the index (true) or not (false)
-
 output:
   fa:
     - - meta:
@@ -86,13 +82,27 @@ output:
           description: Optional gzip index file for compressed inputs
           pattern: "*.gzi"
           ontologies: []
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - samtools:
+          type: string
+          description: The tool name
+      - "samtools version | sed '1!d;s/.* //'":
+          type: eval
+          description: The command used to generate the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - samtools:
+          type: string
+          description: The tool name
+      - "samtools version | sed '1!d;s/.* //'":
+          type: eval
+          description: The command used to generate the version of the tool
 authors:
   - "@drpatelh"
   - "@ewels"
@@ -100,3 +110,4 @@ authors:
 maintainers:
   - "@maxulysse"
   - "@phue"
+  - "@matthdsm"

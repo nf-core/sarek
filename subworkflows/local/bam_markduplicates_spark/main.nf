@@ -42,7 +42,6 @@ workflow BAM_MARKDUPLICATES_SPARK {
     reports = reports.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.reports)
 
     // Gather versions of all tools used
-    versions = versions.mix(INDEX_MARKDUPLICATES.out.versions)
     versions = versions.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.versions)
 
     emit:

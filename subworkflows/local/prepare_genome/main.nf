@@ -99,9 +99,8 @@ workflow PREPARE_GENOME {
     }
 
     if (!fasta_fai_in && step != "annotate") {
-        SAMTOOLS_FAIDX(fasta, [[id: 'no_fai'], []], false)
+        SAMTOOLS_FAIDX(fasta.map { meta, fasta_ -> [ meta, fasta_, [] ] }, false)
         fasta_fai = SAMTOOLS_FAIDX.out.fai.collect()
-        versions = versions.mix(SAMTOOLS_FAIDX.out.versions)
     }
     else if (fasta_fai_in) {
         fasta_fai = channel.fromPath(fasta_fai_in).map { fai -> [[id: 'fai'], fai] }.collect()
