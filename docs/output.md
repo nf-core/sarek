@@ -828,7 +828,7 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
 [CNVKit](https://cnvkit.readthedocs.io/en/stable/) is a toolkit to infer and visualize copy number from high-throughput DNA sequencing data. It is designed for use with hybrid capture, including both whole-exome and custom target panels, and short-read sequencing platforms such as Illumina. For further reading and documentation, see the [CNVKit Documentation](https://cnvkit.readthedocs.io/en/stable/plots.html)
 
 > [!NOTE]
-> When starting from `--step variant_calling` with a pre-aligned CRAM/BAM, CNVKit output **file names** follow the base name of the input alignment file rather than the sample ID (a side effect of CNVKit reusing the shared `CRAM_TO_BAM` conversion). Runs starting from FASTQ are unaffected — the sample-based file names listed below still apply. Output **directories** are always named after the sample (`<sample>` / `<tumorsample>_vs_<normalsample>`).
+> When starting from `--step variant_calling` with a pre-aligned CRAM/BAM, CNVKit output **file names** follow the base name of the input file rather than the sample ID. Runs starting from FASTQ are unaffected — the sample-based names listed below apply. Output **directories** are always named after the sample (`<sample>` / `<tumorsample>_vs_<normalsample>`).
 
 <details markdown="1">
 <summary>Output files for normal and tumor-only samples</summary>
