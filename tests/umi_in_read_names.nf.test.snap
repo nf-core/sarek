@@ -10,7 +10,7 @@
                     "gawk": "5.3.0"
                 },
                 "FGBIO_COPYUMIFROMREADNAME": {
-                    "fgbio": "2.4.0"
+                    "fgbio": "3.1.2"
                 },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.6.2.0"
@@ -269,14 +269,14 @@
                     "bcftools": "1.23.1"
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "COLLATE_FASTQ_MAP": {
                     "samtools": 1.21
@@ -291,7 +291,7 @@
                     "fastqc": "0.12.1"
                 },
                 "FGBIO_COPYUMIFROMREADNAME": {
-                    "fgbio": "2.4.0"
+                    "fgbio": "3.1.2"
                 },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.6.2.0"

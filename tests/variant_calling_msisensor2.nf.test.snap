@@ -11,7 +11,7 @@
                     "tabix": "1.21"
                 },
                 "UNTAR_MSISENSOR2_MODELS": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -104,7 +104,7 @@
                     "tabix": "1.21"
                 },
                 "UNTAR_MSISENSOR2_MODELS": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
@@ -184,7 +184,7 @@
                     "tabix": "1.21"
                 },
                 "UNTAR_MSISENSOR2_MODELS": {
-                    "untar": 1.34
+                    "untar": "1.34"
                 }
             },
             [
