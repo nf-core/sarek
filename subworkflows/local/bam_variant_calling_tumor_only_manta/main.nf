@@ -15,7 +15,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
     intervals     // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi ] or [ [], [] ] if no intervals
 
     main:
-    versions = channel.empty()
 
     // Combine cram and intervals, account for 0 intervals
     cram_intervals = cram.combine(intervals).map{ combined ->
@@ -35,7 +34,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
     tumor_sv_vcf = MANTA_TUMORONLY.out.tumor_sv_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
     tumor_sv_vcf_tbi = MANTA_TUMORONLY.out.tumor_sv_vcf_tbi.map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
 
-
     emit:
     candidate_small_indels_vcf
     candidate_small_indels_vcf_tbi
@@ -44,5 +42,4 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
     tumor_sv_vcf
     tumor_sv_vcf_tbi
 
-    versions
 }

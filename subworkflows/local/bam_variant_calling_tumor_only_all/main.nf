@@ -167,7 +167,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         )
         vcf_lofreq = BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.vcf
         tbi_lofreq = BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.versions)
     }
 
     // MANTA
@@ -181,7 +180,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
         vcf_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.tumor_sv_vcf
         tbi_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.tumor_sv_vcf_tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.versions)
     }
 
     // TIDDIT
@@ -194,7 +192,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
         vcf_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.vcf
         tbi_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
     }
 
     // TNSCOPE

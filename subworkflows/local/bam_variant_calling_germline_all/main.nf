@@ -204,7 +204,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         vcf_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.diploid_sv_vcf
         tbi_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.diploid_sv_vcf_tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
     }
 
     // INDEXCOV, for WGS only
@@ -352,7 +351,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         vcf_strelka = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.vcf
         tbi_strelka = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
     }
 
     // TIDDIT
@@ -366,7 +364,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         vcf_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.vcf
         tbi_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
     }
 
     vcf_all = channel.empty().mix(

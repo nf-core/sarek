@@ -10,13 +10,10 @@ workflow VCF_QC_BCFTOOLS_VCFTOOLS {
 
     main:
 
-    versions = channel.empty()
-
     BCFTOOLS_STATS(vcf.map{ meta, vcf_ -> [ meta, vcf_, [] ] }, [[:],[]], [[:],[]], [[:],[]], [[:],[]], [[:],[]])
     VCFTOOLS_TSTV_COUNT(vcf, target_bed, [])
     VCFTOOLS_TSTV_QUAL(vcf, target_bed, [])
     VCFTOOLS_SUMMARY(vcf, target_bed, [])
-
 
     emit:
     bcftools_stats          = BCFTOOLS_STATS.out.stats
@@ -24,5 +21,4 @@ workflow VCF_QC_BCFTOOLS_VCFTOOLS {
     vcftools_tstv_qual      = VCFTOOLS_TSTV_QUAL.out.tstv_qual
     vcftools_filter_summary = VCFTOOLS_SUMMARY.out.filter_summary
 
-    versions
 }

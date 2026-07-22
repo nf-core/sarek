@@ -17,8 +17,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_TIDDIT {
 
     main:
 
-    versions = channel.empty()
-
     TIDDIT_NORMAL(cram_normal, fasta, bwa)
     TIDDIT_TUMOR(cram_tumor, fasta, bwa)
 
@@ -27,11 +25,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_TIDDIT {
     vcf = SVDB_MERGE.out.vcf.map{ meta, vcf -> [ meta + [ variantcaller:'tiddit' ], vcf ] }
     tbi = SVDB_MERGE.out.tbi.map{ meta, tbi -> [ meta + [ variantcaller:'tiddit' ], tbi ] }
 
-    versions = versions.mix(TIDDIT_NORMAL.out.versions)
-    versions = versions.mix(TIDDIT_TUMOR.out.versions)
-
     emit:
-    versions
     vcf
     tbi
 }

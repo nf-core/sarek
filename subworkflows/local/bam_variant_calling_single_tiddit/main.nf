@@ -14,7 +14,6 @@ workflow BAM_VARIANT_CALLING_SINGLE_TIDDIT {
     bwa
 
     main:
-    versions = channel.empty()
 
     TIDDIT_SV(cram, fasta, bwa)
 
@@ -24,10 +23,8 @@ workflow BAM_VARIANT_CALLING_SINGLE_TIDDIT {
     vcf = TABIX_BGZIP_TIDDIT_SV.out.gz_index.map { meta, gz, _tbi -> [meta + [variantcaller: 'tiddit'], gz] }
     tbi = TABIX_BGZIP_TIDDIT_SV.out.gz_index.map { meta, _gz, tbi -> [meta + [variantcaller: 'tiddit'], tbi] }
 
-
     emit:
     ploidy
     vcf
     tbi
-    versions
 }

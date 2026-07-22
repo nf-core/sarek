@@ -165,7 +165,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         vcf_manta = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.diploid_sv_vcf.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.somatic_sv_vcf)
         tbi_manta = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.diploid_sv_vcf_tbi.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.somatic_sv_vcf_tbi)
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.versions)
     }
 
 
@@ -200,7 +199,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         vcf_strelka = BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.vcf
         tbi_strelka = BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.versions)
     }
 
     // MSISENSORPRO
@@ -284,7 +282,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         vcf_tiddit = BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.vcf
         tbi_tiddit = BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.versions)
     }
 
     vcf_all = channel.empty()
