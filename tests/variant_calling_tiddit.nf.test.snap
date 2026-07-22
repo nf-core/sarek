@@ -30,7 +30,13 @@
                 "TIDDIT_SV": {
                     "tiddit": "3.9.5"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
                     "vcftools": "0.1.17"
                 }
             },
@@ -188,7 +194,13 @@
                 "TIDDIT_SV": {
                     "tiddit": "3.9.5"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
                     "vcftools": "0.1.17"
                 }
             },
@@ -350,7 +362,13 @@
                 "TIDDIT_SV": {
                     "tiddit": "3.9.5"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
                     "vcftools": "0.1.17"
                 }
             },

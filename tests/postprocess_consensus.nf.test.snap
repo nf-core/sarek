@@ -67,7 +67,13 @@
                 "VCFS_NORM_SORT": {
                     "bcftools": "1.23.1"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
                     "vcftools": "0.1.17"
                 }
             },
@@ -430,7 +436,13 @@
                 "VCFS_NORM_SORT": {
                     "bcftools": "1.23.1"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
                     "vcftools": "0.1.17"
                 }
             },
@@ -759,7 +771,13 @@
                 "VCFS_NORM_SORT": {
                     "bcftools": "1.23.1"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
                     "vcftools": "0.1.17"
                 }
             },

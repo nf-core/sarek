@@ -114,7 +114,13 @@
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
                     "vcftools": "0.1.17"
                 }
             },
@@ -742,7 +748,13 @@
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
                     "vcftools": "0.1.17"
                 }
             },
@@ -1236,7 +1248,13 @@
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
                     "vcftools": "0.1.17"
                 }
             },
