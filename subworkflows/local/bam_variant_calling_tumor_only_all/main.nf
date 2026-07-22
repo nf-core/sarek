@@ -187,6 +187,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram,
             fasta,
+            fasta_fai,
             bwa,
         )
 

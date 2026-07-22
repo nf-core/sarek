@@ -359,6 +359,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             cram,
             // Remap channel to match module/subworkflow
             fasta,
+            fasta_fai,
             bwa
         )
 

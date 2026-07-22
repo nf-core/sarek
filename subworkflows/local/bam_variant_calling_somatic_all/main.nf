@@ -277,6 +277,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] },
             cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] },
             fasta,
+            fasta_fai,
             bwa,
         )
 
