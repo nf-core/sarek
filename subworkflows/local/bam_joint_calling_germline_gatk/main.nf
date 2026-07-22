@@ -31,7 +31,6 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     known_snps_vqsr
 
     main:
-    versions = channel.empty()
 
     // Map input for GenomicsDBImport
     // Rename based on num_intervals, group all samples by their interval_name/interval_file and restructure for channel
@@ -147,14 +146,9 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"haplotypecaller"], tbi_out]
     }
 
-    versions = versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)
-    versions = versions.mix(GATK4_GENOTYPEGVCFS.out.versions)
-    versions = versions.mix(VARIANTRECALIBRATOR_SNP.out.versions)
-    versions = versions.mix(GATK4_APPLYVQSR_SNP.out.versions)
 
     emit:
     genotype_index  // channel: [ val(meta), [ tbi ] ]
     genotype_vcf    // channel: [ val(meta), [ vcf ] ]
 
-    versions        // channel: [ versions.yml ]
 }

@@ -10,7 +10,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
@@ -97,7 +97,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
@@ -298,7 +298,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",

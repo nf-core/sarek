@@ -27,7 +27,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     joint_mutect2         // boolean: [mandatory] [default: false] run mutect2 in joint mode
 
     main:
-    versions = channel.empty()
 
     // If no germline resource is provided, then create an empty channel to avoid GetPileupsummaries from being run
     // Handle channel.value([]) input from prepare_genome by converting to proper empty channel
@@ -50,11 +49,11 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
         input_joint_intervals = input_joint
             .combine(intervals)
             .map { meta, cram, crai, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], cram, crai, intervals_] }
-        MUTECT2(input_joint_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
+        MUTECT2(input_joint_intervals, fasta, fai.map { meta, index -> [ meta, index, [] ] }, dict, [], [], germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
     }
     else {
         // Perform variant calling using mutect2 module in tumor single mode
-        MUTECT2(input_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
+        MUTECT2(input_intervals, fasta, fai.map { meta, index -> [ meta, index, [] ] }, dict, [], [], germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample
@@ -164,13 +163,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
         .concat(tbi.map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] })
         .unique { meta, _tbi -> meta }
 
-    versions = versions.mix(CALCULATECONTAMINATION.out.versions)
-    versions = versions.mix(FILTERMUTECTCALLS.out.versions)
-    versions = versions.mix(GETPILEUPSUMMARIES.out.versions)
-    versions = versions.mix(GATHERPILEUPSUMMARIES.out.versions)
-    versions = versions.mix(LEARNREADORIENTATIONMODEL.out.versions)
-    versions = versions.mix(MERGEMUTECTSTATS.out.versions)
-    versions = versions.mix(MUTECT2.out.versions)
 
     emit:
     vcf = vcf_mutect2   // channel: [ meta, vcf ] - filtered if germline_resource provided, otherwise unfiltered
@@ -185,5 +177,4 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     contamination_table = calculatecontamination_out_cont  // channel: [ meta, contamination ]
     segmentation_table  = calculatecontamination_out_seg   // channel: [ meta, segmentation ]
 
-    versions // channel: [ versions.yml ]
 }

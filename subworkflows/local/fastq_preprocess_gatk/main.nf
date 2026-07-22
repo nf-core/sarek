@@ -404,7 +404,6 @@ workflow FASTQ_PREPROCESS_GATK {
                 ch_table_bqsr_spark = BAM_BASERECALIBRATOR_SPARK.out.table_bqsr
 
                 // Gather used softwares versions
-                versions = versions.mix(BAM_BASERECALIBRATOR_SPARK.out.versions)
             } else {
 
             BAM_BASERECALIBRATOR(
@@ -419,7 +418,6 @@ workflow FASTQ_PREPROCESS_GATK {
                 ch_table_bqsr_no_spark = BAM_BASERECALIBRATOR.out.table_bqsr
 
                 // Gather used softwares versions
-                versions = versions.mix(BAM_BASERECALIBRATOR.out.versions)
             }
 
             // ch_table_bqsr contains either:
