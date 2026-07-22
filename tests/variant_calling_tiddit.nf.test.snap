@@ -344,7 +344,7 @@
                     "samtools": 1.21
                 },
                 "SVDB_MERGE": {
-                    "bcftools": 1.21,
+                    "bcftools": "1.23",
                     "svdb": "2.8.4"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
