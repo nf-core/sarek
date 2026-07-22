@@ -88,7 +88,7 @@
                 },
                 "SVDB_MERGE": {
                     "bcftools": 1.21,
-                    "svdb": "2.8.2"
+                    "svdb": "2.8.4"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -109,13 +109,13 @@
                     "tabix": 1.21
                 },
                 "TIDDIT_SV": {
-                    "tiddit": "3.6.1"
+                    "tiddit": "3.9.5"
                 },
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -737,13 +737,13 @@
                     "tabix": 1.21
                 },
                 "TIDDIT_SV": {
-                    "tiddit": "3.6.1"
+                    "tiddit": "3.9.5"
                 },
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -1231,13 +1231,13 @@
                     "tabix": 1.21
                 },
                 "TIDDIT_SV": {
-                    "tiddit": "3.6.1"
+                    "tiddit": "3.9.5"
                 },
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
                 }
             },
             [

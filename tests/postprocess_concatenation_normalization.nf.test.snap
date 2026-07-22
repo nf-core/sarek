@@ -67,7 +67,7 @@
                     "bcftools": "1.23.1"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -395,7 +395,7 @@
                     "bcftools": "1.23.1"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
                 }
             },
             [

@@ -96,7 +96,7 @@
                     "varlociraptor": "8.9.5"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -401,7 +401,7 @@
                     "varlociraptor": "8.9.5"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -649,7 +649,7 @@
                     "varlociraptor": "8.9.5"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
                 }
             },
             [
