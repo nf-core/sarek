@@ -109,8 +109,7 @@ workflow FASTQ_PREPROCESS_GATK {
             save_trimmed_fail = false
             save_merged = false
             FASTP(
-                reads_for_fastp,
-                [], // we are not using any adapter fastas at the moment
+                reads_for_fastp.map { meta, reads -> [ meta, reads, [] ] }, // adapter_fasta folded into the reads tuple (unused)
                 false, // we don't use discard_trimmed_pass at the moment
                 save_trimmed_fail,
                 save_merged
@@ -126,7 +125,6 @@ workflow FASTQ_PREPROCESS_GATK {
                 }.transpose()
             } else reads_for_bbsplit = FASTP.out.reads
 
-            versions = versions.mix(FASTP.out.versions)
 
         } else {
             reads_for_bbsplit = reads_for_fastp
@@ -182,7 +180,6 @@ workflow FASTQ_PREPROCESS_GATK {
             FGBIO_COPYUMIFROMREADNAME(FASTQ_ALIGN.out.bam.map{meta, bam -> [meta, bam, []]})
             aligned_bam = FGBIO_COPYUMIFROMREADNAME.out.bam
             aligned_bai = FGBIO_COPYUMIFROMREADNAME.out.bai
-            versions = versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
         } else {
             aligned_bam = FASTQ_ALIGN.out.bam
             aligned_bai = FASTQ_ALIGN.out.bai
@@ -250,8 +247,6 @@ workflow FASTQ_PREPROCESS_GATK {
             versions = versions.mix(BAM_TO_CRAM_MAPPING.out.versions)
         }
 
-        // Gather used softwares versions
-        versions = versions.mix(FASTQ_ALIGN.out.versions)
     }
 
     if (params.step in ['mapping', 'markduplicates']) {
@@ -270,7 +265,6 @@ workflow FASTQ_PREPROCESS_GATK {
         if(params.step == 'markduplicates' && params.umi_in_read_header) {
             FGBIO_COPYUMIFROMREADNAME(cram_for_markduplicates.map{ meta, bam -> [ meta, bam, [] ] })
             cram_for_markduplicates = FGBIO_COPYUMIFROMREADNAME.out.bam
-            versions = versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
         }
 
         // if no MD is done, then run QC on mapped & converted CRAM files

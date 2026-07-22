@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2235](https://github.com/nf-core/sarek/pull/2235) - Nextflow strict-syntax / 26.x readiness for local code: explicit, named closure parameters (replacing implicit/generic `it`), `_`-prefixed unused parameters, and removal of unused `take:` inputs. Previously-dropped Manta candidate VCFs and Sentieon gVCF indices are now emitted.
 - [#2235](https://github.com/nf-core/sarek/pull/2235) - germline CNVKIT reuses the shared `CRAM_TO_BAM` conversion instead of re-converting CRAM internally, avoiding a duplicate conversion. Side effect: with `--step variant_calling` (user-supplied CRAM/BAM), CNVKit output files are named after the input file rather than the sample; runs from FASTQ are unaffected.
 - [#2238](https://github.com/nf-core/sarek/pull/2238) - Migrate `gatk4`/`gatk4spark` modules to the versions topic channel (bumps gatk4spark 4.6.1.0 → 4.6.2.0)
+- [#2239](https://github.com/nf-core/sarek/pull/2239) - Migrate alignment/UMI/utility modules (`bwa`, `bwamem2`, `dragmap`, `fgbio`, `fastp`, `cat`, `gawk`, `gunzip`, `untar`, `unzip`, `spring`) to the versions topic channel (fastp 0.24.0 → 1.1.0)
 
 ### Fixed
 
@@ -37,6 +38,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | ensembl-vep   | 115.2       | 116.0       |
 | gatk4         | 4.6.1.0     | 4.6.2.0     |
 | gatk4-spark   | 4.6.1.0     | 4.6.2.0     |
+| bwa           | 0.7.18      | 0.7.19      |
+| bwa-mem2      | 2.2.1       | 2.3         |
+| fastp         | 0.24.0      | 1.1.0       |
+| fgbio         | 2.4.0       | 3.1.2       |
+| gawk          | 5.3.0       | 5.3.1       |
+| pigz          | 2.3.4       | 2.8         |
 
 ### Dependencies - plugins
 

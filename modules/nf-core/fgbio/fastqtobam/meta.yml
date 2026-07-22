@@ -7,8 +7,8 @@ keywords:
   - cram
 tools:
   - fgbio:
-      description: A set of tools for working with genomic and high throughput sequencing
-        data, including UMIs
+      description: A set of tools for working with genomic and high throughput
+        sequencing data, including UMIs
       homepage: http://fulcrumgenomics.github.io/fgbio/
       documentation: http://fulcrumgenomics.github.io/fgbio/tools/latest/
       tool_dev_url: https://github.com/fulcrumgenomics/fgbio
@@ -24,32 +24,42 @@ input:
         type: file
         description: pair of reads to be converted into BAM file
         pattern: "*.{fastq.gz}"
+        ontologies: []
 output:
-  - bam:
-      - meta:
+  bam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.bam":
+      - "*.{bam,cram}":
           type: file
-          description: Unaligned, unsorted BAM file
-          pattern: "*.{bam}"
-  - cram:
-      - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-      - "*.cram":
-          type: file
-          description: Unaligned, unsorted CRAM file
-          pattern: "*.{cram}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          description: Unaligned, unsorted BAM or CRAM file
+          pattern: "*.{bam,cram}"
+          ontologies: []
+  versions_fgbio:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - fgbio:
+          type: string
+          description: The tool name
+      - 'fgbio --version 2>&1 | tr -d "[:cntrl:]" | sed -e "s/^.*Version: //;s/\[.*$//"':
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - fgbio:
+          type: string
+          description: The tool name
+      - 'fgbio --version 2>&1 | tr -d "[:cntrl:]" | sed -e "s/^.*Version: //;s/\[.*$//"':
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@lescai"
   - "@matthdsm"

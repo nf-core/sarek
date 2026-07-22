@@ -4,23 +4,23 @@
             18,
             {
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "FASTP": {
-                    "fastp": "0.24.0"
+                    "fastp": "1.1.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
                 },
                 "FGBIO_COPYUMIFROMREADNAME": {
-                    "fgbio": "2.4.0"
+                    "fgbio": "3.1.2"
                 },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.6.2.0"
@@ -318,7 +318,7 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,5e049e05573f1afd0bb893f2cb4076c6",
                 "mosdepth_perchrom.txt:md5,45bca136491a7675ebba87def2534f26",
                 "multiqc_citations.txt:md5,0e2971e7a873c92592112775fa99fb02",
-                "multiqc_fastp.txt:md5,8e11d751e997877e4ffc487c52756f62",
+                "multiqc_fastp.txt:md5,542e41a81f66bd647eff0e741a377b04",
                 "multiqc_fastqc.txt:md5,0ca2cba4204d9076a1eb17596379d10c",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -327,7 +327,7 @@
                 "samtools-stats-dp.txt:md5,a6f11f838a72299e4913a54dd327f2e6",
                 "samtools_alignment_plot.txt:md5,111d8b457e8c34dc919a527f12f27d4a",
                 "samtools_insert_size.txt:md5,5dbef29f8a260b9aa05de422676ab81a",
-                "test-test_L1.fastp.json:md5,d9107ec414e44408d0698b167cc445f9",
+                "test-test_L1.fastp.json:md5,5146ada16c3aae0e55e3e993b9d587af",
                 "test.md.mosdepth.global.dist.txt:md5,40bf266b2080717f92b405cb42fab4a7",
                 "test.md.mosdepth.region.dist.txt:md5,94b080042f51f484fa178339cc9324bc",
                 "test.md.mosdepth.summary.txt:md5,7958c5422bb4b5181afe9782e38a735a",

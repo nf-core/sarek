@@ -19,7 +19,6 @@ workflow FASTQ_ALIGN {
 
     main:
 
-    versions = channel.empty()
     reports = channel.empty()
 
     // Only one of the following should be run
@@ -42,13 +41,8 @@ workflow FASTQ_ALIGN {
     // Gather reports of all tools used
     reports = reports.mix(DRAGMAP_ALIGN.out.log)
 
-    // Gather versions of all tools used
-    versions = versions.mix(BWAMEM1_MEM.out.versions)
-    versions = versions.mix(BWAMEM2_MEM.out.versions)
-    versions = versions.mix(DRAGMAP_ALIGN.out.versions)
     emit:
     bam      // channel: [ [meta], bam ]
     bai      // channel: [ [meta], bai ]
     reports
-    versions // channel: [ versions.yml ]
 }

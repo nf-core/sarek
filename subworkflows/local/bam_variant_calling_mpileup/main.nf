@@ -75,7 +75,6 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
         .map { meta, tbi -> [meta - meta.subMap('num_intervals') + [variantcaller: 'bcftools'], tbi] }
 
     versions = versions.mix(SAMTOOLS_MPILEUP.out.versions)
-    versions = versions.mix(CAT_MPILEUP.out.versions)
 
     emit:
     mpileup

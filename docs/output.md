@@ -135,7 +135,7 @@ The resulting files are intermediate and by default not kept in the final files 
 
 **Output directory: `{outdir}/preprocessing/fastp/<sample>`**
 
-- `<sample>_<lane>_{1,2}.fastp.fastq.gz>`
+- `<sample>_<lane>_{R1,R2}.fastp.fastq.gz>`
   - Bgzipped FastQ file
 
 </details>
@@ -151,7 +151,7 @@ These files are intermediate and by default not placed in the output-folder kept
 
 **Output directory: `{outdir}/preprocessing/fastp/<sample>/`**
 
-- `<sample_lane_{1,2}.fastp.fastq.gz>`
+- `<sample>_<lane>_{R1,R2}.fastp.fastq.gz>`
   - Bgzipped FastQ file
 
 </details>
