@@ -179,8 +179,7 @@ workflow SAREK {
         interleave_input = false
         CONVERT_FASTQ_INPUT(
             input_sample_type.bam,
-            [[id: "fasta"], []],
-            [[id: 'null'], []],
+            [[id: "fasta"], [], []],
             interleave_input,
         )
 

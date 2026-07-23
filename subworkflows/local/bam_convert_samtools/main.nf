@@ -13,17 +13,12 @@ include { CAT_FASTQ                                          } from '../../../mo
 
 workflow BAM_CONVERT_SAMTOOLS {
     take:
-    input       // channel: [meta, alignment (BAM or CRAM), index (optional)]
-    fasta       // optional: reference file if CRAM format and reference not in header
-    fasta_fai
-    interleaved // value: true/false
+    input         // channel: [meta, alignment (BAM or CRAM), index (optional)]
+    fasta_and_fai // [ meta, fasta, fai ] — empty placeholders here (BAM->FASTQ needs no reference)
+    interleaved   // value: true/false
 
     main:
 
-    // Combined [ meta, fasta, fai ] channel for the updated samtools modules
-    fasta_and_fai = fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai ] }
-
-    // Index File if not PROVIDED -> this also requires updates to samtools view possibly URGH
 
     // MAP - MAP
     SAMTOOLS_VIEW_MAP_MAP(input, fasta_and_fai, [[], []], [[], []], [])
@@ -43,7 +38,7 @@ workflow BAM_CONVERT_SAMTOOLS {
         .join(SAMTOOLS_VIEW_MAP_UNMAP.out.bam, failOnDuplicate: true, remainder: true)
         .map{ meta, unmap_unmap, unmap_map, map_unmap -> [ meta, [ unmap_unmap, unmap_map, map_unmap ] ] }
 
-    SAMTOOLS_MERGE_UNMAP(all_unmapped_bam.map { meta, bams -> [ meta, bams, [] ] }, fasta_and_fai.map { meta, fasta_, fai -> [ meta, fasta_, fai, [] ] })
+    SAMTOOLS_MERGE_UNMAP(all_unmapped_bam.map { meta, bams -> [ meta, bams, [] ] }, [[id: 'fasta'], [], [], []])
 
     // Collate & convert unmapped
     COLLATE_FASTQ_UNMAP(SAMTOOLS_MERGE_UNMAP.out.bam, fasta_and_fai, interleaved)
