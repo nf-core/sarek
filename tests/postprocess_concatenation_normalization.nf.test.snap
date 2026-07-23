@@ -34,7 +34,7 @@
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -368,7 +368,7 @@
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"

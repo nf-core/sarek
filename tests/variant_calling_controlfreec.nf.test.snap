@@ -22,10 +22,10 @@
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_MPILEUP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -175,10 +175,10 @@
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_MPILEUP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -351,10 +351,10 @@
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_MPILEUP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -466,10 +466,10 @@
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_MPILEUP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",

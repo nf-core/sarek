@@ -4,7 +4,7 @@
             10,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -20,10 +20,10 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -204,7 +204,7 @@
             10,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -220,10 +220,10 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",

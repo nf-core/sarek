@@ -22,7 +22,6 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     groupreadsbyumi_strategy  // string:  [mandatory] grouping strategy - default: "Adjacency"
 
     main:
-    ch_versions = channel.empty()
 
     // params.umi_read_structure is passed out as ext.args
     // FASTQ reads are converted into a tagged unmapped BAM file (uBAM)
@@ -72,10 +71,8 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     call_min_baseq = 10
     CALLUMICONSENSUS(GROUPREADSBYUMI.out.bam, call_min_reads, call_min_baseq)
 
-
     emit:
     umibam         = FASTQTOBAM.out.bam             // channel: [ val(meta), [ bam ] ]
     groupbam       = GROUPREADSBYUMI.out.bam        // channel: [ val(meta), [ bam ] ]
     consensusbam   = CALLUMICONSENSUS.out.bam       // channel: [ val(meta), [ bam ] ]
-    versions       = ch_versions                    // channel: [ versions.yml ]
 }

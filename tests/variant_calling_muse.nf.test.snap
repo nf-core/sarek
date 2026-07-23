@@ -7,7 +7,7 @@
                     "bcftools": "1.23.1"
                 },
                 "CRAM_TO_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -26,7 +26,7 @@
                     "muse": "2.1.2"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -187,7 +187,7 @@
                     "bcftools": "1.23.1"
                 },
                 "CRAM_TO_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -206,7 +206,7 @@
                     "muse": "2.1.2"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",

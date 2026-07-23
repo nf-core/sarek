@@ -97,8 +97,6 @@ workflow FASTQ_PREPROCESS_GATK {
             reads_for_fastp = CONVERT_FASTQ_UMI.out.reads
 
             // Gather used softwares versions
-            versions = versions.mix(CONVERT_FASTQ_UMI.out.versions)
-            versions = versions.mix(FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.versions)
         } else {
             reads_for_fastp = input_fastq
         }
@@ -125,7 +123,6 @@ workflow FASTQ_PREPROCESS_GATK {
                 }.transpose()
             } else reads_for_bbsplit = FASTP.out.reads
 
-
         } else {
             reads_for_bbsplit = reads_for_fastp
         }
@@ -149,7 +146,6 @@ workflow FASTQ_PREPROCESS_GATK {
         } else {
             reads_for_alignment = reads_for_bbsplit
         }
-
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         // First, we must calculate number of lanes for each sample (meta.n_fastq)
@@ -224,7 +220,6 @@ workflow FASTQ_PREPROCESS_GATK {
             // Group
             .groupTuple()
 
-
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
         // Except if and only if save_mapped or (skipping markduplicates and sentieon-dedup)
         if (
@@ -243,7 +238,6 @@ workflow FASTQ_PREPROCESS_GATK {
             else CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true), params.outdir, params.save_output_as_bam)
 
             // Gather used softwares versions
-            versions = versions.mix(BAM_MERGE_INDEX_SAMTOOLS.out.versions)
         }
 
     }
@@ -455,7 +449,6 @@ workflow FASTQ_PREPROCESS_GATK {
                 cram_variant_calling_spark = BAM_APPLYBQSR_SPARK.out.alignment
 
                 // Gather used softwares versions
-                versions = versions.mix(BAM_APPLYBQSR_SPARK.out.versions)
 
             } else {
 
@@ -469,7 +462,6 @@ workflow FASTQ_PREPROCESS_GATK {
                 cram_variant_calling_no_spark = BAM_APPLYBQSR.out.alignment
 
                 // Gather used softwares versions
-                versions = versions.mix(BAM_APPLYBQSR.out.versions)
             }
 
             cram_variant_calling = channel.empty().mix(

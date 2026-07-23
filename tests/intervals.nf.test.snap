@@ -4,7 +4,7 @@
             10,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "BUILD_INTERVALS": {
                     "gawk": "5.3.1"
@@ -20,10 +20,10 @@
                     "gawk": "5.3.0"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -88,7 +88,7 @@
             10,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -101,10 +101,10 @@
                     "gawk": "5.3.0"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -150,7 +150,7 @@
             7,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -160,10 +160,10 @@
                     "samtools": "1.22.1"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -208,7 +208,7 @@
             7,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -218,10 +218,10 @@
                     "samtools": "1.22.1"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -261,7 +261,7 @@
             9,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -274,10 +274,10 @@
                     "gawk": "5.3.0"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -318,7 +318,7 @@
             10,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "BUILD_INTERVALS": {
                     "gawk": "5.3.1"
@@ -334,10 +334,10 @@
                     "gawk": "5.3.0"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",

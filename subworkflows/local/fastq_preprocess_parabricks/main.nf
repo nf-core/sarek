@@ -18,7 +18,6 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     val_outdir                      // output directory for saving mapped files
 
     main:
-    ch_versions = channel.empty()
     ch_reports  = channel.empty()
 
     reads_grouping_key = ch_reads.map { meta, reads ->
@@ -78,8 +77,6 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     // crams are merged (when multiple lanes from the same sample) and indexed
     CRAM_MERGE_INDEX_SAMTOOLS(cram_mapped, ch_fasta, ch_fasta_fai)
 
-    ch_versions = ch_versions.mix(CRAM_MERGE_INDEX_SAMTOOLS.out.versions)
-
     cram_variant_calling = CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai
         .map { meta, cram, crai ->
                 [ meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [ data_type: 'cram', id: meta.sample ], cram, crai ]
@@ -95,6 +92,5 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
 
     emit:
     cram      = cram_variant_calling     // channel: [ val(meta), cram, crai ]
-    versions  = ch_versions              // channel: [ versions.yml ]
     reports   = ch_reports
 }

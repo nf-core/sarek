@@ -39,13 +39,13 @@
                     "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -409,13 +409,13 @@
                     "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -639,10 +639,10 @@
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_FAIDX": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",

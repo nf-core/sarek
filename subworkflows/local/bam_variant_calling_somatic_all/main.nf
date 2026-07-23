@@ -122,8 +122,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             wes ? intervals_bed_combined : [],
         )
 
-        versions = versions.mix(MPILEUP_NORMAL.out.versions)
-        versions = versions.mix(MPILEUP_TUMOR.out.versions)
     }
 
     // CNVKIT
@@ -167,7 +165,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         tbi_manta = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.diploid_sv_vcf_tbi.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.somatic_sv_vcf_tbi)
     }
 
-
     // INDEXCOV
     //   WGS only
     if (params.wes == false && tools.split(',').contains('indexcov')) {
@@ -180,7 +177,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         out_indexcov = BAM_VARIANT_CALLING_INDEXCOV.out.out_indexcov
         versions = versions.mix(BAM_VARIANT_CALLING_INDEXCOV.out.versions)
     }
-
 
     // STRELKA
     if (tools && tools.split(',').contains('strelka')) {

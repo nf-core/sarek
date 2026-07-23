@@ -16,13 +16,13 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SENTIEON_DEDUP": {
                     "sentieon": "202503.02"
@@ -208,13 +208,13 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SENTIEON_DEDUP": {
                     "sentieon": "202503.02"
@@ -400,13 +400,13 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SENTIEON_DEDUP": {
                     "sentieon": "202503.02"
@@ -595,13 +595,13 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SENTIEON_DEDUP": {
                     "sentieon": "202503.02"
@@ -790,13 +790,13 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SENTIEON_DEDUP": {
                     "sentieon": "202503.02"

@@ -168,7 +168,6 @@ workflow SAREK {
             true,
         )
 
-
         two_fastq_gz_from_spring = r1_fastq_gz_from_spring.fastq.join(r2_fastq_gz_from_spring.fastq).map { meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]] }
 
         two_fastq_gz_from_spring = two_fastq_gz_from_spring.map { meta, files -> addReadgroupToMeta(meta, files) }
@@ -184,8 +183,6 @@ workflow SAREK {
             [[id: 'null'], []],
             interleave_input,
         )
-
-        versions = versions.mix(CONVERT_FASTQ_INPUT.out.versions)
 
         // Gather fastq (inputed or converted)
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
@@ -228,7 +225,6 @@ workflow SAREK {
 
             // Gather used softwares versions
             reports = reports.mix(FASTQ_PREPROCESS_PARABRICKS.out.reports)
-            versions = versions.mix(FASTQ_PREPROCESS_PARABRICKS.out.versions)
         }
         else {
             // PREPROCESSING

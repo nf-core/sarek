@@ -22,7 +22,7 @@
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SENTIEON_APPLYVARCAL_INDEL": {
                     "sentieon": "202503.02"
@@ -238,7 +238,7 @@
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SENTIEON_HAPLOTYPER": {
                     "sentieon": "202503.02"
@@ -432,7 +432,7 @@
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SENTIEON_HAPLOTYPER": {
                     "sentieon": "202503.02"
@@ -630,7 +630,7 @@
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SENTIEON_HAPLOTYPER": {
                     "sentieon": "202503.02"

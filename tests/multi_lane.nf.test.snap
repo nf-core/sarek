@@ -4,7 +4,7 @@
             21,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -30,13 +30,13 @@
                     "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -119,10 +119,10 @@
             25,
             {
                 "BAM2FASTQ": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -138,10 +138,10 @@
                     "cat": "9.5"
                 },
                 "COLLATE_FASTQ_MAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "COLLATE_FASTQ_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -156,25 +156,25 @@
                     "fgbio": "3.1.2"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_CONSENSUS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_MERGE_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_MAP_MAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_MAP_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_UNMAP_MAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_UNMAP_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",

@@ -7,7 +7,7 @@
                     "bwa": "0.7.19-r1273"
                 },
                 "CRAM_TO_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -19,10 +19,10 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -31,7 +31,7 @@
                     "parabricks": "4.6.0-1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -249,10 +249,10 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -261,7 +261,7 @@
                     "parabricks": "4.6.0-1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -500,7 +500,7 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "LEARNREADORIENTATIONMODEL": {
                     "gatk4": "4.6.2.0"
@@ -515,7 +515,7 @@
                     "parabricks": "4.6.0-1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -812,10 +812,10 @@
                     "fastqc": "0.12.1"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -824,7 +824,7 @@
                     "parabricks": "4.6.0-1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",

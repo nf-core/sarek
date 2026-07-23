@@ -19,7 +19,6 @@ workflow BAM_CONVERT_SAMTOOLS {
     interleaved // value: true/false
 
     main:
-    versions = channel.empty()
 
     // Combined [ meta, fasta, fai ] channel for the updated samtools modules
     fasta_and_fai = fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai ] }
@@ -47,10 +46,10 @@ workflow BAM_CONVERT_SAMTOOLS {
     SAMTOOLS_MERGE_UNMAP(all_unmapped_bam.map { meta, bams -> [ meta, bams, [] ] }, fasta_and_fai.map { meta, fasta_, fai -> [ meta, fasta_, fai, [] ] })
 
     // Collate & convert unmapped
-    COLLATE_FASTQ_UNMAP(SAMTOOLS_MERGE_UNMAP.out.bam, fasta, interleaved)
+    COLLATE_FASTQ_UNMAP(SAMTOOLS_MERGE_UNMAP.out.bam, fasta_and_fai, interleaved)
 
     // Collate & convert mapped
-    COLLATE_FASTQ_MAP(SAMTOOLS_VIEW_MAP_MAP.out.bam, fasta, interleaved)
+    COLLATE_FASTQ_MAP(SAMTOOLS_VIEW_MAP_MAP.out.bam, fasta_and_fai, interleaved)
 
     // join Mapped & unmapped fastq
 
@@ -62,10 +61,7 @@ workflow BAM_CONVERT_SAMTOOLS {
     CAT_FASTQ(reads_to_concat)
     reads = CAT_FASTQ.out.reads
 
-    // Gather versions of all tools used
-
     emit:
     reads
 
-    versions
 }

@@ -12,7 +12,6 @@ workflow BAM_MERGE_INDEX_SAMTOOLS {
     bam // channel: [mandatory] meta, bam
 
     main:
-    versions = channel.empty()
 
     // Figuring out if there is one or more bam(s) from the same sample
     bam_to_merge = bam.branch{ meta, bam_ ->
@@ -34,10 +33,7 @@ workflow BAM_MERGE_INDEX_SAMTOOLS {
     // Join with the bai file
     bam_bai = bam_all.join(INDEX_MERGE_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true)
 
-    // Gather versions of all tools used
-
     emit:
     bam_bai
 
-    versions
 }
