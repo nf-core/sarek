@@ -15,7 +15,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
     intervals     // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi] or [ [], []] if no intervals; intervals file contains all intervals
 
     main:
-    versions = channel.empty()
 
     // Combine cram and intervals, account for 0 intervals
     cram_intervals = cram.combine(intervals).map{ combined ->
@@ -35,8 +34,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
     diploid_sv_vcf                 = MANTA_GERMLINE.out.diploid_sv_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
     diploid_sv_vcf_tbi             = MANTA_GERMLINE.out.diploid_sv_vcf_tbi.map{ meta, tbi -> [ meta + [ variantcaller:'manta' ], tbi ] }
 
-    versions = versions.mix(MANTA_GERMLINE.out.versions)
-
     emit:
     candidate_small_indels_vcf
     candidate_small_indels_vcf_tbi
@@ -45,5 +42,4 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
     diploid_sv_vcf
     diploid_sv_vcf_tbi
 
-    versions
 }

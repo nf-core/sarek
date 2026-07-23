@@ -64,10 +64,8 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     // Index the filtered VCFs
     TABIX_VC_FREEBAYES_FILT(vcf_filtered)
 
-    versions = versions.mix(FREEBAYES.out.versions)
     versions = versions.mix(TABIX_VC_FREEBAYES.out.versions)
     versions = versions.mix(TABIX_VC_FREEBAYES_FILT.out.versions)
-    versions = versions.mix(VCFLIB_VCFFILTER.out.versions)
 
     emit:
     vcf_unfiltered = ch_vcf // channel: [ meta, vcf, tbi ]

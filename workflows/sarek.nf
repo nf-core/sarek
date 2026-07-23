@@ -551,7 +551,6 @@ workflow SAREK {
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.versions)
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.versions)
-        versions = versions.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.versions)
         versions = versions.mix(POST_VARIANTCALLING.out.versions)
 
         // ANNOTATE

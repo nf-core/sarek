@@ -10,7 +10,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ {
     dict      // channel: /path/to/reference/fasta/dictionary
 
     main:
-    versions = channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     input_intervals = input.combine(intervals)
@@ -43,10 +42,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ {
     vcf = channel.empty().mix(MERGE_LOFREQ.out.vcf, vcf_branch.no_intervals).map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'lofreq' ], vcf ] }
     tbi = channel.empty().mix(MERGE_LOFREQ.out.tbi, tbi_branch.no_intervals).map{ meta, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'lofreq' ], tbi ] }
 
-    versions = versions.mix(LOFREQ.out.versions)
-
     emit:
     vcf
     tbi
-    versions
 }
