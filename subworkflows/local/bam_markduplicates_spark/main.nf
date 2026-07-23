@@ -29,7 +29,7 @@ workflow BAM_MARKDUPLICATES_SPARK {
 
     // Unified alignment output — join with the appropriate index
     alignment = GATK4SPARK_MARKDUPLICATES.out.output
-        .join(INDEX_MARKDUPLICATES.out.bai.mix(INDEX_MARKDUPLICATES.out.crai), failOnDuplicate: true, failOnMismatch: true)
+        .join(INDEX_MARKDUPLICATES.out.index, failOnDuplicate: true, failOnMismatch: true)
 
     // QC on alignment
     CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, intervals_bed_combined)

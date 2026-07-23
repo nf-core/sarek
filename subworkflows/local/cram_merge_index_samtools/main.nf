@@ -32,7 +32,7 @@ workflow CRAM_MERGE_INDEX_SAMTOOLS {
     INDEX_CRAM(cram_all)
 
     // Join with the crai file
-    cram_crai = cram_all.join(INDEX_CRAM.out.crai, failOnDuplicate: true, failOnMismatch: true)
+    cram_crai = cram_all.join(INDEX_CRAM.out.index, failOnDuplicate: true, failOnMismatch: true)
 
     emit:
     cram_crai
