@@ -90,7 +90,6 @@ workflow FASTQ_PREPROCESS_GATK {
             interleave_input = false // Currently don't allow interleaved input
             CONVERT_FASTQ_UMI(
                 bam_converted_from_fastq,
-                [ [ id:"fasta" ], [], [] ], // [ meta, fasta, fai ]
                 interleave_input)
 
             reads_for_fastp = CONVERT_FASTQ_UMI.out.reads
