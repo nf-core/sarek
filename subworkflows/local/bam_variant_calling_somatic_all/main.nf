@@ -83,7 +83,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             rt_file,
         )
 
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ASCAT.out.versions)
     }
 
     // CONTROLFREEC

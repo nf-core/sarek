@@ -246,9 +246,8 @@ workflow SAREK {
             cram_variant_calling = channel.empty()
             cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_GATK.out.cram_variant_calling)
 
-            // Gather used softwares versions
+            // Gather QC reports
             reports = reports.mix(FASTQ_PREPROCESS_GATK.out.reports)
-            versions = versions.mix(FASTQ_PREPROCESS_GATK.out.versions)
         }
     }
 
@@ -272,7 +271,6 @@ workflow SAREK {
     )
 
     reports = reports.mix(CRAM_SAMPLEQC.out.reports)
-    versions = versions.mix(CRAM_SAMPLEQC.out.versions)
 
     if (tools) {
 

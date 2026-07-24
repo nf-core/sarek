@@ -63,7 +63,6 @@ workflow FASTQ_PREPROCESS_GATK {
 
     // To gather all QC reports for MultiQC
     reports          = channel.empty()
-    versions         = channel.empty()
 
     // PREPROCESSING
 
@@ -95,8 +94,6 @@ workflow FASTQ_PREPROCESS_GATK {
                 interleave_input)
 
             reads_for_fastp = CONVERT_FASTQ_UMI.out.reads
-
-            // Gather used softwares versions
         } else {
             reads_for_fastp = input_fastq
         }
@@ -236,8 +233,6 @@ workflow FASTQ_PREPROCESS_GATK {
             // Create CSV to restart from this step
             if (params.save_output_as_bam) CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, params.outdir, params.save_output_as_bam)
             else CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true), params.outdir, params.save_output_as_bam)
-
-            // Gather used softwares versions
         }
 
     }
@@ -283,8 +278,6 @@ workflow FASTQ_PREPROCESS_GATK {
             // Gather QC reports
             reports = reports.mix(CRAM_QC_NO_MD.out.reports.collect{ _meta, report -> [ report ] })
 
-            // Gather used softwares versions
-            versions = versions.mix(CRAM_QC_NO_MD.out.versions)
         } else if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates')) {
             BAM_MARKDUPLICATES_SPARK(
                 cram_for_markduplicates,
@@ -297,8 +290,6 @@ workflow FASTQ_PREPROCESS_GATK {
             // Gather QC reports
             reports = reports.mix(BAM_MARKDUPLICATES_SPARK.out.reports.collect{ _meta, report -> [ report ] })
 
-            // Gather used softwares versions
-            versions = versions.mix(BAM_MARKDUPLICATES_SPARK.out.versions)
         } else if (params.tools && params.tools.split(',').contains('sentieon_dedup')) {
             crai_for_markduplicates = params.step == 'mapping'
                 ? bai_mapped
@@ -315,8 +306,6 @@ workflow FASTQ_PREPROCESS_GATK {
             // Gather QC reports
             reports = reports.mix(BAM_SENTIEON_DEDUP.out.reports.collect{ _meta, report -> [ report ] })
 
-            // Gather used softwares versions
-            versions = versions.mix(BAM_SENTIEON_DEDUP.out.versions)
         } else {
 
             BAM_MARKDUPLICATES(
@@ -330,8 +319,6 @@ workflow FASTQ_PREPROCESS_GATK {
             // Gather QC reports
             reports = reports.mix(BAM_MARKDUPLICATES.out.reports.collect{ _meta, report -> [ report ] })
 
-            // Gather used softwares versions
-            versions = versions.mix(BAM_MARKDUPLICATES.out.versions)
         }
 
         // ch_md_cram_for_restart contains either:
@@ -389,8 +376,6 @@ workflow FASTQ_PREPROCESS_GATK {
                 known_sites_indels_tbi)
 
                 ch_table_bqsr_spark = BAM_BASERECALIBRATOR_SPARK.out.table_bqsr
-
-                // Gather used softwares versions
             } else {
 
             BAM_BASERECALIBRATOR(
@@ -403,8 +388,6 @@ workflow FASTQ_PREPROCESS_GATK {
                 known_sites_indels_tbi)
 
                 ch_table_bqsr_no_spark = BAM_BASERECALIBRATOR.out.table_bqsr
-
-                // Gather used softwares versions
             }
 
             // ch_table_bqsr contains either:
@@ -447,9 +430,6 @@ workflow FASTQ_PREPROCESS_GATK {
                     intervals_and_num_intervals)
 
                 cram_variant_calling_spark = BAM_APPLYBQSR_SPARK.out.alignment
-
-                // Gather used softwares versions
-
             } else {
 
                 BAM_APPLYBQSR(
@@ -460,8 +440,6 @@ workflow FASTQ_PREPROCESS_GATK {
                     intervals_and_num_intervals)
 
                 cram_variant_calling_no_spark = BAM_APPLYBQSR.out.alignment
-
-                // Gather used softwares versions
             }
 
             cram_variant_calling = channel.empty().mix(
@@ -486,6 +464,5 @@ workflow FASTQ_PREPROCESS_GATK {
     emit:
     cram_variant_calling
     reports
-    versions
 
 }
