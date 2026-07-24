@@ -21,7 +21,7 @@ workflow BAM_CONVERT_SAMTOOLS {
     main:
 
     // Combined [ meta, fasta, fai ] reference tuple for the updated samtools modules
-    fasta_and_fai = fasta.combine(fasta_fai).map { meta, fasta_, _fai_meta, fai -> [ meta, fasta_, fai ] }
+    fasta_and_fai = fasta.combine(fasta_fai).map { meta, fasta_, _fai_meta, fai -> [ meta, fasta_, fai ] }.collect()
 
     // MAP - MAP
     SAMTOOLS_VIEW_MAP_MAP(input, fasta_and_fai, [[], []], [[], []], [])
