@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2184](https://github.com/nf-core/sarek/pull/2184) - Skip nf-schema path-existence validation for `snpeff_cache`, `vep_cache` and `igenomes_base` so pipeline launches succeed when the default S3 buckets are not accessible
 - [#2216](https://github.com/nf-core/sarek/pull/2216) - Fix `--normalize_vcfs` dropping a real ALT allele of `1/2` multiallelic sites (`bcftools norm --rm-dup all` → `--rm-dup exact`)
+- [#2241](https://github.com/nf-core/sarek/pull/2241) - Bump `mosdepth` (0.3.10 → 0.3.14) so its htslib can decode CRAM 3.1 written by samtools 1.24; the previous container silently produced empty coverage files, dropping the mosdepth MultiQC sections (most visible in the parabricks path)
 
 ### Removed
 
@@ -50,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | tiddit        | 3.6.1       | 3.9.5       |
 | vcftools      | 0.1.16      | 0.1.17      |
 | samtools      | 1.21        | 1.24        |
+| mosdepth      | 0.3.10      | 0.3.14      |
 
 ### Dependencies - plugins
 
