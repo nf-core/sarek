@@ -1552,7 +1552,7 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,157a95de8aa4dd8947bb965f0c9ae3c7",
+                "samtools-stats-dp.txt:md5,c8a75397adcc418d4483c57a021550d4",
                 "samtools_alignment_plot.txt:md5,46e8824724863d243a01cc239a5eff15",
                 "samtools_insert_size.txt:md5,17c44517c58803f9c078f6d9b55aed00",
                 "test2.bcftools.bcftools_stats.txt:md5,fa4bd52259a3400e5d21c43b570e40a5",

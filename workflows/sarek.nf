@@ -179,6 +179,8 @@ workflow SAREK {
         interleave_input = false
         CONVERT_FASTQ_INPUT(
             input_sample_type.bam,
+            fasta,
+            fasta_fai,
             interleave_input,
         )
 

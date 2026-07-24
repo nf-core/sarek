@@ -252,7 +252,7 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,ad0637d55d7025330f2f6cb7f9680e64",
                 "mosdepth_perchrom.txt:md5,73ef9a077df1887f9021a581fbf207bc",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
-                "samtools-stats-dp.txt:md5,b446a47b182d93a9e7e74f5f7c8d41c2",
+                "samtools-stats-dp.txt:md5,a6501ad36c9d1e9b97878e69f072d63c",
                 "samtools_alignment_plot.txt:md5,7138a2d29f515993e1df8d745e27b757",
                 "samtools_insert_size.txt:md5,e0c5f4ebb18a0e6bd437f0b919725b39",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",

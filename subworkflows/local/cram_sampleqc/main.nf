@@ -18,6 +18,7 @@ workflow CRAM_SAMPLEQC {
         CRAM_QC_RECAL(
             cram,
             fasta_fai.map{meta, fasta, _fai -> [meta, fasta]},
+            fasta_fai.map{meta, _fasta, fai -> [meta, fai]},
             intervals_for_preprocessing,
         )
 

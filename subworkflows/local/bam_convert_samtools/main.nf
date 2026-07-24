@@ -13,26 +13,27 @@ include { CAT_FASTQ                                          } from '../../../mo
 
 workflow BAM_CONVERT_SAMTOOLS {
     take:
-    input       // channel: [meta, alignment (BAM), index (optional)]
+    input       // channel: [meta, alignment (BAM or CRAM), index (optional)]
+    fasta       // channel: [meta, fasta] — reference, staged in to decode CRAM input
+    fasta_fai   // channel: [meta, fai]
     interleaved // value: true/false
 
     main:
 
-    // BAM -> FASTQ needs no reference, but the updated samtools modules still
-    // require the reference tuple, so pass empty placeholders.
-    reference = [[id: 'fasta'], [], []] // [ meta, fasta, fai ]
+    // Combined [ meta, fasta, fai ] reference tuple for the updated samtools modules
+    fasta_and_fai = fasta.combine(fasta_fai).map { meta, fasta_, _fai_meta, fai -> [ meta, fasta_, fai ] }
 
     // MAP - MAP
-    SAMTOOLS_VIEW_MAP_MAP(input, reference, [[], []], [[], []], [])
+    SAMTOOLS_VIEW_MAP_MAP(input, fasta_and_fai, [[], []], [[], []], [])
 
     // UNMAP - UNMAP
-    SAMTOOLS_VIEW_UNMAP_UNMAP(input, reference, [[], []], [[], []], [])
+    SAMTOOLS_VIEW_UNMAP_UNMAP(input, fasta_and_fai, [[], []], [[], []], [])
 
     // UNMAP - MAP
-    SAMTOOLS_VIEW_UNMAP_MAP(input, reference, [[], []], [[], []], [])
+    SAMTOOLS_VIEW_UNMAP_MAP(input, fasta_and_fai, [[], []], [[], []], [])
 
     // MAP - UNMAP
-    SAMTOOLS_VIEW_MAP_UNMAP(input, reference, [[], []], [[], []], [])
+    SAMTOOLS_VIEW_MAP_UNMAP(input, fasta_and_fai, [[], []], [[], []], [])
 
     // Merge UNMAP
     all_unmapped_bam = SAMTOOLS_VIEW_UNMAP_UNMAP.out.bam
@@ -40,13 +41,13 @@ workflow BAM_CONVERT_SAMTOOLS {
         .join(SAMTOOLS_VIEW_MAP_UNMAP.out.bam, failOnDuplicate: true, remainder: true)
         .map{ meta, unmap_unmap, unmap_map, map_unmap -> [ meta, [ unmap_unmap, unmap_map, map_unmap ] ] }
 
-    SAMTOOLS_MERGE_UNMAP(all_unmapped_bam.map { meta, bams -> [ meta, bams, [] ] }, reference + [[]])
+    SAMTOOLS_MERGE_UNMAP(all_unmapped_bam.map { meta, bams -> [ meta, bams, [] ] }, fasta_and_fai.map { meta, fasta_, fai -> [ meta, fasta_, fai, [] ] })
 
     // Collate & convert unmapped
-    COLLATE_FASTQ_UNMAP(SAMTOOLS_MERGE_UNMAP.out.bam, reference, interleaved)
+    COLLATE_FASTQ_UNMAP(SAMTOOLS_MERGE_UNMAP.out.bam, fasta_and_fai, interleaved)
 
     // Collate & convert mapped
-    COLLATE_FASTQ_MAP(SAMTOOLS_VIEW_MAP_MAP.out.bam, reference, interleaved)
+    COLLATE_FASTQ_MAP(SAMTOOLS_VIEW_MAP_MAP.out.bam, fasta_and_fai, interleaved)
 
     // join Mapped & unmapped fastq
 

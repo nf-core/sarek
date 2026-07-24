@@ -957,7 +957,7 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,300b95526a211b05f18aaffd037dacd3",
+                "samtools-stats-dp.txt:md5,2f8b6ccd23ecf736af3d32dbb33699b2",
                 "samtools_alignment_plot.txt:md5,5053f650b8612fe5e8527b0bca8ab905",
                 "samtools_insert_size.txt:md5,2b1da7c476290081135a2816f4231333",
                 "test.freebayes.filtered.bcftools_stats.txt:md5,b0d8c9234a3b038c05fd14d656e43956",
