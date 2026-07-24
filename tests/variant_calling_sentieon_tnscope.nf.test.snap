@@ -4,13 +4,13 @@
             11,
             {
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
@@ -30,8 +30,14 @@
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -91,13 +97,13 @@
             19,
             {
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
@@ -117,8 +123,14 @@
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -204,7 +216,7 @@
             10,
             {
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
@@ -220,8 +232,14 @@
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -292,13 +310,13 @@
             13,
             {
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
@@ -318,8 +336,14 @@
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [

@@ -62,32 +62,32 @@
                     },
                     "bwa/index": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "bwa/mem": {
                         "branch": "master",
-                        "git_sha": "a29f18660f5e3748d44d6f716241e70c942c065d",
+                        "git_sha": "2fb127c8fd13de0adaa676df7169131e45c0b114",
                         "installed_by": ["modules"]
                     },
                     "bwamem2/index": {
                         "branch": "master",
-                        "git_sha": "b2902040b9cb9b7b32b62400f1c024a709bd4812",
+                        "git_sha": "62ce917fd775aaef732eb82019de069c765adfd3",
                         "installed_by": ["modules"]
                     },
                     "bwamem2/mem": {
                         "branch": "master",
-                        "git_sha": "a29f18660f5e3748d44d6f716241e70c942c065d",
+                        "git_sha": "62ce917fd775aaef732eb82019de069c765adfd3",
                         "installed_by": ["modules"]
                     },
                     "cat/cat": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "eac429d4c67ac5114ce7d4287d460d8f05fd9fab",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "cnvkit/antitarget": {
@@ -153,12 +153,12 @@
                     },
                     "dragmap/align": {
                         "branch": "master",
-                        "git_sha": "8b06d86f6a82b6203f239ad409f606fdf71ec697",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "dragmap/hashtable": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "ensemblvep/download": {
@@ -173,7 +173,7 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "d082103d7976a2804f21225446cc110cbd822f4c",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "fastqc": {
@@ -183,122 +183,122 @@
                     },
                     "fgbio/callmolecularconsensusreads": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "fgbio/copyumifromreadname": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "fgbio/fastqtobam": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "fgbio/groupreadsbyumi": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "freebayes": {
                         "branch": "master",
-                        "git_sha": "d04951ee68e3e8b875ebf5ddb7ba6e05233624c1",
+                        "git_sha": "6fd0d62609c3a24b08c9df3df45857f974efc7ad",
                         "installed_by": ["modules"]
                     },
                     "gatk4/applybqsr": {
                         "branch": "master",
-                        "git_sha": "620300d96c4b9051d533a5ea5f9d3b2c64b781ce",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/applyvqsr": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/baserecalibrator": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/calculatecontamination": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/cnnscorevariants": {
                         "branch": "master",
-                        "git_sha": "1999eff2c530b2b185a25cc42117a1686f09b685",
+                        "git_sha": "21e4662ae927fdbc5fc04eec9bde38b0689d4954",
                         "installed_by": ["modules"]
                     },
                     "gatk4/createsequencedictionary": {
                         "branch": "master",
-                        "git_sha": "a57253204b8f4022edfeaa3ae2f5e2abecd8858b",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/estimatelibrarycomplexity": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/filtermutectcalls": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/filtervarianttranches": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/gatherbqsrreports": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/gatherpileupsummaries": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/genomicsdbimport": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/genotypegvcfs": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/getpileupsummaries": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/haplotypecaller": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "7abcc95130dd0388f696002a99adeb59eca54471",
                         "installed_by": ["modules"]
                     },
                     "gatk4/intervallisttobed": {
                         "branch": "master",
-                        "git_sha": "20fe8646005253d57a7a8db42abf69ea0966dc75",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/learnreadorientationmodel": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/markduplicates": {
                         "branch": "master",
-                        "git_sha": "1ec937ab3edc307bc0d79a2200d784e9f0868359",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/mergemutectstats": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4/mergevcfs": {
@@ -308,32 +308,32 @@
                     },
                     "gatk4/mutect2": {
                         "branch": "master",
-                        "git_sha": "a97cba262e9367734e435dc07d2e3b7d6121ef3e",
+                        "git_sha": "f8001d415ee08634fee5019bd15c7fdaa2a1915d",
                         "installed_by": ["modules"]
                     },
                     "gatk4/variantrecalibrator": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4spark/applybqsr": {
                         "branch": "master",
-                        "git_sha": "620300d96c4b9051d533a5ea5f9d3b2c64b781ce",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4spark/baserecalibrator": {
                         "branch": "master",
-                        "git_sha": "fa55ebb81654fe1736975fa28d1af5a079bf6a08",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gatk4spark/markduplicates": {
                         "branch": "master",
-                        "git_sha": "fa55ebb81654fe1736975fa28d1af5a079bf6a08",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "gawk": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "goleft/indexcov": {
@@ -343,27 +343,27 @@
                     },
                     "gunzip": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "0902eac3012baaf4f9ab6513c8c55acc9353c96c",
                         "installed_by": ["modules"]
                     },
                     "lofreq/callparallel": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "9707facbacc9c5c02ecf0b192f0604a29351b00a",
                         "installed_by": ["modules"]
                     },
                     "manta/germline": {
                         "branch": "master",
-                        "git_sha": "ae6b18e8930fe66595c8b08633b484d42970a564",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "manta/somatic": {
                         "branch": "master",
-                        "git_sha": "ae6b18e8930fe66595c8b08633b484d42970a564",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "manta/tumoronly": {
                         "branch": "master",
-                        "git_sha": "ae6b18e8930fe66595c8b08633b484d42970a564",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "mosdepth": {
@@ -393,12 +393,12 @@
                     },
                     "muse/call": {
                         "branch": "master",
-                        "git_sha": "2ae2df92d6f5ac2d54058d0cece928e13d241912",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "muse/sump": {
                         "branch": "master",
-                        "git_sha": "2ae2df92d6f5ac2d54058d0cece928e13d241912",
+                        "git_sha": "e8c96d814d65d575a840063c90905e44ac5ecc12",
                         "installed_by": ["modules"]
                     },
                     "ngscheckmate/ncm": {
@@ -533,22 +533,22 @@
                     },
                     "spring/decompress": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "strelka/germline": {
                         "branch": "master",
-                        "git_sha": "039730fab3f0150585ad46c402c6bf95396d88b5",
+                        "git_sha": "db2491458130c466967c4e9b44686314c3f37141",
                         "installed_by": ["modules"]
                     },
                     "strelka/somatic": {
                         "branch": "master",
-                        "git_sha": "039730fab3f0150585ad46c402c6bf95396d88b5",
+                        "git_sha": "db2491458130c466967c4e9b44686314c3f37141",
                         "installed_by": ["modules"]
                     },
                     "svdb/merge": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6bc8ff03ace2cb373f683b9502ce79930c8a07f0",
                         "installed_by": ["modules"]
                     },
                     "tabix/bgziptabix": {
@@ -563,17 +563,17 @@
                     },
                     "tiddit/sv": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "untar": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "unzip": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "git_sha": "1c43a7e22f04cf19c9f9d3de7e7e5a3addd9382a",
                         "installed_by": ["modules"]
                     },
                     "varlociraptor/callvariants": {
@@ -598,12 +598,12 @@
                     },
                     "vcflib/vcffilter": {
                         "branch": "master",
-                        "git_sha": "401ec2b2b8d0938d12ae4f9e25819e14596b8f83",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "vcftools": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "094186cc8b196ebdded57d596d741611ff571cf3",
                         "installed_by": ["modules"]
                     },
                     "yte": {

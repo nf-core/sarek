@@ -64,7 +64,6 @@ workflow PREPARE_GENOME {
         if (!bwa_in && (aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks")) {
             BWAMEM1_INDEX(fasta)
             index_alignment = BWAMEM1_INDEX.out.index.collect()
-            versions = versions.mix(BWAMEM1_INDEX.out.versions)
         }
         else if (aligner == "bwa-mem" || aligner == "sentieon-bwamem" || aligner == "parabricks") {
             index_alignment = channel.fromPath(bwa_in).map { index -> [[id: 'bwa'], index] }.collect()
@@ -72,7 +71,6 @@ workflow PREPARE_GENOME {
         else if (!bwamem2_in && aligner == 'bwa-mem2') {
             BWAMEM2_INDEX(fasta)
             index_alignment = BWAMEM2_INDEX.out.index.collect()
-            versions = versions.mix(BWAMEM2_INDEX.out.versions)
         }
         else if (aligner == 'bwa-mem2') {
             index_alignment = channel.fromPath(bwamem2_in).map { index -> [[id: 'bwamem2'], index] }.collect()
@@ -80,7 +78,6 @@ workflow PREPARE_GENOME {
         else if (!dragmap_in && aligner == 'dragmap') {
             DRAGMAP_HASHTABLE(fasta)
             index_alignment = DRAGMAP_HASHTABLE.out.hashmap.collect()
-            versions = versions.mix(DRAGMAP_HASHTABLE.out.versions)
         }
         else if (aligner == 'dragmap') {
             index_alignment = channel.fromPath(dragmap_in).map { index -> [[id: 'dragmap'], index] }.collect()
@@ -93,10 +90,9 @@ workflow PREPARE_GENOME {
     if (!dict_in && step != "annotate") {
         GATK4_CREATESEQUENCEDICTIONARY(fasta)
         dict = GATK4_CREATESEQUENCEDICTIONARY.out.dict.collect()
-        versions = versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
     }
     else if (dict_in) {
-        dict = channel.fromPath(dict_in).map { it -> [[id: 'dict'], it] }.collect()
+        dict = channel.fromPath(dict_in).map { dict_ -> [[id: 'dict'], dict_] }.collect()
     }
     else {
         dict = channel.empty()
@@ -108,7 +104,7 @@ workflow PREPARE_GENOME {
         versions = versions.mix(SAMTOOLS_FAIDX.out.versions)
     }
     else if (fasta_fai_in) {
-        fasta_fai = channel.fromPath(fasta_fai_in).map { it -> [[id: 'fai'], it] }.collect()
+        fasta_fai = channel.fromPath(fasta_fai_in).map { fai -> [[id: 'fai'], fai] }.collect()
     }
     else {
         fasta_fai = channel.empty()
@@ -121,7 +117,6 @@ workflow PREPARE_GENOME {
             // Use user-provided bbsplit index
             if (bbsplit_index_in.endsWith('.tar.gz')) {
                 bbsplit_index = UNTAR_BBSPLIT_INDEX([[id: 'bbsplit_index'], file(bbsplit_index_in, checkIfExists: true)]).untar.map { _meta, index -> index }
-                versions = versions.mix(UNTAR_BBSPLIT_INDEX.out.versions)
             }
             else {
                 bbsplit_index = channel.value(file(bbsplit_index_in, checkIfExists: true))
@@ -129,13 +124,12 @@ workflow PREPARE_GENOME {
         }
         else if (bbsplit_fasta_list_in) {
             // Build it from scratch if we have FASTA
-            channel.of(file(bbsplit_fasta_list_in, checkIfExists: true))
+            ch_bbsplit_fasta_list = channel.of(file(bbsplit_fasta_list_in, checkIfExists: true))
                 .splitCsv(header: false, sep: ',')
                 .flatMap { id, fafile -> [['id', id], ['fasta', file(fafile, checkIfExists: true)]] }
                 .groupTuple()
-                .map { it -> it[1] }
-                .collect { [it] }
-                .set { ch_bbsplit_fasta_list }
+                .map { group -> group[1] }
+                .collect { fasta_group -> [fasta_group] }
 
             bbsplit_index = BBMAP_INDEX(
                 [[id: "build_index"], []],
@@ -212,7 +206,6 @@ workflow PREPARE_GENOME {
     if (msisensor2_models_in && msisensor2_models_in.endsWith(".tar.gz") && tools.split(',').contains('msisensor2')) {
         UNTAR_MSISENSOR2_MODELS(channel.fromPath(file(msisensor2_models_in)).map { archive -> [[id: archive.baseName], archive] })
         msisensor2_models = UNTAR_MSISENSOR2_MODELS.out.untar.collect()
-        versions = versions.mix(UNTAR_MSISENSOR2_MODELS.out.versions)
     }
     else if (msisensor2_models_in && tools.split(',').contains('msisensor2')) {
         msisensor2_models = channel.fromPath(msisensor2_models_in).map { model -> [[id:model.baseName], model] }.collect()
@@ -240,7 +233,6 @@ workflow PREPARE_GENOME {
     else if (ascat_alleles_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
         UNZIP_ALLELES(channel.fromPath(file(ascat_alleles_in)).map { archive -> [[id: archive.baseName], archive] })
         ascat_alleles = UNZIP_ALLELES.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }.collect()
-        versions = versions.mix(UNZIP_ALLELES.out.versions)
     }
     else {
         ascat_alleles = channel.fromPath(ascat_alleles_in).collect()
@@ -252,7 +244,6 @@ workflow PREPARE_GENOME {
     else if (ascat_loci_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
         UNZIP_LOCI(channel.fromPath(file(ascat_loci_in)).map { archive -> [[id: archive.baseName], archive] })
         ascat_loci = UNZIP_LOCI.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }.collect()
-        versions = versions.mix(UNZIP_LOCI.out.versions)
     }
     else {
         ascat_loci = channel.fromPath(ascat_loci_in).collect()
@@ -264,7 +255,6 @@ workflow PREPARE_GENOME {
     else if (ascat_loci_gc_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
         UNZIP_GC(channel.fromPath(file(ascat_loci_gc_in)).map { archive -> [[id: archive.baseName], archive] })
         ascat_loci_gc = UNZIP_GC.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }.collect()
-        versions = versions.mix(UNZIP_GC.out.versions)
     }
     else {
         ascat_loci_gc = channel.fromPath(ascat_loci_gc_in).collect()
@@ -276,7 +266,6 @@ workflow PREPARE_GENOME {
     else if (ascat_loci_rt_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
         UNZIP_RT(channel.fromPath(file(ascat_loci_rt_in)).map { archive -> [[id: archive.baseName], archive] })
         ascat_loci_rt = UNZIP_RT.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }.collect()
-        versions = versions.mix(UNZIP_RT.out.versions)
     }
     else {
         ascat_loci_rt = channel.fromPath(ascat_loci_rt_in).collect()
@@ -288,7 +277,6 @@ workflow PREPARE_GENOME {
     else if (chr_dir_in.endsWith(".tar.gz") && tools.split(',').contains('controlfreec')) {
         UNTAR_CHR_DIR(channel.fromPath(file(chr_dir_in)).map { archive -> [[id: archive.baseName], archive] })
         chr_dir = UNTAR_CHR_DIR.out.untar.map { _meta, extracted_archive -> extracted_archive }.collect()
-        versions = versions.mix(UNTAR_CHR_DIR.out.versions)
     }
     else {
         chr_dir = channel.fromPath(chr_dir_in).collect()

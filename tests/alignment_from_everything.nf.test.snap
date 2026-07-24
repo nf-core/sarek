@@ -4,14 +4,14 @@
             61,
             {
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "COLLATE_FASTQ_MAP": {
                     "samtools": 1.21
@@ -26,17 +26,17 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
