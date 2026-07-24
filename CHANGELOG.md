@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2210](https://github.com/nf-core/sarek/pull/2210) - Update bcftools to 1.23.1
 - [#2229](https://github.com/nf-core/sarek/pull/2229) - Update EnsemblVEP to 116.0
 - [#2232](https://github.com/nf-core/sarek/pull/2232) - Migrate local code to the lowercase `channel` factory for Nextflow strict-syntax / 26.x readiness
+- [#2235](https://github.com/nf-core/sarek/pull/2235) - Nextflow strict-syntax / 26.x readiness for local code: explicit, named closure parameters (replacing implicit/generic `it`), `_`-prefixed unused parameters, and removal of unused `take:` inputs. Previously-dropped Manta candidate VCFs and Sentieon gVCF indices are now emitted.
+- [#2235](https://github.com/nf-core/sarek/pull/2235) - germline CNVKIT reuses the shared `CRAM_TO_BAM` conversion instead of re-converting CRAM internally, avoiding a duplicate conversion. Side effect: with `--step variant_calling` (user-supplied CRAM/BAM), CNVKit output files are named after the input file rather than the sample; runs from FASTQ are unaffected.
+- [#2238](https://github.com/nf-core/sarek/pull/2238) - Migrate `gatk4`/`gatk4spark` modules to the versions topic channel (bumps gatk4spark 4.6.1.0 → 4.6.2.0)
+- [#2239](https://github.com/nf-core/sarek/pull/2239) - Migrate alignment/UMI/utility modules (`bwa`, `bwamem2`, `dragmap`, `fgbio`, `fastp`, `cat`, `gawk`, `gunzip`, `untar`, `unzip`, `spring`) to the versions topic channel (fastp 0.24.0 → 1.1.0)
+- [#2240](https://github.com/nf-core/sarek/pull/2240) - Migrate variant-calling modules (`freebayes`, `strelka`, `manta`, `tiddit`, `lofreq`, `svdb`, `vcflib`, `vcftools`) to the versions topic channel
 
 ### Fixed
 
@@ -32,6 +37,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | htslib        | 1.21        | 1.23.1      |
 | varlociraptor | 8.9.3       | 8.9.5       |
 | ensembl-vep   | 115.2       | 116.0       |
+| gatk4         | 4.6.1.0     | 4.6.2.0     |
+| gatk4-spark   | 4.6.1.0     | 4.6.2.0     |
+| bwa           | 0.7.18      | 0.7.19      |
+| bwa-mem2      | 2.2.1       | 2.3         |
+| fastp         | 0.24.0      | 1.1.0       |
+| fgbio         | 2.4.0       | 3.1.2       |
+| gawk          | 5.3.0       | 5.3.1       |
+| pigz          | 2.3.4       | 2.8         |
+| svdb          | 2.8.2       | 2.8.4       |
+| tiddit        | 3.6.1       | 3.9.5       |
+| vcftools      | 0.1.16      | 0.1.17      |
 
 ### Dependencies - plugins
 
@@ -64,6 +80,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2225](https://github.com/nf-core/sarek/pull/2225) - Back to dev (3.9.1dev)
 - [#2229](https://github.com/nf-core/sarek/pull/2229) - Update nft-utils to 1.0.0, migrate `getAllFilesFromDir` to `getAllFilesFromPath` in test utilities
 - [#2233](https://github.com/nf-core/sarek/pull/2233) - Replace the last remaining deprecated `channel.from` with `channel.of` in `prepare_genome`
+- [#2234](https://github.com/nf-core/sarek/pull/2234) - Replace deprecated `.set {}` channel terminator with plain assignment in local subworkflows for Nextflow strict-syntax / 26.x readiness
+- [#2237](https://github.com/nf-core/sarek/pull/2237) - Update muse/sump module to check if the index is older before touching it
 
 #### Fixed
 

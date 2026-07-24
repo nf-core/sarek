@@ -17,7 +17,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
     intervals     // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi, num_intervals ] or [ [], [], 0 ] if no intervals
 
     main:
-    versions = channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
@@ -27,17 +26,17 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
     STRELKA_SOMATIC(cram_intervals, fasta, fasta_fai )
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    vcf_indels = STRELKA_SOMATIC.out.vcf_indels.branch{
+    vcf_indels = STRELKA_SOMATIC.out.vcf_indels.branch{ meta, _vcf ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    vcf_snvs = STRELKA_SOMATIC.out.vcf_snvs.branch{
+    vcf_snvs = STRELKA_SOMATIC.out.vcf_snvs.branch{ meta, _vcf ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Only when using intervals
@@ -48,17 +47,17 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
     MERGE_STRELKA_SNVS(vcf_snvs_to_merge, dict)
 
     // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_indels = STRELKA_SOMATIC.out.vcf_indels_tbi.branch{
+    tbi_indels = STRELKA_SOMATIC.out.vcf_indels_tbi.branch{ meta, _tbi ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_snvs = STRELKA_SOMATIC.out.vcf_snvs_tbi.branch{
+    tbi_snvs = STRELKA_SOMATIC.out.vcf_snvs_tbi.branch{ meta, _tbi ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Mix intervals and no_intervals channels together
@@ -70,11 +69,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], tbi ] }
 
-    versions = versions.mix(STRELKA_SOMATIC.out.versions)
-
     emit:
     vcf
     tbi
 
-    versions
 }

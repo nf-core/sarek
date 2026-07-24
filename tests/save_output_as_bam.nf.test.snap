@@ -7,11 +7,11 @@
                     "bcftools": "1.23.1"
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "CNVKIT_ANTITARGET": {
                     "cnvkit": "0.9.11"
@@ -38,17 +38,17 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
@@ -70,8 +70,14 @@
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -377,17 +383,17 @@
             9,
             {
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": 1.21
@@ -442,7 +448,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "SENTIEON_DEDUP": {
                     "sentieon": "202503.02"

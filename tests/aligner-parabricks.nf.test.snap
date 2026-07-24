@@ -4,7 +4,7 @@
             15,
             {
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": 1.21
@@ -16,7 +16,7 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
@@ -237,7 +237,7 @@
             14,
             {
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -246,7 +246,7 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
@@ -476,10 +476,10 @@
                     "bcftools": "1.23.1"
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "CALCULATECONTAMINATION": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -488,28 +488,28 @@
                     "fastqc": "0.12.1"
                 },
                 "FILTERMUTECTCALLS": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
                 },
                 "LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
                 "MUTECT2_PAIRED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "PARABRICKS_FQ2BAM": {
                     "parabricks": "4.6.0-1"
@@ -525,8 +525,14 @@
                     "bgzip": "1.21",
                     "tabix": "1.21"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -797,7 +803,7 @@
             13,
             {
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"

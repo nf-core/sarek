@@ -138,7 +138,7 @@ workflow NFCORE_SAREK {
 
     // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
     intervals_for_preprocessing = params.wes
-        ? intervals_bed_combined.map { it -> [[id: it.baseName], it] }.collect()
+        ? intervals_bed_combined.map { bed -> [[id: bed.baseName], bed] }.collect()
         : channel.value([[id: 'null'], []])
     // [ interval, num_intervals ] multiple interval.bed files, divided by useful intervals for scatter/gather
     intervals = PREPARE_INTERVALS.out.intervals_bed
@@ -327,9 +327,9 @@ workflow NFCORE_SAREK {
         params.varlociraptor_events_somatic,
         params.varlociraptor_events_tumor_only,
         params.varlociraptor_fdr,
-        params.varlociraptor_scenario_germline ? channel.fromPath(params.varlociraptor_scenario_germline).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect(),
-        params.varlociraptor_scenario_somatic ? channel.fromPath(params.varlociraptor_scenario_somatic).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect(),
-        params.varlociraptor_scenario_tumor_only ? channel.fromPath(params.varlociraptor_scenario_tumor_only).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect(),
+        params.varlociraptor_scenario_germline ? channel.fromPath(params.varlociraptor_scenario_germline).map { scenario -> [[id: scenario.baseName - '.yte'], scenario] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect(),
+        params.varlociraptor_scenario_somatic ? channel.fromPath(params.varlociraptor_scenario_somatic).map { scenario -> [[id: scenario.baseName - '.yte'], scenario] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect(),
+        params.varlociraptor_scenario_tumor_only ? channel.fromPath(params.varlociraptor_scenario_tumor_only).map { scenario -> [[id: scenario.baseName - '.yte'], scenario] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect(),
         snpeff_cache,
         params.snpeff_db,
         vep_cache,

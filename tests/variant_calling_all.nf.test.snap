@@ -13,18 +13,17 @@
                     "bcftools": "1.23.1"
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "CNVKIT_ANTITARGET": {
                     "cnvkit": "0.9.11"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10",
-                    "samtools": 1.17
+                    "cnvkit": "0.9.10"
                 },
                 "CNVKIT_CALL": {
                     "cnvkit": "0.9.10"
@@ -54,17 +53,17 @@
                     "freebayes": "1.3.10"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
@@ -88,8 +87,8 @@
                     "strelka": "2.9.10"
                 },
                 "SVDB_MERGE": {
-                    "bcftools": 1.21,
-                    "svdb": "2.8.2"
+                    "bcftools": "1.23",
+                    "svdb": "2.8.4"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -110,13 +109,19 @@
                     "tabix": 1.21
                 },
                 "TIDDIT_SV": {
-                    "tiddit": "3.6.1"
+                    "tiddit": "3.9.5"
                 },
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -567,9 +572,9 @@
                 "test2_vs_test.strelka.somatic_indels.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test2_vs_test.strelka.somatic_snvs.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test2_vs_test.strelka.somatic_snvs.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "test.tiddit.FILTER.summary:md5,2cb5598e2a83870e162787c5025c9518",
+                "test.tiddit.FILTER.summary:md5,34b4490cb507e54bce2cdff5d5594508",
                 "test.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
-                "test2_vs_test.tiddit_sv_merge.FILTER.summary:md5,2cb5598e2a83870e162787c5025c9518",
+                "test2_vs_test.tiddit_sv_merge.FILTER.summary:md5,34b4490cb507e54bce2cdff5d5594508",
                 "test2_vs_test.tiddit_sv_merge.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "genome.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "genome.target.bed:md5,ab3aafe8cc4cc3f1c40d527dfad64fda",
@@ -625,10 +630,10 @@
                 "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565",
                 "test2_vs_test.strelka.somatic_indels.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2_vs_test.strelka.somatic_snvs.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "test.tiddit.vcf.gz:md5,c74645590b3d3c8d5f34e1e681ccd05b",
-                "test2_vs_test.tiddit.normal.vcf.gz:md5,c74645590b3d3c8d5f34e1e681ccd05b",
-                "test2_vs_test.tiddit.tumor.vcf.gz:md5,a4a162ddf9a49df61c62abbf704e2d19",
-                "test2_vs_test.tiddit_sv_merge.vcf.gz:md5,9105fb1263deef2521b302b38d77cad7"
+                "test.tiddit.vcf.gz:md5,73a3716cb5280de3f7e70b5eaf6dd1d",
+                "test2_vs_test.tiddit.normal.vcf.gz:md5,73a3716cb5280de3f7e70b5eaf6dd1d",
+                "test2_vs_test.tiddit.tumor.vcf.gz:md5,4dfb5e0e5aa2c961d887a1633167ba71",
+                "test2_vs_test.tiddit_sv_merge.vcf.gz:md5,720f6c1c5b88e02529cb62d7d3d0a543"
             ],
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
@@ -655,18 +660,17 @@
                     "bcftools": "1.23.1"
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "CNVKIT_ANTITARGET": {
                     "cnvkit": "0.9.11"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10",
-                    "samtools": 1.17
+                    "cnvkit": "0.9.10"
                 },
                 "CNVKIT_CALL": {
                     "cnvkit": "0.9.10"
@@ -696,17 +700,17 @@
                     "freebayes": "1.3.10"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
@@ -739,13 +743,19 @@
                     "tabix": 1.21
                 },
                 "TIDDIT_SV": {
-                    "tiddit": "3.6.1"
+                    "tiddit": "3.9.5"
                 },
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -1091,7 +1101,7 @@
                 "test.freebayes.filtered.TsTv.count:md5,845f64e5bb4224af98f3a47294cd5483",
                 "test.strelka.variants.FILTER.summary:md5,dd87f507da7de20d5318841af312493b",
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
-                "test.tiddit.FILTER.summary:md5,2cb5598e2a83870e162787c5025c9518",
+                "test.tiddit.FILTER.summary:md5,34b4490cb507e54bce2cdff5d5594508",
                 "test.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
                 "genome.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "genome.target.bed:md5,ab3aafe8cc4cc3f1c40d527dfad64fda",
@@ -1124,7 +1134,7 @@
                 "test.freebayes.filtered.vcf.gz:md5,bf085c88aa26191a55fbd23bff6a498f",
                 "test.strelka.genome.vcf.gz:md5,16437a040679d88b7d84a9276f793d6c",
                 "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565",
-                "test.tiddit.vcf.gz:md5,ac44cc2f44ebec84f5377e3274131876"
+                "test.tiddit.vcf.gz:md5,5e603e7e628756413a2056ea873e14e1"
             ],
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
@@ -1150,14 +1160,14 @@
                     "bcftools": "1.23.1"
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "CALCULATECONTAMINATION": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "CNVKIT_ANTITARGET": {
                     "cnvkit": "0.9.11"
@@ -1178,38 +1188,38 @@
                     "fastqc": "0.12.1"
                 },
                 "FILTERMUTECTCALLS": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "FREEBAYES": {
                     "freebayes": "1.3.10"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "GETPILEUPSUMMARIES": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": 1.21
                 },
                 "LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
                 "MUTECT2": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": 1.21
@@ -1233,13 +1243,19 @@
                     "tabix": 1.21
                 },
                 "TIDDIT_SV": {
-                    "tiddit": "3.6.1"
+                    "tiddit": "3.9.5"
                 },
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -1559,7 +1575,7 @@
                 "test2.freebayes.filtered.TsTv.count:md5,60b173b4a649483b651fcfedf1f5d790",
                 "test2.mutect2.filtered.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test2.mutect2.filtered.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
-                "test2.tiddit.FILTER.summary:md5,cea83f893b7e8a5744bde7c54486013a",
+                "test2.tiddit.FILTER.summary:md5,d35d41bdd3566a05c48057b8ca3d0e64",
                 "test2.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
                 "cnvkit.reference.antitarget-tmp.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "cnvkit.reference.target-tmp.bed:md5,14a7ba28453f8c8fc6ba5b044c517291",
@@ -1581,7 +1597,7 @@
                 "test2.freebayes.filtered.vcf.gz:md5,8461ef8ccf651775bde7c29d0e563474",
                 "test2.mutect2.filtered.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2.mutect2.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "test2.tiddit.vcf.gz:md5,a4a162ddf9a49df61c62abbf704e2d19"
+                "test2.tiddit.vcf.gz:md5,4dfb5e0e5aa2c961d887a1633167ba71"
             ],
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
