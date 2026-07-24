@@ -334,7 +334,7 @@ workflow NFCORE_SAREK {
         params.vep_genome,
         params.vep_species,
         ch_snpsift_db,
-        versions,
+        versions
     )
 
     emit:
@@ -361,7 +361,7 @@ workflow {
         params.input,
         params.help,
         params.help_full,
-        params.show_hidden,
+        params.show_hidden
     )
 
     //
@@ -378,7 +378,7 @@ workflow {
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
-        NFCORE_SAREK.out.multiqc_report,
+        NFCORE_SAREK.out.multiqc_report
     )
 
     publish:
