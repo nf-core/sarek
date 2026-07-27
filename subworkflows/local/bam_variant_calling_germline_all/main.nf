@@ -91,6 +91,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         )
         vcf_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.vcf
         tbi_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.tbi
+        vcf_mpileup.view { meta, vcf -> "DEBUGGERMLINE mpileup: ${meta} | ${vcf}" }
     }
 
     // CNVKIT
@@ -349,6 +350,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         vcf_strelka = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.vcf
         tbi_strelka = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.tbi
+        vcf_strelka.view { meta, vcf -> "DEBUGGERMLINE strelka: ${meta} | ${vcf}" }
     }
 
     // TIDDIT

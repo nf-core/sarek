@@ -133,6 +133,8 @@ workflow POST_VARIANTCALLING {
             individual_caller_vcfs = small_variant_vcfs
             individual_caller_tbis = small_variant_tbis
 
+            small_variant_vcfs.view { meta, vcf -> "DEBUGPOSTVC small_variant_vcfs: ${meta} | ${vcf}" }
+
             CONSENSUS(small_variant_vcfs.join(small_variant_tbis, failOnDuplicate: true, failOnMismatch: true))
 
             consensus_vcfs = CONSENSUS.out.vcfs.map { meta, vcfs_ ->
