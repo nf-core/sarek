@@ -207,7 +207,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
         vcf_tnscope = BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE.out.vcf
         tbi_tnscope = BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE.out.versions)
     }
 
     vcf_all = channel.empty()

@@ -147,8 +147,6 @@ workflow POST_VARIANTCALLING {
             // Mix consensus VCF with individual caller VCFs for downstream annotation
             small_variant_vcfs = consensus_vcfs.mix(individual_caller_vcfs)
             small_variant_tbis = consensus_tbis.mix(individual_caller_tbis)
-
-            versions = versions.mix(CONSENSUS.out.versions)
         }
 
         vcfs = small_variant_vcfs.mix(all_vcfs.other)

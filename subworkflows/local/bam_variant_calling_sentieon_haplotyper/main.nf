@@ -21,8 +21,6 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     sentieon_haplotyper_emit_mode
 
     main:
-    versions = channel.empty()
-
     gvcf               = channel.empty()
     vcf                = channel.empty()
     genotype_intervals = channel.empty()
@@ -140,7 +138,6 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
 
 
     emit:
-    versions
     vcf
     vcf_tbi
     gvcf

@@ -260,7 +260,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         vcf_tnscope = BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.vcf
         tbi_tnscope = BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.index
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.versions)
     }
 
     // TIDDIT

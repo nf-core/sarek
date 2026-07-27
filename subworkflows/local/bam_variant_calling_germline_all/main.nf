@@ -230,8 +230,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             sentieon_dnascope_pcr_indel_model,
             sentieon_dnascope_model)
 
-        versions = versions.mix(BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.versions)
-
         vcf_sentieon_dnascope      = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.vcf
         tbi_sentieon_dnascope      = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.vcf_tbi
         gvcf_sentieon_dnascope     = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.gvcf
@@ -256,7 +254,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
             vcf_sentieon_dnascope = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
             tbi_sentieon_dnascope = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_index
-            versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.versions)
         } else {
             // If single sample track, check if filtering should be done
             if (!(skip_tools && skip_tools.split(',').contains('dnascope_filter'))) {
@@ -287,8 +284,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             joint_germline,
             sentieon_haplotyper_emit_mode)
 
-        versions = versions.mix(BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.versions)
-
         vcf_sentieon_haplotyper      = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf
         tbi_sentieon_haplotyper      = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf_tbi
         gvcf_sentieon_haplotyper     = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.gvcf
@@ -313,7 +308,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
             vcf_sentieon_haplotyper = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
             tbi_sentieon_haplotyper = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_index
-            versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.versions)
         } else {
 
             // If single sample track, check if filtering should be done

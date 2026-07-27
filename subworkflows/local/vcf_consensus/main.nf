@@ -12,8 +12,6 @@ workflow CONSENSUS {
     vcfs     // [meta, vcf ,tbi]
 
     main:
-    ch_versions = channel.empty()
-
     ch_vcfs = vcfs
         .branch{ meta, _vcf, _tbi ->
             // Somatic Strelka samples have tumor_id field (tumor-normal pairs)
@@ -72,7 +70,6 @@ workflow CONSENSUS {
     CONSENSUS_FROM_SITES(ch_isec_with_results)
 
     emit:
-    versions = ch_versions
     vcfs     = CONSENSUS_FROM_SITES.out.vcf
     tbis     = CONSENSUS_FROM_SITES.out.tbi
 

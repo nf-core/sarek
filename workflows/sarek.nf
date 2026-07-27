@@ -571,9 +571,6 @@ workflow SAREK {
                 bcftools_header_lines,
                 snpsift_db,
             )
-
-            // Gather used softwares versions
-            versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)
         }
     }
 
