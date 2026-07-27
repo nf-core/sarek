@@ -195,7 +195,7 @@
             {
                 "ASCAT": {
                     "alleleCounter": "4.3.0",
-                    "ascat": "3.2.0"
+                    "bioconductor-ascat": "3.2.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -347,7 +347,7 @@
             {
                 "ASCAT": {
                     "alleleCounter": "4.3.0",
-                    "ascat": "3.2.0"
+                    "bioconductor-ascat": "3.2.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
