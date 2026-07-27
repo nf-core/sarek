@@ -66,7 +66,6 @@ workflow CONSENSUS {
         }
 
     // Create consensus VCF from sites.txt with caller presence info
-    // Versions are collected via topic channel
     CONSENSUS_FROM_SITES(ch_isec_with_results)
 
     emit:
