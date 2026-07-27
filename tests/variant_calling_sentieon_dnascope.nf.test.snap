@@ -174,7 +174,7 @@
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
                 "test.dnascope.unfiltered.FILTER.summary:md5,87a84b5f8ac3d3cbeeef7d60afcdbfe7",
                 "test.dnascope.unfiltered.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
@@ -576,7 +576,7 @@
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
                 "joint_germline.FILTER.summary:md5,b489034e69de07875cbf0f5548b4f55e",
                 "joint_germline.TsTv.count:md5,803d74e40f7716202bae2a3a81c1ddfc"
             ],

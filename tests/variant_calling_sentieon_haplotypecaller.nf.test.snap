@@ -200,7 +200,7 @@
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
                 "joint_germline_recalibrated_indel.FILTER.summary:md5,7e04c3bed9ecbb73aa3c02c2b6b46089",
                 "joint_germline_recalibrated_indel.TsTv.count:md5,89562fef808b5c3db629682d36fd86fc"
             ],
@@ -397,7 +397,7 @@
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
                 "test.haplotyper.filtered.FILTER.summary:md5,d501a93356f3c91c743f51104e24514a",
                 "test.haplotyper.filtered.TsTv.count:md5,89562fef808b5c3db629682d36fd86fc"
             ],
@@ -590,7 +590,7 @@
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
                 "test.haplotyper.unfiltered.FILTER.summary:md5,01b3d10464a3ac86f90ee82cdda23f68",
                 "test.haplotyper.unfiltered.TsTv.count:md5,89562fef808b5c3db629682d36fd86fc"
             ],
@@ -790,7 +790,7 @@
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
                 "test.haplotyper.filtered.FILTER.summary:md5,d501a93356f3c91c743f51104e24514a",
                 "test.haplotyper.filtered.TsTv.count:md5,89562fef808b5c3db629682d36fd86fc"
             ],
