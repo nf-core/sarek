@@ -19,12 +19,5 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ASCAT {
 
     main:
 
-    ch_versions = channel.empty()
-
     ASCAT(cram_pair, allele_files, loci_files, intervals_bed, fasta, gc_file, rt_file)
-
-    ch_versions = ch_versions.mix(ASCAT.out.versions)
-
-    emit:
-    versions = ch_versions
 }

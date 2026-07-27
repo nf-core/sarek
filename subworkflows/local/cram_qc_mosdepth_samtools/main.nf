@@ -15,7 +15,6 @@ workflow CRAM_QC_MOSDEPTH_SAMTOOLS {
     intervals
 
     main:
-    versions = channel.empty()
     reports = channel.empty()
 
     // Reports run on cram
@@ -30,5 +29,4 @@ workflow CRAM_QC_MOSDEPTH_SAMTOOLS {
 
     emit:
     reports
-    versions // channel: [ versions.yml ]
 }

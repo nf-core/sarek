@@ -83,7 +83,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             rt_file,
         )
 
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ASCAT.out.versions)
     }
 
     // CONTROLFREEC
@@ -201,7 +200,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     if (tools && tools.split(',').contains('msisensorpro')) {
         MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta, msisensorpro_scan)
 
-        versions = versions.mix(MSISENSORPRO_MSISOMATIC.out.versions)
         out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSISOMATIC.out.output_report)
     }
 
