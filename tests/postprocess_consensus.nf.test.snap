@@ -35,7 +35,8 @@
                     "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "MUTECT2_PAIRED": {
                     "gatk4": "4.6.2.0"
@@ -319,16 +320,16 @@
                 "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
                 "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
                 "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
-                "sample3.recal.per-base.bed.gz.csi:md5,c67dcd711b096eb42f43784d5eadbc0d",
+                "sample3.recal.per-base.bed.gz.csi:md5,68451158beb41ef7fcd07821fe3a52b4",
                 "sample3.recal.regions.bed.gz:md5,314ce8d7273eff353072108aa77c327c",
-                "sample3.recal.regions.bed.gz.csi:md5,9cb0ad7039a3b703d16ca7d5b835c0ee",
+                "sample3.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
                 "sample4.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample4.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample4.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
                 "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample4.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample4.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample4.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
+                "sample4.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
                 "sample3.bcftools.FILTER.summary:md5,9b62595b026decf12e9198d531e4307a",
                 "sample3.bcftools.TsTv.count:md5,6c937125d7bac4c491bea50f18cba43a",
                 "sample4_vs_sample3.mutect2.FILTER.summary:md5,cac64448be577632a614af62a23af34a",
@@ -371,11 +372,11 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
+        "timestamp": "2026-07-27T10:23:15.482817797",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-06T14:58:25.361891009"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --snv_consensus_calling --normalize_vcfs --tools lofreq,mpileup,mutect2 (tumor-only)": {
         "content": [
@@ -410,7 +411,8 @@
                     "lofreq": "2.1.5"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "MUTECT2": {
                     "gatk4": "4.6.2.0"
@@ -632,9 +634,9 @@
                 "sample2.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample2.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample2.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample2.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample2.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
+                "sample2.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
                 "sample2.bcftools.FILTER.summary:md5,8766995f3e4119ef30dfdaa9fb3752ce",
                 "sample2.bcftools.TsTv.count:md5,01df95fcb4df593f7e1b214d90ebdb59",
                 "sample2.lofreq.FILTER.summary:md5,8dd8a0c91d5c4a260b462e04f615e502",
@@ -688,11 +690,11 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
+        "timestamp": "2026-07-27T10:22:11.362506122",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-06T15:02:50.699837449"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --snv_consensus_calling --normalize_vcfs --tools mpileup,mutect2,strelka (germline + somatic)": {
         "content": [
@@ -739,7 +741,8 @@
                     "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "MUTECT2_PAIRED": {
                     "gatk4": "4.6.2.0"
@@ -1019,16 +1022,16 @@
                 "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
                 "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
                 "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
-                "sample3.recal.per-base.bed.gz.csi:md5,c67dcd711b096eb42f43784d5eadbc0d",
+                "sample3.recal.per-base.bed.gz.csi:md5,68451158beb41ef7fcd07821fe3a52b4",
                 "sample3.recal.regions.bed.gz:md5,314ce8d7273eff353072108aa77c327c",
-                "sample3.recal.regions.bed.gz.csi:md5,9cb0ad7039a3b703d16ca7d5b835c0ee",
+                "sample3.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
                 "sample4.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample4.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample4.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
                 "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample4.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample4.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample4.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
+                "sample4.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
                 "sample3.bcftools.FILTER.summary:md5,9b62595b026decf12e9198d531e4307a",
                 "sample3.bcftools.TsTv.count:md5,6c937125d7bac4c491bea50f18cba43a",
                 "sample4_vs_sample3.mutect2.filtered.FILTER.summary:md5,b25d4d2a64f9590d0ffb119fd3adb06e",
@@ -1119,10 +1122,10 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
+        "timestamp": "2026-07-27T10:27:08.769937074",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-06T14:53:33.998324217"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

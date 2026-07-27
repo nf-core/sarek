@@ -36,7 +36,8 @@
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -326,7 +327,7 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,58ea8c88565a359af678aa588e44895c",
+                "samtools-stats-dp.txt:md5,3f430eb99682ee0d3960a42c5a43650e",
                 "samtools_alignment_plot.txt:md5,aac925e42c9da438ab9f0fb7ae77e2fa",
                 "samtools_insert_size.txt:md5,9eccc96ce006c0161497782ed3afc147",
                 "test-test_L1_R1.fastp.fastq.gz:md5,f1a5c524cae7be9b5ca9a4138f847cfa",
@@ -339,12 +340,12 @@
                 "test.md.mosdepth.region.dist.txt:md5,02d51752367e753a6984c12f059499ba",
                 "test.md.mosdepth.summary.txt:md5,f18e776c3ee8e6947c3a69c136f54860",
                 "test.md.regions.bed.gz:md5,a3e8ccd3f04d3aee009a109d52b69920",
-                "test.md.regions.bed.gz.csi:md5,74d39fd1e463ce7b77610c96f5f57daf",
+                "test.md.regions.bed.gz.csi:md5,4b8894bcd39f647bff72e55fe6b5fe4d",
                 "test.recal.mosdepth.global.dist.txt:md5,b1c26e3381f220e65d683048ab6b6e2a",
                 "test.recal.mosdepth.region.dist.txt:md5,02d51752367e753a6984c12f059499ba",
                 "test.recal.mosdepth.summary.txt:md5,f18e776c3ee8e6947c3a69c136f54860",
                 "test.recal.regions.bed.gz:md5,a3e8ccd3f04d3aee009a109d52b69920",
-                "test.recal.regions.bed.gz.csi:md5,74d39fd1e463ce7b77610c96f5f57daf"
+                "test.recal.regions.bed.gz.csi:md5,4b8894bcd39f647bff72e55fe6b5fe4d"
             ],
             "No BAM files",
             [
@@ -356,11 +357,11 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-07-27T10:23:58.917345607",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-17T14:34:45.9737357"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --split_fastq 150000": {
         "content": [
@@ -399,7 +400,8 @@
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -701,7 +703,7 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,93ec69f6db74d9de7e4a549491ae2c73",
+                "samtools-stats-dp.txt:md5,75006287063bdff5824a9ccc46567138",
                 "samtools_alignment_plot.txt:md5,962b7dd27f48ec4bbb668c8c32cbea1b",
                 "samtools_insert_size.txt:md5,555c4ca8aac120c3b23e6cd2457922cd",
                 "0001.test-test_L1_R1.fastp.fastq.gz:md5,f379a60cc2a41f39fa0c0d23edf6eb61",
@@ -726,12 +728,12 @@
                 "test.md.mosdepth.region.dist.txt:md5,5062f8b7bb536c9b77a68f4ccd2315c2",
                 "test.md.mosdepth.summary.txt:md5,455358d5943fd1e5f09853acff3e50b6",
                 "test.md.regions.bed.gz:md5,729091bfb7c08486c8d247f4629996e6",
-                "test.md.regions.bed.gz.csi:md5,295eb71f59c0e37b5c3cf289a467f97e",
+                "test.md.regions.bed.gz.csi:md5,fc3378906815c0591f36b0e2d9d6fad8",
                 "test.recal.mosdepth.global.dist.txt:md5,e5d0c6bf323c32f5414bd48b90bb32fa",
                 "test.recal.mosdepth.region.dist.txt:md5,5062f8b7bb536c9b77a68f4ccd2315c2",
                 "test.recal.mosdepth.summary.txt:md5,455358d5943fd1e5f09853acff3e50b6",
                 "test.recal.regions.bed.gz:md5,729091bfb7c08486c8d247f4629996e6",
-                "test.recal.regions.bed.gz.csi:md5,295eb71f59c0e37b5c3cf289a467f97e"
+                "test.recal.regions.bed.gz.csi:md5,fc3378906815c0591f36b0e2d9d6fad8"
             ],
             "No BAM files",
             [
@@ -743,11 +745,11 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-07-27T10:21:50.402269939",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-03-06T15:10:32.391037"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --trim_fastq (no save)": {
         "content": [
@@ -786,7 +788,8 @@
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -1070,7 +1073,7 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,ae7954084b2cd708c5e7369606bf4208",
+                "samtools-stats-dp.txt:md5,92dc10e61df31bf4286b16582bed488f",
                 "samtools_alignment_plot.txt:md5,438e719bf574a46726dbd2e0f1442e42",
                 "samtools_insert_size.txt:md5,73b933a27800b86a4012c2d525870796",
                 "test-test_L1.fastp.json:md5,a7746b05c3ffb374c8f5d204f971879e",
@@ -1079,12 +1082,12 @@
                 "test.md.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.md.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
                 "test.md.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
-                "test.md.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
+                "test.md.regions.bed.gz.csi:md5,1f17d398be6b9c100cb0218fa226a623",
                 "test.recal.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.recal.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.recal.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
                 "test.recal.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
-                "test.recal.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2"
+                "test.recal.regions.bed.gz.csi:md5,1f17d398be6b9c100cb0218fa226a623"
             ],
             "No BAM files",
             [
@@ -1096,10 +1099,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-07-27T10:21:18.402385401",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-03-06T15:02:50.499879"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

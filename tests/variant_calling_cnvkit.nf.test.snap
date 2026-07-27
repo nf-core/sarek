@@ -28,7 +28,8 @@
                     "gawk": "5.3.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -159,12 +160,12 @@
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample3.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample3.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
+                "sample3.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
                 "sample4.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample4.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample4.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
+                "sample4.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
                 "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multi_intervals.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
                 "reference.cnn:md5,891454915f82d0eeda0be13d71e0d5d7",
@@ -198,11 +199,11 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:30:55.546225902",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-07-20T10:09:45.402105"
+        }
     },
     "-profile test --tools cnvkit --input recalibrated.csv --only_paired_variant_calling": {
         "content": [
@@ -233,7 +234,8 @@
                     "gawk": "5.3.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -394,22 +396,22 @@
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample1.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
+                "sample1.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
                 "sample2.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
+                "sample2.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample3.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample3.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
+                "sample3.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
                 "sample4.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample4.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample4.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
+                "sample4.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
                 "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multi_intervals.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
                 "reference.cnn:md5,891454915f82d0eeda0be13d71e0d5d7",
@@ -454,11 +456,11 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:28:58.93483756",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-07-20T10:18:52.335661"
+        }
     },
     "-profile test --tools cnvkit --input recalibrated_germline.csv": {
         "content": [
@@ -489,7 +491,8 @@
                     "gawk": "5.3.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -595,7 +598,7 @@
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample1.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
+                "sample1.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
                 "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multi_intervals.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
                 "reference.cnn:md5,891454915f82d0eeda0be13d71e0d5d7",
@@ -615,11 +618,11 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:26:30.003168858",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-07-20T10:05:28.442046"
+        }
     },
     "-profile test --tools cnvkit --input recalibrated_tumoronly.csv": {
         "content": [
@@ -650,7 +653,8 @@
                     "gawk": "5.3.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -755,7 +759,7 @@
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
+                "sample2.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
                 "cnvkit.reference.antitarget-tmp.bed:md5,3d4d20f9f23b39970865d29ef239d20b",
                 "cnvkit.reference.target-tmp.bed:md5,657b25dbda8516624efa8cb2cf3716ca",
                 "test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,067115082c4af4b64d58c0dc3a3642e4",
@@ -774,11 +778,11 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:31:08.508007983",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-07-20T10:13:42.841328"
+        }
     },
     "-profile test --tools cnvkit --input recalibrated_tumoronly.csv --no_intervals": {
         "content": [
@@ -788,7 +792,8 @@
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -876,18 +881,18 @@
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd"
+                "sample2.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497"
             ],
             "No BAM files",
             "No CRAM files",
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:21:02.862389764",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-07-20T10:24:27.668069"
+        }
     },
     "-profile test --tools cnvkit --input recalibrated_somatic.csv --no_intervals": {
         "content": [
@@ -909,7 +914,8 @@
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -1041,12 +1047,12 @@
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample3.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample3.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
+                "sample3.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
                 "sample4.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample4.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample4.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
+                "sample4.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
                 "genome.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "genome.bed:md5,9c6cc178da8c2c27364be9f25c9df96d",
                 "genome.target.bed:md5,d6bb0e93de375af227a800a032f08f03",
@@ -1082,10 +1088,10 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:27:01.74112415",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-07-20T10:22:29.609745"
+        }
     }
 }

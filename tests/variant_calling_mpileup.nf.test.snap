@@ -13,7 +13,8 @@
                     "gawk": "5.3.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -171,7 +172,7 @@
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
+                "sample2.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
                 "sample2.bcftools.FILTER.summary:md5,8766995f3e4119ef30dfdaa9fb3752ce",
                 "sample2.bcftools.TsTv.count:md5,01df95fcb4df593f7e1b214d90ebdb59"
             ],
@@ -182,11 +183,11 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:33:46.74937531",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T23:12:38.089637491"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools mpileup --input recalibrated_germline.csv --no_intervals": {
         "content": [
@@ -199,7 +200,8 @@
                     "bcftools": "1.23.1"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -356,7 +358,7 @@
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample1.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
+                "sample1.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
                 "sample1.bcftools.FILTER.summary:md5,83a10512eb9d035f409a84db7e620c28",
                 "sample1.bcftools.TsTv.count:md5,bfa998e75cbcb3da66f823cf39ef1e48"
             ],
@@ -367,11 +369,11 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:28:38.96226408",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T23:11:16.876484642"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools mpileup --input recalibrated_tumoronly.csv --no_intervals": {
         "content": [
@@ -384,7 +386,8 @@
                     "bcftools": "1.23.1"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -541,7 +544,7 @@
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
+                "sample2.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
                 "sample2.bcftools.FILTER.summary:md5,f295c70f174e7705fc2bac607aedbfda",
                 "sample2.bcftools.TsTv.count:md5,e5d20f81fc97f7ee97fb6cb6bd851047"
             ],
@@ -552,11 +555,11 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:33:54.21084607",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T23:14:01.579156158"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools mpileup --input recalibrated_germline.csv": {
         "content": [
@@ -572,7 +575,8 @@
                     "gawk": "5.3.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -730,7 +734,7 @@
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample1.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
+                "sample1.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
                 "sample1.bcftools.FILTER.summary:md5,9b62595b026decf12e9198d531e4307a",
                 "sample1.bcftools.TsTv.count:md5,6c937125d7bac4c491bea50f18cba43a"
             ],
@@ -741,10 +745,10 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:29:53.620097595",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T23:09:53.430122786"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

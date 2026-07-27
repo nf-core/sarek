@@ -16,7 +16,8 @@
                     "lofreq": "2.1.5"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -169,9 +170,9 @@
                 "sample2.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample2.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample2.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample2.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample2.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
+                "sample2.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
                 "sample2.lofreq.FILTER.summary:md5,8dd8a0c91d5c4a260b462e04f615e502"
             ],
             "No BAM files",
@@ -184,10 +185,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-19T18:31:16.337399595",
+        "timestamp": "2026-07-27T10:22:20.09841282",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools lofreq --no_intervals tumoronly": {
@@ -204,7 +205,8 @@
                     "lofreq": "2.1.5"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -352,7 +354,7 @@
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample2.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample2.lofreq.FILTER.summary:md5,72beda1b57da053eb352204828605a40"
             ],
             "No BAM files",
@@ -365,10 +367,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-19T18:32:37.387358619",
+        "timestamp": "2026-07-27T10:30:44.706814777",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "25.10.4"
         }
     }
 }

@@ -69,7 +69,8 @@
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "MSISENSORPRO_MSISOMATIC": {
                     "msisensor-pro": "1.3.0"
@@ -526,7 +527,7 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,13dab249f7bef935dfef234299550db8",
+                "samtools-stats-dp.txt:md5,8b8f48d0b1d134cfe3636e8577265751",
                 "samtools_alignment_plot.txt:md5,44149e0c5cc4bfa58242824b300219a2",
                 "samtools_insert_size.txt:md5,c4b5c78eeb30a8c926d1bd9506882516",
                 "test.bcftools.bcftools_stats.txt:md5,9213504c6b04c6c3cdf308ad3e8b4c3a",
@@ -542,22 +543,22 @@
                 "test.md.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test.md.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
                 "test.md.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
-                "test.md.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
+                "test.md.regions.bed.gz.csi:md5,f58637ea3ed05bef11f054941c96e252",
                 "test.recal.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test.recal.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test.recal.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
                 "test.recal.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
-                "test.recal.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
+                "test.recal.regions.bed.gz.csi:md5,f58637ea3ed05bef11f054941c96e252",
                 "test2.md.mosdepth.global.dist.txt:md5,2020cf6dfc7ddca020c921dd9f0549b7",
                 "test2.md.mosdepth.region.dist.txt:md5,38ff8b38c33b9231f047fea8ea830aae",
                 "test2.md.mosdepth.summary.txt:md5,8b991358768cade225470a07cd34f573",
                 "test2.md.regions.bed.gz:md5,08e767f91a0a8d82733f0040e804a85f",
-                "test2.md.regions.bed.gz.csi:md5,d5f1c9389ecf52ba839e834780a94549",
+                "test2.md.regions.bed.gz.csi:md5,7357b11c67d045f7383a19845688e072",
                 "test2.recal.mosdepth.global.dist.txt:md5,2020cf6dfc7ddca020c921dd9f0549b7",
                 "test2.recal.mosdepth.region.dist.txt:md5,38ff8b38c33b9231f047fea8ea830aae",
                 "test2.recal.mosdepth.summary.txt:md5,8b991358768cade225470a07cd34f573",
                 "test2.recal.regions.bed.gz:md5,08e767f91a0a8d82733f0040e804a85f",
-                "test2.recal.regions.bed.gz.csi:md5,d5f1c9389ecf52ba839e834780a94549",
+                "test2.recal.regions.bed.gz.csi:md5,7357b11c67d045f7383a19845688e072",
                 "test.bcftools.FILTER.summary:md5,2c7c195b18f335698bae9619280492e8",
                 "test.bcftools.TsTv.count:md5,9748f609e7b83855e75804191c935ab3",
                 "test.deepvariant.FILTER.summary:md5,45b02f546c5f8a1365343130497190fa",
@@ -640,11 +641,11 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-07-27T10:30:48.429722692",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-06-12T16:20:15.694178204"
+        }
     },
     "-profile test --input tests/csv/3.0/fastq_single.csv --tools cnvkit,deepvariant,freebayes,mpileup,strelka,tiddit": {
         "content": [
@@ -716,7 +717,8 @@
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -1075,7 +1077,7 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,ae7954084b2cd708c5e7369606bf4208",
+                "samtools-stats-dp.txt:md5,92dc10e61df31bf4286b16582bed488f",
                 "samtools_alignment_plot.txt:md5,438e719bf574a46726dbd2e0f1442e42",
                 "samtools_insert_size.txt:md5,73b933a27800b86a4012c2d525870796",
                 "test.bcftools.bcftools_stats.txt:md5,9213504c6b04c6c3cdf308ad3e8b4c3a",
@@ -1087,12 +1089,12 @@
                 "test.md.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.md.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
                 "test.md.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
-                "test.md.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
+                "test.md.regions.bed.gz.csi:md5,1f17d398be6b9c100cb0218fa226a623",
                 "test.recal.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.recal.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.recal.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
                 "test.recal.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
-                "test.recal.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
+                "test.recal.regions.bed.gz.csi:md5,1f17d398be6b9c100cb0218fa226a623",
                 "test.bcftools.FILTER.summary:md5,2c7c195b18f335698bae9619280492e8",
                 "test.bcftools.TsTv.count:md5,9748f609e7b83855e75804191c935ab3",
                 "test.deepvariant.FILTER.summary:md5,45b02f546c5f8a1365343130497190fa",
@@ -1140,11 +1142,11 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-07-27T10:32:11.483735223",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-06-12T16:23:41.706393706"
+        }
     },
     "-profile test --input tests/csv/3.0/fastq_tumor_only.csv --tools cnvkit,freebayes,mpileup,mutect2,tiddit": {
         "content": [
@@ -1216,7 +1218,8 @@
                     "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "MUTECT2": {
                     "gatk4": "4.6.2.0"
@@ -1563,12 +1566,12 @@
                 "test2.md.mosdepth.region.dist.txt:md5,38ff8b38c33b9231f047fea8ea830aae",
                 "test2.md.mosdepth.summary.txt:md5,8b991358768cade225470a07cd34f573",
                 "test2.md.regions.bed.gz:md5,08e767f91a0a8d82733f0040e804a85f",
-                "test2.md.regions.bed.gz.csi:md5,d5f1c9389ecf52ba839e834780a94549",
+                "test2.md.regions.bed.gz.csi:md5,7357b11c67d045f7383a19845688e072",
                 "test2.recal.mosdepth.global.dist.txt:md5,2020cf6dfc7ddca020c921dd9f0549b7",
                 "test2.recal.mosdepth.region.dist.txt:md5,38ff8b38c33b9231f047fea8ea830aae",
                 "test2.recal.mosdepth.summary.txt:md5,8b991358768cade225470a07cd34f573",
                 "test2.recal.regions.bed.gz:md5,08e767f91a0a8d82733f0040e804a85f",
-                "test2.recal.regions.bed.gz.csi:md5,d5f1c9389ecf52ba839e834780a94549",
+                "test2.recal.regions.bed.gz.csi:md5,7357b11c67d045f7383a19845688e072",
                 "test2.bcftools.FILTER.summary:md5,2a717afe607d6b59558f860518738542",
                 "test2.bcftools.TsTv.count:md5,0c9a9764d605cba41d6c088340688939",
                 "test2.freebayes.filtered.FILTER.summary:md5,24e14f2e2651745a8d74dfe2844afa24",
@@ -1604,10 +1607,10 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
+        "timestamp": "2026-07-27T10:27:19.8576204",
         "meta": {
-            "nf-test": "0.9.3",
+            "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-06-12T16:16:13.675589663"
+        }
     }
 }

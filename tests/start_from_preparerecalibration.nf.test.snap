@@ -19,7 +19,8 @@
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -131,7 +132,7 @@
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259"
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d"
             ],
             "No BAM files",
             [
@@ -140,11 +141,11 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:34:22.669878207",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T21:49:34.278947907"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --skip_tools baserecalibrator --tools strelka": {
         "content": [
@@ -434,7 +435,8 @@
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -546,7 +548,7 @@
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259"
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d"
             ],
             "No BAM files",
             [
@@ -555,10 +557,10 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:27:50.357982281",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T21:52:41.43434759"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

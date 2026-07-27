@@ -119,6 +119,7 @@
             25,
             {
                 "BAM2FASTQ": {
+                    "bgzip": "1.24",
                     "samtools": "1.24"
                 },
                 "BAM_TO_CRAM_MAPPING": {
@@ -222,10 +223,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_umi_cleanname_1.fastq.gz): Cannot extract flowcell ID from @922332"
             ]
         ],
+        "timestamp": "2026-07-27T10:26:26.437520414",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-03-11T11:53:37.119233"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

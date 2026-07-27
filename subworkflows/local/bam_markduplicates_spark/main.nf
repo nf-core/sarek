@@ -40,6 +40,7 @@ workflow BAM_MARKDUPLICATES_SPARK {
     reports = reports.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics)
     reports = reports.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.reports)
 
+
     emit:
     alignment   // channel: [ meta, file, index ] — BAM or CRAM
     reports
