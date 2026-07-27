@@ -23,7 +23,8 @@
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -165,12 +166,12 @@
                 "test.md.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.md.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
                 "test.md.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
-                "test.md.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917",
+                "test.md.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c",
                 "test.recal.mosdepth.global.dist.txt:md5,8e875e20e3fb9cf288d68c1d223f6fd5",
                 "test.recal.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.recal.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
                 "test.recal.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
-                "test.recal.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917"
+                "test.recal.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c"
             ],
             "No BAM files",
             [
@@ -180,11 +181,11 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:26:01.849929162",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T21:45:52.52962218"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --tools null": {
         "content": [
@@ -210,7 +211,8 @@
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -352,12 +354,12 @@
                 "test.md.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.md.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
                 "test.md.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
-                "test.md.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917",
+                "test.md.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c",
                 "test.recal.mosdepth.global.dist.txt:md5,8e875e20e3fb9cf288d68c1d223f6fd5",
                 "test.recal.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.recal.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
                 "test.recal.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
-                "test.recal.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917"
+                "test.recal.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c"
             ],
             "No BAM files",
             [
@@ -367,11 +369,11 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:40:21.440602423",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T21:48:22.238914133"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --skip_tools markduplicates --tools null": {
         "content": [
@@ -393,7 +395,8 @@
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -510,12 +513,12 @@
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
                 "test.sorted.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.sorted.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.sorted.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.sorted.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.sorted.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259"
+                "test.sorted.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d"
             ],
             "No BAM files",
             [
@@ -524,11 +527,11 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:35:07.795402388",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T21:47:02.418026538"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --skip_tools markduplicates --tools null": {
         "content": [
@@ -550,7 +553,8 @@
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -667,12 +671,12 @@
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
                 "test.sorted.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.sorted.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.sorted.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.sorted.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.sorted.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259"
+                "test.sorted.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d"
             ],
             "No BAM files",
             [
@@ -681,10 +685,10 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:19:53.572042834",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T21:44:33.781719225"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

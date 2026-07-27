@@ -29,7 +29,8 @@
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -241,12 +242,12 @@
                 "test.md.mosdepth.region.dist.txt:md5,54273a37adf55f8cee822aaf92a4c321",
                 "test.md.mosdepth.summary.txt:md5,bb12489d3d44c4e44eb5dcc8fdef636c",
                 "test.md.regions.bed.gz:md5,24cd07f8ce342a277f2954d6e731015e",
-                "test.md.regions.bed.gz.csi:md5,db6f77bcdbb7ada7e0c93e5b987b8265",
+                "test.md.regions.bed.gz.csi:md5,b21a943497a42870c5035d81a87524b0",
                 "test.recal.mosdepth.global.dist.txt:md5,0c795eadf5e5a8ea8469ba8c0ece9bdd",
                 "test.recal.mosdepth.region.dist.txt:md5,54273a37adf55f8cee822aaf92a4c321",
                 "test.recal.mosdepth.summary.txt:md5,bb12489d3d44c4e44eb5dcc8fdef636c",
                 "test.recal.regions.bed.gz:md5,24cd07f8ce342a277f2954d6e731015e",
-                "test.recal.regions.bed.gz.csi:md5,db6f77bcdbb7ada7e0c93e5b987b8265",
+                "test.recal.regions.bed.gz.csi:md5,b21a943497a42870c5035d81a87524b0",
                 "test.strelka.variants.FILTER.summary:md5,f58effcb4006be9b10081e4417197aa6",
                 "test.strelka.variants.TsTv.count:md5,fccdacf16ebe20d74f36bd7b38f11ca4"
             ],
@@ -261,11 +262,11 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:36:55.243190299",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-09T09:52:02.012960987"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --input tests/csv/3.0/bam_umi_header.csv --umi_in_read_header --tools markduplicates --step mapping": {
         "content": [
@@ -316,7 +317,8 @@
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_MERGE_UNMAP": {
                     "samtools": "1.24"
@@ -613,12 +615,12 @@
                 "test.md.mosdepth.region.dist.txt:md5,1dd626f6fef0d1ac29fd7ffb8b1bbd95",
                 "test.md.mosdepth.summary.txt:md5,25af78b074abf710ddd9c90cba1928bc",
                 "test.md.regions.bed.gz:md5,813d852c5a237022fd4b7446d12f7772",
-                "test.md.regions.bed.gz.csi:md5,10b7f8e9ac2ac27205f8bc827a186195",
+                "test.md.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c",
                 "test.recal.mosdepth.global.dist.txt:md5,7b8a7773d5d854ae1b681b971d11bb34",
                 "test.recal.mosdepth.region.dist.txt:md5,1dd626f6fef0d1ac29fd7ffb8b1bbd95",
                 "test.recal.mosdepth.summary.txt:md5,25af78b074abf710ddd9c90cba1928bc",
                 "test.recal.regions.bed.gz:md5,813d852c5a237022fd4b7446d12f7772",
-                "test.recal.regions.bed.gz.csi:md5,10b7f8e9ac2ac27205f8bc827a186195",
+                "test.recal.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c",
                 "test.strelka.variants.FILTER.summary:md5,869e416e19c9d8c7c6924758e66ea426",
                 "test.strelka.variants.TsTv.count:md5,2a049bc323b4bc559da89d136a567e28"
             ],
@@ -633,10 +635,10 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:42:25.348630085",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T22:06:00.327735562"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

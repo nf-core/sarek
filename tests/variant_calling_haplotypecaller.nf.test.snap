@@ -10,7 +10,8 @@
                     "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -165,7 +166,7 @@
                 "test.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "test.recal.mosdepth.summary.txt:md5,4f0d231060cbde4efdd673863bd2fb59",
                 "test.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
-                "test.recal.per-base.bed.gz.csi:md5,9e649ac749ff6c6073bef5ab63e8aaa4",
+                "test.recal.per-base.bed.gz.csi:md5,524a822fc4863b450fda9e0f99ccdf04",
                 "test.haplotypecaller.FILTER.summary:md5,87a84b5f8ac3d3cbeeef7d60afcdbfe7",
                 "test.haplotypecaller.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
@@ -176,11 +177,11 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:27:52.965412156",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T22:57:09.952875456"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20 --skip_tools haplotypecaller_filter": {
         "content": [
@@ -199,7 +200,8 @@
                     "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -359,9 +361,9 @@
                 "test.recal.mosdepth.region.dist.txt:md5,3a2030e5e8af7bc12720c3a5592bf921",
                 "test.recal.mosdepth.summary.txt:md5,615c5c5019d88045a9ff5bbe6e63d270",
                 "test.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
-                "test.recal.per-base.bed.gz.csi:md5,9e649ac749ff6c6073bef5ab63e8aaa4",
+                "test.recal.per-base.bed.gz.csi:md5,524a822fc4863b450fda9e0f99ccdf04",
                 "test.recal.regions.bed.gz:md5,0c8215fbea7b0bf7aba9d1781575f905",
-                "test.recal.regions.bed.gz.csi:md5,5c00a1d457c387d6e71848a6d897e309",
+                "test.recal.regions.bed.gz.csi:md5,8f139abca5ac58eaf522bd96a46cff1b",
                 "test.haplotypecaller.FILTER.summary:md5,87a84b5f8ac3d3cbeeef7d60afcdbfe7",
                 "test.haplotypecaller.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
@@ -372,11 +374,11 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:29:55.289787759",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T22:56:07.158030738"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20 --no_intervals": {
         "content": [
@@ -395,7 +397,8 @@
                     "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -552,7 +555,7 @@
                 "test.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "test.recal.mosdepth.summary.txt:md5,4f0d231060cbde4efdd673863bd2fb59",
                 "test.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
-                "test.recal.per-base.bed.gz.csi:md5,9e649ac749ff6c6073bef5ab63e8aaa4",
+                "test.recal.per-base.bed.gz.csi:md5,524a822fc4863b450fda9e0f99ccdf04",
                 "test.haplotypecaller.filtered.FILTER.summary:md5,4e2ceea7f3ff998004691fd71192d9ee",
                 "test.haplotypecaller.filtered.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
@@ -564,11 +567,11 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:32:53.636129324",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T22:54:55.763188536"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20": {
         "content": [
@@ -593,7 +596,8 @@
                     "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -755,9 +759,9 @@
                 "test.recal.mosdepth.region.dist.txt:md5,3a2030e5e8af7bc12720c3a5592bf921",
                 "test.recal.mosdepth.summary.txt:md5,615c5c5019d88045a9ff5bbe6e63d270",
                 "test.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
-                "test.recal.per-base.bed.gz.csi:md5,9e649ac749ff6c6073bef5ab63e8aaa4",
+                "test.recal.per-base.bed.gz.csi:md5,524a822fc4863b450fda9e0f99ccdf04",
                 "test.recal.regions.bed.gz:md5,0c8215fbea7b0bf7aba9d1781575f905",
-                "test.recal.regions.bed.gz.csi:md5,5c00a1d457c387d6e71848a6d897e309",
+                "test.recal.regions.bed.gz.csi:md5,8f139abca5ac58eaf522bd96a46cff1b",
                 "test.haplotypecaller.filtered.FILTER.summary:md5,4e2ceea7f3ff998004691fd71192d9ee",
                 "test.haplotypecaller.filtered.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
@@ -769,10 +773,10 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:32:48.438182421",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T22:53:34.886097542"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

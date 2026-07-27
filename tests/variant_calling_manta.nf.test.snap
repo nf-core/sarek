@@ -13,7 +13,8 @@
                     "manta": "1.6.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -141,7 +142,7 @@
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample1.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
+                "sample1.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
                 "sample1.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample1.manta.diploid_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
@@ -152,10 +153,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-19T18:43:23.100191682",
+        "timestamp": "2026-07-27T10:45:08.642654705",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools manta --no_intervals tumoronly": {
@@ -169,7 +170,8 @@
                     "manta": "1.6.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -296,7 +298,7 @@
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
+                "sample2.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
                 "sample2.manta.tumor_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample2.manta.tumor_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
@@ -307,10 +309,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-19T18:48:58.932904711",
+        "timestamp": "2026-07-27T10:32:07.479458904",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools manta --no_intervals somatic": {
@@ -327,7 +329,8 @@
                     "manta": "1.6.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -479,12 +482,12 @@
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample3.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample3.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
+                "sample3.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
                 "sample4.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample4.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample4.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
+                "sample4.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
                 "sample3.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample3.manta.diploid_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
                 "sample4_vs_sample3.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
@@ -501,10 +504,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-19T18:46:50.07261297",
+        "timestamp": "2026-07-27T10:33:53.269385428",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools manta tumoronly": {
@@ -521,7 +524,8 @@
                     "manta": "1.6.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -649,7 +653,7 @@
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
+                "sample2.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
                 "sample2.manta.tumor_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample2.manta.tumor_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
@@ -660,10 +664,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-19T18:47:53.602614087",
+        "timestamp": "2026-07-27T10:35:30.836798406",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools manta --only_paired_variant_calling": {
@@ -686,7 +690,8 @@
                     "manta": "1.6.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -865,22 +870,22 @@
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample1.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
+                "sample1.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
                 "sample2.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
+                "sample2.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample3.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample3.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
+                "sample3.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
                 "sample4.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample4.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample4.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
+                "sample4.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
                 "sample1.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample1.manta.diploid_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
                 "sample2.manta.tumor_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
@@ -900,10 +905,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-19T18:42:13.91617972",
+        "timestamp": "2026-07-27T10:38:31.008536362",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools manta somatic": {
@@ -923,7 +928,8 @@
                     "manta": "1.6.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -1076,12 +1082,12 @@
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample3.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample3.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
+                "sample3.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
                 "sample4.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample4.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample4.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
+                "sample4.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
                 "sample3.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample3.manta.diploid_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
                 "sample4_vs_sample3.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
@@ -1098,10 +1104,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-19T18:45:35.30977089",
+        "timestamp": "2026-07-27T10:30:18.506893012",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools manta --no_intervals germline": {
@@ -1115,7 +1121,8 @@
                     "manta": "1.6.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -1242,7 +1249,7 @@
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample1.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
+                "sample1.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
                 "sample1.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample1.manta.diploid_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
@@ -1253,10 +1260,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-19T18:44:26.578484488",
+        "timestamp": "2026-07-27T10:39:22.908367447",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "25.10.4"
         }
     }
 }
