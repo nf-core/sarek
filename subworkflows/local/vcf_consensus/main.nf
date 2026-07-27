@@ -14,8 +14,6 @@ workflow CONSENSUS {
     main:
     ch_versions = channel.empty()
 
-    vcfs.view { meta, vcf, tbi -> "DEBUGCONSENSUS incoming: ${meta} | ${vcf} | ${tbi}" }
-
     ch_vcfs = vcfs
         .branch{ meta, _vcf, _tbi ->
             // Somatic Strelka samples have tumor_id field (tumor-normal pairs)
@@ -59,7 +57,6 @@ workflow CONSENSUS {
                             [meta + [callers: callers], sorted_vcfs, tbis, [], [], []]
                         }
 
-    ch_consensus_in.view { meta, vcfs_, tbis_, a, b, c -> "DEBUGCONSENSUS isec_in: ${meta} | ${vcfs_} | ${tbis_}" }
 
     BCFTOOLS_ISEC(ch_consensus_in)
 
