@@ -346,6 +346,11 @@
                         "git_sha": "0902eac3012baaf4f9ab6513c8c55acc9353c96c",
                         "installed_by": ["modules"]
                     },
+                    "htslib/bgziptabix": {
+                        "branch": "master",
+                        "git_sha": "37f69c8ca3eb3d038a5d44f33a329e49f44bd4f2",
+                        "installed_by": ["modules", "vcf_annotate_snpeff"]
+                    },
                     "lofreq/callparallel": {
                         "branch": "master",
                         "git_sha": "9707facbacc9c5c02ecf0b192f0604a29351b00a",
@@ -549,7 +554,7 @@
                     "tabix/bgziptabix": {
                         "branch": "master",
                         "git_sha": "23004c9c64013c90b7d835621ef4cdeff19a1427",
-                        "installed_by": ["modules", "vcf_annotate_snpeff"]
+                        "installed_by": ["modules"]
                     },
                     "tabix/tabix": {
                         "branch": "master",
@@ -642,7 +647,7 @@
                     },
                     "vcf_annotate_snpeff": {
                         "branch": "master",
-                        "git_sha": "23004c9c64013c90b7d835621ef4cdeff19a1427",
+                        "git_sha": "54e41f4ed3aead45054380a9befeb927612ffc91",
                         "installed_by": ["subworkflows"]
                     }
                 }
