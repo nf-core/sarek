@@ -75,6 +75,9 @@ runs:
         # The native differ prints full-length values on one line (scrapeable).
         NFT_DIFF: diff
       run: |
+        # setup-nf-test exports NFT_DIFF_ARGS (pdiff flags) into the env; those
+        # flags suppress the native differ's output entirely, so drop them here.
+        unset NFT_DIFF_ARGS
         nf-test test \
           --profile=+${{ inputs.profile }} \
           $(if [ -n "${{ inputs.tags }}" ]; then echo "--tag ${{ inputs.tags }}"; fi) \
