@@ -168,7 +168,6 @@ workflow SAREK {
             true,
         )
 
-
         two_fastq_gz_from_spring = r1_fastq_gz_from_spring.fastq.join(r2_fastq_gz_from_spring.fastq).map { meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]] }
 
         two_fastq_gz_from_spring = two_fastq_gz_from_spring.map { meta, files -> addReadgroupToMeta(meta, files) }
@@ -180,12 +179,10 @@ workflow SAREK {
         interleave_input = false
         CONVERT_FASTQ_INPUT(
             input_sample_type.bam,
-            [[id: "fasta"], []],
-            [[id: 'null'], []],
+            fasta,
+            fasta_fai,
             interleave_input,
         )
-
-        versions = versions.mix(CONVERT_FASTQ_INPUT.out.versions)
 
         // Gather fastq (inputed or converted)
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
@@ -228,7 +225,6 @@ workflow SAREK {
 
             // Gather used softwares versions
             reports = reports.mix(FASTQ_PREPROCESS_PARABRICKS.out.reports)
-            versions = versions.mix(FASTQ_PREPROCESS_PARABRICKS.out.versions)
         }
         else {
             // PREPROCESSING
@@ -292,7 +288,7 @@ workflow SAREK {
             }
 
             // convert cram files
-            CRAM_TO_BAM(cram_variant_calling_status_tmp.cram, fasta, fasta_fai)
+            CRAM_TO_BAM(cram_variant_calling_status_tmp.cram, fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai ] }.collect())
 
             // gather all bam files
             bam_variant_calling = CRAM_TO_BAM.out.bam
@@ -301,8 +297,6 @@ workflow SAREK {
                 .map { meta, bam, bai ->
                     [meta + [data_type: 'bam'], bam, bai]
                 }
-
-            versions = versions.mix(CRAM_TO_BAM.out.versions)
         }
 
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs

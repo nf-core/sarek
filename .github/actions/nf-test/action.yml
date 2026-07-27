@@ -16,6 +16,10 @@ inputs:
   tags:
     description: "Tags to pass as argument for nf-test --tag parameter"
     required: false
+  update_snapshots:
+    description: "Run with --update-snapshot over all tagged tests and upload regenerated snapshots as artifacts"
+    required: false
+    default: "false"
 runs:
   using: "composite"
   steps:
@@ -70,18 +74,58 @@ runs:
         NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
         SENTIEON_LICSRVR_IP: ${{ env.SENTIEON_LICSRVR_IP }}
         SENTIEON_AUTH_MECH: "GitHub Actions - token"
+        # Use nf-test's native differ instead of pdiff: pdiff wraps the snapshot
+        # diff to the terminal width and truncates md5 checksums in the CI log.
+        # The native differ prints full-length values on one line (scrapeable).
+        NFT_DIFF: diff
       run: |
+        # setup-nf-test exports NFT_DIFF_ARGS (pdiff flags) into the env; those
+        # flags suppress the native differ's output entirely, so drop them here.
+        unset NFT_DIFF_ARGS
+        # In update-snapshot mode, regenerate snapshots over ALL tagged tests
+        # (drop --changed-since, which is only meaningful for PR/push diffs).
+        CHANGED_SINCE="--changed-since HEAD^"
+        UPDATE_SNAPSHOT=""
+        if [ "${{ inputs.update_snapshots }}" = "true" ]; then
+          CHANGED_SINCE=""
+          UPDATE_SNAPSHOT="--update-snapshot"
+        fi
         nf-test test \
           --profile=+${{ inputs.profile }} \
           $(if [ -n "${{ inputs.tags }}" ]; then echo "--tag ${{ inputs.tags }}"; fi) \
           --ci \
-          --changed-since HEAD^ \
+          $CHANGED_SINCE \
+          $UPDATE_SNAPSHOT \
           --verbose \
           --tap=test.tap \
           --shard ${{ inputs.shard }}/${{ inputs.total_shards }}
 
           # Save the absolute path of the test.tap file to the output
           echo "tap_file_path=$(realpath test.tap)" >> $GITHUB_OUTPUT
+
+    # ---- update-snapshot mode: collect & upload regenerated snapshots ----
+    # Only the canonical docker + pinned-Nextflow leg uploads, to avoid
+    # profile/version-specific artifact collisions.
+    - name: Collect updated snapshots
+      if: ${{ inputs.update_snapshots == 'true' && inputs.profile == 'docker' && env.NXF_VERSION == '25.10.4' }}
+      shell: bash
+      run: |
+        rm -rf updated-snaps && mkdir -p updated-snaps
+        git diff --name-only -- 'tests/*.snap' | while read -r f; do
+          mkdir -p "updated-snaps/$(dirname "$f")"
+          cp "$f" "updated-snaps/$f"
+        done
+        echo "Changed snapshot files (shard ${{ inputs.shard }}/${{ inputs.total_shards }}):"
+        git diff --name-only -- 'tests/*.snap' || true
+
+    - name: Upload updated snapshots
+      if: ${{ inputs.update_snapshots == 'true' && inputs.profile == 'docker' && env.NXF_VERSION == '25.10.4' }}
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      with:
+        name: updated-snapshots-shard-${{ inputs.shard }}
+        path: updated-snaps/
+        if-no-files-found: ignore
+        retention-days: 5
 
     - name: Generate test summary
       if: always()

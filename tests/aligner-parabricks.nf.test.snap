@@ -7,7 +7,7 @@
                     "bwa": "0.7.19-r1273"
                 },
                 "CRAM_TO_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -19,19 +19,20 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_FQ2BAM": {
                     "parabricks": "4.6.0-1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -197,7 +198,7 @@
                 "mosdepth_perchrom.txt:md5,f3a4ba86603c5121a26f54616a39c1ba",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
-                "samtools-stats-dp.txt:md5,068d671d8e3fa0a12b9c36072fb36808",
+                "samtools-stats-dp.txt:md5,9dbdd996ce0e7edb5b7861eb13eba285",
                 "samtools_alignment_plot.txt:md5,d2729501a111a33268c008ef6f18c7cd",
                 "samtools_insert_size.txt:md5,1553c58beee5f377cddbcbe8c527720a",
                 "genome.fasta.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
@@ -213,9 +214,9 @@
                 "test.recal.mosdepth.region.dist.txt:md5,45016e5a0b9afb065c56833ba66f3049",
                 "test.recal.mosdepth.summary.txt:md5,3968d28e14fd99350ec75e919778ad0f",
                 "test.recal.per-base.bed.gz:md5,ab3fb06c65b28f774b22973085699d51",
-                "test.recal.per-base.bed.gz.csi:md5,bc588fff78a04f4c31e16768ddde204d",
+                "test.recal.per-base.bed.gz.csi:md5,2171094832c1eab19654be30cf0386d8",
                 "test.recal.regions.bed.gz:md5,912777bfe53139edf4948106611d3aeb",
-                "test.recal.regions.bed.gz.csi:md5,e24653e1e1cc9703eecaee9ebf3d2b13"
+                "test.recal.regions.bed.gz.csi:md5,6f7ee623716b66db7f62de827cec1324"
             ],
             [
                 "test.bam:md5,9da56e1adc10f4fa65303441b8a5a328"
@@ -226,11 +227,11 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-07-27T11:40:10.237605568",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-30T16:47:31.914017014"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --aligner parabricks --wes": {
         "content": [
@@ -249,19 +250,20 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_FQ2BAM": {
                     "parabricks": "4.6.0-1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -431,7 +433,7 @@
                 "mosdepth_perchrom.txt:md5,f3a4ba86603c5121a26f54616a39c1ba",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
-                "samtools-stats-dp.txt:md5,068d671d8e3fa0a12b9c36072fb36808",
+                "samtools-stats-dp.txt:md5,9dbdd996ce0e7edb5b7861eb13eba285",
                 "samtools_alignment_plot.txt:md5,d2729501a111a33268c008ef6f18c7cd",
                 "samtools_insert_size.txt:md5,1553c58beee5f377cddbcbe8c527720a",
                 "genome.fasta.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
@@ -447,9 +449,9 @@
                 "test.recal.mosdepth.region.dist.txt:md5,45016e5a0b9afb065c56833ba66f3049",
                 "test.recal.mosdepth.summary.txt:md5,3968d28e14fd99350ec75e919778ad0f",
                 "test.recal.per-base.bed.gz:md5,ab3fb06c65b28f774b22973085699d51",
-                "test.recal.per-base.bed.gz.csi:md5,bc588fff78a04f4c31e16768ddde204d",
+                "test.recal.per-base.bed.gz.csi:md5,2171094832c1eab19654be30cf0386d8",
                 "test.recal.regions.bed.gz:md5,912777bfe53139edf4948106611d3aeb",
-                "test.recal.regions.bed.gz.csi:md5,e24653e1e1cc9703eecaee9ebf3d2b13"
+                "test.recal.regions.bed.gz.csi:md5,6f7ee623716b66db7f62de827cec1324"
             ],
             "No BAM files",
             [
@@ -462,11 +464,11 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-07-27T11:40:10.53055388",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-30T16:54:59.62879975"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --aligner parabricks --tools mutect2 --wes --input fastq_pair.csv": {
         "content": [
@@ -500,13 +502,14 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "LEARNREADORIENTATIONMODEL": {
                     "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "MUTECT2_PAIRED": {
                     "gatk4": "4.6.2.0"
@@ -515,7 +518,7 @@
                     "parabricks": "4.6.0-1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -741,7 +744,7 @@
                 "mosdepth_perchrom.txt:md5,8973b4a63f05d9443da33ccd1fd48cb1",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "multiqc_fastqc.txt:md5,2fd25e8c81f962594b801d5a9df3cd87",
-                "samtools-stats-dp.txt:md5,a2f978ab572ed3c72e3af6e605708d59",
+                "samtools-stats-dp.txt:md5,af97f6426bc8c6b9d812cc97e880743f",
                 "samtools_alignment_plot.txt:md5,94d6398ce03eefb42aa6f106c8d36e89",
                 "samtools_insert_size.txt:md5,3cf6a33d6676f31b5433f2cc4bf887e0",
                 "genome.fasta.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
@@ -758,16 +761,16 @@
                 "test.recal.mosdepth.region.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.recal.mosdepth.summary.txt:md5,2ea3534987f28b3ed0b64a8e7986b442",
                 "test.recal.per-base.bed.gz:md5,e04122db11a66ad6ef7c851511b1b505",
-                "test.recal.per-base.bed.gz.csi:md5,a0c543664c7e5902d1cb56c25f4123b3",
+                "test.recal.per-base.bed.gz.csi:md5,a815256bdb29a623bb11677e4fbc69e3",
                 "test.recal.regions.bed.gz:md5,339335cc6d0a8048a3e328eaa93c5160",
-                "test.recal.regions.bed.gz.csi:md5,a43bfb8c598e3091406b25ba174c0270",
+                "test.recal.regions.bed.gz.csi:md5,cbc8b8b2bad75646406113dbc8cd13b8",
                 "test2.recal.mosdepth.global.dist.txt:md5,f25166c3a0051bb4d8c11a210278de6c",
                 "test2.recal.mosdepth.region.dist.txt:md5,f25166c3a0051bb4d8c11a210278de6c",
                 "test2.recal.mosdepth.summary.txt:md5,325213ef7bbb89b9ae27ef59252eca49",
                 "test2.recal.per-base.bed.gz:md5,027f5d98da0e283df866f2d9ac8255db",
-                "test2.recal.per-base.bed.gz.csi:md5,c471e17d82fddaeca77167331dead581",
+                "test2.recal.per-base.bed.gz.csi:md5,8f1b503a7653f4637dd83bca4f7dccca",
                 "test2.recal.regions.bed.gz:md5,7f23663b3565fb9546dfaa829dd68c61",
-                "test2.recal.regions.bed.gz.csi:md5,e24653e1e1cc9703eecaee9ebf3d2b13",
+                "test2.recal.regions.bed.gz.csi:md5,6f7ee623716b66db7f62de827cec1324",
                 "test2_vs_test.mutect2.filtered.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test2_vs_test.mutect2.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test.mutect2.pileups.table:md5,4a89cfa663f1552aeb80d5c31aa36e3d",
@@ -792,11 +795,11 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
+        "timestamp": "2026-07-27T11:45:10.811937172",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-30T13:32:40.97607962"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --aligner parabricks --wes --intervals": {
         "content": [
@@ -812,19 +815,20 @@
                     "fastqc": "0.12.1"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_FQ2BAM": {
                     "parabricks": "4.6.0-1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -993,7 +997,7 @@
                 "mosdepth_perchrom.txt:md5,63cfbfc1ea970a26a7f0470efd9ad692",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
-                "samtools-stats-dp.txt:md5,068d671d8e3fa0a12b9c36072fb36808",
+                "samtools-stats-dp.txt:md5,9dbdd996ce0e7edb5b7861eb13eba285",
                 "samtools_alignment_plot.txt:md5,d2729501a111a33268c008ef6f18c7cd",
                 "samtools_insert_size.txt:md5,1553c58beee5f377cddbcbe8c527720a",
                 "genome.fasta.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
@@ -1008,9 +1012,9 @@
                 "test.recal.mosdepth.region.dist.txt:md5,a9e42dc9d21073821858d40ffce5bcde",
                 "test.recal.mosdepth.summary.txt:md5,ac93e4aa5a5229d001404513816cc219",
                 "test.recal.per-base.bed.gz:md5,ab3fb06c65b28f774b22973085699d51",
-                "test.recal.per-base.bed.gz.csi:md5,bc588fff78a04f4c31e16768ddde204d",
+                "test.recal.per-base.bed.gz.csi:md5,2171094832c1eab19654be30cf0386d8",
                 "test.recal.regions.bed.gz:md5,326c62bcdb340f213cc4514213516415",
-                "test.recal.regions.bed.gz.csi:md5,5c00a1d457c387d6e71848a6d897e309"
+                "test.recal.regions.bed.gz.csi:md5,ae98c5e0c344c0961bc9273e26fcb803"
             ],
             "No BAM files",
             [
@@ -1023,10 +1027,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-07-27T11:44:05.461520368",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-30T16:51:33.339994069"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

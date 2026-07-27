@@ -30,7 +30,7 @@ workflow BAM_SENTIEON_DEDUP {
         : SENTIEON_DEDUP.out.cram.join(SENTIEON_DEDUP.out.crai, failOnDuplicate: true, failOnMismatch: true)
 
     // QC on alignment
-    CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, intervals_bed_combined)
+    CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, fasta_fai, intervals_bed_combined)
 
     // Gather all reports generated
     reports = reports.mix(SENTIEON_DEDUP.out.metrics)

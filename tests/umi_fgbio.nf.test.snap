@@ -24,7 +24,8 @@
             29,
             {
                 "BAM2FASTQ": {
-                    "samtools": 1.21
+                    "bgzip": "1.24",
+                    "samtools": "1.24"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -40,10 +41,10 @@
                     "cat": "9.5"
                 },
                 "COLLATE_FASTQ_MAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "COLLATE_FASTQ_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -71,28 +72,29 @@
                     "fgbio": "3.1.2"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_MERGE_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_MAP_MAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_MAP_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_UNMAP_MAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_UNMAP_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -300,19 +302,19 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,49a0910af4cea91b46a1df076c08c5b5",
+                "samtools-stats-dp.txt:md5,7575ba501ebbd93ba39f171443c0791b",
                 "samtools_alignment_plot.txt:md5,60b8f1d48124a8f28b06dc0d15ca4d59",
                 "samtools_insert_size.txt:md5,ef2a81138667814cda3e5c8c2628c549",
                 "test.md.mosdepth.global.dist.txt:md5,bb51e76c9cf2f3929cb5ce560f559dd6",
                 "test.md.mosdepth.region.dist.txt:md5,11dc4683f9038de1938b4874e02974d6",
                 "test.md.mosdepth.summary.txt:md5,d6cda5af0f2bf21973e256cf198aa47a",
                 "test.md.regions.bed.gz:md5,b420210d41279bbc93f211491f7d4f02",
-                "test.md.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "test.md.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
                 "test.recal.mosdepth.global.dist.txt:md5,bb51e76c9cf2f3929cb5ce560f559dd6",
                 "test.recal.mosdepth.region.dist.txt:md5,11dc4683f9038de1938b4874e02974d6",
                 "test.recal.mosdepth.summary.txt:md5,d6cda5af0f2bf21973e256cf198aa47a",
                 "test.recal.regions.bed.gz:md5,b420210d41279bbc93f211491f7d4f02",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
                 "test_umi-grouped_histogram.txt:md5,85292e9acb83edf17110dce17be27f44",
                 "test_umi-grouped_read-metrics.txt:md5,cb2aecfe82357aa06e091d69b4606b9e"
             ],
@@ -328,11 +330,11 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_umi_cleanname_1.fastq.gz): Cannot extract flowcell ID from @922332"
             ]
         ],
+        "timestamp": "2026-07-27T10:25:14.330200197",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T21:53:07.910593016"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null --aligner sentieon-bwamem": {
         "content": [

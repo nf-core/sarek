@@ -91,7 +91,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         )
         vcf_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.vcf
         tbi_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
     }
 
     // CNVKIT
@@ -152,7 +151,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         vcf_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf
         tbi_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.tbi
-
 
         if (joint_germline) {
             BAM_JOINT_CALLING_GERMLINE_GATK(

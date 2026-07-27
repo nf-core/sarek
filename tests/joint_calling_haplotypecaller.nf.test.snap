@@ -28,10 +28,11 @@
                     "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -196,7 +197,7 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,46e5004d6eb0d4f451706dcbb7acc2ed",
                 "mosdepth_perchrom.txt:md5,a9d61b7a7c54a27857b03a1c51ba6ff5",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,a0c101497a0566f60b9e8388207944ab",
+                "samtools-stats-dp.txt:md5,1f1da592b5ef6dc0339d4d0b7b9aa03c",
                 "samtools_alignment_plot.txt:md5,563784066de81f3bc8ccf5fbbe82b3d5",
                 "samtools_insert_size.txt:md5,f3dd80e14876d827eb924c6cc888c782",
                 "joint_germline.bcftools_stats.txt:md5,8d7de0e9bbf007cf6c80caaa5e6e9ea2",
@@ -204,16 +205,16 @@
                 "testN.recal.mosdepth.region.dist.txt:md5,3a2030e5e8af7bc12720c3a5592bf921",
                 "testN.recal.mosdepth.summary.txt:md5,615c5c5019d88045a9ff5bbe6e63d270",
                 "testN.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
-                "testN.recal.per-base.bed.gz.csi:md5,9e649ac749ff6c6073bef5ab63e8aaa4",
+                "testN.recal.per-base.bed.gz.csi:md5,524a822fc4863b450fda9e0f99ccdf04",
                 "testN.recal.regions.bed.gz:md5,0c8215fbea7b0bf7aba9d1781575f905",
-                "testN.recal.regions.bed.gz.csi:md5,5c00a1d457c387d6e71848a6d897e309",
+                "testN.recal.regions.bed.gz.csi:md5,8f139abca5ac58eaf522bd96a46cff1b",
                 "testT.recal.mosdepth.global.dist.txt:md5,ba97ed85645f77da6f3adad138b3cdb4",
                 "testT.recal.mosdepth.region.dist.txt:md5,a7eb835371dd0aaf347ccca7ebe1eb3b",
                 "testT.recal.mosdepth.summary.txt:md5,a937108cbf24c1430b79c861234ce22b",
                 "testT.recal.per-base.bed.gz:md5,fde70b7a0caef4460692540b97b3fd52",
-                "testT.recal.per-base.bed.gz.csi:md5,7f62d96cdff1ce2acc0c7d2d0549cb1b",
+                "testT.recal.per-base.bed.gz.csi:md5,ff9ad8863871d40f0f0ef283a74fdae2",
                 "testT.recal.regions.bed.gz:md5,8f0d545a0950c6a53225abec38553f6f",
-                "testT.recal.regions.bed.gz.csi:md5,5c00a1d457c387d6e71848a6d897e309",
+                "testT.recal.regions.bed.gz.csi:md5,8f139abca5ac58eaf522bd96a46cff1b",
                 "joint_germline.FILTER.summary:md5,2a4eb7abfb2e64e45d53fdda17530b7f",
                 "joint_germline.TsTv.count:md5,949fa16c755189c23a37f0ea8ecd1b26"
             ],
@@ -228,11 +229,11 @@
                 "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
             ]
         ],
+        "timestamp": "2026-07-27T10:17:46.812394654",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T19:58:09.342469278"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "Fails with --no_intervals and --joint_germline for haplotypecaller": {
         "content": [
@@ -280,10 +281,11 @@
                     "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -448,7 +450,7 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,46e5004d6eb0d4f451706dcbb7acc2ed",
                 "mosdepth_perchrom.txt:md5,a9d61b7a7c54a27857b03a1c51ba6ff5",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,a0c101497a0566f60b9e8388207944ab",
+                "samtools-stats-dp.txt:md5,1f1da592b5ef6dc0339d4d0b7b9aa03c",
                 "samtools_alignment_plot.txt:md5,563784066de81f3bc8ccf5fbbe82b3d5",
                 "samtools_insert_size.txt:md5,f3dd80e14876d827eb924c6cc888c782",
                 "joint_germline.bcftools_stats.txt:md5,8d7de0e9bbf007cf6c80caaa5e6e9ea2",
@@ -456,16 +458,16 @@
                 "testN.recal.mosdepth.region.dist.txt:md5,3a2030e5e8af7bc12720c3a5592bf921",
                 "testN.recal.mosdepth.summary.txt:md5,615c5c5019d88045a9ff5bbe6e63d270",
                 "testN.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
-                "testN.recal.per-base.bed.gz.csi:md5,9e649ac749ff6c6073bef5ab63e8aaa4",
+                "testN.recal.per-base.bed.gz.csi:md5,524a822fc4863b450fda9e0f99ccdf04",
                 "testN.recal.regions.bed.gz:md5,0c8215fbea7b0bf7aba9d1781575f905",
-                "testN.recal.regions.bed.gz.csi:md5,5c00a1d457c387d6e71848a6d897e309",
+                "testN.recal.regions.bed.gz.csi:md5,8f139abca5ac58eaf522bd96a46cff1b",
                 "testT.recal.mosdepth.global.dist.txt:md5,ba97ed85645f77da6f3adad138b3cdb4",
                 "testT.recal.mosdepth.region.dist.txt:md5,a7eb835371dd0aaf347ccca7ebe1eb3b",
                 "testT.recal.mosdepth.summary.txt:md5,a937108cbf24c1430b79c861234ce22b",
                 "testT.recal.per-base.bed.gz:md5,fde70b7a0caef4460692540b97b3fd52",
-                "testT.recal.per-base.bed.gz.csi:md5,7f62d96cdff1ce2acc0c7d2d0549cb1b",
+                "testT.recal.per-base.bed.gz.csi:md5,ff9ad8863871d40f0f0ef283a74fdae2",
                 "testT.recal.regions.bed.gz:md5,8f0d545a0950c6a53225abec38553f6f",
-                "testT.recal.regions.bed.gz.csi:md5,5c00a1d457c387d6e71848a6d897e309",
+                "testT.recal.regions.bed.gz.csi:md5,8f139abca5ac58eaf522bd96a46cff1b",
                 "joint_germline.FILTER.summary:md5,2a4eb7abfb2e64e45d53fdda17530b7f",
                 "joint_germline.TsTv.count:md5,949fa16c755189c23a37f0ea8ecd1b26"
             ],
@@ -480,10 +482,10 @@
                 "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
             ]
         ],
+        "timestamp": "2026-07-27T10:19:45.167839338",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T19:59:28.831246669"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

@@ -33,13 +33,14 @@
                     "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -296,7 +297,7 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,ae7954084b2cd708c5e7369606bf4208",
+                "samtools-stats-dp.txt:md5,92dc10e61df31bf4286b16582bed488f",
                 "samtools_alignment_plot.txt:md5,438e719bf574a46726dbd2e0f1442e42",
                 "samtools_insert_size.txt:md5,73b933a27800b86a4012c2d525870796",
                 "test.strelka.variants.bcftools_stats.txt:md5,6efa6598982c21c544d1833dca632b62",
@@ -304,12 +305,12 @@
                 "test.md.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.md.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
                 "test.md.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
-                "test.md.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
+                "test.md.regions.bed.gz.csi:md5,1f17d398be6b9c100cb0218fa226a623",
                 "test.recal.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.recal.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.recal.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
                 "test.recal.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
-                "test.recal.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
+                "test.recal.regions.bed.gz.csi:md5,1f17d398be6b9c100cb0218fa226a623",
                 "test.strelka.variants.FILTER.summary:md5,dd87f507da7de20d5318841af312493b",
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
@@ -326,10 +327,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-05-19T18:36:49.982943659",
+        "timestamp": "2026-07-27T10:25:08.849820282",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test -stub": {
@@ -366,13 +367,13 @@
                     "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"

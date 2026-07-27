@@ -76,7 +76,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         )
         vcf_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.vcf
         tbi_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
     }
 
     // CONTROLFREEC (depends on MPILEUP)

@@ -10,6 +10,11 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      update_snapshots:
+        description: "Regenerate snapshots (--update-snapshot) over all tagged tests and upload them as artifacts"
+        type: boolean
+        default: false
 
 # Cancel if a newer run is started
 concurrency:
@@ -52,6 +57,7 @@ jobs:
         with:
           max_shards: 15
           tags: "cpu,cpu_conda"
+          all_tests: ${{ github.event.inputs.update_snapshots || 'false' }}
 
       - name: debug
         run: |
@@ -103,6 +109,7 @@ jobs:
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
           tags: ${{ matrix.profile == 'conda' && 'cpu_conda' || 'cpu,cpu_conda' }}
+          update_snapshots: ${{ github.event.inputs.update_snapshots || 'false' }}
 
       - name: Report test status
         if: ${{ always() }}

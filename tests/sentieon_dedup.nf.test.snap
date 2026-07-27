@@ -16,13 +16,14 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SENTIEON_DEDUP": {
                     "sentieon": "202503.02"
@@ -163,19 +164,19 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,b20f475e03ef81a68b3dec99b7e6aae4",
+                "samtools-stats-dp.txt:md5,e1ea864eb9632fcb7bc548122bff5aac",
                 "samtools_alignment_plot.txt:md5,b693942009526869bd21cbc42d54f53c",
                 "samtools_insert_size.txt:md5,7e95fe3ffb2346827b9e63da4de60842",
                 "test.dedup.mosdepth.global.dist.txt:md5,8e875e20e3fb9cf288d68c1d223f6fd5",
                 "test.dedup.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.dedup.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
                 "test.dedup.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
-                "test.dedup.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917",
+                "test.dedup.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c",
                 "test.recal.mosdepth.global.dist.txt:md5,8e875e20e3fb9cf288d68c1d223f6fd5",
                 "test.recal.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.recal.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
                 "test.recal.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
-                "test.recal.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917"
+                "test.recal.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c"
             ],
             "No BAM files",
             [
@@ -185,11 +186,11 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-27T11:35:39.37304294",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
-        },
-        "timestamp": "2025-06-21T10:54:13.719485962"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/mapped_single_cram.csv --sentieon_consensus": {
         "content": [
@@ -208,13 +209,14 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SENTIEON_DEDUP": {
                     "sentieon": "202503.02"
@@ -355,19 +357,19 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,b7a972304062dab47bf1ef592defa909",
+                "samtools-stats-dp.txt:md5,6d7ae257a6d8786b2d3ae875d57c2c66",
                 "samtools_alignment_plot.txt:md5,5c19e1b5d6980e773e9a182557ae20f8",
                 "samtools_insert_size.txt:md5,223fb9c7f62b54ffe8a820b09c21b89d",
                 "test.dedup.mosdepth.global.dist.txt:md5,cc38f46822141ac16b5025ac5d62d044",
                 "test.dedup.mosdepth.region.dist.txt:md5,86b78626070a52dbe36d952b85814921",
                 "test.dedup.mosdepth.summary.txt:md5,3cf3700ecd4ec08825ab33e8bcbc3206",
                 "test.dedup.regions.bed.gz:md5,ba570a03993dbc155da2e5bf8e42f62e",
-                "test.dedup.regions.bed.gz.csi:md5,10b7f8e9ac2ac27205f8bc827a186195",
+                "test.dedup.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c",
                 "test.recal.mosdepth.global.dist.txt:md5,cc38f46822141ac16b5025ac5d62d044",
                 "test.recal.mosdepth.region.dist.txt:md5,86b78626070a52dbe36d952b85814921",
                 "test.recal.mosdepth.summary.txt:md5,3cf3700ecd4ec08825ab33e8bcbc3206",
                 "test.recal.regions.bed.gz:md5,ba570a03993dbc155da2e5bf8e42f62e",
-                "test.recal.regions.bed.gz.csi:md5,10b7f8e9ac2ac27205f8bc827a186195"
+                "test.recal.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c"
             ],
             "No BAM files",
             [
@@ -377,11 +379,11 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-27T11:37:42.701914376",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
-        },
-        "timestamp": "2025-08-15T09:38:15.648926052"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/mapped_single_cram.csv": {
         "content": [
@@ -400,13 +402,14 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SENTIEON_DEDUP": {
                     "sentieon": "202503.02"
@@ -547,19 +550,19 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,b20f475e03ef81a68b3dec99b7e6aae4",
+                "samtools-stats-dp.txt:md5,e1ea864eb9632fcb7bc548122bff5aac",
                 "samtools_alignment_plot.txt:md5,b693942009526869bd21cbc42d54f53c",
                 "samtools_insert_size.txt:md5,7e95fe3ffb2346827b9e63da4de60842",
                 "test.dedup.mosdepth.global.dist.txt:md5,8e875e20e3fb9cf288d68c1d223f6fd5",
                 "test.dedup.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.dedup.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
                 "test.dedup.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
-                "test.dedup.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917",
+                "test.dedup.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c",
                 "test.recal.mosdepth.global.dist.txt:md5,8e875e20e3fb9cf288d68c1d223f6fd5",
                 "test.recal.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.recal.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
                 "test.recal.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
-                "test.recal.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917"
+                "test.recal.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c"
             ],
             "No BAM files",
             [
@@ -569,11 +572,11 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-27T11:34:59.34095366",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
-        },
-        "timestamp": "2025-06-21T11:05:41.448189865"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/bam_umi_header.csv --sentieon_consensus --umi_in_read_header": {
         "content": [
@@ -595,13 +598,14 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SENTIEON_DEDUP": {
                     "sentieon": "202503.02"
@@ -742,19 +746,19 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,36c50f0e76e2cdb1476248b8bffa60f3",
+                "samtools-stats-dp.txt:md5,a0fd3c6744845e917395774d709b1e1d",
                 "samtools_alignment_plot.txt:md5,511a3eba2589bb6790a4cfcd2a9c0d6c",
                 "samtools_insert_size.txt:md5,28a3cafdf305cd8c610017d1da8af854",
                 "test.dedup.mosdepth.global.dist.txt:md5,822c1f9c009f5436fefcfc9f5f7e6ee7",
                 "test.dedup.mosdepth.region.dist.txt:md5,1395b75e88a291268b96ec38f63c033e",
                 "test.dedup.mosdepth.summary.txt:md5,17f1b050f76ba0bfc96cbd045b627cd4",
                 "test.dedup.regions.bed.gz:md5,175dba70847fa0f2e5a44a014fa91027",
-                "test.dedup.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "test.dedup.regions.bed.gz.csi:md5,b21a943497a42870c5035d81a87524b0",
                 "test.recal.mosdepth.global.dist.txt:md5,822c1f9c009f5436fefcfc9f5f7e6ee7",
                 "test.recal.mosdepth.region.dist.txt:md5,1395b75e88a291268b96ec38f63c033e",
                 "test.recal.mosdepth.summary.txt:md5,17f1b050f76ba0bfc96cbd045b627cd4",
                 "test.recal.regions.bed.gz:md5,175dba70847fa0f2e5a44a014fa91027",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259"
+                "test.recal.regions.bed.gz.csi:md5,b21a943497a42870c5035d81a87524b0"
             ],
             "No BAM files",
             [
@@ -764,11 +768,11 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-27T11:36:17.840418937",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
-        },
-        "timestamp": "2025-08-15T10:02:22.395300103"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/bam_umi_header.csv --umi_in_read_header": {
         "content": [
@@ -790,13 +794,14 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SENTIEON_DEDUP": {
                     "sentieon": "202503.02"
@@ -937,19 +942,19 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,a416a2f4042ce91471192ee33bab23ad",
+                "samtools-stats-dp.txt:md5,005cfcc30b93dc9be53956fcdf502bc2",
                 "samtools_alignment_plot.txt:md5,cf28e9513f09390047f12f904114a50c",
                 "samtools_insert_size.txt:md5,4212a4d5afe29c9a16599ab14b6c7cd9",
                 "test.dedup.mosdepth.global.dist.txt:md5,71d52337c3c971849645655e3203f9e0",
                 "test.dedup.mosdepth.region.dist.txt:md5,d985616d0cb8d74ff6448601d9a03318",
                 "test.dedup.mosdepth.summary.txt:md5,c01b82249d58f2f2c0d7473c588ffaf4",
                 "test.dedup.regions.bed.gz:md5,b49899dadd40a3b54b0c43033d740aa8",
-                "test.dedup.regions.bed.gz.csi:md5,5c556fe6462be13681267bb28257b654",
+                "test.dedup.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c",
                 "test.recal.mosdepth.global.dist.txt:md5,71d52337c3c971849645655e3203f9e0",
                 "test.recal.mosdepth.region.dist.txt:md5,d985616d0cb8d74ff6448601d9a03318",
                 "test.recal.mosdepth.summary.txt:md5,c01b82249d58f2f2c0d7473c588ffaf4",
                 "test.recal.regions.bed.gz:md5,b49899dadd40a3b54b0c43033d740aa8",
-                "test.recal.regions.bed.gz.csi:md5,5c556fe6462be13681267bb28257b654"
+                "test.recal.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c"
             ],
             "No BAM files",
             [
@@ -959,10 +964,10 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-27T11:35:19.642136626",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
-        },
-        "timestamp": "2025-08-15T09:50:20.120218465"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }
