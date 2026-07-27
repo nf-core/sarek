@@ -74,14 +74,7 @@ runs:
         NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
         SENTIEON_LICSRVR_IP: ${{ env.SENTIEON_LICSRVR_IP }}
         SENTIEON_AUTH_MECH: "GitHub Actions - token"
-        # Use nf-test's native differ instead of pdiff: pdiff wraps the snapshot
-        # diff to the terminal width and truncates md5 checksums in the CI log.
-        # The native differ prints full-length values on one line (scrapeable).
-        NFT_DIFF: diff
       run: |
-        # setup-nf-test exports NFT_DIFF_ARGS (pdiff flags) into the env; those
-        # flags suppress the native differ's output entirely, so drop them here.
-        unset NFT_DIFF_ARGS
         # In update-snapshot mode, regenerate snapshots over ALL tagged tests
         # (drop --changed-since, which is only meaningful for PR/push diffs).
         CHANGED_SINCE="--changed-since HEAD^"
