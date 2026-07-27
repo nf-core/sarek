@@ -132,8 +132,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             intervals_bed_combined.map { _intervals -> _intervals ? [[id: _intervals[0].baseName], _intervals] : [[id: 'no_intervals'], []] },
             [[id: "null"], []],
         )
-
-        versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
     // FREEBAYES

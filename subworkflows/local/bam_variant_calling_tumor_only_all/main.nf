@@ -102,8 +102,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             [[id: "null"], []],
             cnvkit_reference.map { reference -> [[id: reference[0].baseName], reference] },
         )
-
-        versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
     // FREEBAYES

@@ -160,7 +160,6 @@ workflow NFCORE_SAREK {
         else {
             PREPARE_REFERENCE_CNVKIT(PREPARE_GENOME.out.fasta, intervals_bed_combined)
             cnvkit_reference = PREPARE_REFERENCE_CNVKIT.out.cnvkit_reference
-            versions = versions.mix(PREPARE_REFERENCE_CNVKIT.out.versions)
         }
     }
     else {

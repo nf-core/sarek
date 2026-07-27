@@ -4,22 +4,23 @@
             20,
             {
                 "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12",
+                    "samtools": "1.21"
                 },
                 "CNVKIT_CALL": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_EXPORT": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_GENEMETRICS": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -210,22 +211,23 @@
             30,
             {
                 "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12",
+                    "samtools": "1.21"
                 },
                 "CNVKIT_CALL": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_EXPORT": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_GENEMETRICS": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -467,22 +469,23 @@
             13,
             {
                 "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12",
+                    "samtools": "1.21"
                 },
                 "CNVKIT_CALL": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_EXPORT": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_GENEMETRICS": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -629,22 +632,23 @@
             13,
             {
                 "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12",
+                    "samtools": "1.21"
                 },
                 "CNVKIT_CALL": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_EXPORT": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_GENEMETRICS": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -899,16 +903,17 @@
             16,
             {
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12",
+                    "samtools": "1.21"
                 },
                 "CNVKIT_CALL": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_EXPORT": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_GENEMETRICS": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"

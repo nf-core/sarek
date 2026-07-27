@@ -18,7 +18,6 @@ workflow BAM_VARIANT_CALLING_CNVKIT {
     reference           // channel: [optional]  meta, cnn
 
     main:
-    versions = channel.empty()
     generate_pon = false
 
     // cram carries [ meta, tumor, normal ]; the module now expects tumor/normal index
@@ -46,5 +45,4 @@ workflow BAM_VARIANT_CALLING_CNVKIT {
     emit:
     cnv_calls_raw    = CNVKIT_CALL.out.cns      // channel: [ meta, cns ]
     cnv_calls_export = CNVKIT_EXPORT.out.output // channel: [ meta, export_format ]
-    versions                                    // channel: [ versions.yml ]
 }
