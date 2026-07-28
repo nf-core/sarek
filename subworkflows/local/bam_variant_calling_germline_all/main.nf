@@ -52,8 +52,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     sentieon_dnascope_model           // channel: [mandatory] value channel with string
 
     main:
-    versions = channel.empty()
-
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     gvcf_sentieon_dnascope       = channel.empty()
     gvcf_sentieon_haplotyper     = channel.empty()
@@ -406,6 +404,4 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     tbi_sentieon_haplotyper
     tbi_strelka
     tbi_tiddit
-
-    versions
 }

@@ -51,9 +51,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     main:
     // channels are often remapped to match module/subworkflow
 
-    // Gather all versions
-    versions = channel.empty()
-
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     out_indexcov     = channel.empty()
     out_msisensorpro = channel.empty()
@@ -315,5 +312,4 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     tbi_strelka
     tbi_tiddit
     tbi_tnscope
-    versions
 }

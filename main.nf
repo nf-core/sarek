@@ -333,7 +333,6 @@ workflow NFCORE_SAREK {
         params.vep_genome,
         params.vep_species,
         ch_snpsift_db,
-        channel.empty(),
     )
 
     emit:
