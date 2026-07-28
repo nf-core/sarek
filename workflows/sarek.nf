@@ -222,7 +222,7 @@ workflow SAREK {
             cram_variant_calling = channel.empty()
             cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_PARABRICKS.out.cram)
 
-            // Gather used softwares versions
+            // Gather QC reports
             reports = reports.mix(FASTQ_PREPROCESS_PARABRICKS.out.reports)
         }
         else {
