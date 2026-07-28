@@ -551,16 +551,6 @@
                         "git_sha": "6bc8ff03ace2cb373f683b9502ce79930c8a07f0",
                         "installed_by": ["modules"]
                     },
-                    "tabix/bgziptabix": {
-                        "branch": "master",
-                        "git_sha": "23004c9c64013c90b7d835621ef4cdeff19a1427",
-                        "installed_by": ["modules"]
-                    },
-                    "tabix/tabix": {
-                        "branch": "master",
-                        "git_sha": "f2cfcf9d3f6a2d123e6c44aefa788aa232204a7a",
-                        "installed_by": ["modules"]
-                    },
                     "tiddit/sv": {
                         "branch": "master",
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",

@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2241](https://github.com/nf-core/sarek/pull/2241) - Migrate `samtools/*` and `mosdepth` modules to the versions topic channel
 - [#2242](https://github.com/nf-core/sarek/pull/2242) - Migrate QC/coverage modules (`ascat`, `goleft`, `msisensor2`, `msisensorpro`) to the versions topic channel
 - [#2243](https://github.com/nf-core/sarek/pull/2243) - Migrate `cnvkit/*` modules to the versions topic channel (rewires `cnvkit/batch` for its new input signature)
+- [#2243](https://github.com/nf-core/sarek/pull/2243) - Replace deprecated `tabix/tabix` and `tabix/bgziptabix` modules with `htslib/bgziptabix` across 13 call sites (both old modules `assert false` on any future module update)
 
 ### Fixed
 
@@ -55,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | samtools      | 1.21        | 1.24        |
 | mosdepth      | 0.3.10      | 0.3.14      |
 | cnvkit        | 0.9.11      | 0.9.12      |
+| xz            | -           | 5.8.3       |
 
 ### Dependencies - plugins
 
