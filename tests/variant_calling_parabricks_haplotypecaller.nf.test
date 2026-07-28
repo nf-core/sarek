@@ -30,19 +30,18 @@ nextflow_pipeline {
             stub: true,
             no_conda: true
         ],
-        // This test runs out of memory on the CI runners.
-        // [
-        //     name: "-profile test --tools parabricks_haplotypecaller --joint_germline",
-        //     params: [
-        //         intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
-        //         input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
-        //         tools: "parabricks_haplotypecaller",
-        //         step: "variant_calling",
-        //         joint_germline: true
-        //     ],
-        //     gpu: true,
-        //     no_conda: true
-        // ],
+        [
+            name: "-profile test --tools parabricks_haplotypecaller --joint_germline",
+            params: [
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
+                tools: "parabricks_haplotypecaller",
+                step: "variant_calling",
+                joint_germline: true
+            ],
+            gpu: true,
+            no_conda: true
+        ],
         [
             name: "-profile test --tools parabricks_haplotypecaller --joint_germline --no_intervals -stub",
             params: [
