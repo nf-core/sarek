@@ -29,12 +29,12 @@
                     "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -186,7 +186,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-27T11:35:39.37304294",
+        "timestamp": "2026-07-28T10:57:26.744377427",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -222,12 +222,12 @@
                     "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -379,7 +379,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-27T11:37:42.701914376",
+        "timestamp": "2026-07-28T11:00:34.291406145",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -415,12 +415,12 @@
                     "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -572,7 +572,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-27T11:34:59.34095366",
+        "timestamp": "2026-07-28T11:01:09.715185863",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -611,12 +611,12 @@
                     "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -768,7 +768,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-27T11:36:17.840418937",
+        "timestamp": "2026-07-28T10:58:09.138069802",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
