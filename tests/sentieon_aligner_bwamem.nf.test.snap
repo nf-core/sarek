@@ -156,11 +156,11 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_umi_cleanname_1.fastq.gz): Cannot extract flowcell ID from @922332"
             ]
         ],
+        "timestamp": "2026-07-28T14:28:02.089129479",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.2"
-        },
-        "timestamp": "2025-08-18T06:00:05.261761108"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --aligner sentieon-bwamem --save_reference --build_only_index": {
         "content": [

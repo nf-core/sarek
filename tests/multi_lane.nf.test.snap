@@ -108,11 +108,11 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-07-28T14:38:33.629293529",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-03-06T18:03:04.332516"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --input tests/csv/3.0/fastq_umi_multi_lane.csv --umi_read_structure '+T 7M1S+T' --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools --tools null": {
         "content": [

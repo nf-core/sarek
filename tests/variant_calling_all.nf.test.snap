@@ -20,22 +20,23 @@
                     "samtools": "1.22.1"
                 },
                 "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12",
+                    "samtools": "1.21"
                 },
                 "CNVKIT_CALL": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_EXPORT": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_GENEMETRICS": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -592,7 +593,7 @@
                 "test.targetcoverage.cnn:md5,0e0416a5dc409a9c311232092a058aec",
                 "genome.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "genome.target.bed:md5,d7fcdfe7dc055924fe7cc3fb990f5633",
-                "reference.cnn:md5,6542568cd3859ba3789c543c27d64b20",
+                "reference.cnn:md5,2a397362f7f209c4bae39bb18b74e57f",
                 "test.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.targetcoverage.cnn:md5,bc82e785b5930b589c216516d1543985",
                 "test2.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
@@ -643,7 +644,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-27T10:30:48.429722692",
+        "timestamp": "2026-07-28T14:46:50.973045461",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

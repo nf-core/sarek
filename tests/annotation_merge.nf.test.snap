@@ -8,12 +8,12 @@
                     "perl-math-cdf": "0.1",
                     "tabix": "1.23.1"
                 },
-                "SNPEFF_SNPEFF": {
-                    "snpeff": "5.4c"
-                },
                 "HTSLIB_BGZIPTABIX": {
                     "htslib": "1.24",
                     "xz": "5.8.3"
+                },
+                "SNPEFF_SNPEFF": {
+                    "snpeff": "5.4c"
                 },
                 "VCF_ANNOTATE_MERGE": {
                     "ensemblvep": "116.0",
@@ -109,16 +109,20 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-08T10:14:04.788318141",
+        "timestamp": "2026-07-28T14:26:31.042408461",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools merge,snpsift": {
         "content": [
             6,
             {
+                "HTSLIB_BGZIPTABIX": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
                 "SNPEFF_SNPEFF": {
                     "snpeff": "5.4c"
                 },
@@ -127,10 +131,6 @@
                 },
                 "SNPSIFT_ANNMEMCREATE": {
                     "snpsift": "5.4a"
-                },
-                "HTSLIB_BGZIPTABIX": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
                 },
                 "VCF_ANNOTATE_MERGE": {
                     "ensemblvep": "116.0",
@@ -220,22 +220,22 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-08T10:15:44.567611717",
+        "timestamp": "2026-07-28T14:26:19.448342505",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools merge": {
         "content": [
             4,
             {
-                "SNPEFF_SNPEFF": {
-                    "snpeff": "5.4c"
-                },
                 "HTSLIB_BGZIPTABIX": {
                     "htslib": "1.24",
                     "xz": "5.8.3"
+                },
+                "SNPEFF_SNPEFF": {
+                    "snpeff": "5.4c"
                 },
                 "VCF_ANNOTATE_MERGE": {
                     "ensemblvep": "116.0",
@@ -320,10 +320,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-08T10:12:53.660022078",
+        "timestamp": "2026-07-28T14:26:11.026803304",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "25.10.4"
         }
     }
 }

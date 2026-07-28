@@ -151,10 +151,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2025-12-15T19:01:59.187593488",
+        "timestamp": "2026-07-28T14:28:21.866075734",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --aligner dragmap --save_reference --build_only_index - stub": {
