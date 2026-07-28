@@ -4,7 +4,7 @@
 include { ADD_INFO_TO_VCF                   } from '../../../modules/local/add_info_to_vcf'
 include { BCFTOOLS_NORM as VCFS_NORM        } from '../../../modules/nf-core/bcftools/norm'
 include { BCFTOOLS_SORT as VCFS_NORM_SORT   } from '../../../modules/nf-core/bcftools/sort'
-include { TABIX_BGZIPTABIX as TABIX_EXT_VCF } from '../../../modules/nf-core/tabix/bgziptabix'
+include { HTSLIB_BGZIPTABIX as TABIX_EXT_VCF } from '../../../modules/nf-core/htslib/bgziptabix'
 
 // Workflow to normalize, compress, and index VCF files
 workflow NORMALIZE_VCFS {
@@ -19,10 +19,10 @@ workflow NORMALIZE_VCFS {
     ADD_INFO_TO_VCF(vcfs)
 
     // Compress the VCF files with bgzip
-    TABIX_EXT_VCF(ADD_INFO_TO_VCF.out.vcf)
+    TABIX_EXT_VCF(ADD_INFO_TO_VCF.out.vcf.map{ meta, vcf -> [ meta, vcf, [], [] ] }, 'compress', true, '')
 
     // Normalize the VCF files with BCFTOOLS_NORM
-    VCFS_NORM(TABIX_EXT_VCF.out.gz_index, fasta)
+    VCFS_NORM(TABIX_EXT_VCF.out.output.join(TABIX_EXT_VCF.out.index), fasta)
 
     // Sort the normalized VCF files
     VCFS_NORM_SORT(VCFS_NORM.out.vcf)
