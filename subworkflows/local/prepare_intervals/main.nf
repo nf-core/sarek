@@ -29,7 +29,7 @@ workflow PREPARE_INTERVALS {
     intervals_combined   = channel.empty() // Single bed file containing all intervals
 
     if (no_intervals) {
-        file("${outdir}/no_intervals.bed").text        = "no_intervals\t0\t1\n"
+        file("${outdir}/no_intervals.bed").text        = ""
         file("${outdir}/no_intervals.bed.gz").text     = "no_intervals\n"
         file("${outdir}/no_intervals.bed.gz.tbi").text = "no_intervals\n"
 
