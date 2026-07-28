@@ -166,7 +166,6 @@ workflow NFCORE_SAREK {
         cnvkit_reference = channel.value([])
     }
     // Gather used softwares versions
-    versions = versions.mix(PREPARE_GENOME.out.versions)
     versions = versions.mix(PREPARE_INTERVALS.out.versions)
 
     // Fails when consensus calling is specified without normalization
