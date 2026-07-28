@@ -11,9 +11,9 @@
                 "SNPEFF_SNPEFF": {
                     "snpeff": "5.4c"
                 },
-                "TABIX_BGZIPTABIX": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                "HTSLIB_BGZIPTABIX": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCF_ANNOTATE_MERGE": {
                     "ensemblvep": "116.0",
@@ -128,9 +128,9 @@
                 "SNPSIFT_ANNMEMCREATE": {
                     "snpsift": "5.4a"
                 },
-                "TABIX_BGZIPTABIX": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                "HTSLIB_BGZIPTABIX": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCF_ANNOTATE_MERGE": {
                     "ensemblvep": "116.0",
@@ -233,9 +233,9 @@
                 "SNPEFF_SNPEFF": {
                     "snpeff": "5.4c"
                 },
-                "TABIX_BGZIPTABIX": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                "HTSLIB_BGZIPTABIX": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCF_ANNOTATE_MERGE": {
                     "ensemblvep": "116.0",
