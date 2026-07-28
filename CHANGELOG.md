@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2240](https://github.com/nf-core/sarek/pull/2240) - Migrate variant-calling modules (`freebayes`, `strelka`, `manta`, `tiddit`, `lofreq`, `svdb`, `vcflib`, `vcftools`) to the versions topic channel
 - [#2241](https://github.com/nf-core/sarek/pull/2241) - Migrate `samtools/*` and `mosdepth` modules to the versions topic channel
 - [#2242](https://github.com/nf-core/sarek/pull/2242) - Migrate QC/coverage modules (`ascat`, `goleft`, `msisensor2`, `msisensorpro`) to the versions topic channel
-- [#2243](https://github.com/nf-core/sarek/pull/2243) - Migrate `cnvkit/*` modules to the versions topic channel (rewires `cnvkit/batch` for its new input signature), and replace the deprecated `tabix/tabix`/`tabix/bgziptabix` modules with `htslib/bgziptabix`
+- [#2243](https://github.com/nf-core/sarek/pull/2243) - Migrate `cnvkit/*` modules to the versions topic channel, and replace the deprecated `tabix/tabix`/`tabix/bgziptabix` modules with `htslib/bgziptabix`
 
 ### Fixed
 
