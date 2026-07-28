@@ -146,7 +146,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
         tbi_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
     // MANTA

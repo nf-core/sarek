@@ -134,7 +134,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
         tbi_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
     // HAPLOTYPECALLER
