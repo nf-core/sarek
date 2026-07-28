@@ -9,8 +9,8 @@
 include { CREATE_INTERVALS_BED                                   } from '../../../modules/local/create_intervals_bed'
 include { GATK4_INTERVALLISTTOBED                                } from '../../../modules/nf-core/gatk4/intervallisttobed'
 include { GAWK as BUILD_INTERVALS                                } from '../../../modules/nf-core/gawk'
-include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT    } from '../../../modules/nf-core/tabix/bgziptabix'
-include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_COMBINED } from '../../../modules/nf-core/tabix/bgziptabix'
+include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT    } from '../../../modules/nf-core/htslib/bgziptabix'
+include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_COMBINED } from '../../../modules/nf-core/htslib/bgziptabix'
 
 workflow PREPARE_INTERVALS {
     take:
@@ -88,18 +88,18 @@ workflow PREPARE_INTERVALS {
             .transpose()
 
         // 2. Create bed.gz and bed.gz.tbi for each interval file. They are split by region (see above)
-        TABIX_BGZIPTABIX_INTERVAL_SPLIT(intervals_bed.map{ file, _num_intervals -> [ [ id:file.baseName], file ] })
+        TABIX_BGZIPTABIX_INTERVAL_SPLIT(intervals_bed.map{ file, _num_intervals -> [ [ id:file.baseName], file, [], [] ] }, 'compress', true, 'bed')
 
-        intervals_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_index.map{ _meta, bed, tbi -> [ bed, tbi ] }.toList()
+        intervals_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.output.join(TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.index).map{ _meta, bed, tbi -> [ bed, tbi ] }.toList()
             // Adding number of intervals as elements
             .map{ files -> [ files, files.size() ] }
             .transpose()
     }
 
-    TABIX_BGZIPTABIX_INTERVAL_COMBINED(intervals_combined)
+    TABIX_BGZIPTABIX_INTERVAL_COMBINED(intervals_combined.map{ meta, bed -> [ meta, bed, [], [] ] }, 'compress', true, 'bed')
 
     intervals_bed_combined        = intervals_combined.map{_meta, bed -> bed }.collect()
-    intervals_bed_gz_tbi_combined = TABIX_BGZIPTABIX_INTERVAL_COMBINED.out.gz_index.map{_meta, gz, tbi -> [gz, tbi] }.collect()
+    intervals_bed_gz_tbi_combined = TABIX_BGZIPTABIX_INTERVAL_COMBINED.out.output.join(TABIX_BGZIPTABIX_INTERVAL_COMBINED.out.index).map{_meta, gz, tbi -> [gz, tbi] }.collect()
 
     emit:
     // Intervals split for parallel execution
