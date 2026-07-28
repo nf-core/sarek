@@ -1,0 +1,89 @@
+name: "samtools_reindex_bam"
+description: Re-index a BAM/CRAM after dropping duplicate, supplementary, and unmapped
+  reads, producing a header-only BAM and a matching index for goleft/indexcov
+keywords:
+  - samtools
+  - bam
+  - index
+  - indexcov
+tools:
+  - "samtools":
+      description: "Tools for dealing with SAM, BAM and CRAM files"
+      homepage: "http://www.htslib.org/"
+      documentation: "http://www.htslib.org/doc/samtools.html"
+      tool_dev_url: "https://github.com/samtools/samtools"
+      doi: "10.1093/bioinformatics/btp352"
+      licence: ["MIT"]
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'sample1' ]
+    - input:
+        type: file
+        description: BAM/CRAM file
+        pattern: "*.{bam,cram}"
+    - input_index:
+        type: file
+        description: BAM/CRAM index
+        pattern: "*.{bai,crai}"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - fasta:
+        type: file
+        description: Reference genome FASTA file, required when the input is CRAM
+        pattern: "*.{fa,fasta}"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - fai:
+        type: file
+        description: Reference genome FASTA index, required when the input is CRAM
+        pattern: "*.fai"
+output:
+  output:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'sample1' ]
+      - "${meta.id}.reindex.bam":
+          type: file
+          description: Header-only BAM with duplicate/supplementary/unmapped reads removed
+          pattern: "*.reindex.bam"
+      - "${meta.id}.reindex.bam.bai":
+          type: file
+          description: BAM index matching the reindexed BAM
+          pattern: "*.reindex.bam.bai"
+  versions_samtools:
+    - - "${task.process}":
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - "samtools --version | head -n1 | sed 's/samtools //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - "${task.process}":
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - "samtools --version | head -n1 | sed 's/samtools //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@FriederikeHanssen"
+maintainers:
+  - "@FriederikeHanssen"
+  - "@maxulysse"

@@ -37,7 +37,6 @@ workflow POST_VARIANTCALLING {
     varlociraptor_scenario_tumor_only
 
     main:
-    versions = channel.empty()
     vcfs = channel.empty()
     tbis = channel.empty()
 
@@ -124,7 +123,6 @@ workflow POST_VARIANTCALLING {
 
             small_variant_vcfs = NORMALIZE_VCFS.out.vcfs // [meta, vcf]
             small_variant_tbis = NORMALIZE_VCFS.out.tbis // [meta, tbi]
-            versions = versions.mix(NORMALIZE_VCFS.out.versions)
         }
 
         if (normalize_vcfs && snv_consensus_calling){
@@ -156,8 +154,6 @@ workflow POST_VARIANTCALLING {
 
             vcfs = vcfs.mix(CONCATENATE_GERMLINE_VCFS.out.vcfs)
             tbis = tbis.mix(CONCATENATE_GERMLINE_VCFS.out.tbis)
-
-            versions = versions.mix(CONCATENATE_GERMLINE_VCFS.out.versions)
         }
 
 
@@ -169,5 +165,4 @@ workflow POST_VARIANTCALLING {
     emit:
     vcfs     // post processed vcfs [meta, vcf]
     tbis     // post processed tbis [meta, tbi]
-    versions // channel: [ versions.yml ]
 }

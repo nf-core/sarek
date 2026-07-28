@@ -13,8 +13,6 @@ workflow CONCATENATE_GERMLINE_VCFS {
     vcfs
 
     main:
-    versions = channel.empty()
-
     // Concatenate vcf-files
     ADD_INFO_TO_VCF(vcfs)
     TABIX_EXT_VCF(ADD_INFO_TO_VCF.out.vcf.map{ meta, vcf -> [ meta, vcf, [], [] ] }, 'compress', true, 'vcf')
@@ -28,5 +26,4 @@ workflow CONCATENATE_GERMLINE_VCFS {
     emit:
     vcfs     = GERMLINE_VCFS_CONCAT_SORT.out.vcf // concatenated vcfs
     tbis     = GERMLINE_VCFS_CONCAT_SORT.out.index // matching tbis
-    versions // channel: [ versions.yml ]
 }

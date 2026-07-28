@@ -211,7 +211,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         )
 
         out_indexcov = BAM_VARIANT_CALLING_INDEXCOV.out.out_indexcov
-        versions = versions.mix(BAM_VARIANT_CALLING_INDEXCOV.out.versions)
     }
 
     // SENTIEON DNASCOPE

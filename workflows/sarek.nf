@@ -542,7 +542,6 @@ workflow SAREK {
         // Gather used variant calling softwares versions
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.versions)
-        versions = versions.mix(POST_VARIANTCALLING.out.versions)
 
         // ANNOTATE
         if (step == 'annotate') {
