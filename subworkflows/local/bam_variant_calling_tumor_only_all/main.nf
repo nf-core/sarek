@@ -43,9 +43,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     main:
     // Channels are often remapped to match module/subworkflow
 
-    // Gather all versions
-    versions = channel.empty()
-
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     out_msisensor2 = channel.empty()
     vcf_freebayes  = channel.empty()
@@ -248,5 +245,4 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     tbi_mutect2
     tbi_tiddit
     tbi_tnscope
-    versions
 }

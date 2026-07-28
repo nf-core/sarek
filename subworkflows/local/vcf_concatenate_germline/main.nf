@@ -17,7 +17,7 @@ workflow CONCATENATE_GERMLINE_VCFS {
 
     // Concatenate vcf-files
     ADD_INFO_TO_VCF(vcfs)
-    TABIX_EXT_VCF(ADD_INFO_TO_VCF.out.vcf.map{ meta, vcf -> [ meta, vcf, [], [] ] }, 'compress', true, '')
+    TABIX_EXT_VCF(ADD_INFO_TO_VCF.out.vcf.map{ meta, vcf -> [ meta, vcf, [], [] ] }, 'compress', true, 'vcf')
 
     // Gather vcfs and vcf-tbis for concatenating germline-vcfs
     germline_vcfs_with_tbis = TABIX_EXT_VCF.out.output.join(TABIX_EXT_VCF.out.index).groupTuple()

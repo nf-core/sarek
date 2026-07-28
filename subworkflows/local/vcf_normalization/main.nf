@@ -19,7 +19,7 @@ workflow NORMALIZE_VCFS {
     ADD_INFO_TO_VCF(vcfs)
 
     // Compress the VCF files with bgzip
-    TABIX_EXT_VCF(ADD_INFO_TO_VCF.out.vcf.map{ meta, vcf -> [ meta, vcf, [], [] ] }, 'compress', true, '')
+    TABIX_EXT_VCF(ADD_INFO_TO_VCF.out.vcf.map{ meta, vcf -> [ meta, vcf, [], [] ] }, 'compress', true, 'vcf')
 
     // Normalize the VCF files with BCFTOOLS_NORM
     VCFS_NORM(TABIX_EXT_VCF.out.output.join(TABIX_EXT_VCF.out.index), fasta)
