@@ -20,12 +20,9 @@ workflow BAM_VARIANT_CALLING_CNVKIT {
     main:
     generate_pon = false
 
-    // cram carries [ meta, tumor, normal ]; the module now expects tumor/normal index
-    // slots too. The incoming channel does not carry indexes, so pass [] placeholders
-    // (the script converts/indexes CRAMs internally and never reads these inputs).
+    // tumor/normal index slots are unused (CNVKIT_BATCH indexes CRAMs internally)
     cram_input = cram.map { meta, tumor, normal -> [meta, tumor, [], normal, []] }
 
-    // module now takes fasta and fasta_fai as a single [ meta, fasta, fasta_fai ] tuple
     fasta_input = fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fasta_fai_ -> [meta, fasta_, fasta_fai_] }
 
     CNVKIT_BATCH(cram_input, fasta_input, targets, reference, generate_pon)
