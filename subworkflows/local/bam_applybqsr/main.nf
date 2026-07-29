@@ -10,13 +10,16 @@ include { GATK4_APPLYBQSR           } from '../../../modules/nf-core/gatk4/apply
 
 workflow BAM_APPLYBQSR {
     take:
-    cram      // channel: [mandatory] [ meta, cram, crai, recal ]
-    dict      // channel: [mandatory] [ meta, dict ]
-    fasta     // channel: [mandatory] [ meta, fasta ]
-    fasta_fai // channel: [mandatory] [ meta, fasta_fai ]
-    intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
+    cram                // channel: [mandatory] [ meta, cram, crai, recal ]
+    dict                // channel: [mandatory] [ meta, dict ]
+    fasta               // channel: [mandatory] [ meta, fasta ]
+    fasta_fai           // channel: [mandatory] [ meta, fasta_fai ]
+    intervals           // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
+    save_output_as_bam  // boolean: [mandatory] params.save_output_as_bam
 
     main:
+
+    output_suffix = save_output_as_bam ? 'bam' : 'cram'
 
     // Combine cram and intervals for spread and gather strategy
     // Move num_intervals to meta map
@@ -36,17 +39,17 @@ workflow BAM_APPLYBQSR {
     GATK4_APPLYBQSR(
         cram_intervals,
         fasta_fai_dict,
-        params.save_output_as_bam ? 'bam' : 'cram',
+        output_suffix,
     )
 
-    // BAM path — populated when save_output_as_bam is true, empty otherwise
+    // BAM path — populated when output_suffix == 'bam', empty otherwise
     bam_to_merge = GATK4_APPLYBQSR.out.bam
         .map { meta, bam_ -> [groupKey(meta, meta.num_intervals), bam_] }
         .groupTuple()
 
     BAM_MERGE_INDEX_SAMTOOLS(bam_to_merge)
 
-    // CRAM path — populated when save_output_as_bam is false, empty otherwise
+    // CRAM path — populated when output_suffix == 'cram', empty otherwise
     cram_to_merge = GATK4_APPLYBQSR.out.cram.map { meta, cram_ -> [groupKey(meta, meta.num_intervals), cram_] }.groupTuple()
 
     CRAM_MERGE_INDEX_SAMTOOLS(
