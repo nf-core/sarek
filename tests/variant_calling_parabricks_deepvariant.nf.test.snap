@@ -7,21 +7,22 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -92,14 +93,14 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,df2fc825dfc41e30f72f5d125a6447ee",
                 "mosdepth_perchrom.txt:md5,115b9a93bcf511419e6622919172f321",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
-                "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
+                "samtools-stats-dp.txt:md5,53338147cfd6cffd24eef5c07518fe4c",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259"
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d"
             ],
             "No BAM files",
             "No CRAM files",
@@ -108,23 +109,24 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.6"
         },
-        "timestamp": "2026-07-16T12:25:02.942316038"
+        "timestamp": "2026-07-29T07:32:54.308069646"
     },
     "-profile test --tools parabricks_deepvariant --input mapped_single_bam.csv --no_intervals": {
         "content": [
             4,
             {
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -198,39 +200,42 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,df2fc825dfc41e30f72f5d125a6447ee",
                 "mosdepth_perchrom.txt:md5,115b9a93bcf511419e6622919172f321",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
-                "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
+                "samtools-stats-dp.txt:md5,53338147cfd6cffd24eef5c07518fe4c",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259"
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d"
             ],
             "No BAM files",
             "No CRAM files",
             "No VCF files",
-            "No warnings"
+            [
+                "[WARN] WARN: The `file()` function was called with a glob pattern that matched a collection of files -- use `files()` instead."
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.6"
         },
-        "timestamp": "2026-07-16T12:25:51.237111005"
+        "timestamp": "2026-07-29T07:33:38.602267412"
     },
     "-profile test --tools parabricks_deepvariant --input mapped_single_bam.csv --no_intervals -stub": {
         "content": [
             4,
             {
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -240,6 +245,7 @@
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/.stub",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
                 "no_intervals.bed.gz",
@@ -267,14 +273,15 @@
                 "reports/samtools/test/test.recal.cram.stats"
             ],
             [
-                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+                "[WARN] WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected. HINT: A common mistake is to provide multiple values separated by spaces e.g. `-profile test, [CONTAINER]`.",
+                "[WARN] WARN: The `file()` function was called with a glob pattern that matched a collection of files -- use `files()` instead."
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nextflow": "26.04.6"
         },
-        "timestamp": "2026-04-29T13:51:07.021107353"
+        "timestamp": "2026-07-29T07:34:51.5572819"
     },
     "-profile test --tools parabricks_deepvariant --input mapped_single_bam.csv -stub": {
         "content": [
@@ -284,21 +291,22 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -308,6 +316,7 @@
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/.stub",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
@@ -332,13 +341,13 @@
                 "reports/samtools/test/test.recal.cram.stats"
             ],
             [
-                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+                "[WARN] WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected. HINT: A common mistake is to provide multiple values separated by spaces e.g. `-profile test, [CONTAINER]`."
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "26.04.0"
+            "nextflow": "26.04.6"
         },
-        "timestamp": "2026-04-29T13:06:51.802748045"
+        "timestamp": "2026-07-29T07:34:17.680582261"
     }
 }
