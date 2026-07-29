@@ -18,10 +18,14 @@ workflow BAM_VARIANT_CALLING_CNVKIT {
     reference           // channel: [optional]  meta, cnn
 
     main:
-    versions = channel.empty()
     generate_pon = false
 
-    CNVKIT_BATCH(cram, fasta, fasta_fai, targets, reference, generate_pon)
+    // tumor/normal index slots are unused (CNVKIT_BATCH indexes CRAMs internally)
+    cram_input = cram.map { meta, tumor, normal -> [meta, tumor, [], normal, []] }
+
+    fasta_input = fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fasta_fai_ -> [meta, fasta_, fasta_fai_] }
+
+    CNVKIT_BATCH(cram_input, fasta_input, targets, reference, generate_pon)
 
     // right now we do not use an input VCF to improve the calling of B alleles
     // based on SNV frequencies from the VCF file
@@ -35,12 +39,7 @@ workflow BAM_VARIANT_CALLING_CNVKIT {
     ch_genemetrics = CNVKIT_BATCH.out.cnr.join(CNVKIT_BATCH.out.cns).map{ meta, cnr, cns -> [meta, cnr, cns[2]]}
     CNVKIT_GENEMETRICS(ch_genemetrics)
 
-    versions = versions.mix(CNVKIT_BATCH.out.versions)
-    versions = versions.mix(CNVKIT_GENEMETRICS.out.versions)
-    versions = versions.mix(CNVKIT_CALL.out.versions)
-    versions = versions.mix(CNVKIT_EXPORT.out.versions)
     emit:
     cnv_calls_raw    = CNVKIT_CALL.out.cns      // channel: [ meta, cns ]
     cnv_calls_export = CNVKIT_EXPORT.out.output // channel: [ meta, export_format ]
-    versions                                    // channel: [ versions.yml ]
 }

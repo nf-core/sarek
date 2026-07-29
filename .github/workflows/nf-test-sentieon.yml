@@ -10,6 +10,11 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      update_snapshots:
+        description: "Regenerate snapshots (--update-snapshot) over all tagged tests and upload them as artifacts"
+        type: boolean
+        default: false
 
 # Cancel if a newer run is started
 concurrency:
@@ -51,6 +56,7 @@ jobs:
         with:
           tags: "sentieon,sentieon_conda"
           max_shards: 10
+          all_tests: ${{ github.event.inputs.update_snapshots || 'false' }}
 
       - name: debug
         run: |
@@ -109,6 +115,7 @@ jobs:
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
           tags: ${{ matrix.profile == 'conda' && 'sentieon_conda' || 'sentieon,sentieon_conda' }}
+          update_snapshots: ${{ github.event.inputs.update_snapshots || 'false' }}
       - name: Report test status
         if: ${{ always() }}
         run: |
