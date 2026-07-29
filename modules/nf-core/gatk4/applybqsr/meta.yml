@@ -15,7 +15,8 @@ tools:
       homepage: https://gatk.broadinstitute.org/hc/en-us
       documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
       doi: 10.1158/1538-7445.AM2017-3590
-      licence: ["Apache-2.0"]
+      licence:
+        - "Apache-2.0"
       identifier: ""
 input:
   - - meta:
@@ -27,35 +28,47 @@ input:
         type: file
         description: BAM/CRAM file from alignment
         pattern: "*.{bam,cram}"
-        ontologies: []
+        ontologies:
+          - edam: "http://edamontology.org/format_2572" #BAM
+          - edam: "http://edamontology.org/format_3462" #CRAM
     - input_index:
         type: file
         description: BAI/CRAI file from alignment
         pattern: "*.{bai,crai}"
-        ontologies: []
+        ontologies:
+          - edam: "http://edamontology.org/format_3327" #BAI
     - bqsr_table:
         type: file
         description: Recalibration table from gatk4_baserecalibrator
-        ontologies: []
     - intervals:
         type: file
         description: Bed file with the genomic regions included in the library (optional)
-        ontologies: []
-  - fasta:
-      type: file
-      description: The reference fasta file
-      pattern: "*.fasta"
-      ontologies: []
-  - fai:
-      type: file
-      description: Index of reference fasta file
-      pattern: "*.fasta.fai"
-      ontologies: []
-  - dict:
-      type: file
-      description: GATK sequence dictionary
-      pattern: "*.dict"
-      ontologies: []
+        ontologies:
+          - edam: "http://edamontology.org/format_3003" #BED
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information about the reference
+          e.g. [ id:'genome' ]
+    - fasta:
+        type: file
+        description: The reference fasta file
+        pattern: "*.fasta"
+        ontologies:
+          - edam: "http://edamontology.org/format_1929" #FASTA
+    - fai:
+        type: file
+        description: Index of reference fasta file
+        pattern: "*.fasta.fai"
+        ontologies:
+          - edam: "http://edamontology.org/data_3210"
+    - dict:
+        type: file
+        description: GATK sequence dictionary
+        pattern: "*.dict"
+  - output_suffix:
+      type: string
+      description: Output file format, either "bam" or "cram" (cram is the default)
 output:
   bam:
     - - meta:
@@ -67,7 +80,8 @@ output:
           type: file
           description: Recalibrated BAM file
           pattern: "${prefix}.bam"
-          ontologies: []
+          ontologies:
+            - edam: "http://edamontology.org/format_2572" #BAM
   bai:
     - - meta:
           type: map
@@ -78,7 +92,8 @@ output:
           type: file
           description: Recalibrated BAM index file
           pattern: "${prefix}*bai"
-          ontologies: []
+          ontologies:
+            - edam: "http://edamontology.org/format_3327" #BAI
   cram:
     - - meta:
           type: map
@@ -89,7 +104,8 @@ output:
           type: file
           description: Recalibrated CRAM file
           pattern: "${prefix}.cram"
-          ontologies: []
+          ontologies:
+            - edam: "http://edamontology.org/format_3462" #CRAM"
   versions_gatk4:
     - - ${task.process}:
           type: string
