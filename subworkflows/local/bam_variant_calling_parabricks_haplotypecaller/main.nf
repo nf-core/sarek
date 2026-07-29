@@ -2,8 +2,8 @@
 // PARABRICKS HAPLOTYPECALLER germline variant calling (GPU-accelerated)
 //
 
-include { PARABRICKS_HAPLOTYPECALLER } from '../../../modules/nf-core/parabricks/haplotypecaller/main'
-include { TABIX_BGZIPTABIX            } from '../../../modules/nf-core/tabix/bgziptabix/main'
+include { PARABRICKS_HAPLOTYPECALLER             } from '../../../modules/nf-core/parabricks/haplotypecaller/main'
+include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX  } from '../../../modules/nf-core/htslib/bgziptabix/main'
 
 workflow BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER {
     take:
@@ -27,10 +27,12 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER {
     PARABRICKS_HAPLOTYPECALLER(cram_intervals, fasta)
 
     // Compress and index the uncompressed VCF output
-    TABIX_BGZIPTABIX(PARABRICKS_HAPLOTYPECALLER.out.vcf)
+    TABIX_BGZIPTABIX(PARABRICKS_HAPLOTYPECALLER.out.vcf.map { meta, vcf_ -> [ meta, vcf_, [], [] ] }, 'compress', true, 'vcf')
 
-    vcf = TABIX_BGZIPTABIX.out.gz_index.map { meta, vcf_, _tbi -> [ meta, vcf_ ] }
-    tbi = TABIX_BGZIPTABIX.out.gz_index.map { meta, _vcf, tbi  -> [ meta, tbi  ] }
+    vcf_tbi = TABIX_BGZIPTABIX.out.output.join(TABIX_BGZIPTABIX.out.index)
+
+    vcf = vcf_tbi.map { meta, vcf_, _tbi -> [ meta, vcf_ ] }
+    tbi = vcf_tbi.map { meta, _vcf, tbi  -> [ meta, tbi  ] }
 
     emit:
     vcf      // channel: [ val(meta), vcf.gz ]
