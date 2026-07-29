@@ -1,0 +1,57 @@
+name: "create_intervals_bed"
+description: Split an interval file (BED, GATK interval_list, or picard-style `chr:start-end`
+  list) into runtime-balanced BED chunks for parallelization
+keywords:
+  - intervals
+  - bed
+  - parallelization
+tools:
+  - "gawk":
+      description: "GNU awk, a pattern scanning and processing language"
+      homepage: "https://www.gnu.org/software/gawk/"
+      documentation: "https://www.gnu.org/software/gawk/manual/gawk.html"
+      licence: ["GPL-3.0-or-later"]
+input:
+  - - intervals:
+        type: file
+        description: Interval file, either BED, GATK `.interval_list`, or a picard-style
+          `chr:start-end` list
+        pattern: "*.{bed,interval_list}"
+    - nucleotides_per_second:
+        type: integer
+        description: Estimated nucleotides processed per second, used to balance runtime
+          across chunks when the input has no runtime estimate column
+output:
+  bed:
+    - "*.bed":
+        type: file
+        description: One or more BED files, each a runtime-balanced chunk of the input
+          intervals
+        pattern: "*.bed"
+  versions_gawk:
+    - - "${task.process}":
+          type: string
+          description: The name of the process
+      - gawk:
+          type: string
+          description: The name of the tool
+      - "awk --version | head -n1 | sed 's/GNU Awk //; s/, .*//'":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - "${task.process}":
+          type: string
+          description: The name of the process
+      - gawk:
+          type: string
+          description: The name of the tool
+      - "awk --version | head -n1 | sed 's/GNU Awk //; s/, .*//'":
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@FriederikeHanssen"
+  - "@maxulysse"
+maintainers:
+  - "@FriederikeHanssen"
+  - "@maxulysse"
