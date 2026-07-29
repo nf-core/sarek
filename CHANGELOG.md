@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2242](https://github.com/nf-core/sarek/pull/2242) - Migrate QC/coverage modules (`ascat`, `goleft`, `msisensor2`, `msisensorpro`) to the versions topic channel
 - [#2243](https://github.com/nf-core/sarek/pull/2243) - Migrate `cnvkit/*` modules to the versions topic channel, and replace the deprecated `tabix/tabix`/`tabix/bgziptabix` modules with `htslib/bgziptabix`
 - [#2244](https://github.com/nf-core/sarek/pull/2244) - Migrate local modules (`add_info_to_vcf`, `create_intervals_bed`, `samtools/reindex_bam`) to the versions topic channel
+- [#2245](https://github.com/nf-core/sarek/pull/2245) - Update `bbmap/bbsplit`, `gatk4/applybqsr`, `parabricks/fq2bam` (4.6.0 → 4.7.1), `rbt/vcfsplit`, `sentieon/*`, `snpsift/annmem`+`annmemcreate` (5.4.0a → 5.4.0c), and `yte` modules to their latest revisions
 
 ### Fixed
 
