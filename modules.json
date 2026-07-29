@@ -418,7 +418,7 @@
                     },
                     "rbt/vcfsplit": {
                         "branch": "master",
-                        "git_sha": "117bda90be326bcff5cb2286c7988a4caa588b5d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "samtools/bam2fq": {
