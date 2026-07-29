@@ -32,7 +32,7 @@ workflow PREPARE_INTERVALS {
         file("${outdir}/no_intervals.bed.gz.tbi").text = "no_intervals\n"
 
         intervals_bed        = channel.fromPath(file("${outdir}/no_intervals.bed")).map{ bed -> [ bed, 0 ] }
-        intervals_bed_gz_tbi = channel.fromPath(file("${outdir}/no_intervals.bed.{gz,gz.tbi}")).collect().map{ files -> [ files, 0 ] }
+        intervals_bed_gz_tbi = channel.fromPath(files("${outdir}/no_intervals.bed.{gz,gz.tbi}")).collect().map{ files -> [ files, 0 ] }
         intervals_combined   = channel.fromPath(file("${outdir}/no_intervals.bed")).map{ bed -> [ [ id:bed.simpleName ], bed ] }
     } else if (step != 'annotate' && step != 'controlfreec') {
         // If no interval/target file is provided, then generated intervals from FASTA file
