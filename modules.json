@@ -523,12 +523,12 @@
                     },
                     "snpsift/annmem": {
                         "branch": "master",
-                        "git_sha": "e12534f75a4504b67984412122698c1cf1966e6f",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "snpsift/annmemcreate": {
                         "branch": "master",
-                        "git_sha": "e12534f75a4504b67984412122698c1cf1966e6f",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "spring/decompress": {
