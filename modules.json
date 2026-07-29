@@ -478,7 +478,7 @@
                     },
                     "sentieon/dedup": {
                         "branch": "master",
-                        "git_sha": "7ad1622c68ea87dd3a16bcc4b82cd5d5878fffd9",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "sentieon/dnamodelapply": {
