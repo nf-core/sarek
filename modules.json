@@ -12,7 +12,7 @@
                     },
                     "bbmap/bbsplit": {
                         "branch": "master",
-                        "git_sha": "6d1d4b987af3ee5852d852abf99f8883028cea9c",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "bcftools/annotate": {
