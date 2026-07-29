@@ -39,6 +39,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [GATK HaplotypeCaller](#gatk-haplotypecaller)
       - [GATK Germline Single Sample Variant Calling](#gatk-germline-single-sample-variant-calling)
       - [GATK Joint Germline Variant Calling](#gatk-joint-germline-variant-calling)
+    - [Parabricks HaplotypeCaller](#parabricks-haplotypecaller)
     - [GATK Mutect2](#gatk-mutect2)
     - [Lofreq](#lofreq)
     - [MuSE](#muse)
@@ -135,7 +136,7 @@ The resulting files are intermediate and by default not kept in the final files 
 
 **Output directory: `{outdir}/preprocessing/fastp/<sample>`**
 
-- `<sample>_<lane>_{1,2}.fastp.fastq.gz>`
+- `<sample>_<lane>_{R1,R2}.fastp.fastq.gz>`
   - Bgzipped FastQ file
 
 </details>
@@ -151,7 +152,7 @@ These files are intermediate and by default not placed in the output-folder kept
 
 **Output directory: `{outdir}/preprocessing/fastp/<sample>/`**
 
-- `<sample_lane_{1,2}.fastp.fastq.gz>`
+- `<sample>_<lane>_{R1,R2}.fastp.fastq.gz>`
   - Bgzipped FastQ file
 
 </details>
@@ -471,6 +472,20 @@ If the haplotype-called VCF files are not filtered, then Sarek should be run wit
   - VCF with tabix index
 - `joint_germline_recalibrated.vcf.gz` and `joint_germline_recalibrated.vcf.gz.tbi`
   - variant recalibrated VCF with tabix index (if VQSR is applied)
+
+</details>
+
+#### Parabricks HaplotypeCaller
+
+[Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) is a GPU-accelerated implementation of GATK HaplotypeCaller for germline SNP and indel calling. Enable with `--tools parabricks_haplotypecaller --profile <docker/singularity>,gpu`.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+**Output directory: `{outdir}/variant_calling/parabricks_haplotypecaller/<sample>/`**
+
+- `<sample>.parabricks_haplotypecaller.vcf.gz` and `<sample>.parabricks_haplotypecaller.vcf.gz.tbi`
+  - VCF with tabix index
 
 </details>
 
@@ -826,6 +841,9 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
 #### CNVKit
 
 [CNVKit](https://cnvkit.readthedocs.io/en/stable/) is a toolkit to infer and visualize copy number from high-throughput DNA sequencing data. It is designed for use with hybrid capture, including both whole-exome and custom target panels, and short-read sequencing platforms such as Illumina. For further reading and documentation, see the [CNVKit Documentation](https://cnvkit.readthedocs.io/en/stable/plots.html)
+
+> [!NOTE]
+> When starting from `--step variant_calling` with a pre-aligned CRAM/BAM, CNVKit output **file names** follow the base name of the input file rather than the sample ID. Runs starting from FASTQ are unaffected — the sample-based names listed below apply. Output **directories** are always named after the sample (`<sample>` / `<tumorsample>_vs_<normalsample>`).
 
 <details markdown="1">
 <summary>Output files for normal and tumor-only samples</summary>

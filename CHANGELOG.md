@@ -5,24 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev
+## dev - unreleased
 
 ### Added
 
-- [#2087](https://github.com/nf-core/sarek/pull/2087) - Add `bam` as output format for parabricks/fq2bam, add multi lane support
+- [#2208](https://github.com/nf-core/sarek/pull/2208) - Add varlociraptor/filterfdr
 
 ### Changed
 
-- [#2055](https://github.com/nf-core/sarek/pull/2055) - Sort final vcf in varlociraptor sbwfs and update varlociraptor
-- [#2141](https://github.com/nf-core/sarek/pull/2141) - Update snpeff
+- [#2210](https://github.com/nf-core/sarek/pull/2210) - Update bcftools to 1.23.1
+- [#2229](https://github.com/nf-core/sarek/pull/2229) - Update EnsemblVEP to 116.0
+- [#2232](https://github.com/nf-core/sarek/pull/2232) - Migrate local code to the lowercase `channel` factory for Nextflow strict-syntax / 26.x readiness
+- [#2235](https://github.com/nf-core/sarek/pull/2235) - Nextflow strict-syntax / 26.x readiness for local code: explicit, named closure parameters (replacing implicit/generic `it`), `_`-prefixed unused parameters, and removal of unused `take:` inputs. Previously-dropped Manta candidate VCFs and Sentieon gVCF indices are now emitted.
+- [#2235](https://github.com/nf-core/sarek/pull/2235) - germline CNVKIT reuses the shared `CRAM_TO_BAM` conversion instead of re-converting CRAM internally, avoiding a duplicate conversion. Side effect: with `--step variant_calling` (user-supplied CRAM/BAM), CNVKit output files are named after the input file rather than the sample; runs from FASTQ are unaffected.
+- [#2238](https://github.com/nf-core/sarek/pull/2238) - Migrate `gatk4`/`gatk4spark` modules to the versions topic channel (bumps gatk4spark 4.6.1.0 → 4.6.2.0)
+- [#2239](https://github.com/nf-core/sarek/pull/2239) - Migrate alignment/UMI/utility modules (`bwa`, `bwamem2`, `dragmap`, `fgbio`, `fastp`, `cat`, `gawk`, `gunzip`, `untar`, `unzip`, `spring`) to the versions topic channel (fastp 0.24.0 → 1.1.0)
+- [#2240](https://github.com/nf-core/sarek/pull/2240) - Migrate variant-calling modules (`freebayes`, `strelka`, `manta`, `tiddit`, `lofreq`, `svdb`, `vcflib`, `vcftools`) to the versions topic channel
+- [#2241](https://github.com/nf-core/sarek/pull/2241) - Migrate `samtools/*` and `mosdepth` modules to the versions topic channel
+- [#2242](https://github.com/nf-core/sarek/pull/2242) - Migrate QC/coverage modules (`ascat`, `goleft`, `msisensor2`, `msisensorpro`) to the versions topic channel
+- [#2243](https://github.com/nf-core/sarek/pull/2243) - Migrate `cnvkit/*` modules to the versions topic channel, and replace the deprecated `tabix/tabix`/`tabix/bgziptabix` modules with `htslib/bgziptabix`
+- [#2244](https://github.com/nf-core/sarek/pull/2244) - Migrate local modules (`add_info_to_vcf`, `create_intervals_bed`, `samtools/reindex_bam`) to the versions topic channel
 
 ### Fixed
 
-- [#2117](https://github.com/nf-core/sarek/pull/2117) - Silent failure with multi-lane samples
-- [#2143](https://github.com/nf-core/sarek/pull/2143) - Varlociraptor collecting multiple scenario files for one sample
-- [#2146](https://github.com/nf-core/sarek/pull/2146) - Fail early when `--no_intervals` is used with joint germline HaplotypeCaller
-- [#2147](https://github.com/nf-core/sarek/pull/2147) - Fix empty fastp output folder created when trimmed reads are not saved
-- [#2152](https://github.com/nf-core/sarek/pull/2152) - Fix missing `params.` prefix for `umi_tag` in markduplicates config
+- [#2184](https://github.com/nf-core/sarek/pull/2184) - Skip nf-schema path-existence validation for `snpeff_cache`, `vep_cache` and `igenomes_base` so pipeline launches succeed when the default S3 buckets are not accessible
+- [#2216](https://github.com/nf-core/sarek/pull/2216) - Fix `--normalize_vcfs` dropping a real ALT allele of `1/2` multiallelic sites (`bcftools norm --rm-dup all` → `--rm-dup exact`)
+- [#2241](https://github.com/nf-core/sarek/pull/2241) - Bump `mosdepth` (0.3.10 → 0.3.14) so its htslib can decode CRAM 3.1 written by samtools 1.24; the previous container silently produced empty coverage files, dropping the mosdepth MultiQC sections (most visible in the parabricks path)
 
 ### Removed
 
@@ -30,9 +38,115 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency    | Old version | New version |
 | ------------- | ----------- | ----------- |
-| snpeff        | 5.3a        | 5.4a        |
-| varlociraptor | 8.7.4       | 8.9.3       |
-| yte           | 1.9.0       | 1.9.4       |
+| bcftools      | 1.21        | 1.23.1      |
+| htslib        | 1.21        | 1.24        |
+| varlociraptor | 8.9.3       | 8.9.5       |
+| ensembl-vep   | 115.2       | 116.0       |
+| gatk4         | 4.6.1.0     | 4.6.2.0     |
+| gatk4-spark   | 4.6.1.0     | 4.6.2.0     |
+| bwa           | 0.7.18      | 0.7.19      |
+| bwa-mem2      | 2.2.1       | 2.3         |
+| fastp         | 0.24.0      | 1.1.0       |
+| fgbio         | 2.4.0       | 3.1.2       |
+| gawk          | 5.3.0       | 5.3.1       |
+| pigz          | 2.3.4       | 2.8         |
+| svdb          | 2.8.2       | 2.8.4       |
+| tiddit        | 3.6.1       | 3.9.5       |
+| vcftools      | 0.1.16      | 0.1.17      |
+| samtools      | 1.21        | 1.24        |
+| mosdepth      | 0.3.10      | 0.3.14      |
+| cnvkit        | 0.9.11      | 0.9.12      |
+| xz            | -           | 5.8.3       |
+
+### Dependencies - plugins
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
+| Params                              | status |
+| ----------------------------------- | ------ |
+| `--varlociraptor_events_germline`   | New    |
+| `--varlociraptor_events_somatic,`   | New    |
+| `--varlociraptor_events_tumor_only` | New    |
+| `--varlociraptor_fdr`               | New    |
+
+| Parameter   | Old default | New default |
+| ----------- | ----------- | ----------- |
+| vep_version | 115.2-1     | 116.0-0     |
+
+### Developer section
+
+#### Added
+
+- [#2225](https://github.com/nf-core/sarek/pull/2225) - Add contributor ORCIDs to `nextflow.config`
+- [#2228](https://github.com/nf-core/sarek/pull/2228) - Add `AGENTS.md` file with nf-core agent instructions
+
+#### Changed
+
+- [#2178](https://github.com/nf-core/sarek/pull/2178) - Template update for nf-core/tools v4.0.2
+- [#2225](https://github.com/nf-core/sarek/pull/2225) - Back to dev (3.9.1dev)
+- [#2229](https://github.com/nf-core/sarek/pull/2229) - Update nft-utils to 1.0.0, migrate `getAllFilesFromDir` to `getAllFilesFromPath` in test utilities
+- [#2233](https://github.com/nf-core/sarek/pull/2233) - Replace the last remaining deprecated `channel.from` with `channel.of` in `prepare_genome`
+- [#2234](https://github.com/nf-core/sarek/pull/2234) - Replace deprecated `.set {}` channel terminator with plain assignment in local subworkflows for Nextflow strict-syntax / 26.x readiness
+- [#2237](https://github.com/nf-core/sarek/pull/2237) - Update muse/sump module to check if the index is older before touching it
+
+#### Fixed
+
+- [#2208](https://github.com/nf-core/sarek/pull/2208) - Update freebayes params (remove `--pooled-discrete` and change `--min-alternate-fraction` from 0.03 to 0.01), move chunk_size param
+- [#2229](https://github.com/nf-core/sarek/pull/2229) - Fix LoFTEE test to validate CSQ fields instead of asserting nothing
+
+#### Removed
+
+## [3.9.0](https://github.com/nf-core/sarek/releases/tag/3.9.0) - Sarvesjåhkå
+
+Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
+
+### Added
+
+- [#2087](https://github.com/nf-core/sarek/pull/2087) - Add `bam` as output format for parabricks/fq2bam, add multi lane support
+- [#2176](https://github.com/nf-core/sarek/pull/2176) - Add Parabricks HaplotypeCaller as GPU-accelerated germline variant caller (`--tools parabricks_haplotypecaller`)
+- [#2194](https://github.com/nf-core/sarek/pull/2194) - Add `--vep_cache_preflight_check` parameter to force preflight check for local VEP cache download
+- [#2199](https://github.com/nf-core/sarek/pull/2199) - Add animated metro map (`docs/images/sarek_subway_animated.svg`) with dots flowing through the workflow
+
+### Changed
+
+- [#2055](https://github.com/nf-core/sarek/pull/2055) - Sort final vcf in varlociraptor sbwfs, update varlociraptor, and add `--force-samples` to the `bcftools merge` of germline/somatic VCFs so the merge proceeds (renaming colliding columns) instead of failing when sample names collide
+- [#2141](https://github.com/nf-core/sarek/pull/2141) - Update snpeff
+- [#2194](https://github.com/nf-core/sarek/pull/2194) - Replace local `annotation_cache_initialisation` and `download_cache_snpeff_vep` subworkflows with nf-core `utils_annotation_cache` and `cache_download_ensemblvep_snpeff`
+- [#2209](https://github.com/nf-core/sarek/pull/2209) - Add flowing dots for the additional `bam/cram` and `vcf` entry points on the core line and the `cram` entry on the germline line in the animated metro map
+- [#2220](https://github.com/nf-core/sarek/pull/2220) - Update DeepVariant to `1.10.0` and sync `gatk4/mergevcfs`; both modules now report tool versions via the `versions` topic
+
+### Fixed
+
+- [#2117](https://github.com/nf-core/sarek/pull/2117) - Silent failure with multi-lane samples, including stripping `sample_lane_id` in the UMI consensus `groupKey` so `groupTuple` can merge lanes from the same sample (previously blocked by the retained per-lane `sample_lane_id`)
+- [#2143](https://github.com/nf-core/sarek/pull/2143) - Varlociraptor collecting multiple scenario files for one sample
+- [#2146](https://github.com/nf-core/sarek/pull/2146) - Fail early when `--no_intervals` is used with joint germline HaplotypeCaller
+- [#2147](https://github.com/nf-core/sarek/pull/2147) - Fix empty fastp output folder created when trimmed reads are not saved
+- [#2152](https://github.com/nf-core/sarek/pull/2152) - Fix missing `params.` prefix for `umi_tag` in markduplicates config
+- [#2154](https://github.com/nf-core/sarek/pull/2154) - Fix `--save_output_as_bam` causing duplicate emission errors, silently skipping variant calling, and running unnecessary CRAM-to-BAM conversions; add BAM output support for the sentieon dedup path; stop publishing converted BAMs when `--save_output_as_bam` is not set; widen the `--use_gatk_spark markduplicates` + `--save_mapped` incompatibility check to error regardless of `--save_output_as_bam`
+- [#2189](https://github.com/nf-core/sarek/pull/2189) - Fixes the `interval_name` → `intervals_name` typo in the branch step (was a silent no-op)
+- [#2190](https://github.com/nf-core/sarek/pull/2190) - Fix controlfreec crash in edge cases when no breakpoints are found
+- [#2196](https://github.com/nf-core/sarek/pull/2196) - Update `vep_version` parameter from `115.0-0` to `115.2-1` and fix `loftee_path` from `/usr/local/share` to `/opt/conda/share` to match the container VEP installation path
+- [#2219](https://github.com/nf-core/sarek/pull/2219) - Downgrade `controlfreec/assesssignificance` from `control-freec` 11.6b (`hde5307d_3`) back to 11.6 (`h1b792b2_1`)
+
+### Removed
+
+### Dependencies - modules
+
+| Dependency                   | Old version | New version |
+| ---------------------------- | ----------- | ----------- |
+| controlfreec                 | 11.6        | 11.6b       |
+| deepvariant                  | 1.9.0       | 1.10.0      |
+| ensemblvep                   | 115.2       | 115.2       |
+| gatk4 (in `GATK4_MERGEVCFS`) | 4.6.1.0     | 4.6.2.0     |
+| --htslib                     |             | 1.23.1      |
+| multiqc                      | 1.33        | 1.35        |
+| sentieon                     | 202503.01   | 202503.02   |
+| snpeff                       | 5.3a        | 5.4c        |
+| varlociraptor                | 8.7.4       | 8.9.3       |
+| yte                          | 1.9.0       | 1.9.4       |
 
 ### Dependencies - plugins
 
@@ -43,8 +157,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params | status |
-| ------ | ------ |
+| Params                        | status |
+| ----------------------------- | ------ |
+| `--vep_cache_preflight_check` | New    |
 
 ### Developer section
 
@@ -52,13 +167,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Changed
 
-- [#2142](https://github.com/nf-core/sarek/pull/2142) - Replace custom Slack/Teams notifications with nf-slack plugin (v0.5.0) bot token auth, scoped entirely to CI cloud test workflow, Remove Azure cloud test profiles, use dynamic matrix for selective test dispatch, Fix cloud test to use secrets instead of vars for TOWER_BUCKET_AWS, TOWER_COMPUTE_ENV, and TOWER_WORKSPACE_ID
 - [#2055](https://github.com/nf-core/sarek/pull/2055) - Update varlociraptor to use only one input channel, swap to topics
 - [#2087](https://github.com/nf-core/sarek/pull/2087) - Move parabricks config into its own, adhere to strict syntax, swap to topics
 - [#2139](https://github.com/nf-core/sarek/pull/2139) - Back to dev (3.9.0dev)
 - [#2141](https://github.com/nf-core/sarek/pull/2141) - Update vcf_annotate_snpeff subworkflow, swap tabix/bgziptabix and snpeff to topics, strict syntax
+- [#2142](https://github.com/nf-core/sarek/pull/2142) - Replace custom Slack/Teams notifications with nf-slack plugin (v0.5.0) bot token auth, scoped entirely to CI cloud test workflow, Remove Azure cloud test profiles, use dynamic matrix for selective test dispatch, Fix cloud test to use secrets instead of vars for TOWER_BUCKET_AWS, TOWER_COMPUTE_ENV, and TOWER_WORKSPACE_ID
 - [#2159](https://github.com/nf-core/sarek/pull/2159) - Fix strict syntax errors
+- [#2169](https://github.com/nf-core/sarek/pull/2169) - Prepare release 3.9.0
 - [#2170](https://github.com/nf-core/sarek/pull/2170) - Update dependencies
+- [#2173](https://github.com/nf-core/sarek/pull/2173) - Update MultiQC
+- [#2188](https://github.com/nf-core/sarek/pull/2188) - Update all `sentieon/*` modules to `nf-core/modules@7ad1622c`. Brings in `--interval` honouring in `sentieon/gvcftyper`, multi-`--resource:` parsing in `sentieon/varcal`, and the new `topic: versions` emission across all sentieon modules. Removed the now-broken explicit `versions.mix(SENTIEON_*.out.versions)` calls; sarek's `softwareVersionsToYAML` picks up the topic emissions via `channel.topic("versions")`.
+- [#2194](https://github.com/nf-core/sarek/pull/2194) - Update `ensemblvep/vep` module: add `htslib` dependency, support apptainer container engine, fix cache input signature, fix output path patterns
+- [#2194](https://github.com/nf-core/sarek/pull/2194) - Update `main.nf` to use lowercase `channel.*` factory methods (strict syntax)
+- [#2203](https://github.com/nf-core/sarek/pull/2203) - Dedicated GHA for `Sentieon`
 
 #### Fixed
 
@@ -67,10 +188,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2165](https://github.com/nf-core/sarek/pull/2165) - Recover help message
 - [#2167](https://github.com/nf-core/sarek/pull/2167) - Fix and extend pipeline level stub tests
 - [#2170](https://github.com/nf-core/sarek/pull/2170) - Add index to workflow output for MultiQC
+- [#2189](https://github.com/nf-core/sarek/pull/2189) - Preserve `groupKey` size hint into `groupTuple` in the sentieon haplotyper and dnascope subworkflows so per-sample MERGE*SENTIEON*\*\_VCFS / GVCFS emits progressively as each sample's intervals finish instead of bursting at end-of-haplotyper.
+- [#2197](https://github.com/nf-core/sarek/pull/2197) - Fix controlfreec `versions` emission: swap to topics and remove explicit `versions.mix` wiring
+- [#2217](https://github.com/nf-core/sarek/pull/2217) - Mark sentieon_dedup scenario in `save_output_as_bam` test with `sentieon: true` flag
 
 #### Removed
 
 ## [3.8.1](https://github.com/nf-core/sarek/releases/tag/3.8.1) - Laitaure
+
+Laitaure is a lake formed by the Rapaätno River in Sarek.
 
 ### Added
 

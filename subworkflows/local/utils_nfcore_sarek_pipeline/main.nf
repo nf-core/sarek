@@ -35,8 +35,6 @@ workflow PIPELINE_INITIALISATION {
 
     main:
 
-    versions = channel.empty()
-
     // Print version and exit if required and dump pipeline parameters to JSON file
     UTILS_NEXTFLOW_PIPELINE(
         version,
@@ -64,7 +62,7 @@ workflow PIPELINE_INITIALISATION {
 \033[0;35m  nf-core/sarek ${workflow.manifest.version}\033[0m
 -\033[2m----------------------------------------------------\033[0m-
 """
-    def after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
+    def after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/', '')}" }.join("\n")}${workflow.manifest.doi ? "\n" : ""}
 * The nf-core framework
     https://doi.org/10.1038/s41587-020-0439-x
 
@@ -83,6 +81,7 @@ workflow PIPELINE_INITIALISATION {
         before_text,
         after_text,
         command,
+        null,
     )
 
     // Check config provided to the pipeline
@@ -159,7 +158,6 @@ workflow PIPELINE_INITIALISATION {
         params.ascat_loci_rt,
         params.bcftools_annotations,
         params.bcftools_annotations_tbi,
-        params.bcftools_columns,
         params.bcftools_header_lines,
         params.build_only_index,
         params.dbsnp,
@@ -190,7 +188,6 @@ workflow PIPELINE_INITIALISATION {
 
     emit:
     samplesheet = SAMPLESHEET_TO_CHANNEL.out.input_sample
-    versions
 }
 
 /*
@@ -253,10 +250,13 @@ def genomeExistsError() {
     }
 }
 
-//  Exit if trying to use "use_gatk_spark", "save_mapped": true and "save_output_as_bam"
+//  Exit if trying to use Spark markduplicates together with --save_mapped.
+//  Spark markduplicates requires name-sorted input, so the mapped alignment is
+//  produced name-sorted and cannot be indexed (or used downstream) regardless of
+//  whether it is saved as BAM or CRAM.
 def sparkAndBam() {
-    if (params.use_gatk_spark && params.save_mapped && params.save_output_as_bam) {
-        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  The --use_gatk_spark option is not compatible with --save_mapped and --save_output_as_bam.\n" + "  If you want to save your bam files please swap to the normal gatk implementation.\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates') && params.save_mapped) {
+        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  --use_gatk_spark with 'markduplicates' is not compatible with --save_mapped.\n" + "  Spark markduplicates requires name-sorted input, so the saved mapped\n" + "  alignment (BAM or CRAM) would be name-sorted and cannot be indexed.\n" + "  Either drop --save_mapped, or switch to the non-Spark markduplicates path.\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         System.err.println(error_string)
         error(error_string)
     }

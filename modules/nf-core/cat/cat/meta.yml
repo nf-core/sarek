@@ -1,5 +1,6 @@
 name: cat_cat
 description: A module for concatenation of gzipped or uncompressed files
+deprecated: true
 keywords:
   - concatenate
   - gzip
@@ -20,21 +21,41 @@ input:
         type: file
         description: List of compressed / uncompressed files
         pattern: "*"
+        ontologies: []
 output:
-  - file_out:
-      - meta:
-          type: file
-          description: Concatenated file. Will be gzipped if file_out ends with ".gz"
-          pattern: "${file_out}"
+  file_out:
+    - - meta:
+          type: map
+          description: Groovy Map containing sample information
       - ${prefix}:
           type: file
-          description: Concatenated file. Will be gzipped if file_out ends with ".gz"
+          description: Concatenated file. Will be gzipped if file_out ends with
+            ".gz"
           pattern: "${file_out}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_cat:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pigz:
+          type: string
+          description: The name of the tool
+      - "pigz --version 2>&1 | sed 's/pigz //g'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pigz:
+          type: string
+          description: The name of the tool
+      - "pigz --version 2>&1 | sed 's/pigz //g'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@erikrikarddaniel"
   - "@FriederikeHanssen"

@@ -208,6 +208,17 @@ process {
 }
 ```
 
+#### Using GPU accelerated variant calling (`--tools parabricks_haplotypecaller`)
+
+> [!NOTE]
+> This is an experimental addition to the pipeline which requires a GPU and does not support `--profile conda`.
+
+To use NVIDIA Clara Parabricks' GPU-accelerated HaplotypeCaller for germline variant calling, add `--tools parabricks_haplotypecaller --profile <docker/singularity>,gpu` to your run command. This replicates GATK HaplotypeCaller germline SNP and indel calling with GPU acceleration.
+
+Parabricks HaplotypeCaller takes a CRAM file as input and outputs a single VCF per sample (no scatter/gather over intervals). Intervals can be provided via `--intervals` to restrict calling to specific regions.
+
+For more details on available arguments, see the [Parabricks HaplotypeCaller documentation](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html).
+
 ### Start with duplicate marking (`--step markduplicates`)
 
 #### Duplicate Marking
@@ -575,7 +586,6 @@ Expected run output:
 [88/3af664] process > NFCORE_SAREK:SAREK:BAM_APPLYBQSR:CRAM_MERGE_INDEX_SAMTOOLS:INDEX_CRAM (test)                                  [100%] 1 of 1 ✔
 [f4/828fde] process > NFCORE_SAREK:SAREK:CRAM_QC_RECAL:SAMTOOLS_STATS (test)                                                        [100%] 1 of 1 ✔
 [fb/a9d66f] process > NFCORE_SAREK:SAREK:CRAM_QC_RECAL:MOSDEPTH (test)                                                              [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:CRAM_TO_BAM_RECAL                                                                          -
 [ef/026185] process > NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_SINGLE_STRELKA:STRELKA_SINGLE (test)  [100%] 1 of 1 ✔
 [-        ] process > NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_SINGLE_STRELKA:MERGE_STRELKA          -
 [-        ] process > NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_SINGLE_STRELKA:MERGE_STRELKA_GENOME   -
@@ -653,7 +663,7 @@ This list is by no means exhaustive and it will depend on the specific analysis 
 | [ASCAT](https://github.com/VanLoo-lab/ascat)                                                            |  x  |  x  |   -    |     -     |     -      |           x            |
 | [CNVKit](https://cnvkit.readthedocs.io/en/stable/)                                                      |  x  |  x  |   -    |     x     |     x      |           x            |
 | [Control-FREEC](https://github.com/BoevaLab/FREEC)                                                      |  x  |  x  |   x    |     -     |     x      |           x            |
-| [MSIsensor2](https://github.com/niu-lab/msisensor2)                                                     |  x  |  x  |   x    |     -     |     X      |           -            |
+| [MSIsensor2](https://github.com/niu-lab/msisensor2)                                                     |  x  |  x  |   x    |     -     |     x      |           -            |
 | [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro)                                             |  x  |  x  |   x    |     -     |     -      |           x            |
 | [Varlociraptor](https://varlociraptor.github.io/landing/)                                               |  x  |  x  |   x    |     x     |     x      |           x            |
 
@@ -905,6 +915,8 @@ Varlociraptor allows the usage of different scenario files, a few examples can b
 
 You can control the number of chunks that the candidate VCF file is split into by `--varlociraptor_chunk_size <integer>`, it is set to reasonable default (15) but more chunks might aid in accelerating your workflow run if you can run more processes in parallel.
 
+Varlociraptor by default just returns all candidate variants annotated with probabilities. The variants need to be filtered to yield a representativ result, see the [docs](https://varlociraptor.github.io/docs/filtering/) for more info. In sarek this is implemented with default set events related to the scenario files which used by default. If you use your own scenario file please adapt the events accordingly by using the flags `--varlociraptor_events_tumor_only`, `--varlociraptor_events_somatic` and `--varlociraptor_events_germline`. The events need to be supplied as a list with spaces between the events. Filtering also depends on the False Discovery Rate (FDR) in sarek we opted for a default of filtering in `--mode local-smart` to a FDR of 5% with `--fdr 0.05`. The FDR can be controlled by `--varlociraptor_fdr`.
+
 ## Spark related issues
 
 If you have problems running processes that make use of Spark such as `MarkDuplicates`.
@@ -949,7 +961,7 @@ Command error:
   [E::sam_index] Read 'LH00271:69:2237HHLT4:7:1101:1000:11758' with ref_name='chr16', ref_length=90338345, flags=163, pos=58528490 cannot be indexed  samtools index: failed to create index for "sample_19.sorted.bam"
 ```
 
-Please be aware that `--use_gatk_spark` is not compatible with `--save_output_as_bam --save_mapped` because merging the reads to export them to bam files only works when they are coordinate sorted - spark works with name-sorting the reads.
+Please be aware that `--use_gatk_spark markduplicates` is not compatible with `--save_mapped`, regardless of `--save_output_as_bam`. Spark MarkDuplicates requires name-sorted input, so the reads exiting the mapping stage are name-sorted. The saved mapped alignment (whether published as BAM or CRAM) is therefore name-sorted and cannot be indexed or used by downstream tools. Either drop `--save_mapped`, or switch to the non-Spark markduplicates path.
 
 ## How to handle Unique Molecular Identifiers (UMIs)
 

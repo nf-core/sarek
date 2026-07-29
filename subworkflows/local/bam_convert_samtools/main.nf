@@ -14,26 +14,26 @@ include { CAT_FASTQ                                          } from '../../../mo
 workflow BAM_CONVERT_SAMTOOLS {
     take:
     input       // channel: [meta, alignment (BAM or CRAM), index (optional)]
-    fasta       // optional: reference file if CRAM format and reference not in header
-    fasta_fai
+    fasta       // channel: [meta, fasta] — reference, staged in to decode CRAM input
+    fasta_fai   // channel: [meta, fai]
     interleaved // value: true/false
 
     main:
-    versions = Channel.empty()
 
-    // Index File if not PROVIDED -> this also requires updates to samtools view possibly URGH
+    // Combined [ meta, fasta, fai ] reference tuple for the updated samtools modules
+    fasta_and_fai = fasta.combine(fasta_fai).map { meta, fasta_, _fai_meta, fai -> [ meta, fasta_, fai ] }.collect()
 
     // MAP - MAP
-    SAMTOOLS_VIEW_MAP_MAP(input, fasta, [], [])
+    SAMTOOLS_VIEW_MAP_MAP(input, fasta_and_fai, [[], []], [[], []], [])
 
     // UNMAP - UNMAP
-    SAMTOOLS_VIEW_UNMAP_UNMAP(input, fasta, [], [])
+    SAMTOOLS_VIEW_UNMAP_UNMAP(input, fasta_and_fai, [[], []], [[], []], [])
 
     // UNMAP - MAP
-    SAMTOOLS_VIEW_UNMAP_MAP(input, fasta, [], [])
+    SAMTOOLS_VIEW_UNMAP_MAP(input, fasta_and_fai, [[], []], [[], []], [])
 
     // MAP - UNMAP
-    SAMTOOLS_VIEW_MAP_UNMAP(input, fasta, [], [])
+    SAMTOOLS_VIEW_MAP_UNMAP(input, fasta_and_fai, [[], []], [[], []], [])
 
     // Merge UNMAP
     all_unmapped_bam = SAMTOOLS_VIEW_UNMAP_UNMAP.out.bam
@@ -41,13 +41,13 @@ workflow BAM_CONVERT_SAMTOOLS {
         .join(SAMTOOLS_VIEW_MAP_UNMAP.out.bam, failOnDuplicate: true, remainder: true)
         .map{ meta, unmap_unmap, unmap_map, map_unmap -> [ meta, [ unmap_unmap, unmap_map, map_unmap ] ] }
 
-    SAMTOOLS_MERGE_UNMAP(all_unmapped_bam, fasta, fasta_fai)
+    SAMTOOLS_MERGE_UNMAP(all_unmapped_bam.map { meta, bams -> [ meta, bams, [] ] }, fasta_and_fai.map { meta, fasta_, fai -> [ meta, fasta_, fai, [] ] })
 
     // Collate & convert unmapped
-    COLLATE_FASTQ_UNMAP(SAMTOOLS_MERGE_UNMAP.out.bam, fasta, interleaved)
+    COLLATE_FASTQ_UNMAP(SAMTOOLS_MERGE_UNMAP.out.bam, fasta_and_fai, interleaved)
 
     // Collate & convert mapped
-    COLLATE_FASTQ_MAP(SAMTOOLS_VIEW_MAP_MAP.out.bam, fasta, interleaved)
+    COLLATE_FASTQ_MAP(SAMTOOLS_VIEW_MAP_MAP.out.bam, fasta_and_fai, interleaved)
 
     // join Mapped & unmapped fastq
 
@@ -59,18 +59,7 @@ workflow BAM_CONVERT_SAMTOOLS {
     CAT_FASTQ(reads_to_concat)
     reads = CAT_FASTQ.out.reads
 
-    // Gather versions of all tools used
-    versions = versions.mix(CAT_FASTQ.out.versions)
-    versions = versions.mix(COLLATE_FASTQ_MAP.out.versions)
-    versions = versions.mix(COLLATE_FASTQ_UNMAP.out.versions)
-    versions = versions.mix(SAMTOOLS_MERGE_UNMAP.out.versions)
-    versions = versions.mix(SAMTOOLS_VIEW_MAP_MAP.out.versions)
-    versions = versions.mix(SAMTOOLS_VIEW_MAP_UNMAP.out.versions)
-    versions = versions.mix(SAMTOOLS_VIEW_UNMAP_MAP.out.versions)
-    versions = versions.mix(SAMTOOLS_VIEW_UNMAP_UNMAP.out.versions)
-
     emit:
     reads
 
-    versions
 }

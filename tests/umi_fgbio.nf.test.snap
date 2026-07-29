@@ -24,26 +24,27 @@
             29,
             {
                 "BAM2FASTQ": {
-                    "samtools": 1.21
+                    "bgzip": "1.24",
+                    "samtools": "1.24"
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "CALLUMICONSENSUS": {
-                    "fgbio": "2.4.0"
+                    "fgbio": "3.1.2"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "COLLATE_FASTQ_MAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "COLLATE_FASTQ_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -52,55 +53,56 @@
                     "fastqc": "0.12.1"
                 },
                 "FASTQTOBAM": {
-                    "fgbio": "2.4.0"
+                    "fgbio": "3.1.2"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "GROUPREADSBYUMI": {
-                    "fgbio": "2.4.0"
+                    "fgbio": "3.1.2"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_MERGE_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_MAP_MAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_MAP_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_UNMAP_MAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_UNMAP_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -150,6 +152,7 @@
                 "multiqc/multiqc_data/picard_deduplication.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-status-check-heatmap.pdf",
@@ -176,6 +179,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/png",
                 "multiqc/multiqc_plots/png/fastqc-status-check-heatmap.png",
                 "multiqc/multiqc_plots/png/fastqc_adapter_content_plot.png",
@@ -201,6 +205,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/svg",
                 "multiqc/multiqc_plots/svg/fastqc-status-check-heatmap.svg",
                 "multiqc/multiqc_plots/svg/fastqc_adapter_content_plot.svg",
@@ -226,6 +231,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
@@ -272,7 +278,8 @@
                 "reports/samtools/test/test.md.cram.stats",
                 "reports/samtools/test/test.recal.cram.stats",
                 "reports/umi",
-                "reports/umi/test_umi-grouped_histogram.txt"
+                "reports/umi/test_umi-grouped_histogram.txt",
+                "reports/umi/test_umi-grouped_read-metrics.txt"
             ],
             [
                 "fastqc-status-check-heatmap.txt:md5,92fcedba625d8394492d1ef6e2eb64f0",
@@ -286,46 +293,48 @@
                 "fastqc_sequence_counts_plot.txt:md5,1a4aab87f1bd4fd9f69cabef40f5e5ed",
                 "fastqc_sequence_duplication_levels_plot.txt:md5,72e6366160d000a2990b2bbd321300a7",
                 "fastqc_sequence_length_distribution_plot.txt:md5,7c07faf0c0b90613cdc82a9f09bc1f19",
-                "mosdepth-coverage-per-contig-single.txt:md5,800ad271050c46d24bf53c0f8bdf7b6e",
-                "mosdepth-cumcoverage-dist-id.txt:md5,3c526ec6da433233b419bdbdd19a1b56",
-                "mosdepth_perchrom.txt:md5,800ad271050c46d24bf53c0f8bdf7b6e",
+                "mosdepth-coverage-per-contig-single.txt:md5,fc8d90478e230b3cbad16ef68ede3a62",
+                "mosdepth-cumcoverage-dist-id.txt:md5,7985d3196b234be9907f6c417c4fe0df",
+                "mosdepth_perchrom.txt:md5,fc8d90478e230b3cbad16ef68ede3a62",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
                 "multiqc_fastqc.txt:md5,0ca2cba4204d9076a1eb17596379d10c",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,4d27768d75a69a61daf23bf5efe17687",
-                "samtools_alignment_plot.txt:md5,3c2a882852a7ffe06610c9027f0a312a",
-                "test.md.mosdepth.global.dist.txt:md5,09d22913aa50a0207f97a3f85b182c6e",
-                "test.md.mosdepth.region.dist.txt:md5,61676a4a3668c0e84eb0f56dc6bda1ae",
-                "test.md.mosdepth.summary.txt:md5,9bbea5e4d213a51f501c2aadff8d4526",
-                "test.md.regions.bed.gz:md5,e24c18ad56e54376c41fdaacec372f9e",
-                "test.md.regions.bed.gz.csi:md5,d0713716f63ac573f4a3385733e9a537",
-                "test.recal.mosdepth.global.dist.txt:md5,09d22913aa50a0207f97a3f85b182c6e",
-                "test.recal.mosdepth.region.dist.txt:md5,61676a4a3668c0e84eb0f56dc6bda1ae",
-                "test.recal.mosdepth.summary.txt:md5,9bbea5e4d213a51f501c2aadff8d4526",
-                "test.recal.regions.bed.gz:md5,e24c18ad56e54376c41fdaacec372f9e",
-                "test.recal.regions.bed.gz.csi:md5,d0713716f63ac573f4a3385733e9a537",
-                "test_umi-grouped_histogram.txt:md5,85292e9acb83edf17110dce17be27f44"
+                "samtools-stats-dp.txt:md5,7575ba501ebbd93ba39f171443c0791b",
+                "samtools_alignment_plot.txt:md5,60b8f1d48124a8f28b06dc0d15ca4d59",
+                "samtools_insert_size.txt:md5,ef2a81138667814cda3e5c8c2628c549",
+                "test.md.mosdepth.global.dist.txt:md5,bb51e76c9cf2f3929cb5ce560f559dd6",
+                "test.md.mosdepth.region.dist.txt:md5,11dc4683f9038de1938b4874e02974d6",
+                "test.md.mosdepth.summary.txt:md5,d6cda5af0f2bf21973e256cf198aa47a",
+                "test.md.regions.bed.gz:md5,b420210d41279bbc93f211491f7d4f02",
+                "test.md.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
+                "test.recal.mosdepth.global.dist.txt:md5,bb51e76c9cf2f3929cb5ce560f559dd6",
+                "test.recal.mosdepth.region.dist.txt:md5,11dc4683f9038de1938b4874e02974d6",
+                "test.recal.mosdepth.summary.txt:md5,d6cda5af0f2bf21973e256cf198aa47a",
+                "test.recal.regions.bed.gz:md5,b420210d41279bbc93f211491f7d4f02",
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
+                "test_umi-grouped_histogram.txt:md5,85292e9acb83edf17110dce17be27f44",
+                "test_umi-grouped_read-metrics.txt:md5,cb2aecfe82357aa06e091d69b4606b9e"
             ],
             [
-                "test_umi-consensus.bam:md5,18d420720f72366289d3a324f4552522"
+                "test_umi-consensus.bam:md5,86ddd035aced3a9e7b6e618794824050"
             ],
             [
-                "test.md.cram:md5,2d0c176fed158d84a061b69e1947994c",
-                "test.recal.cram:md5,6927569ca52dbba512d27f8742bc6aae"
+                "test.md.cram:md5,a8f60b321cc24e782dcf6470fd310b08",
+                "test.recal.cram:md5,a8f60b321cc24e782dcf6470fd310b08"
             ],
             "No VCF files",
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_umi_cleanname_1.fastq.gz): Cannot extract flowcell ID from @922332"
             ]
         ],
+        "timestamp": "2026-07-27T10:25:14.330200197",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T21:53:07.910593016"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null --aligner sentieon-bwamem": {
         "content": [

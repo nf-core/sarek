@@ -3,6 +3,6 @@
 channels:
   - conda-forge
   - bioconda
-
 dependencies:
-  - bioconda::htslib=1.21
+  # renovate: datasource=conda depName=bioconda/varlociraptor
+  - bioconda::varlociraptor=8.9.5

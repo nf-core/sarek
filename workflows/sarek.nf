@@ -5,54 +5,54 @@
 */
 
 include { paramsSummaryMap                                  } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc                              } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
+include { paramsSummaryMultiqc                              } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML                            } from 'plugin/nf-core-utils'
-include { methodsDescriptionText                            } from '../../subworkflows/local/utils_nfcore_sarek_pipeline'
+include { methodsDescriptionText                            } from '../subworkflows/local/utils_nfcore_sarek_pipeline'
 
 // Create samplesheets to restart from different steps
-include { CHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../../subworkflows/local/channel_variant_calling_create_csv'
+include { CHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../subworkflows/local/channel_variant_calling_create_csv'
 
 // Convert BAM files to FASTQ files
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT       } from '../../subworkflows/local/bam_convert_samtools'
+include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT       } from '../subworkflows/local/bam_convert_samtools'
 
 // Convert fastq.gz.spring files to fastq.gz files
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R1_FQ   } from '../../modules/nf-core/spring/decompress'
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R2_FQ   } from '../../modules/nf-core/spring/decompress'
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_FQ_PAIR } from '../../modules/nf-core/spring/decompress'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R1_FQ   } from '../modules/nf-core/spring/decompress'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R2_FQ   } from '../modules/nf-core/spring/decompress'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_FQ_PAIR } from '../modules/nf-core/spring/decompress'
 
 // Run FASTQC
-include { FASTQC                                            } from '../../modules/nf-core/fastqc'
+include { FASTQC                                            } from '../modules/nf-core/fastqc'
 
 // QC on CRAM
-include { CRAM_SAMPLEQC                                     } from '../../subworkflows/local/cram_sampleqc'
+include { CRAM_SAMPLEQC                                     } from '../subworkflows/local/cram_sampleqc'
 
 // Preprocessing
-include { FASTQ_PREPROCESS_GATK                             } from '../../subworkflows/local/fastq_preprocess_gatk'
-include { FASTQ_PREPROCESS_PARABRICKS                       } from '../../subworkflows/local/fastq_preprocess_parabricks'
+include { FASTQ_PREPROCESS_GATK                             } from '../subworkflows/local/fastq_preprocess_gatk'
+include { FASTQ_PREPROCESS_PARABRICKS                       } from '../subworkflows/local/fastq_preprocess_parabricks'
 
 // CRAM_TO_BAM conversion
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM                   } from '../../modules/nf-core/samtools/convert'
+include { SAMTOOLS_CONVERT as CRAM_TO_BAM                   } from '../modules/nf-core/samtools/convert'
 
 // Variant calling on a single normal sample
-include { BAM_VARIANT_CALLING_GERMLINE_ALL                  } from '../../subworkflows/local/bam_variant_calling_germline_all'
+include { BAM_VARIANT_CALLING_GERMLINE_ALL                  } from '../subworkflows/local/bam_variant_calling_germline_all'
 
 // Variant calling on a single tumor sample
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL                } from '../../subworkflows/local/bam_variant_calling_tumor_only_all'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL                } from '../subworkflows/local/bam_variant_calling_tumor_only_all'
 
 // Variant calling on tumor/normal pair
-include { BAM_VARIANT_CALLING_SOMATIC_ALL                   } from '../../subworkflows/local/bam_variant_calling_somatic_all'
+include { BAM_VARIANT_CALLING_SOMATIC_ALL                   } from '../subworkflows/local/bam_variant_calling_somatic_all'
 
 // POST VARIANTCALLING: e.g. merging
-include { POST_VARIANTCALLING                               } from '../../subworkflows/local/post_variantcalling'
+include { POST_VARIANTCALLING                               } from '../subworkflows/local/post_variantcalling'
 
 // QC on VCF files
-include { VCF_QC_BCFTOOLS_VCFTOOLS                          } from '../../subworkflows/local/vcf_qc_bcftools_vcftools'
+include { VCF_QC_BCFTOOLS_VCFTOOLS                          } from '../subworkflows/local/vcf_qc_bcftools_vcftools'
 
 // Annotation
-include { VCF_ANNOTATE_ALL                                  } from '../../subworkflows/local/vcf_annotate_all'
+include { VCF_ANNOTATE_ALL                                  } from '../subworkflows/local/vcf_annotate_all'
 
 // MULTIQC
-include { MULTIQC                                           } from '../../modules/nf-core/multiqc'
+include { MULTIQC                                           } from '../modules/nf-core/multiqc'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -107,6 +107,11 @@ workflow SAREK {
     pon
     pon_tbi
     sentieon_dnascope_model
+    varlociraptor_chunk_size
+    varlociraptor_events_germline
+    varlociraptor_events_somatic
+    varlociraptor_events_tumor_only
+    varlociraptor_fdr
     varlociraptor_scenario_germline
     varlociraptor_scenario_somatic
     varlociraptor_scenario_tumor_only
@@ -118,14 +123,10 @@ workflow SAREK {
     vep_fasta
     vep_genome
     vep_species
-    snpsift_db                  // channel: [[databases], [tbis], [vardbs], [fields], [prefixes]]
-    versions
+    snpsift_db // channel: [[databases], [tbis], [vardbs], [fields], [prefixes]]
 
     main:
     // To gather all QC reports for MultiQC
-    ch_multiqc_files = channel.empty()
-    multiqc_publish = channel.empty()
-    multiqc_report = channel.empty()
     reports = channel.empty()
 
     /*
@@ -137,11 +138,11 @@ workflow SAREK {
     // PREPROCESSING
     if (step == 'mapping') {
         // Figure out if input is bam, fastq, or spring
-        input_sample_type = input_sample.branch {
-            bam: it[0].data_type == "bam"
-            fastq_gz: it[0].data_type == "fastq_gz"
-            one_fastq_gz_spring: it[0].data_type == "one_fastq_gz_spring"
-            two_fastq_gz_spring: it[0].data_type == "two_fastq_gz_spring"
+        input_sample_type = input_sample.branch { sample ->
+            bam: sample[0].data_type == "bam"
+            fastq_gz: sample[0].data_type == "fastq_gz"
+            one_fastq_gz_spring: sample[0].data_type == "one_fastq_gz_spring"
+            two_fastq_gz_spring: sample[0].data_type == "two_fastq_gz_spring"
         }
 
         // Two fastq.gz-files
@@ -166,10 +167,6 @@ workflow SAREK {
             true,
         )
 
-        versions = versions.mix(SPRING_DECOMPRESS_TO_R1_FQ.out.versions)
-        versions = versions.mix(SPRING_DECOMPRESS_TO_R2_FQ.out.versions)
-        versions = versions.mix(SPRING_DECOMPRESS_TO_FQ_PAIR.out.versions)
-
         two_fastq_gz_from_spring = r1_fastq_gz_from_spring.fastq.join(r2_fastq_gz_from_spring.fastq).map { meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]] }
 
         two_fastq_gz_from_spring = two_fastq_gz_from_spring.map { meta, files -> addReadgroupToMeta(meta, files) }
@@ -181,12 +178,10 @@ workflow SAREK {
         interleave_input = false
         CONVERT_FASTQ_INPUT(
             input_sample_type.bam,
-            [[id: "fasta"], []],
-            [[id: 'null'], []],
+            fasta,
+            fasta_fai,
             interleave_input,
         )
-
-        versions = versions.mix(CONVERT_FASTQ_INPUT.out.versions)
 
         // Gather fastq (inputed or converted)
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
@@ -200,7 +195,6 @@ workflow SAREK {
             FASTQC(input_fastq)
 
             reports = reports.mix(FASTQC.out.zip.collect { _meta, logs -> logs })
-            versions = versions.mix(FASTQC.out.versions)
         }
     }
     else {
@@ -228,9 +222,8 @@ workflow SAREK {
             cram_variant_calling = channel.empty()
             cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_PARABRICKS.out.cram)
 
-            // Gather used softwares versions
+            // Gather QC reports
             reports = reports.mix(FASTQ_PREPROCESS_PARABRICKS.out.reports)
-            versions = versions.mix(FASTQ_PREPROCESS_PARABRICKS.out.versions)
         }
         else {
             // PREPROCESSING
@@ -252,9 +245,8 @@ workflow SAREK {
             cram_variant_calling = channel.empty()
             cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_GATK.out.cram_variant_calling)
 
-            // Gather used softwares versions
+            // Gather QC reports
             reports = reports.mix(FASTQ_PREPROCESS_GATK.out.reports)
-            versions = versions.mix(FASTQ_PREPROCESS_GATK.out.versions)
         }
     }
 
@@ -272,13 +264,12 @@ workflow SAREK {
     CRAM_SAMPLEQC(
         cram_variant_calling,
         ngscheckmate_bed,
-        fasta,
+        fasta.combine(fasta_fai).map { meta_fasta_, fasta_file , _meta_fai, fai -> [meta_fasta_, fasta_file, fai] }.collect(),
         skip_tools.split(',').contains('baserecalibrator'),
         intervals_for_preprocessing,
     )
 
     reports = reports.mix(CRAM_SAMPLEQC.out.reports)
-    versions = versions.mix(CRAM_SAMPLEQC.out.versions)
 
     if (tools) {
 
@@ -288,13 +279,13 @@ workflow SAREK {
         if (tools.split(',').contains('cnvkit') || tools.split(',').contains('msisensor2') || tools.split(',').contains('muse')) {
 
             // Differentiate between bam and cram files
-            cram_variant_calling_status_tmp = cram_variant_calling.branch { meta, file, index ->
+            cram_variant_calling_status_tmp = cram_variant_calling.branch { _meta, file, _index ->
                 bam: file.toString().endsWith('.bam')
                 cram: file.toString().endsWith('.cram')
             }
 
             // convert cram files
-            CRAM_TO_BAM(cram_variant_calling_status_tmp.cram, fasta, fasta_fai)
+            CRAM_TO_BAM(cram_variant_calling_status_tmp.cram, fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai ] }.collect())
 
             // gather all bam files
             bam_variant_calling = CRAM_TO_BAM.out.bam
@@ -303,18 +294,16 @@ workflow SAREK {
                 .map { meta, bam, bai ->
                     [meta + [data_type: 'bam'], bam, bai]
                 }
-
-            versions = versions.mix(CRAM_TO_BAM.out.versions)
         }
 
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
-        cram_variant_calling_status = cram_variant_calling.branch { meta, file, index ->
+        cram_variant_calling_status = cram_variant_calling.branch { meta, _file, _index ->
             normal: meta.status == 0
             tumor: meta.status == 1
         }
 
         // Follow the same logic with bam as we have with cram
-        bam_variant_calling_status = bam_variant_calling.branch { meta, file, index ->
+        bam_variant_calling_status = bam_variant_calling.branch { meta, _file, _index ->
             normal: meta.status == 0
             tumor: meta.status == 1
         }
@@ -339,13 +328,13 @@ workflow SAREK {
         bam_variant_calling_tumor_joined = bam_variant_calling_tumor_grouped.join(bam_variant_calling_normal_to_cross, failOnDuplicate: true, remainder: true)
 
         // 3. Filter out entries with last entry null
-        cram_variant_calling_tumor_filtered = cram_variant_calling_tumor_joined.filter { it -> !(it.last()) }
-        bam_variant_calling_tumor_filtered = bam_variant_calling_tumor_joined.filter { it -> !(it.last()) }
+        cram_variant_calling_tumor_filtered = cram_variant_calling_tumor_joined.filter { joined -> !(joined.last()) }
+        bam_variant_calling_tumor_filtered = bam_variant_calling_tumor_joined.filter { joined -> !(joined.last()) }
 
         // 4. Transpose [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ] ] back to [ patient1, meta1, [ cram1, crai1 ], null ] [ patient1, meta2, [ cram2, crai2 ], null ]
         // and remove patient ID field & null value for further processing [ meta1, [ cram1, crai1 ] ] [ meta2, [ cram2, crai2 ] ]
-        cram_variant_calling_tumor_only = cram_variant_calling_tumor_filtered.transpose().map { it -> [it[1], it[2], it[3]] }
-        bam_variant_calling_tumor_only = bam_variant_calling_tumor_filtered.transpose().map { it -> [it[1], it[2], it[3]] }
+        cram_variant_calling_tumor_only = cram_variant_calling_tumor_filtered.transpose().map { record -> [record[1], record[2], record[3]] }
+        bam_variant_calling_tumor_only = bam_variant_calling_tumor_filtered.transpose().map { record -> [record[1], record[2], record[3]] }
 
         if (params.only_paired_variant_calling) {
             // Normal only samples
@@ -355,12 +344,12 @@ workflow SAREK {
             bam_variant_calling_normal_joined = bam_variant_calling_normal_to_cross.join(bam_variant_calling_tumor_grouped, failOnDuplicate: true, remainder: true)
 
             // 2. Filter out entries with last entry null
-            cram_variant_calling_normal_filtered = cram_variant_calling_normal_joined.filter { it -> !(it.last()) }
-            bam_variant_calling_normal_filtered = bam_variant_calling_normal_joined.filter { it -> !(it.last()) }
+            cram_variant_calling_normal_filtered = cram_variant_calling_normal_joined.filter { joined -> !(joined.last()) }
+            bam_variant_calling_normal_filtered = bam_variant_calling_normal_joined.filter { joined -> !(joined.last()) }
 
             // 3. Remove patient ID field & null value for further processing [ meta1, [ cram1, crai1 ] ] [ meta2, [ cram2, crai2 ] ] (no transposing needed since only one normal per patient ID)
-            cram_variant_calling_status_normal = cram_variant_calling_normal_filtered.map { it -> [it[1], it[2], it[3]] }
-            bam_variant_calling_status_normal = bam_variant_calling_normal_filtered.map { it -> [it[1], it[2], it[3]] }
+            cram_variant_calling_status_normal = cram_variant_calling_normal_filtered.map { record -> [record[1], record[2], record[3]] }
+            bam_variant_calling_status_normal = bam_variant_calling_normal_filtered.map { record -> [record[1], record[2], record[3]] }
         }
         else {
             cram_variant_calling_status_normal = cram_variant_calling_status.normal
@@ -457,7 +446,6 @@ workflow SAREK {
             germline_resource,
             germline_resource_tbi,
             intervals_and_num_intervals,
-            intervals_bed_gz_tbi_and_num_intervals,
             intervals_bed_combined,
             intervals_bed_gz_tbi_combined,
             mappability,
@@ -534,7 +522,11 @@ workflow SAREK {
             params.filter_vcfs,
             params.snv_consensus_calling,
             params.normalize_vcfs,
-            params.varlociraptor_chunk_size,
+            varlociraptor_chunk_size,
+            varlociraptor_events_germline,
+            varlociraptor_events_somatic,
+            varlociraptor_events_tumor_only,
+            varlociraptor_fdr,
             varlociraptor_scenario_germline,
             varlociraptor_scenario_somatic,
             varlociraptor_scenario_tumor_only,
@@ -545,13 +537,6 @@ workflow SAREK {
         vcf_to_annotate = POST_VARIANTCALLING.out.vcfs
 
         CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate, params.outdir)
-
-        // Gather used variant calling softwares versions
-        versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.versions)
-        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.versions)
-        versions = versions.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.versions)
-        versions = versions.mix(POST_VARIANTCALLING.out.versions)
 
         // ANNOTATE
         if (step == 'annotate') {
@@ -579,19 +564,16 @@ workflow SAREK {
                 bcftools_header_lines,
                 snpsift_db,
             )
-
-            // Gather used softwares versions
-            versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)
         }
     }
 
     //
     // Collate and save software versions
     //
-    def version_yaml = channel.empty()
+    def collated_versions = channel.empty()
     if (!(skip_tools.split(',').contains('versions'))) {
-        version_yaml = softwareVersionsToYAML(
-            softwareVersions: versions.mix(channel.topic("versions")),
+        collated_versions = softwareVersionsToYAML(
+            softwareVersions: channel.topic("versions"),
             nextflowVersion: workflow.nextflow.version,
         ).collectFile(
             storeDir: "${params.outdir}/pipeline_info",
@@ -604,39 +586,42 @@ workflow SAREK {
     //
     // MODULE: MultiQC
     //
-    if (!(skip_tools.split(',').contains('multiqc'))) {
-        ch_multiqc_config = channel.fromPath("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)
-        ch_multiqc_custom_config = params.multiqc_config ? channel.fromPath(params.multiqc_config, checkIfExists: true) : channel.empty()
-        ch_multiqc_logo = params.multiqc_logo ? channel.fromPath(params.multiqc_logo, checkIfExists: true) : channel.empty()
+    def collated_reports = channel.topic("multiqc_files")
+        .map { _meta, _process, _tool, reports_ -> reports_ }
 
-        summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
-        ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
-        ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-        ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
-        ch_methods_description = channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
+    // MULTIQC
+    def ch_multiqc_files = channel.empty()
 
-        ch_multiqc_files = ch_multiqc_files.mix(version_yaml)
-        ch_multiqc_files = ch_multiqc_files.mix(reports)
-        ch_multiqc_files = ch_multiqc_files.mix(channel.topic("multiqc_files").map { _meta, _process, _tool, report -> report })
+    ch_multiqc_files = ch_multiqc_files.mix(collated_versions)
+    ch_multiqc_files = ch_multiqc_files.mix(collated_reports)
+    ch_multiqc_files = ch_multiqc_files.mix(reports)
 
-        ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true))
+    def summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    def workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
+    def multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
+    def methods_description = channel.value(methodsDescriptionText(multiqc_custom_methods_description))
 
-        MULTIQC(
-            ch_multiqc_files.collect(),
-            ch_multiqc_config.toList(),
-            ch_multiqc_custom_config.toList(),
-            ch_multiqc_logo.toList(),
-            [],
-            [],
-        )
-        multiqc_publish = MULTIQC.out.data.mix(MULTIQC.out.plots, MULTIQC.out.report)
-        multiqc_report = MULTIQC.out.report.toList()
-    }
+    ch_multiqc_files = ch_multiqc_files.mix(workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    ch_multiqc_files = ch_multiqc_files.mix(methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true))
+
+    MULTIQC(
+        ch_multiqc_files.flatten().collect().map { files ->
+            [
+                [id: 'sarek'],
+                files,
+                params.multiqc_config
+                    ? file(params.multiqc_config, checkIfExists: true)
+                    : file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true),
+                params.multiqc_logo ? file(params.multiqc_logo, checkIfExists: true) : [],
+                [],
+                [],
+            ]
+        }.filter { !skip_tools.split(',').contains('multiqc') }
+    )
 
     emit:
-    multiqc_report // channel: /path/to/multiqc_report.html
-    multiqc_publish
-    versions // channel: [ path(versions.yml) ]
+    multiqc_report  = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
+    multiqc_publish = MULTIQC.out.data.mix(MULTIQC.out.plots, MULTIQC.out.report)
 }
 
 /*
@@ -699,8 +684,8 @@ def flowcellLaneFromFastq(path) {
 def readFirstLineOfFastq(path) {
     def line = null
     try {
-        path.withInputStream {
-            def InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
+        path.withInputStream { stream ->
+            def InputStream gzipStream = new java.util.zip.GZIPInputStream(stream)
             def Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
             def BufferedReader buffered = new BufferedReader(decoder)
             line = buffered.readLine()
