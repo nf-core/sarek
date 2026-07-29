@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2242](https://github.com/nf-core/sarek/pull/2242) - Migrate QC/coverage modules (`ascat`, `goleft`, `msisensor2`, `msisensorpro`) to the versions topic channel
 - [#2243](https://github.com/nf-core/sarek/pull/2243) - Migrate `cnvkit/*` modules to the versions topic channel, and replace the deprecated `tabix/tabix`/`tabix/bgziptabix` modules with `htslib/bgziptabix`
 - [#2244](https://github.com/nf-core/sarek/pull/2244) - Migrate local modules (`add_info_to_vcf`, `create_intervals_bed`, `samtools/reindex_bam`) to the versions topic channel
-- [#2245](https://github.com/nf-core/sarek/pull/2245) - Update `bbmap/bbsplit`, `gatk4/applybqsr`, `parabricks/fq2bam` (4.6.0 → 4.7.1), `rbt/vcfsplit`, `sentieon/*`, `snpsift/annmem`+`annmemcreate` (5.4.0a → 5.4.0c), and `yte` modules to their latest revisions
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Update `bbmap/bbsplit`, `gatk4/applybqsr`, `parabricks/fq2bam` (4.6.0 → 4.7.1), `rbt/vcfsplit`, `sentieon/*`, `snpsift/annmem`+`annmemcreate` (5.4.0a → 5.4.0c), and `yte` modules to their latest revisions. Side effect: `GATK4_APPLYBQSR`'s bam/cram output format is now set directly via a `params.save_output_as_bam` process argument rather than `ext.suffix`, so a custom `modules.config` override of `ext.suffix` on `GATK4_APPLYBQSR` no longer has any effect; `GATK4SPARK_APPLYBQSR` is unaffected and still reads `ext.suffix`.
 
 ### Fixed
 
@@ -58,6 +58,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | mosdepth      | 0.3.10      | 0.3.14      |
 | cnvkit        | 0.9.11      | 0.9.12      |
 | xz            | -           | 5.8.3       |
+| parabricks    | 4.6.0-1     | 4.7.1-1     |
+| snpsift       | 5.4.0a      | 5.4.0c      |
 
 ### Dependencies - plugins
 
