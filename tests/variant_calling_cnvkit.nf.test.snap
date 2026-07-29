@@ -4,22 +4,23 @@
             20,
             {
                 "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12",
+                    "samtools": "1.21"
                 },
                 "CNVKIT_CALL": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_EXPORT": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_GENEMETRICS": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -35,12 +36,12 @@
                     "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -179,7 +180,7 @@
                 "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,4153756b30abc934f10717c023bd262f",
                 "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multi_intervals.target.bed:md5,f9e727147a7cbca46c2b9b2de3ecae91",
-                "reference.cnn:md5,e0aefc1c8a40e6919dc9cfb686e51f7c",
+                "reference.cnn:md5,dfc49a037a468bef43a33b5dd4a2bc05",
                 "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,826087b08d380135a271e2774c94084c",
                 "test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
@@ -199,7 +200,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:30:55.546225902",
+        "timestamp": "2026-07-28T14:42:57.173889218",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -210,22 +211,23 @@
             30,
             {
                 "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12",
+                    "samtools": "1.21"
                 },
                 "CNVKIT_CALL": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_EXPORT": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_GENEMETRICS": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -241,12 +243,12 @@
                     "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -435,7 +437,7 @@
                 "test2.paired_end.recalibrated.sorted.tumor_only.call.cns:md5,70a308c6db7acf1a5fd623936cac6412",
                 "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multi_intervals.target.bed:md5,f9e727147a7cbca46c2b9b2de3ecae91",
-                "reference.cnn:md5,e0aefc1c8a40e6919dc9cfb686e51f7c",
+                "reference.cnn:md5,dfc49a037a468bef43a33b5dd4a2bc05",
                 "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,826087b08d380135a271e2774c94084c",
                 "test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
@@ -456,7 +458,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:28:58.93483756",
+        "timestamp": "2026-07-28T14:41:59.048184914",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -467,22 +469,23 @@
             13,
             {
                 "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12",
+                    "samtools": "1.21"
                 },
                 "CNVKIT_CALL": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_EXPORT": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_GENEMETRICS": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -498,12 +501,12 @@
                     "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -629,22 +632,23 @@
             13,
             {
                 "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12",
+                    "samtools": "1.21"
                 },
                 "CNVKIT_CALL": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_EXPORT": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_GENEMETRICS": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -660,12 +664,12 @@
                     "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -799,8 +803,8 @@
                     "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -899,16 +903,17 @@
             16,
             {
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12",
+                    "samtools": "1.21"
                 },
                 "CNVKIT_CALL": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_EXPORT": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_GENEMETRICS": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -921,8 +926,8 @@
                     "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -1068,7 +1073,7 @@
                 "genome.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "genome.bed:md5,9c6cc178da8c2c27364be9f25c9df96d",
                 "genome.target.bed:md5,ee8081becc36524d35889e3b5f70961b",
-                "reference.cnn:md5,8c53491ff76a2a06b7a977714db862bb",
+                "reference.cnn:md5,b43c5b91bf2da9efe4dc9631cbb46c44",
                 "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,0067cc3a0e479b23ab3bf056cead31b4",
                 "test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
@@ -1088,7 +1093,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:27:01.74112415",
+        "timestamp": "2026-07-28T14:38:02.484867231",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

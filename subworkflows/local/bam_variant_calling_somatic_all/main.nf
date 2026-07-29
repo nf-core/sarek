@@ -132,8 +132,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             intervals_bed_combined.map { _intervals -> _intervals ? [[id: _intervals[0].baseName], _intervals] : [[id: 'no_intervals'], []] },
             [[id: "null"], []],
         )
-
-        versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
     // FREEBAYES
@@ -148,7 +146,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
         tbi_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
     // MANTA
@@ -262,7 +259,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         vcf_tnscope = BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.vcf
         tbi_tnscope = BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.index
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.versions)
     }
 
     // TIDDIT

@@ -20,22 +20,23 @@
                     "samtools": "1.22.1"
                 },
                 "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12",
+                    "samtools": "1.21"
                 },
                 "CNVKIT_CALL": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_EXPORT": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_GENEMETRICS": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -92,22 +93,24 @@
                     "svdb": "2.8.4"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIP_TIDDIT_SV": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_VC_FREEBAYES": {
-                    "tabix": 1.21
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_VC_FREEBAYES_FILT": {
-                    "tabix": 1.21
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TIDDIT_SV": {
                     "tiddit": "3.9.5"
@@ -590,7 +593,7 @@
                 "test.targetcoverage.cnn:md5,0e0416a5dc409a9c311232092a058aec",
                 "genome.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "genome.target.bed:md5,d7fcdfe7dc055924fe7cc3fb990f5633",
-                "reference.cnn:md5,6542568cd3859ba3789c543c27d64b20",
+                "reference.cnn:md5,2a397362f7f209c4bae39bb18b74e57f",
                 "test.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.targetcoverage.cnn:md5,bc82e785b5930b589c216516d1543985",
                 "test2.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
@@ -641,7 +644,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-27T10:30:48.429722692",
+        "timestamp": "2026-07-28T14:46:50.973045461",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -668,22 +671,23 @@
                     "samtools": "1.22.1"
                 },
                 "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12",
+                    "samtools": "1.21"
                 },
                 "CNVKIT_CALL": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_EXPORT": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_GENEMETRICS": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -727,22 +731,24 @@
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIP_TIDDIT_SV": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_VC_FREEBAYES": {
-                    "tabix": 1.21
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_VC_FREEBAYES_FILT": {
-                    "tabix": 1.21
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TIDDIT_SV": {
                     "tiddit": "3.9.5"
@@ -1142,7 +1148,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-27T10:32:11.483735223",
+        "timestamp": "2026-07-28T11:10:08.379344895",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1172,13 +1178,14 @@
                     "gatk4": "4.6.2.0"
                 },
                 "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.10"
+                    "cnvkit": "0.9.12",
+                    "samtools": "1.21"
                 },
                 "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.11"
+                    "cnvkit": "0.9.12"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -1228,22 +1235,24 @@
                     "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIP_TIDDIT_SV": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_VC_FREEBAYES": {
-                    "tabix": 1.21
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_VC_FREEBAYES_FILT": {
-                    "tabix": 1.21
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TIDDIT_SV": {
                     "tiddit": "3.9.5"
@@ -1607,7 +1616,7 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-07-27T10:27:19.8576204",
+        "timestamp": "2026-07-28T11:06:54.492117039",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

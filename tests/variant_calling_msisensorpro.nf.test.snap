@@ -10,8 +10,8 @@
                     "msisensor-pro": "1.3.0"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -69,12 +69,12 @@
                     "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -206,8 +206,8 @@
                     "msisensor-pro": "1.3.0"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -239,7 +239,7 @@
             [
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "genome.dict:md5,de4ff13287d28c1679a11ae989a3a980",
-                "no_intervals.bed.gz:md5,f3dac01ea66b95fe477446fde2d31489",
+                "no_intervals.bed.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "genome.msisensor_scan.list:md5,614754c7f1f44d5988dd80f8f21f69d1"
             ],
             "No BAM files",
@@ -247,10 +247,10 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-28T14:41:52.061061413",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T23:19:39.916442214"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

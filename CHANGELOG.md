@@ -22,7 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2239](https://github.com/nf-core/sarek/pull/2239) - Migrate alignment/UMI/utility modules (`bwa`, `bwamem2`, `dragmap`, `fgbio`, `fastp`, `cat`, `gawk`, `gunzip`, `untar`, `unzip`, `spring`) to the versions topic channel (fastp 0.24.0 → 1.1.0)
 - [#2240](https://github.com/nf-core/sarek/pull/2240) - Migrate variant-calling modules (`freebayes`, `strelka`, `manta`, `tiddit`, `lofreq`, `svdb`, `vcflib`, `vcftools`) to the versions topic channel
 - [#2241](https://github.com/nf-core/sarek/pull/2241) - Migrate `samtools/*` and `mosdepth` modules to the versions topic channel
-- [#2242](https://github.com/nf-core/sarek/pull/2242) - Migrate QC/coverage modules (`fastqc`, `ngscheckmate`, `goleft`, `msisensor2`, `msisensorpro`, `ascat`) to the versions topic channel
+- [#2242](https://github.com/nf-core/sarek/pull/2242) - Migrate QC/coverage modules (`ascat`, `goleft`, `msisensor2`, `msisensorpro`) to the versions topic channel
+- [#2243](https://github.com/nf-core/sarek/pull/2243) - Migrate `cnvkit/*` modules to the versions topic channel, and replace the deprecated `tabix/tabix`/`tabix/bgziptabix` modules with `htslib/bgziptabix`
 
 ### Fixed
 
@@ -37,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency    | Old version | New version |
 | ------------- | ----------- | ----------- |
 | bcftools      | 1.21        | 1.23.1      |
-| htslib        | 1.21        | 1.23.1      |
+| htslib        | 1.21        | 1.24        |
 | varlociraptor | 8.9.3       | 8.9.5       |
 | ensembl-vep   | 115.2       | 116.0       |
 | gatk4         | 4.6.1.0     | 4.6.2.0     |
@@ -53,6 +54,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | vcftools      | 0.1.16      | 0.1.17      |
 | samtools      | 1.21        | 1.24        |
 | mosdepth      | 0.3.10      | 0.3.14      |
+| cnvkit        | 0.9.11      | 0.9.12      |
+| xz            | -           | 5.8.3       |
 
 ### Dependencies - plugins
 

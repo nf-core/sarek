@@ -43,9 +43,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     main:
     // Channels are often remapped to match module/subworkflow
 
-    // Gather all versions
-    versions = channel.empty()
-
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     out_msisensor2 = channel.empty()
     vcf_freebayes  = channel.empty()
@@ -102,8 +99,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             [[id: "null"], []],
             cnvkit_reference.map { reference -> [[id: reference[0].baseName], reference] },
         )
-
-        versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
     // FREEBAYES
@@ -118,7 +113,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
         vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
         tbi_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
     // MSISENSOR
@@ -209,7 +203,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
         vcf_tnscope = BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE.out.vcf
         tbi_tnscope = BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE.out.versions)
     }
 
     vcf_all = channel.empty()
@@ -252,5 +245,4 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     tbi_mutect2
     tbi_tiddit
     tbi_tnscope
-    versions
 }

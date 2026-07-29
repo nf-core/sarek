@@ -30,8 +30,6 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     variant_caller
 
     main:
-    versions = channel.empty()
-
     sentieon_input = input
         .map{ meta, gvcf, tbi, intervals -> [ [ id:'joint_variant_calling', intervals_name:intervals.baseName, num_intervals:meta.num_intervals ], gvcf, tbi, intervals ] }
         .groupTuple(by:[0, 3])
@@ -139,6 +137,4 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     emit:
     genotype_index  // channel: [ val(meta), [ tbi ] ]
     genotype_vcf    // channel: [ val(meta), [ vcf ] ]
-
-    versions        // channel: [ versions.yml ]
 }

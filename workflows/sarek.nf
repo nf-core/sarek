@@ -542,7 +542,6 @@ workflow SAREK {
         // Gather used variant calling softwares versions
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.versions)
-        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.versions)
         versions = versions.mix(POST_VARIANTCALLING.out.versions)
 
         // ANNOTATE
@@ -571,9 +570,6 @@ workflow SAREK {
                 bcftools_header_lines,
                 snpsift_db,
             )
-
-            // Gather used softwares versions
-            versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)
         }
     }
 
