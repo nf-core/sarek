@@ -11,7 +11,8 @@ tools:
         CNVkit is a Python library and command-line software toolkit to infer and visualize copy number from high-throughput DNA sequencing data. It is designed for use with hybrid capture, including both whole-exome and custom target panels, and short-read sequencing platforms such as Illumina and Ion Torrent.
       homepage: https://cnvkit.readthedocs.io/en/stable/index.html
       documentation: https://cnvkit.readthedocs.io/en/stable/index.html
-      licence: ["Apache-2.0"]
+      licence:
+        - "Apache-2.0"
       identifier: biotools:cnvkit
 input:
   - - meta:
@@ -23,13 +24,15 @@ input:
         type: file
         description: CNR file
         pattern: "*.cnr"
+        ontologies: []
     - cns:
         type: file
         description: CNS file [Optional]
         pattern: "*.cns"
+        ontologies: []
 output:
-  - tsv:
-      - meta:
+  tsv:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -38,21 +41,29 @@ output:
           type: file
           description: TSV file
           pattern: "*.tsv"
-  - cnn:
-      - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-      - "*.cnn":
-          type: file
-          description: CNN file
-          pattern: "*.cnn"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3475
+  versions_cnvkit:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - cnvkit:
+          type: string
+          description: The name of the tool
+      - 'cnvkit.py version | sed -e "s/cnvkit v//g"':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - cnvkit:
+          type: string
+          description: The name of the tool
+      - 'cnvkit.py version | sed -e "s/cnvkit v//g"':
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@adamrtalbot"
   - "@marrip"

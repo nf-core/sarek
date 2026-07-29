@@ -34,9 +34,6 @@ workflow BAM_VARIANT_CALLING_INDEXCOV {
         fasta_fai
         )
 
-    versions = versions.mix(goleft_ch.versions)
-
-
     emit:
 
     out_indexcov = goleft_ch.output

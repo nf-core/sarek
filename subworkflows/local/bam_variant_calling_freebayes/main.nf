@@ -7,8 +7,8 @@
 include { BCFTOOLS_SORT                              } from '../../../modules/nf-core/bcftools/sort'
 include { FREEBAYES                                  } from '../../../modules/nf-core/freebayes'
 include { GATK4_MERGEVCFS as MERGE_FREEBAYES         } from '../../../modules/nf-core/gatk4/mergevcfs'
-include { TABIX_TABIX     as TABIX_VC_FREEBAYES      } from '../../../modules/nf-core/tabix/tabix'
-include { TABIX_TABIX     as TABIX_VC_FREEBAYES_FILT } from '../../../modules/nf-core/tabix/tabix'
+include { HTSLIB_BGZIPTABIX as TABIX_VC_FREEBAYES      } from '../../../modules/nf-core/htslib/bgziptabix'
+include { HTSLIB_BGZIPTABIX as TABIX_VC_FREEBAYES_FILT } from '../../../modules/nf-core/htslib/bgziptabix'
 include { VCFLIB_VCFFILTER                           } from '../../../modules/nf-core/vcflib/vcffilter'
 
 workflow BAM_VARIANT_CALLING_FREEBAYES {
@@ -20,8 +20,6 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     ch_intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
-    versions = channel.empty()
-
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = ch_cram.combine(ch_intervals)
         // Move num_intervals to meta map and reorganize channel for FREEBAYES module
@@ -43,7 +41,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     MERGE_FREEBAYES(vcf_to_merge, ch_dict)
 
     // Only when no_intervals
-    TABIX_VC_FREEBAYES(bcftools_vcf_out.no_intervals)
+    TABIX_VC_FREEBAYES(bcftools_vcf_out.no_intervals.map{ meta, vcf -> [ meta, vcf, [], [] ] }, 'compress', true, '')
 
     // Mix intervals and no_intervals channels together, including the tabix index
     merged_vcf_with_tbi = MERGE_FREEBAYES.out.vcf
@@ -51,7 +49,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
         .map{ meta, vcf, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'freebayes' ], vcf, tbi ] }
 
     no_intervals_with_tbi = bcftools_vcf_out.no_intervals
-        .join(TABIX_VC_FREEBAYES.out.tbi, by: [0])
+        .join(TABIX_VC_FREEBAYES.out.index, by: [0])
         .map{ meta, vcf, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'freebayes' ], vcf, tbi ] }
 
     // Final channel with VCF and its index
@@ -62,16 +60,12 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     vcf_filtered = VCFLIB_VCFFILTER.out.vcf
 
     // Index the filtered VCFs
-    TABIX_VC_FREEBAYES_FILT(vcf_filtered)
-
-    versions = versions.mix(TABIX_VC_FREEBAYES.out.versions)
-    versions = versions.mix(TABIX_VC_FREEBAYES_FILT.out.versions)
+    TABIX_VC_FREEBAYES_FILT(vcf_filtered.map{ meta, vcf -> [ meta, vcf, [], [] ] }, 'compress', true, '')
 
     emit:
     vcf_unfiltered = ch_vcf // channel: [ meta, vcf, tbi ]
 
     // Use the QUAL filtered vcfs for the next steps
     vcf = vcf_filtered                         // channel: [ meta, vcf ]
-    tbi = TABIX_VC_FREEBAYES_FILT.out.tbi      // channel: [ meta, tbi ]
-    versions
+    tbi = TABIX_VC_FREEBAYES_FILT.out.index    // channel: [ meta, tbi ]
 }

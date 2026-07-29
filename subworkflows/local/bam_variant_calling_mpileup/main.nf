@@ -18,7 +18,6 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
     intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
-    versions = channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram
@@ -28,6 +27,9 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
     // per-chunk bed restricts mpileup only; intervals_call left empty
     cram_intervals_bcftools = cram_intervals.map { meta, cram_, intervals_ -> [meta, cram_, intervals_, []] }
 
+    // samtools/mpileup now expects [ meta, input, index, intervals ]; keep the crai
+    cram_crai_intervals = cram.combine(intervals).map { meta, cram_, crai, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], cram_, crai, intervals_] }
+
     fasta_fai = fasta.combine(fai).map { meta, fasta_, _meta2, fai_ -> [meta, fasta_, fai_] }.collect()
 
     // Run, if --tools mpileup
@@ -35,7 +37,7 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
     BCFTOOLS_MPILEUP(cram_intervals_bcftools, fasta_fai, keep_bcftools_mpileup)
 
     //Only run, if --tools ControlFreec
-    SAMTOOLS_MPILEUP(cram_intervals, fasta)
+    SAMTOOLS_MPILEUP(cram_crai_intervals, fasta_fai)
 
     // Figuring out if there is one or more vcf(s) from the same sample
     vcf_mpileup = BCFTOOLS_MPILEUP.out.vcf.branch { meta, _vcf ->
@@ -74,11 +76,8 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
         .mix(tbi_mpileup.no_intervals)
         .map { meta, tbi -> [meta - meta.subMap('num_intervals') + [variantcaller: 'bcftools'], tbi] }
 
-    versions = versions.mix(SAMTOOLS_MPILEUP.out.versions)
-
     emit:
     mpileup
     vcf
     tbi
-    versions
 }

@@ -83,7 +83,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             rt_file,
         )
 
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ASCAT.out.versions)
     }
 
     // CONTROLFREEC
@@ -122,8 +121,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             wes ? intervals_bed_combined : [],
         )
 
-        versions = versions.mix(MPILEUP_NORMAL.out.versions)
-        versions = versions.mix(MPILEUP_TUMOR.out.versions)
     }
 
     // CNVKIT
@@ -135,8 +132,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             intervals_bed_combined.map { _intervals -> _intervals ? [[id: _intervals[0].baseName], _intervals] : [[id: 'no_intervals'], []] },
             [[id: "null"], []],
         )
-
-        versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
     // FREEBAYES
@@ -151,7 +146,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
         tbi_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
     // MANTA
@@ -167,7 +161,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         tbi_manta = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.diploid_sv_vcf_tbi.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.somatic_sv_vcf_tbi)
     }
 
-
     // INDEXCOV
     //   WGS only
     if (params.wes == false && tools.split(',').contains('indexcov')) {
@@ -180,7 +173,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         out_indexcov = BAM_VARIANT_CALLING_INDEXCOV.out.out_indexcov
         versions = versions.mix(BAM_VARIANT_CALLING_INDEXCOV.out.versions)
     }
-
 
     // STRELKA
     if (tools && tools.split(',').contains('strelka')) {
@@ -205,7 +197,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     if (tools && tools.split(',').contains('msisensorpro')) {
         MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta, msisensorpro_scan)
 
-        versions = versions.mix(MSISENSORPRO_MSISOMATIC.out.versions)
         out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSISOMATIC.out.output_report)
     }
 
@@ -268,7 +259,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         vcf_tnscope = BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.vcf
         tbi_tnscope = BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.index
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.versions)
     }
 
     // TIDDIT

@@ -15,7 +15,6 @@ workflow BAM_MARKDUPLICATES {
     intervals_bed_combined // channel: [optional]  [ intervals_bed ]
 
     main:
-    versions = channel.empty()
     reports  = channel.empty()
 
     // RUN MARKUPDUPLICATES
@@ -30,18 +29,13 @@ workflow BAM_MARKDUPLICATES {
             .join(GATK4_MARKDUPLICATES.out.crai, failOnDuplicate: true, failOnMismatch: true))
 
     // QC on alignment
-    CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, intervals_bed_combined)
+    CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, fasta_fai, intervals_bed_combined)
 
     // Gather all reports generated
     reports = reports.mix(GATK4_MARKDUPLICATES.out.metrics)
     reports = reports.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.reports)
 
-    // Gather versions of all tools used
-    versions = versions.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.versions)
-
     emit:
     alignment   // channel: [ meta, file, index ] — BAM or CRAM
     reports
-
-    versions    // channel: [ versions.yml ]
 }
