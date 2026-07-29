@@ -35,8 +35,6 @@ workflow PIPELINE_INITIALISATION {
 
     main:
 
-    versions = channel.empty()
-
     // Print version and exit if required and dump pipeline parameters to JSON file
     UTILS_NEXTFLOW_PIPELINE(
         version,
@@ -190,7 +188,6 @@ workflow PIPELINE_INITIALISATION {
 
     emit:
     samplesheet = SAMPLESHEET_TO_CHANNEL.out.input_sample
-    versions
 }
 
 /*

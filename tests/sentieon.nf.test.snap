@@ -26,25 +26,25 @@
                     "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
                     "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [

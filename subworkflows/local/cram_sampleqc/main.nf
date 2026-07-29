@@ -10,7 +10,6 @@ workflow CRAM_SAMPLEQC {
     intervals_for_preprocessing // channel:
 
     main:
-    versions = channel.empty()
     reports = channel.empty()
 
     if (!skip_baserecalibration) {
@@ -18,14 +17,12 @@ workflow CRAM_SAMPLEQC {
         CRAM_QC_RECAL(
             cram,
             fasta_fai.map{meta, fasta, _fai -> [meta, fasta]},
+            fasta_fai.map{meta, _fasta, fai -> [meta, fai]},
             intervals_for_preprocessing,
         )
 
         // Gather QC reports
         reports = CRAM_QC_RECAL.out.reports.collect { _meta, report -> report }
-
-        // Gather used softwares versions
-        versions = versions.mix(CRAM_QC_RECAL.out.versions)
     }
 
     BAM_NGSCHECKMATE(cram.map { meta, cram_, _crai -> [meta, cram_] }, ngscheckmate_bed.map { bed -> [[id: "ngscheckmate"], bed] }, fasta_fai)
@@ -37,5 +34,4 @@ workflow CRAM_SAMPLEQC {
     vcf         = BAM_NGSCHECKMATE.out.vcf // channel: [ meta, vcf ]
     pdf         = BAM_NGSCHECKMATE.out.pdf // channel: [ meta, pdf ]
     reports
-    versions    // channel: [ versions.yml ]
 }

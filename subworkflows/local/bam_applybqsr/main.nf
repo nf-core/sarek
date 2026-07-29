@@ -17,7 +17,6 @@ workflow BAM_APPLYBQSR {
     intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
-    versions = channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     // Move num_intervals to meta map
@@ -54,11 +53,6 @@ workflow BAM_APPLYBQSR {
         .mix(CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai)
         .map { meta, file_, index -> [meta - meta.subMap('num_intervals'), file_, index] }
 
-    // Gather versions of all tools used
-    versions = versions.mix(BAM_MERGE_INDEX_SAMTOOLS.out.versions)
-    versions = versions.mix(CRAM_MERGE_INDEX_SAMTOOLS.out.versions)
-
     emit:
     alignment = recal_out // channel: [ meta, file, index ] — BAM or CRAM
-    versions              // channel: [ versions.yml ]
 }

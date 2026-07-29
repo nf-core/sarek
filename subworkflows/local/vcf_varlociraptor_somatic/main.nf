@@ -3,8 +3,8 @@ include { BCFTOOLS_CONCAT as CONCAT_SOMATIC_STRELKA                             
 include { BCFTOOLS_MERGE as MERGE_GERMLINE_SOMATIC_VCFS                           } from '../../../modules/nf-core/bcftools/merge'
 include { BCFTOOLS_SORT as SORT_CALLED_CHUNKS                                     } from '../../../modules/nf-core/bcftools/sort'
 include { BCFTOOLS_SORT as SORT_FINAL_VCF                                         } from '../../../modules/nf-core/bcftools/sort'
-include { TABIX_TABIX as TABIX_GERMLINE                                           } from '../../../modules/nf-core/tabix/tabix'
-include { TABIX_TABIX as TABIX_SOMATIC                                            } from '../../../modules/nf-core/tabix/tabix'
+include { HTSLIB_BGZIPTABIX as TABIX_GERMLINE                                     } from '../../../modules/nf-core/htslib/bgziptabix'
+include { HTSLIB_BGZIPTABIX as TABIX_SOMATIC                                      } from '../../../modules/nf-core/htslib/bgziptabix'
 include { RBT_VCFSPLIT                                                            } from '../../../modules/nf-core/rbt/vcfsplit'
 include { VARLOCIRAPTOR_CALLVARIANTS                                              } from '../../../modules/nf-core/varlociraptor/callvariants'
 include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES as ALIGNMENTPROPERTIES_NORMAL } from '../../../modules/nf-core/varlociraptor/estimatealignmentproperties'
@@ -27,7 +27,6 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     val_fdr
 
     main:
-    ch_versions = channel.empty()
 
     meta_map = ch_cram.map { meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai ->
         meta + [sex_string: (meta.sex == "XX" ? "female" : "male")]
@@ -57,9 +56,8 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     //
     // CONCAT SNV AND INDEL VCFS FOR STRELKA
     //
-    TABIX_SOMATIC(ch_somatic_vcf)
-    ch_versions = ch_versions.mix(TABIX_SOMATIC.out.versions)
-    ch_somatic_vcf_tbi = ch_somatic_vcf.join(TABIX_SOMATIC.out.tbi, by: [0])
+    TABIX_SOMATIC(ch_somatic_vcf.map{ meta, vcf -> [ meta, vcf, [], [] ] }, 'compress', true, '')
+    ch_somatic_vcf_tbi = ch_somatic_vcf.join(TABIX_SOMATIC.out.index, by: [0])
 
     // CONCAT SNV / INDEL VCFs COMING FROM STRELKA
     ch_somatic_branched = ch_somatic_vcf_tbi.branch { meta, _vcf, _tbi ->
@@ -85,9 +83,8 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     //
     // MERGE GERMLINE AND SOMATIC VCFs
     //
-    TABIX_GERMLINE(ch_germline_vcf)
-    ch_versions = ch_versions.mix(TABIX_GERMLINE.out.versions)
-    ch_germline_vcf_tbi = ch_germline_vcf.join(TABIX_GERMLINE.out.tbi, by: [0])
+    TABIX_GERMLINE(ch_germline_vcf.map{ meta, vcf -> [ meta, vcf, [], [] ] }, 'compress', true, '')
+    ch_germline_vcf_tbi = ch_germline_vcf.join(TABIX_GERMLINE.out.index, by: [0])
 
     def somatic_with_key = ch_somatic_vcf_conc.map { meta, vcf, tbi ->
         [[id: meta.normal_id, variantcaller: meta.variantcaller], meta, vcf, tbi]
@@ -288,5 +285,4 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     emit:
     vcf      = SORT_FINAL_VCF.out.vcf
     tbi      = SORT_FINAL_VCF.out.index
-    versions = ch_versions
 }

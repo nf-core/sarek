@@ -16,18 +16,19 @@
                     "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCFTOOLS_SUMMARY": {
                     "vcftools": "0.1.17"
@@ -164,7 +165,7 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,df2fc825dfc41e30f72f5d125a6447ee",
                 "mosdepth_perchrom.txt:md5,115b9a93bcf511419e6622919172f321",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
+                "samtools-stats-dp.txt:md5,53338147cfd6cffd24eef5c07518fe4c",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
                 "test.deepvariant.bcftools_stats.txt:md5,c784614aec9ed43f1d4a6149c8ae8bf3",
@@ -172,7 +173,7 @@
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
                 "test.deepvariant.FILTER.summary:md5,533b6a6a8eb84238b2d7ac6c229c1a7f",
                 "test.deepvariant.TsTv.count:md5,2851ce55f9813280515c2fdcacb86844"
             ],
@@ -184,11 +185,11 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-28T11:29:42.272387988",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
-        },
-        "timestamp": "2025-10-02T10:43:58.630637808"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv -stub": {
         "content": [
@@ -210,15 +211,15 @@
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCFTOOLS_SUMMARY": {
                     "vcftools": "0.1.17"
@@ -238,7 +239,6 @@
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
-                "multiqc/multiqc_plots/.stub",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
@@ -338,13 +338,15 @@
                 "variant_calling/deepvariant/test/test.deepvariant.vcf.gz",
                 "variant_calling/deepvariant/test/test.deepvariant.vcf.gz.tbi"
             ],
-            "No warnings"
+            [
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
         ],
+        "timestamp": "2026-04-08T12:19:24.034798786",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.6"
-        },
-        "timestamp": "2026-07-24T13:45:53.593475474"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.2"
+        }
     },
     "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals -stub": {
         "content": [
@@ -360,11 +362,11 @@
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCFTOOLS_SUMMARY": {
                     "vcftools": "0.1.17"
@@ -384,7 +386,6 @@
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
-                "multiqc/multiqc_plots/.stub",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
                 "no_intervals.bed.gz",
@@ -487,13 +488,15 @@
                 "variant_calling/deepvariant/test/test.deepvariant.vcf.gz",
                 "variant_calling/deepvariant/test/test.deepvariant.vcf.gz.tbi"
             ],
-            "No warnings"
+            [
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
         ],
+        "timestamp": "2026-04-08T12:20:26.174510128",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.6"
-        },
-        "timestamp": "2026-07-24T13:47:58.441774935"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.2"
+        }
     },
     "-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals": {
         "content": [
@@ -506,14 +509,15 @@
                     "deepvariant": "1.10.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCFTOOLS_SUMMARY": {
                     "vcftools": "0.1.17"
@@ -653,7 +657,7 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,df2fc825dfc41e30f72f5d125a6447ee",
                 "mosdepth_perchrom.txt:md5,115b9a93bcf511419e6622919172f321",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
+                "samtools-stats-dp.txt:md5,53338147cfd6cffd24eef5c07518fe4c",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
                 "test.deepvariant.bcftools_stats.txt:md5,c784614aec9ed43f1d4a6149c8ae8bf3",
@@ -661,7 +665,7 @@
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
                 "test.deepvariant.FILTER.summary:md5,533b6a6a8eb84238b2d7ac6c229c1a7f",
                 "test.deepvariant.TsTv.count:md5,2851ce55f9813280515c2fdcacb86844"
             ],
@@ -673,10 +677,10 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:38:30.287152607",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.6"
-        },
-        "timestamp": "2025-10-02T10:45:45.83448312"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

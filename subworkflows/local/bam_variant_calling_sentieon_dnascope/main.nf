@@ -23,8 +23,6 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
     sentieon_dnascope_model           // channel
 
     main:
-    versions = channel.empty()
-
     gvcf               = channel.empty()
     vcf                = channel.empty()
     genotype_intervals = channel.empty()
@@ -143,7 +141,6 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
 
 
     emit:
-    versions
     vcf
     vcf_tbi
     gvcf

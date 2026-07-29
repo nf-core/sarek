@@ -90,8 +90,6 @@ workflow NFCORE_SAREK {
     samplesheet
 
     main:
-    versions = channel.empty()
-
     // build indexes if needed
     PREPARE_GENOME(
         params.ascat_alleles,
@@ -160,15 +158,11 @@ workflow NFCORE_SAREK {
         else {
             PREPARE_REFERENCE_CNVKIT(PREPARE_GENOME.out.fasta, intervals_bed_combined)
             cnvkit_reference = PREPARE_REFERENCE_CNVKIT.out.cnvkit_reference
-            versions = versions.mix(PREPARE_REFERENCE_CNVKIT.out.versions)
         }
     }
     else {
         cnvkit_reference = channel.value([])
     }
-    // Gather used softwares versions
-    versions = versions.mix(PREPARE_GENOME.out.versions)
-    versions = versions.mix(PREPARE_INTERVALS.out.versions)
 
     // Fails when consensus calling is specified without normalization
     if (params.snv_consensus_calling && !params.normalize_vcfs) {
@@ -339,7 +333,6 @@ workflow NFCORE_SAREK {
         params.vep_genome,
         params.vep_species,
         ch_snpsift_db,
-        versions,
     )
 
     emit:

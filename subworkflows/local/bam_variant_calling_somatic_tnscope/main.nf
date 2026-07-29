@@ -19,8 +19,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_TNSCOPE {
     intervals                 // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
-    versions = channel.empty()
-
     // Combine input and intervals for spread and gather strategy
     input_intervals = input.combine(intervals)
         // Move num_intervals to meta map and reorganize channel for TNSCOPE module
@@ -68,5 +66,4 @@ workflow BAM_VARIANT_CALLING_SOMATIC_TNSCOPE {
     emit:
     vcf      // channel: [ meta, vcf ]
     index    // channel: [ meta, index ]
-    versions // channel: [ versions.yml ]
 }

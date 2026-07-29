@@ -124,7 +124,6 @@ workflow SAREK {
     vep_genome
     vep_species
     snpsift_db // channel: [[databases], [tbis], [vardbs], [fields], [prefixes]]
-    versions
 
     main:
     // To gather all QC reports for MultiQC
@@ -168,7 +167,6 @@ workflow SAREK {
             true,
         )
 
-
         two_fastq_gz_from_spring = r1_fastq_gz_from_spring.fastq.join(r2_fastq_gz_from_spring.fastq).map { meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]] }
 
         two_fastq_gz_from_spring = two_fastq_gz_from_spring.map { meta, files -> addReadgroupToMeta(meta, files) }
@@ -180,12 +178,10 @@ workflow SAREK {
         interleave_input = false
         CONVERT_FASTQ_INPUT(
             input_sample_type.bam,
-            [[id: "fasta"], []],
-            [[id: 'null'], []],
+            fasta,
+            fasta_fai,
             interleave_input,
         )
-
-        versions = versions.mix(CONVERT_FASTQ_INPUT.out.versions)
 
         // Gather fastq (inputed or converted)
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
@@ -226,9 +222,8 @@ workflow SAREK {
             cram_variant_calling = channel.empty()
             cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_PARABRICKS.out.cram)
 
-            // Gather used softwares versions
+            // Gather QC reports
             reports = reports.mix(FASTQ_PREPROCESS_PARABRICKS.out.reports)
-            versions = versions.mix(FASTQ_PREPROCESS_PARABRICKS.out.versions)
         }
         else {
             // PREPROCESSING
@@ -250,9 +245,8 @@ workflow SAREK {
             cram_variant_calling = channel.empty()
             cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_GATK.out.cram_variant_calling)
 
-            // Gather used softwares versions
+            // Gather QC reports
             reports = reports.mix(FASTQ_PREPROCESS_GATK.out.reports)
-            versions = versions.mix(FASTQ_PREPROCESS_GATK.out.versions)
         }
     }
 
@@ -276,7 +270,6 @@ workflow SAREK {
     )
 
     reports = reports.mix(CRAM_SAMPLEQC.out.reports)
-    versions = versions.mix(CRAM_SAMPLEQC.out.versions)
 
     if (tools) {
 
@@ -292,7 +285,7 @@ workflow SAREK {
             }
 
             // convert cram files
-            CRAM_TO_BAM(cram_variant_calling_status_tmp.cram, fasta, fasta_fai)
+            CRAM_TO_BAM(cram_variant_calling_status_tmp.cram, fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai ] }.collect())
 
             // gather all bam files
             bam_variant_calling = CRAM_TO_BAM.out.bam
@@ -301,8 +294,6 @@ workflow SAREK {
                 .map { meta, bam, bai ->
                     [meta + [data_type: 'bam'], bam, bai]
                 }
-
-            versions = versions.mix(CRAM_TO_BAM.out.versions)
         }
 
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
@@ -547,12 +538,6 @@ workflow SAREK {
 
         CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate, params.outdir)
 
-        // Gather used variant calling softwares versions
-        versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.versions)
-        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.versions)
-        versions = versions.mix(POST_VARIANTCALLING.out.versions)
-
         // ANNOTATE
         if (step == 'annotate') {
             vcf_to_annotate = input_sample
@@ -579,9 +564,6 @@ workflow SAREK {
                 bcftools_header_lines,
                 snpsift_db,
             )
-
-            // Gather used softwares versions
-            versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)
         }
     }
 
@@ -591,7 +573,7 @@ workflow SAREK {
     def collated_versions = channel.empty()
     if (!(skip_tools.split(',').contains('versions'))) {
         collated_versions = softwareVersionsToYAML(
-            softwareVersions: versions.mix(channel.topic("versions")),
+            softwareVersions: channel.topic("versions"),
             nextflowVersion: workflow.nextflow.version,
         ).collectFile(
             storeDir: "${params.outdir}/pipeline_info",
@@ -640,7 +622,6 @@ workflow SAREK {
     emit:
     multiqc_report  = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
     multiqc_publish = MULTIQC.out.data.mix(MULTIQC.out.plots, MULTIQC.out.report)
-    versions // channel: [ path(versions.yml) ]
 }
 
 /*

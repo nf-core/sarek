@@ -69,8 +69,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.vcfs,
-                    workflow.out.tbis,
-                    workflow.out.versions
+                    workflow.out.tbis
                 ).match() }
             )
         }
@@ -136,8 +135,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.vcfs,
-                    workflow.out.tbis,
-                    workflow.out.versions
+                    workflow.out.tbis
                 ).match() }
             )
         }
@@ -203,8 +201,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.vcfs,
-                    workflow.out.tbis,
-                    workflow.out.versions
+                    workflow.out.tbis
                 ).match() }
             )
         }
@@ -334,8 +331,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.vcfs,
-                    workflow.out.tbis,
-                    workflow.out.versions
+                    workflow.out.tbis
                 ).match() }
             )
         }
@@ -402,8 +398,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.vcfs,
-                    workflow.out.tbis,
-                    workflow.out.versions
+                    workflow.out.tbis
                 ).match() }
             )
         }
@@ -474,8 +469,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.vcfs,
-                    workflow.out.tbis,
-                    workflow.out.versions
+                    workflow.out.tbis
                 ).match() }
             )
         }
@@ -545,8 +539,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.vcfs,
-                    workflow.out.tbis,
-                    workflow.out.versions
+                    workflow.out.tbis
                 ).match() }
             )
         }
@@ -617,8 +610,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.vcfs,
-                    workflow.out.tbis,
-                    workflow.out.versions
+                    workflow.out.tbis
                 ).match() }
             )
         }
@@ -687,8 +679,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.vcfs,
-                    workflow.out.tbis,
-                    workflow.out.versions
+                    workflow.out.tbis
                 ).match() }
             )
         }
@@ -767,8 +758,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.vcfs,
-                    workflow.out.tbis,
-                    workflow.out.versions
+                    workflow.out.tbis
                 ).match() }
             )
         }
@@ -845,8 +835,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.vcfs,
-                    workflow.out.tbis,
-                    workflow.out.versions
+                    workflow.out.tbis
                 ).match() }
             )
         }
@@ -918,8 +907,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.vcfs,
-                    workflow.out.tbis,
-                    workflow.out.versions
+                    workflow.out.tbis
                 ).match() }
             )
         }
@@ -991,8 +979,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.vcfs,
-                    workflow.out.tbis,
-                    workflow.out.versions
+                    workflow.out.tbis
                 ).match() }
             )
         }
@@ -1066,8 +1053,7 @@ nextflow_workflow {
                 { assert workflow.success },
                 { assert snapshot(
                     workflow.out.vcfs,
-                    workflow.out.tbis,
-                    workflow.out.versions
+                    workflow.out.tbis
                 ).match() }
             )
         }

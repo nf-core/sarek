@@ -1,65 +1,70 @@
 process ASCAT {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/4c/4cf02c7911ee5e974ce7db978810770efbd8d872ff5ab3462d2a11bcf022fab5/data':
-        'community.wave.seqera.io/library/ascat_cancerit-allelecount:c3e8749fa4af0e99' }"
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/4c/4cf02c7911ee5e974ce7db978810770efbd8d872ff5ab3462d2a11bcf022fab5/data'
+        : 'community.wave.seqera.io/library/ascat_cancerit-allelecount:c3e8749fa4af0e99'}"
 
     input:
     tuple val(meta), path(input_normal), path(index_normal), path(input_tumor), path(index_tumor)
-    path(allele_files)
-    path(loci_files)
-    path(bed_file)  // optional
-    path(fasta)     // optional
-    path(gc_file)   // optional
-    path(rt_file)   // optional
+    path allele_files
+    path loci_files
+    path bed_file
+    path fasta
+    path gc_file
+    path rt_file
 
     output:
     tuple val(meta), path("*alleleFrequencies_chr*.txt"), emit: allelefreqs
-    tuple val(meta), path("*BAF.txt")                   , emit: bafs
-    tuple val(meta), path("*cnvs.txt")                  , emit: cnvs
-    tuple val(meta), path("*LogR.txt")                  , emit: logrs
-    tuple val(meta), path("*metrics.txt")               , emit: metrics
-    tuple val(meta), path("*png")                       , emit: png
-    tuple val(meta), path("*purityploidy.txt")          , emit: purityploidy
-    tuple val(meta), path("*segments.txt")              , emit: segments
-    path "versions.yml"                                 , emit: versions
+    tuple val(meta), path("*BAF.txt"),                    emit: bafs
+    tuple val(meta), path("*cnvs.txt"),                   emit: cnvs
+    tuple val(meta), path("*LogR.txt"),                   emit: logrs
+    tuple val(meta), path("*metrics.txt"),                emit: metrics
+    tuple val(meta), path("*png"),                        emit: png
+    tuple val(meta), path("*purityploidy.txt"),           emit: purityploidy
+    tuple val(meta), path("*segments.txt"),               emit: segments
+    tuple val("${task.process}"), val('bioconductor-ascat'), eval('Rscript -e "library(ASCAT); cat(as.character(packageVersion(\'ASCAT\')))"'), topic: versions, emit: versions_ascat
+    tuple val("${task.process}"), val('alleleCounter'), eval("alleleCounter --version"), topic: versions, emit: versions_allelecounter
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def args           = task.ext.args        ?: ''
-    def prefix         = task.ext.prefix      ?: "${meta.id}"
-    def gender         = args.gender          ?  "${args.gender}"        : "NULL"
-    def genomeVersion  = args.genomeVersion   ?  "${args.genomeVersion}" : "NULL"
-    def purity         = args.purity          ?  "${args.purity}"        : "NULL"
-    def ploidy         = args.ploidy          ?  "${args.ploidy}"        : "NULL"
-    def gc_input       = gc_file              ?  "${gc_file}"            : "NULL"
-    def rt_input       = rt_file              ?  "${rt_file}"            : "NULL"
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
 
-    def minCounts_arg                    = args.minCounts                      ?  ", minCounts = ${args.minCounts}"         : ""
-    def bed_file_arg                     = bed_file                            ?  ", BED_file = '${bed_file}'"              : ""
-    def chrom_names_arg                  = args.chrom_names                    ?  ", chrom_names = ${args.chrom_names}"     : ""
-    def min_base_qual_arg                = args.min_base_qual                  ?  ", min_base_qual = ${args.min_base_qual}" : ""
-    def min_map_qual_arg                 = args.min_map_qual                   ?  ", min_map_qual = ${args.min_map_qual}"   : ""
-    def skip_allele_counting_tumour_arg  = args.skip_allele_counting_tumour    ?  ", skip_allele_counting_tumour = ${args.skip_allele_counting_tumour}"       : ""
-    def skip_allele_counting_normal_arg  = args.skip_allele_counting_normal    ?  ", skip_allele_counting_normal = ${args.skip_allele_counting_normal}"       : ""
+    def gender        = args.gender        ? "${args.gender}"        : "NULL"
+    def genomeVersion = args.genomeVersion ? "${args.genomeVersion}" : "NULL"
+    def purity        = args.purity        ? "${args.purity}"        : "NULL"
+    def ploidy        = args.ploidy        ? "${args.ploidy}"        : "NULL"
+    def gc_input      = gc_file            ? "${gc_file}"            : "NULL"
+    def rt_input      = rt_file            ? "${rt_file}"            : "NULL"
 
-    if(args.additional_allelecounter_flags && fasta) {
+    def minCounts_arg                   = args.minCounts                   ? ", minCounts = ${args.minCounts}"                                     : ""
+    def bed_file_arg                    = bed_file                         ? ", BED_file = '${bed_file}'"                                          : ""
+    def chrom_names_arg                 = args.chrom_names                 ? ", chrom_names = ${args.chrom_names}"                                 : ""
+    def min_base_qual_arg               = args.min_base_qual               ? ", min_base_qual = ${args.min_base_qual}"                             : ""
+    def min_map_qual_arg                = args.min_map_qual                ? ", min_map_qual = ${args.min_map_qual}"                               : ""
+    def skip_allele_counting_tumour_arg = args.skip_allele_counting_tumour ? ", skip_allele_counting_tumour = ${args.skip_allele_counting_tumour}" : ""
+    def skip_allele_counting_normal_arg = args.skip_allele_counting_normal ? ", skip_allele_counting_normal = ${args.skip_allele_counting_normal}" : ""
+
+    if (args.additional_allelecounter_flags && fasta) {
         additional_allelecounter_arg = ", additional_allelecounter_flags = \"${args.additional_allelecounter_flags} -r ${fasta}\" "
-    } else if (args.additional_allelecounter_flags ) {
+    }
+    else if (args.additional_allelecounter_flags) {
         additional_allelecounter_arg = ", additional_allelecounter_flags = \"${args.additional_allelecounter_flags}\" "
-    } else if (fasta) {
+    }
+    else if (fasta) {
         additional_allelecounter_arg = ", additional_allelecounter_flags = '-r \"${fasta}\"'"
-    } else {
+    }
+    else {
         additional_allelecounter_arg = ""
     }
 
     """
-    #!/usr/bin/env Rscript
+    Rscript - <<'EOF'
     library(RColorBrewer)
     library(ASCAT)
     options(bitmapType='cairo')
@@ -213,15 +218,7 @@ process ASCAT {
     write.table(summary, file=paste0("${prefix}",".purityploidy.txt"), sep="\t", quote=F, row.names=F, col.names=T)
 
     write.table(QC, file=paste0("${prefix}", ".metrics.txt"), sep="\t", quote=F, row.names=F)
-
-    # Version export
-    f <- file("versions.yml","w")
-    alleleCounter_version = system(paste("alleleCounter --version"), intern = T)
-    ascat_version = as.character(packageVersion('ASCAT'))
-    writeLines(paste0('"', "${task.process}", '"', ":"), f)
-    writeLines(paste("    ascat:", ascat_version), f)
-    writeLines(paste("    alleleCounter:", alleleCounter_version), f)
-    close(f)
+    EOF
     """
 
     stub:
@@ -245,13 +242,5 @@ process ASCAT {
     touch ${prefix}.tumour_normalLogR.txt
     touch ${prefix}.tumour_tumourBAF.txt
     touch ${prefix}.tumour_tumourLogR.txt
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bioconductor-ascat: \$(Rscript -e "library(ASCAT); cat(as.character(packageVersion('ASCAT')))")
-        alleleCounter: \$(alleleCounter --version)
-    END_VERSIONS
     """
-
-
 }

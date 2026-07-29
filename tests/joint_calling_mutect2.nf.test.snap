@@ -16,21 +16,22 @@
                     "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "MUTECT2_PAIRED": {
                     "gatk4": "4.6.2.0"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCFTOOLS_SUMMARY": {
                     "vcftools": "0.1.17"
@@ -191,7 +192,7 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,f08ab9b4898020d43b2e0ff77212f5b2",
                 "mosdepth_perchrom.txt:md5,05b840db853703d42c6c0be360cb573e",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,fe7c4ec200c94df7ff97a0e8cbec2f70",
+                "samtools-stats-dp.txt:md5,801a1756a694e97039aae8500a5477f6",
                 "samtools_alignment_plot.txt:md5,82d6fb277fbbbd221a92ebda4567d9d9",
                 "samtools_insert_size.txt:md5,00660bb059693565c1189ce98356e414",
                 "test.mutect2.bcftools_stats.txt:md5,2de4f9f8da53b202e9d784b4e95c3245",
@@ -199,23 +200,23 @@
                 "sample1.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
                 "sample1.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
                 "sample1.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
-                "sample1.recal.per-base.bed.gz.csi:md5,c67dcd711b096eb42f43784d5eadbc0d",
+                "sample1.recal.per-base.bed.gz.csi:md5,68451158beb41ef7fcd07821fe3a52b4",
                 "sample1.recal.regions.bed.gz:md5,314ce8d7273eff353072108aa77c327c",
-                "sample1.recal.regions.bed.gz.csi:md5,9cb0ad7039a3b703d16ca7d5b835c0ee",
+                "sample1.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample2.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample2.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample2.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample2.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
+                "sample2.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
                 "sample3.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample3.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample3.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
                 "sample3.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample3.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample3.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample3.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample3.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
+                "sample3.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
                 "test.mutect2.FILTER.summary:md5,19fd44ff1fbdfe422473bf1f5dc9cdb3",
                 "test.mutect2.TsTv.count:md5,aa51bde6080c015c6aa6c8254977dd11",
                 "test.mutect2.vcf.gz.stats:md5,6340205d9cc91fc3c2d243fc151c210b"
@@ -230,11 +231,11 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
+        "timestamp": "2026-07-28T11:15:22.037134015",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T20:17:32.428293264"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --input tests/csv/3.0/recalibrated_tumoronly_joint.csv --tools mutect2 --joint_mutect2": {
         "content": [
@@ -256,21 +257,22 @@
                     "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "MUTECT2": {
                     "gatk4": "4.6.2.0"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCFTOOLS_SUMMARY": {
                     "vcftools": "0.1.17"
@@ -421,7 +423,7 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,0bd6d5120cacef0c90192267731031a5",
                 "mosdepth_perchrom.txt:md5,a14350b5c82288d538ea43992a65be99",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,e6019a625137ced6d426a503cd652559",
+                "samtools-stats-dp.txt:md5,32150435d1e8f1c6f47ba618a71f1e86",
                 "samtools_alignment_plot.txt:md5,cb01fb538637d281195e46e557031c7a",
                 "samtools_insert_size.txt:md5,97989575c42dadc81f347d661faa09cb",
                 "test.mutect2.bcftools_stats.txt:md5,3079129e89fdaf04a3403d888a99fd81",
@@ -429,16 +431,16 @@
                 "sample2.recal.mosdepth.region.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.summary.txt:md5,b0b47739dcafeeb1a9e6218b8abca1e0",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample2.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample2.recal.regions.bed.gz:md5,fb0efeba20ea272b7b709cf65246689e",
-                "sample2.recal.regions.bed.gz.csi:md5,e8452848671e9e5c147ff4cceee944af",
+                "sample2.recal.regions.bed.gz.csi:md5,e95efa0e55e9f9699b48e6a661d5e1e4",
                 "sample3.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample3.recal.mosdepth.region.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample3.recal.mosdepth.summary.txt:md5,b0b47739dcafeeb1a9e6218b8abca1e0",
                 "sample3.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample3.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample3.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample3.recal.regions.bed.gz:md5,fb0efeba20ea272b7b709cf65246689e",
-                "sample3.recal.regions.bed.gz.csi:md5,e8452848671e9e5c147ff4cceee944af",
+                "sample3.recal.regions.bed.gz.csi:md5,e95efa0e55e9f9699b48e6a661d5e1e4",
                 "test.mutect2.FILTER.summary:md5,b55562501b24e3cec53c22ffe0ce346f",
                 "test.mutect2.TsTv.count:md5,d06a480e205f2f894db2bb51846b4c39",
                 "test.mutect2.vcf.gz.stats:md5,bd9ff0f343dd60fdd2860fdeff617a51"
@@ -453,10 +455,10 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
+        "timestamp": "2026-07-27T10:32:24.759023585",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T20:42:22.769087844"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }
