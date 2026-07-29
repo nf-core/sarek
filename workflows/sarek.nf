@@ -124,7 +124,6 @@ workflow SAREK {
     vep_genome
     vep_species
     snpsift_db // channel: [[databases], [tbis], [vardbs], [fields], [prefixes]]
-    versions
 
     main:
     // To gather all QC reports for MultiQC
@@ -223,7 +222,7 @@ workflow SAREK {
             cram_variant_calling = channel.empty()
             cram_variant_calling = cram_variant_calling.mix(FASTQ_PREPROCESS_PARABRICKS.out.cram)
 
-            // Gather used softwares versions
+            // Gather QC reports
             reports = reports.mix(FASTQ_PREPROCESS_PARABRICKS.out.reports)
         }
         else {
@@ -539,11 +538,6 @@ workflow SAREK {
 
         CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate, params.outdir)
 
-        // Gather used variant calling softwares versions
-        versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.versions)
-        versions = versions.mix(POST_VARIANTCALLING.out.versions)
-
         // ANNOTATE
         if (step == 'annotate') {
             vcf_to_annotate = input_sample
@@ -579,7 +573,7 @@ workflow SAREK {
     def collated_versions = channel.empty()
     if (!(skip_tools.split(',').contains('versions'))) {
         collated_versions = softwareVersionsToYAML(
-            softwareVersions: versions.mix(channel.topic("versions")),
+            softwareVersions: channel.topic("versions"),
             nextflowVersion: workflow.nextflow.version,
         ).collectFile(
             storeDir: "${params.outdir}/pipeline_info",
@@ -628,7 +622,6 @@ workflow SAREK {
     emit:
     multiqc_report  = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
     multiqc_publish = MULTIQC.out.data.mix(MULTIQC.out.plots, MULTIQC.out.report)
-    versions // channel: [ path(versions.yml) ]
 }
 
 /*

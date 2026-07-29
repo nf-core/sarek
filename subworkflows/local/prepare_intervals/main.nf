@@ -22,8 +22,6 @@ workflow PREPARE_INTERVALS {
     step
 
     main:
-    versions = channel.empty()
-
     intervals_bed        = channel.empty() // List of [ bed, num_intervals ], one for each region
     intervals_bed_gz_tbi = channel.empty() // List of [ bed.gz, bed,gz.tbi, num_intervals ], one for each region
     intervals_combined   = channel.empty() // Single bed file containing all intervals
@@ -47,14 +45,11 @@ workflow PREPARE_INTERVALS {
 
             intervals_bed = CREATE_INTERVALS_BED.out.bed
 
-            versions = versions.mix(CREATE_INTERVALS_BED.out.versions)
         } else {
             intervals_combined = channel.fromPath(file(intervals)).map{bed -> [ [ id:bed.baseName ], bed ] }
             CREATE_INTERVALS_BED(file(intervals), nucleotides_per_second)
 
             intervals_bed = CREATE_INTERVALS_BED.out.bed
-
-            versions = versions.mix(CREATE_INTERVALS_BED.out.versions)
 
             // If interval file is not provided as .bed, but e.g. as .interval_list then convert to BED format
             if (intervals.endsWith(".interval_list")) {
@@ -108,6 +103,4 @@ workflow PREPARE_INTERVALS {
     // All intervals in one file
     intervals_bed_combined        // [ intervals.bed ]
     intervals_bed_gz_tbi_combined // [ intervals.bed.gz, intervals.bed.gz.tbi]
-
-    versions               // [ versions.yml ]
 }
