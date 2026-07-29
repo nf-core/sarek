@@ -7,13 +7,14 @@
                     "gawk": "5.3.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_HAPLOTYPECALLER": {
                     "parabricks": "4.7.1-1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -100,19 +101,19 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,f0177ed551b6ec930854d0d221904ec0",
                 "mosdepth_perchrom.txt:md5,9cfd38310d4da59c7242b2a7ae6bd651",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
-                "samtools-stats-dp.txt:md5,a0c101497a0566f60b9e8388207944ab",
+                "samtools-stats-dp.txt:md5,1f1da592b5ef6dc0339d4d0b7b9aa03c",
                 "samtools_alignment_plot.txt:md5,563784066de81f3bc8ccf5fbbe82b3d5",
                 "samtools_insert_size.txt:md5,f3dd80e14876d827eb924c6cc888c782",
                 "testN.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "testN.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "testN.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "testN.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "testN.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "testN.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
                 "testT.recal.mosdepth.global.dist.txt:md5,3106c114529adc4231badeb3bb38b6d1",
                 "testT.recal.mosdepth.region.dist.txt:md5,ccf646922b05cb4759c4f89072be2b69",
                 "testT.recal.mosdepth.summary.txt:md5,024649a659caff330dfbef4ac3560542",
                 "testT.recal.regions.bed.gz:md5,14b36a2cf428840aab471f95cfbe399f",
-                "testT.recal.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917"
+                "testT.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d"
             ],
             "No BAM files",
             "No CRAM files",
@@ -133,13 +134,14 @@
                     "bcftools": "1.23.1"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_HAPLOTYPECALLER": {
                     "parabricks": "4.7.1-1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX": {
                     "bgzip": "1.21",
@@ -284,13 +286,14 @@
             8,
             {
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_HAPLOTYPECALLER": {
                     "parabricks": "4.7.1-1"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "bgzip": "1.21",
@@ -525,7 +528,7 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,df2fc825dfc41e30f72f5d125a6447ee",
                 "mosdepth_perchrom.txt:md5,115b9a93bcf511419e6622919172f321",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
+                "samtools-stats-dp.txt:md5,53338147cfd6cffd24eef5c07518fe4c",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
                 "test.parabricks_haplotypecaller.bcftools_stats.txt:md5,b4f8cb62900cbf17e8ecda9d66efee58",
@@ -533,7 +536,7 @@
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
                 "test.parabricks_haplotypecaller.FILTER.summary:md5,87a84b5f8ac3d3cbeeef7d60afcdbfe7",
                 "test.parabricks_haplotypecaller.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
