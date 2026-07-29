@@ -9,6 +9,7 @@ include { BAM_VARIANT_CALLING_DEEPVARIANT                                       
 include { BAM_VARIANT_CALLING_FREEBAYES                                                } from '../bam_variant_calling_freebayes/main'
 include { BAM_VARIANT_CALLING_GERMLINE_MANTA                                           } from '../bam_variant_calling_germline_manta/main'
 include { BAM_VARIANT_CALLING_HAPLOTYPECALLER                                          } from '../bam_variant_calling_haplotypecaller/main'
+include { BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER                               } from '../bam_variant_calling_parabricks_haplotypecaller/main'
 include { BAM_VARIANT_CALLING_INDEXCOV                                                 } from '../bam_variant_calling_indexcov/main'
 include { BAM_VARIANT_CALLING_SENTIEON_DNASCOPE                                        } from '../bam_variant_calling_sentieon_dnascope/main'
 include { BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER                                      } from '../bam_variant_calling_sentieon_haplotyper/main'
@@ -53,30 +54,32 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
     main:
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    gvcf_sentieon_dnascope       = channel.empty()
-    gvcf_sentieon_haplotyper     = channel.empty()
-    gvcf_tbi_sentieon_dnascope   = channel.empty()
+    gvcf_sentieon_dnascope     = channel.empty()
+    gvcf_sentieon_haplotyper   = channel.empty()
+    gvcf_tbi_sentieon_dnascope = channel.empty()
     gvcf_tbi_sentieon_haplotyper = channel.empty()
 
-    out_indexcov             = channel.empty()
-    vcf_deepvariant          = channel.empty()
-    vcf_freebayes            = channel.empty()
-    vcf_haplotypecaller      = channel.empty()
-    vcf_manta                = channel.empty()
-    vcf_mpileup              = channel.empty()
-    vcf_sentieon_dnascope    = channel.empty()
-    vcf_sentieon_haplotyper  = channel.empty()
-    vcf_strelka              = channel.empty()
-    vcf_tiddit               = channel.empty()
-    tbi_deepvariant          = channel.empty()
-    tbi_freebayes            = channel.empty()
-    tbi_haplotypecaller      = channel.empty()
-    tbi_manta                = channel.empty()
-    tbi_mpileup              = channel.empty()
-    tbi_sentieon_dnascope    = channel.empty()
-    tbi_sentieon_haplotyper  = channel.empty()
-    tbi_strelka              = channel.empty()
-    tbi_tiddit               = channel.empty()
+    out_indexcov                       = channel.empty()
+    vcf_deepvariant                    = channel.empty()
+    vcf_freebayes                      = channel.empty()
+    vcf_haplotypecaller                = channel.empty()
+    vcf_manta                          = channel.empty()
+    vcf_mpileup                        = channel.empty()
+    vcf_parabricks_haplotypecaller     = channel.empty()
+    vcf_sentieon_dnascope              = channel.empty()
+    vcf_sentieon_haplotyper            = channel.empty()
+    vcf_strelka                        = channel.empty()
+    vcf_tiddit                         = channel.empty()
+    tbi_deepvariant                    = channel.empty()
+    tbi_freebayes                      = channel.empty()
+    tbi_haplotypecaller                = channel.empty()
+    tbi_manta                          = channel.empty()
+    tbi_mpileup                        = channel.empty()
+    tbi_parabricks_haplotypecaller     = channel.empty()
+    tbi_sentieon_dnascope              = channel.empty()
+    tbi_sentieon_haplotyper            = channel.empty()
+    tbi_strelka                        = channel.empty()
+    tbi_tiddit                         = channel.empty()
 
     // BCFTOOLS MPILEUP
     if (tools && tools.split(',').contains('mpileup')) {
@@ -185,6 +188,18 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
             }
         }
+    }
+
+    // PARABRICKS HAPLOTYPECALLER
+    if (tools && tools.split(',').contains('parabricks_haplotypecaller')) {
+        BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER(
+            cram,
+            fasta,
+            intervals_bed_combined
+        )
+
+        vcf_parabricks_haplotypecaller = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.vcf
+        tbi_parabricks_haplotypecaller = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.tbi
     }
 
     // MANTA
@@ -357,10 +372,11 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_all = channel.empty().mix(
         vcf_deepvariant,
         vcf_freebayes,
-        vcf_sentieon_dnascope,
         vcf_haplotypecaller,
         vcf_manta,
         vcf_mpileup,
+        vcf_parabricks_haplotypecaller,
+        vcf_sentieon_dnascope,
         vcf_sentieon_haplotyper,
         vcf_strelka,
         vcf_tiddit
@@ -369,10 +385,11 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     tbi_all = channel.empty().mix(
         tbi_deepvariant,
         tbi_freebayes,
-        tbi_sentieon_dnascope,
         tbi_haplotypecaller,
         tbi_manta,
         tbi_mpileup,
+        tbi_parabricks_haplotypecaller,
+        tbi_sentieon_dnascope,
         tbi_sentieon_haplotyper,
         tbi_strelka,
         tbi_tiddit
@@ -390,6 +407,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_haplotypecaller
     vcf_manta
     vcf_mpileup
+    vcf_parabricks_haplotypecaller
     vcf_strelka
     vcf_sentieon_dnascope
     vcf_sentieon_haplotyper
@@ -400,6 +418,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     tbi_haplotypecaller
     tbi_manta
     tbi_mpileup
+    tbi_parabricks_haplotypecaller
     tbi_sentieon_dnascope
     tbi_sentieon_haplotyper
     tbi_strelka
