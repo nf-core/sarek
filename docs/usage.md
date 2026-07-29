@@ -215,9 +215,9 @@ Sarek supports two GPU-accelerated variant callers via [NVIDIA Clara Parabricks]
 > [!NOTE]
 > These are an experimental addition to the pipeline.
 
-| Tool | `--tools` value | Equivalent to | Command |
-|------|-----------------|---------------|---------|
-| [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html) | `parabricks_deepvariant` | DeepVariant | `nextflow run nf-core/sarek --tools parabricks_deepvariant --profile <docker/singularity>,gpu` |
+| Tool                                                                                                                          | `--tools` value              | Equivalent to        | Command                                                                                            |
+| ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | -------------------- | -------------------------------------------------------------------------------------------------- |
+| [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html)         | `parabricks_deepvariant`     | DeepVariant          | `nextflow run nf-core/sarek --tools parabricks_deepvariant --profile <docker/singularity>,gpu`     |
 | [Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) | `parabricks_haplotypecaller` | GATK HaplotypeCaller | `nextflow run nf-core/sarek --tools parabricks_haplotypecaller --profile <docker/singularity>,gpu` |
 
 Both callers take a CRAM file as input and output a single VCF per sample. Intervals can be provided via `--intervals` to restrict calling to specific regions. For DeepVariant, use `--wes` to switch from WGS to WES mode (passes `--mode wes` to pbrun). HaplotypeCaller does not support scatter/gather over intervals.
