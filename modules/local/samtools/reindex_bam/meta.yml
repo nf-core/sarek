@@ -83,7 +83,7 @@ topics:
           type: eval
           description: The expression to obtain the version of the tool
 authors:
-  - "@FriederikeHanssen"
+  - "@lindenb"
 maintainers:
   - "@FriederikeHanssen"
   - "@maxulysse"
