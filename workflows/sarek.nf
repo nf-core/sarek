@@ -239,6 +239,7 @@ workflow SAREK {
                 known_sites_indels,
                 known_sites_indels_tbi,
                 bbsplit_index,
+                params.save_output_as_bam,
             )
 
             // Gather preprocessing output
