@@ -73,10 +73,6 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     CALLUMICONSENSUS(GROUPREADSBYUMI.out.bam, call_min_reads, call_min_baseq)
 
     ch_versions = ch_versions.mix(BAM2FASTQ.out.versions)
-    ch_versions = ch_versions.mix(ALIGN_UMI.out.versions)
-    ch_versions = ch_versions.mix(CALLUMICONSENSUS.out.versions)
-    ch_versions = ch_versions.mix(FASTQTOBAM.out.versions)
-    ch_versions = ch_versions.mix(GROUPREADSBYUMI.out.versions)
     ch_versions = ch_versions.mix(MERGE_CONSENSUS.out.versions)
 
     emit:

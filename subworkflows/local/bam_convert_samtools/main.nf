@@ -19,7 +19,7 @@ workflow BAM_CONVERT_SAMTOOLS {
     interleaved // value: true/false
 
     main:
-    versions = Channel.empty()
+    versions = channel.empty()
 
     // Index File if not PROVIDED -> this also requires updates to samtools view possibly URGH
 
@@ -60,7 +60,6 @@ workflow BAM_CONVERT_SAMTOOLS {
     reads = CAT_FASTQ.out.reads
 
     // Gather versions of all tools used
-    versions = versions.mix(CAT_FASTQ.out.versions)
     versions = versions.mix(COLLATE_FASTQ_MAP.out.versions)
     versions = versions.mix(COLLATE_FASTQ_UNMAP.out.versions)
     versions = versions.mix(SAMTOOLS_MERGE_UNMAP.out.versions)

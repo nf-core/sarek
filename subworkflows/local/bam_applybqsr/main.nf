@@ -57,7 +57,6 @@ workflow BAM_APPLYBQSR {
     // Gather versions of all tools used
     versions = versions.mix(BAM_MERGE_INDEX_SAMTOOLS.out.versions)
     versions = versions.mix(CRAM_MERGE_INDEX_SAMTOOLS.out.versions)
-    versions = versions.mix(GATK4_APPLYBQSR.out.versions)
 
     emit:
     alignment = recal_out // channel: [ meta, file, index ] — BAM or CRAM

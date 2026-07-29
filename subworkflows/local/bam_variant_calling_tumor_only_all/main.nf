@@ -31,7 +31,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     germline_resource             // channel: [optional]  germline_resource
     germline_resource_tbi         // channel: [optional]  germline_resource_tbi
     intervals                     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
-    intervals_bed_gz_tbi          // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi, num_intervals ] or [ [], [], 0 ] if no intervals
     intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
     intervals_bed_gz_tbi_combined // channel: [mandatory] intervals/target regions in one file zipped
     mappability
@@ -45,26 +44,26 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     // Channels are often remapped to match module/subworkflow
 
     // Gather all versions
-    versions = Channel.empty()
+    versions = channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    out_msisensor2 = Channel.empty()
-    vcf_freebayes  = Channel.empty()
-    vcf_lofreq     = Channel.empty()
-    vcf_manta      = Channel.empty()
-    vcf_mpileup    = Channel.empty()
-    vcf_mutect2    = Channel.empty()
-    vcf_tiddit     = Channel.empty()
-    vcf_tnscope    = Channel.empty()
+    out_msisensor2 = channel.empty()
+    vcf_freebayes  = channel.empty()
+    vcf_lofreq     = channel.empty()
+    vcf_manta      = channel.empty()
+    vcf_mpileup    = channel.empty()
+    vcf_mutect2    = channel.empty()
+    vcf_tiddit     = channel.empty()
+    vcf_tnscope    = channel.empty()
 
     // Initialize empty TBI channels
-    tbi_freebayes  = Channel.empty()
-    tbi_lofreq     = Channel.empty()
-    tbi_manta      = Channel.empty()
-    tbi_mpileup    = Channel.empty()
-    tbi_mutect2    = Channel.empty()
-    tbi_tiddit     = Channel.empty()
-    tbi_tnscope    = Channel.empty()
+    tbi_freebayes  = channel.empty()
+    tbi_lofreq     = channel.empty()
+    tbi_manta      = channel.empty()
+    tbi_mpileup    = channel.empty()
+    tbi_mutect2    = channel.empty()
+    tbi_tiddit     = channel.empty()
+    tbi_tnscope    = channel.empty()
 
     // MPILEUP
     if (tools && tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')) {
@@ -102,7 +101,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             fasta,
             fasta_fai,
             [[id: "null"], []],
-            cnvkit_reference.map { it -> [[id: it[0].baseName], it] },
+            cnvkit_reference.map { reference -> [[id: reference[0].baseName], reference] },
         )
 
         versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
@@ -155,7 +154,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         // vcf_mutect2 and tbi_mutect2 always contain usable output (filtered if available, otherwise unfiltered)
         vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.vcf
         tbi_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
     }
 
     //LOFREQ
@@ -169,7 +167,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         )
         vcf_lofreq = BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.vcf
         tbi_lofreq = BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.versions)
     }
 
     // MANTA
@@ -181,9 +178,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             intervals_bed_gz_tbi_combined,
         )
 
-        vcf_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.vcf
-        tbi_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.versions)
+        vcf_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.tumor_sv_vcf
+        tbi_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.tumor_sv_vcf_tbi
     }
 
     // TIDDIT
@@ -191,12 +187,12 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram,
             fasta,
+            fasta_fai,
             bwa,
         )
 
         vcf_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.vcf
         tbi_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
     }
 
     // TNSCOPE
@@ -218,7 +214,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE.out.versions)
     }
 
-    vcf_all = Channel.empty()
+    vcf_all = channel.empty()
         .mix(
             vcf_freebayes,
             vcf_lofreq,
@@ -229,7 +225,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             vcf_tnscope,
         )
 
-    tbi_all = Channel.empty()
+    tbi_all = channel.empty()
         .mix(
             tbi_freebayes,
             tbi_lofreq,

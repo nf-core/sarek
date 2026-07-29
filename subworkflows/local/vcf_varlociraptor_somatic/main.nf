@@ -62,9 +62,9 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     ch_somatic_vcf_tbi = ch_somatic_vcf.join(TABIX_SOMATIC.out.tbi, by: [0])
 
     // CONCAT SNV / INDEL VCFs COMING FROM STRELKA
-    ch_somatic_branched = ch_somatic_vcf_tbi.branch { items ->
-        strelka: items[0].variantcaller == 'strelka'
-        other: items[0].variantcaller != 'strelka'
+    ch_somatic_branched = ch_somatic_vcf_tbi.branch { meta, _vcf, _tbi ->
+        strelka: meta.variantcaller == 'strelka'
+        other: meta.variantcaller != 'strelka'
     }
 
     // Group somatic strelka SNVs and INDELs by sample for concatenation
@@ -100,9 +100,9 @@ workflow VCF_VARLOCIRAPTOR_SOMATIC {
     def matching_pairs = somatic_with_key.join(germline_with_key, failOnMismatch: false)
 
     // Branch based on whether a matching germline VCF was found
-    def branched = matching_pairs.branch { items ->
-        matched: items.size() == 7
-        unmatched: items.size() == 4
+    def branched = matching_pairs.branch { pair ->
+        matched: pair.size() == 7
+        unmatched: pair.size() == 4
     }
 
     MERGE_GERMLINE_SOMATIC_VCFS(

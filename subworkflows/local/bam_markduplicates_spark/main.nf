@@ -18,11 +18,11 @@ workflow BAM_MARKDUPLICATES_SPARK {
     intervals_bed_combined        // channel: [optional]  intervals_bed
 
     main:
-    versions = Channel.empty()
-    reports = Channel.empty()
+    versions = channel.empty()
+    reports = channel.empty()
 
     // RUN MARKUPDUPLICATES SPARK
-    GATK4SPARK_MARKDUPLICATES(bam, fasta.map{ meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ meta, fasta_fai_ -> [ fasta_fai_ ] }, dict.map{ meta, dict_ -> [ dict_ ] })
+    GATK4SPARK_MARKDUPLICATES(bam, fasta.map{ _meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] }, dict.map{ _meta, dict_ -> [ dict_ ] })
 
     // Index output (BAM or CRAM depending on ext.prefix)
     INDEX_MARKDUPLICATES(GATK4SPARK_MARKDUPLICATES.out.output)
@@ -35,15 +35,13 @@ workflow BAM_MARKDUPLICATES_SPARK {
     CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, intervals_bed_combined)
 
     // When running Marduplicates spark, and saving reports
-    GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta.map{ meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ meta, fasta_fai_ -> [ fasta_fai_ ] }, dict.map{ meta, dict_ -> [ dict_ ] })
+    GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta.map{ _meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] }, dict.map{ _meta, dict_ -> [ dict_ ] })
 
     // Gather all reports generated
     reports = reports.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics)
     reports = reports.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.reports)
 
     // Gather versions of all tools used
-    versions = versions.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.versions)
-    versions = versions.mix(GATK4SPARK_MARKDUPLICATES.out.versions)
     versions = versions.mix(INDEX_MARKDUPLICATES.out.versions)
     versions = versions.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.versions)
 
