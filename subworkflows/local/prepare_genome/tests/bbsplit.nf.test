@@ -58,8 +58,7 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
-                    workflow.out.bbsplit_index,
-                    workflow.out.versions
+                    workflow.out.bbsplit_index
                 ).match() }
             )
         }
@@ -171,8 +170,7 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.bbsplit_index,
-                    workflow.out.versions
+                    workflow.out.bbsplit_index
                 ).match() }
             )
         }
@@ -230,8 +228,7 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.bbsplit_index,
-                    workflow.out.versions
+                    workflow.out.bbsplit_index
                 ).match() }
             )
         }
@@ -292,8 +289,7 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.bbsplit_index,
-                    workflow.out.versions
+                    workflow.out.bbsplit_index
                 ).match() }
             )
         }

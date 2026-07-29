@@ -13,12 +13,12 @@
                     "gatk4": "4.6.2.0"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -61,10 +61,10 @@
                 "WARN: DragMap was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using DragMap"
             ]
         ],
-        "timestamp": "2025-12-15T19:02:48.431048619",
+        "timestamp": "2026-07-28T10:58:04.077770914",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --aligner dragmap --save_reference skip QC/recal/md": {
@@ -72,7 +72,7 @@
             10,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -89,18 +89,18 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -151,10 +151,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2025-12-15T19:01:59.187593488",
+        "timestamp": "2026-07-28T14:28:21.866075734",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --aligner dragmap --save_reference --build_only_index - stub": {
@@ -171,12 +171,12 @@
                     "gatk4": "4.6.2.0"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -209,7 +209,7 @@
             10,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -226,18 +226,18 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [

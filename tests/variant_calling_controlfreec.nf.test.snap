@@ -19,17 +19,18 @@
                     "controlfreec": "11.6b"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_MPILEUP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "UNTAR_CHR_DIR": {
                     "untar": "1.34"
@@ -121,13 +122,13 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,88b94dd2dcc423983da65125ece7651e",
                 "mosdepth_perchrom.txt:md5,a0266cd06dd6f7f5463f09e3cb8af71d",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
-                "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
+                "samtools-stats-dp.txt:md5,42facbec7ea07232de8dc0369f0da065",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
                 "samtools_insert_size.txt:md5,5cb5779e1a7baf077b529af8c427147c",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample2.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample2.bed:md5,5249f46e614b60867bdd6b9b83327979",
                 "sample2.circos.txt:md5,2efab24d023931cec8b158c56d1f1765",
                 "sample2.p.value.txt:md5,38c8c9ad33a4fca3804a34d5c436cd1e",
@@ -143,10 +144,10 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-05-28T15:29:16.864765246",
+        "timestamp": "2026-07-27T10:37:16.056899008",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools controlfreec somatic": {
@@ -172,21 +173,22 @@
                     "controlfreec": "11.6b"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_MPILEUP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "UNTAR_CHR_DIR": {
                     "untar": "1.34"
@@ -289,23 +291,23 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,cb7468f51b8be1230fb3ac5b130be31f",
                 "mosdepth_perchrom.txt:md5,4ee05f71086179b42a01cd2fb450346f",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
-                "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
+                "samtools-stats-dp.txt:md5,bf6d30315fd7608b97b2a4eb1dc71fdc",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
                 "samtools_insert_size.txt:md5,8fa108dcbe0da42e9425dd125fe22905",
                 "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
                 "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
                 "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
                 "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
-                "sample3.recal.per-base.bed.gz.csi:md5,c67dcd711b096eb42f43784d5eadbc0d",
+                "sample3.recal.per-base.bed.gz.csi:md5,68451158beb41ef7fcd07821fe3a52b4",
                 "sample3.recal.regions.bed.gz:md5,314ce8d7273eff353072108aa77c327c",
-                "sample3.recal.regions.bed.gz.csi:md5,9cb0ad7039a3b703d16ca7d5b835c0ee",
+                "sample3.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
                 "sample4.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample4.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample4.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
                 "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample4.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample4.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample4.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
+                "sample4.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
                 "sample4_vs_sample3.bed:md5,47f60179409e9389e59b2e2525e42210",
                 "sample4_vs_sample3.circos.txt:md5,68addb1d8bda08355842bef0ab15cd6e",
                 "sample4_vs_sample3.normal.mpileup.gz_control.cpn:md5,d50bf2c9a4d35f022364901c284e80ed",
@@ -322,10 +324,10 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-05-28T15:27:36.537227044",
+        "timestamp": "2026-07-27T10:29:23.11767132",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools controlfreec --no_intervals somatic -stub": {
@@ -351,14 +353,14 @@
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_MPILEUP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "UNTAR_CHR_DIR": {
                     "untar": "1.34"
@@ -466,18 +468,18 @@
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_MPILEUP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "UNTAR_CHR_DIR": {
                     "untar": "1.34"
