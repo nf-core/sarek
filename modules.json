@@ -12,7 +12,7 @@
                     },
                     "bbmap/bbsplit": {
                         "branch": "master",
-                        "git_sha": "6d1d4b987af3ee5852d852abf99f8883028cea9c",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "bcftools/annotate": {
@@ -208,7 +208,7 @@
                     },
                     "gatk4/applybqsr": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "ad964832ffcb72516a0a9c2c34688e3443655b5a",
                         "installed_by": ["modules"]
                     },
                     "gatk4/applyvqsr": {
@@ -413,7 +413,7 @@
                     },
                     "parabricks/fq2bam": {
                         "branch": "master",
-                        "git_sha": "f0b0dc3c3f001b1b7bf814a3c353baecbab17ea1",
+                        "git_sha": "3e0ec6464725c64d81abe928e15a6750d5fdd272",
                         "installed_by": ["modules"]
                     },
                     "parabricks/mutectcaller": {
@@ -423,7 +423,7 @@
                     },
                     "rbt/vcfsplit": {
                         "branch": "master",
-                        "git_sha": "117bda90be326bcff5cb2286c7988a4caa588b5d",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "samtools/bam2fq": {
@@ -473,47 +473,47 @@
                     },
                     "sentieon/applyvarcal": {
                         "branch": "master",
-                        "git_sha": "7ad1622c68ea87dd3a16bcc4b82cd5d5878fffd9",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "sentieon/bwamem": {
                         "branch": "master",
-                        "git_sha": "7ad1622c68ea87dd3a16bcc4b82cd5d5878fffd9",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "sentieon/dedup": {
                         "branch": "master",
-                        "git_sha": "7ad1622c68ea87dd3a16bcc4b82cd5d5878fffd9",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "sentieon/dnamodelapply": {
                         "branch": "master",
-                        "git_sha": "7ad1622c68ea87dd3a16bcc4b82cd5d5878fffd9",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "sentieon/dnascope": {
                         "branch": "master",
-                        "git_sha": "7ad1622c68ea87dd3a16bcc4b82cd5d5878fffd9",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "sentieon/gvcftyper": {
                         "branch": "master",
-                        "git_sha": "7ad1622c68ea87dd3a16bcc4b82cd5d5878fffd9",
+                        "git_sha": "19430b872a6e970b62e625d78a29a9b275d9dc18",
                         "installed_by": ["modules"]
                     },
                     "sentieon/haplotyper": {
                         "branch": "master",
-                        "git_sha": "7ad1622c68ea87dd3a16bcc4b82cd5d5878fffd9",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "sentieon/tnscope": {
                         "branch": "master",
-                        "git_sha": "7ad1622c68ea87dd3a16bcc4b82cd5d5878fffd9",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "sentieon/varcal": {
                         "branch": "master",
-                        "git_sha": "7ad1622c68ea87dd3a16bcc4b82cd5d5878fffd9",
+                        "git_sha": "8ee2033cd73a14f4496e690196dac45426e9cadc",
                         "installed_by": ["modules"]
                     },
                     "snpeff/download": {
@@ -528,12 +528,12 @@
                     },
                     "snpsift/annmem": {
                         "branch": "master",
-                        "git_sha": "e12534f75a4504b67984412122698c1cf1966e6f",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "snpsift/annmemcreate": {
                         "branch": "master",
-                        "git_sha": "e12534f75a4504b67984412122698c1cf1966e6f",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
                     "spring/decompress": {
@@ -603,7 +603,7 @@
                     },
                     "yte": {
                         "branch": "master",
-                        "git_sha": "c734c101f0010ec13ed9bbf578477962c32f9cc3",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     }
                 }

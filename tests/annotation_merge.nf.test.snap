@@ -127,10 +127,10 @@
                     "snpeff": "5.4c"
                 },
                 "SNPSIFT_ANNMEM": {
-                    "snpsift": "5.4a"
+                    "snpsift": "5.4c"
                 },
                 "SNPSIFT_ANNMEMCREATE": {
-                    "snpsift": "5.4a"
+                    "snpsift": "5.4c"
                 },
                 "VCF_ANNOTATE_MERGE": {
                     "ensemblvep": "116.0",

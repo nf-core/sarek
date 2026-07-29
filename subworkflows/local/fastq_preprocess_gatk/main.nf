@@ -58,6 +58,7 @@ workflow FASTQ_PREPROCESS_GATK {
         known_sites_indels
         known_sites_indels_tbi
         bbsplit_index
+        save_output_as_bam
 
     main:
 
@@ -231,8 +232,8 @@ workflow FASTQ_PREPROCESS_GATK {
 
             BAM_TO_CRAM_MAPPING(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai ] }.collect())
             // Create CSV to restart from this step
-            if (params.save_output_as_bam) CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, params.outdir, params.save_output_as_bam)
-            else CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true), params.outdir, params.save_output_as_bam)
+            if (save_output_as_bam) CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, params.outdir, save_output_as_bam)
+            else CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true), params.outdir, save_output_as_bam)
         }
 
     }
@@ -437,7 +438,8 @@ workflow FASTQ_PREPROCESS_GATK {
                     dict,
                     fasta,
                     fasta_fai,
-                    intervals_and_num_intervals)
+                    intervals_and_num_intervals,
+                    save_output_as_bam)
 
                 cram_variant_calling_no_spark = BAM_APPLYBQSR.out.alignment
             }
