@@ -508,7 +508,7 @@
                     },
                     "sentieon/varcal": {
                         "branch": "master",
-                        "git_sha": "7ad1622c68ea87dd3a16bcc4b82cd5d5878fffd9",
+                        "git_sha": "8ee2033cd73a14f4496e690196dac45426e9cadc",
                         "installed_by": ["modules"]
                     },
                     "snpeff/download": {
