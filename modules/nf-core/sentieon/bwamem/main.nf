@@ -25,12 +25,7 @@ process SENTIEON_BWAMEM {
     script:
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}.bam"
-    def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64
-        ? "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; "
-        : ""
-
     """
-    ${sentieonLicense}
     export bwt_max_mem="${(task.memory * 0.9).toGiga()}G"
 
     INDEX=`find -L ./ -name "*.amb" | sed 's/.amb//'`

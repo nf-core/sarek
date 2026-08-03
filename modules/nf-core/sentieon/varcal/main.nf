@@ -67,12 +67,7 @@ process SENTIEON_VARCAL {
         error("Expected 'labels' to be either a String or a List, but got ${labels_input.getClass()}")
     }
 
-    def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64
-        ? "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; "
-        : ""
     """
-    ${sentieonLicense}
-
     sentieon driver \\
         -r ${fasta} \\
         --algo VarCal \\

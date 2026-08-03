@@ -25,12 +25,7 @@ process SENTIEON_DNAMODELAPPLY {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}_applied"
-    def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64
-        ? "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; "
-        : ""
     """
-    ${sentieonLicense}
-
     sentieon driver \\
         -t ${task.cpus} \\
         -r ${fasta} \\
@@ -39,7 +34,6 @@ process SENTIEON_DNAMODELAPPLY {
         --model ${ml_model} \\
         -v ${vcf} \\
         ${prefix}.vcf.gz
-
     """
 
     stub:

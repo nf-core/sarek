@@ -57,12 +57,7 @@ process SENTIEON_DNASCOPE {
         gvcf_cmd = base_cmd + args3 + ' ' + model_cmd + pcr_indel_model_cmd + ' --emit_mode gvcf ' + prefix + '.g.vcf.gz'
     }
 
-    def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64
-        ? "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; "
-        : ""
     """
-    ${sentieonLicense}
-
     sentieon driver \\
         ${args} \\
         -r ${fasta} \\

@@ -36,13 +36,7 @@ process SENTIEON_TNSCOPE {
     def pon_str = pon ? "--pon ${pon}" : ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def inputs = input.collect {in -> "-i ${in}" }.join(" ")
-    def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64
-        ? "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; "
-        : ""
     """
-    ${sentieonLicense}
-
-
     sentieon driver \\
         -t ${task.cpus} \\
         -r ${fasta} \\

@@ -35,12 +35,7 @@ process SENTIEON_DEDUP {
     def metrics = "${prefix}.metrics"
     def input_list = bam.collect {input -> "-i ${input}" }.join(' ')
     def prefix_basename = prefix.substring(0, prefix.lastIndexOf("."))
-    def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64
-        ? "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; "
-        : ""
     """
-    ${sentieonLicense}
-
     sentieon driver ${args} -t ${task.cpus} ${input_list} -r ${fasta} --algo LocusCollector ${args2} --fun score_info ${prefix_basename}.score
     sentieon driver ${args3} -t ${task.cpus} ${input_list} -r ${fasta} --algo Dedup ${args4} --score_info ${prefix_basename}.score --metrics ${metrics} ${prefix}
 

@@ -54,13 +54,7 @@ process SENTIEON_HAPLOTYPER {
     def gvcf_cmd = emit_gvcf
         ? base_cmd + args3 + ' --emit_mode gvcf ' + prefix + '.g.vcf.gz'
         : ""
-
-    def sentieonLicense = secrets.SENTIEON_LICENSE_BASE64
-        ? "export SENTIEON_LICENSE=\$(mktemp);echo -e \"${secrets.SENTIEON_LICENSE_BASE64}\" | base64 -d > \$SENTIEON_LICENSE; "
-        : ""
     """
-    ${sentieonLicense}
-
     sentieon driver \\
         ${args} \\
         -r ${fasta} \\
