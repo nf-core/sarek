@@ -1,0 +1,5 @@
+patient,sex,status,sample,lane,fastq_1,fastq_2,spring_1,spring_2,bam,bai
+test,XX,0,test,test_L1,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz,,,,
+test2,XX,0,test2,test2_L1,,,https://raw.githubusercontent.com/nf-core/test-datasets/sarek3/data/genomics/homo_sapiens/illumina/spring/test_1.fastq.gz.spring,https://raw.githubusercontent.com/nf-core/test-datasets/sarek3/data/genomics/homo_sapiens/illumina/spring/test_2.fastq.gz.spring,,
+test3,XX,0,test3,test3_L1,,,https://raw.githubusercontent.com/nf-core/test-datasets/sarek3/data/genomics/homo_sapiens/illumina/spring/test_R1_R2.fastq.gz.spring,,,
+test_bam,XX,0,test_bam,test_bam_L1,,,,,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai

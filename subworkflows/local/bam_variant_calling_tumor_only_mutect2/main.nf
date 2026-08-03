@@ -1,213 +1,180 @@
 //
-// Run GATK mutect2 in tumor only mode, getepileupsummaries, calculatecontamination and filtermutectcalls
+// GATK MUTECT2 in tumor only mode: getepileupsummaries, calculatecontamination and filtermutectcalls
 //
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { GATK4_MERGEVCFS                 as MERGE_MUTECT2             } from '../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_CALCULATECONTAMINATION    as CALCULATECONTAMINATION    } from '../../../modules/nf-core/gatk4/calculatecontamination/main'
-include { GATK4_FILTERMUTECTCALLS         as FILTERMUTECTCALLS         } from '../../../modules/nf-core/gatk4/filtermutectcalls/main'
-include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES        } from '../../../modules/nf-core/gatk4/getpileupsummaries/main'
-include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES     } from '../../../modules/nf-core/gatk4/gatherpileupsummaries/main'
-include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL } from '../../../modules/nf-core/gatk4/learnreadorientationmodel/main'
-include { GATK4_MERGEMUTECTSTATS          as MERGEMUTECTSTATS          } from '../../../modules/nf-core/gatk4/mergemutectstats/main'
-include { GATK4_MUTECT2                   as MUTECT2                   } from '../../../modules/nf-core/gatk4/mutect2/main'
+include { GATK4_MERGEVCFS as MERGE_MUTECT2                             } from '../../../modules/nf-core/gatk4/mergevcfs'
+include { GATK4_CALCULATECONTAMINATION as CALCULATECONTAMINATION       } from '../../../modules/nf-core/gatk4/calculatecontamination'
+include { GATK4_FILTERMUTECTCALLS as FILTERMUTECTCALLS                 } from '../../../modules/nf-core/gatk4/filtermutectcalls'
+include { GATK4_GETPILEUPSUMMARIES as GETPILEUPSUMMARIES               } from '../../../modules/nf-core/gatk4/getpileupsummaries'
+include { GATK4_GATHERPILEUPSUMMARIES as GATHERPILEUPSUMMARIES         } from '../../../modules/nf-core/gatk4/gatherpileupsummaries'
+include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL } from '../../../modules/nf-core/gatk4/learnreadorientationmodel'
+include { GATK4_MERGEMUTECTSTATS as MERGEMUTECTSTATS                   } from '../../../modules/nf-core/gatk4/mergemutectstats'
+include { GATK4_MUTECT2 as MUTECT2                                     } from '../../../modules/nf-core/gatk4/mutect2'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     take:
-    input                     // channel: [ val(meta), [ input ], [ input_index ], [intervals], [] ]
-    fasta                     // channel: /path/to/reference/fasta
-    fai                       // channel: /path/to/reference/fasta/index
-    dict                      // channel: /path/to/reference/fasta/dictionary
-    germline_resource         // channel: /path/to/germline/resource
-    germline_resource_tbi     // channel: /path/to/germline/index
-    panel_of_normals          // channel: /path/to/panel/of/normals
-    panel_of_normals_tbi      // channel: /path/to/panel/of/normals/index
+    input                 // channel: [ meta, [ input ], [ input_index ] ]
+    fasta                 // channel: /path/to/reference/fasta
+    fai                   // channel: /path/to/reference/fasta/index
+    dict                  // channel: /path/to/reference/fasta/dictionary
+    germline_resource     // channel: /path/to/germline/resource
+    germline_resource_tbi // channel: /path/to/germline/index
+    panel_of_normals      // channel: /path/to/panel/of/normals
+    panel_of_normals_tbi  // channel: /path/to/panel/of/normals/index
+    intervals             // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
+    joint_mutect2         // boolean: [mandatory] [default: false] run mutect2 in joint mode
 
     main:
-    ch_versions = Channel.empty()
 
-    //
-    //Perform variant calling using mutect2 module in tumor single mode.
-    //
-    MUTECT2(input,
-            fasta,
-            fai,
-            dict,
-            germline_resource,
-            germline_resource_tbi,
-            panel_of_normals,
-            panel_of_normals_tbi)
+    // If no germline resource is provided, then create an empty channel to avoid GetPileupsummaries from being run
+    // Handle channel.value([]) input from prepare_genome by converting to proper empty channel
+    germline_resource_pileup = germline_resource.filter { germline_resource_ -> germline_resource_ != [] }
+    germline_resource_pileup_tbi = germline_resource_tbi.filter { germline_resource_tbi_ -> germline_resource_tbi_ != [] }
 
-    // Figure out if using intervals or no_intervals
-    MUTECT2.out.vcf.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{ mutect2_vcf_branch }
+    // Combine input and intervals for spread and gather strategy
+    input_intervals = input
+        .combine(intervals)
+        .map { meta, input_, index, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], input_, index, intervals_] }
 
-    MUTECT2.out.tbi.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{ mutect2_tbi_branch }
+    if (joint_mutect2) {
+        // Perform variant calling using mutect2 module in tumor single mode
+        // Group cram files by patient
+        input_joint = input
+            .map { meta, input_, index -> [meta - meta.subMap('sample') + [id: meta.patient], input_, index] }
+            .groupTuple()
 
-    MUTECT2.out.stats.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{ mutect2_stats_branch }
+        // Add intervals for scatter-gather scaling
+        input_joint_intervals = input_joint
+            .combine(intervals)
+            .map { meta, cram, crai, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], cram, crai, intervals_] }
+        MUTECT2(input_joint_intervals, fasta, fai.map { meta, index -> [ meta, index, [] ] }, dict, [], [], germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
+    }
+    else {
+        // Perform variant calling using mutect2 module in tumor single mode
+        MUTECT2(input_intervals, fasta, fai.map { meta, index -> [ meta, index, [] ] }, dict, [], [], germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
+    }
 
-    MUTECT2.out.f1r2.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{ mutect2_f1r2_branch }
+    // Figuring out if there is one or more vcf(s) from the same sample
+    vcf_branch = MUTECT2.out.vcf.branch { meta, _vcf ->
+        intervals: meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
+    }
 
-    //Only when using intervals
-    //Merge Mutect2 VCF
+    // Figuring out if there is one or more tbi(s) from the same sample
+    tbi_branch = MUTECT2.out.tbi.branch { meta, _tbi ->
+        intervals: meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
+    }
 
-    MERGE_MUTECT2(
-        mutect2_vcf_branch.intervals
-        .map{ meta, vcf ->
-            new_meta = [
-                        id:             meta.sample,
-                        num_intervals:  meta.num_intervals,
-                        patient:        meta.patient,
-                        sample:         meta.sample,
-                        sex:            meta.sex,
-                        status:         meta.status,
-                    ]
+    // Figuring out if there is one or more stats(s) from the same sample
+    stats_branch = MUTECT2.out.stats.branch { meta, _stats ->
+        intervals: meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
+    }
 
-            [groupKey(new_meta, meta.num_intervals), vcf]
-        }.groupTuple(),
-        dict)
+    // Figuring out if there is one or more f1r2(s) from the same sample
+    f1r2_branch = MUTECT2.out.f1r2.branch { meta, _f1r2 ->
+        intervals: meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
+    }
 
-    mutect2_vcf = Channel.empty().mix(
-        MERGE_MUTECT2.out.vcf,
-        mutect2_vcf_branch.no_intervals)
+    // Only when using intervals
+    vcf_to_merge = vcf_branch.intervals.map { meta, vcf -> [groupKey(meta, meta.num_intervals), vcf] }.groupTuple()
+    stats_to_merge = stats_branch.intervals.map { meta, stats -> [groupKey(meta, meta.num_intervals), stats] }.groupTuple()
+    f1r2_to_merge = f1r2_branch.intervals.map { meta, f1r2 -> [groupKey(meta, meta.num_intervals), f1r2] }.groupTuple()
 
-    mutect2_tbi = Channel.empty().mix(
-        MERGE_MUTECT2.out.tbi,
-        mutect2_tbi_branch.no_intervals)
+    MERGE_MUTECT2(vcf_to_merge, dict)
+    MERGEMUTECTSTATS(stats_to_merge)
 
-    //Merge Mutect2 Stats
-    MERGEMUTECTSTATS(
-        mutect2_stats_branch.intervals
-        .map{ meta, stats ->
-            new_meta = [
-                        id:             meta.sample,
-                        num_intervals:  meta.num_intervals,
-                        patient:        meta.patient,
-                        sample:         meta.sample,
-                        sex:            meta.sex,
-                        status:         meta.status,
-                    ]
+    // Mix intervals and no_intervals channels together
+    // Remove unnecessary metadata
+    vcf = channel.empty().mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals).map { meta, vcf -> [meta - meta.subMap('num_intervals'), vcf] }
+    tbi = channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals).map { meta, tbi -> [meta - meta.subMap('num_intervals'), tbi] }
+    stats = channel.empty().mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals).map { meta, stats -> [meta - meta.subMap('num_intervals'), stats] }
+    f1r2 = channel.empty().mix(f1r2_to_merge, f1r2_branch.no_intervals).map { meta, f1r2 -> [meta - meta.subMap('num_intervals'), f1r2] }
 
-            [groupKey(new_meta, meta.num_intervals), stats]
-        }.groupTuple())
+    // Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2
+    LEARNREADORIENTATIONMODEL(f1r2)
 
-    mutect2_stats = Channel.empty().mix(
-        MERGEMUTECTSTATS.out.stats,
-        mutect2_stats_branch.no_intervals)
+    pileup_input = input_intervals.map { meta, cram, crai, intervals_ -> [meta + [id: meta.sample], cram, crai, intervals_] }.unique()
 
-    //
-    //Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2.
-    //
-    LEARNREADORIENTATIONMODEL(
-        Channel.empty().mix(
-            mutect2_f1r2_branch.intervals
-            .map{ meta, f1r2 ->
-                new_meta = [
-                            id:             meta.sample,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sample:         meta.sample,
-                            sex:            meta.sex,
-                            status:         meta.status,
-                        ]
+    // Generate pileup summary table using getepileupsummaries
+    GETPILEUPSUMMARIES(pileup_input, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
 
-                [groupKey(new_meta, meta.num_intervals), f1r2]
-            }.groupTuple(),
-            mutect2_f1r2_branch.no_intervals))
+    // Figuring out if there is one or more table(s) from the same sample
+    pileup_table_branch = GETPILEUPSUMMARIES.out.table.branch { meta, _table ->
+        intervals: meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
+    }
 
-    //
-    //Generate pileup summary table using getepileupsummaries.
-    //
-    germline_resource_pileup = germline_resource_tbi ? germline_resource : Channel.empty()
-    germline_resource_pileup_tbi = germline_resource_tbi ?: Channel.empty()
-    GETPILEUPSUMMARIES ( input , fasta, fai, dict, germline_resource_pileup , germline_resource_pileup_tbi )
+    // Only when using intervals
+    pileup_table_to_merge = pileup_table_branch.intervals.map { meta, table -> [groupKey(meta, meta.num_intervals), table] }.groupTuple()
 
-    GETPILEUPSUMMARIES.out.table.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }set{ pileup_table_branch }
+    GATHERPILEUPSUMMARIES(pileup_table_to_merge, dict.map { _meta, dict_ -> [dict_] })
 
-    //Merge Pileup Summaries
-    GATHERPILEUPSUMMARIES(
-        GETPILEUPSUMMARIES.out.table
-        .map{ meta, table ->
-            new_meta = [
-                        id:             meta.sample,
-                        num_intervals:  meta.num_intervals,
-                        patient:        meta.patient,
-                        sample:         meta.sample,
-                        sex:            meta.sex,
-                        status:         meta.status,
-                    ]
+    // Mix intervals and no_intervals channels together
+    pileup_table = channel.empty().mix(GATHERPILEUPSUMMARIES.out.table, pileup_table_branch.no_intervals).map { meta, table -> [meta - meta.subMap('num_intervals') + [id: meta.sample], table] }
 
-            [groupKey(new_meta, meta.num_intervals), table]
-        }.groupTuple(),
-        dict)
+    // Contamination and segmentation tables created using calculatecontamination on the pileup summary table
+    CALCULATECONTAMINATION(pileup_table.map { meta, table -> [meta, table, []] })
 
-    pileup_table = Channel.empty().mix(
-        GATHERPILEUPSUMMARIES.out.table,
-        pileup_table_branch.no_intervals)
+    // Initialize empty channel: Contamination calculation is run on pileup table, pileup is not run if germline resource is not provided
+    calculatecontamination_out_seg = channel.empty()
+    calculatecontamination_out_cont = channel.empty()
 
-    //
-    //Contamination and segmentation tables created using calculatecontamination on the pileup summary table.
-    //
-    table_contamination = pileup_table.map{meta, table -> [meta, table, []]}
-    CALCULATECONTAMINATION ( table_contamination )
+    if (joint_mutect2) {
+        // Group tables by samples
+        calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation.map { meta, seg -> [meta - meta.subMap('sample', 'num_intervals') + [id: meta.patient], seg] }.groupTuple()
+        calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination.map { meta, cont -> [meta - meta.subMap('sample', 'num_intervals') + [id: meta.patient], cont] }.groupTuple()
+    }
+    else {
+        // Regular single sample mode
+        calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation.map { meta, seg -> [meta - meta.subMap('num_intervals'), seg] }
+        calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination.map { meta, cont -> [meta - meta.subMap('num_intervals'), cont] }
+    }
 
-    //
-    //Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables.
-    //
-    ch_filtermutect    = mutect2_vcf.join(mutect2_tbi)
-                                    .join(mutect2_stats)
-                                    .join(LEARNREADORIENTATIONMODEL.out.artifactprior)
-                                    .join(CALCULATECONTAMINATION.out.segmentation)
-                                    .join(CALCULATECONTAMINATION.out.contamination)
-    ch_filtermutect_in = ch_filtermutect.map{ meta, vcf, tbi, stats, artifactprior, seg, cont -> [meta, vcf, tbi, stats, artifactprior, seg, cont, []] }
+    // Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables
+    vcf_to_filter = vcf
+        .join(tbi, failOnDuplicate: true, failOnMismatch: true)
+        .join(stats, failOnDuplicate: true, failOnMismatch: true)
+        .join(LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
+        .join(calculatecontamination_out_seg)
+        .join(calculatecontamination_out_cont)
+        .map { meta, vcf_, tbi_, stats_, artifactprior, seg, cont -> [meta, vcf_, tbi_, stats_, artifactprior, seg, cont, []] }
 
-    FILTERMUTECTCALLS ( ch_filtermutect_in, fasta, fai, dict )
+    FILTERMUTECTCALLS(vcf_to_filter, fasta, fai, dict)
 
-    ch_versions = ch_versions.mix(MERGE_MUTECT2.out.versions)
-    ch_versions = ch_versions.mix(CALCULATECONTAMINATION.out.versions)
-    ch_versions = ch_versions.mix(FILTERMUTECTCALLS.out.versions)
-    ch_versions = ch_versions.mix(GETPILEUPSUMMARIES.out.versions)
-    ch_versions = ch_versions.mix(GATHERPILEUPSUMMARIES.out.versions)
-    ch_versions = ch_versions.mix(LEARNREADORIENTATIONMODEL.out.versions)
-    ch_versions = ch_versions.mix(MERGEMUTECTSTATS.out.versions)
-    ch_versions = ch_versions.mix(MUTECT2.out.versions)
+    // Handle filtered vs unfiltered output
+    // vcf_mutect2 and tbi_mutect2 should always contain usable output:
+    // - If filtering happened (germline_resource provided): use filtered results
+    // - If filtering didn't happen: use unfiltered results with variantcaller metadata
+    // This ensures downstream processes always have mutect2 calls available for consensus calling
+    // Using concat() + unique() ensures filtered output takes precedence deterministically
+    // concat() preserves order (filtered first), unique() keeps first occurrence of each meta key
+    vcf_mutect2 = FILTERMUTECTCALLS.out.vcf
+        .map { meta, vcf_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], vcf_] }
+        .concat(vcf.map { meta, vcf_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], vcf_] })
+        .unique { meta, _vcf -> meta }
+
+    tbi_mutect2 = FILTERMUTECTCALLS.out.tbi
+        .map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] }
+        .concat(tbi.map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] })
+        .unique { meta, _tbi -> meta }
+
 
     emit:
-    mutect2_vcf         = mutect2_vcf                               // channel: [ val(meta), [ vcf ] ]
-    mutect2_stats       = mutect2_stats                              // channel: [ val(meta), [ stats ] ]
+    vcf = vcf_mutect2   // channel: [ meta, vcf ] - filtered if germline_resource provided, otherwise unfiltered
+    tbi = tbi_mutect2   // channel: [ meta, tbi ] - filtered if germline_resource provided, otherwise unfiltered
 
-    artifact_priors     = LEARNREADORIENTATIONMODEL.out.artifactprior    // channel: [ val(meta), [ artifactprior ] ]
+    stats_filtered     = FILTERMUTECTCALLS.out.stats // channel: [ meta, stats ]
 
-    pileup_table        = pileup_table                              // channel: [ val(meta), [ table ] ]
+    artifact_priors = LEARNREADORIENTATIONMODEL.out.artifactprior    // channel: [ meta, artifactprior ]
 
-    contamination_table = CALCULATECONTAMINATION.out.contamination  // channel: [ val(meta), [ contamination ] ]
-    segmentation_table  = CALCULATECONTAMINATION.out.segmentation   // channel: [ val(meta), [ segmentation ] ]
+    pileup_table  // channel: [ meta, table ]
 
-    filtered_vcf        = FILTERMUTECTCALLS.out.vcf.map{ meta, vcf -> [[
-                                                                        id:             meta.sample,
-                                                                        num_intervals:  meta.num_intervals,
-                                                                        patient:        meta.patient,
-                                                                        sample:         meta.sample,
-                                                                        sex:            meta.sex,
-                                                                        status:         meta.status,
-                                                                        variantcaller:  "mutect2"
-                                                                        ]
-                                                                        , vcf] } // channel: [ val(meta), [ vcf ] ]
-    filtered_index      = FILTERMUTECTCALLS.out.tbi                 // channel: [ val(meta), [ tbi ] ]
-    filtered_stats      = FILTERMUTECTCALLS.out.stats               // channel: [ val(meta), [ stats ] ]
+    contamination_table = calculatecontamination_out_cont  // channel: [ meta, contamination ]
+    segmentation_table  = calculatecontamination_out_seg   // channel: [ meta, segmentation ]
 
-    versions            = ch_versions                               // channel: [ versions.yml ]
 }

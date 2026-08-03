@@ -1,18 +1,19 @@
 process DRAGMAP_HASHTABLE {
-    tag "$fasta"
+    tag "${fasta}"
     label 'process_high'
 
-    conda (params.enable_conda ? "bioconda::dragmap=1.2.1" : null)
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/dragmap:1.2.1--hd4ca14e_0':
-        'quay.io/biocontainers/dragmap:1.2.1--hd4ca14e_0' }"
+    conda "${moduleDir}/environment.yml"
+    // WARN: Do not update this tool to 1.3.0 until https://github.com/Illumina/DRAGMAP/issues/47 is resolved
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/dragmap:1.2.1--h72d16da_1'
+        : 'quay.io/biocontainers/dragmap:1.2.1--h72d16da_1'}"
 
     input:
-    path fasta
+    tuple val(meta), path(fasta)
 
     output:
-    path "dragmap"      , emit: hashmap
-    path "versions.yml" , emit: versions
+    tuple val(meta), path("dragmap"), emit: hashmap
+    tuple val("${task.process}"), val('dragmap'), eval("dragen-os --version 2>&1"), emit: versions_dragmap, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -23,14 +24,14 @@ process DRAGMAP_HASHTABLE {
     mkdir dragmap
     dragen-os \\
         --build-hash-table true \\
-        --ht-reference $fasta \\
+        --ht-reference ${fasta} \\
         --output-directory dragmap \\
-        $args \\
-        --ht-num-threads $task.cpus
+        ${args} \\
+        --ht-num-threads ${task.cpus}
+    """
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        dragmap: \$(echo \$(dragen-os --version 2>&1))
-    END_VERSIONS
+    stub:
+    """
+    mkdir dragmap
     """
 }

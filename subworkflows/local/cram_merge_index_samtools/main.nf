@@ -9,46 +9,31 @@ include { SAMTOOLS_MERGE as MERGE_CRAM } from '../../../modules/nf-core/samtools
 
 workflow CRAM_MERGE_INDEX_SAMTOOLS {
     take:
-        ch_cram       // channel: [mandatory] meta, cram
-        fasta         // channel: [mandatory] fasta
-        fasta_fai     // channel: [mandatory] fai for fasta
+    cram      // channel: [mandatory] meta, cram
+    fasta     // channel: [mandatory] meta, fasta
+    fasta_fai // channel: [mandatory] meta, fai
 
     main:
-    ch_versions = Channel.empty()
 
     // Figuring out if there is one or more cram(s) from the same sample
-    ch_cram_to_merge = ch_cram.map{ meta, cram ->
-
-        [groupKey([
-                    data_type:      meta.data_type,
-                    id:             meta.sample,
-                    num_intervals:  meta.num_intervals,
-                    patient:        meta.patient,
-                    sample:         meta.sample,
-                    sex:            meta.sex,
-                    status:         meta.status,
-                    ],
-                meta.num_intervals),
-        cram]
-    }.groupTuple()
-    .branch{
-        //Warning: size() calculates file size not list length here, so use num_intervals instead
-        single:   it[0].num_intervals <= 1
-        multiple: it[0].num_intervals > 1
+    cram_to_merge = cram.branch { meta, cram_files ->
+        single: cram_files.size() <= 1
+        return [meta, cram_files[0]]
+        multiple: cram_files.size() > 1
     }
 
-    MERGE_CRAM(ch_cram_to_merge.multiple, fasta, fasta_fai)
-    INDEX_CRAM(ch_cram_to_merge.single.mix(MERGE_CRAM.out.cram))
+    // Only when using intervals
+    MERGE_CRAM(cram_to_merge.multiple.map { meta, crams -> [ meta, crams, [] ] }, fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai, [] ] }.collect())
 
-    cram_crai = ch_cram_to_merge.single.map{meta, cram -> [meta, cram[0]]}
-        .mix(MERGE_CRAM.out.cram)
-        .join(INDEX_CRAM.out.crai)
+    // Mix intervals and no_intervals channels together
+    cram_all = MERGE_CRAM.out.cram.mix(cram_to_merge.single)
 
-    // Gather versions of all tools used
-    ch_versions = ch_versions.mix(INDEX_CRAM.out.versions.first())
-    ch_versions = ch_versions.mix(MERGE_CRAM.out.versions.first())
+    // Index cram
+    INDEX_CRAM(cram_all)
+
+    // Join with the crai file
+    cram_crai = cram_all.join(INDEX_CRAM.out.index, failOnDuplicate: true, failOnMismatch: true)
 
     emit:
-        cram_crai
-        versions  = ch_versions
+    cram_crai
 }

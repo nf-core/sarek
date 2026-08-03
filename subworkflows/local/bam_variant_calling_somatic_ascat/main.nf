@@ -1,3 +1,9 @@
+//
+// ASCAT variant calling
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
 include { ASCAT } from '../../../modules/nf-core/ascat/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ASCAT {
@@ -13,16 +19,5 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ASCAT {
 
     main:
 
-    ch_versions = Channel.empty()
-
-    if (params.wes){
-        ASCAT(cram_pair, allele_files, loci_files, intervals_bed, fasta, gc_file, rt_file)
-    } else if (!params.wes) {
-        ASCAT(cram_pair, allele_files, loci_files, [], fasta, gc_file, rt_file)
-    }
-
-    ch_versions = ch_versions.mix(ASCAT.out.versions)
-
-    emit:
-    versions = ch_versions
+    ASCAT(cram_pair, allele_files, loci_files, intervals_bed, fasta, gc_file, rt_file)
 }

@@ -4,62 +4,55 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { GATK4_APPLYBQSR_SPARK     } from '../../../modules/nf-core/gatk4/applybqsrspark/main'
-include { CRAM_MERGE_INDEX_SAMTOOLS } from '../cram_merge_index_samtools/main'
+include { BAM_MERGE_INDEX_SAMTOOLS  } from '../bam_merge_index_samtools'
+include { CRAM_MERGE_INDEX_SAMTOOLS } from '../cram_merge_index_samtools'
+include { GATK4SPARK_APPLYBQSR      } from '../../../modules/nf-core/gatk4spark/applybqsr'
 
 workflow BAM_APPLYBQSR_SPARK {
     take:
-        cram          // channel: [mandatory] meta, cram, crai, recal
-        dict          // channel: [mandatory] dict
-        fasta         // channel: [mandatory] fasta
-        fasta_fai     // channel: [mandatory] fasta_fai
-        intervals     // channel: [mandatory] intervals, num_intervals
+    cram      // channel: [mandatory] [ meta, cram, crai, recal ]
+    dict      // channel: [mandatory] [ dict ]
+    fasta     // channel: [mandatory] [ fasta ]
+    fasta_fai // channel: [mandatory] [ fasta_fai ]
+    intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
-    ch_versions = Channel.empty()
 
-    cram_intervals = cram.combine(intervals)
-        .map{ meta, cram, crai, recal, intervals, num_intervals ->
+    // Combine cram and intervals for spread and gather strategy
+    // Move num_intervals to meta map
+    cram_intervals = cram
+        .combine(intervals)
+        .map { meta, cram_, crai, recal, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], cram_, crai, recal, intervals_] }
 
-            //If no interval file provided (0) then add empty list
-            intervals_new = num_intervals == 0 ? [] : intervals
+    // RUN APPLYBQSR SPARK
+    GATK4SPARK_APPLYBQSR(
+        cram_intervals,
+        fasta.map { _meta, fasta_ -> [fasta_] },
+        fasta_fai.map { _meta, fasta_fai_ -> [fasta_fai_] },
+        dict.map { _meta, dict_ -> [dict_] },
+    )
 
-            [[
-                id:             meta.sample,
-                data_type:      meta.data_type,
-                num_intervals:  num_intervals,
-                patient:        meta.patient,
-                sample:         meta.sample,
-                sex:            meta.sex,
-                status:         meta.status,
-            ],
-            cram, crai, recal, intervals_new]
-        }
+    // BAM path — populated when ext.suffix='bam', empty otherwise
+    bam_to_merge = GATK4SPARK_APPLYBQSR.out.bam
+        .map { meta, bam_ -> [groupKey(meta, meta.num_intervals), bam_] }
+        .groupTuple()
 
-    // Run Applybqsr spark
-    GATK4_APPLYBQSR_SPARK(cram_intervals, fasta, fasta_fai, dict)
+    BAM_MERGE_INDEX_SAMTOOLS(bam_to_merge)
 
-    // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED BAM FILES
-    CRAM_MERGE_INDEX_SAMTOOLS(GATK4_APPLYBQSR_SPARK.out.cram, fasta, fasta_fai)
+    // CRAM path — populated when ext.suffix='cram', empty otherwise
+    cram_to_merge = GATK4SPARK_APPLYBQSR.out.cram.map { meta, cram_ -> [groupKey(meta, meta.num_intervals), cram_] }.groupTuple()
 
-    ch_cram_recal_out = CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai.map{ meta, cram, crai ->
-                             // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
-                            [[
-                                id:         meta.id,
-                                data_type:  meta.data_type,
-                                patient:    meta.patient,
-                                sample:     meta.sample,
-                                sex:        meta.sex,
-                                status:     meta.status,
-                            ],
-                            cram, crai]
-                        }
+    CRAM_MERGE_INDEX_SAMTOOLS(
+        cram_to_merge,
+        fasta,
+        fasta_fai,
+    )
 
-    // Gather versions of all tools used
-    ch_versions = ch_versions.mix(GATK4_APPLYBQSR_SPARK.out.versions)
-    ch_versions = ch_versions.mix(CRAM_MERGE_INDEX_SAMTOOLS.out.versions)
+    // Mix — one is always empty
+    recal_out = BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai
+        .mix(CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai)
+        .map { meta, file_, index -> [meta - meta.subMap('num_intervals'), file_, index] }
 
     emit:
-        cram     = ch_cram_recal_out
-        versions = ch_versions // channel: [ versions.yml ]
+    alignment = recal_out // channel: [ meta, file, index ] — BAM or CRAM
 }

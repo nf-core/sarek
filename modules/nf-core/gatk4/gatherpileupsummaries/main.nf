@@ -1,20 +1,19 @@
 process GATK4_GATHERPILEUPSUMMARIES {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_low'
 
-    conda (params.enable_conda ? "bioconda::gatk4=4.2.6.1" : null)
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gatk4:4.2.6.1--hdfd78af_0':
-        'quay.io/biocontainers/gatk4:4.2.6.1--hdfd78af_0' }"
-
+    conda "${moduleDir}/environment.yml"
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/ce/ced519873646379e287bc28738bdf88e975edd39a92e7bc6a34bccd37153d9d0/data'
+        : 'community.wave.seqera.io/library/gatk4_gcnvkernel:edb12e4f0bf02cd3'}"
 
     input:
     tuple val(meta), path(pileup)
-    path  dict
+    path dict
 
     output:
-    tuple val(meta), path("*.pileupsummaries.table"), emit: table
-    path "versions.yml"                             , emit: versions
+    tuple val(meta), path("*.pileups.table"), emit: table
+    tuple val("${task.process}"), val('gatk4'), eval("gatk --version | sed -n '/GATK.*v/s/.*v//p'"), topic: versions, emit: versions_gatk4
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,25 +21,28 @@ process GATK4_GATHERPILEUPSUMMARIES {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def input_list = pileup.collect{ "--I $it" }.join(' ')
+    def input_list = pileup.collect { pileup_ -> "--I ${pileup_}" }.join(' ')
 
-    def avail_mem = 3
+    def avail_mem = 3072
     if (!task.memory) {
-        log.info '[GATK GatherPileupSummaries] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
-    } else {
-        avail_mem = task.memory.giga
+        log.info('[GATK GatherPileupSummaries] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.')
+    }
+    else {
+        avail_mem = (task.memory.mega * 0.8).intValue()
     }
     """
-    gatk --java-options "-Xmx${avail_mem}g" GatherPileupSummaries \\
-        $input_list \\
-        --O ${prefix}.pileupsummaries.table \\
-        --sequence-dictionary $dict \\
+    gatk --java-options "-Xmx${avail_mem}M -XX:-UsePerfData" \\
+        GatherPileupSummaries \\
+        ${input_list} \\
+        --O ${prefix}.pileups.table \\
+        --sequence-dictionary ${dict} \\
         --tmp-dir . \\
-        $args
+        ${args}
+    """
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
-    END_VERSIONS
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.pileups.table
     """
 }

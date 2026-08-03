@@ -1,46 +1,41 @@
 //
-// MARKDUPLICATES
+// MARKDUPLICATES AND QC after mapping
 //
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { CRAM_QC_MOSDEPTH_SAMTOOLS              } from '../cram_qc_mosdepth_samtools/main'
-include { GATK4_MARKDUPLICATES                   } from '../../../modules/nf-core/gatk4/markduplicates/main'
-include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES } from '../../../modules/nf-core/samtools/index/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS } from '../cram_qc_mosdepth_samtools/main'
+include { GATK4_MARKDUPLICATES      } from '../../../modules/nf-core/gatk4/markduplicates/main'
 
 workflow BAM_MARKDUPLICATES {
     take:
-        bam                           // channel: [mandatory] meta, bam
-        fasta                         // channel: [mandatory] fasta
-        fasta_fai                     // channel: [mandatory] fasta_fai
-        intervals_bed_combined        // channel: [optional]  intervals_bed
+    bam                    // channel: [mandatory] [ meta, bam ]
+    fasta                  // channel: [mandatory] [ fasta ]
+    fasta_fai              // channel: [mandatory] [ fasta_fai ]
+    intervals_bed_combined // channel: [optional]  [ intervals_bed ]
 
     main:
-    ch_versions = Channel.empty()
-    qc_reports  = Channel.empty()
+    reports  = channel.empty()
 
-    // Run Markupduplicates
-    GATK4_MARKDUPLICATES(bam, fasta, fasta_fai)
-    INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES.out.cram)
+    // RUN MARKUPDUPLICATES
+    // --CREATE_INDEX true is set via ext.args when --save_output_as_bam, so the
+    // module emits .bai inline; CRAM mode emits .crai via samtools post-conversion.
+    GATK4_MARKDUPLICATES(bam, fasta.map{ _meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] })
 
-    cram_markduplicates = GATK4_MARKDUPLICATES.out.cram
-        .join(INDEX_MARKDUPLICATES.out.crai)
+    // Unified alignment output — BAM or CRAM depending on save_output_as_bam
+    alignment = GATK4_MARKDUPLICATES.out.bam
+        .join(GATK4_MARKDUPLICATES.out.bai, failOnDuplicate: true, failOnMismatch: true)
+        .mix(GATK4_MARKDUPLICATES.out.cram
+            .join(GATK4_MARKDUPLICATES.out.crai, failOnDuplicate: true, failOnMismatch: true))
 
-    // Convert output to cram
-    CRAM_QC_MOSDEPTH_SAMTOOLS(cram_markduplicates, fasta, fasta_fai, intervals_bed_combined)
+    // QC on alignment
+    CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, fasta_fai, intervals_bed_combined)
 
     // Gather all reports generated
-    qc_reports = qc_reports.mix(GATK4_MARKDUPLICATES.out.metrics,
-                                CRAM_QC_MOSDEPTH_SAMTOOLS.out.qc)
-
-    // Gather versions of all tools used
-    ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES.out.versions)
-    ch_versions = ch_versions.mix(INDEX_MARKDUPLICATES.out.versions)
-    ch_versions = ch_versions.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.versions)
+    reports = reports.mix(GATK4_MARKDUPLICATES.out.metrics)
+    reports = reports.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.reports)
 
     emit:
-        cram     = cram_markduplicates
-        qc       = qc_reports
-
-        versions = ch_versions // channel: [ versions.yml ]
+    alignment   // channel: [ meta, file, index ] — BAM or CRAM
+    reports
 }

@@ -1,83 +1,71 @@
-include { BCFTOOLS_SORT                                } from '../../../modules/nf-core/bcftools/sort/main'
-include { GATK4_MERGEVCFS as MERGE_FREEBAYES           } from '../../../modules/nf-core/gatk4/mergevcfs/main'
-include { FREEBAYES                                    } from '../../../modules/nf-core/freebayes/main'
-include { TABIX_TABIX as TABIX_VC_FREEBAYES            } from '../../../modules/nf-core/tabix/tabix/main'
+//
+// FREEBAYES variant calling
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
+include { BCFTOOLS_SORT                              } from '../../../modules/nf-core/bcftools/sort'
+include { FREEBAYES                                  } from '../../../modules/nf-core/freebayes'
+include { GATK4_MERGEVCFS as MERGE_FREEBAYES         } from '../../../modules/nf-core/gatk4/mergevcfs'
+include { HTSLIB_BGZIPTABIX as TABIX_VC_FREEBAYES      } from '../../../modules/nf-core/htslib/bgziptabix'
+include { HTSLIB_BGZIPTABIX as TABIX_VC_FREEBAYES_FILT } from '../../../modules/nf-core/htslib/bgziptabix'
+include { VCFLIB_VCFFILTER                           } from '../../../modules/nf-core/vcflib/vcffilter'
 
 workflow BAM_VARIANT_CALLING_FREEBAYES {
     take:
-    cram                     // channel: [mandatory] [meta, cram, crai, [], [], interval]
-    dict
-    fasta                    // channel: [mandatory]
-    fasta_fai                // channel: [mandatory]
+    ch_cram      // channel: [mandatory] [ meta, cram1, crai1, cram2, crai2 ] or [ meta, cram, crai, [], [] ]
+    ch_dict      // channel: [mandatory] [ meta, dict ]
+    ch_fasta     // channel: [mandatory] [ meta, fasta ]
+    ch_fasta_fai // channel: [mandatory] [ meta, fasta_fai ]
+    ch_intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
+    // Combine cram and intervals for spread and gather strategy
+    cram_intervals = ch_cram.combine(ch_intervals)
+        // Move num_intervals to meta map and reorganize channel for FREEBAYES module
+        .map{ meta, cram1, crai1, cram2, crai2, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram1, crai1, cram2, crai2, intervals ]}
 
-    ch_versions = Channel.empty()
-
-    FREEBAYES(
-        cram,
-        fasta,
-        fasta_fai,
-        [], [], [])
+    FREEBAYES(cram_intervals, ch_fasta, ch_fasta_fai, [[id:'null'], []], [[id:'null'], []], [[id:'null'], []])
 
     BCFTOOLS_SORT(FREEBAYES.out.vcf)
-    BCFTOOLS_SORT.out.vcf.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{bcftools_vcf_out}
 
-    // Only when no intervals
-    TABIX_VC_FREEBAYES(bcftools_vcf_out.no_intervals)
+    // Figuring out if there is one or more vcf(s) from the same sample
+    bcftools_vcf_out = BCFTOOLS_SORT.out.vcf.branch{ meta, _vcf ->
+        // Use meta.num_intervals to asses number of intervals
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
+    }
 
     // Only when using intervals
-    MERGE_FREEBAYES(
-        bcftools_vcf_out.intervals
-            .map{ meta, vcf ->
+    vcf_to_merge = bcftools_vcf_out.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}.groupTuple()
+    MERGE_FREEBAYES(vcf_to_merge, ch_dict)
 
-                new_meta = meta.tumor_id ? [
-                                                id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                                                normal_id:      meta.normal_id,
-                                                num_intervals:  meta.num_intervals,
-                                                patient:        meta.patient,
-                                                sex:            meta.sex,
-                                                tumor_id:       meta.tumor_id,
-                                            ]
-                                        :   [
-                                                id:             meta.sample,
-                                                num_intervals:  meta.num_intervals,
-                                                patient:        meta.patient,
-                                                sample:         meta.sample,
-                                                sex:            meta.sex,
-                                                status:         meta.status,
-                                            ]
-                [groupKey(new_meta, meta.num_intervals), vcf]
-            }.groupTuple(),
-        dict
-    )
+    // Only when no_intervals
+    TABIX_VC_FREEBAYES(bcftools_vcf_out.no_intervals.map{ meta, vcf -> [ meta, vcf, [], [] ] }, 'compress', true, '')
 
-    // Mix output channels for "no intervals" and "with intervals" results
-    freebayes_vcf = Channel.empty().mix(
-                        MERGE_FREEBAYES.out.vcf,
-                        bcftools_vcf_out.no_intervals)
-                    .map{ meta, vcf ->
-                        [ [
-                            id:             meta.id,
-                            normal_id:      meta.normal_id,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sex:            meta.sex,
-                            tumor_id:       meta.tumor_id,
-                            variantcaller:  "freebayes"
-                        ],
-                            vcf]
-                    }
+    // Mix intervals and no_intervals channels together, including the tabix index
+    merged_vcf_with_tbi = MERGE_FREEBAYES.out.vcf
+        .join(MERGE_FREEBAYES.out.tbi, by: [0])
+        .map{ meta, vcf, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'freebayes' ], vcf, tbi ] }
 
-    ch_versions = ch_versions.mix(BCFTOOLS_SORT.out.versions)
-    ch_versions = ch_versions.mix(MERGE_FREEBAYES.out.versions)
-    ch_versions = ch_versions.mix(FREEBAYES.out.versions)
-    ch_versions = ch_versions.mix(TABIX_VC_FREEBAYES.out.versions)
+    no_intervals_with_tbi = bcftools_vcf_out.no_intervals
+        .join(TABIX_VC_FREEBAYES.out.index, by: [0])
+        .map{ meta, vcf, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'freebayes' ], vcf, tbi ] }
+
+    // Final channel with VCF and its index
+    ch_vcf = merged_vcf_with_tbi.mix(no_intervals_with_tbi)
+
+    VCFLIB_VCFFILTER(ch_vcf)
+
+    vcf_filtered = VCFLIB_VCFFILTER.out.vcf
+
+    // Index the filtered VCFs
+    TABIX_VC_FREEBAYES_FILT(vcf_filtered.map{ meta, vcf -> [ meta, vcf, [], [] ] }, 'compress', true, '')
 
     emit:
-    freebayes_vcf
-    versions = ch_versions
+    vcf_unfiltered = ch_vcf // channel: [ meta, vcf, tbi ]
+
+    // Use the QUAL filtered vcfs for the next steps
+    vcf = vcf_filtered                         // channel: [ meta, vcf ]
+    tbi = TABIX_VC_FREEBAYES_FILT.out.index    // channel: [ meta, tbi ]
 }

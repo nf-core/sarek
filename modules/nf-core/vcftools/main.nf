@@ -2,15 +2,15 @@ process VCFTOOLS {
     tag "$meta.id"
     label 'process_single'
 
-    conda (params.enable_conda ? "bioconda::vcftools=0.1.16" : null)
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/vcftools:0.1.16--he513fc3_4' :
-        'quay.io/biocontainers/vcftools:0.1.16--he513fc3_4' }"
+    conda "${moduleDir}/environment.yml"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/vcftools:0.1.17--pl5321h077b44d_0' :
+        'quay.io/biocontainers/vcftools:0.1.17--pl5321h077b44d_0' }"
 
     input:
     // Owing to the nature of vcftools we here provide solutions to working with optional bed files and optional
     // alternative variant files, for use with the 'diff' suite of tools.
-    // Other optional input files can be utilised in a similar way to below but we do not exhaustively itterate through all
+    // Other optional input files can be utilised in a similar way to below but we do not exhaustively iterate through all
     // possible options. Instead we leave that to the user.
     tuple val(meta), path(variant_file)
     path  bed
@@ -79,7 +79,7 @@ process VCFTOOLS {
     tuple val(meta), path("*.diff.indv")              , optional:true, emit: diff_indv
     tuple val(meta), path("*.diff.discordance.matrix"), optional:true, emit: diff_discd_matrix
     tuple val(meta), path("*.diff.switch")            , optional:true, emit: diff_switch_error
-    path "versions.yml"                               , emit: versions
+    tuple val("${task.process}"), val('vcftools'), eval('vcftools --version 2>&1 | sed "s/^.*VCFtools (//;s/).*//"'), emit: versions_vcftools, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -91,17 +91,21 @@ process VCFTOOLS {
 
     def bed_arg  = (args.contains('--bed')) ? "--bed ${bed}" :
         (args.contains('--exclude-bed')) ? "--exclude-bed ${bed}" :
-        (args.contains('--hapcount')) ? "--hapcount ${bed}" : ''
-    args_list.removeIf { it.contains('--bed') }
-    args_list.removeIf { it.contains('--exclude-bed') }
-    args_list.removeIf { it.contains('--hapcount') }
+        (args.contains('--hapcount')) ? "--hapcount ${bed}" :
+        (args.contains('--positions')) ? "--positions ${bed}" :
+        (args.contains('--exclude-positions')) ? "--exclude-positions ${bed}"  : ''
+    args_list.removeIf { arg -> arg.contains('--bed') }
+    args_list.removeIf { arg -> arg.contains('--exclude-bed') }
+    args_list.removeIf { arg -> arg.contains('--hapcount') }
+    args_list.removeIf { arg -> arg.contains('--positions') }
+    args_list.removeIf { arg -> arg.contains('--exclude-positions') }
 
     def diff_variant_arg = (args.contains('--diff')) ? "--diff ${diff_variant_file}" :
         (args.contains('--gzdiff')) ? "--gzdiff ${diff_variant_file}" :
         (args.contains('--diff-bcf')) ? "--diff-bcf ${diff_variant_file}" : ''
-    args_list.removeIf { it.contains('--diff') }
-    args_list.removeIf { it.contains('--gzdiff') }
-    args_list.removeIf { it.contains('--diff-bcf') }
+    args_list.removeIf { arg -> arg.contains('--diff') }
+    args_list.removeIf { arg -> arg.contains('--gzdiff') }
+    args_list.removeIf { arg -> arg.contains('--diff-bcf') }
 
     def input_file = ("$variant_file".endsWith(".vcf")) ? "--vcf ${variant_file}" :
         ("$variant_file".endsWith(".vcf.gz")) ? "--gzvcf ${variant_file}" :
@@ -114,10 +118,72 @@ process VCFTOOLS {
         ${args_list.join(' ')} \\
         $bed_arg \\
         $diff_variant_arg
+    """
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        vcftools: \$(echo \$(vcftools --version 2>&1) | sed 's/^.*VCFtools (//;s/).*//')
-    END_VERSIONS
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.vcf
+    touch ${prefix}.bcf
+    touch ${prefix}.frq
+    touch ${prefix}.frq.count
+    touch ${prefix}.idepth
+    touch ${prefix}.ldepth
+    touch ${prefix}.ldepth.mean
+    touch ${prefix}.gdepth
+    touch ${prefix}.hap.ld
+    touch ${prefix}.geno.ld
+    touch ${prefix}.geno.chisq
+    touch ${prefix}.list.hap.ld
+    touch ${prefix}.list.geno.ld
+    touch ${prefix}.interchrom.hap.ld
+    touch ${prefix}.interchrom.geno.ld
+    touch ${prefix}.TsTv
+    touch ${prefix}.TsTv.summary
+    touch ${prefix}.TsTv.count
+    touch ${prefix}.TsTv.qual
+    touch ${prefix}.FILTER.summary
+    touch ${prefix}.sites.pi
+    touch ${prefix}.windowed.pi
+    touch ${prefix}.weir.fst
+    touch ${prefix}.het
+    touch ${prefix}.hwe
+    touch ${prefix}.Tajima.D
+    touch ${prefix}.ifreqburden
+    touch ${prefix}.LROH
+    touch ${prefix}.relatedness
+    touch ${prefix}.relatedness2
+    touch ${prefix}.lqual
+    touch ${prefix}.imiss
+    touch ${prefix}.lmiss
+    touch ${prefix}.snpden
+    touch ${prefix}.kept.sites
+    touch ${prefix}.removed.sites
+    touch ${prefix}.singletons
+    touch ${prefix}.indel.hist
+    touch ${prefix}.hapcount
+    touch ${prefix}.mendel
+    touch ${prefix}.FORMAT
+    touch ${prefix}.INFO
+    touch ${prefix}.012
+    touch ${prefix}.012.indv
+    touch ${prefix}.012.pos
+    touch ${prefix}.impute.hap
+    touch ${prefix}.impute.hap.legend
+    touch ${prefix}.impute.hap.indv
+    touch ${prefix}.ldhat.sites
+    touch ${prefix}.ldhat.locs
+    touch ${prefix}.BEAGLE.GL
+    touch ${prefix}.BEAGLE.PL
+    touch ${prefix}.ped
+    touch ${prefix}.map
+    touch ${prefix}.tped
+    touch ${prefix}.tfam
+    touch ${prefix}.diff.sites_in_files
+    touch ${prefix}.diff.indv_in_files
+    touch ${prefix}.diff.sites
+    touch ${prefix}.diff.indv
+    touch ${prefix}.diff.discordance.matrix
+    touch ${prefix}.diff.switch
     """
 }

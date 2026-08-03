@@ -2,13 +2,14 @@ process FASTP {
     tag "$meta.id"
     label 'process_medium'
 
-    conda (params.enable_conda ? 'bioconda::fastp=0.23.2' : null)
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/fastp:0.23.2--h79da9fb_0' :
-        'quay.io/biocontainers/fastp:0.23.2--h79da9fb_0' }"
+    conda "${moduleDir}/environment.yml"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/55/556474e164daf5a5e218cd5d497681dcba0645047cf24698f88e3e078eacbd09/data' :
+        'community.wave.seqera.io/library/fastp:1.1.0--08aa7c5662a30d57' }"
 
     input:
-    tuple val(meta), path(reads)
+    tuple val(meta), path(reads), path(adapter_fasta)
+    val   discard_trimmed_pass
     val   save_trimmed_fail
     val   save_merged
 
@@ -17,9 +18,9 @@ process FASTP {
     tuple val(meta), path('*.json')           , emit: json
     tuple val(meta), path('*.html')           , emit: html
     tuple val(meta), path('*.log')            , emit: log
-    path "versions.yml"                       , emit: versions
     tuple val(meta), path('*.fail.fastq.gz')  , optional:true, emit: reads_fail
     tuple val(meta), path('*.merged.fastq.gz'), optional:true, emit: reads_merged
+    tuple val("${task.process}"), val('fastp'), eval('fastp --version 2>&1 | sed -e "s/fastp //g"'), emit: versions_fastp, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -27,7 +28,10 @@ process FASTP {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def fail_fastq = save_trimmed_fail && meta.single_end ? "--failed_out ${prefix}.fail.fastq.gz" : save_trimmed_fail && !meta.single_end ? "--unpaired1 ${prefix}_1.fail.fastq.gz --unpaired2 ${prefix}_2.fail.fastq.gz" : ''
+    def adapter_list = adapter_fasta ? "--adapter_fasta ${adapter_fasta}" : ""
+    def fail_fastq = save_trimmed_fail && meta.single_end ? "--failed_out ${prefix}.fail.fastq.gz" : save_trimmed_fail && !meta.single_end ? "--failed_out ${prefix}.paired.fail.fastq.gz --unpaired1 ${prefix}_R1.fail.fastq.gz --unpaired2 ${prefix}_R2.fail.fastq.gz" : ''
+    def out_fq1 = discard_trimmed_pass ?: ( meta.single_end ? "--out1 ${prefix}.fastp.fastq.gz" : "--out1 ${prefix}_R1.fastp.fastq.gz" )
+    def out_fq2 = discard_trimmed_pass ?: "--out2 ${prefix}_R2.fastp.fastq.gz"
     // Added soft-links to original fastqs for consistent naming in MultiQC
     // Use single ended for interleaved. Add --interleaved_in in config.
     if ( task.ext.args?.contains('--interleaved_in') ) {
@@ -40,59 +44,61 @@ process FASTP {
             --thread $task.cpus \\
             --json ${prefix}.fastp.json \\
             --html ${prefix}.fastp.html \\
+            $adapter_list \\
             $fail_fastq \\
             $args \\
-            2> ${prefix}.fastp.log \\
+            2>| >(tee ${prefix}.fastp.log >&2) \\
         | gzip -c > ${prefix}.fastp.fastq.gz
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            fastp: \$(fastp --version 2>&1 | sed -e "s/fastp //g")
-        END_VERSIONS
         """
     } else if (meta.single_end) {
         """
         [ ! -f  ${prefix}.fastq.gz ] && ln -sf $reads ${prefix}.fastq.gz
 
         fastp \\
-            --stdout \\
             --in1 ${prefix}.fastq.gz \\
-            --out1  ${prefix}.fastp.fastq.gz \\
+            $out_fq1 \\
             --thread $task.cpus \\
             --json ${prefix}.fastp.json \\
             --html ${prefix}.fastp.html \\
+            $adapter_list \\
             $fail_fastq \\
             $args \\
-            2> ${prefix}.fastp.log
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            fastp: \$(fastp --version 2>&1 | sed -e "s/fastp //g")
-        END_VERSIONS
+            2>| >(tee ${prefix}.fastp.log >&2)
         """
     } else {
         def merge_fastq = save_merged ? "-m --merged_out ${prefix}.merged.fastq.gz" : ''
         """
-        [ ! -f  ${prefix}_1.fastq.gz ] && ln -sf ${reads[0]} ${prefix}_1.fastq.gz
-        [ ! -f  ${prefix}_2.fastq.gz ] && ln -sf ${reads[1]} ${prefix}_2.fastq.gz
+        [ ! -f  ${prefix}_R1.fastq.gz ] && ln -sf ${reads[0]} ${prefix}_R1.fastq.gz
+        [ ! -f  ${prefix}_R2.fastq.gz ] && ln -sf ${reads[1]} ${prefix}_R2.fastq.gz
         fastp \\
-            --in1 ${prefix}_1.fastq.gz \\
-            --in2 ${prefix}_2.fastq.gz \\
-            --out1 ${prefix}_1.fastp.fastq.gz \\
-            --out2 ${prefix}_2.fastp.fastq.gz \\
+            --in1 ${prefix}_R1.fastq.gz \\
+            --in2 ${prefix}_R2.fastq.gz \\
+            $out_fq1 \\
+            $out_fq2 \\
             --json ${prefix}.fastp.json \\
             --html ${prefix}.fastp.html \\
+            $adapter_list \\
             $fail_fastq \\
             $merge_fastq \\
             --thread $task.cpus \\
             --detect_adapter_for_pe \\
             $args \\
-            2> ${prefix}.fastp.log
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            fastp: \$(fastp --version 2>&1 | sed -e "s/fastp //g")
-        END_VERSIONS
+            2>| >(tee ${prefix}.fastp.log >&2)
         """
     }
+
+    stub:
+    def prefix              = task.ext.prefix ?: "${meta.id}"
+    def is_single_output    = task.ext.args?.contains('--interleaved_in') || meta.single_end
+    def touch_reads         = (discard_trimmed_pass) ? "" : (is_single_output) ? "echo '' | gzip > ${prefix}.fastp.fastq.gz" : "echo '' | gzip > ${prefix}_R1.fastp.fastq.gz ; echo '' | gzip > ${prefix}_R2.fastp.fastq.gz"
+    def touch_merged        = (!is_single_output && save_merged) ? "echo '' | gzip >  ${prefix}.merged.fastq.gz" : ""
+    def touch_fail_fastq    = (!save_trimmed_fail) ? "" : meta.single_end ? "echo '' | gzip > ${prefix}.fail.fastq.gz" : "echo '' | gzip > ${prefix}.paired.fail.fastq.gz ; echo '' | gzip > ${prefix}_R1.fail.fastq.gz ; echo '' | gzip > ${prefix}_R2.fail.fastq.gz"
+    """
+    $touch_reads
+    $touch_fail_fastq
+    $touch_merged
+    touch "${prefix}.fastp.json"
+    touch "${prefix}.fastp.html"
+    touch "${prefix}.fastp.log"
+    """
 }

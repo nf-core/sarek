@@ -1,4 +1,3 @@
-*.code-workspace
 .nextflow*
 work/
 data/
@@ -7,3 +6,14 @@ results/
 testing/
 testing*
 *.pyc
+null/
+*.code-workspace
+.nf-test*
+.nf-test/
+test-datasets/
+test.tap
+test.xml
+.vscode/mcp.json
+modules/nf-core/**/tests/
+subworkflows/nf-core/**/tests/
+.lineage/

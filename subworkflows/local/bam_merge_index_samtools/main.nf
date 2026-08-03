@@ -9,30 +9,31 @@ include { SAMTOOLS_MERGE as MERGE_BAM       } from '../../../modules/nf-core/sam
 
 workflow BAM_MERGE_INDEX_SAMTOOLS {
     take:
-        bam // channel: [mandatory] meta, bam
+    bam // channel: [mandatory] meta, bam
 
     main:
-    ch_versions = Channel.empty()
 
     // Figuring out if there is one or more bam(s) from the same sample
-    bam.branch{
-        //Here there actually is a list, so size() works
-        single:   it[1].size() == 1
-        multiple: it[1].size() > 1
-    }.set{bam_to_merge}
+    bam_to_merge = bam.branch{ meta, bam_ ->
+        // bam is a list, so use bam.size() to asses number of intervals
+        single:   bam_.size() <= 1
+            return [ meta, bam_[0] ]
+        multiple: bam_.size() > 1
+    }
 
-    MERGE_BAM(bam_to_merge.multiple, [], [])
-    INDEX_MERGE_BAM(bam_to_merge.single.mix(MERGE_BAM.out.bam))
+    // Only when using intervals
+    MERGE_BAM(bam_to_merge.multiple.map { meta, bams -> [ meta, bams, [] ] }, [ [ id:'null' ], [], [], [] ])
 
-    bam_bai = bam_to_merge.single.map{meta, bam -> [meta, bam[0]]}
-        .mix(MERGE_BAM.out.bam)
-        .join(INDEX_MERGE_BAM.out.bai)
+    // Mix intervals and no_intervals channels together
+    bam_all = MERGE_BAM.out.bam.mix(bam_to_merge.single)
 
-    // Gather versions of all tools used
-    ch_versions = ch_versions.mix(INDEX_MERGE_BAM.out.versions.first())
-    ch_versions = ch_versions.mix(MERGE_BAM.out.versions.first())
+    // Index bam
+    INDEX_MERGE_BAM(bam_all)
+
+    // Join with the bai file
+    bam_bai = bam_all.join(INDEX_MERGE_BAM.out.index, failOnDuplicate: true, failOnMismatch: true)
 
     emit:
-        bam_bai
-        versions = ch_versions
+    bam_bai
+
 }

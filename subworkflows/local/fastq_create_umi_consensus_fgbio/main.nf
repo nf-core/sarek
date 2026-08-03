@@ -9,19 +9,19 @@
 include { FGBIO_CALLMOLECULARCONSENSUSREADS as CALLUMICONSENSUS } from '../../../modules/nf-core/fgbio/callmolecularconsensusreads/main.nf'
 include { FGBIO_FASTQTOBAM                  as FASTQTOBAM       } from '../../../modules/nf-core/fgbio/fastqtobam/main'
 include { FGBIO_GROUPREADSBYUMI             as GROUPREADSBYUMI  } from '../../../modules/nf-core/fgbio/groupreadsbyumi/main'
-include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP   as ALIGN_UMI        } from '../fastq_align_bwamem_mem2_dragmap/main'
-include { SAMBLASTER                                            } from '../../../modules/nf-core/samblaster/main'
+include { FASTQ_ALIGN                       as ALIGN_UMI        } from '../fastq_align/main'
+include { SAMTOOLS_MERGE                    as MERGE_CONSENSUS  } from '../../../modules/nf-core/samtools/merge/main'
 include { SAMTOOLS_BAM2FQ                   as BAM2FASTQ        } from '../../../modules/nf-core/samtools/bam2fq/main.nf'
 
 workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     take:
     reads                     // channel: [mandatory] [ val(meta), [ reads ] ]
     fasta                     // channel: [mandatory] /path/to/reference/fasta
+    fai                       // channel: [optional] /path/to/reference/fasta_fai, needed for Sentieon
     map_index                 // channel: [mandatory] Pre-computed mapping index
     groupreadsbyumi_strategy  // string:  [mandatory] grouping strategy - default: "Adjacency"
 
     main:
-    ch_versions = Channel.empty()
 
     // params.umi_read_structure is passed out as ext.args
     // FASTQ reads are converted into a tagged unmapped BAM file (uBAM)
@@ -37,30 +37,42 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     // appropriately tagged interleaved FASTQ reads are mapped to the reference
     // bams will not be sorted (hence, sort = false)
     sort = false
-    ALIGN_UMI(BAM2FASTQ.out.reads, map_index, sort)
+    ALIGN_UMI(BAM2FASTQ.out.reads, map_index, sort, fasta, fai)
 
-    // samblaster is used in order to tag mates information in the BAM file
-    // this is used in order to group reads by UMI
-    SAMBLASTER(ALIGN_UMI.out.bam)
+    bams_to_merge = ALIGN_UMI.out.bam
+    // id currently includes the lane, so swap to just id=sample and groupKey to avoid blocking
+    // Remove lane-specific fields (id, sample_lane_id) so groupTuple can match lanes from the same sample
+        .map { meta, bam ->
+            def clean_meta = meta - meta.subMap('id', 'sample_lane_id') + [id: meta.sample]
+            tuple( groupKey(clean_meta, meta.num_lanes), bam)
+            }
+        .groupTuple()
+        // undo the groupKey, else the meta map is not a normal map.
+        .map { meta, bam -> tuple(meta.target, bam) }
+        .branch { meta, bam ->
+            single: meta.num_lanes <= 1
+            return [meta, bam[0]]
+            multiple: meta.num_lanes > 1
+        }
+
+    // Merge across runs/lanes for the same sample
+    MERGE_CONSENSUS(bams_to_merge.multiple.map { meta, bams -> [ meta, bams, [] ] }, [[], [], [], []])
+
+    bams_all = MERGE_CONSENSUS.out.bam.mix(bams_to_merge.single)
 
     // appropriately tagged reads are now grouped by UMI information
-    GROUPREADSBYUMI(SAMBLASTER.out.bam, groupreadsbyumi_strategy)
+    GROUPREADSBYUMI(bams_all, groupreadsbyumi_strategy)
 
     // Using newly created groups
     // To call a consensus across reads in the same group
     // And emit a consensus BAM file
-    CALLUMICONSENSUS(GROUPREADSBYUMI.out.bam)
-
-    ch_versions = ch_versions.mix(BAM2FASTQ.out.versions)
-    ch_versions = ch_versions.mix(ALIGN_UMI.out.versions)
-    ch_versions = ch_versions.mix(CALLUMICONSENSUS.out.versions)
-    ch_versions = ch_versions.mix(FASTQTOBAM.out.versions)
-    ch_versions = ch_versions.mix(GROUPREADSBYUMI.out.versions)
-    ch_versions = ch_versions.mix(SAMBLASTER.out.versions)
+    // TODO: add params for call_min_reads and call_min_baseq
+    call_min_reads = 1
+    call_min_baseq = 10
+    CALLUMICONSENSUS(GROUPREADSBYUMI.out.bam, call_min_reads, call_min_baseq)
 
     emit:
     umibam         = FASTQTOBAM.out.bam             // channel: [ val(meta), [ bam ] ]
     groupbam       = GROUPREADSBYUMI.out.bam        // channel: [ val(meta), [ bam ] ]
     consensusbam   = CALLUMICONSENSUS.out.bam       // channel: [ val(meta), [ bam ] ]
-    versions       = ch_versions                    // channel: [ versions.yml ]
 }

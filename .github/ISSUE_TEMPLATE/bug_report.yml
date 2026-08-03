@@ -9,7 +9,6 @@ body:
 
         - [nf-core website: troubleshooting](https://nf-co.re/usage/troubleshooting)
         - [nf-core/sarek pipeline documentation](https://nf-co.re/sarek/usage)
-
   - type: textarea
     id: description
     attributes:
@@ -42,9 +41,9 @@ body:
     attributes:
       label: System information
       description: |
-        * Nextflow version _(eg. 21.10.3)_
+        * Nextflow version _(eg. 23.04.0)_
         * Hardware _(eg. HPC, Desktop, Cloud)_
         * Executor _(eg. slurm, local, awsbatch)_
-        * Container engine: _(e.g. Docker, Singularity, Conda, Podman, Shifter or Charliecloud)_
+        * Container engine: _(e.g. Docker, Singularity, Conda, Podman, Shifter, Charliecloud, or Apptainer)_
         * OS _(eg. CentOS Linux, macOS, Linux Mint)_
         * Version of nf-core/sarek _(eg. 1.1, 1.5, 1.8.2)_

@@ -1,0 +1,23 @@
+{
+    "Fails with profile test --tools snpeff --snpeff_db na --build_only_index": {
+        "content": [
+            [
+                "pipeline_info"
+            ],
+            "No stable content",
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files",
+            "No warnings",
+            [
+                "This path is not available within annotation-cache.",
+                "Please check https://annotation-cache.github.io/ to create a request for it."
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2025-12-15T19:13:50.126681673"
+    }
+}

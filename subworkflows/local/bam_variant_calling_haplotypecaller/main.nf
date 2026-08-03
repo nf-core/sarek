@@ -1,120 +1,104 @@
-include { GATK4_MERGEVCFS as MERGE_HAPLOTYPECALLER } from '../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_HAPLOTYPECALLER                    } from '../../../modules/nf-core/gatk4/haplotypecaller/main'
-include { BAM_JOINT_CALLING_GERMLINE_GATK          } from '../bam_joint_calling_germline_gatk/main'
-include { VCF_VARIANT_FILTERING_GATK               } from '../vcf_variant_filtering_gatk/main'
+//
+// GATK4 HAPLOTYPACALLER germline variant calling:
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
+include { BAM_MERGE_INDEX_SAMTOOLS                            } from '../bam_merge_index_samtools/main'
+include { GATK4_HAPLOTYPECALLER                               } from '../../../modules/nf-core/gatk4/haplotypecaller/main'
+include { GATK4_MERGEVCFS            as MERGE_HAPLOTYPECALLER } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 
 workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     take:
-    cram                            // channel: [mandatory] [meta, cram, crai, interval.bed]
-    fasta                           // channel: [mandatory]
-    fasta_fai                       // channel: [mandatory]
-    dict                            // channel: [mandatory]
-    dbsnp                           // channel: []
-    dbsnp_tbi
-    known_sites_indels
-    known_sites_indels_tbi
-    known_sites_snps
-    known_sites_snps_tbi
-    intervals_bed_combined          // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
-
+    cram                         // channel: [mandatory] [ meta, cram, crai, interval.bed ]
+    fasta                        // channel: [mandatory]
+    fasta_fai                    // channel: [mandatory]
+    dict                         // channel: [mandatory]
+    dbsnp                        // channel: [optional]
+    dbsnp_tbi                    // channel: [optional]
+    intervals                    // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
 
-    ch_versions = Channel.empty()
-    filtered_vcf = Channel.empty()
+    vcf           = channel.empty()
+    realigned_bam = channel.empty()
+
+    // Combine cram and intervals for spread and gather strategy
+    cram_intervals = cram.combine(intervals)
+        // Move num_intervals to meta map
+        // Add interval_name to allow correct merging with interval files
+        .map{ meta, cram_, crai, intervals_, num_intervals -> [ meta + [ interval_name:intervals_.baseName, num_intervals:num_intervals, variantcaller:'haplotypecaller' ], cram_, crai, intervals_, [] ] }
 
     GATK4_HAPLOTYPECALLER(
-        cram,
+        cram_intervals,
         fasta,
         fasta_fai,
         dict,
         dbsnp,
         dbsnp_tbi)
 
-    // Figure out if using intervals or no_intervals
-    GATK4_HAPLOTYPECALLER.out.vcf.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{haplotypecaller_vcf_branch}
+    // For joint genotyping
+    gvcf_tbi_intervals = GATK4_HAPLOTYPECALLER.out.vcf
+        .join(GATK4_HAPLOTYPECALLER.out.tbi, failOnMismatch: true)
+        .join(cram_intervals, failOnMismatch: true)
+        .map{ meta, gvcf, tbi, _cram, _crai, intervals_, _dragstr_model -> [ meta, gvcf, tbi, intervals_ ] }
 
-    GATK4_HAPLOTYPECALLER.out.tbi.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{haplotypecaller_tbi_branch}
+    // Figuring out if there is one or more vcf(s) from the same sample
+    haplotypecaller_vcf = GATK4_HAPLOTYPECALLER.out.vcf.map{
+            meta, vcf_ -> [ meta - meta.subMap('interval_name'), vcf_]
+        }
+        .branch{ meta, _vcf ->
+        // Use meta.num_intervals to asses number of intervals
+            intervals:    meta.num_intervals > 1
+            no_intervals: meta.num_intervals <= 1
+        }
 
-    if (params.joint_germline) {
-        // merge vcf and tbis
-        genotype_gvcf_to_call = Channel.empty().mix(GATK4_HAPLOTYPECALLER.out.vcf
-                                                    .join(GATK4_HAPLOTYPECALLER.out.tbi)
-                                                    .join(cram).map{ meta, vcf, tbi, cram, crai, intervals, dragstr_model ->
-                                                            [ meta, vcf, tbi, intervals ]
-                                                    })
-        // make channels from labels
-        dbsnp_vqsr        = params.dbsnp_vqsr        ? Channel.value(params.dbsnp_vqsr)        : Channel.empty()
-        known_indels_vqsr = params.known_indels_vqsr ? Channel.value(params.known_indels_vqsr) : Channel.empty()
-        known_snps_vqsr   = params.known_snps_vqsr   ? Channel.value(params.known_snps_vqsr)   : Channel.empty()
+    // Figuring out if there is one or more tbi(s) from the same sample
+    haplotypecaller_tbi = GATK4_HAPLOTYPECALLER.out.tbi.map{
+            meta, tbi -> [ meta - meta.subMap('interval_name'), tbi]
+        }.branch{ meta, _tbi ->
+        // Use meta.num_intervals to asses number of intervals
+            intervals:    meta.num_intervals > 1
+            no_intervals: meta.num_intervals <= 1
+        }
 
+    // Figuring out if there is one or more bam(s) from the same sample
+    haplotypecaller_bam = GATK4_HAPLOTYPECALLER.out.bam.map{
+            meta, bam -> [ meta - meta.subMap('interval_name'), bam]
+        }.branch{ meta, _bam ->
+        // Use meta.num_intervals to asses number of intervals
+            intervals:    meta.num_intervals > 1
+            no_intervals: meta.num_intervals <= 1
+        }
 
-        BAM_JOINT_CALLING_GERMLINE_GATK(
-            genotype_gvcf_to_call,
-            fasta,
-            fasta_fai,
-            dict,
-            dbsnp,
-            dbsnp_tbi,
-            dbsnp_vqsr,
-            known_sites_indels,
-            known_sites_indels_tbi,
-            known_indels_vqsr,
-            known_sites_snps,
-            known_sites_snps_tbi,
-            known_snps_vqsr)
+    // Only when using intervals
+    MERGE_HAPLOTYPECALLER(haplotypecaller_vcf.intervals.map{ meta, vcf_ -> [ groupKey(meta, meta.num_intervals), vcf_ ] }.groupTuple(), dict)
 
-        filtered_vcf = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_vcf
-        ch_versions = ch_versions.mix(BAM_JOINT_CALLING_GERMLINE_GATK.out.versions)
-    } else {
-
-        // Only when using intervals
-        MERGE_HAPLOTYPECALLER(
-            haplotypecaller_vcf_branch.intervals
-            .map{ meta, vcf ->
-
-                new_meta = [
-                                id:             meta.sample,
-                                num_intervals:  meta.num_intervals,
-                                patient:        meta.patient,
-                                sample:         meta.sample,
-                                sex:            meta.sex,
-                                status:         meta.status
-                            ]
-
-                    [groupKey(new_meta, new_meta.num_intervals), vcf]
-                }.groupTuple(),
-            dict)
-
-        haplotypecaller_vcf = Channel.empty().mix(
+    haplotypecaller_vcf = channel.empty().mix(
             MERGE_HAPLOTYPECALLER.out.vcf,
-            haplotypecaller_vcf_branch.no_intervals)
+            haplotypecaller_vcf.no_intervals)
 
-        haplotypecaller_tbi = Channel.empty().mix(
+    haplotypecaller_tbi = channel.empty().mix(
             MERGE_HAPLOTYPECALLER.out.tbi,
-            haplotypecaller_tbi_branch.no_intervals)
+            haplotypecaller_tbi.no_intervals)
 
-        VCF_VARIANT_FILTERING_GATK(haplotypecaller_vcf.join(haplotypecaller_tbi),
-                    fasta,
-                    fasta_fai,
-                    dict,
-                    intervals_bed_combined,
-                    known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
-                    known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
+    // BAM output
+    BAM_MERGE_INDEX_SAMTOOLS(haplotypecaller_bam.intervals
+        .map{ meta, bam -> [ groupKey(meta, meta.num_intervals), bam ] }
+        .groupTuple()
+        .mix(haplotypecaller_bam.no_intervals))
 
-        filtered_vcf = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf.map{ meta, vcf-> [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"haplotypecaller"], vcf]}
-        ch_versions = ch_versions.mix(GATK4_HAPLOTYPECALLER.out.versions)
-        ch_versions = ch_versions.mix(MERGE_HAPLOTYPECALLER.out.versions)
-        ch_versions = ch_versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
-    }
+    realigned_bam = BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai
+
+
+    // Remove no longer necessary field: num_intervals
+    vcf = haplotypecaller_vcf.map{ meta, vcf_ -> [ meta - meta.subMap('num_intervals'), vcf_ ] }
+    tbi = haplotypecaller_tbi.map{ meta, tbi -> [ meta - meta.subMap('num_intervals'), tbi ] }
 
     emit:
-    versions = ch_versions
-    filtered_vcf
+    gvcf_tbi_intervals // For joint genotyping
+    realigned_bam      // Optional
+    vcf                // vcf
+    tbi                // tbi
+
 }

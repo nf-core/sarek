@@ -1,17 +1,19 @@
 process CREATE_INTERVALS_BED {
-    tag "$intervals"
+    tag "${intervals}"
+    label 'process_single'
 
-    conda (params.enable_conda ? "anaconda::gawk=5.1.0" : null)
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gawk:5.1.0' :
-        'quay.io/biocontainers/gawk:5.1.0' }"
+    conda "${moduleDir}/environment.yml"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/gawk:5.3.0'
+        : 'biocontainers/gawk:5.3.0'}"
 
     input:
-    path(intervals)
+    path intervals
+    val nucleotides_per_second
 
     output:
-    path("*.bed")       , emit: bed
-    path "versions.yml" , emit: versions
+    path ("*.bed"),      emit: bed
+    tuple val("${task.process}"), val('gawk'), eval("awk --version | head -n1 | sed 's/GNU Awk //; s/, .*//'"), emit: versions_gawk, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -26,7 +28,7 @@ process CREATE_INTERVALS_BED {
             t = \$5  # runtime estimate
             if (t == "") {
                 # no runtime estimate in this row, assume default value
-                t = (\$3 - \$2) / ${params.nucleotides_per_second}
+                t = (\$3 - \$2) / ${nucleotides_per_second}
             }
             if (name == "" || (chunk > 600 && (chunk + t) > longest * 1.05)) {
                 # start a new chunk
@@ -39,35 +41,28 @@ process CREATE_INTERVALS_BED {
             chunk += t
             print \$0 > name
         }' ${intervals}
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            gawk: \$(awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//')
-        END_VERSIONS
         """
-    } else if (intervals.toString().toLowerCase().endsWith("interval_list")) {
+    }
+    else if (intervals.toString().toLowerCase().endsWith("interval_list")) {
         """
         grep -v '^@' ${intervals} | awk -vFS="\t" '{
             name = sprintf("%s_%d-%d", \$1, \$2, \$3);
             printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
         }'
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            gawk: \$(awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//')
-        END_VERSIONS
         """
-    } else {
+    }
+    else {
         """
         awk -vFS="[:-]" '{
             name = sprintf("%s_%d-%d", \$1, \$2, \$3);
             printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
         }' ${intervals}
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            gawk: \$(awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//')
-        END_VERSIONS
         """
     }
+
+    stub:
+    def prefix = task.ext.prefix ?: "${intervals.baseName}"
+    """
+    touch ${prefix}.stub.bed
+    """
 }

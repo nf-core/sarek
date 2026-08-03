@@ -1,0 +1,22 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+
+    def test_scenario = [
+        [
+            name: "-profile test",
+            params: [],
+        ],
+        [
+            name: "-profile test -stub",
+            params: [],
+            stub: true,
+        ],
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}

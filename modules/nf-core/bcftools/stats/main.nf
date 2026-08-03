@@ -1,19 +1,23 @@
 process BCFTOOLS_STATS {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_single'
 
-    conda (params.enable_conda ? "bioconda::bcftools=1.15.1" : null)
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bcftools:1.15.1--h0ea216a_0':
-        'quay.io/biocontainers/bcftools:1.15.1--h0ea216a_0' }"
+    conda "${moduleDir}/environment.yml"
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/0b/0b4d52ca9a56d07be3f78a12af654e5116f5112908dba277e6796fd9dfb83fe5/data'
+        : 'community.wave.seqera.io/library/bcftools_htslib:1.23.1--9f08ec665533d64a'}"
 
     input:
-    tuple val(meta), path(vcf)
-    path(target_bed)
+    tuple val(meta), path(vcf), path(tbi)
+    tuple val(meta2), path(regions)
+    tuple val(meta3), path(targets)
+    tuple val(meta4), path(samples)
+    tuple val(meta5), path(exons)
+    tuple val(meta6), path(fasta)
 
     output:
     tuple val(meta), path("*stats.txt"), emit: stats
-    path  "versions.yml"               , emit: versions
+    tuple val("${task.process}"), val('bcftools'), eval("bcftools --version | sed '1!d; s/^.*bcftools //'"), topic: versions, emit: versions_bcftools
 
     when:
     task.ext.when == null || task.ext.when
@@ -21,16 +25,26 @@ process BCFTOOLS_STATS {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def target = target_bed ? "--regions-file ${target_bed}" : ""
+    def regions_file = regions ? "--regions-file ${regions}" : ""
+    def targets_file = targets ? "--targets-file ${targets}" : ""
+    def samples_file = samples ? "--samples-file ${samples}" : ""
+    def reference_fasta = fasta ? "--fasta-ref ${fasta}" : ""
+    def exons_file = exons ? "--exons ${exons}" : ""
     """
     bcftools stats \\
-        $args \\
-        $target \\
-        $vcf > ${prefix}.bcftools_stats.txt
+        ${args} \\
+        ${regions_file} \\
+        ${targets_file} \\
+        ${samples_file} \\
+        ${reference_fasta} \\
+        ${exons_file} \\
+        ${vcf} > ${prefix}.bcftools_stats.txt
+    """
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bcftools: \$(bcftools --version 2>&1 | head -n1 | sed 's/^.*bcftools //; s/ .*\$//')
-    END_VERSIONS
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+
+    """
+    touch ${prefix}.bcftools_stats.txt
     """
 }

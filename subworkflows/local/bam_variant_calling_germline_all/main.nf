@@ -2,235 +2,425 @@
 // GERMLINE VARIANT CALLING
 //
 
-include { BAM_VARIANT_CALLING_CNVKIT          } from '../bam_variant_calling_cnvkit/main'
-include { BAM_VARIANT_CALLING_DEEPVARIANT     } from '../bam_variant_calling_deepvariant/main'
-include { BAM_VARIANT_CALLING_FREEBAYES       } from '../bam_variant_calling_freebayes/main'
-include { BAM_VARIANT_CALLING_GERMLINE_MANTA  } from '../bam_variant_calling_germline_manta/main'
-include { BAM_VARIANT_CALLING_HAPLOTYPECALLER } from '../bam_variant_calling_haplotypecaller/main'
-include { BAM_VARIANT_CALLING_MPILEUP         } from '../bam_variant_calling_mpileup/main'
-include { BAM_VARIANT_CALLING_SINGLE_STRELKA  } from '../bam_variant_calling_single_strelka/main'
-include { BAM_VARIANT_CALLING_SINGLE_TIDDIT   } from '../bam_variant_calling_single_tiddit/main'
+include { BAM_JOINT_CALLING_GERMLINE_GATK                                              } from '../bam_joint_calling_germline_gatk/main'
+include { BAM_JOINT_CALLING_GERMLINE_SENTIEON                                          } from '../bam_joint_calling_germline_sentieon/main'
+include { BAM_VARIANT_CALLING_CNVKIT                                                   } from '../bam_variant_calling_cnvkit/main'
+include { BAM_VARIANT_CALLING_DEEPVARIANT                                              } from '../bam_variant_calling_deepvariant/main'
+include { BAM_VARIANT_CALLING_FREEBAYES                                                } from '../bam_variant_calling_freebayes/main'
+include { BAM_VARIANT_CALLING_GERMLINE_MANTA                                           } from '../bam_variant_calling_germline_manta/main'
+include { BAM_VARIANT_CALLING_HAPLOTYPECALLER                                          } from '../bam_variant_calling_haplotypecaller/main'
+include { BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER                               } from '../bam_variant_calling_parabricks_haplotypecaller/main'
+include { BAM_VARIANT_CALLING_INDEXCOV                                                 } from '../bam_variant_calling_indexcov/main'
+include { BAM_VARIANT_CALLING_SENTIEON_DNASCOPE                                        } from '../bam_variant_calling_sentieon_dnascope/main'
+include { BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER                                      } from '../bam_variant_calling_sentieon_haplotyper/main'
+include { BAM_VARIANT_CALLING_MPILEUP                                                  } from '../bam_variant_calling_mpileup/main'
+include { BAM_VARIANT_CALLING_SINGLE_STRELKA                                           } from '../bam_variant_calling_single_strelka/main'
+include { BAM_VARIANT_CALLING_SINGLE_TIDDIT                                            } from '../bam_variant_calling_single_tiddit/main'
+include { SENTIEON_DNAMODELAPPLY                                                       } from '../../../modules/nf-core/sentieon/dnamodelapply/main'
+include { VCF_VARIANT_FILTERING_GATK                                                   } from '../vcf_variant_filtering_gatk/main'
+include { VCF_VARIANT_FILTERING_GATK as SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK } from '../vcf_variant_filtering_gatk/main'
 
 workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
-        tools                             // Mandatory, list of tools to apply
-        cram_recalibrated                 // channel: [mandatory] cram
-        bwa                               // channel: [mandatory] bwa
-        dbsnp                             // channel: [mandatory] dbsnp
-        dbsnp_tbi                         // channel: [mandatory] dbsnp_tbi
-        dict                              // channel: [mandatory] dict
-        fasta                             // channel: [mandatory] fasta
-        fasta_fai                         // channel: [mandatory] fasta_fai
-        intervals                         // channel: [mandatory] intervals/target regions
-        intervals_bed_gz_tbi              // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combined            // channel: [mandatory] intervals/target regions in one file unzipped
-        intervals_bed_combined_haplotypec // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
-        known_sites_indels
-        known_sites_indels_tbi
-        known_sites_snps
-        known_sites_snps_tbi
+    tools                             // Mandatory, list of tools to apply
+    skip_tools                        // Mandatory, list of tools to skip
+    bam                               // channel: [mandatory] meta, bam
+    cram                              // channel: [mandatory] meta, cram
+    bwa                               // channel: [mandatory] meta, bwa
+    cnvkit_reference                  // channel: [optional] cnvkit reference
+    dbsnp                             // channel: [mandatory] meta, dbsnp
+    dbsnp_tbi                         // channel: [mandatory] dbsnp_tbi
+    dbsnp_vqsr
+    dict                              // channel: [mandatory] meta, dict
+    fasta                             // channel: [mandatory] meta, fasta
+    fasta_fai                         // channel: [mandatory] meta, fasta_fai
+    intervals                         // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
+    intervals_bed_combined            // channel: [mandatory] intervals/target regions in one file unzipped
+    intervals_bed_gz_tbi_combined     // channel: [mandatory] intervals/target regions in one file zipped
+    intervals_bed_combined_haplotypec // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
+    intervals_bed_gz_tbi              // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi, num_intervals ] or [ [], [], 0 ] if no intervals
+    known_indels_vqsr
+    known_sites_indels
+    known_sites_indels_tbi
+    known_sites_snps
+    known_sites_snps_tbi
+    known_snps_vqsr
+    joint_germline                    // boolean: [mandatory] [default: false] joint calling of germline variants
+    skip_haplotypecaller_filter       // boolean: [mandatory] [default: false] whether to filter haplotypecaller single sample vcfs
+    sentieon_haplotyper_emit_mode     // channel: [mandatory] value channel with string
+    sentieon_dnascope_emit_mode       // channel: [mandatory] value channel with string
+    sentieon_dnascope_pcr_indel_model // channel: [mandatory] value channel with string
+    sentieon_dnascope_model           // channel: [mandatory] value channel with string
 
     main:
-
-    ch_versions         = Channel.empty()
-
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    deepvariant_vcf     = Channel.empty()
-    freebayes_vcf       = Channel.empty()
-    genotype_gvcf       = Channel.empty()
-    haplotypecaller_vcf = Channel.empty()
-    manta_vcf           = Channel.empty()
-    strelka_vcf         = Channel.empty()
-    tiddit_vcf          = Channel.empty()
+    gvcf_sentieon_dnascope     = channel.empty()
+    gvcf_sentieon_haplotyper   = channel.empty()
+    gvcf_tbi_sentieon_dnascope = channel.empty()
+    gvcf_tbi_sentieon_haplotyper = channel.empty()
 
-    // Remap channel with intervals
-    cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
-        .map{ meta, cram, crai, intervals, num_intervals ->
+    out_indexcov                       = channel.empty()
+    vcf_deepvariant                    = channel.empty()
+    vcf_freebayes                      = channel.empty()
+    vcf_haplotypecaller                = channel.empty()
+    vcf_manta                          = channel.empty()
+    vcf_mpileup                        = channel.empty()
+    vcf_parabricks_haplotypecaller     = channel.empty()
+    vcf_sentieon_dnascope              = channel.empty()
+    vcf_sentieon_haplotyper            = channel.empty()
+    vcf_strelka                        = channel.empty()
+    vcf_tiddit                         = channel.empty()
+    tbi_deepvariant                    = channel.empty()
+    tbi_freebayes                      = channel.empty()
+    tbi_haplotypecaller                = channel.empty()
+    tbi_manta                          = channel.empty()
+    tbi_mpileup                        = channel.empty()
+    tbi_parabricks_haplotypecaller     = channel.empty()
+    tbi_sentieon_dnascope              = channel.empty()
+    tbi_sentieon_haplotyper            = channel.empty()
+    tbi_strelka                        = channel.empty()
+    tbi_tiddit                         = channel.empty()
 
-            //If no interval file provided (0) then add empty list
-            intervals_new = num_intervals == 0 ? [] : intervals
-
-            [[
-                data_type:      meta.data_type,
-                id:             meta.sample,
-                num_intervals:  num_intervals,
-                patient:        meta.patient,
-                sample:         meta.sample,
-                sex:            meta.sex,
-                status:         meta.status,
-            ],
-            cram, crai, intervals_new]
-        }
-
-    // Remap channel with gzipped intervals + indexes
-    cram_recalibrated_intervals_gz_tbi = cram_recalibrated.combine(intervals_bed_gz_tbi)
-        .map{ meta, cram, crai, bed_tbi, num_intervals ->
-
-            //If no interval file provided (0) then add empty list
-            bed_new = num_intervals == 0 ? [] : bed_tbi[0]
-            tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
-
-            [[
-                data_type:      meta.data_type,
-                id:             meta.sample,
-                num_intervals:  num_intervals,
-                patient:        meta.patient,
-                sample:         meta.sample,
-                sex:            meta.sex,
-                status:         meta.status,
-            ],
-            cram, crai, bed_new, tbi_new]
-        }
-
-    if(tools.split(',').contains('mpileup')){
-        cram_intervals_no_index = cram_recalibrated_intervals
-            .map { meta, cram, crai, intervals ->
-                [meta, cram, intervals]
-            }
-
+    // BCFTOOLS MPILEUP
+    if (tools && tools.split(',').contains('mpileup')) {
         BAM_VARIANT_CALLING_MPILEUP(
-            cram_intervals_no_index,
-            fasta
+            cram,
+            dict,
+            fasta,
+            fasta_fai,
+            intervals
         )
-
-        mpileup_germline = BAM_VARIANT_CALLING_MPILEUP.out.mpileup
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
+        vcf_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.vcf
+        tbi_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.tbi
     }
 
     // CNVKIT
-
-    if(tools.split(',').contains('cnvkit')){
-        cram_recalibrated_cnvkit_germline = cram_recalibrated
-            .map{ meta, cram, crai ->
-                [meta, [], cram]
-            }
-
+    if (tools && tools.split(',').contains('cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT(
-            cram_recalibrated_cnvkit_germline,
+            // Remap channel to match module/subworkflow
+            // Use the already-converted BAM (shared with somatic/tumor-only) instead of CRAM
+            bam.map{ meta, bam_, _bai -> [ meta, [], bam_ ] },
             fasta,
             fasta_fai,
-            intervals_bed_combined,
-            []
+            intervals_bed_combined.map{_intervals -> _intervals ? [[id:_intervals[0].baseName], _intervals]: [[id:'no_intervals'], []]},
+            params.cnvkit_reference ? cnvkit_reference.map{ reference -> [[id:reference[0].baseName], reference] } : [[:],[]]
         )
-
-        ch_versions     = ch_versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
     // DEEPVARIANT
-    if(tools.split(',').contains('deepvariant')){
+    if (tools && tools.split(',').contains('deepvariant')) {
         BAM_VARIANT_CALLING_DEEPVARIANT(
-            cram_recalibrated_intervals,
+            cram,
             dict,
             fasta,
-            fasta_fai
+            fasta_fai,
+            intervals
         )
 
-        deepvariant_vcf = Channel.empty().mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.deepvariant_vcf)
-        ch_versions     = ch_versions.mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.versions)
+        vcf_deepvariant = BAM_VARIANT_CALLING_DEEPVARIANT.out.vcf
+        tbi_deepvariant = BAM_VARIANT_CALLING_DEEPVARIANT.out.tbi
     }
 
     // FREEBAYES
-    if (tools.split(',').contains('freebayes')){
-        // Remap channel for Freebayes
-        cram_recalibrated_intervals_freebayes = cram_recalibrated_intervals
-            .map{ meta, cram, crai, intervals ->
-                [meta, cram, crai, [], [], intervals]
-            }
-
+    if (tools && tools.split(',').contains('freebayes')) {
+        // Input channel is remapped to match input of module/subworkflow
         BAM_VARIANT_CALLING_FREEBAYES(
-            cram_recalibrated_intervals_freebayes,
+            // Remap channel to match module/subworkflow
+            cram.map{ meta, cram_, crai -> [ meta, cram_, crai, [], [] ] },
             dict,
             fasta,
-            fasta_fai
+            fasta_fai,
+            intervals
         )
 
-        freebayes_vcf   = BAM_VARIANT_CALLING_FREEBAYES.out.freebayes_vcf
-        ch_versions     = ch_versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
+        vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
+        tbi_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.tbi
     }
 
     // HAPLOTYPECALLER
-    if (tools.split(',').contains('haplotypecaller')){
-        cram_recalibrated_intervals_haplotypecaller = cram_recalibrated_intervals
-            .map{ meta, cram, crai, intervals ->
+    if (tools && tools.split(',').contains('haplotypecaller')) {
+        BAM_VARIANT_CALLING_HAPLOTYPECALLER(
+            cram,
+            fasta,
+            fasta_fai,
+            dict,
+            dbsnp.map{dbsnp_ -> [[:], dbsnp_]},
+            dbsnp_tbi.map{dbsnp_tbi_ -> [[:], dbsnp_tbi_]},
+            intervals)
 
-            intervals_name = meta.num_intervals == 0 ? "no_interval" : intervals.simpleName
-            new_meta = params.joint_germline ? [
-                                                    data_type:meta.data_type,
-                                                    id:meta.sample,
-                                                    intervals_name:intervals_name,
-                                                    num_intervals:meta.num_intervals,
-                                                    patient:meta.patient,
-                                                    sample:meta.sample,
-                                                    sex:meta.sex,
-                                                    status:meta.status
-                                                ]
-                                            : meta
+        vcf_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf
+        tbi_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.tbi
 
-                [new_meta, cram, crai, intervals, []]
+        if (joint_germline) {
+            BAM_JOINT_CALLING_GERMLINE_GATK(
+                BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.gvcf_tbi_intervals,
+                fasta,
+                fasta_fai,
+                dict,
+                dbsnp,
+                dbsnp_tbi,
+                dbsnp_vqsr,
+                known_sites_indels,
+                known_sites_indels_tbi,
+                known_indels_vqsr,
+                known_sites_snps,
+                known_sites_snps_tbi,
+                known_snps_vqsr)
+
+            vcf_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_vcf
+            tbi_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_index
+        } else {
+
+            // If single sample track, check if filtering should be done
+            if (!skip_haplotypecaller_filter) {
+
+                VCF_VARIANT_FILTERING_GATK(
+                    vcf_haplotypecaller.join(tbi_haplotypecaller, failOnDuplicate: true, failOnMismatch: true),
+                    fasta.map{ _meta, fasta_ -> [ fasta_ ] },
+                    fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] },
+                    dict.map{ _meta, dict_ -> [ dict_ ] },
+                    intervals_bed_combined_haplotypec,
+                    known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
+                    known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
+
+                vcf_haplotypecaller = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
+                tbi_haplotypecaller = VCF_VARIANT_FILTERING_GATK.out.filtered_tbi
+
+            }
         }
+    }
 
-        BAM_VARIANT_CALLING_HAPLOTYPECALLER(cram_recalibrated_intervals_haplotypecaller,
-                        fasta,
-                        fasta_fai,
-                        dict,
-                        dbsnp,
-                        dbsnp_tbi,
-                        known_sites_indels,
-                        known_sites_indels_tbi,
-                        known_sites_snps,
-                        known_sites_snps_tbi,
-                        intervals_bed_combined_haplotypec)
+    // PARABRICKS HAPLOTYPECALLER
+    if (tools && tools.split(',').contains('parabricks_haplotypecaller')) {
+        BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER(
+            cram,
+            fasta,
+            intervals_bed_combined
+        )
 
-        haplotypecaller_vcf  = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.filtered_vcf
-        ch_versions          = ch_versions.mix(BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.versions)
+        vcf_parabricks_haplotypecaller = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.vcf
+        tbi_parabricks_haplotypecaller = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.tbi
     }
 
     // MANTA
-    if (tools.split(',').contains('manta')){
+    if (tools && tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_GERMLINE_MANTA (
-            cram_recalibrated_intervals_gz_tbi,
-            dict,
+            cram,
+            fasta,
+            fasta_fai,
+            intervals_bed_gz_tbi_combined
+        )
+
+        vcf_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.diploid_sv_vcf
+        tbi_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.diploid_sv_vcf_tbi
+    }
+
+    // INDEXCOV, for WGS only
+    if (params.wes==false &&  tools.split(',').contains('indexcov')) {
+        BAM_VARIANT_CALLING_INDEXCOV (
+            cram,
             fasta,
             fasta_fai
         )
 
-        manta_vcf   = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.manta_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
+        out_indexcov = BAM_VARIANT_CALLING_INDEXCOV.out.out_indexcov
+    }
+
+    // SENTIEON DNASCOPE
+    if (tools && tools.split(',').contains('sentieon_dnascope')) {
+        BAM_VARIANT_CALLING_SENTIEON_DNASCOPE(
+            cram,
+            fasta,
+            fasta_fai,
+            dict,
+            dbsnp,
+            dbsnp_tbi,
+            intervals,
+            joint_germline,
+            sentieon_dnascope_emit_mode,
+            sentieon_dnascope_pcr_indel_model,
+            sentieon_dnascope_model)
+
+        vcf_sentieon_dnascope      = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.vcf
+        tbi_sentieon_dnascope      = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.vcf_tbi
+        gvcf_sentieon_dnascope     = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.gvcf
+        gvcf_tbi_sentieon_dnascope = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.gvcf_tbi
+
+        if (joint_germline) {
+            BAM_JOINT_CALLING_GERMLINE_SENTIEON(
+                BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.genotype_intervals,
+                fasta,
+                fasta_fai,
+                dict,
+                dbsnp,
+                dbsnp_tbi,
+                dbsnp_vqsr,
+                known_sites_indels,
+                known_sites_indels_tbi,
+                known_indels_vqsr,
+                known_sites_snps,
+                known_sites_snps_tbi,
+                known_snps_vqsr,
+                'sentieon_dnascope')
+
+            vcf_sentieon_dnascope = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
+            tbi_sentieon_dnascope = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_index
+        } else {
+            // If single sample track, check if filtering should be done
+            if (!(skip_tools && skip_tools.split(',').contains('dnascope_filter'))) {
+
+                SENTIEON_DNAMODELAPPLY(
+                    vcf_sentieon_dnascope.join(tbi_sentieon_dnascope, failOnDuplicate: true, failOnMismatch: true),
+                    fasta,
+                    fasta_fai,
+                    sentieon_dnascope_model.map{ model -> [ [ id:model.baseName ], model ] })
+
+                vcf_sentieon_dnascope = SENTIEON_DNAMODELAPPLY.out.vcf
+                tbi_sentieon_dnascope = SENTIEON_DNAMODELAPPLY.out.tbi
+            }
+
+        }
+    }
+
+    // SENTIEON HAPLOTYPER
+    if (tools && tools.split(',').contains('sentieon_haplotyper')) {
+        BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER(
+            cram,
+            fasta,
+            fasta_fai,
+            dict,
+            dbsnp,
+            dbsnp_tbi,
+            intervals,
+            joint_germline,
+            sentieon_haplotyper_emit_mode)
+
+        vcf_sentieon_haplotyper      = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf
+        tbi_sentieon_haplotyper      = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf_tbi
+        gvcf_sentieon_haplotyper     = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.gvcf
+        gvcf_tbi_sentieon_haplotyper = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.gvcf_tbi
+
+        if (joint_germline) {
+            BAM_JOINT_CALLING_GERMLINE_SENTIEON(
+                BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.genotype_intervals,
+                fasta,
+                fasta_fai,
+                dict,
+                dbsnp,
+                dbsnp_tbi,
+                dbsnp_vqsr,
+                known_sites_indels,
+                known_sites_indels_tbi,
+                known_indels_vqsr,
+                known_sites_snps,
+                known_sites_snps_tbi,
+                known_snps_vqsr,
+                'sentieon_haplotyper')
+
+            vcf_sentieon_haplotyper = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
+            tbi_sentieon_haplotyper = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_index
+        } else {
+
+            // If single sample track, check if filtering should be done
+            if (!(skip_tools && skip_tools.split(',').contains('haplotyper_filter'))) {
+
+                SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK(
+                    vcf_sentieon_haplotyper.join(tbi_sentieon_haplotyper, failOnDuplicate: true, failOnMismatch: true),
+                    fasta.map{ _meta, fasta_ -> [ fasta_ ] },
+                    fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] },
+                    dict.map{ _meta, dict_ -> [ dict_ ] },
+                    intervals_bed_combined_haplotypec,
+                    known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
+                    known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
+
+                vcf_sentieon_haplotyper = SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
+                tbi_sentieon_haplotyper = SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK.out.filtered_tbi
+            }
+        }
     }
 
     // STRELKA
-    if (tools.split(',').contains('strelka')){
+
+    if (tools && tools.split(',').contains('strelka')) {
+
         BAM_VARIANT_CALLING_SINGLE_STRELKA(
-            cram_recalibrated_intervals_gz_tbi,
+            cram,
             dict,
-            fasta,
-            fasta_fai
+            fasta.map{ _meta, fasta_ -> [ fasta_ ] },
+            fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] },
+            intervals_bed_gz_tbi
         )
 
-        strelka_vcf = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.strelka_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
+        vcf_strelka = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.vcf
+        tbi_strelka = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.tbi
     }
 
-    //TIDDIT
-    if (tools.split(',').contains('tiddit')){
+    // TIDDIT
+    if (tools && tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
-            cram_recalibrated,
+            cram,
+            // Remap channel to match module/subworkflow
             fasta,
+            fasta_fai,
             bwa
         )
 
-        tiddit_vcf = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.tiddit_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
+        vcf_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.vcf
+        tbi_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.tbi
     }
 
-    emit:
-    deepvariant_vcf
-    freebayes_vcf
-    genotype_gvcf
-    haplotypecaller_vcf
-    manta_vcf
-    strelka_vcf
-    tiddit_vcf
+    vcf_all = channel.empty().mix(
+        vcf_deepvariant,
+        vcf_freebayes,
+        vcf_haplotypecaller,
+        vcf_manta,
+        vcf_mpileup,
+        vcf_parabricks_haplotypecaller,
+        vcf_sentieon_dnascope,
+        vcf_sentieon_haplotyper,
+        vcf_strelka,
+        vcf_tiddit
+    )
 
-    versions = ch_versions
+    tbi_all = channel.empty().mix(
+        tbi_deepvariant,
+        tbi_freebayes,
+        tbi_haplotypecaller,
+        tbi_manta,
+        tbi_mpileup,
+        tbi_parabricks_haplotypecaller,
+        tbi_sentieon_dnascope,
+        tbi_sentieon_haplotyper,
+        tbi_strelka,
+        tbi_tiddit
+    )
+
+    emit:
+    gvcf_sentieon_dnascope
+    gvcf_sentieon_haplotyper
+    gvcf_tbi_sentieon_dnascope
+    gvcf_tbi_sentieon_haplotyper
+    out_indexcov
+    vcf_all
+    vcf_deepvariant
+    vcf_freebayes
+    vcf_haplotypecaller
+    vcf_manta
+    vcf_mpileup
+    vcf_parabricks_haplotypecaller
+    vcf_strelka
+    vcf_sentieon_dnascope
+    vcf_sentieon_haplotyper
+    vcf_tiddit
+    tbi_all
+    tbi_deepvariant
+    tbi_freebayes
+    tbi_haplotypecaller
+    tbi_manta
+    tbi_mpileup
+    tbi_parabricks_haplotypecaller
+    tbi_sentieon_dnascope
+    tbi_sentieon_haplotyper
+    tbi_strelka
+    tbi_tiddit
 }
