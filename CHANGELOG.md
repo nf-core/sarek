@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2243](https://github.com/nf-core/sarek/pull/2243) - Migrate `cnvkit/*` modules to the versions topic channel, and replace the deprecated `tabix/tabix`/`tabix/bgziptabix` modules with `htslib/bgziptabix`
 - [#2244](https://github.com/nf-core/sarek/pull/2244) - Migrate local modules (`add_info_to_vcf`, `create_intervals_bed`, `samtools/reindex_bam`) to the versions topic channel
 - [#2252](https://github.com/nf-core/sarek/pull/2252) - Update `bbmap/bbsplit`, `gatk4/applybqsr`, `parabricks/fq2bam` (4.6.0 → 4.7.1), `rbt/vcfsplit`, `sentieon/*`, `snpsift/annmem`+`annmemcreate` (5.4.0a → 5.4.0c), and `yte` modules to their latest revisions. Side effect: `GATK4_APPLYBQSR`'s bam/cram output format is now set directly via a `params.save_output_as_bam` process argument rather than `ext.suffix`, so a custom `modules.config` override of `ext.suffix` on `GATK4_APPLYBQSR` no longer has any effect; `GATK4SPARK_APPLYBQSR` is unaffected and still reads `ext.suffix`.
+- [#2255](https://github.com/nf-core/sarek/pull/2255) - Template update for nf-core/tools v4.1.0. This also collapses the list-form `publishDir` blocks in `conf/modules/*.config` into single maps that route through `saveAs`, required because nf-core/tools 4.1.0 lints via `nextflow config -o json`, which fails on a closure nested inside a collection. Published output layouts are unchanged.
 
 ### Fixed
 

@@ -17,7 +17,7 @@ class UTILS {
             "Check script",
             "Creating env using",
             "Downloading plugin",
-            "Got an interrupted  exception while taking agent result",
+            "Got an interrupted exception while taking agent result",
             "Pulling Singularity image",
             "Staging foreign file",
             "Unable to resume cached task",
