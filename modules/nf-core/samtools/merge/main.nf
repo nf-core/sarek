@@ -25,6 +25,9 @@ process SAMTOOLS_MERGE {
     prefix = task.ext.prefix ?: "${meta.id}"
     def file_type = input_files instanceof List ? input_files[0].getExtension() : input_files.getExtension()
     def reference = fasta ? "--reference ${fasta}" : ""
+    // samtools merge --write-index defaults to .csi for BAM; force the legacy .bai/.crai extensions via the ##idx## naming trick so index files match what downstream sample-sheet validation expects
+    def index_type = file_type == "bam" ? "bai" : "crai"
+    def output = args.contains("--write-index") ? "${prefix}.${file_type}##idx##${prefix}.${file_type}.${index_type}" : "${prefix}.${file_type}"
     """
     # Note: --threads value represents *additional* CPUs to allocate (total CPUs = 1 + --threads).
     samtools \\
@@ -32,7 +35,7 @@ process SAMTOOLS_MERGE {
         --threads ${task.cpus - 1} \\
         ${args} \\
         ${reference} \\
-        ${prefix}.${file_type} \\
+        ${output} \\
         ${input_files}
     """
 
@@ -40,8 +43,8 @@ process SAMTOOLS_MERGE {
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
     def file_type = input_files instanceof List ? input_files[0].getExtension() : input_files.getExtension()
-    def index_type = file_type == "bam" ? "csi" : "crai"
-    def index = args.contains("--write-index") ? "touch ${prefix}.${index_type}" : ""
+    def index_type = file_type == "bam" ? "bai" : "crai"
+    def index = args.contains("--write-index") ? "touch ${prefix}.${file_type}.${index_type}" : ""
     """
     touch ${prefix}.${file_type}
     ${index}
