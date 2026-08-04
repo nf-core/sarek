@@ -35,7 +35,7 @@ workflow UTILS_NFSCHEMA_PLUGIN {
             fullHelp: help_full,
         ]
         if(parameters_schema) {
-            help_options << [parametersSchema: parameters_schema]
+            help_options << [parameters_schema: parameters_schema]
         }
         log.info paramsHelp(
             help_options,
@@ -51,7 +51,7 @@ workflow UTILS_NFSCHEMA_PLUGIN {
 
     summary_options = [:]
     if(parameters_schema) {
-        summary_options << [parametersSchema: parameters_schema]
+        summary_options << [parameters_schema: parameters_schema]
     }
     log.info before_text
     log.info paramsSummaryLog(summary_options, input_workflow)
@@ -64,7 +64,7 @@ workflow UTILS_NFSCHEMA_PLUGIN {
     if(validate_params) {
         validateOptions = [:]
         if(parameters_schema) {
-            validateOptions << [parametersSchema: parameters_schema]
+            validateOptions << [parameters_schema: parameters_schema]
         }
         if(cli_typecast != null) {
             validateOptions << [cast_cli_params: cli_typecast]
