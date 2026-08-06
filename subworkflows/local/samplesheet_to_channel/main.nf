@@ -400,8 +400,8 @@ workflow SAMPLESHEET_TO_CHANNEL {
         error("The GATK's Haplotypecaller, Parabricks' Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper should be specified as one of the tools when doing joint germline variant calling.) ")
     }
 
-    if (tools && tools.split(',').contains('haplotypecaller') && joint_germline && no_intervals) {
-        System.err.println("Joint germline variant calling with GATK's HaplotypeCaller requires intervals because GenomicsDB cannot be used without them. Please provide intervals or remove `--no_intervals`.")
+    if (tools && (tools.split(',').contains('haplotypecaller') || tools.split(',').contains('parabricks_haplotypecaller')) && joint_germline && no_intervals) {
+        System.err.println("Joint germline variant calling with GATK's or Parabricks' HaplotypeCaller requires intervals because GenomicsDB cannot be used without them. Please provide intervals or remove `--no_intervals`.")
         error("Execution halted due to missing intervals.")
     }
 

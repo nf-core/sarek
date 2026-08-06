@@ -29,6 +29,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     resource_snps_vcf
     resource_snps_tbi
     known_snps_vqsr
+    variantcaller        // string: name of the caller the gVCFs came from, used for output naming
 
     main:
 
@@ -54,7 +55,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     GATK4_GENOTYPEGVCFS(genotype_input, fasta, fai, dict, dbsnp.map{ dbsnp_ -> [ [:], dbsnp_ ] }, dbsnp_tbi.map{ dbsnp_tbi_ -> [ [:], dbsnp_tbi_ ] })
 
     BCFTOOLS_SORT(GATK4_GENOTYPEGVCFS.out.vcf)
-    gvcf_to_merge = BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [ meta.subMap('num_intervals') + [ id:'joint_variant_calling', patient:'all_samples', variantcaller:'haplotypecaller' ], vcf ]}.groupTuple()
+    gvcf_to_merge = BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [ meta.subMap('num_intervals') + [ id:'joint_variant_calling', patient:'all_samples', variantcaller:variantcaller ], vcf ]}.groupTuple()
 
     // Merge scatter/gather vcfs & index
     // Rework meta for variantscalled.csv and annotation tools
@@ -135,7 +136,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
 
         def vcf_out = recal_vcf ?: joint_vcf
 
-        [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"haplotypecaller"], vcf_out]
+        [[id:"joint_variant_calling", patient:"all_samples", variantcaller:variantcaller], vcf_out]
     }
 
     genotype_index = merge_tbi_for_join.join(vqsr_tbi_for_join, remainder: true).map{
@@ -143,7 +144,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
 
         def tbi_out = recal_tbi ?: joint_tbi
 
-        [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"haplotypecaller"], tbi_out]
+        [[id:"joint_variant_calling", patient:"all_samples", variantcaller:variantcaller], tbi_out]
     }
 
 

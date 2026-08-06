@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2184](https://github.com/nf-core/sarek/pull/2184) - Skip nf-schema path-existence validation for `snpeff_cache`, `vep_cache` and `igenomes_base` so pipeline launches succeed when the default S3 buckets are not accessible
 - [#2216](https://github.com/nf-core/sarek/pull/2216) - Fix `--normalize_vcfs` dropping a real ALT allele of `1/2` multiallelic sites (`bcftools norm --rm-dup all` → `--rm-dup exact`)
+- [#2257](https://github.com/nf-core/sarek/pull/2257) - Fix `--tools parabricks_haplotypecaller --joint_germline` finishing without producing any variants: the gVCFs are now indexed and fed into GenomicsDBImport/GenotypeGVCFs. `--joint_germline` with `--no_intervals` is rejected for this caller, as it already is for GATK's HaplotypeCaller
+- [#2257](https://github.com/nf-core/sarek/pull/2257) - Fix `--vep_loftee` silently producing no `LoF` annotations under `-profile conda`: the plugin path is no longer hardcoded to `/opt/conda` but resolved from `$CONDA_PREFIX` at runtime
 - [#2241](https://github.com/nf-core/sarek/pull/2241) - Bump `mosdepth` (0.3.10 → 0.3.14) so its htslib can decode CRAM 3.1 written by samtools 1.24; the previous container silently produced empty coverage files, dropping the mosdepth MultiQC sections (most visible in the parabricks path)
 
 ### Removed

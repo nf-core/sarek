@@ -3,6 +3,7 @@
 //
 
 include { BAM_JOINT_CALLING_GERMLINE_GATK                                              } from '../bam_joint_calling_germline_gatk/main'
+include { BAM_JOINT_CALLING_GERMLINE_GATK as BAM_JOINT_CALLING_GERMLINE_PARABRICKS     } from '../bam_joint_calling_germline_gatk/main'
 include { BAM_JOINT_CALLING_GERMLINE_SENTIEON                                          } from '../bam_joint_calling_germline_sentieon/main'
 include { BAM_VARIANT_CALLING_CNVKIT                                                   } from '../bam_variant_calling_cnvkit/main'
 include { BAM_VARIANT_CALLING_DEEPVARIANT                                              } from '../bam_variant_calling_deepvariant/main'
@@ -165,7 +166,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 known_indels_vqsr,
                 known_sites_snps,
                 known_sites_snps_tbi,
-                known_snps_vqsr)
+                known_snps_vqsr,
+                'haplotypecaller')
 
             vcf_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_vcf
             tbi_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_index
@@ -200,10 +202,31 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         vcf_parabricks_haplotypecaller = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.vcf
         tbi_parabricks_haplotypecaller = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.tbi
+
+        if (joint_germline) {
+            BAM_JOINT_CALLING_GERMLINE_PARABRICKS(
+                BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.gvcf_tbi_intervals,
+                fasta,
+                fasta_fai,
+                dict,
+                dbsnp,
+                dbsnp_tbi,
+                dbsnp_vqsr,
+                known_sites_indels,
+                known_sites_indels_tbi,
+                known_indels_vqsr,
+                known_sites_snps,
+                known_sites_snps_tbi,
+                known_snps_vqsr,
+                'parabricks_haplotypecaller')
+
+            vcf_parabricks_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_PARABRICKS.out.genotype_vcf
+            tbi_parabricks_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_PARABRICKS.out.genotype_index
+        }
     }
 
     // MANTA
-    if (tools && tools.split(',').contains('manta')) {
+    if (tools_list.contains('manta')) {
         BAM_VARIANT_CALLING_GERMLINE_MANTA (
             cram,
             fasta,

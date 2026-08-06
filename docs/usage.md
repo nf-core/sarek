@@ -217,6 +217,8 @@ To use NVIDIA Clara Parabricks' GPU-accelerated HaplotypeCaller for germline var
 
 Parabricks HaplotypeCaller takes a CRAM file as input and outputs a single VCF per sample (no scatter/gather over intervals). Intervals can be provided via `--intervals` to restrict calling to specific regions.
 
+Joint germline variant calling is supported by adding `--joint_germline`. Each sample is then called in gVCF mode and the per-sample gVCFs are combined with GATK's GenomicsDBImport and GenotypeGVCFs, the same way as for GATK's HaplotypeCaller. Because GenomicsDB cannot be used without intervals, `--joint_germline` cannot be combined with `--no_intervals`.
+
 For more details on available arguments, see the [Parabricks HaplotypeCaller documentation](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html).
 
 ### Start with duplicate marking (`--step markduplicates`)
