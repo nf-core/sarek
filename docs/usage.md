@@ -439,7 +439,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
 - `wave`
-  - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow `24.03.0-edge` or later).
+  - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above.
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 - `gpu`
@@ -915,7 +915,7 @@ Varlociraptor allows the usage of different scenario files, a few examples can b
 
 You can control the number of chunks that the candidate VCF file is split into by `--varlociraptor_chunk_size <integer>`, it is set to reasonable default (15) but more chunks might aid in accelerating your workflow run if you can run more processes in parallel.
 
-Varlociraptor by default just returns all candidate variants annotated with probabilities. The variants need to be filtered to yield a representativ result, see the [docs](https://varlociraptor.github.io/docs/filtering/) for more info. In sarek this is implemented with default set events related to the scenario files which used by default. If you use your own scenario file please adapt the events accordingly by using the flags `--varlociraptor_events_tumor_only`, `--varlociraptor_events_somatic` and `--varlociraptor_events_germline`. The events need to be supplied as a list with spaces between the events. Filtering also depends on the False Discovery Rate (FDR) in sarek we opted for a default of filtering in `--mode local-smart` to a FDR of 5% with `--fdr 0.05`. The FDR can be controlled by `--varlociraptor_fdr`.
+Varlociraptor by default just returns all candidate variants annotated with probabilities. The variants need to be filtered to yield a representative result, see the [docs](https://varlociraptor.github.io/docs/filtering/) for more info. In sarek this is implemented with default set events related to the scenario files which are used by default. If you use your own scenario file please adapt the events accordingly by using the flags `--varlociraptor_events_tumor_only`, `--varlociraptor_events_somatic` and `--varlociraptor_events_germline`. The events need to be supplied as a list with spaces between the events. Filtering also depends on the False Discovery Rate (FDR) in sarek we opted for a default of filtering in `--mode local-smart` to a FDR of 5% with `--fdr 0.05`. The FDR can be controlled by `--varlociraptor_fdr`.
 
 ## Spark related issues
 

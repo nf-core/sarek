@@ -72,7 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Params                              | status |
 | ----------------------------------- | ------ |
 | `--varlociraptor_events_germline`   | New    |
-| `--varlociraptor_events_somatic,`   | New    |
+| `--varlociraptor_events_somatic`    | New    |
 | `--varlociraptor_events_tumor_only` | New    |
 | `--varlociraptor_fdr`               | New    |
 
