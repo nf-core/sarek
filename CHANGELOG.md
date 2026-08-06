@@ -9,10 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#2176](https://github.com/nf-core/sarek/pull/2176) - Add Parabricks HaplotypeCaller as GPU-accelerated germline variant caller (`--tools parabricks_haplotypecaller`)
 - [#2208](https://github.com/nf-core/sarek/pull/2208) - Add varlociraptor/filterfdr
 
 ### Changed
 
+- [#2208](https://github.com/nf-core/sarek/pull/2208) - Update somatic freebayes params (remove `--pooled-discrete` and change `--min-alternate-fraction` from 0.03 to 0.01), move chunk_size param
 - [#2210](https://github.com/nf-core/sarek/pull/2210) - Update bcftools to 1.23.1
 - [#2229](https://github.com/nf-core/sarek/pull/2229) - Update EnsemblVEP to 116.0
 - [#2232](https://github.com/nf-core/sarek/pull/2232) - Migrate local code to the lowercase `channel` factory for Nextflow strict-syntax / 26.x readiness
@@ -100,7 +102,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Fixed
 
-- [#2208](https://github.com/nf-core/sarek/pull/2208) - Update freebayes params (remove `--pooled-discrete` and change `--min-alternate-fraction` from 0.03 to 0.01), move chunk_size param
 - [#2229](https://github.com/nf-core/sarek/pull/2229) - Fix LoFTEE test to validate CSQ fields instead of asserting nothing
 
 #### Removed
@@ -112,7 +113,6 @@ Sarvesjåhkå is the biggest stream from Sarvesvágge to flow in Rapaätno.
 ### Added
 
 - [#2087](https://github.com/nf-core/sarek/pull/2087) - Add `bam` as output format for parabricks/fq2bam, add multi lane support
-- [#2176](https://github.com/nf-core/sarek/pull/2176) - Add Parabricks HaplotypeCaller as GPU-accelerated germline variant caller (`--tools parabricks_haplotypecaller`)
 - [#2194](https://github.com/nf-core/sarek/pull/2194) - Add `--vep_cache_preflight_check` parameter to force preflight check for local VEP cache download
 - [#2199](https://github.com/nf-core/sarek/pull/2199) - Add animated metro map (`docs/images/sarek_subway_animated.svg`) with dots flowing through the workflow
 
