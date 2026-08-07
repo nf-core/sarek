@@ -81,7 +81,7 @@ workflow PIPELINE_INITIALISATION {
         before_text,
         after_text,
         command,
-        null,
+        false
     )
 
     // Check config provided to the pipeline
@@ -227,7 +227,7 @@ workflow PIPELINE_COMPLETION {
     }
 
     workflow.onError {
-        log.error("Pipeline failed. Please refer to troubleshooting docs: https://nf-co.re/docs/usage/troubleshooting")
+        log.error("Pipeline failed. Please refer to troubleshooting docs for common issues: https://nf-co.re/docs/running/troubleshooting")
     }
 }
 
