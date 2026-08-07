@@ -348,7 +348,7 @@
             "nextflow": "26.04.0"
         }
     },
-    "Fails with --joint_germline for parabricks_haplotypecaller": {
+    "Fails with --joint_germline and no joint-capable caller": {
         "content": [
             [
                 "pipeline_info"
@@ -359,10 +359,10 @@
             "No VCF files",
             "No warnings",
             [
-                "Joint germline variant calling is not yet supported with Parabricks' HaplotypeCaller. Please use GATK's Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper instead, or remove `--joint_germline`."
+                "The GATK's Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper should be specified as one of the tools when doing joint germline variant calling.) "
             ]
         ],
-        "timestamp": "2026-08-07T13:25:55.073103",
+        "timestamp": "2026-08-07T19:00:47.323906",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
