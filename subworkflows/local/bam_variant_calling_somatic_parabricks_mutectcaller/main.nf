@@ -31,10 +31,11 @@ workflow BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER {
             [ meta, tumor_reads, tumor_index, normal_reads, normal_index, intervals ]
         }
 
+    fasta_with_fai = fasta.combine(fasta_fai.map { _meta, fai -> fai })
+
     PARABRICKS_MUTECTCALLER(
         ch_input,
-        fasta,
-        fasta_fai,
+        fasta_with_fai,
         panel_of_normals,
         panel_of_normals_tbi,
     )
