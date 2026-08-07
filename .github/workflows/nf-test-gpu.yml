@@ -31,7 +31,9 @@ env:
 jobs:
   nf-test-gpu-changes:
     name: nf-test-gpu-changes
-    runs-on: "ubuntu-latest" # temporarily using GitHub-hosted runners while self-hosted runners are down
+    runs-on: # use self-hosted runners
+      - runs-on=${{ github.run_id }}-nf-test-gpu-changes
+      - runner=4cpu-linux-x64
     outputs:
       shard: ${{ steps.set-shards.outputs.shard }}
       total_shards: ${{ steps.set-shards.outputs.total_shards }}
@@ -65,7 +67,7 @@ jobs:
     name: "GPU | ${{ matrix.profile }} | ${{ matrix.NXF_VER }} | ${{ matrix.shard }}/${{ needs.nf-test-gpu-changes.outputs.total_shards }}"
     needs: [nf-test-gpu-changes]
     if: ${{ needs.nf-test-gpu-changes.outputs.total_shards != '0' }}
-    runs-on: "ubuntu-latest" # temporarily using GitHub-hosted runners while self-hosted runners are down (no GPU available)
+    runs-on: "runs-on=${{ github.run_id }}/family=g4dn.xlarge/image=ubuntu24-gpu-x64"
     strategy:
       fail-fast: false
       matrix:
@@ -130,7 +132,9 @@ jobs:
   confirm-pass:
     needs: [nf-test-gpu]
     if: always()
-    runs-on: "ubuntu-latest" # temporarily using GitHub-hosted runners while self-hosted runners are down
+    runs-on: # use self-hosted runners
+      - runs-on=${{ github.run_id }}-confirm-pass
+      - runner=2cpu-linux-x64
     steps:
       - name: One or more tests failed (excluding latest-everything)
         if: ${{ contains(needs.*.result, 'failure') }}

@@ -31,7 +31,9 @@ env:
 jobs:
   nf-test-sentieon-changes:
     name: nf-test-sentieon-changes
-    runs-on: "ubuntu-latest" # temporarily using GitHub-hosted runners while self-hosted runners are down
+    runs-on: # use self-hosted runners
+      - runs-on=${{ github.run_id }}-nf-test-sentieon-changes
+      - runner=4cpu-linux-x64
     outputs:
       shard: ${{ steps.set-shards.outputs.shard }}
       total_shards: ${{ steps.set-shards.outputs.total_shards }}
@@ -65,7 +67,10 @@ jobs:
     name: "${{ matrix.profile }} | ${{ matrix.NXF_VER }} | ${{ matrix.shard }}/${{ needs.nf-test-sentieon-changes.outputs.total_shards }}"
     needs: [nf-test-sentieon-changes]
     if: ${{ needs.nf-test-sentieon-changes.outputs.total_shards != '0' }}
-    runs-on: "ubuntu-latest" # temporarily using GitHub-hosted runners while self-hosted runners are down
+    runs-on: # use self-hosted runners
+      - runs-on=${{ github.run_id }}-nf-test-sentieon
+      - runner=4cpu-linux-x64
+      - volume=80gb
     strategy:
       fail-fast: false
       matrix:
@@ -128,7 +133,9 @@ jobs:
   confirm-pass:
     needs: [nf-test-sentieon]
     if: always()
-    runs-on: "ubuntu-latest" # temporarily using GitHub-hosted runners while self-hosted runners are down
+    runs-on: # use self-hosted runners
+      - runs-on=${{ github.run_id }}-confirm-pass
+      - runner=2cpu-linux-x64
     steps:
       - name: One or more tests failed (excluding latest-everything)
         if: ${{ contains(needs.*.result, 'failure') }}
