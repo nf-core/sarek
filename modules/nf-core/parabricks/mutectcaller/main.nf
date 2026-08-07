@@ -5,12 +5,11 @@ process PARABRICKS_MUTECTCALLER {
     // needed by the module to work properly can be removed when fixed upstream - see: https://github.com/nf-core/modules/issues/7226
     stageInMode 'copy'
 
-    container "nvcr.io/nvidia/clara/clara-parabricks:4.6.0-1"
+    container "nvcr.io/nvidia/clara/clara-parabricks:4.7.1-1"
 
     input:
     tuple val(meta), path(tumor_bam), path(tumor_bam_index), path(normal_bam), path(normal_bam_index), path(intervals)
-    tuple val(ref_meta), path(fasta)
-    tuple val(fai_meta), path(fasta_fai)
+    tuple val(meta2), path(fasta), path(fasta_fai)
     path panel_of_normals
     path panel_of_normals_index
 
