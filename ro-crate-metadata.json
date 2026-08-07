@@ -1,6 +1,6 @@
 {
     "@context": [
-        "https://w3id.org/ro/crate/1.2/context",
+        "https://w3id.org/ro/crate/1.1/context",
         {
             "GithubService": "https://w3id.org/ro/terms/test#GithubService",
             "JenkinsService": "https://w3id.org/ro/terms/test#JenkinsService",
@@ -21,9 +21,9 @@
         {
             "@id": "./",
             "@type": "Dataset",
-            "creativeWorkStatus": "InProgress",
-            "datePublished": "2026-07-03T08:36:13+00:00",
-            "description": "<h1>\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/images/nf-core-sarek_logo_dark.png\">\n    <img alt=\"nf-core/sarek\" src=\"docs/images/nf-core-sarek_logo_light.png\">\n  </picture>\n</h1>\n\n[![Open in GitHub Codespaces](https://img.shields.io/badge/Open_In_GitHub_Codespaces-black?labelColor=grey&logo=github)](https://github.com/codespaces/new/nf-core/sarek)\n[![GitHub Actions CI Status](https://github.com/nf-core/sarek/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-core/sarek/actions/workflows/nf-test.yml)\n[![GitHub Actions Linting Status](https://github.com/nf-core/sarek/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/sarek/actions/workflows/linting.yml)\n[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/sarek/results)\n[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3476425-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3476425)\n[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)\n\n[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)\n[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.1.0-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.1.0)\n[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)\n[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)\n[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)\n[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/sarek)\n\n[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23sarek-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/sarek)\n[![Follow on Bluesky](https://img.shields.io/badge/bluesky-%40nf__core-1185fe?labelColor=000000&logo=bluesky)](https://bsky.app/profile/nf-co.re)\n[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)\n[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)\n\n## Introduction\n\n**nf-core/sarek** is a workflow designed to detect variants on whole genome or targeted sequencing data. Initially designed for Human, and Mouse, it can work on any species with a reference genome. Sarek can also handle tumour / normal pairs and could include additional relapses.\n\nThe pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!\n\nOn release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/sarek/results).\n\nIt's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-core-sarek) and [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek).\n\n<p align=\"center\">\n    <img title=\"Sarek Workflow\" src=\"docs/images/sarek_workflow.png\" width=30%>\n</p>\n\n## Pipeline summary\n\nDepending on the options and samples provided, the pipeline can currently perform the following:\n\n- Form consensus reads from UMI sequences (`fgbio`)\n- Sequencing quality control and trimming (enabled by `--trim_fastq`) (`FastQC`, `fastp`)\n- Contamination removal (`BBSplit`, enabled by `--tools bbsplit`)\n- Map Reads to Reference (`BWA-mem`, `BWA-mem2`, `dragmap` or `Sentieon BWA-mem`)\n- Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator` and `GATK ApplyBQSR` or `Sentieon LocusCollector` and `Sentieon Dedup`)\n- _Experimental Feature_: Use GPU-accelerated parabricks implementation as alternative to \"Map Reads to Reference\" + \"Process BAM file\" (`--aligner parabricks`)\n- Summarise alignment statistics (`samtools stats`, `mosdepth`)\n- Variant calling (enabled by `--tools`, see [compatibility](https://nf-co.re/sarek/latest/docs/usage#which-variant-calling-tool-is-implemented-for-which-data-type)):\n  - `ASCAT`\n  - `CNVkit`\n  - `Control-FREEC`\n  - `DeepVariant`\n  - `freebayes`\n  - `GATK HaplotypeCaller`\n  - `GATK Mutect2`\n  - _Experimental Feature_: `Parabricks HaplotypeCaller` (GPU-accelerated germline calling, `--tools parabricks_haplotypecaller`)\n  - `indexcov`\n  - `Lofreq`\n  - `Manta`\n  - `mpileup`\n  - `MSIsensor2`\n  - `MSIsensor-pro`\n  - `MuSE`\n  - `Sentieon Haplotyper`\n  - `Strelka`\n  - `TIDDIT`\n- Post-variant calling options, one of:\n  - Filtering (`bcftools view` (default: filter by `PASS,.`)), normalisation (`bcftools norm`) and consensus calling (`bcftools isec`, default: called by at least 2 tools `-n+2`) on all vcfs and/or `bcftools concat` for germline vcfs\n  - `Varlociraptor` for all vcfs\n- Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`, `SnpSift`)\n- Summarise and represent QC (`MultiQC`)\n\n<p align=\"center\">\n    <img title=\"Sarek Workflow\" src=\"docs/images/sarek_subway_animated.svg\" width=60%>\n</p>\n\n## Usage\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/get_started/environment_setup/overview) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/get_started/run-your-first-pipeline) with `-profile test` before running the workflow on actual data.\n\nFirst, prepare a samplesheet with your input data that looks as follows:\n\n`samplesheet.csv`:\n\n```csv\npatient,sample,lane,fastq_1,fastq_2\nID1,S1,L002,ID1_S1_L002_R1_001.fastq.gz,ID1_S1_L002_R2_001.fastq.gz\n```\n\nEach row represents a pair of fastq files (paired end).\n\nNow, you can run the pipeline using:\n\n```bash\nnextflow run nf-core/sarek \\\n   -profile <docker/singularity/.../institute> \\\n   --input samplesheet.csv \\\n   --outdir <OUTDIR>\n```\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/running/run-pipelines#using-parameter-files).\n\nFor more details and further functionality, please refer to the [usage documentation](https://nf-co.re/sarek/usage) and the [parameter documentation](https://nf-co.re/sarek/parameters).\n\n## Pipeline output\n\nTo see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/sarek/results) tab on the nf-core website pipeline page.\nFor more details about the output files and reports, please refer to the\n[output documentation](https://nf-co.re/sarek/output).\n\n## Benchmarking\n\nOn each release, the pipeline is run on 3 full size tests:\n\n- `test_full` runs tumor-normal data for one patient from the SEQ2C consortium\n- `test_full_germline` runs a WGS 30X Genome-in-a-Bottle(NA12878) dataset\n- `test_full_germline_ncbench_agilent` runs two WES samples with 75M and 200M reads (data available [here](https://github.com/ncbench/ncbench-workflow#contributing-callsets)). The results are uploaded to Zenodo, evaluated against a truth dataset, and results are made available via the [NCBench dashboard](https://ncbench.github.io/report/report.html#).\n\n## Credits\n\nSarek was originally written by Maxime U Garcia and Szilveszter Juhos at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)](https://ki.se/forskning/barntumorbanken).\nFriederike Hanssen and Gisela Gabernet at [QBiC](https://www.qbic.uni-tuebingen.de/) later joined and helped with further development.\n\nThe Nextflow DSL2 conversion of the pipeline was lead by Friederike Hanssen and Maxime U Garcia.\n\nMaintenance is now lead by Friederike Hanssen (now at [Seqera](https://seqera.io)) and Maxime U Garcia.\n\nMain developers:\n\n- [Maxime U Garcia](https://github.com/maxulysse)\n- [Friederike Hanssen](https://github.com/FriederikeHanssen)\n\nWe thank the following people for their extensive assistance in the development of this pipeline:\n\n- [Abhinav Sharma](https://github.com/abhi18av)\n- [Adam Talbot](https://github.com/adamrtalbot)\n- [Adrian Lärkeryd](https://github.com/adrlar)\n- [Àitor Olivares](https://github.com/AitorPeseta)\n- [Alexander Peltzer](https://github.com/apeltzer)\n- [Alison Meynert](https://github.com/ameynert)\n- [Anders Sune Pedersen](https://github.com/asp8200)\n- [arontommi](https://github.com/arontommi)\n- [BarryDigby](https://github.com/BarryDigby)\n- [Bekir Ergüner](https://github.com/berguner)\n- [bjornnystedt](https://github.com/bjornnystedt)\n- [cgpu](https://github.com/cgpu)\n- [Chela James](https://github.com/chelauk)\n- [David Mas-Ponte](https://github.com/davidmasp)\n- [Edmund Miller](https://github.com/edmundmiller)\n- [Famke Bäuerle](https://github.com/famosab)\n- [Francesco Lescai](https://github.com/lescai)\n- [Francisco Martínez](https://github.com/nevinwu)\n- [Gavin Mackenzie](https://github.com/GCJMackenzie)\n- [Gisela Gabernet](https://github.com/ggabernet)\n- [Grant Neilson](https://github.com/grantn5)\n- [gulfshores](https://github.com/gulfshores)\n- [Harshil Patel](https://github.com/drpatelh)\n- [Hongwei Ye](https://github.com/YeHW)\n- [James A. Fellows Yates](https://github.com/jfy133)\n- [Jesper Eisfeldt](https://github.com/J35P312)\n- [Johannes Alneberg](https://github.com/alneberg)\n- [Jonas Kjellin](https://github.com/kjellinjonas)\n- [José Fernández Navarro](https://github.com/jfnavarro)\n- [Júlia Mir Pedrol](https://github.com/mirpedrol)\n- [Ken Brewer](https://github.com/kenibrewer)\n- [Lasse Westergaard Folkersen](https://github.com/lassefolkersen)\n- [Lucia Conde](https://github.com/lconde-ucl)\n- [Louis Le Nézet](https://github.com/LouisLeNezet)\n- [Malin Larsson](https://github.com/malinlarsson)\n- [Marcel Martin](https://github.com/marcelm)\n- [Nick Smith](https://github.com/nickhsmith)\n- [Nicolas Schcolnicov](https://github.com/nschcolnicov)\n- [Nilesh Tawari](https://github.com/nilesh-tawari)\n- [Nils Homer](https://github.com/nh13)\n- [Olga Botvinnik](https://github.com/olgabot)\n- [Oskar Wacker](https://github.com/WackerO)\n- [pallolason](https://github.com/pallolason)\n- [Paul Cantalupo](https://github.com/pcantalupo)\n- [Phil Ewels](https://github.com/ewels)\n- [Pierre Lindenbaum](https://github.com/lindenb)\n- [Sabrina Krakau](https://github.com/skrakau)\n- [Sam Minot](https://github.com/sminot)\n- [Sebastian-D](https://github.com/Sebastian-D)\n- [Silvia Morini](https://github.com/silviamorins)\n- [Simon Pearce](https://github.com/SPPearce)\n- [Solenne Correard](https://github.com/scorreard)\n- [Susanne Jodoin](https://github.com/SusiJo)\n- [Szilveszter Juhos](https://github.com/szilvajuhos)\n- [Tobias Koch](https://github.com/KochTobi)\n- [Winni Kretzschmar](https://github.com/winni2k)\n- [Patricie Skaláková](https://github.com/Patricie34)\n\n## Acknowledgements\n\n|      [![Barntumörbanken](docs/images/BTB_logo.png)](https://ki.se/forskning/barntumorbanken)      |            [![SciLifeLab](docs/images/SciLifeLab_logo.png)](https://scilifelab.se)             |\n| :-----------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------: |\n| [![National Genomics Infrastructure](docs/images/NGI_logo.png)](https://ngisweden.scilifelab.se/) | [![National Bioinformatics Infrastructure Sweden](docs/images/NBIS_logo.png)](https://nbis.se) |\n|              [![QBiC](docs/images/QBiC_logo.png)](https://www.qbic.uni-tuebingen.de)              |                   [![GHGA](docs/images/GHGA_logo.png)](https://www.ghga.de/)                   |\n|                     [![DNGC](docs/images/DNGC_logo.png)](https://eng.ngc.dk/)                     |                                                                                                |\n\n## Contributions & Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](docs/CONTRIBUTING.md).\n\nFor further information or help, don't hesitate to get in touch on the [Slack `#sarek` channel](https://nfcore.slack.com/channels/sarek), or contact the dev team on the [Slack `#sarek_dev` channel](https://nfcore.slack.com/channels/sarek_dev). (you can join with [this invite](https://nf-co.re/join/slack)).\n\n## Citations\n\nIf you use `nf-core/sarek` for your analysis, please cite the `Sarek` article as follows:\n\n> Friederike Hanssen, Maxime U Garcia, Lasse Folkersen, Anders Sune Pedersen, Francesco Lescai, Susanne Jodoin, Edmund Miller, Oskar Wacker, Nicholas Smith, nf-core community, Gisela Gabernet, Sven Nahnsen **Scalable and efficient DNA sequencing analysis on different compute infrastructures aiding variant discovery** _NAR Genomics and Bioinformatics_ Volume 6, Issue 2, June 2024, lqae031, [doi: 10.1093/nargab/lqae031](https://doi.org/10.1093/nargab/lqae031).\n\n> Garcia M, Juhos S, Larsson M et al. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants [version 2; peer review: 2 approved]** _F1000Research_ 2020, 9:63 [doi: 10.12688/f1000research.16665.2](http://dx.doi.org/10.12688/f1000research.16665.2).\n\nYou can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.3476425](https://doi.org/10.5281/zenodo.3476425)\n\nAn extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\nYou can cite the `nf-core` publication as follows:\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n\n## CHANGELOG\n\n- [CHANGELOG](CHANGELOG.md)\n",
+            "creativeWorkStatus": "Stable",
+            "datePublished": "2026-08-06T07:45:06+00:00",
+            "description": "<h1>\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/images/nf-core-sarek_logo_dark.png\">\n    <img alt=\"nf-core/sarek\" src=\"docs/images/nf-core-sarek_logo_light.png\">\n  </picture>\n</h1>\n\n[![Open in GitHub Codespaces](https://img.shields.io/badge/Open_In_GitHub_Codespaces-black?labelColor=grey&logo=github)](https://github.com/codespaces/new/nf-core/sarek)\n[![GitHub Actions CI Status](https://github.com/nf-core/sarek/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-core/sarek/actions/workflows/nf-test.yml)\n[![GitHub Actions Linting Status](https://github.com/nf-core/sarek/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/sarek/actions/workflows/linting.yml)\n[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/sarek/results)\n[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3476425-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3476425)\n[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)\n\n[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)\n[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.1.0-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.1.0)\n[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)\n[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)\n[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)\n[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/sarek)\n\n[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23sarek-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/sarek)\n[![Follow on Bluesky](https://img.shields.io/badge/bluesky-%40nf__core-1185fe?labelColor=000000&logo=bluesky)](https://bsky.app/profile/nf-co.re)\n[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)\n[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)\n\n## Introduction\n\n**nf-core/sarek** is a workflow designed to detect variants on whole genome or targeted sequencing data. Initially designed for Human, and Mouse, it can work on any species with a reference genome. Sarek can also handle tumour / normal pairs and could include additional relapses.\n\nThe pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!\n\nOn release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/sarek/results).\n\nIt's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-core-sarek) and [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek).\n\n<p align=\"center\">\n    <img title=\"Sarek Workflow\" src=\"docs/images/sarek_workflow.png\" width=30%>\n</p>\n\n## Pipeline summary\n\nDepending on the options and samples provided, the pipeline can currently perform the following:\n\n- Form consensus reads from UMI sequences (`fgbio`)\n- Sequencing quality control and trimming (enabled by `--trim_fastq`) (`FastQC`, `fastp`)\n- Contamination removal (`BBSplit`, enabled by `--tools bbsplit`)\n- Map Reads to Reference (`BWA-mem`, `BWA-mem2`, `dragmap` or `Sentieon BWA-mem`)\n- Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator` and `GATK ApplyBQSR` or `Sentieon LocusCollector` and `Sentieon Dedup`)\n- _Experimental Feature_: Use GPU-accelerated parabricks implementation as alternative to \"Map Reads to Reference\" + \"Process BAM file\" (`--aligner parabricks`)\n- Summarise alignment statistics (`samtools stats`, `mosdepth`)\n- Variant calling (enabled by `--tools`, see [compatibility](https://nf-co.re/sarek/latest/docs/usage#which-variant-calling-tool-is-implemented-for-which-data-type)):\n  - `ASCAT`\n  - `CNVkit`\n  - `Control-FREEC`\n  - `DeepVariant`\n  - `freebayes`\n  - `GATK HaplotypeCaller`\n  - `GATK Mutect2`\n  - _Experimental Feature_: `Parabricks HaplotypeCaller` (GPU-accelerated germline calling, `--tools parabricks_haplotypecaller`)\n  - `indexcov`\n  - `Lofreq`\n  - `Manta`\n  - `mpileup`\n  - `MSIsensor2`\n  - `MSIsensor-pro`\n  - `MuSE`\n  - `Sentieon Haplotyper`\n  - `Strelka`\n  - `TIDDIT`\n- Post-variant calling options, one of:\n  - Filtering (`bcftools view` (default: filter by `PASS,.`)), normalisation (`bcftools norm`) and consensus calling (`bcftools isec`, default: called by at least 2 tools `-n+2`) on all vcfs and/or `bcftools concat` for germline vcfs\n  - `Varlociraptor` for all vcfs\n- Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`, `SnpSift`)\n- Summarise and represent QC (`MultiQC`)\n\n<p align=\"center\">\n    <img title=\"Sarek Workflow\" src=\"docs/images/sarek_subway_animated.svg\" width=60%>\n</p>\n\n## Usage\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/get_started/environment_setup/overview) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/get_started/run-your-first-pipeline) with `-profile test` before running the workflow on actual data.\n\nFirst, prepare a samplesheet with your input data that looks as follows:\n\n`samplesheet.csv`:\n\n```csv\npatient,sample,lane,fastq_1,fastq_2\nID1,S1,L002,ID1_S1_L002_R1_001.fastq.gz,ID1_S1_L002_R2_001.fastq.gz\n```\n\nEach row represents a pair of fastq files (paired end).\n\nNow, you can run the pipeline using:\n\n```bash\nnextflow run nf-core/sarek \\\n   -profile <docker/singularity/.../institute> \\\n   --input samplesheet.csv \\\n   --outdir <OUTDIR>\n```\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/running/run-pipelines#using-parameter-files).\n\nFor more details and further functionality, please refer to the [usage documentation](https://nf-co.re/sarek/usage) and the [parameter documentation](https://nf-co.re/sarek/parameters).\n\n## Pipeline output\n\nTo see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/sarek/results) tab on the nf-core website pipeline page.\nFor more details about the output files and reports, please refer to the\n[output documentation](https://nf-co.re/sarek/output).\n\n## Benchmarking\n\nOn each release, the pipeline is run on 3 full size tests:\n\n- `test_full` runs tumor-normal data for one patient from the SEQ2C consortium\n- `test_full_germline` runs a WGS 30X Genome-in-a-Bottle(NA12878) dataset\n- `test_full_germline_ncbench_agilent` runs two WES samples with 75M and 200M reads (data available [here](https://github.com/ncbench/ncbench-workflow#contributing-callsets)). The results are uploaded to Zenodo, evaluated against a truth dataset, and results are made available via the [NCBench dashboard](https://ncbench.github.io/report/report.html#).\n\n## Credits\n\nSarek was originally written by Maxime U Garcia and Szilveszter Juhos at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntum\u00f6rbanken)](https://ki.se/forskning/barntumorbanken).\nFriederike Hanssen and Gisela Gabernet at [QBiC](https://www.qbic.uni-tuebingen.de/) later joined and helped with further development.\n\nThe Nextflow DSL2 conversion of the pipeline was lead by Friederike Hanssen and Maxime U Garcia.\n\nMaintenance is now lead by Friederike Hanssen (now at [Seqera](https://seqera.io)) and Maxime U Garcia.\n\nMain developers:\n\n- [Maxime U Garcia](https://github.com/maxulysse)\n- [Friederike Hanssen](https://github.com/FriederikeHanssen)\n\nWe thank the following people for their extensive assistance in the development of this pipeline:\n\n- [Abhinav Sharma](https://github.com/abhi18av)\n- [Adam Talbot](https://github.com/adamrtalbot)\n- [Adrian L\u00e4rkeryd](https://github.com/adrlar)\n- [\u00c0itor Olivares](https://github.com/AitorPeseta)\n- [Alexander Peltzer](https://github.com/apeltzer)\n- [Alison Meynert](https://github.com/ameynert)\n- [Anders Sune Pedersen](https://github.com/asp8200)\n- [arontommi](https://github.com/arontommi)\n- [BarryDigby](https://github.com/BarryDigby)\n- [Bekir Erg\u00fcner](https://github.com/berguner)\n- [bjornnystedt](https://github.com/bjornnystedt)\n- [cgpu](https://github.com/cgpu)\n- [Chela James](https://github.com/chelauk)\n- [David Mas-Ponte](https://github.com/davidmasp)\n- [Edmund Miller](https://github.com/edmundmiller)\n- [Famke B\u00e4uerle](https://github.com/famosab)\n- [Francesco Lescai](https://github.com/lescai)\n- [Francisco Mart\u00ednez](https://github.com/nevinwu)\n- [Gavin Mackenzie](https://github.com/GCJMackenzie)\n- [Gisela Gabernet](https://github.com/ggabernet)\n- [Grant Neilson](https://github.com/grantn5)\n- [gulfshores](https://github.com/gulfshores)\n- [Harshil Patel](https://github.com/drpatelh)\n- [Hongwei Ye](https://github.com/YeHW)\n- [James A. Fellows Yates](https://github.com/jfy133)\n- [Jesper Eisfeldt](https://github.com/J35P312)\n- [Johannes Alneberg](https://github.com/alneberg)\n- [Jonas Kjellin](https://github.com/kjellinjonas)\n- [Jos\u00e9 Fern\u00e1ndez Navarro](https://github.com/jfnavarro)\n- [J\u00falia Mir Pedrol](https://github.com/mirpedrol)\n- [Ken Brewer](https://github.com/kenibrewer)\n- [Lasse Westergaard Folkersen](https://github.com/lassefolkersen)\n- [Lucia Conde](https://github.com/lconde-ucl)\n- [Louis Le N\u00e9zet](https://github.com/LouisLeNezet)\n- [Malin Larsson](https://github.com/malinlarsson)\n- [Marcel Martin](https://github.com/marcelm)\n- [Nick Smith](https://github.com/nickhsmith)\n- [Nicolas Schcolnicov](https://github.com/nschcolnicov)\n- [Nilesh Tawari](https://github.com/nilesh-tawari)\n- [Nils Homer](https://github.com/nh13)\n- [Olga Botvinnik](https://github.com/olgabot)\n- [Oskar Wacker](https://github.com/WackerO)\n- [pallolason](https://github.com/pallolason)\n- [Paul Cantalupo](https://github.com/pcantalupo)\n- [Phil Ewels](https://github.com/ewels)\n- [Pierre Lindenbaum](https://github.com/lindenb)\n- [Sabrina Krakau](https://github.com/skrakau)\n- [Sam Minot](https://github.com/sminot)\n- [Sebastian-D](https://github.com/Sebastian-D)\n- [Silvia Morini](https://github.com/silviamorins)\n- [Simon Pearce](https://github.com/SPPearce)\n- [Solenne Correard](https://github.com/scorreard)\n- [Susanne Jodoin](https://github.com/SusiJo)\n- [Szilveszter Juhos](https://github.com/szilvajuhos)\n- [Tobias Koch](https://github.com/KochTobi)\n- [Winni Kretzschmar](https://github.com/winni2k)\n- [Patricie Skal\u00e1kov\u00e1](https://github.com/Patricie34)\n\n## Acknowledgements\n\n|      [![Barntum\u00f6rbanken](docs/images/BTB_logo.png)](https://ki.se/forskning/barntumorbanken)      |            [![SciLifeLab](docs/images/SciLifeLab_logo.png)](https://scilifelab.se)             |\n| :-----------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------: |\n| [![National Genomics Infrastructure](docs/images/NGI_logo.png)](https://ngisweden.scilifelab.se/) | [![National Bioinformatics Infrastructure Sweden](docs/images/NBIS_logo.png)](https://nbis.se) |\n|              [![QBiC](docs/images/QBiC_logo.png)](https://www.qbic.uni-tuebingen.de)              |                   [![GHGA](docs/images/GHGA_logo.png)](https://www.ghga.de/)                   |\n|                     [![DNGC](docs/images/DNGC_logo.png)](https://eng.ngc.dk/)                     |                                                                                                |\n\n## Contributions & Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](docs/CONTRIBUTING.md).\n\nFor further information or help, don't hesitate to get in touch on the [Slack `#sarek` channel](https://nfcore.slack.com/channels/sarek), or contact the dev team on the [Slack `#sarek_dev` channel](https://nfcore.slack.com/channels/sarek_dev). (you can join with [this invite](https://nf-co.re/join/slack)).\n\n## Citations\n\nIf you use `nf-core/sarek` for your analysis, please cite the `Sarek` article as follows:\n\n> Friederike Hanssen, Maxime U Garcia, Lasse Folkersen, Anders Sune Pedersen, Francesco Lescai, Susanne Jodoin, Edmund Miller, Oskar Wacker, Nicholas Smith, nf-core community, Gisela Gabernet, Sven Nahnsen **Scalable and efficient DNA sequencing analysis on different compute infrastructures aiding variant discovery** _NAR Genomics and Bioinformatics_ Volume 6, Issue 2, June 2024, lqae031, [doi: 10.1093/nargab/lqae031](https://doi.org/10.1093/nargab/lqae031).\n\n> Garcia M, Juhos S, Larsson M et al. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants [version 2; peer review: 2 approved]** _F1000Research_ 2020, 9:63 [doi: 10.12688/f1000research.16665.2](http://dx.doi.org/10.12688/f1000research.16665.2).\n\nYou can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.3476425](https://doi.org/10.5281/zenodo.3476425)\n\nAn extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\nYou can cite the `nf-core` publication as follows:\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n\n## CHANGELOG\n\n- [CHANGELOG](CHANGELOG.md)\n",
             "hasPart": [
                 {
                     "@id": "main.nf"
@@ -105,7 +105,7 @@
             },
             "mentions": [
                 {
-                    "@id": "#9e0f3a8f-9d90-4d54-8c6c-a0a29b776d3c"
+                    "@id": "#2959b312-2195-4098-ba14-1aa172e72eab"
                 }
             ],
             "name": "nf-core/sarek"
@@ -118,7 +118,7 @@
             },
             "conformsTo": [
                 {
-                    "@id": "https://w3id.org/ro/crate/1.2"
+                    "@id": "https://w3id.org/ro/crate/1.1"
                 },
                 {
                     "@id": "https://w3id.org/workflowhub/workflow-ro-crate/1.0"
@@ -145,16 +145,16 @@
             ],
             "contributor": [
                 {
-                    "@id": "#af625541-b970-4b97-8ab0-17a316b7cae2"
+                    "@id": "#68e19ac4-9970-4b6d-936c-49d05aadce72"
                 },
                 {
-                    "@id": "#247aa4b3-9203-46a4-8f1e-61d5c489723f"
+                    "@id": "#bd5a2761-5e63-4ad4-9b75-714949125557"
                 },
                 {
                     "@id": "https://orcid.org/0000-0003-1424-7840"
                 },
                 {
-                    "@id": "#8a809452-e771-4516-bbe0-1e24d68af311"
+                    "@id": "#e2455759-7ff9-4f1e-ab08-b92b8974c249"
                 },
                 {
                     "@id": "https://orcid.org/0000-0002-6503-2180"
@@ -163,7 +163,7 @@
                     "@id": "https://orcid.org/0000-0001-5839-1751"
                 },
                 {
-                    "@id": "#8b9760e9-82c7-4a6a-b248-79bd7ad2b053"
+                    "@id": "#f4c01682-9991-46a5-bf66-9835d57bf7ea"
                 },
                 {
                     "@id": "https://orcid.org/0000-0002-5547-8568"
@@ -175,7 +175,7 @@
                     "@id": "https://orcid.org/0000-0001-5475-0892"
                 },
                 {
-                    "@id": "#4489aab7-cad4-4024-9ae7-680e3f62d35f"
+                    "@id": "#4d59bf92-7871-4ad0-8e00-b0a9818ce204"
                 },
                 {
                     "@id": "https://orcid.org/0000-0002-4257-7241"
@@ -187,7 +187,7 @@
                     "@id": "https://orcid.org/0000-0001-7409-305X"
                 },
                 {
-                    "@id": "#05b6b43d-feda-49dc-8857-5c1de743db1f"
+                    "@id": "#9c2e978e-bb4b-44b7-869a-735cee124fbc"
                 },
                 {
                     "@id": "https://orcid.org/0000-0003-1387-0251"
@@ -196,28 +196,28 @@
                     "@id": "https://orcid.org/0000-0002-6399-9101"
                 },
                 {
-                    "@id": "#998a0be1-18d5-40f4-8b2d-b38cf34567bb"
+                    "@id": "#6c423cf3-7039-4fd2-ae18-229d6c6f1048"
                 },
                 {
-                    "@id": "#11030fc5-094f-45f4-87ef-7cdd57f11d2e"
+                    "@id": "#32f84d4e-ec10-4ca0-9931-63c1e6626369"
                 },
                 {
-                    "@id": "#5120a9b1-e14a-4bb2-a80d-541ccabef32b"
+                    "@id": "#aae0c0fd-4fbc-4a4b-b649-a47e9a452e58"
                 },
                 {
-                    "@id": "#2e56838e-3d67-44ac-8d7a-d68d8e676ac8"
+                    "@id": "#c3553093-e3cd-41f5-bb32-c149244fff2e"
                 },
                 {
                     "@id": "https://orcid.org/0000-0001-6813-3051"
                 },
                 {
-                    "@id": "#7be1bb4e-0cde-494c-8774-60946b1ae96b"
+                    "@id": "#8ae7756a-86e8-4395-8d05-e9ea0f82f158"
                 },
                 {
-                    "@id": "#a0c796c5-c875-42ca-b557-fe2ac96b66ce"
+                    "@id": "#2fefc079-fc22-42d3-a896-8abedb523a84"
                 },
                 {
-                    "@id": "#09402bb5-a6eb-4ae7-a7b1-dcfa67184a76"
+                    "@id": "#1981c2ee-f809-40c5-8c11-4a5686cd1608"
                 },
                 {
                     "@id": "https://orcid.org/0000-0003-3716-4917"
@@ -229,34 +229,34 @@
                     "@id": "https://orcid.org/0000-0002-3830-7046"
                 },
                 {
-                    "@id": "#ac09a5c7-717f-41c6-bdc8-e688212472b2"
+                    "@id": "#6b01299e-76b4-47ef-b245-a38f427f9948"
                 },
                 {
                     "@id": "https://orcid.org/0000-0001-6104-9260"
                 },
                 {
-                    "@id": "#d690a65c-327a-41c4-8261-5c57663c35e9"
+                    "@id": "#9c1b07ce-1ccf-47d1-b0a4-37cf57f7eaa2"
                 },
                 {
                     "@id": "https://orcid.org/0000-0003-0708-9530"
                 },
                 {
-                    "@id": "#369d8757-d425-4b2d-96ce-f1ad800f6c89"
+                    "@id": "#192a8653-5651-45ae-b0f7-dd8fd4a27d09"
                 },
                 {
                     "@id": "https://orcid.org/0009-0000-0202-2703"
                 },
                 {
-                    "@id": "#e4fb587c-918e-435b-b428-08c168306d97"
+                    "@id": "#add79495-7175-4105-b124-db3ffe1c378d"
                 },
                 {
-                    "@id": "#57198db3-c35c-48af-84d2-ff2001a51b44"
+                    "@id": "#b05148ef-916a-467f-9ad2-cae2eea603db"
                 },
                 {
-                    "@id": "#65d3ef9a-2755-401d-bfdb-bdda06a5b039"
+                    "@id": "#7aeed064-1ee3-40af-9f23-79079a34702d"
                 },
                 {
-                    "@id": "#c44e3833-23dc-4cb7-8bb1-562d34a2dada"
+                    "@id": "#3d70a6d0-7c54-45e1-9867-99ecb1b78d93"
                 },
                 {
                     "@id": "https://orcid.org/0000-0002-1127-0765"
@@ -277,7 +277,7 @@
                     "@id": "https://orcid.org/0000-0003-3966-8481"
                 },
                 {
-                    "@id": "#ea5b7667-91bb-4a92-bb6b-7dad7ae3b69a"
+                    "@id": "#558104fe-4b28-449b-9244-caa4baf29f65"
                 },
                 {
                     "@id": "https://orcid.org/0000-0003-0148-9787"
@@ -286,7 +286,7 @@
                     "@id": "https://orcid.org/0000-0003-0603-7907"
                 },
                 {
-                    "@id": "#620ba4aa-b10e-4a2a-a84a-65874baade8a"
+                    "@id": "#b688b553-23c6-470d-8c2d-9a23891d26f0"
                 },
                 {
                     "@id": "https://orcid.org/0000-0002-9759-2211"
@@ -304,17 +304,17 @@
                     "@id": "https://orcid.org/0009-0001-9152-7291"
                 },
                 {
-                    "@id": "#31dce384-0d05-4394-b60f-61599eaeacb4"
+                    "@id": "#41dc5c91-85eb-447e-ac5c-93da479bec7b"
                 },
                 {
-                    "@id": "#0f2c277a-8111-440f-8385-1a0b8a019aba"
+                    "@id": "#b78cf32d-c072-4af0-b159-4a34daf9a65a"
                 },
                 {
                     "@id": "https://orcid.org/0009-0009-0647-7639"
                 }
             ],
             "dateCreated": "",
-            "dateModified": "2026-07-03T10:36:13Z",
+            "dateModified": "2026-08-06T09:45:06Z",
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
             "keywords": [
                 "nf-core",
@@ -353,10 +353,10 @@
             },
             "url": [
                 "https://github.com/nf-core/sarek",
-                "https://nf-co.re/sarek/dev/"
+                "https://nf-co.re/sarek/3.10.0/"
             ],
             "version": [
-                "3.9.1dev"
+                "3.10.0"
             ]
         },
         {
@@ -372,11 +372,11 @@
             "version": "!>=25.10.4"
         },
         {
-            "@id": "#9e0f3a8f-9d90-4d54-8c6c-a0a29b776d3c",
+            "@id": "#2959b312-2195-4098-ba14-1aa172e72eab",
             "@type": "TestSuite",
             "instance": [
                 {
-                    "@id": "#f5446036-5b2b-46d5-901b-255ceff391ce"
+                    "@id": "#60096fd5-5201-462d-ae4d-2cd93c443678"
                 }
             ],
             "mainEntity": {
@@ -385,7 +385,7 @@
             "name": "Test suite for nf-core/sarek"
         },
         {
-            "@id": "#f5446036-5b2b-46d5-901b-255ceff391ce",
+            "@id": "#60096fd5-5201-462d-ae4d-2cd93c443678",
             "@type": "TestInstance",
             "name": "GitHub Actions workflow for testing nf-core/sarek",
             "resource": "repos/nf-core/sarek/actions/workflows/nf-test.yml",
@@ -547,14 +547,14 @@
             "url": "https://github.com/szilvajuhos"
         },
         {
-            "@id": "#af625541-b970-4b97-8ab0-17a316b7cae2",
+            "@id": "#68e19ac4-9970-4b6d-936c-49d05aadce72",
             "@type": "Person",
             "email": "abhi18av@users.noreply.github.com",
             "name": "Abhinav Sharma",
             "url": "https://github.com/abhi18av"
         },
         {
-            "@id": "#247aa4b3-9203-46a4-8f1e-61d5c489723f",
+            "@id": "#bd5a2761-5e63-4ad4-9b75-714949125557",
             "@type": "Person",
             "affiliation": "Seqera",
             "email": "12817534+adamrtalbot@users.noreply.github.com",
@@ -564,13 +564,13 @@
         {
             "@id": "https://orcid.org/0000-0003-1424-7840",
             "@type": "Person",
-            "name": "Adrian Lärkeryd",
+            "name": "Adrian L\u00e4rkeryd",
             "url": "https://github.com/adrlar"
         },
         {
-            "@id": "#8a809452-e771-4516-bbe0-1e24d68af311",
+            "@id": "#e2455759-7ff9-4f1e-ab08-b92b8974c249",
             "@type": "Person",
-            "name": "Àitor Olivares",
+            "name": "\u00c0itor Olivares",
             "url": "https://github.com/AitorPeseta"
         },
         {
@@ -588,7 +588,7 @@
             "url": "https://github.com/ameynert"
         },
         {
-            "@id": "#8b9760e9-82c7-4a6a-b248-79bd7ad2b053",
+            "@id": "#f4c01682-9991-46a5-bf66-9835d57bf7ea",
             "@type": "Person",
             "email": "37172585+asp8200@users.noreply.github.com",
             "name": "Anders Sune Pedersen",
@@ -610,13 +610,13 @@
             "@id": "https://orcid.org/0000-0001-5475-0892",
             "@type": "Person",
             "email": "bekire@gmail.com",
-            "name": "Bekir Ergüner",
+            "name": "Bekir Erg\u00fcner",
             "url": "https://github.com/berguner"
         },
         {
-            "@id": "#4489aab7-cad4-4024-9ae7-680e3f62d35f",
+            "@id": "#4d59bf92-7871-4ad0-8e00-b0a9818ce204",
             "@type": "Person",
-            "name": "Björn Nystedt",
+            "name": "Bj\u00f6rn Nystedt",
             "url": "https://github.com/bjornnystedt"
         },
         {
@@ -640,7 +640,7 @@
             "url": "https://github.com/davidmasp"
         },
         {
-            "@id": "#05b6b43d-feda-49dc-8857-5c1de743db1f",
+            "@id": "#9c2e978e-bb4b-44b7-869a-735cee124fbc",
             "@type": "Person",
             "affiliation": "Seqera",
             "email": "20095261+edmundmiller@users.noreply.github.com",
@@ -650,9 +650,9 @@
         {
             "@id": "https://orcid.org/0000-0003-1387-0251",
             "@type": "Person",
-            "affiliation": "Quantitative Biology Center (QBiC) Tübingen, University of Tübingen, Germany",
+            "affiliation": "Quantitative Biology Center (QBiC) T\u00fcbingen, University of T\u00fcbingen, Germany",
             "email": "45968370+famosab@users.noreply.github.com",
-            "name": "Famke Bäuerle",
+            "name": "Famke B\u00e4uerle",
             "url": "https://github.com/famosab"
         },
         {
@@ -663,27 +663,27 @@
             "url": "https://github.com/lescai"
         },
         {
-            "@id": "#998a0be1-18d5-40f4-8b2d-b38cf34567bb",
+            "@id": "#6c423cf3-7039-4fd2-ae18-229d6c6f1048",
             "@type": "Person",
             "email": "f.martinezpico@gmail.com",
-            "name": "Francisco Martínez",
+            "name": "Francisco Mart\u00ednez",
             "url": "https://github.com/nevinwu"
         },
         {
-            "@id": "#11030fc5-094f-45f4-87ef-7cdd57f11d2e",
+            "@id": "#32f84d4e-ec10-4ca0-9931-63c1e6626369",
             "@type": "Person",
             "name": "Gavin Mackenzie",
             "url": "https://github.com/GCJMackenzie"
         },
         {
-            "@id": "#5120a9b1-e14a-4bb2-a80d-541ccabef32b",
+            "@id": "#aae0c0fd-4fbc-4a4b-b649-a47e9a452e58",
             "@type": "Person",
             "email": "gisela.gabernet@gmail.com",
             "name": "Gisela Gabernet",
             "url": "https://github.com/ggabernet"
         },
         {
-            "@id": "#2e56838e-3d67-44ac-8d7a-d68d8e676ac8",
+            "@id": "#c3553093-e3cd-41f5-bb32-c149244fff2e",
             "@type": "Person",
             "email": "127763095+grantn5@users.noreply.github.com",
             "name": "Grant Neilson",
@@ -692,11 +692,11 @@
         {
             "@id": "https://orcid.org/0000-0001-6813-3051",
             "@type": "Person",
-            "name": "Max Käller",
+            "name": "Max K\u00e4ller",
             "url": "https://github.com/gulfshores"
         },
         {
-            "@id": "#7be1bb4e-0cde-494c-8774-60946b1ae96b",
+            "@id": "#8ae7756a-86e8-4395-8d05-e9ea0f82f158",
             "@type": "Person",
             "affiliation": "Seqera",
             "email": "drpatelh@users.noreply.github.com",
@@ -704,14 +704,14 @@
             "url": "https://github.com/drpatelh"
         },
         {
-            "@id": "#a0c796c5-c875-42ca-b557-fe2ac96b66ce",
+            "@id": "#2fefc079-fc22-42d3-a896-8abedb523a84",
             "@type": "Person",
             "email": "yehwhey@gmail.com",
             "name": "Hongwei Ye",
             "url": "https://github.com/YeHW"
         },
         {
-            "@id": "#09402bb5-a6eb-4ae7-a7b1-dcfa67184a76",
+            "@id": "#1981c2ee-f809-40c5-8c11-4a5686cd1608",
             "@type": "Person",
             "name": "James A. Fellows Yates",
             "url": "https://github.com/jfy133"
@@ -738,21 +738,21 @@
             "url": "https://github.com/kjellinjonas"
         },
         {
-            "@id": "#ac09a5c7-717f-41c6-bdc8-e688212472b2",
+            "@id": "#6b01299e-76b4-47ef-b245-a38f427f9948",
             "@type": "Person",
             "email": "jc.fernandez.navarro@gmail.com",
-            "name": "José Fernández Navarro",
+            "name": "Jos\u00e9 Fern\u00e1ndez Navarro",
             "url": "https://github.com/jfnavarro"
         },
         {
             "@id": "https://orcid.org/0000-0001-6104-9260",
             "@type": "Person",
             "email": "mirp.julia@gmail.com",
-            "name": "Júlia Mir Pedrol",
+            "name": "J\u00falia Mir Pedrol",
             "url": "https://github.com/mirpedrol"
         },
         {
-            "@id": "#d690a65c-327a-41c4-8261-5c57663c35e9",
+            "@id": "#9c1b07ce-1ccf-47d1-b0a4-37cf57f7eaa2",
             "@type": "Person",
             "affiliation": "Seqera",
             "email": "kenibrewer@users.noreply.github.com",
@@ -766,7 +766,7 @@
             "url": "https://github.com/lassefolkersen"
         },
         {
-            "@id": "#369d8757-d425-4b2d-96ce-f1ad800f6c89",
+            "@id": "#192a8653-5651-45ae-b0f7-dd8fd4a27d09",
             "@type": "Person",
             "email": "l.conde@ucl.ac.uk",
             "name": "Lucia Conde",
@@ -775,30 +775,30 @@
         {
             "@id": "https://orcid.org/0009-0000-0202-2703",
             "@type": "Person",
-            "name": "Louis Le Nézet",
+            "name": "Louis Le N\u00e9zet",
             "url": "https://github.com/LouisLeNezet"
         },
         {
-            "@id": "#e4fb587c-918e-435b-b428-08c168306d97",
+            "@id": "#add79495-7175-4105-b124-db3ffe1c378d",
             "@type": "Person",
             "email": "malin.larsson@liu.se",
             "name": "Malin Larsson",
             "url": "https://github.com/malinlarsson"
         },
         {
-            "@id": "#57198db3-c35c-48af-84d2-ff2001a51b44",
+            "@id": "#b05148ef-916a-467f-9ad2-cae2eea603db",
             "@type": "Person",
             "name": "Marcel Martin",
             "url": "https://github.com/marcelm"
         },
         {
-            "@id": "#65d3ef9a-2755-401d-bfdb-bdda06a5b039",
+            "@id": "#7aeed064-1ee3-40af-9f23-79079a34702d",
             "@type": "Person",
             "name": "Nick Smith",
             "url": "https://github.com/nickhsmith"
         },
         {
-            "@id": "#c44e3833-23dc-4cb7-8bb1-562d34a2dada",
+            "@id": "#3d70a6d0-7c54-45e1-9867-99ecb1b78d93",
             "@type": "Person",
             "email": "90359308+nschcolnicov@users.noreply.github.com",
             "name": "Nicolas Schcolnicov",
@@ -844,7 +844,7 @@
             "url": "https://github.com/pcantalupo"
         },
         {
-            "@id": "#ea5b7667-91bb-4a92-bb6b-7dad7ae3b69a",
+            "@id": "#558104fe-4b28-449b-9244-caa4baf29f65",
             "@type": "Person",
             "affiliation": "Seqera",
             "email": "phil.ewels@scilifelab.se",
@@ -866,7 +866,7 @@
             "url": "https://github.com/skrakau"
         },
         {
-            "@id": "#620ba4aa-b10e-4a2a-a84a-65874baade8a",
+            "@id": "#b688b553-23c6-470d-8c2d-9a23891d26f0",
             "@type": "Person",
             "email": "sminot@gmail.com",
             "name": "Sam Minot",
@@ -905,13 +905,13 @@
             "url": "https://github.com/SusiJo"
         },
         {
-            "@id": "#31dce384-0d05-4394-b60f-61599eaeacb4",
+            "@id": "#41dc5c91-85eb-447e-ac5c-93da479bec7b",
             "@type": "Person",
             "name": "Tobias Koch",
             "url": "https://github.com/KochTobi"
         },
         {
-            "@id": "#0f2c277a-8111-440f-8385-1a0b8a019aba",
+            "@id": "#b78cf32d-c072-4af0-b159-4a34daf9a65a",
             "@type": "Person",
             "name": "Winni Kretzschmar",
             "url": "https://github.com/winni2k"
@@ -920,7 +920,7 @@
             "@id": "https://orcid.org/0009-0009-0647-7639",
             "@type": "Person",
             "email": "158295213+Patricie34@users.noreply.github.com",
-            "name": "Patricie Skaláková",
+            "name": "Patricie Skal\u00e1kov\u00e1",
             "url": "https://github.com/Patricie34"
         }
     ]
