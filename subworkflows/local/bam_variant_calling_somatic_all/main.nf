@@ -252,7 +252,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER.out.vcf
         tbi_parabricks_mutectcaller = BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER.out.versions)
     }
 
     // TNSCOPE

@@ -3,8 +3,8 @@
 // PARABRICKS MUTECTCALLER: GPU-accelerated tumor-normal somatic variant calling
 //
 
-include { PARABRICKS_MUTECTCALLER } from '../../../modules/nf-core/parabricks/mutectcaller/main'
-include { TABIX_TABIX              } from '../../../modules/nf-core/tabix/tabix/main'
+include { PARABRICKS_MUTECTCALLER                       } from '../../../modules/nf-core/parabricks/mutectcaller/main'
+include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX         } from '../../../modules/nf-core/htslib/bgziptabix/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER {
     take:
@@ -16,8 +16,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER {
     intervals_bed_combined // channel: intervals or []
 
     main:
-    versions = Channel.empty()
-
     // Rearrange to [ meta, tumor_reads, tumor_index, normal_reads, normal_index, intervals ]
     // Use single-param closure: when no_intervals, intervals_bed_combined is Channel.value([])
     // and combine passes the 5-element reads tuple as a single LinkedList item.
@@ -42,12 +40,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER {
     )
     // PARABRICKS_MUTECTCALLER uses topic: versions — no out.versions to mix
 
-    TABIX_TABIX(PARABRICKS_MUTECTCALLER.out.vcf)
-    versions = versions.mix(TABIX_TABIX.out.versions)
+    TABIX_BGZIPTABIX(PARABRICKS_MUTECTCALLER.out.vcf.map { meta, vcf -> [ meta, vcf, [], [] ] }, 'compress', true, 'vcf')
 
     emit:
-    vcf      = PARABRICKS_MUTECTCALLER.out.vcf.map { meta, vcf -> [ meta + [ variantcaller: 'parabricks_mutectcaller' ], vcf ] }
-    tbi      = TABIX_TABIX.out.tbi.map           { meta, tbi -> [ meta + [ variantcaller: 'parabricks_mutectcaller' ], tbi ] }
-    stats    = PARABRICKS_MUTECTCALLER.out.stats
-    versions // channel: [ versions.yml ]
+    vcf   = TABIX_BGZIPTABIX.out.output.map { meta, vcf -> [ meta + [ variantcaller: 'parabricks_mutectcaller' ], vcf ] }
+    tbi   = TABIX_BGZIPTABIX.out.index.map  { meta, tbi -> [ meta + [ variantcaller: 'parabricks_mutectcaller' ], tbi ] }
+    stats = PARABRICKS_MUTECTCALLER.out.stats
 }
