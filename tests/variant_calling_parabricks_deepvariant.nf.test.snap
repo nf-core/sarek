@@ -212,15 +212,13 @@
             "No BAM files",
             "No CRAM files",
             "No VCF files",
-            [
-                "[WARN] WARN: The `file()` function was called with a glob pattern that matched a collection of files -- use `files()` instead."
-            ]
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "26.04.6"
         },
-        "timestamp": "2026-07-29T07:33:38.602267412"
+        "timestamp": "2026-08-07T05:53:48.008472166"
     },
     "-profile test --tools parabricks_deepvariant --input mapped_single_bam.csv --no_intervals -stub": {
         "content": [
