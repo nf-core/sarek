@@ -32,41 +32,17 @@ nextflow_pipeline {
             no_conda: true
         ],
         [
-            name: "-profile test,gpu --tools parabricks_haplotypecaller --joint_germline",
+            name: "Fails with --joint_germline for parabricks_haplotypecaller",
             params: [
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
                 tools: "parabricks_haplotypecaller",
                 step: "variant_calling",
                 joint_germline: true
-            ],
-            gpu: true,
-            no_conda: true
-        ],
-        [
-            name: "-profile test --tools parabricks_haplotypecaller --joint_germline -stub",
-            params: [
-                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
-                input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
-                tools: "parabricks_haplotypecaller",
-                step: "variant_calling",
-                joint_germline: true
-            ],
-            stub: true,
-            no_conda: true
-        ],
-        [
-            name: "Fails with --joint_germline and --no_intervals for parabricks_haplotypecaller",
-            params: [
-                input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
-                tools: "parabricks_haplotypecaller",
-                step: "variant_calling",
-                joint_germline: true,
-                no_intervals: true
             ],
             failure: true,
             snapshot: 'stdout',
-            snapshot_include: 'requires intervals',
+            snapshot_include: 'not yet supported with Parabricks',
             no_conda: true
         ]
     ]

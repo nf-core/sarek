@@ -347,5 +347,25 @@
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"
         }
+    },
+    "Fails with --joint_germline for parabricks_haplotypecaller": {
+        "content": [
+            [
+                "pipeline_info"
+            ],
+            "No stable content",
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files",
+            "No warnings",
+            [
+                "Joint germline variant calling is not yet supported with Parabricks' HaplotypeCaller. Please use GATK's Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper instead, or remove `--joint_germline`."
+            ]
+        ],
+        "timestamp": "2026-08-07T13:25:55.073103",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

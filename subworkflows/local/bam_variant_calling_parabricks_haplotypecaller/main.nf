@@ -15,7 +15,7 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER {
     // Combine each sample with the (optional) intervals list
     // intervals_bed_combined emits [] (no intervals) or [file] (one combined BED)
     // When no_intervals, the empty list contributes 0 elements to the combined tuple,
-    // so use it.size() to safely extract the optional 4th element.
+    // so check the tuple size to safely extract the optional 4th element.
     cram_intervals = cram
         .combine(intervals_bed_combined)
         .map { cram_combined ->
@@ -26,28 +26,15 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER {
 
     PARABRICKS_HAPLOTYPECALLER(cram_intervals, fasta)
 
-    // With --joint_germline the module is run with `--gvcf` and writes a bgzipped gVCF to its
-    // `gvcf` output instead of the plain `vcf` one. Exactly one of the two is ever populated,
-    // so mixing them keeps the compress/index step below uniform for both modes.
-    called_variants = PARABRICKS_HAPLOTYPECALLER.out.vcf.mix(PARABRICKS_HAPLOTYPECALLER.out.gvcf)
-
-    // Compress and index the called variants. bgziptabix detects already-BGZF input and only
-    // indexes it, so this handles the plain VCF and the gVCF alike.
-    TABIX_BGZIPTABIX(called_variants.map { meta, called -> [ meta, called, [], [] ] }, 'compress', true, 'vcf')
+    // Compress and index the uncompressed VCF output
+    TABIX_BGZIPTABIX(PARABRICKS_HAPLOTYPECALLER.out.vcf.map { meta, vcf_ -> [ meta, vcf_, [], [] ] }, 'compress', true, 'vcf')
 
     vcf_tbi = TABIX_BGZIPTABIX.out.output.join(TABIX_BGZIPTABIX.out.index)
-
-    // For joint genotyping: [ meta, gvcf, tbi, intervals ]
-    // Parabricks calls the whole (combined) interval set in one go, hence num_intervals is 1.
-    gvcf_tbi_intervals = vcf_tbi
-        .join(cram_intervals, failOnMismatch: true)
-        .map { meta, gvcf, tbi, _cram, _crai, intervals_ -> [ meta + [ num_intervals:1 ], gvcf, tbi, intervals_ ] }
 
     vcf = vcf_tbi.map { meta, vcf_, _tbi -> [ meta, vcf_ ] }
     tbi = vcf_tbi.map { meta, _vcf, tbi  -> [ meta, tbi  ] }
 
     emit:
-    gvcf_tbi_intervals // For joint genotyping
-    vcf                // channel: [ val(meta), vcf.gz ]
-    tbi                // channel: [ val(meta), vcf.gz.tbi ]
+    vcf      // channel: [ val(meta), vcf.gz ]
+    tbi      // channel: [ val(meta), vcf.gz.tbi ]
 }
