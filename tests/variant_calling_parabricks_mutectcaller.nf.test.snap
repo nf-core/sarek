@@ -166,11 +166,11 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-08-07T08:02:33.263225915",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "26.04.6"
-        },
-        "timestamp": "2026-08-07T08:02:33.263225915"
+        }
     },
     "-profile test --tools parabricks_mutectcaller somatic --no_intervals -stub": {
         "content": [
@@ -413,11 +413,11 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-05-14T15:29:37.378769859",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-05-14T15:29:37.378769859"
+        }
     },
     "-profile test --tools parabricks_mutectcaller somatic -stub": {
         "content": [
@@ -667,11 +667,11 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-05-08T13:24:10.115287005",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-05-08T13:24:10.115287005"
+        }
     },
     "-profile test --aligner parabricks --tools parabricks_mutectcaller somatic --no_intervals -stub": {
         "content": [
@@ -714,11 +714,11 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-08-07T08:04:09.213694045",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "26.04.6"
-        },
-        "timestamp": "2026-08-07T08:04:09.213694045"
+        }
     },
     "-profile test --aligner parabricks --tools parabricks_mutectcaller somatic --no_intervals": {
         "content": [
@@ -833,13 +833,16 @@
             "No BAM files",
             "No CRAM files",
             "No VCF files",
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ]
         ],
+        "timestamp": "2026-08-10T10:59:28.366987746",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.6"
-        },
-        "timestamp": "2026-08-07T08:06:58.969701079"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools parabricks_mutectcaller somatic": {
         "content": [
@@ -1206,13 +1209,16 @@
                 "test2_vs_test.parabricks_mutectcaller.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2_vs_test.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ]
         ],
+        "timestamp": "2026-08-10T11:01:52.556864029",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "26.04.6"
-        },
-        "timestamp": "2026-08-07T08:09:10.624309826"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --step variant_calling --tools parabricks_mutectcaller somatic from cram input -stub": {
         "content": [
@@ -1385,11 +1391,11 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-08-07T08:01:52.660777702",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "26.04.6"
-        },
-        "timestamp": "2026-08-07T08:01:52.660777702"
+        }
     },
     "-profile test --aligner parabricks --tools parabricks_mutectcaller somatic -stub": {
         "content": [
@@ -1584,10 +1590,10 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-08-07T08:03:31.129196998",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "26.04.6"
-        },
-        "timestamp": "2026-08-07T08:03:31.129196998"
+        }
     }
 }
