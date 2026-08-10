@@ -32,7 +32,7 @@ nextflow_pipeline {
             no_conda: true
         ],
         [
-            name: "-profile test,gpu --tools parabricks_haplotypecaller --joint_germline",
+            name: "Fails with --joint_germline and no joint-capable caller",
             params: [
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
@@ -40,19 +40,9 @@ nextflow_pipeline {
                 step: "variant_calling",
                 joint_germline: true
             ],
-            gpu: true,
-            no_conda: true
-        ],
-        [
-            name: "-profile test --tools parabricks_haplotypecaller --joint_germline --no_intervals -stub",
-            params: [
-                input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
-                tools: "parabricks_haplotypecaller",
-                step: "variant_calling",
-                joint_germline: true,
-                no_intervals: true
-            ],
-            stub: true,
+            failure: true,
+            snapshot: 'stdout',
+            snapshot_include: 'should be specified as one of the tools',
             no_conda: true
         ]
     ]
