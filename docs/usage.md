@@ -221,6 +221,9 @@ Sarek supports two GPU-accelerated variant callers via [NVIDIA Clara Parabricks]
 | [Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) | `parabricks_haplotypecaller` | GATK HaplotypeCaller | `nextflow run nf-core/sarek --tools parabricks_haplotypecaller --profile <docker/singularity>,gpu` |
 
 Both callers take a CRAM file as input and output a single VCF per sample. Intervals can be provided via `--intervals` to restrict calling to specific regions. For DeepVariant, use `--wes` to switch from WGS to WES mode (passes `--mode wes` to pbrun). HaplotypeCaller does not support scatter/gather over intervals.
+Joint germline variant calling is not yet supported for Haplotypecaller: it only produces per-sample VCFs, and the wiring to combine per-sample gVCFs into a joint call is still to come. `--joint_germline` is therefore ignored by this caller, and using it with `parabricks_haplotypecaller` as your only germline caller fails early rather than running and producing no joint call. Combine it with GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as well.
+
+For more details on available arguments, see the [Parabricks HaplotypeCaller documentation](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html).
 
 ### Start with duplicate marking (`--step markduplicates`)
 

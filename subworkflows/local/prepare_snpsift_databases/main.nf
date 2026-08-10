@@ -33,19 +33,14 @@ workflow PREPARE_SNPSIFT_DATABASES {
     ch_prebuilt = ch_branched.has_vardb
         .map { config -> [config.vcf, config.tbi, config.vardb, config.fields ? config.fields.replace(';', ',') : '', config.prefix ?: ''] }
 
-    // Collect all into output tuple
+    // Collect all into output tuple: [ db_vcf, db_vcf_tbi, db_vardb, db_fields, db_prefixes ]
+    // Each row is [ vcf, tbi, vardb, fields, prefix ], so transposing regroups them by column.
+    // The caller only runs this subworkflow when there is at least one config, so the list is
+    // never empty here (transpose collapses an empty list to [] rather than five empty lists).
     ch_db_tuple = ch_prebuilt
         .mix(ch_created)
         .toList()
-        .map { list ->
-            [
-                list.collect { row -> row[0] },  // db_vcf
-                list.collect { row -> row[1] },  // db_vcf_tbi
-                list.collect { row -> row[2] },  // db_vardb
-                list.collect { row -> row[3] },  // db_fields
-                list.collect { row -> row[4] }   // db_prefixes
-            ]
-        }
+        .map { rows -> rows.transpose() }
 
     emit:
     db_tuple = ch_db_tuple
