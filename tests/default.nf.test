@@ -20,7 +20,6 @@ nextflow_pipeline {
                 nucleotides_per_second: 20,
                 skip_tools: 'fastqc,mosdepth,multiqc,samtools',
             ],
-            tag: 'cram_merge',
         ],
     ]
 
