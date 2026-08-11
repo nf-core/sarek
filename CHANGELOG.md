@@ -25,6 +25,8 @@ Aktse is a mountain hut on the northern shore of Laitaure, on the Kungsleden tra
 - [#2238](https://github.com/nf-core/sarek/pull/2238), [#2239](https://github.com/nf-core/sarek/pull/2239), [#2240](https://github.com/nf-core/sarek/pull/2240), [#2241](https://github.com/nf-core/sarek/pull/2241), [#2242](https://github.com/nf-core/sarek/pull/2242), [#2243](https://github.com/nf-core/sarek/pull/2243), [#2244](https://github.com/nf-core/sarek/pull/2244) - Migrate all modules to use topic channels (bumps gatk4spark 4.6.1.0 → 4.6.2.0, fastp 0.24.0 → 1.1.0)
 - [#2252](https://github.com/nf-core/sarek/pull/2252) - Update `bbmap/bbsplit`, `gatk4/applybqsr`, `parabricks/fq2bam` (4.6.0 → 4.7.1), `rbt/vcfsplit`, `sentieon/*`, `snpsift/annmem`+`annmemcreate` (5.4.0a → 5.4.0c), and `yte` modules to their latest revisions. Side effect: `GATK4_APPLYBQSR`'s bam/cram output format is now set directly via a `params.save_output_as_bam` process argument rather than `ext.suffix`, so a custom `modules.config` override of `ext.suffix` on `GATK4_APPLYBQSR` no longer has any effect.
 - [#2255](https://github.com/nf-core/sarek/pull/2255) - Template update for nf-core/tools v4.1.0. This also collapses the list-form `publishDir` blocks in `conf/modules/*.config` into single maps that route through `saveAs`, required because nf-core/tools 4.1.0 lints via `nextflow config -o json`, which fails on a closure nested inside a collection. Published output layouts are unchanged.
+- [#2263](https://github.com/nf-core/sarek/pull/2263) - **The minimum required Nextflow version is now `26.04.0`** (was `25.10.4`), because nf-schema 2.8.0 requires it.
+- [#2263](https://github.com/nf-core/sarek/pull/2263) - Bump nf-schema 2.7.2 → 2.8.0. Pattern validation of `file-path`/`directory-path`/`path` values is now retried against the resolved real path when the literal URI does not match, so samplesheets and params pointing at proxy filesystems are no longer rejected on the extension check alone.
 - [#2262](https://github.com/nf-core/sarek/pull/2262) - The `gatk4spark/applybqsr`, `gatk4spark/baserecalibrator` and `gatk4spark/markduplicates` modules now bind-mount the host's `/etc/passwd` and `/etc/group` to work around Spark's `UnixLoginModule` failing to resolve a username for the container's UID, for Docker and Podman only (not Singularity/Apptainer). `GATK4SPARK_APPLYBQSR`'s bam/cram output format is now set via an `output_suffix` process argument rather than `ext.suffix`, so a custom `modules.config` override of `ext.suffix` on `GATK4SPARK_APPLYBQSR` no longer has any effect.
 
 ### Fixed
@@ -66,6 +68,7 @@ Aktse is a mountain hut on the northern shore of Laitaure, on the Kungsleden tra
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+| nf-schema  | 2.7.2       | 2.8.0       |
 
 ### Parameters
 
