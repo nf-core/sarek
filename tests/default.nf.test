@@ -1,3 +1,5 @@
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
 nextflow_pipeline {
 
     name "Test pipeline"
@@ -18,5 +20,36 @@ nextflow_pipeline {
     // Generate tests for each scenario
     test_scenario.each { scenario ->
         test(scenario.name, UTILS.getTest(scenario))
+    }
+
+    test("-profile test with merged CRAM") {
+
+        tag "pipeline"
+        tag "pipeline_sarek"
+        tag "cpu_conda"
+
+        options "-output-dir ${outputDir}"
+
+        when {
+            params {
+                outdir = "${outputDir}"
+                intervals = modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed'
+                nucleotides_per_second = 20
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            // The two interval shards are merged by Samtools before Strelka consumes the CRAM.
+            def cram = new File("${params.outdir}/preprocessing/recalibrated/test/test.recal.cram")
+            assert cram.exists()
+
+            byte[] header = new byte[6]
+            cram.withInputStream { stream ->
+                assert stream.read(header) == header.length
+            }
+            assert header.toList() == [67, 82, 65, 77, 3, 0] // CRAM magic followed by version 3.0
+        }
     }
 }
