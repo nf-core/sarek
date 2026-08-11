@@ -57,6 +57,9 @@ input:
       description: GATK sequence dictionary
       pattern: "*.dict"
       ontologies: []
+  - output_suffix:
+      type: string
+      description: Output file format, either "bam" or "cram" (cram is the default)
 output:
   bam:
     - - meta:

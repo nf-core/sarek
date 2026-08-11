@@ -318,17 +318,17 @@
                     },
                     "gatk4spark/applybqsr": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "fe846231249fc7ccec12bec2d670137a875d9638",
                         "installed_by": ["modules"]
                     },
                     "gatk4spark/baserecalibrator": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "fe846231249fc7ccec12bec2d670137a875d9638",
                         "installed_by": ["modules"]
                     },
                     "gatk4spark/markduplicates": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "fe846231249fc7ccec12bec2d670137a875d9638",
                         "installed_by": ["modules"]
                     },
                     "gawk": {
