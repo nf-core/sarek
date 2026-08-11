@@ -428,7 +428,8 @@ workflow FASTQ_PREPROCESS_GATK {
                     dict,
                     fasta,
                     fasta_fai,
-                    intervals_and_num_intervals)
+                    intervals_and_num_intervals,
+                    save_output_as_bam)
 
                 cram_variant_calling_spark = BAM_APPLYBQSR_SPARK.out.alignment
             } else {
