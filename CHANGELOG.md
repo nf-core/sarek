@@ -32,6 +32,7 @@ Aktse is a mountain hut on the northern shore of Laitaure, on the Kungsleden tra
 - [#2216](https://github.com/nf-core/sarek/pull/2216) - Fix `--normalize_vcfs` dropping a real ALT allele of `1/2` multiallelic sites (`bcftools norm --rm-dup all` → `--rm-dup exact`)
 - [#2257](https://github.com/nf-core/sarek/pull/2257) - Fix two cases that completed successfully without producing the requested output: `--tools parabricks_haplotypecaller` no longer counts as a joint-germline caller, so requesting `--joint_germline` without one now fails early instead of finishing without any variants; and `--vep_loftee` no longer silently omits `LoF` annotations under `-profile conda`, where the plugin path was hardcoded to `/opt/conda` instead of being resolved from `$CONDA_PREFIX` at runtime
 - [#2241](https://github.com/nf-core/sarek/pull/2241) - Bump `mosdepth` (0.3.10 → 0.3.14) so its htslib can decode CRAM 3.1 written by samtools 1.24; the previous container silently produced empty coverage files, dropping the mosdepth MultiQC sections (most visible in the parabricks path)
+- [#2264](https://github.com/nf-core/sarek/pull/2264) - Pin merged samtools output to CRAM 3.0 for compatibility with downstream callers and use engine-specific GPU container options for Parabricks HaplotypeCaller tests
 
 ### Removed
 
