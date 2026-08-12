@@ -80,11 +80,6 @@
                         "git_sha": "62ce917fd775aaef732eb82019de069c765adfd3",
                         "installed_by": ["modules"]
                     },
-                    "cat/cat": {
-                        "branch": "master",
-                        "git_sha": "eac429d4c67ac5114ce7d4287d460d8f05fd9fab",
-                        "installed_by": ["modules"]
-                    },
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
@@ -197,6 +192,11 @@
                         "installed_by": ["modules"]
                     },
                     "fgbio/groupreadsbyumi": {
+                        "branch": "master",
+                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "installed_by": ["modules"]
+                    },
+                    "find/concatenate": {
                         "branch": "master",
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
