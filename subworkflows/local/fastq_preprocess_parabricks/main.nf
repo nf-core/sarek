@@ -63,18 +63,21 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     )
 
     if (val_applybqsr) {
-        // Combine each fq2bam BAM with its index, recalibration table (same run -> same
-        // meta), the optional intervals and the reference into a single tuple channel.
-        // The applybqsr module takes everything in ONE tuple so this works for any number
-        // of samples (a plain multi-tuple process input would not broadcast the singletons).
-        bqsr_input = PARABRICKS_FQ2BAM.out.bam
-            .join(PARABRICKS_FQ2BAM.out.bai, failOnDuplicate: true, failOnMismatch: true)
-            .join(PARABRICKS_FQ2BAM.out.bqsr_table, failOnDuplicate: true, failOnMismatch: true)
-            .combine(ch_interval_file)
-            .combine(ch_fasta)
-            .map { meta, bam_, bai, table, _imeta, intervals, _fmeta, fasta -> [ meta, bam_, bai, table, intervals, fasta ] }
+        // PARABRICKS_APPLYBQSR declares 5 separate tuple input channels (one per file),
+        // so each must be passed as its own channel argument — not combined into one.
+        ch_bam        = PARABRICKS_FQ2BAM.out.bam
+        ch_bai        = PARABRICKS_FQ2BAM.out.bai
+        ch_bqsr_table = PARABRICKS_FQ2BAM.out.bqsr_table
+        ch_intervals  = ch_interval_file.collect().map { files -> [ [ 'id': 'intervals' ], files ] }
+        ch_fasta      = ch_fasta.collect().map { meta, fasta, _fai -> [ meta, fasta ] }
 
-        PARABRICKS_APPLYBQSR(bqsr_input)
+        PARABRICKS_APPLYBQSR(
+            ch_bam,
+            ch_bai,
+            ch_bqsr_table,
+            ch_intervals,
+            ch_fasta,
+        )
 
         // Native BAM (per lane) is the applybqsr output to keep when saving as BAM
         native_bam = PARABRICKS_APPLYBQSR.out.bam.join(PARABRICKS_APPLYBQSR.out.bai, failOnDuplicate: true, failOnMismatch: true)
