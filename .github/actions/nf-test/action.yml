@@ -100,7 +100,7 @@ runs:
     # Only the canonical docker + pinned-Nextflow leg uploads, to avoid
     # profile/version-specific artifact collisions.
     - name: Collect updated snapshots
-      if: ${{ inputs.update_snapshots == 'true' && inputs.profile == 'docker' && env.NXF_VERSION == '25.10.4' }}
+      if: ${{ inputs.update_snapshots == 'true' && inputs.profile == 'docker' && env.NXF_VERSION == '26.04.0' }}
       shell: bash
       run: |
         rm -rf updated-snaps && mkdir -p updated-snaps
@@ -112,7 +112,7 @@ runs:
         git diff --name-only -- 'tests/*.snap' || true
 
     - name: Upload updated snapshots
-      if: ${{ inputs.update_snapshots == 'true' && inputs.profile == 'docker' && env.NXF_VERSION == '25.10.4' }}
+      if: ${{ inputs.update_snapshots == 'true' && inputs.profile == 'docker' && env.NXF_VERSION == '26.04.0' }}
       uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
       with:
         name: updated-snapshots-shard-${{ inputs.shard }}

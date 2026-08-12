@@ -38,7 +38,7 @@
             [
                 "The following invalid input values have been detected:",
                 "* --input ([PATH]/./tests/csv/3.0/fastq_sample_with_space.csv): Validation of file failed:",
-                "\t-> Entry 2: Error for field 'sample' (test 2): \"test 2\" does not match regular expression [^\\S+$] (Sample ID must be provided, cannot contain spaces and must be a string value)"
+                "\t-> Entry 2: Error for field 'sample' (test 2): \"test 2\" does not match regular expression ^\\S+$ (Sample ID must be provided, cannot contain spaces and must be a string value)"
             ]
         ],
         "timestamp": "2026-07-03T12:29:12.419007781",
