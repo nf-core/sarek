@@ -13,6 +13,14 @@ nextflow_pipeline {
             params: [],
             stub: true,
         ],
+        [
+            name: "-profile test --intervals genome.multi_intervals.bed --nucleotides_per_second 20 --skip_tools fastqc,mosdepth,multiqc,samtools",
+            params: [
+                intervals: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                nucleotides_per_second: 20,
+                skip_tools: 'fastqc,mosdepth,multiqc,samtools',
+            ],
+        ],
     ]
 
     // Generate tests for each scenario
