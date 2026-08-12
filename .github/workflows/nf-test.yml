@@ -149,6 +149,9 @@ jobs:
       - runs-on=${{ github.run_id }}-confirm-pass
       - runner=2cpu-linux-x64
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
       - name: One or more tests failed (excluding latest-everything)
         if: ${{ contains(needs.*.result, 'failure') }}
         run: exit 1
