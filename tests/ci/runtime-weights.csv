@@ -1,0 +1,9 @@
+test,p75_seconds
+tests/joint_calling_mutect2.nf.test::-profile test --input tests/csv/3.0/recalibrated_tumoronly_joint.csv --tools mutect2 --joint_mutect2,1331.545
+tests/variant_calling_mutect2.nf.test::-profile test --tools mutect2 somatic --no_intervals,266.769
+tests/aligner-bwa-mem2.nf.test::-profile test --aligner bwa-mem2 --save_reference skip QC/recal/md,245.675
+tests/umi_in_read_names.nf.test::-profile test --input tests/csv/3.0/bam_umi_header.csv --umi_in_read_header --tools markduplicates --step markduplicates,171.250
+tests/variant_calling_deepvariant.nf.test::-profile test --tools deepvariant --input tests/csv/3.0/mapped_single_cram.csv --no_intervals,115.644
+tests/qc_ngscheckmate.nf.test::-profile test --tools ngscheckmate,73.883
+tests/variant_calling_manta.nf.test::-profile test --tools manta --no_intervals germline,66.014
+tests/start_from_preparerecalibration.nf.test::-profile test --input tests/csv/3.0/mapped_single_bam.csv --step prepare_recalibration --tools null,65.047

@@ -20,6 +20,9 @@ inputs:
     description: "Run with --update-snapshot over all tagged tests and upload regenerated snapshots as artifacts"
     required: false
     default: "false"
+  selectors:
+    description: "Space-separated explicit nf-test path@hash selectors"
+    required: false
 runs:
   using: "composite"
   steps:
@@ -74,11 +77,17 @@ runs:
         NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
         SENTIEON_LICSRVR_IP: ${{ env.SENTIEON_LICSRVR_IP }}
         SENTIEON_AUTH_MECH: "GitHub Actions - token"
+        TEST_SELECTORS: ${{ inputs.selectors }}
       run: |
         # In update-snapshot mode, regenerate snapshots over ALL tagged tests
         # (drop --changed-since, which is only meaningful for PR/push diffs).
         CHANGED_SINCE="--changed-since HEAD^"
         UPDATE_SNAPSHOT=""
+        SHARD_OPTION="--shard ${{ inputs.shard }}/${{ inputs.total_shards }}"
+        if [ -n "$TEST_SELECTORS" ]; then
+          CHANGED_SINCE=""
+          SHARD_OPTION=""
+        fi
         if [ "${{ inputs.update_snapshots }}" = "true" ]; then
           CHANGED_SINCE=""
           UPDATE_SNAPSHOT="--update-snapshot"
@@ -92,7 +101,8 @@ runs:
           --verbose \
           --tap=test.tap \
           --csv=test-results.csv \
-          --shard ${{ inputs.shard }}/${{ inputs.total_shards }}
+          $SHARD_OPTION \
+          $TEST_SELECTORS
 
           # Save the absolute path of the test.tap file to the output
           echo "tap_file_path=$(realpath test.tap)" >> $GITHUB_OUTPUT
