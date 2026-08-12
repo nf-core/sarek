@@ -208,21 +208,21 @@ process {
 }
 ```
 
-#### Using GPU accelerated variant calling 
-
+#### Using GPU accelerated variant calling
 
 > [!NOTE]
 > These are an experimental addition to the pipeline.
 
-Sarek supports the following GPU-accelerated variant callers from [NVIDIA Parabricks](https://docs.nvidia.com/clara/parabricks/latest/) as an alternative to CPU based implementations: 
+Sarek supports the following GPU-accelerated variant callers from [NVIDIA Parabricks](https://docs.nvidia.com/clara/parabricks/latest/) as an alternative to CPU based implementations:
 
-* [Haplotypecaller](https://docs.nvidia.com/clara/parabricks/tool-reference/tools/haplotypecaller) 
-* [Mutectcaller](https://docs.nvidia.com/clara/parabricks/tool-reference/tools/mutectcaller)
+- [Haplotypecaller](https://docs.nvidia.com/clara/parabricks/tool-reference/tools/haplotypecaller)
+- [Mutectcaller](https://docs.nvidia.com/clara/parabricks/tool-reference/tools/mutectcaller)
 
-There are a few differences to note about the Parabricks versions of these tools:  
-* Parabricks does not support the use of this pipeline with `--profile conda`.
-* Parabricks HaplotypeCaller does not support scatter/gather over intervals. 
-* Parabricks Haplotypecaller does not yet support joint germline variant calling, it only produces per-sample VCFs, and the wiring to combine per-sample gVCFs into a joint call is still to come. `--joint_germline` is therefore ignored by this caller, and using it with `parabricks_haplotypecaller` as your only germline caller fails early rather than running and producing no joint call. Combine it with GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as well.
+There are a few differences to note about the Parabricks versions of these tools:
+
+- Parabricks does not support the use of this pipeline with `--profile conda`.
+- Parabricks HaplotypeCaller does not support scatter/gather over intervals.
+- Parabricks Haplotypecaller does not yet support joint germline variant calling, it only produces per-sample VCFs, and the wiring to combine per-sample gVCFs into a joint call is still to come. `--joint_germline` is therefore ignored by this caller, and using it with `parabricks_haplotypecaller` as your only germline caller fails early rather than running and producing no joint call. Combine it with GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as well.
 
 ### Start with duplicate marking (`--step markduplicates`)
 
