@@ -687,14 +687,14 @@ def readFirstLineOfFastq(path) {
     def line = null
     try {
         path.withInputStream { stream ->
-            def gzipStream: InputStream = new java.util.zip.GZIPInputStream(stream)
-            def decoder: Reader = new InputStreamReader(gzipStream, 'ASCII')
-            def buffered: BufferedReader = new BufferedReader(decoder)
+            def gzipStream = new java.util.zip.GZIPInputStream(stream)
+            def decoder = new InputStreamReader(gzipStream, 'ASCII')
+            def buffered = new BufferedReader(decoder)
             line = buffered.readLine()
             assert line.startsWith('@')
         }
     }
-    catch (e: Exception) {
+    catch (Exception e) {
         log.warn("FASTQ file(${path}): Error streaming")
         log.warn("${e.message}")
     }
