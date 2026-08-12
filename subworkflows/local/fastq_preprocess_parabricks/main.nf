@@ -1,8 +1,9 @@
-include { PARABRICKS_APPLYBQSR            } from '../../../modules/nf-core/parabricks/applybqsr/main.nf'
-include { PARABRICKS_FQ2BAM               } from '../../../modules/nf-core/parabricks/fq2bam/main.nf'
-include { CHANNEL_ALIGN_CREATE_CSV        } from '../../../subworkflows/local/channel_align_create_csv/main'
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM } from '../../../modules/nf-core/samtools/convert/main'
-include { CRAM_MERGE_INDEX_SAMTOOLS       } from '../../../subworkflows/local/cram_merge_index_samtools/main'
+include { PARABRICKS_APPLYBQSR                    } from '../../../modules/nf-core/parabricks/applybqsr/main.nf'
+include { PARABRICKS_FQ2BAM                       } from '../../../modules/nf-core/parabricks/fq2bam/main.nf'
+include { CHANNEL_ALIGN_CREATE_CSV                } from '../../../subworkflows/local/channel_align_create_csv/main'
+include { SAMTOOLS_CONVERT as CRAM_TO_BAM         } from '../../../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAM_TO_BAM_TO_SAVE } from '../../../modules/nf-core/samtools/convert/main'
+include { CRAM_MERGE_INDEX_SAMTOOLS               } from '../../../subworkflows/local/cram_merge_index_samtools/main'
 
 workflow FASTQ_PREPROCESS_PARABRICKS {
 
@@ -14,7 +15,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     ch_interval_file                // channel: [optional]  intervals_bed_combined
     ch_known_sites                  // channel: [optional]  known_sites_indels
     val_output_fmt                  // either bam or cram
-    val_perform_bqsr                // boolean
+    val_applybqsr                   // boolean
     val_save_mapped                 // boolean
     val_save_output_as_bam          // boolean
     val_outdir                      // output directory for saving mapped files
@@ -50,7 +51,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     fasta_fai = ch_fasta.combine(ch_fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai ] }.collect()
 
     // BQSR needs fq2bam to emit BAM (applybqsr only ingests BAM), otherwise we keep the requested format
-    fq2bam_output_fmt = val_perform_bqsr ? 'bam' : val_output_fmt
+    fq2bam_output_fmt = val_applybqsr? 'bam' : val_output_fmt
 
     PARABRICKS_FQ2BAM(
         ch_reads,           // channel: [ val(meta), reads ]
@@ -61,7 +62,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
         fq2bam_output_fmt   // either bam or cram
     )
 
-    if (val_perform_bqsr) {
+    if (val_applybqsr) {
         // Combine each fq2bam BAM with its index, recalibration table (same run -> same
         // meta), the optional intervals and the reference into a single tuple channel.
         // The applybqsr module takes everything in ONE tuple so this works for any number
@@ -119,13 +120,13 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
             }
 
     if (val_save_output_as_bam) {
-        if (val_perform_bqsr) {
+        if (val_applybqsr) {
             // BQSR already produced BAMs, so saving as BAM needs no conversion (inverted logic)
             CHANNEL_ALIGN_CREATE_CSV(native_bam, val_outdir, val_save_output_as_bam)
         } else {
             // Convert CRAM files to BAM
-            CRAM_TO_BAM(cram_variant_calling, fasta_fai)
-            CHANNEL_ALIGN_CREATE_CSV(CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true), val_outdir, val_save_output_as_bam)
+            CRAM_TO_BAM_TO_SAVE(cram_variant_calling, fasta_fai)
+            CHANNEL_ALIGN_CREATE_CSV(CRAM_TO_BAM_TO_SAVE.out.bam.join(CRAM_TO_BAM_TO_SAVE.out.bai, failOnDuplicate: true, failOnMismatch: true), val_outdir, val_save_output_as_bam)
         }
     } else if (val_save_mapped) {
         CHANNEL_ALIGN_CREATE_CSV(cram_variant_calling, val_outdir, val_save_output_as_bam)
