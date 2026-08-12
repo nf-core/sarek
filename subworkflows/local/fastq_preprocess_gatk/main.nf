@@ -58,12 +58,12 @@ workflow FASTQ_PREPROCESS_GATK {
         known_sites_indels
         known_sites_indels_tbi
         bbsplit_index
+        save_output_as_bam
 
     main:
 
     // To gather all QC reports for MultiQC
     reports          = channel.empty()
-    versions         = channel.empty()
 
     // PREPROCESSING
 
@@ -90,15 +90,11 @@ workflow FASTQ_PREPROCESS_GATK {
             interleave_input = false // Currently don't allow interleaved input
             CONVERT_FASTQ_UMI(
                 bam_converted_from_fastq,
-                [ [ id:"fasta" ], [] ], // fasta
-                [ [ id:'null' ], [] ],  // fasta_fai
+                fasta,
+                fasta_fai,
                 interleave_input)
 
             reads_for_fastp = CONVERT_FASTQ_UMI.out.reads
-
-            // Gather used softwares versions
-            versions = versions.mix(CONVERT_FASTQ_UMI.out.versions)
-            versions = versions.mix(FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.versions)
         } else {
             reads_for_fastp = input_fastq
         }
@@ -109,8 +105,7 @@ workflow FASTQ_PREPROCESS_GATK {
             save_trimmed_fail = false
             save_merged = false
             FASTP(
-                reads_for_fastp,
-                [], // we are not using any adapter fastas at the moment
+                reads_for_fastp.map { meta, reads -> [ meta, reads, [] ] }, // adapter_fasta folded into the reads tuple (unused)
                 false, // we don't use discard_trimmed_pass at the moment
                 save_trimmed_fail,
                 save_merged
@@ -125,8 +120,6 @@ workflow FASTQ_PREPROCESS_GATK {
                     [ meta + [ n_fastq: read_files.size() ], read_files ]
                 }.transpose()
             } else reads_for_bbsplit = FASTP.out.reads
-
-            versions = versions.mix(FASTP.out.versions)
 
         } else {
             reads_for_bbsplit = reads_for_fastp
@@ -152,19 +145,17 @@ workflow FASTQ_PREPROCESS_GATK {
             reads_for_alignment = reads_for_bbsplit
         }
 
-
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         // First, we must calculate number of lanes for each sample (meta.n_fastq)
         // This is needed to group reads from the same sample together using groupKey to avoid stalling the workflow
         // when reads from different samples are mixed together
-        reads_for_alignment.map { meta, reads ->
+        reads_grouping_key = reads_for_alignment.map { meta, reads ->
                 [ meta.subMap('patient', 'sample', 'sex', 'status'), reads ]
             }
             .groupTuple()
             .map { meta, reads ->
                 meta + [ n_fastq: reads.size() ] // We can drop the FASTQ files now that we know how many there are
             }
-            .set { reads_grouping_key }
 
         reads_for_alignment = reads_for_alignment.map{ meta, reads ->
             // Update meta.id to meta.sample no multiple lanes or splitted fastqs
@@ -183,7 +174,6 @@ workflow FASTQ_PREPROCESS_GATK {
             FGBIO_COPYUMIFROMREADNAME(FASTQ_ALIGN.out.bam.map{meta, bam -> [meta, bam, []]})
             aligned_bam = FGBIO_COPYUMIFROMREADNAME.out.bam
             aligned_bai = FGBIO_COPYUMIFROMREADNAME.out.bai
-            versions = versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
         } else {
             aligned_bam = FASTQ_ALIGN.out.bam
             aligned_bai = FASTQ_ALIGN.out.bai
@@ -228,7 +218,6 @@ workflow FASTQ_PREPROCESS_GATK {
             // Group
             .groupTuple()
 
-
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
         // Except if and only if save_mapped or (skipping markduplicates and sentieon-dedup)
         if (
@@ -241,18 +230,12 @@ workflow FASTQ_PREPROCESS_GATK {
             // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
             BAM_MERGE_INDEX_SAMTOOLS(bam_mapped)
 
-            BAM_TO_CRAM_MAPPING(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta, fasta_fai)
+            BAM_TO_CRAM_MAPPING(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai ] }.collect())
             // Create CSV to restart from this step
-            if (params.save_output_as_bam) CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, params.outdir, params.save_output_as_bam)
-            else CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true), params.outdir, params.save_output_as_bam)
-
-            // Gather used softwares versions
-            versions = versions.mix(BAM_MERGE_INDEX_SAMTOOLS.out.versions)
-            versions = versions.mix(BAM_TO_CRAM_MAPPING.out.versions)
+            if (save_output_as_bam) CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, params.outdir, save_output_as_bam)
+            else CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true), params.outdir, save_output_as_bam)
         }
 
-        // Gather used softwares versions
-        versions = versions.mix(FASTQ_ALIGN.out.versions)
     }
 
     if (params.step in ['mapping', 'markduplicates']) {
@@ -271,7 +254,6 @@ workflow FASTQ_PREPROCESS_GATK {
         if(params.step == 'markduplicates' && params.umi_in_read_header) {
             FGBIO_COPYUMIFROMREADNAME(cram_for_markduplicates.map{ meta, bam -> [ meta, bam, [] ] })
             cram_for_markduplicates = FGBIO_COPYUMIFROMREADNAME.out.bam
-            versions = versions.mix(FGBIO_COPYUMIFROMREADNAME.out.versions)
         }
 
         // if no MD is done, then run QC on mapped & converted CRAM files
@@ -292,13 +274,11 @@ workflow FASTQ_PREPROCESS_GATK {
                 cram_skip_markduplicates = channel.empty().mix(input_sample)
             }
 
-            CRAM_QC_NO_MD(cram_skip_markduplicates, fasta, intervals_for_preprocessing)
+            CRAM_QC_NO_MD(cram_skip_markduplicates, fasta, fasta_fai, intervals_for_preprocessing)
 
             // Gather QC reports
             reports = reports.mix(CRAM_QC_NO_MD.out.reports.collect{ _meta, report -> [ report ] })
 
-            // Gather used softwares versions
-            versions = versions.mix(CRAM_QC_NO_MD.out.versions)
         } else if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates')) {
             BAM_MARKDUPLICATES_SPARK(
                 cram_for_markduplicates,
@@ -311,8 +291,6 @@ workflow FASTQ_PREPROCESS_GATK {
             // Gather QC reports
             reports = reports.mix(BAM_MARKDUPLICATES_SPARK.out.reports.collect{ _meta, report -> [ report ] })
 
-            // Gather used softwares versions
-            versions = versions.mix(BAM_MARKDUPLICATES_SPARK.out.versions)
         } else if (params.tools && params.tools.split(',').contains('sentieon_dedup')) {
             crai_for_markduplicates = params.step == 'mapping'
                 ? bai_mapped
@@ -329,8 +307,6 @@ workflow FASTQ_PREPROCESS_GATK {
             // Gather QC reports
             reports = reports.mix(BAM_SENTIEON_DEDUP.out.reports.collect{ _meta, report -> [ report ] })
 
-            // Gather used softwares versions
-            versions = versions.mix(BAM_SENTIEON_DEDUP.out.versions)
         } else {
 
             BAM_MARKDUPLICATES(
@@ -344,8 +320,6 @@ workflow FASTQ_PREPROCESS_GATK {
             // Gather QC reports
             reports = reports.mix(BAM_MARKDUPLICATES.out.reports.collect{ _meta, report -> [ report ] })
 
-            // Gather used softwares versions
-            versions = versions.mix(BAM_MARKDUPLICATES.out.versions)
         }
 
         // ch_md_cram_for_restart contains either:
@@ -403,9 +377,6 @@ workflow FASTQ_PREPROCESS_GATK {
                 known_sites_indels_tbi)
 
                 ch_table_bqsr_spark = BAM_BASERECALIBRATOR_SPARK.out.table_bqsr
-
-                // Gather used softwares versions
-                versions = versions.mix(BAM_BASERECALIBRATOR_SPARK.out.versions)
             } else {
 
             BAM_BASERECALIBRATOR(
@@ -418,9 +389,6 @@ workflow FASTQ_PREPROCESS_GATK {
                 known_sites_indels_tbi)
 
                 ch_table_bqsr_no_spark = BAM_BASERECALIBRATOR.out.table_bqsr
-
-                // Gather used softwares versions
-                versions = versions.mix(BAM_BASERECALIBRATOR.out.versions)
             }
 
             // ch_table_bqsr contains either:
@@ -460,13 +428,10 @@ workflow FASTQ_PREPROCESS_GATK {
                     dict,
                     fasta,
                     fasta_fai,
-                    intervals_and_num_intervals)
+                    intervals_and_num_intervals,
+                    save_output_as_bam)
 
                 cram_variant_calling_spark = BAM_APPLYBQSR_SPARK.out.alignment
-
-                // Gather used softwares versions
-                versions = versions.mix(BAM_APPLYBQSR_SPARK.out.versions)
-
             } else {
 
                 BAM_APPLYBQSR(
@@ -474,12 +439,10 @@ workflow FASTQ_PREPROCESS_GATK {
                     dict,
                     fasta,
                     fasta_fai,
-                    intervals_and_num_intervals)
+                    intervals_and_num_intervals,
+                    save_output_as_bam)
 
                 cram_variant_calling_no_spark = BAM_APPLYBQSR.out.alignment
-
-                // Gather used softwares versions
-                versions = versions.mix(BAM_APPLYBQSR.out.versions)
             }
 
             cram_variant_calling = channel.empty().mix(
@@ -504,6 +467,5 @@ workflow FASTQ_PREPROCESS_GATK {
     emit:
     cram_variant_calling
     reports
-    versions
 
 }

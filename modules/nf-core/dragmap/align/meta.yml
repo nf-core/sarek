@@ -12,7 +12,8 @@ tools:
       homepage: https://github.com/Illumina/dragmap
       documentation: https://github.com/Illumina/dragmap
       tool_dev_url: https://github.com/Illumina/dragmap#basic-command-line-usage
-      licence: ["GPL v3"]
+      licence:
+        - "GPL v3"
       identifier: ""
 input:
   - - meta:
@@ -25,6 +26,8 @@ input:
         description: |
           List of input FastQ files of size 1 and 2 for single-end and paired-end data,
           respectively.
+        ontologies:
+          - edam: http://edamontology.org/format_1930
   - - meta2:
         type: map
         description: |
@@ -34,6 +37,7 @@ input:
         type: file
         description: DRAGMAP hash table
         pattern: "Directory containing DRAGMAP hash table *.{cmp,.bin,.txt}"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -43,12 +47,14 @@ input:
         type: file
         description: Genome fasta reference files
         pattern: "*.{fa,fasta,fna}"
-  - - sort_bam:
-        type: boolean
-        description: Sort the BAM file
+        ontologies:
+          - edam: http://edamontology.org/format_1929
+  - sort_bam:
+      type: boolean
+      description: Sort the BAM file
 output:
-  - sam:
-      - meta:
+  sam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -57,17 +63,22 @@ output:
           type: file
           description: Output SAM file containing read alignments
           pattern: "*.{sam}"
-  - bam:
-      - meta:
-          type: file
-          description: Output BAM file containing read alignments
-          pattern: "*.{bam}"
+          ontologies:
+            - edam: http://edamontology.org/format_2571
+  bam:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
       - "*.bam":
           type: file
           description: Output BAM file containing read alignments
           pattern: "*.{bam}"
-  - cram:
-      - meta:
+          ontologies:
+            - edam: http://edamontology.org/format_2572
+  cram:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -76,8 +87,10 @@ output:
           type: file
           description: Output CRAM file containing read alignments
           pattern: "*.{cram}"
-  - crai:
-      - meta:
+          ontologies:
+            - edam: http://edamontology.org/format_2573
+  crai:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -86,8 +99,9 @@ output:
           type: file
           description: Index file for CRAM file
           pattern: "*.{crai}"
-  - csi:
-      - meta:
+          ontologies: []
+  csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -96,8 +110,9 @@ output:
           type: file
           description: Index file for CRAM file
           pattern: "*.{csi}"
-  - log:
-      - meta:
+          ontologies: []
+  log:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -106,11 +121,67 @@ output:
           type: file
           description: Log file
           pattern: "*.{log}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3888
+  versions_dragmap:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - dragmap:
+          type: string
+          description: The name of the tool
+      - dragen-os --version 2>&1:
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - samtools version | sed '1!d;s/.* //':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_pigz:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pigz:
+          type: string
+          description: The name of the tool
+      - pigz --version 2>&1 | sed 's/pigz //':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - dragmap:
+          type: string
+          description: The name of the tool
+      - dragen-os --version 2>&1:
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - samtools version | sed '1!d;s/.* //':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pigz:
+          type: string
+          description: The name of the tool
+      - pigz --version 2>&1 | sed 's/pigz //':
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@edmundmiller"
 maintainers:

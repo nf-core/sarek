@@ -10,6 +10,11 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      update_snapshots:
+        description: "Regenerate snapshots (--update-snapshot) over all tagged tests and upload them as artifacts"
+        type: boolean
+        default: false
 
 # Cancel if a newer run is started
 concurrency:
@@ -18,7 +23,8 @@ concurrency:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  NFT_VER: "0.9.3"
+  NFT_VER: "0.9.5"
+  NFT_WORKDIR: "~"
   NXF_ANSI_LOG: false
   NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
   NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
@@ -38,7 +44,7 @@ jobs:
           rm -rf ./* || true
           rm -rf ./.??* || true
           ls -la ./
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
 
@@ -50,6 +56,7 @@ jobs:
         with:
           tags: "gpu"
           max_shards: 2
+          all_tests: ${{ github.event.inputs.update_snapshots || 'false' }}
 
       - name: debug
         run: |
@@ -77,14 +84,14 @@ jobs:
           - isMain: false
             profile: "singularity"
         NXF_VER:
-          - 25.10.2
-          - latest-everything
+          - "25.10.4"
+          - "latest-everything"
     env:
       NXF_ANSI_LOG: false
       TOTAL_SHARDS: ${{ needs.nf-test-gpu-changes.outputs.total_shards }}
 
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
 
@@ -107,6 +114,7 @@ jobs:
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
           tags: ${{ matrix.profile == 'conda' && 'gpu_conda' || 'gpu,gpu_conda' }}
+          update_snapshots: ${{ github.event.inputs.update_snapshots || 'false' }}
       - name: Report test status
         if: ${{ always() }}
         run: |

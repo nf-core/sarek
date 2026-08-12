@@ -1,20 +1,21 @@
 process FGBIO_GROUPREADSBYUMI {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/87/87626ef674e2f19366ae6214575a114fe80ce598e796894820550731706a84be/data' :
-        'community.wave.seqera.io/library/fgbio:2.4.0--913bad9d47ff8ddc' }"
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/4d/4d1150a2e123f49f8c268f0ab429847afae642376fa52af713b846b084df4a9f/data'
+        : 'community.wave.seqera.io/library/fgbio:3.1.2--6e9400d507a9dc55'}"
 
     input:
     tuple val(meta), path(bam)
-    val(strategy)
+    val strategy
 
     output:
-    tuple val(meta), path("*.bam")         , emit: bam
+    tuple val(meta), path("*.bam"), emit: bam
     tuple val(meta), path("*histogram.txt"), emit: histogram
-    path "versions.yml"                    , emit: versions
+    tuple val(meta), path("*read-metrics.txt"), emit: read_metrics
+    tuple val("${task.process}"), val('fgbio'), eval('fgbio --version 2>&1 | tr -d "[:cntrl:]" | sed -e "s/^.*Version: //;s/\\[.*$//"'), topic: versions, emit: versions_fgbio
 
     when:
     task.ext.when == null || task.ext.when
@@ -24,44 +25,42 @@ process FGBIO_GROUPREADSBYUMI {
     def prefix = task.ext.prefix ?: "${meta.id}_umi-grouped"
     def mem_gb = 8
     if (!task.memory) {
-        log.info '[fgbio FilterConsensusReads] Available memory not known - defaulting to 8GB. Specify process memory requirements to change this.'
-    } else if (mem_gb > task.memory.giga) {
+        log.info('[fgbio FilterConsensusReads] Available memory not known - defaulting to 8GB. Specify process memory requirements to change this.')
+    }
+    else if (mem_gb > task.memory.giga) {
         if (task.memory.giga < 2) {
             mem_gb = 1
-        } else {
+        }
+        else {
             mem_gb = task.memory.giga - 1
         }
     }
 
-    if ("$bam" == "${prefix}.bam") error "Input and output names are the same, use \"task.ext.prefix\" to disambiguate!"
+    if ("${bam}" == "${prefix}.bam") {
+        error("Input and output names are the same, use \"task.ext.prefix\" to disambiguate!")
+    }
 
     """
     fgbio \\
         -Xmx${mem_gb}g \\
         --tmp-dir=. \\
         GroupReadsByUmi \\
-        -s $strategy \\
-        $args \\
-        -i $bam \\
+        -s ${strategy} \\
+        ${args} \\
+        -i ${bam} \\
         -o ${prefix}.bam \\
-        -f ${prefix}_histogram.txt
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        fgbio: \$( echo \$(fgbio --version 2>&1 | tr -d '[:cntrl:]' ) | sed -e 's/^.*Version: //;s/\\[.*\$//')
-    END_VERSIONS
+        -f ${prefix}_histogram.txt \\
+        --grouping-metrics ${prefix}_read-metrics.txt
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}_umi-grouped"
-    if ("$bam" == "${prefix}.bam") error "Input and output names are the same, use \"task.ext.prefix\" to disambiguate!"
+    if ("${bam}" == "${prefix}.bam") {
+        error("Input and output names are the same, use \"task.ext.prefix\" to disambiguate!")
+    }
     """
     touch ${prefix}.bam
     touch ${prefix}_histogram.txt
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        fgbio: \$( echo \$(fgbio --version 2>&1 | tr -d '[:cntrl:]' ) | sed -e 's/^.*Version: //;s/\\[.*\$//')
-    END_VERSIONS
+    touch ${prefix}_read-metrics.txt
     """
 }

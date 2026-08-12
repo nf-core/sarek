@@ -14,9 +14,10 @@ class UTILS {
 
         // These strings are not stable and should be ignored
         def snapshot_ignore_list = [
+            "Check script",
             "Creating env using",
             "Downloading plugin",
-            "Got an interrupted  exception while taking agent result",
+            "Got an interrupted exception while taking agent result",
             "Pulling Singularity image",
             "Staging foreign file",
             "Unable to resume cached task",
@@ -24,26 +25,28 @@ class UTILS {
         ]
 
         // stable_name: All files + folders in ${outdir}/ with a stable name
-        def stable_name = getAllFilesFromDir(outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+        def stable_name = getAllFilesFromPath(outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
         // stable_content: All files in ${outdir}/ with stable content
-        def stable_content = getAllFilesFromDir(outdir, ignoreFile: 'tests/.nftignore', ignore: [scenario.ignoreFiles ])
+        def stable_content = getAllFilesFromPath(outdir, ignoreFile: 'tests/.nftignore', ignore: [scenario.ignoreFiles])
         // bam_files: All bam files
-        def bam_files = getAllFilesFromDir(outdir, include: ['**/*.bam'], ignore: [scenario.ignoreFiles ])
+        def bam_files = getAllFilesFromPath(outdir, include: ['**/*.bam'], ignore: [scenario.ignoreFiles])
         // cram_files: All cram files
-        def cram_files = getAllFilesFromDir(outdir, include: ['**/*.cram'], ignore: [scenario.ignoreFiles ])
+        def cram_files = getAllFilesFromPath(outdir, include: ['**/*.cram'], ignore: [scenario.ignoreFiles])
         // Fasta file for cram verification with nft-bam
         def fasta_base = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
         def fasta = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
         // txt_files: MuSE txt files
-        def txt_files = getAllFilesFromDir(outdir, include: ['**/*.MuSE.txt'])
+        def txt_files = getAllFilesFromPath(outdir, include: ['**/*.MuSE.txt'])
         // vcf_files: All vcf files
-        def vcf_files = getAllFilesFromDir(outdir, include: ['**/*.vcf{,.gz}'], ignore: [scenario.ignoreFiles ])
+        def vcf_files = getAllFilesFromPath(outdir, include: ['**/*.vcf{,.gz}'], ignore: [scenario.ignoreFiles])
         // freebayes_unfiltered: vcf files from freebayes without quality filtering
-        def freebayes_unfiltered = getAllFilesFromDir(outdir, include: ['**/*.freebayes.vcf.gz'])
+        def freebayes_unfiltered = getAllFilesFromPath(outdir, include: ['**/*.freebayes.vcf.gz'])
         // varlociraptor vcf
-        def varlociraptor_vcf = getAllFilesFromDir(outdir, include: ['**/*.varlociraptor.{vcf}{,.gz}'])
+        def varlociraptor_vcf = getAllFilesFromPath(outdir, include: ['**/*.varlociraptor.{vcf}{,.gz}'])
 
         def assertion = []
+        // getAllFilesFromPath returns relative paths (strings), so this resolves to an absolute path
+        def absolutePath = { file -> file.toString().startsWith('/') ? file.toString() : "${outdir}/${file}" }
 
         if (!scenario.failure) {
             assertion.add(workflow.trace.succeeded().size())
@@ -54,26 +57,31 @@ class UTILS {
         assertion.add(stable_name)
 
         if (!scenario.stub) {
-            assertion.add(stable_content.isEmpty() ? 'No stable content' : stable_content)
-            assertion.add(bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.getName() + ":md5," + bam(file.toString()).readsMD5 })
-            assertion.add(cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.getName() + ":md5," + cram(file.toString(), fasta).readsMD5 })
+            assertion.add(stable_content.isEmpty() ? 'No stable content' : stable_content.collect { file -> path(absolutePath(file)) })
+            assertion.add(bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.tokenize('/').last() + ":md5," + bam(absolutePath(file)).readsMD5 })
+            assertion.add(cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.tokenize('/').last() + ":md5," + cram(absolutePath(file), fasta).readsMD5 })
             if (scenario.include_muse_txt) {
                 // It will skip the first line of the txt file
-                assertion.add(txt_files.isEmpty() ? 'No TXT files' : txt_files.collect{ file -> file.getName() + ":md5," + file.readLines()[2..-1].join('\n').md5() })
+                assertion.add(txt_files.isEmpty() ? 'No TXT files' : txt_files.collect { file -> file.tokenize('/').last() + ":md5," + path(absolutePath(file)).readLines().drop(2).join('\n').md5() })
             }
             if (scenario.include_freebayes_unfiltered) {
                 // It will only print the vcf summary to avoid differing md5sums because of small differences in QUAL score
-                assertion.add(freebayes_unfiltered.isEmpty() ? 'No Freebayes unfiltered VCF files' : freebayes_unfiltered.collect { file -> [ file.getName(), path(file.toString()).vcf.summary ] })
+                assertion.add(freebayes_unfiltered.isEmpty() ? 'No Freebayes unfiltered VCF files' : freebayes_unfiltered.collect { file -> [ file.tokenize('/').last(), path(absolutePath(file)).vcf.summary ] })
             }
             if (scenario.no_vcf_md5sum) {
                 // Will print the summary instead of the md5sum for vcf files
-                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [ file.getName(), path(file.toString()).vcf.summary ] })
+                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> [ file.tokenize('/').last(), path(absolutePath(file)).vcf.summary ] })
             } else {
-                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.getName() + ":md5," + path(file.toString()).vcf.variantsMD5 })
+                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.tokenize('/').last() + ":md5," + path(absolutePath(file)).vcf.variantsMD5 })
                 if (scenario.include_varlociraptor_vcf) {
                     // It will use the summary method to extract the vcf file content
-                    assertion.add(varlociraptor_vcf.isEmpty() ? 'No Varlociraptor VCF files' : varlociraptor_vcf.collect { file -> file.getName() + ":summary," + path(file.toString()).vcf.summary })
+                    assertion.add(varlociraptor_vcf.isEmpty() ? 'No Varlociraptor VCF files' : varlociraptor_vcf.collect { file -> file.tokenize('/').last() + ":summary," + path(absolutePath(file)).vcf.summary })
                 }
+            }
+
+            // Check for specific VCF header fields if requested
+            if (scenario.vcf_header_check) {
+                assertion.add(vcf_files.isEmpty() ? 'No VCF files' : vcf_files.collect { file -> file.tokenize('/').last() + ":header.contains(${scenario.vcf_header_check})," + path(absolutePath(file)).vcf.header.toString().contains(scenario.vcf_header_check) })
             }
         }
 

@@ -4,49 +4,56 @@
             19,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "FGBIO_COPYUMIFROMREADNAME": {
-                    "fgbio": "2.4.0"
+                    "fgbio": "3.1.2"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -227,20 +234,20 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,175b0442368f03294ef9ce9e73172c7b",
+                "samtools-stats-dp.txt:md5,e65c4559a631a2f575dfa4549b47c324",
                 "samtools_alignment_plot.txt:md5,6555bbf8c1ef12058e9a050545a9fa41",
                 "samtools_insert_size.txt:md5,164be68813f2cb96462c152743b95cae",
-                "test.strelka.variants.bcftools_stats.txt:md5,5b7cff7b17c5bcde6177a188b1511986",
+                "test.strelka.variants.bcftools_stats.txt:md5,f4f3355bc1f101411c2fed6cf77d478e",
                 "test.md.mosdepth.global.dist.txt:md5,0c795eadf5e5a8ea8469ba8c0ece9bdd",
                 "test.md.mosdepth.region.dist.txt:md5,54273a37adf55f8cee822aaf92a4c321",
                 "test.md.mosdepth.summary.txt:md5,bb12489d3d44c4e44eb5dcc8fdef636c",
                 "test.md.regions.bed.gz:md5,24cd07f8ce342a277f2954d6e731015e",
-                "test.md.regions.bed.gz.csi:md5,db6f77bcdbb7ada7e0c93e5b987b8265",
+                "test.md.regions.bed.gz.csi:md5,b21a943497a42870c5035d81a87524b0",
                 "test.recal.mosdepth.global.dist.txt:md5,0c795eadf5e5a8ea8469ba8c0ece9bdd",
                 "test.recal.mosdepth.region.dist.txt:md5,54273a37adf55f8cee822aaf92a4c321",
                 "test.recal.mosdepth.summary.txt:md5,bb12489d3d44c4e44eb5dcc8fdef636c",
                 "test.recal.regions.bed.gz:md5,24cd07f8ce342a277f2954d6e731015e",
-                "test.recal.regions.bed.gz.csi:md5,db6f77bcdbb7ada7e0c93e5b987b8265",
+                "test.recal.regions.bed.gz.csi:md5,b21a943497a42870c5035d81a87524b0",
                 "test.strelka.variants.FILTER.summary:md5,f58effcb4006be9b10081e4417197aa6",
                 "test.strelka.variants.TsTv.count:md5,fccdacf16ebe20d74f36bd7b38f11ca4"
             ],
@@ -255,34 +262,34 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:36:55.243190299",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-09T09:52:02.012960987"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --input tests/csv/3.0/bam_umi_header.csv --umi_in_read_header --tools markduplicates --step mapping": {
         "content": [
             30,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "COLLATE_FASTQ_MAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "COLLATE_FASTQ_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -291,58 +298,65 @@
                     "fastqc": "0.12.1"
                 },
                 "FGBIO_COPYUMIFROMREADNAME": {
-                    "fgbio": "2.4.0"
+                    "fgbio": "3.1.2"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_MERGE_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_MAP_MAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_MAP_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_UNMAP_MAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_UNMAP_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -593,20 +607,20 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,afe461017b5f2189651f29c79f6fee44",
+                "samtools-stats-dp.txt:md5,99bedef59d485c544a016e3e372591d5",
                 "samtools_alignment_plot.txt:md5,9d6e0d529e64404f2c24e74285e242ee",
                 "samtools_insert_size.txt:md5,91c40430c1296fd8ce04788f2f528754",
-                "test.strelka.variants.bcftools_stats.txt:md5,3f4c40f17e956e4140a0432072a9dde0",
+                "test.strelka.variants.bcftools_stats.txt:md5,a1500be145d3bd8a1e643c8772c4406d",
                 "test.md.mosdepth.global.dist.txt:md5,7b8a7773d5d854ae1b681b971d11bb34",
                 "test.md.mosdepth.region.dist.txt:md5,1dd626f6fef0d1ac29fd7ffb8b1bbd95",
                 "test.md.mosdepth.summary.txt:md5,25af78b074abf710ddd9c90cba1928bc",
                 "test.md.regions.bed.gz:md5,813d852c5a237022fd4b7446d12f7772",
-                "test.md.regions.bed.gz.csi:md5,10b7f8e9ac2ac27205f8bc827a186195",
+                "test.md.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c",
                 "test.recal.mosdepth.global.dist.txt:md5,7b8a7773d5d854ae1b681b971d11bb34",
                 "test.recal.mosdepth.region.dist.txt:md5,1dd626f6fef0d1ac29fd7ffb8b1bbd95",
                 "test.recal.mosdepth.summary.txt:md5,25af78b074abf710ddd9c90cba1928bc",
                 "test.recal.regions.bed.gz:md5,813d852c5a237022fd4b7446d12f7772",
-                "test.recal.regions.bed.gz.csi:md5,10b7f8e9ac2ac27205f8bc827a186195",
+                "test.recal.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c",
                 "test.strelka.variants.FILTER.summary:md5,869e416e19c9d8c7c6924758e66ea426",
                 "test.strelka.variants.TsTv.count:md5,2a049bc323b4bc559da89d136a567e28"
             ],
@@ -621,10 +635,10 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-28T11:27:38.221141795",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T22:06:00.327735562"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

@@ -4,34 +4,41 @@
             12,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIP_TIDDIT_SV": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TIDDIT_SV": {
-                    "tiddit": "3.6.1"
+                    "tiddit": "3.9.5"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -132,15 +139,15 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,edd8dfc8023e629e476e01c3a1448d30",
                 "mosdepth_perchrom.txt:md5,49fd828d21d79a5c9430cdb30d7f0126",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,41d36c1a8413d565788a1a364b467606",
+                "samtools-stats-dp.txt:md5,5b881919a10bdc8661d05845dead0a98",
                 "samtools_alignment_plot.txt:md5,35f8fd2a557568b2237193f46afbab5c",
                 "samtools_insert_size.txt:md5,be7a60f43f0ca5238674cbf0f9d48917",
-                "sample1.tiddit.bcftools_stats.txt:md5,ee25406b8d3ed73eaa8a66972c805c1f",
+                "sample1.tiddit.bcftools_stats.txt:md5,ce8d4ce1c8fde22cf1557603caa1c4e9",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample1.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
+                "sample1.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
                 "sample1.tiddit.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample1.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
@@ -151,10 +158,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-20T09:36:34.643829502",
+        "timestamp": "2026-07-27T10:29:34.219316164",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools tiddit tumoronly": {
@@ -162,34 +169,41 @@
             12,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIP_TIDDIT_SV": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TIDDIT_SV": {
-                    "tiddit": "3.6.1"
+                    "tiddit": "3.9.5"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -290,15 +304,15 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,8398d1127a10d0c002831ddedfb9713b",
                 "mosdepth_perchrom.txt:md5,ff38f1e35ce12244c751921db673b23c",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
+                "samtools-stats-dp.txt:md5,42facbec7ea07232de8dc0369f0da065",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
                 "samtools_insert_size.txt:md5,5cb5779e1a7baf077b529af8c427147c",
-                "sample2.tiddit.bcftools_stats.txt:md5,82343c0b28dace889f164bbb256a8461",
+                "sample2.tiddit.bcftools_stats.txt:md5,f49030d75a44dde7a9d068af09e89c52",
                 "sample2.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
+                "sample2.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
                 "sample2.tiddit.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample2.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
@@ -309,10 +323,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-20T09:39:22.408315557",
+        "timestamp": "2026-07-27T10:32:32.25435422",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools tiddit somatic": {
@@ -320,38 +334,45 @@
             23,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SVDB_MERGE": {
-                    "bcftools": 1.21,
-                    "svdb": "2.8.2"
+                    "bcftools": "1.23",
+                    "svdb": "2.8.4"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIP_TIDDIT_SV": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TIDDIT_SV": {
-                    "tiddit": "3.6.1"
+                    "tiddit": "3.9.5"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -473,21 +494,21 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,0cc87c596a0fc30ebb676c4587e986de",
                 "mosdepth_perchrom.txt:md5,336d786b273c4d4e714d51c44207ff56",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
+                "samtools-stats-dp.txt:md5,bf6d30315fd7608b97b2a4eb1dc71fdc",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
                 "samtools_insert_size.txt:md5,8fa108dcbe0da42e9425dd125fe22905",
-                "sample3.tiddit.bcftools_stats.txt:md5,b8a60370884c8f2c94baa7d3e859492f",
-                "sample4_vs_sample3.tiddit_sv_merge.bcftools_stats.txt:md5,82f123b157211ac9b8d3b145bbea2147",
+                "sample3.tiddit.bcftools_stats.txt:md5,981a4170dd5a6bd6e5f51bbb169f8a17",
+                "sample4_vs_sample3.tiddit_sv_merge.bcftools_stats.txt:md5,6d73929bb5b17c93f98eed8db6ac7bc4",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample3.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample3.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
+                "sample3.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
                 "sample4.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample4.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample4.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
+                "sample4.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
                 "sample3.tiddit.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample3.tiddit.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
                 "sample4_vs_sample3.tiddit_sv_merge.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
@@ -503,10 +524,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-05-20T09:38:11.731089821",
+        "timestamp": "2026-07-27T10:24:40.00162687",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "25.10.4"
         }
     }
 }

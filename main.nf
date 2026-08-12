@@ -90,8 +90,6 @@ workflow NFCORE_SAREK {
     samplesheet
 
     main:
-    versions = channel.empty()
-
     // build indexes if needed
     PREPARE_GENOME(
         params.ascat_alleles,
@@ -138,7 +136,7 @@ workflow NFCORE_SAREK {
 
     // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
     intervals_for_preprocessing = params.wes
-        ? intervals_bed_combined.map { it -> [[id: it.baseName], it] }.collect()
+        ? intervals_bed_combined.map { bed -> [[id: bed.baseName], bed] }.collect()
         : channel.value([[id: 'null'], []])
     // [ interval, num_intervals ] multiple interval.bed files, divided by useful intervals for scatter/gather
     intervals = PREPARE_INTERVALS.out.intervals_bed
@@ -160,15 +158,11 @@ workflow NFCORE_SAREK {
         else {
             PREPARE_REFERENCE_CNVKIT(PREPARE_GENOME.out.fasta, intervals_bed_combined)
             cnvkit_reference = PREPARE_REFERENCE_CNVKIT.out.cnvkit_reference
-            versions = versions.mix(PREPARE_REFERENCE_CNVKIT.out.versions)
         }
     }
     else {
         cnvkit_reference = channel.value([])
     }
-    // Gather used softwares versions
-    versions = versions.mix(PREPARE_GENOME.out.versions)
-    versions = versions.mix(PREPARE_INTERVALS.out.versions)
 
     // Fails when consensus calling is specified without normalization
     if (params.snv_consensus_calling && !params.normalize_vcfs) {
@@ -289,7 +283,7 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.bbsplit_index,
         PREPARE_GENOME.out.bcftools_annotations,
         PREPARE_GENOME.out.bcftools_annotations_tbi,
-        params.bcftools_columns ? channel.fromPath(params.bcftools_columns).collect() : channel.value([]),
+        params.bcftools_columns ? channel.fromPath(params.bcftools_columns).collect() : channel.value([[]]),
         params.bcftools_header_lines ? channel.fromPath(params.bcftools_header_lines).collect() : channel.empty(),
         params.cf_chrom_len ? channel.fromPath(params.cf_chrom_len).collect() : [],
         PREPARE_GENOME.out.chr_dir,
@@ -322,9 +316,14 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.pon,
         PREPARE_GENOME.out.pon_tbi,
         params.sentieon_dnascope_model ? channel.fromPath(params.sentieon_dnascope_model).collect() : channel.value([]),
-        params.varlociraptor_scenario_germline ? channel.fromPath(params.varlociraptor_scenario_germline).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect(),
-        params.varlociraptor_scenario_somatic ? channel.fromPath(params.varlociraptor_scenario_somatic).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect(),
-        params.varlociraptor_scenario_tumor_only ? channel.fromPath(params.varlociraptor_scenario_tumor_only).map { it -> [[id: it.baseName - '.yte'], it] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect(),
+        params.varlociraptor_chunk_size,
+        params.varlociraptor_events_germline,
+        params.varlociraptor_events_somatic,
+        params.varlociraptor_events_tumor_only,
+        params.varlociraptor_fdr,
+        params.varlociraptor_scenario_germline ? channel.fromPath(params.varlociraptor_scenario_germline).map { scenario -> [[id: scenario.baseName - '.yte'], scenario] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_germline.yte.yaml").collect(),
+        params.varlociraptor_scenario_somatic ? channel.fromPath(params.varlociraptor_scenario_somatic).map { scenario -> [[id: scenario.baseName - '.yte'], scenario] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect(),
+        params.varlociraptor_scenario_tumor_only ? channel.fromPath(params.varlociraptor_scenario_tumor_only).map { scenario -> [[id: scenario.baseName - '.yte'], scenario] }.collect() : channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect(),
         snpeff_cache,
         params.snpeff_db,
         vep_cache,
@@ -334,7 +333,6 @@ workflow NFCORE_SAREK {
         params.vep_genome,
         params.vep_species,
         ch_snpsift_db,
-        versions,
     )
 
     emit:
@@ -361,7 +359,7 @@ workflow {
         params.input,
         params.help,
         params.help_full,
-        params.show_hidden,
+        params.show_hidden
     )
 
     //
@@ -378,7 +376,7 @@ workflow {
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
-        NFCORE_SAREK.out.multiqc_report,
+        NFCORE_SAREK.out.multiqc_report
     )
 
     publish:

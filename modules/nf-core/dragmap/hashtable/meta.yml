@@ -11,7 +11,8 @@ tools:
       homepage: https://github.com/Illumina/dragmap
       documentation: https://github.com/Illumina/dragmap
       tool_dev_url: https://github.com/Illumina/dragmap#basic-command-line-usage
-      licence: ["GPL v3"]
+      licence:
+        - "GPL v3"
       identifier: ""
 input:
   - - meta:
@@ -22,7 +23,8 @@ input:
     - fasta:
         type: file
         description: Input genome fasta file
-        ontologies: []
+        ontologies:
+          - edam: http://edamontology.org/format_1929
 output:
   hashmap:
     - - meta:
@@ -31,17 +33,35 @@ output:
             Groovy Map containing reference information
             e.g. [ id:'test', single_end:false ]
       - dragmap:
-          type: file
+          type: string
           description: DRAGMAP hash table
           pattern: "*.{cmp,.bin,.txt}"
           ontologies: []
+  versions_dragmap:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - dragmap:
+          type: string
+          description: DRAGMAP hash table
+          pattern: "*.{cmp,.bin,.txt}"
+          ontologies: []
+      - dragen-os --version 2>&1:
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - dragmap:
+          type: string
+          description: DRAGMAP hash table
+          pattern: "*.{cmp,.bin,.txt}"
+          ontologies: []
+      - dragen-os --version 2>&1:
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@edmundmiller"
 maintainers:

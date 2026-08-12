@@ -3,9 +3,9 @@ process SNPSIFT_ANNMEMCREATE {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/a1/a116bb44e388ca83fea78d82fe8bdfd5cf3557254e2ec7dd3f1f17354880638c/data' :
-        'community.wave.seqera.io/library/htslib_snpsift:ace461dff1cfc121' }"
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/c5/c5ee8f24fb1bcd6e98ecb91fcf013f35a8db193dc9af4883c468e623aaebd7cf/data'
+        : 'community.wave.seqera.io/library/htslib_snpsift:6167cd8f20036c55'}"
 
     input:
     tuple val(meta), path(db_vcf), path(db_vcf_tbi), val(db_fields)
@@ -18,7 +18,7 @@ process SNPSIFT_ANNMEMCREATE {
     task.ext.when == null || task.ext.when
 
     script:
-    def args   = task.ext.args ?: ''
+    def args = task.ext.args ?: ''
     def fields = db_fields instanceof List ? db_fields.join(',') : db_fields
 
     """

@@ -18,7 +18,6 @@ workflow BAM_BASERECALIBRATOR_SPARK {
     known_sites_tbi // channel: [optional]  [ known_sites_tbi ]
 
     main:
-    versions = Channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
@@ -26,13 +25,13 @@ workflow BAM_BASERECALIBRATOR_SPARK {
         .map{ meta, cram_, crai, intervals_, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram_, crai, intervals_ ] }
 
     // RUN BASERECALIBRATOR SPARK
-    GATK4SPARK_BASERECALIBRATOR(cram_intervals, fasta.map{ meta, it -> [ it ] }, fasta_fai.map{ meta, it -> [ it ] }, dict.map{ meta, it -> [ it ] }, known_sites, known_sites_tbi)
+    GATK4SPARK_BASERECALIBRATOR(cram_intervals, fasta.map{ _meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] }, dict.map{ _meta, dict_ -> [ dict_ ] }, known_sites, known_sites_tbi)
 
     // Figuring out if there is one or more table(s) from the same sample
-    table_to_merge = GATK4SPARK_BASERECALIBRATOR.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple().branch{
+    table_to_merge = GATK4SPARK_BASERECALIBRATOR.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple().branch{ meta, _table ->
         // Use meta.num_intervals to asses number of intervals
-        single:   it[0].num_intervals <= 1
-        multiple: it[0].num_intervals > 1
+        single:   meta.num_intervals <= 1
+        multiple: meta.num_intervals > 1
     }
 
     // Only when using intervals
@@ -43,12 +42,8 @@ workflow BAM_BASERECALIBRATOR_SPARK {
         // Remove no longer necessary field: num_intervals
         .map{ meta, table -> [ meta - meta.subMap('num_intervals'), table ] }
 
-    // Gather versions of all tools used
-    versions = versions.mix(GATK4SPARK_BASERECALIBRATOR.out.versions)
-    versions = versions.mix(GATK4_GATHERBQSRREPORTS.out.versions)
 
     emit:
     table_bqsr // channel: [ meta, table ]
 
-    versions   // channel: [ versions.yml ]
 }

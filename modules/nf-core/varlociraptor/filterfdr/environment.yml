@@ -4,4 +4,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - conda-forge::pigz=2.3.4
+  # renovate: datasource=conda depName=bioconda/varlociraptor
+  - bioconda::varlociraptor=8.9.5
