@@ -23,6 +23,18 @@ inputs:
   selectors:
     description: "Space-separated explicit nf-test path@hash selectors"
     required: false
+  all_tests:
+    description: "Run all tagged tests instead of filtering against HEAD^"
+    required: false
+    default: "false"
+  minimum_tests:
+    description: "Fail if fewer tests than this value are reported"
+    required: false
+    default: "0"
+  artifact_suffix:
+    description: "Suffix used to keep runtime-report artifact names unique"
+    required: false
+    default: ""
 runs:
   using: "composite"
   steps:
@@ -88,6 +100,9 @@ runs:
           CHANGED_SINCE=""
           SHARD_OPTION=""
         fi
+        if [ "${{ inputs.all_tests }}" = "true" ]; then
+          CHANGED_SINCE=""
+        fi
         if [ "${{ inputs.update_snapshots }}" = "true" ]; then
           CHANGED_SINCE=""
           UPDATE_SNAPSHOT="--update-snapshot"
@@ -104,6 +119,13 @@ runs:
           $SHARD_OPTION \
           $TEST_SELECTORS
 
+          test_count=$(python -c "import csv; print(sum(1 for _ in csv.DictReader(open('test-results.csv'))))")
+          echo "nf-test reported $test_count tests"
+          if [ "$test_count" -lt "${{ inputs.minimum_tests }}" ]; then
+            echo "Expected at least ${{ inputs.minimum_tests }} tests, but nf-test reported $test_count"
+            exit 1
+          fi
+
           # Save the absolute path of the test.tap file to the output
           echo "tap_file_path=$(realpath test.tap)" >> $GITHUB_OUTPUT
 
@@ -111,7 +133,7 @@ runs:
       if: always()
       uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
       with:
-        name: nf-test-results-${{ inputs.profile }}-${{ env.NXF_VERSION }}-${{ inputs.shard }}
+        name: nf-test-results-${{ inputs.profile }}-${{ env.NXF_VERSION }}-${{ inputs.shard }}${{ inputs.artifact_suffix }}
         path: test-results.csv
         if-no-files-found: warn
         retention-days: 14
