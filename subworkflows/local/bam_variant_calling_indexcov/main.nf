@@ -15,6 +15,8 @@ workflow BAM_VARIANT_CALLING_INDEXCOV {
     fasta_fai     // channel: [mandatory] [ meta, fasta_fai ]
 
     main:
+    versions = Channel.empty()
+
     // generate a cleaner bam index without duplicate, supplementary, etc. (Small workload because the bam itself is not re-generated)
     reindex_ch = SAMTOOLS_REINDEX_BAM(
         cram,
@@ -22,15 +24,21 @@ workflow BAM_VARIANT_CALLING_INDEXCOV {
         fasta_fai
         )
 
+    versions = versions.mix(reindex_ch.versions)
+
     // create [ [id:directory], bams, bais ]
-    indexcov_input_ch = reindex_ch.output.map{ _meta, bam, bai -> [[id:"indexcov"], bam, bai]}.groupTuple()
+    indexcov_input_ch = reindex_ch.output.map{[[id:"indexcov"], it[1], it[2]]}.groupTuple()
 
     goleft_ch = GOLEFT_INDEXCOV(
         indexcov_input_ch,
         fasta_fai
         )
 
+    versions = versions.mix(goleft_ch.versions)
+
+
     emit:
 
     out_indexcov = goleft_ch.output
+    versions
 }

@@ -12,7 +12,7 @@ process ADD_INFO_TO_VCF {
 
     output:
     tuple val(meta), path("*.added_info.vcf"), emit: vcf
-    tuple val("${task.process}"), val('gawk'), eval("awk --version | head -n1 | sed 's/GNU Awk //; s/, .*//'"), emit: versions_gawk, topic: versions
+    path "versions.yml",                       emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -32,5 +32,10 @@ process ADD_INFO_TO_VCF {
     if grep -Ev "^#" \$input; then
         grep -Ev "^#" \$input | awk 'BEGIN{FS=OFS="\t"} { \$8=="." ? \$8="SOURCE=${vcf_gz}" : \$8=\$8";SOURCE=${vcf_gz}"; print }' >> \$output
     fi
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        gawk: \$(awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//')
+    END_VERSIONS
     """
 }

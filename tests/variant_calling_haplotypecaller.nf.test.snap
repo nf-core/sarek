@@ -4,30 +4,23 @@
             9,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": "1.23.1"
+                    "bcftools": 1.21
                 },
                 "GATK4_HAPLOTYPECALLER": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "MOSDEPTH": {
-                    "gzip": "1.14",
-                    "mosdepth": "0.3.14"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "VCFTOOLS_SUMMARY": {
-                    "vcftools": "0.1.17"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.17"
-                },
-                "VCFTOOLS_TSTV_QUAL": {
-                    "vcftools": "0.1.17"
+                    "vcftools": "0.1.16"
                 }
             },
             [
@@ -159,14 +152,14 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,24098c80b7a75e41cd68ef1f2154b7b0",
                 "mosdepth_perchrom.txt:md5,93a8fd4ad5c5a4fcdf9e67a07183c7cb",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,53338147cfd6cffd24eef5c07518fe4c",
+                "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
-                "test.haplotypecaller.bcftools_stats.txt:md5,b9b8c3cb422534bdb7a45d884c121af8",
+                "test.haplotypecaller.bcftools_stats.txt:md5,1497941f37b14c39a24490a50a97e365",
                 "test.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "test.recal.mosdepth.summary.txt:md5,4f0d231060cbde4efdd673863bd2fb59",
                 "test.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
-                "test.recal.per-base.bed.gz.csi:md5,524a822fc4863b450fda9e0f99ccdf04",
+                "test.recal.per-base.bed.gz.csi:md5,9e649ac749ff6c6073bef5ab63e8aaa4",
                 "test.haplotypecaller.FILTER.summary:md5,87a84b5f8ac3d3cbeeef7d60afcdbfe7",
                 "test.haplotypecaller.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
@@ -177,51 +170,44 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:27:52.965412156",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-30T22:57:09.952875456"
     },
     "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20 --skip_tools haplotypecaller_filter": {
         "content": [
             14,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": "1.23.1"
+                    "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_HAPLOTYPECALLER": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "MERGE_HAPLOTYPECALLER": {
                     "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "gzip": "1.14",
-                    "mosdepth": "0.3.14"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "VCFTOOLS_SUMMARY": {
-                    "vcftools": "0.1.17"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.17"
-                },
-                "VCFTOOLS_TSTV_QUAL": {
-                    "vcftools": "0.1.17"
+                    "vcftools": "0.1.16"
                 }
             },
             [
@@ -353,17 +339,17 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,cff5ad3df703fd30cd655ef53caf75fb",
                 "mosdepth_perchrom.txt:md5,6e1f4a26793f1912cd83cee7259635c6",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,53338147cfd6cffd24eef5c07518fe4c",
+                "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
-                "test.haplotypecaller.bcftools_stats.txt:md5,b9b8c3cb422534bdb7a45d884c121af8",
+                "test.haplotypecaller.bcftools_stats.txt:md5,1497941f37b14c39a24490a50a97e365",
                 "test.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "test.recal.mosdepth.region.dist.txt:md5,3a2030e5e8af7bc12720c3a5592bf921",
                 "test.recal.mosdepth.summary.txt:md5,615c5c5019d88045a9ff5bbe6e63d270",
                 "test.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
-                "test.recal.per-base.bed.gz.csi:md5,524a822fc4863b450fda9e0f99ccdf04",
+                "test.recal.per-base.bed.gz.csi:md5,9e649ac749ff6c6073bef5ab63e8aaa4",
                 "test.recal.regions.bed.gz:md5,0c8215fbea7b0bf7aba9d1781575f905",
-                "test.recal.regions.bed.gz.csi:md5,8f139abca5ac58eaf522bd96a46cff1b",
+                "test.recal.regions.bed.gz.csi:md5,5c00a1d457c387d6e71848a6d897e309",
                 "test.haplotypecaller.FILTER.summary:md5,87a84b5f8ac3d3cbeeef7d60afcdbfe7",
                 "test.haplotypecaller.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
@@ -374,47 +360,40 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:29:55.289787759",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-30T22:56:07.158030738"
     },
     "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20 --no_intervals": {
         "content": [
             11,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": "1.23.1"
+                    "bcftools": 1.21
                 },
                 "CNNSCOREVARIANTS": {
                     "gatk4": "4.5.0.0"
                 },
                 "FILTERVARIANTTRANCHES": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_HAPLOTYPECALLER": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "MOSDEPTH": {
-                    "gzip": "1.14",
-                    "mosdepth": "0.3.14"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "VCFTOOLS_SUMMARY": {
-                    "vcftools": "0.1.17"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.17"
-                },
-                "VCFTOOLS_TSTV_QUAL": {
-                    "vcftools": "0.1.17"
+                    "vcftools": "0.1.16"
                 }
             },
             [
@@ -548,14 +527,14 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,24098c80b7a75e41cd68ef1f2154b7b0",
                 "mosdepth_perchrom.txt:md5,93a8fd4ad5c5a4fcdf9e67a07183c7cb",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,53338147cfd6cffd24eef5c07518fe4c",
+                "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
-                "test.haplotypecaller.filtered.bcftools_stats.txt:md5,5debbaa917411dda07c7972272a95f38",
+                "test.haplotypecaller.filtered.bcftools_stats.txt:md5,bfdbcc0c0513be1e223434eefee3b90b",
                 "test.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "test.recal.mosdepth.summary.txt:md5,4f0d231060cbde4efdd673863bd2fb59",
                 "test.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
-                "test.recal.per-base.bed.gz.csi:md5,524a822fc4863b450fda9e0f99ccdf04",
+                "test.recal.per-base.bed.gz.csi:md5,9e649ac749ff6c6073bef5ab63e8aaa4",
                 "test.haplotypecaller.filtered.FILTER.summary:md5,4e2ceea7f3ff998004691fd71192d9ee",
                 "test.haplotypecaller.filtered.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
@@ -567,18 +546,18 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:32:53.636129324",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-30T22:54:55.763188536"
     },
     "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20": {
         "content": [
             16,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": "1.23.1"
+                    "bcftools": 1.21
                 },
                 "CNNSCOREVARIANTS": {
                     "gatk4": "4.5.0.0"
@@ -587,37 +566,30 @@
                     "gawk": "5.3.0"
                 },
                 "FILTERVARIANTTRANCHES": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_HAPLOTYPECALLER": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "MERGE_HAPLOTYPECALLER": {
                     "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "gzip": "1.14",
-                    "mosdepth": "0.3.14"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "VCFTOOLS_SUMMARY": {
-                    "vcftools": "0.1.17"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.17"
-                },
-                "VCFTOOLS_TSTV_QUAL": {
-                    "vcftools": "0.1.17"
+                    "vcftools": "0.1.16"
                 }
             },
             [
@@ -751,17 +723,17 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,cff5ad3df703fd30cd655ef53caf75fb",
                 "mosdepth_perchrom.txt:md5,6e1f4a26793f1912cd83cee7259635c6",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,53338147cfd6cffd24eef5c07518fe4c",
+                "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
-                "test.haplotypecaller.filtered.bcftools_stats.txt:md5,5debbaa917411dda07c7972272a95f38",
+                "test.haplotypecaller.filtered.bcftools_stats.txt:md5,bfdbcc0c0513be1e223434eefee3b90b",
                 "test.recal.mosdepth.global.dist.txt:md5,e82e90c7d508a135b5a8a7cd6933452e",
                 "test.recal.mosdepth.region.dist.txt:md5,3a2030e5e8af7bc12720c3a5592bf921",
                 "test.recal.mosdepth.summary.txt:md5,615c5c5019d88045a9ff5bbe6e63d270",
                 "test.recal.per-base.bed.gz:md5,da6db0fb375a3053a89db8c935eebbaa",
-                "test.recal.per-base.bed.gz.csi:md5,524a822fc4863b450fda9e0f99ccdf04",
+                "test.recal.per-base.bed.gz.csi:md5,9e649ac749ff6c6073bef5ab63e8aaa4",
                 "test.recal.regions.bed.gz:md5,0c8215fbea7b0bf7aba9d1781575f905",
-                "test.recal.regions.bed.gz.csi:md5,8f139abca5ac58eaf522bd96a46cff1b",
+                "test.recal.regions.bed.gz.csi:md5,5c00a1d457c387d6e71848a6d897e309",
                 "test.haplotypecaller.filtered.FILTER.summary:md5,4e2ceea7f3ff998004691fd71192d9ee",
                 "test.haplotypecaller.filtered.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
@@ -773,10 +745,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:32:48.438182421",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-30T22:53:34.886097542"
     }
 }

@@ -3,7 +3,7 @@ process MUSE_SUMP {
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
         ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/83/83d1d3caa1b6ce54ce999e0061d7fe8acbe6788d5c7970574eff330ea819fb85/data'
         : 'community.wave.seqera.io/library/htslib_muse:9a4b9cb78c211f1e'}"
 
@@ -25,10 +25,9 @@ process MUSE_SUMP {
     // args for bgzip
     def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    // MuSE complains if the timestamp of the dbsnp VCF index is older than the timestamp of the VCF itself
-    // we check whether that is the case and if its not then we run touch
+    // MuSE complains if the timestamp of the dbsnp VCF index is older than the timestamp of the VCF itself, so we need to touch it here
     """
-    [ "${ref_vcf_tbi}" -ot "${ref_vcf}" ] && touch "${ref_vcf_tbi}"
+    touch ${ref_vcf_tbi}
 
     MuSE \\
         sump \\

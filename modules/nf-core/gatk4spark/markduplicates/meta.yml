@@ -28,25 +28,21 @@ input:
         type: file
         description: Sorted BAM file
         pattern: "*.{bam}"
-        ontologies: []
-  - fasta:
-      type: file
-      description: The reference fasta file
-      pattern: "*.fasta"
-      ontologies: []
-  - fasta_fai:
-      type: file
-      description: Index of reference fasta file
-      pattern: "*.fai"
-      ontologies: []
-  - dict:
-      type: file
-      description: GATK sequence dictionary
-      pattern: "*.dict"
-      ontologies: []
+  - - fasta:
+        type: file
+        description: The reference fasta file
+        pattern: "*.fasta"
+  - - fasta_fai:
+        type: file
+        description: Index of reference fasta file
+        pattern: "*.fai"
+  - - dict:
+        type: file
+        description: GATK sequence dictionary
+        pattern: "*.dict"
 output:
-  output:
-    - - meta:
+  - output:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -55,9 +51,8 @@ output:
           type: file
           description: Marked duplicates BAM/CRAM file
           pattern: "*.{bam,cram}"
-          ontologies: []
-  bam_index:
-    - - meta:
+  - bam_index:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -66,9 +61,8 @@ output:
           type: file
           description: Optional BAM index file
           pattern: "*.bai"
-          ontologies: []
-  metrics:
-    - - meta:
+  - metrics:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -77,28 +71,11 @@ output:
           type: file
           description: Metrics file
           pattern: "*.metrics"
-          ontologies: []
-  versions_gatk4:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - gatk4:
-          type: string
-          description: The name of the tool
-      - gatk --version | sed -n '/GATK.*v/s/.*v//p':
-          type: eval
-          description: The expression to obtain the version of the tool
-topics:
-  versions:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - gatk4:
-          type: string
-          description: The name of the tool
-      - gatk --version | sed -n '/GATK.*v/s/.*v//p':
-          type: eval
-          description: The expression to obtain the version of the tool
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@ajodeh-juma"
   - "@FriederikeHanssen"

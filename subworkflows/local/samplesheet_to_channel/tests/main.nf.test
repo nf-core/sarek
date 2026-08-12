@@ -11,7 +11,7 @@ nextflow_workflow {
             workflow {
                 """
                 // define inputs of the workflow here. Example:
-                input[0] = channel.of([
+                input[0] = Channel.of([
                     ['patient':'test', 'sample':'test',
                     'sex':'XX', 'status':0, 'lane':'test_L1'],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),

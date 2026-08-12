@@ -35,6 +35,8 @@ workflow PIPELINE_INITIALISATION {
 
     main:
 
+    versions = channel.empty()
+
     // Print version and exit if required and dump pipeline parameters to JSON file
     UTILS_NEXTFLOW_PIPELINE(
         version,
@@ -81,7 +83,7 @@ workflow PIPELINE_INITIALISATION {
         before_text,
         after_text,
         command,
-        false
+        null,
     )
 
     // Check config provided to the pipeline
@@ -158,6 +160,7 @@ workflow PIPELINE_INITIALISATION {
         params.ascat_loci_rt,
         params.bcftools_annotations,
         params.bcftools_annotations_tbi,
+        params.bcftools_columns,
         params.bcftools_header_lines,
         params.build_only_index,
         params.dbsnp,
@@ -188,6 +191,7 @@ workflow PIPELINE_INITIALISATION {
 
     emit:
     samplesheet = SAMPLESHEET_TO_CHANNEL.out.input_sample
+    versions
 }
 
 /*
@@ -227,7 +231,7 @@ workflow PIPELINE_COMPLETION {
     }
 
     workflow.onError {
-        log.error("Pipeline failed. Please refer to troubleshooting docs for common issues: https://nf-co.re/docs/running/troubleshooting")
+        log.error("Pipeline failed. Please refer to troubleshooting docs: https://nf-co.re/docs/usage/troubleshooting")
     }
 }
 

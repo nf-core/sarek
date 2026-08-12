@@ -3,20 +3,21 @@ process GATK4_APPLYBQSR {
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/ce/ced519873646379e287bc28738bdf88e975edd39a92e7bc6a34bccd37153d9d0/data'
-        : 'community.wave.seqera.io/library/gatk4_gcnvkernel:edb12e4f0bf02cd3'}"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b2/b28daf5d9bb2f0d129dcad1b7410e0dd8a9b087aaf3ec7ced929b1f57624ad98/data'
+        : 'community.wave.seqera.io/library/gatk4_gcnvkernel:e48d414933d188cd'}"
 
     input:
     tuple val(meta), path(input), path(input_index), path(bqsr_table), path(intervals)
-    tuple val(meta2), path(fasta), path(fai), path(dict)
-    val(output_suffix)
+    path fasta
+    path fai
+    path dict
 
     output:
-    tuple val(meta), path("${prefix}.bam"), emit: bam, optional: true
-    tuple val(meta), path("${prefix}*bai"), emit: bai, optional: true
+    tuple val(meta), path("${prefix}.bam"),  emit: bam,  optional: true
+    tuple val(meta), path("${prefix}*bai"),  emit: bai,  optional: true
     tuple val(meta), path("${prefix}.cram"), emit: cram, optional: true
-    tuple val("${task.process}"), val('gatk4'), eval("gatk --version | sed -n '/GATK.*v/s/.*v//p'"), topic: versions, emit: versions_gatk4
+    path "versions.yml",                     emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -25,8 +26,7 @@ process GATK4_APPLYBQSR {
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
     // suffix can only be bam or cram, cram being the sensible default
-    def suffix = output_suffix == "bam" ? "bam" : "cram"
-
+    def suffix = task.ext.suffix && task.ext.suffix == "bam" ? "bam" : "cram"
     def interval_command = intervals ? "--intervals ${intervals}" : ""
 
     def avail_mem = 3072
@@ -46,12 +46,16 @@ process GATK4_APPLYBQSR {
         ${interval_command} \\
         --tmp-dir . \\
         ${args}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
+    END_VERSIONS
     """
 
     stub:
     prefix = task.ext.prefix ?: "${meta.id}"
-    def suffix = output_suffix == "bam" ? "bam" : "cram"
-
+    def suffix = task.ext.suffix ?: "cram"
     """
     touch ${prefix}.${suffix}
     if [[ ${suffix} == cram ]]; then
@@ -59,5 +63,10 @@ process GATK4_APPLYBQSR {
     else
         touch ${prefix}.bai
     fi
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
+    END_VERSIONS
     """
 }

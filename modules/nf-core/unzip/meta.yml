@@ -7,13 +7,12 @@ keywords:
   - archiving
 tools:
   - unzip:
-      description: p7zip is a quick port of 7z.exe and 7za.exe (command line
-        version of 7zip, see www.7-zip.org) for Unix.
+      description: p7zip is a quick port of 7z.exe and 7za.exe (command line version
+        of 7zip, see www.7-zip.org) for Unix.
       homepage: https://sourceforge.net/projects/p7zip/
       documentation: https://sourceforge.net/projects/p7zip/
       tool_dev_url: https://sourceforge.net/projects/p7zip"
-      licence:
-        - "LGPL-2.1-or-later"
+      licence: ["LGPL-2.1-or-later"]
       identifier: ""
 input:
   - - meta:
@@ -26,7 +25,7 @@ input:
         description: ZIP file
         pattern: "*.zip"
         ontologies:
-          - edam: http://edamontology.org/format_3987
+          - edam: http://edamontology.org/format_3987 # ZIP format
 output:
   unzipped_archive:
     - - meta:
@@ -38,27 +37,13 @@ output:
           type: directory
           description: Directory contents of the unzipped archive
           pattern: "${archive.baseName}/"
-  versions_7za:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - 7za:
-          type: string
-          description: The name of the tool
-      - 7za 2>&1 | sed -n '2s/^.* \([0-9.]*\) .*/\1/p':
-          type: eval
-          description: The expression to obtain the version of the tool
-topics:
   versions:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - 7za:
-          type: string
-          description: The name of the tool
-      - 7za 2>&1 | sed -n '2s/^.* \([0-9.]*\) .*/\1/p':
-          type: eval
-          description: The expression to obtain the version of the tool
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@jfy133"
 maintainers:

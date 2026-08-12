@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::vcftools=0.1.17
+  - bioconda::vcftools=0.1.16

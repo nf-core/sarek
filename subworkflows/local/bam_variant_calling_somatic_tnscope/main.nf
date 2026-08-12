@@ -19,6 +19,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_TNSCOPE {
     intervals                 // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
+    versions = Channel.empty()
+
     // Combine input and intervals for spread and gather strategy
     input_intervals = input.combine(intervals)
         // Move num_intervals to meta map and reorganize channel for TNSCOPE module
@@ -36,16 +38,16 @@ workflow BAM_VARIANT_CALLING_SOMATIC_TNSCOPE {
         [[],[]] // cosmic_tbi
     )
     // Figuring out if there is one or more vcf(s) from the same sample
-    vcf_branch = SENTIEON_TNSCOPE.out.vcf.branch{ meta, _vcf ->
+    vcf_branch = SENTIEON_TNSCOPE.out.vcf.branch{
         // Use meta.num_intervals to asses number of intervals
-        intervals:    meta.num_intervals > 1
-        no_intervals: meta.num_intervals <= 1
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
     }
     // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_branch = SENTIEON_TNSCOPE.out.index.branch{ meta, _tbi ->
+    tbi_branch = SENTIEON_TNSCOPE.out.index.branch{
         // Use meta.num_intervals to asses number of intervals
-        intervals:    meta.num_intervals > 1
-        no_intervals: meta.num_intervals <= 1
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
     }
 
     vcf_to_merge = vcf_branch.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ] }.groupTuple()
@@ -55,15 +57,16 @@ workflow BAM_VARIANT_CALLING_SOMATIC_TNSCOPE {
 
     // Mix intervals and no_intervals channels together
     // Remove unnecessary metadata and add variantcaller
-    vcf   = channel.empty()
+    vcf   = Channel.empty()
         .mix(MERGE_TNSCOPE.out.vcf, vcf_branch.no_intervals)
         .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'sentieon_tnscope' ], vcf ] }
 
-    index = channel.empty()
+    index = Channel.empty()
         .mix(MERGE_TNSCOPE.out.tbi, tbi_branch.no_intervals)
         .map{ meta, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'sentieon_tnscope' ], tbi ] }
 
     emit:
     vcf      // channel: [ meta, vcf ]
     index    // channel: [ meta, index ]
+    versions // channel: [ versions.yml ]
 }

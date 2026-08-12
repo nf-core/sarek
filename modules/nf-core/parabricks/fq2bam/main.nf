@@ -5,7 +5,7 @@ process PARABRICKS_FQ2BAM {
     // needed by the module to run on a cluster because we need to copy the fasta reference, see https://github.com/nf-core/modules/issues/9230
     stageInMode 'copy'
 
-    container "nvcr.io/nvidia/clara/clara-parabricks:4.7.1-1"
+    container "nvcr.io/nvidia/clara/clara-parabricks:4.6.0-1"
 
     input:
     tuple val(meta), path(reads)

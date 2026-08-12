@@ -3,6 +3,7 @@
 channels:
   - conda-forge
   - bioconda
+
 dependencies:
-  - bioconda::bcftools=1.23=*
-  - bioconda::svdb=2.8.4
+  - bcftools=1.21
+  - svdb=2.8.2

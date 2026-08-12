@@ -25,17 +25,14 @@ input:
         type: file
         description: Tumor sample sorted BAM file
         pattern: "*.{bam}"
-        ontologies: []
     - bai:
         type: file
         description: BAM index file
         pattern: "*.{bam.bai}"
-        ontologies: []
     - intervals:
         type: file
         description: BED file containing target regions for variant calling
         pattern: "*.{bed}"
-        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -45,7 +42,6 @@ input:
         type: file
         description: Reference genome FASTA file
         pattern: "*.{fasta}"
-        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -55,10 +51,9 @@ input:
         type: file
         description: Reference genome FASTA index file
         pattern: "*.{fai}"
-        ontologies: []
 output:
-  vcf:
-    - - meta:
+  - vcf:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -67,9 +62,8 @@ output:
           type: file
           description: Predicted variants file
           pattern: "*.{vcf}"
-          ontologies: []
-  tbi:
-    - - meta:
+  - tbi:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -78,28 +72,11 @@ output:
           type: file
           description: Index of vcf file
           pattern: "*.{vcf.gz.tbi}"
-          ontologies: []
-  versions_lofreq:
-    - - ${task.process}:
-          type: string
-          description: Process which generated the version
-      - lofreq:
-          type: string
-          description: Tool name
-      - "lofreq version | sed -n '1s/^.* //p'":
-          type: eval
-          description: The expression to obtain the version of the tool
-topics:
-  versions:
-    - - ${task.process}:
-          type: string
-          description: Process which generated the version
-      - lofreq:
-          type: string
-          description: Tool name
-      - "lofreq version | sed -n '1s/^.* //p'":
-          type: eval
-          description: The expression to obtain the version of the tool
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@kaurravneet4123"
   - "@bjohnnyd"

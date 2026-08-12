@@ -23,10 +23,9 @@ input:
     - intervals:
         type: file
         description: IntervalList file
-        ontologies: []
 output:
-  bed:
-    - - meta:
+  - bed:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -37,27 +36,11 @@ output:
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
           pattern: "${prefix}.bed"
-  versions_gatk4:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - gatk4:
-          type: string
-          description: The name of the tool
-      - gatk --version | sed -n '/GATK.*v/s/.*v//p':
-          type: eval
-          description: The expression to obtain the version of the tool
-topics:
-  versions:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - gatk4:
-          type: string
-          description: The name of the tool
-      - gatk --version | sed -n '/GATK.*v/s/.*v//p':
-          type: eval
-          description: The expression to obtain the version of the tool
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@FriederikeHanssen"
 maintainers:

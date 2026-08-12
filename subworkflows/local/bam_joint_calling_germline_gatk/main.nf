@@ -31,6 +31,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     known_snps_vqsr
 
     main:
+    versions = Channel.empty()
 
     // Map input for GenomicsDBImport
     // Rename based on num_intervals, group all samples by their interval_name/interval_file and restructure for channel
@@ -51,7 +52,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     // Joint genotyping performed using GenotypeGVCFs
     // Sort vcfs called by interval within each VCF
 
-    GATK4_GENOTYPEGVCFS(genotype_input, fasta, fai, dict, dbsnp.map{ dbsnp_ -> [ [:], dbsnp_ ] }, dbsnp_tbi.map{ dbsnp_tbi_ -> [ [:], dbsnp_tbi_ ] })
+    GATK4_GENOTYPEGVCFS(genotype_input, fasta, fai, dict, dbsnp.map{ it -> [ [:], it ] }, dbsnp_tbi.map{ it -> [ [:], it ] })
 
     BCFTOOLS_SORT(GATK4_GENOTYPEGVCFS.out.vcf)
     gvcf_to_merge = BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [ meta.subMap('num_intervals') + [ id:'joint_variant_calling', patient:'all_samples', variantcaller:'haplotypecaller' ], vcf ]}.groupTuple()
@@ -146,9 +147,14 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"haplotypecaller"], tbi_out]
     }
 
+    versions = versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)
+    versions = versions.mix(GATK4_GENOTYPEGVCFS.out.versions)
+    versions = versions.mix(VARIANTRECALIBRATOR_SNP.out.versions)
+    versions = versions.mix(GATK4_APPLYVQSR_SNP.out.versions)
 
     emit:
     genotype_index  // channel: [ val(meta), [ tbi ] ]
     genotype_vcf    // channel: [ val(meta), [ vcf ] ]
 
+    versions        // channel: [ versions.yml ]
 }

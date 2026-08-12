@@ -22,6 +22,7 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     groupreadsbyumi_strategy  // string:  [mandatory] grouping strategy - default: "Adjacency"
 
     main:
+    ch_versions = channel.empty()
 
     // params.umi_read_structure is passed out as ext.args
     // FASTQ reads are converted into a tagged unmapped BAM file (uBAM)
@@ -56,7 +57,7 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
         }
 
     // Merge across runs/lanes for the same sample
-    MERGE_CONSENSUS(bams_to_merge.multiple.map { meta, bams -> [ meta, bams, [] ] }, [[], [], [], []])
+    MERGE_CONSENSUS(bams_to_merge.multiple, [[], []], [[], []])
 
     bams_all = MERGE_CONSENSUS.out.bam.mix(bams_to_merge.single)
 
@@ -71,8 +72,16 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     call_min_baseq = 10
     CALLUMICONSENSUS(GROUPREADSBYUMI.out.bam, call_min_reads, call_min_baseq)
 
+    ch_versions = ch_versions.mix(BAM2FASTQ.out.versions)
+    ch_versions = ch_versions.mix(ALIGN_UMI.out.versions)
+    ch_versions = ch_versions.mix(CALLUMICONSENSUS.out.versions)
+    ch_versions = ch_versions.mix(FASTQTOBAM.out.versions)
+    ch_versions = ch_versions.mix(GROUPREADSBYUMI.out.versions)
+    ch_versions = ch_versions.mix(MERGE_CONSENSUS.out.versions)
+
     emit:
     umibam         = FASTQTOBAM.out.bam             // channel: [ val(meta), [ bam ] ]
     groupbam       = GROUPREADSBYUMI.out.bam        // channel: [ val(meta), [ bam ] ]
     consensusbam   = CALLUMICONSENSUS.out.bam       // channel: [ val(meta), [ bam ] ]
+    versions       = ch_versions                    // channel: [ versions.yml ]
 }

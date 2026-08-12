@@ -4,33 +4,32 @@
             29,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": "1.23.1"
+                    "bcftools": 1.21
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.19-r1273"
+                    "bwa": "0.7.18-r1243-dirty"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.19-r1273",
-                    "samtools": "1.22.1"
+                    "bwa": "0.7.18-r1243-dirty",
+                    "samtools": 1.21
                 },
                 "CNVKIT_ANTITARGET": {
-                    "cnvkit": "0.9.12"
+                    "cnvkit": "0.9.11"
                 },
                 "CNVKIT_BATCH": {
-                    "cnvkit": "0.9.12",
-                    "samtools": "1.21"
+                    "cnvkit": "0.9.10"
                 },
                 "CNVKIT_CALL": {
-                    "cnvkit": "0.9.12"
+                    "cnvkit": "0.9.10"
                 },
                 "CNVKIT_EXPORT": {
-                    "cnvkit": "0.9.12"
+                    "cnvkit": "0.9.10"
                 },
                 "CNVKIT_GENEMETRICS": {
-                    "cnvkit": "0.9.12"
+                    "cnvkit": "0.9.10"
                 },
                 "CNVKIT_REFERENCE": {
-                    "cnvkit": "0.9.12"
+                    "cnvkit": "0.9.11"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -39,47 +38,40 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.2.0",
-                    "samtools": "1.21"
+                    "gatk4": "4.6.1.0",
+                    "samtools": 1.21
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "MOSDEPTH": {
-                    "gzip": "1.14",
-                    "mosdepth": "0.3.14"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "VCFTOOLS_SUMMARY": {
-                    "vcftools": "0.1.17"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.17"
-                },
-                "VCFTOOLS_TSTV_QUAL": {
-                    "vcftools": "0.1.17"
+                    "vcftools": "0.1.16"
                 }
             },
             [
@@ -332,20 +324,20 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,92dc10e61df31bf4286b16582bed488f",
+                "samtools-stats-dp.txt:md5,ae7954084b2cd708c5e7369606bf4208",
                 "samtools_alignment_plot.txt:md5,438e719bf574a46726dbd2e0f1442e42",
                 "samtools_insert_size.txt:md5,73b933a27800b86a4012c2d525870796",
-                "test.strelka.variants.bcftools_stats.txt:md5,6efa6598982c21c544d1833dca632b62",
+                "test.strelka.variants.bcftools_stats.txt:md5,2613827870dd789fe602a8a3b739b7f2",
                 "test.md.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.md.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.md.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
                 "test.md.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
-                "test.md.regions.bed.gz.csi:md5,1f17d398be6b9c100cb0218fa226a623",
+                "test.md.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
                 "test.recal.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.recal.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.recal.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
                 "test.recal.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
-                "test.recal.regions.bed.gz.csi:md5,1f17d398be6b9c100cb0218fa226a623",
+                "test.recal.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
                 "test.strelka.variants.FILTER.summary:md5,dd87f507da7de20d5318841af312493b",
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
                 "genome.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -374,42 +366,42 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-28T14:39:40.512178305",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-03-13T09:13:12.307067"
     },
     "-profile test --save_output_as_bam skip QC/recal/md": {
         "content": [
             9,
             {
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.19-r1273"
+                    "bwa": "0.7.18-r1243-dirty"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.19-r1273",
-                    "samtools": "1.22.1"
+                    "bwa": "0.7.18-r1243-dirty",
+                    "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "MERGE_BAM": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
@@ -436,11 +428,11 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-28T14:39:25.431547577",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-03-13T09:02:14.635985"
     },
     "-profile test --save_output_as_bam --tools sentieon_dedup": {
         "content": [
@@ -450,18 +442,18 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "SENTIEON_DEDUP": {
                     "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
@@ -491,10 +483,10 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-28T10:59:38.19303281",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-06-09T14:40:13.000000"
     }
 }

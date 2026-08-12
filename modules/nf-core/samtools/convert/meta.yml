@@ -26,12 +26,10 @@ input:
         type: file
         description: BAM/CRAM file
         pattern: "*.{bam,cram}"
-        ontologies: []
     - index:
         type: file
         description: BAM/CRAM index file
         pattern: "*.{bai,crai}"
-        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -41,15 +39,18 @@ input:
         type: file
         description: Reference file to create the CRAM file
         pattern: "*.{fasta,fa}"
-        ontologies: []
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
     - fai:
         type: file
         description: Reference index file to create the CRAM file
         pattern: "*.{fai}"
-        ontologies: []
 output:
-  bam:
-    - - meta:
+  - bam:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -58,9 +59,8 @@ output:
           type: file
           description: filtered/converted BAM file
           pattern: "*{.bam}"
-          ontologies: []
-  cram:
-    - - meta:
+  - cram:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -69,9 +69,8 @@ output:
           type: file
           description: filtered/converted CRAM file
           pattern: "*{cram}"
-          ontologies: []
-  bai:
-    - - meta:
+  - bai:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -80,9 +79,8 @@ output:
           type: file
           description: filtered/converted BAM index
           pattern: "*{.bai}"
-          ontologies: []
-  crai:
-    - - meta:
+  - crai:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -91,28 +89,11 @@ output:
           type: file
           description: filtered/converted CRAM index
           pattern: "*{.crai}"
-          ontologies: []
-  versions_samtools:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - samtools:
-          type: string
-          description: The name of the tool
-      - samtools version | sed '1!d;s/.* //':
-          type: eval
-          description: The expression to obtain the version of the tool
-topics:
-  versions:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - samtools:
-          type: string
-          description: The name of the tool
-      - samtools version | sed '1!d;s/.* //':
-          type: eval
-          description: The expression to obtain the version of the tool
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@FriederikeHanssen"
   - "@maxulysse"

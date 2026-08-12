@@ -1,21 +1,21 @@
 process GATK4_ESTIMATELIBRARYCOMPLEXITY {
-    tag "${meta.id}"
+    tag "$meta.id"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/ce/ced519873646379e287bc28738bdf88e975edd39a92e7bc6a34bccd37153d9d0/data'
-        : 'community.wave.seqera.io/library/gatk4_gcnvkernel:edb12e4f0bf02cd3'}"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b2/b28daf5d9bb2f0d129dcad1b7410e0dd8a9b087aaf3ec7ced929b1f57624ad98/data':
+        'community.wave.seqera.io/library/gatk4_gcnvkernel:e48d414933d188cd' }"
 
     input:
     tuple val(meta), path(input)
-    path fasta
-    path fai
-    path dict
+    path  fasta
+    path  fai
+    path  dict
 
     output:
     tuple val(meta), path('*.metrics'), emit: metrics
-    tuple val("${task.process}"), val('gatk4'), eval("gatk --version | sed -n '/GATK.*v/s/.*v//p'"), topic: versions, emit: versions_gatk4
+    path "versions.yml"               , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -23,24 +23,28 @@ process GATK4_ESTIMATELIBRARYCOMPLEXITY {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def input_list = input.collect { bam -> "--INPUT ${bam}" }.join(" ")
+    def input_list = input.collect(){"--INPUT $it"}.join(" ")
     def reference = fasta ? "--REFERENCE_SEQUENCE ${fasta}" : ""
 
     def avail_mem = 3072
     if (!task.memory) {
-        log.info('[GATK EstimateLibraryComplexity] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.')
-    }
-    else {
-        avail_mem = (task.memory.mega * 0.8).intValue()
+        log.info '[GATK EstimateLibraryComplexity] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
+    } else {
+        avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
     gatk --java-options "-Xmx${avail_mem}M -XX:-UsePerfData" \\
         EstimateLibraryComplexity \\
-        ${input_list} \\
+        $input_list \\
         --OUTPUT ${prefix}.metrics \\
-        ${reference} \\
+        $reference \\
         --TMP_DIR . \\
-        ${args}
+        $args
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
+    END_VERSIONS
     """
 
     stub:
@@ -48,5 +52,10 @@ process GATK4_ESTIMATELIBRARYCOMPLEXITY {
 
     """
     touch ${prefix}.metrics
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
+    END_VERSIONS
     """
 }

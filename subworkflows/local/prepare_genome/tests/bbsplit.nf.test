@@ -25,27 +25,27 @@ nextflow_workflow {
                 input[3]  = null                                                                                                                                       // ascat_loci_rt
                 input[4]  = "${projectDir}/tests/csv/bbsplit_fasta_list.csv"                                                                                           // bbsplit_fasta_list
                 input[5]  = null                                                                                                                                       // bbsplit_index
-                input[6]  = channel.empty()                                                                                                                            // bcftools_annotations
-                input[7]  = channel.empty()                                                                                                                            // bcftools_annotations_tbi
+                input[6]  = Channel.empty()                                                                                                                            // bcftools_annotations
+                input[7]  = Channel.empty()                                                                                                                            // bcftools_annotations_tbi
                 input[8]  = null                                                                                                                                       // bwa
                 input[9]  = null                                                                                                                                       // bwamem2
                 input[10] = null                                                                                                                                       // chr_dir
-                input[11] = channel.empty()                                                                                                                            // dbsnp
-                input[12] = channel.empty()                                                                                                                            // dbsnp_tbi
+                input[11] = Channel.empty()                                                                                                                            // dbsnp
+                input[12] = Channel.empty()                                                                                                                            // dbsnp_tbi
                 input[13] = null                                                                                                                                       // dict
                 input[14] = null                                                                                                                                       // dragmap
-                input[15] = channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
+                input[15] = Channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
                 input[16] = null                                                                                                                                       // fasta_fai
-                input[17] = channel.empty()                                                                                                                            // germline_resource
-                input[18] = channel.empty()                                                                                                                            // germline_resource_tbi
-                input[19] = channel.empty()                                                                                                                            // known_indels
-                input[20] = channel.empty()                                                                                                                            // known_indels_tbi
-                input[21] = channel.empty()                                                                                                                            // known_snps
-                input[22] = channel.empty()                                                                                                                            // known_snps_tbi
+                input[17] = Channel.empty()                                                                                                                            // germline_resource
+                input[18] = Channel.empty()                                                                                                                            // germline_resource_tbi
+                input[19] = Channel.empty()                                                                                                                            // known_indels
+                input[20] = Channel.empty()                                                                                                                            // known_indels_tbi
+                input[21] = Channel.empty()                                                                                                                            // known_snps
+                input[22] = Channel.empty()                                                                                                                            // known_snps_tbi
                 input[23] = null                                                                                                                                       // msisensor2_models
                 input[24] = null                                                                                                                                       // msisensorpro_scan
-                input[25] = channel.empty()                                                                                                                            // pon
-                input[26] = channel.empty()                                                                                                                            // pon_tbi
+                input[25] = Channel.empty()                                                                                                                            // pon
+                input[26] = Channel.empty()                                                                                                                            // pon_tbi
                 input[27] = 'bwa-mem'                                                                                                                                  // aligner
                 input[28] = 'mapping'                                                                                                                                  // step
                 input[29] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
@@ -58,7 +58,8 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
-                    workflow.out.bbsplit_index
+                    workflow.out.bbsplit_index,
+                    workflow.out.versions
                 ).match() }
             )
         }
@@ -80,27 +81,27 @@ nextflow_workflow {
                 input[3]  = null                                                                                                                                       // ascat_loci_rt
                 input[4]  = null                                                                                                                                       // bbsplit_fasta_list
                 input[5]  = null                                                                                                                                       // bbsplit_index
-                input[6]  = channel.empty()                                                                                                                            // bcftools_annotations
-                input[7]  = channel.empty()                                                                                                                            // bcftools_annotations_tbi
+                input[6]  = Channel.empty()                                                                                                                            // bcftools_annotations
+                input[7]  = Channel.empty()                                                                                                                            // bcftools_annotations_tbi
                 input[8]  = null                                                                                                                                       // bwa
                 input[9]  = null                                                                                                                                       // bwamem2
                 input[10] = null                                                                                                                                       // chr_dir
-                input[11] = channel.empty()                                                                                                                            // dbsnp
-                input[12] = channel.empty()                                                                                                                            // dbsnp_tbi
+                input[11] = Channel.empty()                                                                                                                            // dbsnp
+                input[12] = Channel.empty()                                                                                                                            // dbsnp_tbi
                 input[13] = null                                                                                                                                       // dict
                 input[14] = null                                                                                                                                       // dragmap
-                input[15] = channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
+                input[15] = Channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
                 input[16] = null                                                                                                                                       // fasta_fai
-                input[17] = channel.empty()                                                                                                                            // germline_resource
-                input[18] = channel.empty()                                                                                                                            // germline_resource_tbi
-                input[19] = channel.empty()                                                                                                                            // known_indels
-                input[20] = channel.empty()                                                                                                                            // known_indels_tbi
-                input[21] = channel.empty()                                                                                                                            // known_snps
-                input[22] = channel.empty()                                                                                                                            // known_snps_tbi
+                input[17] = Channel.empty()                                                                                                                            // germline_resource
+                input[18] = Channel.empty()                                                                                                                            // germline_resource_tbi
+                input[19] = Channel.empty()                                                                                                                            // known_indels
+                input[20] = Channel.empty()                                                                                                                            // known_indels_tbi
+                input[21] = Channel.empty()                                                                                                                            // known_snps
+                input[22] = Channel.empty()                                                                                                                            // known_snps_tbi
                 input[23] = null                                                                                                                                       // msisensor2_models
                 input[24] = null                                                                                                                                       // msisensorpro_scan
-                input[25] = channel.empty()                                                                                                                            // pon
-                input[26] = channel.empty()                                                                                                                            // pon_tbi
+                input[25] = Channel.empty()                                                                                                                            // pon
+                input[26] = Channel.empty()                                                                                                                            // pon_tbi
                 input[27] = 'bwa-mem'                                                                                                                                  // aligner
                 input[28] = 'mapping'                                                                                                                                  // step
                 input[29] = "no_tools"                                                                                                                                 // tools - bbsplit not enabled
@@ -137,27 +138,27 @@ nextflow_workflow {
                 input[3]  = null                                                                                                                                       // ascat_loci_rt
                 input[4]  = null                                                                                                                                       // bbsplit_fasta_list
                 input[5]  = mock_index_dir.toString()                                                                                                                  // bbsplit_index (directory)
-                input[6]  = channel.empty()                                                                                                                            // bcftools_annotations
-                input[7]  = channel.empty()                                                                                                                            // bcftools_annotations_tbi
+                input[6]  = Channel.empty()                                                                                                                            // bcftools_annotations
+                input[7]  = Channel.empty()                                                                                                                            // bcftools_annotations_tbi
                 input[8]  = null                                                                                                                                       // bwa
                 input[9]  = null                                                                                                                                       // bwamem2
                 input[10] = null                                                                                                                                       // chr_dir
-                input[11] = channel.empty()                                                                                                                            // dbsnp
-                input[12] = channel.empty()                                                                                                                            // dbsnp_tbi
+                input[11] = Channel.empty()                                                                                                                            // dbsnp
+                input[12] = Channel.empty()                                                                                                                            // dbsnp_tbi
                 input[13] = null                                                                                                                                       // dict
                 input[14] = null                                                                                                                                       // dragmap
-                input[15] = channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
+                input[15] = Channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
                 input[16] = null                                                                                                                                       // fasta_fai
-                input[17] = channel.empty()                                                                                                                            // germline_resource
-                input[18] = channel.empty()                                                                                                                            // germline_resource_tbi
-                input[19] = channel.empty()                                                                                                                            // known_indels
-                input[20] = channel.empty()                                                                                                                            // known_indels_tbi
-                input[21] = channel.empty()                                                                                                                            // known_snps
-                input[22] = channel.empty()                                                                                                                            // known_snps_tbi
+                input[17] = Channel.empty()                                                                                                                            // germline_resource
+                input[18] = Channel.empty()                                                                                                                            // germline_resource_tbi
+                input[19] = Channel.empty()                                                                                                                            // known_indels
+                input[20] = Channel.empty()                                                                                                                            // known_indels_tbi
+                input[21] = Channel.empty()                                                                                                                            // known_snps
+                input[22] = Channel.empty()                                                                                                                            // known_snps_tbi
                 input[23] = null                                                                                                                                       // msisensor2_models
                 input[24] = null                                                                                                                                       // msisensorpro_scan
-                input[25] = channel.empty()                                                                                                                            // pon
-                input[26] = channel.empty()                                                                                                                            // pon_tbi
+                input[25] = Channel.empty()                                                                                                                            // pon
+                input[26] = Channel.empty()                                                                                                                            // pon_tbi
                 input[27] = 'bwa-mem'                                                                                                                                  // aligner
                 input[28] = 'mapping'                                                                                                                                  // step
                 input[29] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
@@ -170,7 +171,8 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.bbsplit_index
+                    workflow.out.bbsplit_index,
+                    workflow.out.versions
                 ).match() }
             )
         }
@@ -195,27 +197,27 @@ nextflow_workflow {
                 input[3]  = null                                                                                                                                       // ascat_loci_rt
                 input[4]  = "${projectDir}/tests/csv/bbsplit_fasta_list.csv"                                                                                           // bbsplit_fasta_list
                 input[5]  = null                                                                                                                                       // bbsplit_index
-                input[6]  = channel.empty()                                                                                                                            // bcftools_annotations
-                input[7]  = channel.empty()                                                                                                                            // bcftools_annotations_tbi
+                input[6]  = Channel.empty()                                                                                                                            // bcftools_annotations
+                input[7]  = Channel.empty()                                                                                                                            // bcftools_annotations_tbi
                 input[8]  = null                                                                                                                                       // bwa
                 input[9]  = null                                                                                                                                       // bwamem2
                 input[10] = null                                                                                                                                       // chr_dir
-                input[11] = channel.empty()                                                                                                                            // dbsnp
-                input[12] = channel.empty()                                                                                                                            // dbsnp_tbi
+                input[11] = Channel.empty()                                                                                                                            // dbsnp
+                input[12] = Channel.empty()                                                                                                                            // dbsnp_tbi
                 input[13] = null                                                                                                                                       // dict
                 input[14] = null                                                                                                                                       // dragmap
-                input[15] = channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
+                input[15] = Channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
                 input[16] = null                                                                                                                                       // fasta_fai
-                input[17] = channel.empty()                                                                                                                            // germline_resource
-                input[18] = channel.empty()                                                                                                                            // germline_resource_tbi
-                input[19] = channel.empty()                                                                                                                            // known_indels
-                input[20] = channel.empty()                                                                                                                            // known_indels_tbi
-                input[21] = channel.empty()                                                                                                                            // known_snps
-                input[22] = channel.empty()                                                                                                                            // known_snps_tbi
+                input[17] = Channel.empty()                                                                                                                            // germline_resource
+                input[18] = Channel.empty()                                                                                                                            // germline_resource_tbi
+                input[19] = Channel.empty()                                                                                                                            // known_indels
+                input[20] = Channel.empty()                                                                                                                            // known_indels_tbi
+                input[21] = Channel.empty()                                                                                                                            // known_snps
+                input[22] = Channel.empty()                                                                                                                            // known_snps_tbi
                 input[23] = null                                                                                                                                       // msisensor2_models
                 input[24] = null                                                                                                                                       // msisensorpro_scan
-                input[25] = channel.empty()                                                                                                                            // pon
-                input[26] = channel.empty()                                                                                                                            // pon_tbi
+                input[25] = Channel.empty()                                                                                                                            // pon
+                input[26] = Channel.empty()                                                                                                                            // pon_tbi
                 input[27] = 'bwa-mem'                                                                                                                                  // aligner
                 input[28] = 'mapping'                                                                                                                                  // step
                 input[29] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
@@ -228,7 +230,8 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.bbsplit_index
+                    workflow.out.bbsplit_index,
+                    workflow.out.versions
                 ).match() }
             )
         }
@@ -256,27 +259,27 @@ nextflow_workflow {
                 input[3]  = null                                                                                                                                       // ascat_loci_rt
                 input[4]  = null                                                                                                                                       // bbsplit_fasta_list
                 input[5]  = dummy_tar.toString()                                                                                                                       // bbsplit_index (tar.gz file)
-                input[6]  = channel.empty()                                                                                                                            // bcftools_annotations
-                input[7]  = channel.empty()                                                                                                                            // bcftools_annotations_tbi
+                input[6]  = Channel.empty()                                                                                                                            // bcftools_annotations
+                input[7]  = Channel.empty()                                                                                                                            // bcftools_annotations_tbi
                 input[8]  = null                                                                                                                                       // bwa
                 input[9]  = null                                                                                                                                       // bwamem2
                 input[10] = null                                                                                                                                       // chr_dir
-                input[11] = channel.empty()                                                                                                                            // dbsnp
-                input[12] = channel.empty()                                                                                                                            // dbsnp_tbi
+                input[11] = Channel.empty()                                                                                                                            // dbsnp
+                input[12] = Channel.empty()                                                                                                                            // dbsnp_tbi
                 input[13] = null                                                                                                                                       // dict
                 input[14] = null                                                                                                                                       // dragmap
-                input[15] = channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
+                input[15] = Channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
                 input[16] = null                                                                                                                                       // fasta_fai
-                input[17] = channel.empty()                                                                                                                            // germline_resource
-                input[18] = channel.empty()                                                                                                                            // germline_resource_tbi
-                input[19] = channel.empty()                                                                                                                            // known_indels
-                input[20] = channel.empty()                                                                                                                            // known_indels_tbi
-                input[21] = channel.empty()                                                                                                                            // known_snps
-                input[22] = channel.empty()                                                                                                                            // known_snps_tbi
+                input[17] = Channel.empty()                                                                                                                            // germline_resource
+                input[18] = Channel.empty()                                                                                                                            // germline_resource_tbi
+                input[19] = Channel.empty()                                                                                                                            // known_indels
+                input[20] = Channel.empty()                                                                                                                            // known_indels_tbi
+                input[21] = Channel.empty()                                                                                                                            // known_snps
+                input[22] = Channel.empty()                                                                                                                            // known_snps_tbi
                 input[23] = null                                                                                                                                       // msisensor2_models
                 input[24] = null                                                                                                                                       // msisensorpro_scan
-                input[25] = channel.empty()                                                                                                                            // pon
-                input[26] = channel.empty()                                                                                                                            // pon_tbi
+                input[25] = Channel.empty()                                                                                                                            // pon
+                input[26] = Channel.empty()                                                                                                                            // pon_tbi
                 input[27] = 'bwa-mem'                                                                                                                                  // aligner
                 input[28] = 'mapping'                                                                                                                                  // step
                 input[29] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
@@ -289,7 +292,8 @@ nextflow_workflow {
             assertAll(
                 { assert workflow.success },
                 { assert snapshot(
-                    workflow.out.bbsplit_index
+                    workflow.out.bbsplit_index,
+                    workflow.out.versions
                 ).match() }
             )
         }

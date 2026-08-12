@@ -16,32 +16,28 @@ inputs:
   tags:
     description: "Tags to pass as argument for nf-test --tag parameter"
     required: false
-  update_snapshots:
-    description: "Run with --update-snapshot over all tagged tests and upload regenerated snapshots as artifacts"
-    required: false
-    default: "false"
 runs:
   using: "composite"
   steps:
     - name: Setup Nextflow
-      uses: nf-core/setup-nextflow@893c28b667aedeba26e37f296d260ccc5bc4d914 # v3
+      uses: nf-core/setup-nextflow@v2
       with:
         version: "${{ env.NXF_VERSION }}"
 
     - name: Set up Python
-      uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+      uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6
       with:
         python-version: "3.14"
 
     - name: Install nf-test
-      uses: nf-core/setup-nf-test@4069fbbaabe94c08faba4ad261bfa88225ba133f # v2
+      uses: nf-core/setup-nf-test@v1
       with:
         version: "${{ env.NFT_VER }}"
         install-pdiff: true
 
     - name: Setup apptainer
       if: contains(inputs.profile, 'singularity')
-      uses: eWaterCycle/setup-apptainer@3f706d898c9db585b1d741b4692e66755f3a1b40 # v2.0.0
+      uses: eWaterCycle/setup-apptainer@main
 
     - name: Set up Singularity
       if: contains(inputs.profile, 'singularity')
@@ -52,7 +48,7 @@ runs:
 
     - name: Conda setup
       if: contains(inputs.profile, 'conda')
-      uses: conda-incubator/setup-miniconda@8ee1f361103df19b6f8c8655fd3967a8ecb162d5 # v4
+      uses: conda-incubator/setup-miniconda@505e6394dae86d6a5c7fbb6e3fb8938e3e863830 # v3
       with:
         auto-update-conda: true
         conda-solver: libmamba
@@ -75,50 +71,17 @@ runs:
         SENTIEON_LICSRVR_IP: ${{ env.SENTIEON_LICSRVR_IP }}
         SENTIEON_AUTH_MECH: "GitHub Actions - token"
       run: |
-        # In update-snapshot mode, regenerate snapshots over ALL tagged tests
-        # (drop --changed-since, which is only meaningful for PR/push diffs).
-        CHANGED_SINCE="--changed-since HEAD^"
-        UPDATE_SNAPSHOT=""
-        if [ "${{ inputs.update_snapshots }}" = "true" ]; then
-          CHANGED_SINCE=""
-          UPDATE_SNAPSHOT="--update-snapshot"
-        fi
         nf-test test \
           --profile=+${{ inputs.profile }} \
           $(if [ -n "${{ inputs.tags }}" ]; then echo "--tag ${{ inputs.tags }}"; fi) \
           --ci \
-          $CHANGED_SINCE \
-          $UPDATE_SNAPSHOT \
+          --changed-since HEAD^ \
           --verbose \
           --tap=test.tap \
           --shard ${{ inputs.shard }}/${{ inputs.total_shards }}
 
           # Save the absolute path of the test.tap file to the output
           echo "tap_file_path=$(realpath test.tap)" >> $GITHUB_OUTPUT
-
-    # ---- update-snapshot mode: collect & upload regenerated snapshots ----
-    # Only the canonical docker + pinned-Nextflow leg uploads, to avoid
-    # profile/version-specific artifact collisions.
-    - name: Collect updated snapshots
-      if: ${{ inputs.update_snapshots == 'true' && inputs.profile == 'docker' && env.NXF_VERSION == '25.10.4' }}
-      shell: bash
-      run: |
-        rm -rf updated-snaps && mkdir -p updated-snaps
-        git diff --name-only -- 'tests/*.snap' | while read -r f; do
-          mkdir -p "updated-snaps/$(dirname "$f")"
-          cp "$f" "updated-snaps/$f"
-        done
-        echo "Changed snapshot files (shard ${{ inputs.shard }}/${{ inputs.total_shards }}):"
-        git diff --name-only -- 'tests/*.snap' || true
-
-    - name: Upload updated snapshots
-      if: ${{ inputs.update_snapshots == 'true' && inputs.profile == 'docker' && env.NXF_VERSION == '25.10.4' }}
-      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
-      with:
-        name: updated-snapshots-shard-${{ inputs.shard }}
-        path: updated-snaps/
-        if-no-files-found: ignore
-        retention-days: 5
 
     - name: Generate test summary
       if: always()

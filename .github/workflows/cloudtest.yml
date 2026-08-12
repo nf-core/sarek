@@ -1,7 +1,8 @@
-name: nf-core AWS full size tests
+name: nf-core cloud tests (both full size and smaller)
 # This workflow is triggered on PRs opened against the main/master branch.
 # It can be additionally triggered manually with GitHub actions workflow dispatch button.
-# It runs the -profile 'test_full' on AWS batch
+# It runs the -profile 'test_full' on cloud
+# or the -profile 'test' on cloud (smaller tests)
 
 on:
   pull_request_review:
@@ -10,6 +11,10 @@ on:
     types: [published]
   workflow_dispatch:
     inputs:
+      test:
+        description: "-profile test (smaller)"
+        type: boolean
+        default: true
       somatic:
         description: "Somatic full test"
         type: boolean
@@ -37,6 +42,12 @@ jobs:
           # All available profiles
           all='[
             {
+              "profile": "test_aws",
+              "test": "test",
+              "compute_env": "TOWER_COMPUTE_ENV",
+              "workdir": "TOWER_BUCKET_AWS"
+            },
+            {
               "profile": "test_full_aws",
               "test": "somatic",
               "compute_env": "TOWER_COMPUTE_ENV",
@@ -59,6 +70,7 @@ jobs:
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             # Filter to only selected profiles
             matrix=$(echo "$all" | jq -c '[.[] | select(
+              (.test == "test" and ${{ inputs.test }}) or
               (.test == "somatic" and ${{ inputs.somatic }}) or
               (.test == "germline" and ${{ inputs.germline }}) or
               (.test == "germline_ncbench_agilent" and ${{ inputs.germline_ncbench_agilent }})
@@ -86,7 +98,7 @@ jobs:
 
       - name: Launch workflow via Seqera Platform
         id: tower-launch
-        uses: seqeralabs/action-tower-launch@51565b514bff1827cf34620de25d0055759f1fc9 # v2
+        uses: seqeralabs/action-tower-launch@v2
         with:
           run_name: sarek_${{ matrix.profile }}
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
@@ -129,9 +141,9 @@ jobs:
             --repo ${{ github.repository }} \
             --body "Cloud test **${{ matrix.profile }}** launched on [Seqera Platform](${{ steps.tower-launch.outputs.workflowUrl }})"
 
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: Seqera Platform debug log file - ${{ matrix.profile }}
           path: |
-            tower_action_*.log
-            tower_action_*.json
+            seqera_platform_action_*.log
+            seqera_platform_action_*.json

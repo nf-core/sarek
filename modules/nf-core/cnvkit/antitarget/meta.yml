@@ -26,10 +26,9 @@ input:
         type: file
         description: File containing genomic regions
         pattern: "*.{bed}"
-        ontologies: []
 output:
-  bed:
-    - - meta:
+  - bed:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -38,28 +37,11 @@ output:
           type: file
           description: File containing off-target regions
           pattern: "*.{bed}"
-          ontologies: []
-  versions_cnvkit:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - cnvkit:
-          type: string
-          description: The name of the tool
-      - 'cnvkit.py version | sed -e "s/cnvkit v//g"':
-          type: eval
-          description: The expression to obtain the version of the tool
-topics:
-  versions:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - cnvkit:
-          type: string
-          description: The name of the tool
-      - 'cnvkit.py version | sed -e "s/cnvkit v//g"':
-          type: eval
-          description: The expression to obtain the version of the tool
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@adamrtalbot"
   - "@priesgo"

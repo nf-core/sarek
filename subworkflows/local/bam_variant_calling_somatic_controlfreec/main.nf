@@ -29,7 +29,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
     //Creates empty channel if file is missing
     cnv_files = FREEC_SOMATIC.out.CNV
     .map{ meta, cnv ->
-        def tumor_file = cnv instanceof List ? cnv.find { cnv_file -> cnv_file.toString().endsWith("gz_CNVs") } : cnv //only find if its a list, else it returns only the filename without the path
+        def tumor_file = cnv instanceof List ? cnv.find { it.toString().endsWith("gz_CNVs") } : cnv //only find if its a list, else it returns only the filename without the path
         if (!tumor_file){
             error("CNVs tumor file not found for sample $meta.id")
         }
@@ -38,7 +38,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
 
     ratio_files = FREEC_SOMATIC.out.ratio
     .map{ meta, ratio ->
-        def tumor_file = ratio instanceof List ? ratio.find { ratio_file -> ratio_file.toString().endsWith("gz_ratio.txt") } : ratio //same here as cnv
+        def tumor_file = ratio instanceof List ? ratio.find { it.toString().endsWith("gz_ratio.txt") } : ratio //same here as cnv
         if (!tumor_file){
             error("Ratio tumor file not found for sample $meta.id")
         }

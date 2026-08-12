@@ -1,22 +1,23 @@
 process SAMTOOLS_FAIDX {
-    tag "${fasta}"
+    tag "$fasta"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/e9/e994bf4eb3731150511a14f5706b7bdfd64df1b6d40898fff334286c027e0859/data'
-        : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/samtools:1.21--h50ea8bc_0' :
+        'biocontainers/samtools:1.21--h50ea8bc_0' }"
 
     input:
-    tuple val(meta), path(fasta), path(fai)
+    tuple val(meta), path(fasta)
+    tuple val(meta2), path(fai)
     val get_sizes
 
     output:
-    tuple val(meta), path("*.{fa,fasta}"), emit: fa, optional: true
-    tuple val(meta), path("*.sizes"), emit: sizes, optional: true
-    tuple val(meta), path("*.fai"), emit: fai, optional: true
-    tuple val(meta), path("*.gzi"), emit: gzi, optional: true
-    tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), topic: versions, emit: versions_samtools
+    tuple val(meta), path ("*.{fa,fasta}") , emit: fa, optional: true
+    tuple val(meta), path ("*.sizes")      , emit: sizes, optional: true
+    tuple val(meta), path ("*.fai")        , emit: fai, optional: true
+    tuple val(meta), path ("*.gzi")        , emit: gzi, optional: true
+    path "versions.yml"                    , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -27,10 +28,15 @@ process SAMTOOLS_FAIDX {
     """
     samtools \\
         faidx \\
-        ${fasta} \\
-        ${args}
+        $fasta \\
+        $args
 
     ${get_sizes_command}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
     """
 
     stub:
@@ -45,5 +51,11 @@ process SAMTOOLS_FAIDX {
     fi
 
     ${get_sizes_command}
+
+    cat <<-END_VERSIONS > versions.yml
+
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
     """
 }

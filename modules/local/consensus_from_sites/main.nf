@@ -24,6 +24,7 @@ process CONSENSUS_FROM_SITES {
     task.ext.when == null || task.ext.when
 
     script:
+    def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
     def callers = meta.callers.join(',')
     """

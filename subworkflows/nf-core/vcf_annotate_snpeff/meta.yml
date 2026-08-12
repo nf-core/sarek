@@ -8,7 +8,7 @@ keywords:
 components:
   - snpeff
   - snpeff/snpeff
-  - htslib/bgziptabix
+  - tabix/bgziptabix
 input:
   - ch_vcf:
       description: |

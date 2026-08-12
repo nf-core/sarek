@@ -30,13 +30,18 @@ workflow VCF_ANNOTATE_ALL {
     vcf_ann = channel.empty()
     tab_ann = channel.empty()
     json_ann = channel.empty()
+    versions = channel.empty()
 
     if (tools.split(',').contains('bcfann')) {
         BCFTOOLS_ANNOTATE(
-            vcf.map { meta, vcf_ -> [meta, vcf_, []] }.combine(bcftools_annotations).combine(bcftools_annotations_index).combine(bcftools_columns).combine(bcftools_header_lines).map{meta, vcf_, index, ann, ann_index, cols, header -> [meta, vcf_, index, ann, ann_index, cols, header, []]}
+            vcf.map { meta, vcf_ -> [meta, vcf_, []] }.combine(bcftools_annotations).combine(bcftools_annotations_index),
+            bcftools_columns,
+            bcftools_header_lines,
+            [],
         )
 
-        vcf_ann = vcf_ann.mix(BCFTOOLS_ANNOTATE.out.vcf.join(BCFTOOLS_ANNOTATE.out.index, failOnDuplicate: true, failOnMismatch: true))
+        vcf_ann = vcf_ann.mix(BCFTOOLS_ANNOTATE.out.vcf.join(BCFTOOLS_ANNOTATE.out.tbi, failOnDuplicate: true, failOnMismatch: true))
+        versions = versions.mix(BCFTOOLS_ANNOTATE.out.versions)
     }
 
     if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff')) {
@@ -77,4 +82,5 @@ workflow VCF_ANNOTATE_ALL {
     vcf_ann  // channel: [ val(meta), vcf.gz, vcf.gz.tbi ]
     tab_ann
     json_ann
+    versions //    path: versions.yml
 }

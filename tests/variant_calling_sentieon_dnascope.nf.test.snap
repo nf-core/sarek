@@ -4,40 +4,33 @@
             12,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": "1.23.1"
+                    "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "MOSDEPTH": {
-                    "gzip": "1.14",
-                    "mosdepth": "0.3.14"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "SENTIEON_DNASCOPE": {
                     "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "VCFTOOLS_SUMMARY": {
-                    "vcftools": "0.1.17"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.17"
-                },
-                "VCFTOOLS_TSTV_QUAL": {
-                    "vcftools": "0.1.17"
+                    "vcftools": "0.1.16"
                 }
             },
             [
@@ -167,15 +160,15 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,df2fc825dfc41e30f72f5d125a6447ee",
                 "mosdepth_perchrom.txt:md5,115b9a93bcf511419e6622919172f321",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,53338147cfd6cffd24eef5c07518fe4c",
+                "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
-                "test.dnascope.unfiltered.bcftools_stats.txt:md5,e7e014ba2764fca171a3291c26cca34c",
+                "test.dnascope.unfiltered.bcftools_stats.txt:md5,ccd33b2c34ef09efe1fd7a86474eaa53",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
+                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
                 "test.dnascope.unfiltered.FILTER.summary:md5,87a84b5f8ac3d3cbeeef7d60afcdbfe7",
                 "test.dnascope.unfiltered.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
@@ -186,31 +179,30 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-28T11:00:49.396195515",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-06-21T12:35:10.846318732"
     },
     "-profile test --tools sentieon_dnascope": {
         "content": [
             13,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": "1.23.1"
+                    "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "MOSDEPTH": {
-                    "gzip": "1.14",
-                    "mosdepth": "0.3.14"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "SENTIEON_DNAMODELAPPLY": {
                     "sentieon": "202503.02"
@@ -219,21 +211,15 @@
                     "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "VCFTOOLS_SUMMARY": {
-                    "vcftools": "0.1.17"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.17"
-                },
-                "VCFTOOLS_TSTV_QUAL": {
-                    "vcftools": "0.1.17"
+                    "vcftools": "0.1.16"
                 }
             },
             [
@@ -365,15 +351,15 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,df2fc825dfc41e30f72f5d125a6447ee",
                 "mosdepth_perchrom.txt:md5,115b9a93bcf511419e6622919172f321",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,53338147cfd6cffd24eef5c07518fe4c",
+                "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
-                "test.dnascope.filtered.bcftools_stats.txt:md5,af2789c5de131bbd90b133b9382f506f",
+                "test.dnascope.filtered.bcftools_stats.txt:md5,ad4472e0b4767e0f3c4052ff3e3c1cdb",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
+                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
                 "test.dnascope.filtered.FILTER.summary:md5,e67b24d296810a075378e5864bcea0fa",
                 "test.dnascope.filtered.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
@@ -385,37 +371,33 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-28T11:01:09.004361032",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-06-21T11:44:42.944302645"
     },
     "-profile test --tools sentieon_dnascope --joint_germline --sentieon_dnascope_emit_mode gvcf": {
         "content": [
             15,
             {
-                "BCFTOOLS_SORT": {
-                    "bcftools": "1.23.1"
-                },
                 "BCFTOOLS_STATS": {
-                    "bcftools": "1.23.1"
+                    "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "MERGE_GENOTYPEGVCFS": {
                     "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "gzip": "1.14",
-                    "mosdepth": "0.3.14"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "SENTIEON_DNASCOPE": {
                     "sentieon": "202503.02"
@@ -424,21 +406,15 @@
                     "sentieon": "202503.02"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "VCFTOOLS_SUMMARY": {
-                    "vcftools": "0.1.17"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.17"
-                },
-                "VCFTOOLS_TSTV_QUAL": {
-                    "vcftools": "0.1.17"
+                    "vcftools": "0.1.16"
                 }
             },
             [
@@ -571,15 +547,15 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,df2fc825dfc41e30f72f5d125a6447ee",
                 "mosdepth_perchrom.txt:md5,115b9a93bcf511419e6622919172f321",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,53338147cfd6cffd24eef5c07518fe4c",
+                "samtools-stats-dp.txt:md5,06abce459a3e3192252b6196ae3b189e",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
-                "joint_germline.bcftools_stats.txt:md5,936ca7dc4a8d81cb73a9446057ec4b24",
+                "joint_germline.bcftools_stats.txt:md5,b66f04fbf0ca30785d07a4d0b4156bb7",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
+                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
                 "joint_germline.FILTER.summary:md5,b489034e69de07875cbf0f5548b4f55e",
                 "joint_germline.TsTv.count:md5,803d74e40f7716202bae2a3a81c1ddfc"
             ],
@@ -593,10 +569,10 @@
                 "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
             ]
         ],
-        "timestamp": "2026-07-28T11:01:41.929110424",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.2"
+        },
+        "timestamp": "2025-06-21T16:52:44.930404505"
     }
 }

@@ -15,8 +15,7 @@ tools:
       documentation: https://github.com/freebayes/freebayes
       tool_dev_url: https://github.com/freebayes/freebayes
       doi: "10.48550/arXiv.1207.3907"
-      licence:
-        - "MIT"
+      licence: ["MIT"]
       identifier: biotools:freebayes
 input:
   - - meta:
@@ -28,37 +27,28 @@ input:
         type: file
         description: BAM/CRAM/SAM file
         pattern: "*.{bam,cram,sam}"
-        ontologies:
-          - edam: http://edamontology.org/format_2572 # BAM
-          - edam: http://edamontology.org/format_3462 # CRAM
-          - edam: http://edamontology.org/format_2573 # SAM
+        ontologies: []
     - input_1_index:
         type: file
         description: BAM/CRAM/SAM index file
         pattern: "*.{bai,crai}"
-        ontologies:
-          - edam: http://edamontology.org/format_3327 # BAI/CRAI index
+        ontologies: []
     - input_2:
         type: file
         description: BAM/CRAM/SAM file
         pattern: "*.{bam,cram,sam}"
-        ontologies:
-          - edam: http://edamontology.org/format_2572 # BAM
-          - edam: http://edamontology.org/format_3462 # CRAM
-          - edam: http://edamontology.org/format_2573 # SAM
+        ontologies: []
     - input_2_index:
         type: file
         description: BAM/CRAM/SAM index file
         pattern: "*.{bai,crai}"
-        ontologies:
-          - edam: http://edamontology.org/format_3327 # BAI/CRAI index
+        ontologies: []
     - target_bed:
         type: file
-        description: Optional - Limit analysis to targets listed in this
-          BED-format FILE.
+        description: Optional - Limit analysis to targets listed in this BED-format
+          FILE.
         pattern: "*.bed"
-        ontologies:
-          - edam: http://edamontology.org/format_3003 # BED
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -68,8 +58,7 @@ input:
         type: file
         description: reference fasta file
         pattern: ".{fa,fa.gz,fasta,fasta.gz}"
-        ontologies:
-          - edam: http://edamontology.org/format_1929 # FASTA
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -79,8 +68,7 @@ input:
         type: file
         description: reference fasta file index
         pattern: "*.{fa,fasta}.fai"
-        ontologies:
-          - edam: http://edamontology.org/format_3327 # FASTA index
+        ontologies: []
   - - meta4:
         type: map
         description: |
@@ -88,11 +76,10 @@ input:
           e.g. [ id:'test_samples' ]
     - samples:
         type: file
-        description: Optional - Limit analysis to samples listed (one per line) in
-          the FILE.
+        description: Optional - Limit analysis to samples listed (one per line) in the
+          FILE.
         pattern: "*.txt"
-        ontologies:
-          - edam: http://edamontology.org/format_2330 # Textual format
+        ontologies: []
   - - meta5:
         type: map
         description: |
@@ -100,11 +87,10 @@ input:
           e.g. [ id:'test_populations' ]
     - populations:
         type: file
-        description: Optional - Each line of FILE should list a sample and a
-          population which it is part of.
+        description: Optional - Each line of FILE should list a sample and a population
+          which it is part of.
         pattern: "*.txt"
-        ontologies:
-          - edam: http://edamontology.org/format_2330 # Textual format
+        ontologies: []
   - - meta6:
         type: map
         description: |
@@ -118,8 +104,7 @@ input:
           or a region-specific format:
           seq_name start end sample_name copy_number
         pattern: "*.bed"
-        ontologies:
-          - edam: http://edamontology.org/format_3003 # BED
+        ontologies: []
 output:
   vcf:
     - - meta:
@@ -132,28 +117,14 @@ output:
           description: Compressed VCF file
           pattern: "*.vcf.gz"
           ontologies:
-            - edam: http://edamontology.org/format_3989
-  versions_freebayes:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - freebayes:
-          type: string
-          description: The name of the tool
-      - freebayes --version 2>&1 | sed "s/version:\s*v//g":
-          type: eval
-          description: The expression to obtain the version of the tool
-topics:
+            - edam: http://edamontology.org/format_3989 # GZIP format
   versions:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - freebayes:
-          type: string
-          description: The name of the tool
-      - freebayes --version 2>&1 | sed "s/version:\s*v//g":
-          type: eval
-          description: The expression to obtain the version of the tool
+    - versions.yml:
+        type: file
+        description: File containing software version
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@maxibor"
   - "@FriederikeHanssen"

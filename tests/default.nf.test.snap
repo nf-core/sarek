@@ -4,14 +4,14 @@
             23,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": "1.23.1"
+                    "bcftools": 1.21
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.19-r1273"
+                    "bwa": "0.7.18-r1243-dirty"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.19-r1273",
-                    "samtools": "1.22.1"
+                    "bwa": "0.7.18-r1243-dirty",
+                    "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -20,47 +20,40 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.2.0",
-                    "samtools": "1.21"
+                    "gatk4": "4.6.1.0",
+                    "samtools": 1.21
                 },
                 "INDEX_CRAM": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "MOSDEPTH": {
-                    "gzip": "1.14",
-                    "mosdepth": "0.3.14"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "VCFTOOLS_SUMMARY": {
-                    "vcftools": "0.1.17"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.17"
-                },
-                "VCFTOOLS_TSTV_QUAL": {
-                    "vcftools": "0.1.17"
+                    "vcftools": "0.1.16"
                 }
             },
             [
@@ -297,20 +290,20 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,92dc10e61df31bf4286b16582bed488f",
+                "samtools-stats-dp.txt:md5,ae7954084b2cd708c5e7369606bf4208",
                 "samtools_alignment_plot.txt:md5,438e719bf574a46726dbd2e0f1442e42",
                 "samtools_insert_size.txt:md5,73b933a27800b86a4012c2d525870796",
-                "test.strelka.variants.bcftools_stats.txt:md5,6efa6598982c21c544d1833dca632b62",
+                "test.strelka.variants.bcftools_stats.txt:md5,2613827870dd789fe602a8a3b739b7f2",
                 "test.md.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.md.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.md.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
                 "test.md.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
-                "test.md.regions.bed.gz.csi:md5,1f17d398be6b9c100cb0218fa226a623",
+                "test.md.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
                 "test.recal.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.recal.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.recal.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
                 "test.recal.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
-                "test.recal.regions.bed.gz.csi:md5,1f17d398be6b9c100cb0218fa226a623",
+                "test.recal.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
                 "test.strelka.variants.FILTER.summary:md5,dd87f507da7de20d5318841af312493b",
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
@@ -327,157 +320,25 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-05-19T18:36:49.982943659",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-07-27T10:25:08.849820282"
-    },
-    "-profile test --intervals genome.multi_intervals.bed --nucleotides_per_second 20 --skip_tools fastqc,mosdepth,multiqc,samtools": {
-        "content": [
-            23,
-            {
-                "BCFTOOLS_STATS": {
-                    "bcftools": "1.23.1"
-                },
-                "BWAMEM1_INDEX": {
-                    "bwa": "0.7.19-r1273"
-                },
-                "BWAMEM1_MEM": {
-                    "bwa": "0.7.19-r1273",
-                    "samtools": "1.22.1"
-                },
-                "CREATE_INTERVALS_BED": {
-                    "gawk": "5.3.0"
-                },
-                "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
-                },
-                "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
-                },
-                "GATK4_GATHERBQSRREPORTS": {
-                    "gatk4": "4.6.2.0"
-                },
-                "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.2.0",
-                    "samtools": "1.21"
-                },
-                "INDEX_CRAM": {
-                    "samtools": "1.24"
-                },
-                "MERGE_CRAM": {
-                    "samtools": "1.24"
-                },
-                "MERGE_STRELKA": {
-                    "gatk4": "4.6.2.0"
-                },
-                "MERGE_STRELKA_GENOME": {
-                    "gatk4": "4.6.2.0"
-                },
-                "STRELKA_SINGLE": {
-                    "strelka": "2.9.10"
-                },
-                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "VCFTOOLS_SUMMARY": {
-                    "vcftools": "0.1.17"
-                },
-                "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.17"
-                },
-                "VCFTOOLS_TSTV_QUAL": {
-                    "vcftools": "0.1.17"
-                }
-            },
-            [
-                "csv",
-                "csv/markduplicates.csv",
-                "csv/markduplicates_no_table.csv",
-                "csv/recalibrated.csv",
-                "csv/variantcalled.csv",
-                "multiqc",
-                "multiqc/index.json",
-                "pipeline_info",
-                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "preprocessing",
-                "preprocessing/markduplicates",
-                "preprocessing/markduplicates/test",
-                "preprocessing/markduplicates/test/test.md.cram",
-                "preprocessing/markduplicates/test/test.md.cram.crai",
-                "preprocessing/recal_table",
-                "preprocessing/recal_table/test",
-                "preprocessing/recal_table/test/test.recal.table",
-                "preprocessing/recalibrated",
-                "preprocessing/recalibrated/test",
-                "preprocessing/recalibrated/test/test.recal.cram",
-                "preprocessing/recalibrated/test/test.recal.cram.crai",
-                "reference",
-                "reports",
-                "reports/bcftools",
-                "reports/bcftools/strelka",
-                "reports/bcftools/strelka/test",
-                "reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt",
-                "reports/markduplicates",
-                "reports/markduplicates/test",
-                "reports/markduplicates/test/test.md.cram.metrics",
-                "reports/vcftools",
-                "reports/vcftools/strelka",
-                "reports/vcftools/strelka/test",
-                "reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary",
-                "reports/vcftools/strelka/test/test.strelka.variants.TsTv.count",
-                "reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual",
-                "variant_calling",
-                "variant_calling/strelka",
-                "variant_calling/strelka/test",
-                "variant_calling/strelka/test/test.strelka.genome.vcf.gz",
-                "variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi",
-                "variant_calling/strelka/test/test.strelka.variants.vcf.gz",
-                "variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi"
-            ],
-            [
-                "test.strelka.variants.bcftools_stats.txt:md5,52b8ab0b1868241b823447f748b9b9b1",
-                "test.strelka.variants.FILTER.summary:md5,950b7f195abd750c28b168f75cef5e67",
-                "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
-            ],
-            "No BAM files",
-            [
-                "test.md.cram:md5,724c601c9daf019d356a53a7d5e1c8b1",
-                "test.recal.cram:md5,e0b8589bcc82aecad1fbbc256e85a6ee"
-            ],
-            [
-                "test.strelka.genome.vcf.gz:md5,8817bce07e30765b72124c4380b7047f",
-                "test.strelka.variants.vcf.gz:md5,7351e72c5ee0cebbff5c9bbbfa8397fb"
-            ],
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-08-11T15:36:03.649214125"
+            "nextflow": "26.04.1"
+        }
     },
     "-profile test -stub": {
         "content": [
             23,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": "1.23.1"
+                    "bcftools": 1.21
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.19-r1273"
+                    "bwa": "0.7.18-r1243-dirty"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.19-r1273",
-                    "samtools": "1.22.1"
+                    "bwa": "0.7.18-r1243-dirty",
+                    "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -486,46 +347,40 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.6.1.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.2.0",
-                    "samtools": "1.21"
+                    "gatk4": "4.6.1.0",
+                    "samtools": 1.21
                 },
                 "INDEX_CRAM": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "VCFTOOLS_SUMMARY": {
-                    "vcftools": "0.1.17"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.17"
-                },
-                "VCFTOOLS_TSTV_QUAL": {
-                    "vcftools": "0.1.17"
+                    "vcftools": "0.1.16"
                 }
             },
             [
@@ -679,10 +534,10 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-05-19T18:29:08.987530161",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.1"
-        },
-        "timestamp": "2026-05-19T18:29:08.987530161"
+        }
     }
 }

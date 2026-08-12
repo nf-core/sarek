@@ -28,11 +28,12 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     joint_mutect2         // boolean: [mandatory] [default: false] run mutect2 in joint mode
 
     main:
+    versions = Channel.empty()
 
     // If no germline resource is provided, then create an empty channel to avoid GetPileupsummaries from being run
-    // Handle channel.value([]) input from prepare_genome by converting to proper empty channel
-    germline_resource_pileup = germline_resource.filter { germline_resource_ -> germline_resource_ != [] }
-    germline_resource_pileup_tbi = germline_resource_tbi.filter { germline_resource_tbi_ -> germline_resource_tbi_ != [] }
+    // Handle Channel.value([]) input from prepare_genome by converting to proper empty channel
+    germline_resource_pileup = germline_resource.filter { it != [] }
+    germline_resource_pileup_tbi = germline_resource_tbi.filter { it != [] }
 
     // Combine input and intervals for spread and gather strategy
     //   Move num_intervals to meta map and reorganize channel for MUTECT2_PAIRED module
@@ -57,37 +58,37 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
             .combine(intervals)
             .map { meta, cram, crai, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], cram, crai, intervals_] }
 
-        MUTECT2_PAIRED(ch_tn_intervals, fasta, fai.map { meta, index -> [ meta, index, [] ] }, dict, [], [], germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
+        MUTECT2_PAIRED(ch_tn_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
     }
     else {
 
         // Perform variant calling using mutect2 module pair mode
         // meta: [id:tumor_id_vs_normal_id, normal_id, num_intervals, patient, sex, tumor_id]
-        MUTECT2_PAIRED(input_intervals, fasta, fai.map { meta, index -> [ meta, index, [] ] }, dict, [], [], germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
+        MUTECT2_PAIRED(input_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    vcf_branch = MUTECT2_PAIRED.out.vcf.branch { meta, _vcf ->
-        intervals: meta.num_intervals > 1
-        no_intervals: meta.num_intervals <= 1
+    vcf_branch = MUTECT2_PAIRED.out.vcf.branch {
+        intervals: it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
     }
 
     // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_branch = MUTECT2_PAIRED.out.tbi.branch { meta, _tbi ->
-        intervals: meta.num_intervals > 1
-        no_intervals: meta.num_intervals <= 1
+    tbi_branch = MUTECT2_PAIRED.out.tbi.branch {
+        intervals: it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    stats_branch = MUTECT2_PAIRED.out.stats.branch { meta, _stats ->
-        intervals: meta.num_intervals > 1
-        no_intervals: meta.num_intervals <= 1
+    stats_branch = MUTECT2_PAIRED.out.stats.branch {
+        intervals: it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    f1r2_branch = MUTECT2_PAIRED.out.f1r2.branch { meta, _f1r2 ->
-        intervals: meta.num_intervals > 1
-        no_intervals: meta.num_intervals <= 1
+    f1r2_branch = MUTECT2_PAIRED.out.f1r2.branch {
+        intervals: it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
     }
 
     // Only when using intervals
@@ -99,22 +100,22 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     MERGEMUTECTSTATS(stats_to_merge)
 
     // Mix intervals and no_intervals channels together and remove no longer necessary field: normal_id, tumor_id, num_intervals
-    vcf = channel.empty()
+    vcf = Channel.empty()
         .mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals)
         .map { meta, vcf ->
             [joint_mutect2 ? meta - meta.subMap('normal_id', 'num_intervals') : meta - meta.subMap('num_intervals'), vcf]
         }
-    tbi = channel.empty()
+    tbi = Channel.empty()
         .mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals)
         .map { meta, tbi ->
             [joint_mutect2 ? meta - meta.subMap('normal_id', 'num_intervals') : meta - meta.subMap('num_intervals'), tbi]
         }
-    stats = channel.empty()
+    stats = Channel.empty()
         .mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals)
         .map { meta, stats ->
             [joint_mutect2 ? meta - meta.subMap('normal_id', 'num_intervals') : meta - meta.subMap('num_intervals'), stats]
         }
-    f1r2 = channel.empty()
+    f1r2 = Channel.empty()
         .mix(f1r2_to_merge, f1r2_branch.no_intervals)
         .map { meta, f1r2 ->
             [joint_mutect2 ? meta - meta.subMap('normal_id', 'num_intervals') : meta - meta.subMap('num_intervals'), f1r2]
@@ -140,15 +141,15 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     GETPILEUPSUMMARIES_TUMOR(pileup_tumor, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
 
     // Figuring out if there is one or more table(s) from the same sample
-    pileup_table_normal_branch = GETPILEUPSUMMARIES_NORMAL.out.table.branch { meta, _table ->
-        intervals: meta.num_intervals > 1
-        no_intervals: meta.num_intervals <= 1
+    pileup_table_normal_branch = GETPILEUPSUMMARIES_NORMAL.out.table.branch {
+        intervals: it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
     }
 
     // Figuring out if there is one or more table(s) from the same sample
-    pileup_table_tumor_branch = GETPILEUPSUMMARIES_TUMOR.out.table.branch { meta, _table ->
-        intervals: meta.num_intervals > 1
-        no_intervals: meta.num_intervals <= 1
+    pileup_table_tumor_branch = GETPILEUPSUMMARIES_TUMOR.out.table.branch {
+        intervals: it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
     }
 
     // Only when using intervals
@@ -161,8 +162,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
 
     // Do some channel magic to generate tumor-normal pairs again.
     // This is necessary because we generated one normal pileup summary for each patient but we need run calculate contamination for each tumor-normal pair.
-    pileup_table_tumor = channel.empty().mix(GATHERPILEUPSUMMARIES_TUMOR.out.table, pileup_table_tumor_branch.no_intervals).map { meta, table -> [meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [id: meta.patient], meta.id, table] }
-    pileup_table_normal = channel.empty().mix(GATHERPILEUPSUMMARIES_NORMAL.out.table, pileup_table_normal_branch.no_intervals).map { meta, table -> [meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [id: meta.patient], meta.id, table] }
+    pileup_table_tumor = Channel.empty().mix(GATHERPILEUPSUMMARIES_TUMOR.out.table, pileup_table_tumor_branch.no_intervals).map { meta, table -> [meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [id: meta.patient], meta.id, table] }
+    pileup_table_normal = Channel.empty().mix(GATHERPILEUPSUMMARIES_NORMAL.out.table, pileup_table_normal_branch.no_intervals).map { meta, table -> [meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [id: meta.patient], meta.id, table] }
 
     ch_calculatecontamination_in_tables = pileup_table_tumor
         .combine(
@@ -182,8 +183,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     CALCULATECONTAMINATION(ch_calculatecontamination_in_tables)
 
     // Initialize empty channel: Contamination calculation is run on pileup table, pileup is not run if germline resource is not provided
-    calculatecontamination_out_seg = channel.empty()
-    calculatecontamination_out_cont = channel.empty()
+    calculatecontamination_out_seg = Channel.empty()
+    calculatecontamination_out_cont = Channel.empty()
 
     if (joint_mutect2) {
         // Reduce the meta to only patient name
@@ -219,13 +220,22 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     vcf_mutect2 = FILTERMUTECTCALLS.out.vcf
         .map { meta, vcf_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], vcf_] }
         .concat(vcf.map { meta, vcf_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], vcf_] })
-        .unique { meta, _vcf -> meta }
+        .unique { it[0] }
 
     tbi_mutect2 = FILTERMUTECTCALLS.out.tbi
         .map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] }
         .concat(tbi.map { meta, tbi_ -> [meta - meta.subMap('num_intervals') + [variantcaller: 'mutect2'], tbi_] })
-        .unique { meta, _tbi -> meta }
+        .unique { it[0] }
 
+    versions = versions.mix(CALCULATECONTAMINATION.out.versions)
+    versions = versions.mix(FILTERMUTECTCALLS.out.versions)
+    versions = versions.mix(GETPILEUPSUMMARIES_NORMAL.out.versions)
+    versions = versions.mix(GETPILEUPSUMMARIES_TUMOR.out.versions)
+    versions = versions.mix(GATHERPILEUPSUMMARIES_NORMAL.out.versions)
+    versions = versions.mix(GATHERPILEUPSUMMARIES_TUMOR.out.versions)
+    versions = versions.mix(LEARNREADORIENTATIONMODEL.out.versions)
+    versions = versions.mix(MERGEMUTECTSTATS.out.versions)
+    versions = versions.mix(MUTECT2_PAIRED.out.versions)
 
     emit:
     vcf = vcf_mutect2   // channel: [ meta, vcf ] - filtered if germline_resource provided, otherwise unfiltered
@@ -237,4 +247,5 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     pileup_table_tumor  // channel: [ meta, table_tumor ]
     contamination_table = calculatecontamination_out_cont // channel: [ meta, contamination ]
     segmentation_table  = calculatecontamination_out_seg // channel: [ meta, segmentation ]
+    versions            // channel: [ versions.yml ]
 }

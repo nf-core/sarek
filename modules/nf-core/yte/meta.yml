@@ -12,6 +12,7 @@ tools:
       tool_dev_url: "https://github.com/yte-template-engine/yte"
       licence: ["MIT"]
       identifier: ""
+
 input:
   - - meta:
         type: map
@@ -35,6 +36,7 @@ input:
         description: |
           Groovy Map containing mapping information to be used in the template
           e.g. `[ key: value ]` with key being a wildcard in the template
+
 output:
   rendered:
     - - meta:
@@ -53,9 +55,10 @@ output:
       - yte:
           type: string
           description: The tool name
-      - 1.9.4:
+      - echo $VERSION:
           type: eval
           description: The expression to obtain the version of the tool
+
 topics:
   versions:
     - - ${task.process}:
@@ -64,9 +67,10 @@ topics:
       - yte:
           type: string
           description: The tool name
-      - 1.9.4:
+      - echo $VERSION:
           type: eval
           description: The expression to obtain the version of the tool
+
 authors:
   - "@famosab"
 maintainers:

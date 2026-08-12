@@ -28,39 +28,39 @@ workflow POST_VARIANTCALLING {
     snv_consensus_calling
     normalize_vcfs
     varlociraptor_chunk_size // integer: [mandatory] [default: 15] number of chunks to split BCF files when preprocessing and calling variants
-    varlociraptor_events_germline
-    varlociraptor_events_somatic
-    varlociraptor_events_tumor_only
-    varlociraptor_fdr
     varlociraptor_scenario_germline
     varlociraptor_scenario_somatic
     varlociraptor_scenario_tumor_only
 
     main:
-    vcfs = channel.empty()
-    tbis = channel.empty()
+    versions = Channel.empty()
+    vcfs = Channel.empty()
+    tbis = Channel.empty()
 
     //
     // VARLOCIRAPTOR
     //
     if (tools && tools.split(',').contains('varlociraptor')) {
         // GERMLINE
-        VCF_VARLOCIRAPTOR_GERMLINE(cram_germline, fasta, fai, varlociraptor_scenario_germline, germline_vcfs, varlociraptor_chunk_size, 'normal', varlociraptor_events_germline, varlociraptor_fdr)
+        VCF_VARLOCIRAPTOR_GERMLINE(cram_germline, fasta, fai, varlociraptor_scenario_germline, germline_vcfs, varlociraptor_chunk_size, 'normal')
 
         vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.vcf)
         tbis = tbis.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.tbi)
+        versions = versions.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.versions)
 
         // SOMATIC
-        VCF_VARLOCIRAPTOR_SOMATIC(cram_somatic, fasta, fai, varlociraptor_scenario_somatic, somatic_vcfs, germline_vcfs, varlociraptor_chunk_size, varlociraptor_events_somatic, varlociraptor_fdr)
+        VCF_VARLOCIRAPTOR_SOMATIC(cram_somatic, fasta, fai, varlociraptor_scenario_somatic, somatic_vcfs, germline_vcfs, varlociraptor_chunk_size)
 
         vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.vcf)
         tbis = tbis.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.tbi)
+        versions = versions.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.versions)
 
         // TUMOR ONLY
-        VCF_VARLOCIRAPTOR_TUMOR_ONLY(cram_tumor_only, fasta, fai, varlociraptor_scenario_tumor_only, tumor_only_vcfs, varlociraptor_chunk_size, 'tumor', varlociraptor_events_tumor_only, varlociraptor_fdr)
+        VCF_VARLOCIRAPTOR_TUMOR_ONLY(cram_tumor_only, fasta, fai, varlociraptor_scenario_tumor_only, tumor_only_vcfs, varlociraptor_chunk_size, 'tumor')
 
         vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.vcf)
         tbis = tbis.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.tbi)
+        versions = versions.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.versions)
 
     } else if (filter_vcfs || normalize_vcfs || concatenate_vcfs ) {
 
@@ -76,25 +76,25 @@ workflow POST_VARIANTCALLING {
         // - manta, tiddit: structural variant callers (separate workflow)
         // - samtools mpileup produces pileup format for ControlFREEC, not consensus-ready VCFs
         def small_variantcallers = ['bcftools', 'deepvariant', 'freebayes', 'haplotypecaller',
-                                    'lofreq', 'muse', 'mutect2', 'parabricks_haplotypecaller',
-                                    'sentieon_dnascope', 'sentieon_haplotyper', 'sentieon_tnscope', 'strelka' ]
+                                    'lofreq', 'muse', 'mutect2', 'sentieon_dnascope',
+                                    'sentieon_haplotyper', 'sentieon_tnscope', 'strelka' ]
 
         def excluded_variantcallers = ['manta', 'tiddit', 'samtools']
 
-        all_vcfs = channel.empty().mix(germline_vcfs, tumor_only_vcfs, somatic_vcfs)
-                                .branch{ meta, _vcf ->
+        all_vcfs = Channel.empty().mix(germline_vcfs, tumor_only_vcfs, somatic_vcfs)
+                                .branch{ meta, vcf ->
                                     small: small_variantcallers.contains(meta.variantcaller)
                                     other: true
                                 }
 
-        all_tbis = channel.empty().mix(germline_tbis, tumor_only_tbis, somatic_tbis)
-                                .branch{ meta, _tbi ->
+        all_tbis = Channel.empty().mix(germline_tbis, tumor_only_tbis, somatic_tbis)
+                                .branch{ meta, tbi ->
                                     small: small_variantcallers.contains(meta.variantcaller)
                                     other: true
                                 }
 
         // Validate that we're not silently excluding unknown variant callers
-        all_vcfs.other.subscribe { meta, _vcf ->
+        all_vcfs.other.subscribe { meta, vcf ->
             if (!excluded_variantcallers.contains(meta.variantcaller)) {
                 error("Variant caller '${meta.variantcaller}' is not in the small_variantcallers list and will be excluded from normalization/filtering/consensus. If this is a new SNV caller, please add it to the list in subworkflows/local/post_variantcalling/main.nf:78-80")
             }
@@ -114,7 +114,8 @@ workflow POST_VARIANTCALLING {
             FILTER_VCFS( small_variant_vcfs.join(small_variant_tbis, failOnDuplicate: true, failOnMismatch: true), [], [], [])
 
             small_variant_vcfs = FILTER_VCFS.out.vcf
-            small_variant_tbis = FILTER_VCFS.out.index
+            small_variant_tbis = FILTER_VCFS.out.tbi
+            versions = versions.mix(FILTER_VCFS.out.versions)
         }
 
         if (normalize_vcfs) {
@@ -123,6 +124,7 @@ workflow POST_VARIANTCALLING {
 
             small_variant_vcfs = NORMALIZE_VCFS.out.vcfs // [meta, vcf]
             small_variant_tbis = NORMALIZE_VCFS.out.tbis // [meta, tbi]
+            versions = versions.mix(NORMALIZE_VCFS.out.versions)
         }
 
         if (normalize_vcfs && snv_consensus_calling){
@@ -144,6 +146,8 @@ workflow POST_VARIANTCALLING {
             // Mix consensus VCF with individual caller VCFs for downstream annotation
             small_variant_vcfs = consensus_vcfs.mix(individual_caller_vcfs)
             small_variant_tbis = consensus_tbis.mix(individual_caller_tbis)
+
+            versions = versions.mix(CONSENSUS.out.versions)
         }
 
         vcfs = small_variant_vcfs.mix(all_vcfs.other)
@@ -154,6 +158,8 @@ workflow POST_VARIANTCALLING {
 
             vcfs = vcfs.mix(CONCATENATE_GERMLINE_VCFS.out.vcfs)
             tbis = tbis.mix(CONCATENATE_GERMLINE_VCFS.out.tbis)
+
+            versions = versions.mix(CONCATENATE_GERMLINE_VCFS.out.versions)
         }
 
 
@@ -165,4 +171,5 @@ workflow POST_VARIANTCALLING {
     emit:
     vcfs     // post processed vcfs [meta, vcf]
     tbis     // post processed tbis [meta, tbi]
+    versions // channel: [ versions.yml ]
 }

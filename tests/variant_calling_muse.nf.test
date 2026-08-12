@@ -31,7 +31,7 @@ nextflow_pipeline {
             ],
             include_muse_txt: true
         ],
-        [
+                [
             name: "-profile test --tools muse --input recalibrated_somatic.csv -stub",
             params: [
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",

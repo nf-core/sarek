@@ -3,9 +3,9 @@ process VCFTOOLS {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/vcftools:0.1.17--pl5321h077b44d_0' :
-        'quay.io/biocontainers/vcftools:0.1.17--pl5321h077b44d_0' }"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/vcftools:0.1.16--he513fc3_4' :
+        'biocontainers/vcftools:0.1.16--he513fc3_4' }"
 
     input:
     // Owing to the nature of vcftools we here provide solutions to working with optional bed files and optional
@@ -79,7 +79,7 @@ process VCFTOOLS {
     tuple val(meta), path("*.diff.indv")              , optional:true, emit: diff_indv
     tuple val(meta), path("*.diff.discordance.matrix"), optional:true, emit: diff_discd_matrix
     tuple val(meta), path("*.diff.switch")            , optional:true, emit: diff_switch_error
-    tuple val("${task.process}"), val('vcftools'), eval('vcftools --version 2>&1 | sed "s/^.*VCFtools (//;s/).*//"'), emit: versions_vcftools, topic: versions
+    path "versions.yml"                               , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -94,18 +94,18 @@ process VCFTOOLS {
         (args.contains('--hapcount')) ? "--hapcount ${bed}" :
         (args.contains('--positions')) ? "--positions ${bed}" :
         (args.contains('--exclude-positions')) ? "--exclude-positions ${bed}"  : ''
-    args_list.removeIf { arg -> arg.contains('--bed') }
-    args_list.removeIf { arg -> arg.contains('--exclude-bed') }
-    args_list.removeIf { arg -> arg.contains('--hapcount') }
-    args_list.removeIf { arg -> arg.contains('--positions') }
-    args_list.removeIf { arg -> arg.contains('--exclude-positions') }
+    args_list.removeIf { it.contains('--bed') }
+    args_list.removeIf { it.contains('--exclude-bed') }
+    args_list.removeIf { it.contains('--hapcount') }
+    args_list.removeIf { it.contains('--positions') }
+    args_list.removeIf { it.contains('--exclude-positions') }
 
     def diff_variant_arg = (args.contains('--diff')) ? "--diff ${diff_variant_file}" :
         (args.contains('--gzdiff')) ? "--gzdiff ${diff_variant_file}" :
         (args.contains('--diff-bcf')) ? "--diff-bcf ${diff_variant_file}" : ''
-    args_list.removeIf { arg -> arg.contains('--diff') }
-    args_list.removeIf { arg -> arg.contains('--gzdiff') }
-    args_list.removeIf { arg -> arg.contains('--diff-bcf') }
+    args_list.removeIf { it.contains('--diff') }
+    args_list.removeIf { it.contains('--gzdiff') }
+    args_list.removeIf { it.contains('--diff-bcf') }
 
     def input_file = ("$variant_file".endsWith(".vcf")) ? "--vcf ${variant_file}" :
         ("$variant_file".endsWith(".vcf.gz")) ? "--gzvcf ${variant_file}" :
@@ -118,6 +118,11 @@ process VCFTOOLS {
         ${args_list.join(' ')} \\
         $bed_arg \\
         $diff_variant_arg
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        vcftools: \$(echo \$(vcftools --version 2>&1) | sed 's/^.*VCFtools (//;s/).*//')
+    END_VERSIONS
     """
 
     stub:
@@ -185,5 +190,10 @@ process VCFTOOLS {
     touch ${prefix}.diff.indv
     touch ${prefix}.diff.discordance.matrix
     touch ${prefix}.diff.switch
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        vcftools: \$(echo \$(vcftools --version 2>&1) | sed 's/^.*VCFtools (//;s/).*//')
+    END_VERSIONS
     """
 }

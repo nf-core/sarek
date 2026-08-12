@@ -4,19 +4,19 @@
             5,
             {
                 "ENSEMBLVEP_VEP": {
-                    "ensemblvep": "116.0",
+                    "ensemblvep": "115.2",
                     "perl-math-cdf": "0.1",
                     "tabix": "1.23.1"
-                },
-                "HTSLIB_BGZIPTABIX": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
                 },
                 "SNPEFF_SNPEFF": {
                     "snpeff": "5.4c"
                 },
+                "TABIX_BGZIPTABIX": {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
+                },
                 "VCF_ANNOTATE_MERGE": {
-                    "ensemblvep": "116.0",
+                    "ensemblvep": "115.2",
                     "perl-math-cdf": "0.1",
                     "tabix": "1.23.1"
                 }
@@ -109,31 +109,31 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-28T14:26:31.042408461",
+        "timestamp": "2026-05-27T10:13:01.036308477",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.2"
         }
     },
     "-profile test --tools merge,snpsift": {
         "content": [
             6,
             {
-                "HTSLIB_BGZIPTABIX": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
                 "SNPEFF_SNPEFF": {
                     "snpeff": "5.4c"
                 },
                 "SNPSIFT_ANNMEM": {
-                    "snpsift": "5.4c"
+                    "snpsift": "5.4a"
                 },
                 "SNPSIFT_ANNMEMCREATE": {
-                    "snpsift": "5.4c"
+                    "snpsift": "5.4a"
+                },
+                "TABIX_BGZIPTABIX": {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCF_ANNOTATE_MERGE": {
-                    "ensemblvep": "116.0",
+                    "ensemblvep": "115.2",
                     "perl-math-cdf": "0.1",
                     "tabix": "1.23.1"
                 }
@@ -220,25 +220,25 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-28T14:26:19.448342505",
+        "timestamp": "2026-05-27T10:14:01.977520509",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.2"
         }
     },
     "-profile test --tools merge": {
         "content": [
             4,
             {
-                "HTSLIB_BGZIPTABIX": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
                 "SNPEFF_SNPEFF": {
                     "snpeff": "5.4c"
                 },
+                "TABIX_BGZIPTABIX": {
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
+                },
                 "VCF_ANNOTATE_MERGE": {
-                    "ensemblvep": "116.0",
+                    "ensemblvep": "115.2",
                     "perl-math-cdf": "0.1",
                     "tabix": "1.23.1"
                 }
@@ -320,10 +320,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-28T14:26:11.026803304",
+        "timestamp": "2026-05-27T10:12:05.371914045",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.2"
         }
     }
 }

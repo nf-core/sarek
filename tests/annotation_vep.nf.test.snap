@@ -4,7 +4,7 @@
             2,
             {
                 "ENSEMBLVEP_VEP": {
-                    "ensemblvep": "116.0",
+                    "ensemblvep": "115.2",
                     "perl-math-cdf": "0.1",
                     "tabix": "1.23.1"
                 }
@@ -52,15 +52,12 @@
             [
                 "test_VEP.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
-            [
-                "test_VEP.ann.vcf.gz:header.contains(|LoF|),true"
-            ],
             "No warnings"
         ],
-        "timestamp": "2026-07-08T10:26:06.53157943",
+        "timestamp": "2026-05-27T13:40:41.25343459",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.2"
         }
     },
     "Fails with profile test --dbnsfp and no dbnsfp_tbi": {

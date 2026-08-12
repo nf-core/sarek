@@ -18,7 +18,7 @@ process SAMTOOLS_REINDEX_BAM {
 
     output:
     tuple val(meta), path("${meta.id}.reindex.bam"), path("${meta.id}.reindex.bam.bai"),emit: output
-    tuple val("${task.process}"), val('samtools'), eval("samtools --version | head -n1 | sed 's/samtools //'"), emit: versions_samtools, topic: versions
+    path  "versions.yml"            , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -48,5 +48,10 @@ process SAMTOOLS_REINDEX_BAM {
         ${reference} \\
         ${args} \\
         ${input}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
     """
 }

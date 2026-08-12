@@ -10,8 +10,7 @@ tools:
   - samtools:
       description: Tools for dealing with SAM, BAM and CRAM files
       documentation: http://www.htslib.org/doc/1.1/samtools.html
-      licence:
-        - "MIT"
+      licence: ["MIT"]
       identifier: biotools:samtools
 input:
   - - meta:
@@ -23,18 +22,17 @@ input:
         type: file
         description: BAM/CRAM/SAM file
         pattern: "*.{bam,cram,sam}"
-        ontologies: []
-  - split:
-      type: boolean
-      description: |
-        TRUE/FALSE value to indicate if reads should be separated into
-        /1, /2 and if present other, or singleton.
-        Note: choosing TRUE will generate 4 different files.
-        Choosing FALSE will produce a single file, which will be interleaved in case
-        the input contains paired reads.
+  - - split:
+        type: boolean
+        description: |
+          TRUE/FALSE value to indicate if reads should be separated into
+          /1, /2 and if present other, or singleton.
+          Note: choosing TRUE will generate 4 different files.
+          Choosing FALSE will produce a single file, which will be interleaved in case
+          the input contains paired reads.
 output:
-  reads:
-    - - meta:
+  - reads:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -45,50 +43,12 @@ output:
             FASTQ files, which will be either a group of 4 files (read_1, read_2, other and singleton)
             or a single interleaved .fq.gz file if the user chooses not to split the reads.
           pattern: "*.fq.gz"
-          ontologies:
-            - edam: http://edamontology.org/format_3989
-  versions_samtools:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - samtools:
-          type: string
-          description: The name of the tool
-      - samtools version | sed '1!d;s/.* //':
-          type: eval
-          description: The expression to obtain the version of the tool
-  versions_bgzip:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - bgzip:
-          type: string
-          description: The name of the tool
-      - bgzip --version | head -1 | sed "s/bgzip (htslib) //":
-          type: eval
-          description: The expression to obtain the version of the tool
-topics:
-  versions:
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - samtools:
-          type: string
-          description: The name of the tool
-      - samtools version | sed '1!d;s/.* //':
-          type: eval
-          description: The expression to obtain the version of the tool
-    - - ${task.process}:
-          type: string
-          description: The name of the process
-      - bgzip:
-          type: string
-          description: The name of the tool
-      - bgzip --version | head -1 | sed "s/bgzip (htslib) //":
-          type: eval
-          description: The expression to obtain the version of the tool
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@lescai"
 maintainers:
   - "@lescai"
-  - "@matthdsm"

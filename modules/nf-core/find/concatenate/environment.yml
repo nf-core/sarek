@@ -1,8 +1,0 @@
-channels:
-  - conda-forge
-  - bioconda
-
-dependencies:
-  - coreutils==9.4
-  - findutils==4.6.0
-  - pigz==2.8

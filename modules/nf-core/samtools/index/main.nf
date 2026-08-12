@@ -1,18 +1,20 @@
 process SAMTOOLS_INDEX {
-    tag "${meta.id}"
+    tag "$meta.id"
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/e9/e994bf4eb3731150511a14f5706b7bdfd64df1b6d40898fff334286c027e0859/data'
-        : 'community.wave.seqera.io/library/htslib_samtools:1.24--d697cfb9dce007cd'}"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/samtools:1.21--h50ea8bc_0' :
+        'biocontainers/samtools:1.21--h50ea8bc_0' }"
 
     input:
     tuple val(meta), path(input)
 
     output:
-    tuple val(meta), path("*.{bai,csi,crai}"), emit: index
-    tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), emit: versions_samtools, topic: versions
+    tuple val(meta), path("*.bai") , optional:true, emit: bai
+    tuple val(meta), path("*.csi") , optional:true, emit: csi
+    tuple val(meta), path("*.crai"), optional:true, emit: crai
+    path  "versions.yml"           , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,17 +24,26 @@ process SAMTOOLS_INDEX {
     """
     samtools \\
         index \\
-        -@ ${task.cpus} \\
-        ${args} \\
-        ${input}
+        -@ ${task.cpus-1} \\
+        $args \\
+        $input
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
     """
 
     stub:
     def args = task.ext.args ?: ''
-    def extension = file(input).getExtension() == 'cram'
-        ? "crai"
-        : args.contains("-c") ? "csi" : "bai"
+    def extension = file(input).getExtension() == 'cram' ?
+                    "crai" : args.contains("-c") ?  "csi" : "bai"
     """
     touch ${input}.${extension}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
     """
 }

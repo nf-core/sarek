@@ -4,17 +4,16 @@
             22,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": "1.23.1"
+                    "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "MOSDEPTH": {
-                    "gzip": "1.14",
-                    "mosdepth": "0.3.14"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -23,21 +22,15 @@
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "VCFTOOLS_SUMMARY": {
-                    "vcftools": "0.1.17"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.17"
-                },
-                "VCFTOOLS_TSTV_QUAL": {
-                    "vcftools": "0.1.17"
+                    "vcftools": "0.1.16"
                 }
             },
             [
@@ -192,22 +185,22 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,0cc87c596a0fc30ebb676c4587e986de",
                 "mosdepth_perchrom.txt:md5,336d786b273c4d4e714d51c44207ff56",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,bf6d30315fd7608b97b2a4eb1dc71fdc",
+                "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
                 "samtools_insert_size.txt:md5,8fa108dcbe0da42e9425dd125fe22905",
-                "sample3.strelka.variants.bcftools_stats.txt:md5,2c40e667f6ee75761fe6c3b33dda0679",
-                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,0092bfd1833160732c4e3180a2a8d54d",
-                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,91f318ab5e6b017554f8f72866c6a5bd",
+                "sample3.strelka.variants.bcftools_stats.txt:md5,6d4d032ba146941cb226765aaed9d67f",
+                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,62c6123f6494c3cdbd42dc7230e757b3",
+                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,8404ea88658fbc41d447ba20bf46dd0a",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample3.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample3.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
+                "sample3.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
                 "sample4.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample4.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample4.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
+                "sample4.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
                 "sample3.strelka.variants.FILTER.summary:md5,fef8aeadd3b0f3b8c040c0da03bf1cbd",
                 "sample3.strelka.variants.TsTv.count:md5,c5b7a8eda2526d899098439ae4c06a49",
                 "sample4_vs_sample3.strelka.somatic_indels.FILTER.summary:md5,30a45e2bc87f40c89388032cbf75ec65",
@@ -225,48 +218,41 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:30:09.214764374",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-30T23:48:23.853303187"
     },
     "-profile test --tools strelka germline": {
         "content": [
             11,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": "1.23.1"
+                    "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "MOSDEPTH": {
-                    "gzip": "1.14",
-                    "mosdepth": "0.3.14"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "VCFTOOLS_SUMMARY": {
-                    "vcftools": "0.1.17"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.17"
-                },
-                "VCFTOOLS_TSTV_QUAL": {
-                    "vcftools": "0.1.17"
+                    "vcftools": "0.1.16"
                 }
             },
             [
@@ -394,15 +380,15 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,edd8dfc8023e629e476e01c3a1448d30",
                 "mosdepth_perchrom.txt:md5,49fd828d21d79a5c9430cdb30d7f0126",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,5b881919a10bdc8661d05845dead0a98",
+                "samtools-stats-dp.txt:md5,41d36c1a8413d565788a1a364b467606",
                 "samtools_alignment_plot.txt:md5,35f8fd2a557568b2237193f46afbab5c",
                 "samtools_insert_size.txt:md5,be7a60f43f0ca5238674cbf0f9d48917",
-                "sample1.strelka.variants.bcftools_stats.txt:md5,bcb50cfcfefdce0d203aff1d054d9f24",
+                "sample1.strelka.variants.bcftools_stats.txt:md5,7d091579d450a6f6d6e6ed9795dce0cb",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample1.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
+                "sample1.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
                 "sample1.strelka.variants.FILTER.summary:md5,fef8aeadd3b0f3b8c040c0da03bf1cbd",
                 "sample1.strelka.variants.TsTv.count:md5,c5b7a8eda2526d899098439ae4c06a49"
             ],
@@ -414,28 +400,27 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:33:17.232108325",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-30T23:45:18.036242508"
     },
     "-profile test --tools strelka --only_paired_variant_calling": {
         "content": [
             26,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": "1.23.1"
+                    "bcftools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "MOSDEPTH": {
-                    "gzip": "1.14",
-                    "mosdepth": "0.3.14"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -444,21 +429,15 @@
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "VCFTOOLS_SUMMARY": {
-                    "vcftools": "0.1.17"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.17"
-                },
-                "VCFTOOLS_TSTV_QUAL": {
-                    "vcftools": "0.1.17"
+                    "vcftools": "0.1.16"
                 }
             },
             [
@@ -629,32 +608,32 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,ad0637d55d7025330f2f6cb7f9680e64",
                 "mosdepth_perchrom.txt:md5,73ef9a077df1887f9021a581fbf207bc",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,a6501ad36c9d1e9b97878e69f072d63c",
+                "samtools-stats-dp.txt:md5,b446a47b182d93a9e7e74f5f7c8d41c2",
                 "samtools_alignment_plot.txt:md5,7138a2d29f515993e1df8d745e27b757",
                 "samtools_insert_size.txt:md5,e0c5f4ebb18a0e6bd437f0b919725b39",
-                "sample1.strelka.variants.bcftools_stats.txt:md5,bcb50cfcfefdce0d203aff1d054d9f24",
-                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,0092bfd1833160732c4e3180a2a8d54d",
-                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,91f318ab5e6b017554f8f72866c6a5bd",
+                "sample1.strelka.variants.bcftools_stats.txt:md5,7d091579d450a6f6d6e6ed9795dce0cb",
+                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,62c6123f6494c3cdbd42dc7230e757b3",
+                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,8404ea88658fbc41d447ba20bf46dd0a",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample1.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
+                "sample1.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
                 "sample2.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample2.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
+                "sample2.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample3.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample3.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
+                "sample3.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
                 "sample4.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample4.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample4.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
+                "sample4.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
                 "sample1.strelka.variants.FILTER.summary:md5,fef8aeadd3b0f3b8c040c0da03bf1cbd",
                 "sample1.strelka.variants.TsTv.count:md5,c5b7a8eda2526d899098439ae4c06a49",
                 "sample4_vs_sample3.strelka.somatic_indels.FILTER.summary:md5,30a45e2bc87f40c89388032cbf75ec65",
@@ -672,41 +651,34 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-28T11:15:18.903995357",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-30T23:43:48.55687233"
     },
     "-profile test --tools strelka --no_intervals germline": {
         "content": [
             9,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": "1.23.1"
+                    "bcftools": 1.21
                 },
                 "MOSDEPTH": {
-                    "gzip": "1.14",
-                    "mosdepth": "0.3.14"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "VCFTOOLS_SUMMARY": {
-                    "vcftools": "0.1.17"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.17"
-                },
-                "VCFTOOLS_TSTV_QUAL": {
-                    "vcftools": "0.1.17"
+                    "vcftools": "0.1.16"
                 }
             },
             [
@@ -837,15 +809,15 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,edd8dfc8023e629e476e01c3a1448d30",
                 "mosdepth_perchrom.txt:md5,49fd828d21d79a5c9430cdb30d7f0126",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,5b881919a10bdc8661d05845dead0a98",
+                "samtools-stats-dp.txt:md5,41d36c1a8413d565788a1a364b467606",
                 "samtools_alignment_plot.txt:md5,35f8fd2a557568b2237193f46afbab5c",
                 "samtools_insert_size.txt:md5,be7a60f43f0ca5238674cbf0f9d48917",
-                "sample1.strelka.variants.bcftools_stats.txt:md5,198d97ab341f78b4c33ee345ebdfe5e2",
+                "sample1.strelka.variants.bcftools_stats.txt:md5,a125b261633ee5e73c4c0bfead86c77c",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample1.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
+                "sample1.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
                 "sample1.strelka.variants.FILTER.summary:md5,8697a0a983314e98b99b5f6038af65f6",
                 "sample1.strelka.variants.TsTv.count:md5,1481854d2a765f5641856ecf95ca4097"
             ],
@@ -857,25 +829,24 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:30:57.796189985",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-30T23:46:48.703134861"
     },
     "-profile test --tools strelka --no_intervals somatic": {
         "content": [
             20,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": "1.23.1"
+                    "bcftools": 1.21
                 },
                 "MOSDEPTH": {
-                    "gzip": "1.14",
-                    "mosdepth": "0.3.14"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -884,17 +855,11 @@
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "VCFTOOLS_SUMMARY": {
-                    "vcftools": "0.1.17"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.17"
-                },
-                "VCFTOOLS_TSTV_QUAL": {
-                    "vcftools": "0.1.17"
+                    "vcftools": "0.1.16"
                 }
             },
             [
@@ -1052,22 +1017,22 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,0cc87c596a0fc30ebb676c4587e986de",
                 "mosdepth_perchrom.txt:md5,336d786b273c4d4e714d51c44207ff56",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,bf6d30315fd7608b97b2a4eb1dc71fdc",
+                "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
                 "samtools_insert_size.txt:md5,8fa108dcbe0da42e9425dd125fe22905",
-                "sample3.strelka.variants.bcftools_stats.txt:md5,9a87ae32f97121c0e033043cd6605f67",
-                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,0092bfd1833160732c4e3180a2a8d54d",
-                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,3cc8ac7236cc77f857f6e56a3efa27f5",
+                "sample3.strelka.variants.bcftools_stats.txt:md5,322c544c624565a9ab0e128bca556d81",
+                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,62c6123f6494c3cdbd42dc7230e757b3",
+                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,eec9d410eb24068b9a67be417c41d54e",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample3.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
-                "sample3.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
+                "sample3.recal.regions.bed.gz.csi:md5,5fc6f880df27ca754ab229f0ccad2aea",
                 "sample4.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
                 "sample4.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
-                "sample4.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
+                "sample4.recal.regions.bed.gz.csi:md5,68b7a9a98053b1122bdca68a1e1c87dd",
                 "sample3.strelka.variants.FILTER.summary:md5,8697a0a983314e98b99b5f6038af65f6",
                 "sample3.strelka.variants.TsTv.count:md5,1481854d2a765f5641856ecf95ca4097",
                 "sample4_vs_sample3.strelka.somatic_indels.FILTER.summary:md5,30a45e2bc87f40c89388032cbf75ec65",
@@ -1085,10 +1050,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:35:17.803996008",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-30T23:49:57.22542474"
     }
 }

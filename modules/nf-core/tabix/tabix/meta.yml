@@ -1,0 +1,63 @@
+name: tabix_tabix
+description: create tabix index from a sorted bgzip tab-delimited genome file
+keywords:
+  - index
+  - tabix
+  - vcf
+tools:
+  - tabix:
+      description: Generic indexer for TAB-delimited genome position files.
+      homepage: https://www.htslib.org/doc/tabix.html
+      documentation: https://www.htslib.org/doc/tabix.1.html
+      doi: 10.1093/bioinformatics/btq671
+      licence: ["MIT"]
+      identifier: biotools:tabix
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - tab:
+        type: file
+        description: TAB-delimited genome position file compressed with bgzip
+        pattern: "*.{bed.gz,gff.gz,sam.gz,vcf.gz}"
+        ontologies: []
+output:
+  tbi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.tbi":
+          type: file
+          description: tabix index file
+          pattern: "*.{tbi}"
+          ontologies: []
+  csi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.csi":
+          type: file
+          description: coordinate sorted index file
+          pattern: "*.{csi}"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@joseespinosa"
+  - "@drpatelh"
+  - "@maxulysse"
+maintainers:
+  - "@joseespinosa"
+  - "@drpatelh"
+  - "@maxulysse"

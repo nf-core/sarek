@@ -18,6 +18,7 @@ workflow BAM_BASERECALIBRATOR {
     known_sites_tbi // channel: [optional]  [ known_sites_tbi ]
 
     main:
+    versions = Channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
@@ -35,10 +36,10 @@ workflow BAM_BASERECALIBRATOR {
     )
 
     // Figuring out if there is one or more table(s) from the same sample
-    table_to_merge = GATK4_BASERECALIBRATOR.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple().branch{ meta, _table ->
+    table_to_merge = GATK4_BASERECALIBRATOR.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple().branch{
         // Use meta.num_intervals to asses number of intervals
-        single:   meta.num_intervals <= 1
-        multiple: meta.num_intervals > 1
+        single:   it[0].num_intervals <= 1
+        multiple: it[0].num_intervals > 1
     }
 
     // Only when using intervals
@@ -49,8 +50,12 @@ workflow BAM_BASERECALIBRATOR {
         // Remove no longer necessary field: num_intervals
         .map{ meta, table -> [ meta - meta.subMap('num_intervals'), table ] }
 
+    // Gather versions of all tools used
+    versions = versions.mix(GATK4_BASERECALIBRATOR.out.versions)
+    versions = versions.mix(GATK4_GATHERBQSRREPORTS.out.versions)
 
     emit:
     table_bqsr // channel: [ meta, table ]
 
+    versions   // channel: [ versions.yml ]
 }

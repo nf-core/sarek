@@ -4,34 +4,34 @@
             10,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "BUILD_INTERVALS": {
-                    "gawk": "5.3.1"
+                    "gawk": "5.3.0"
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.19-r1273"
+                    "bwa": "0.7.18-r1243-dirty"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.19-r1273",
-                    "samtools": "1.22.1"
+                    "bwa": "0.7.18-r1243-dirty",
+                    "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "MERGE_BAM": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
@@ -77,10 +77,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-28T14:27:36.729918989",
+        "timestamp": "2025-12-15T19:53:53.927423365",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         }
     },
     "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
@@ -88,31 +88,31 @@
             10,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.19-r1273"
+                    "bwa": "0.7.18-r1243-dirty"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.19-r1273",
-                    "samtools": "1.22.1"
+                    "bwa": "0.7.18-r1243-dirty",
+                    "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "MERGE_BAM": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
@@ -139,10 +139,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-28T14:27:26.457705565",
+        "timestamp": "2025-12-15T19:51:26.151477364",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         }
     },
     "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
@@ -150,24 +150,24 @@
             7,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.19-r1273"
+                    "bwa": "0.7.18-r1243-dirty"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.19-r1273",
-                    "samtools": "1.22.1"
+                    "bwa": "0.7.18-r1243-dirty",
+                    "samtools": 1.21
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "MERGE_BAM": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
@@ -197,10 +197,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-28T14:27:48.805959532",
+        "timestamp": "2025-12-15T19:52:40.407831822",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         }
     },
     "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub": {
@@ -208,24 +208,24 @@
             7,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.19-r1273"
+                    "bwa": "0.7.18-r1243-dirty"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.19-r1273",
-                    "samtools": "1.22.1"
+                    "bwa": "0.7.18-r1243-dirty",
+                    "samtools": 1.21
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "MERGE_BAM": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
@@ -261,31 +261,31 @@
             9,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.19-r1273"
+                    "bwa": "0.7.18-r1243-dirty"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.19-r1273",
-                    "samtools": "1.22.1"
+                    "bwa": "0.7.18-r1243-dirty",
+                    "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "MERGE_BAM": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
@@ -318,34 +318,34 @@
             10,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "BUILD_INTERVALS": {
-                    "gawk": "5.3.1"
+                    "gawk": "5.3.0"
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.19-r1273"
+                    "bwa": "0.7.18-r1243-dirty"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.19-r1273",
-                    "samtools": "1.22.1"
+                    "bwa": "0.7.18-r1243-dirty",
+                    "samtools": 1.21
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "MERGE_BAM": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [

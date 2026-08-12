@@ -26,57 +26,30 @@ input:
         type: file
         description: BAM/CRAM/SAM file
         pattern: "*.{bam,cram,sam}"
-        ontologies: []
     - index:
         type: file
         description: BAM.BAI/BAM.CSI/CRAM.CRAI file (optional)
         pattern: "*.{.bai,.csi,.crai}"
-        ontologies: []
   - - meta2:
         type: map
         description: |
           Groovy Map containing reference information
-          e.g. [ id:'genome' ]
+          e.g. [ id:'test' ]
     - fasta:
         type: file
-        description: Fasta reference file
+        description: Reference file the CRAM was created with (optional)
         pattern: "*.{fasta,fa}"
-        ontologies:
-          - edam: http://edamontology.org/format_1929 # FASTA
-    - fai:
-        type: file
-        description: Fasta reference file index
-        pattern: "*.{fai}"
-        ontologies:
-          - edam: http://edamontology.org/format_3326 # Index
-  - - meta3:
-        type: map
-        description: |
-          Groovy Map containing sample information
-          e.g. [ id:'test', single_end:false ]
-    - qname:
+  - - qname:
         type: file
         description: Optional file with read names to output only select alignments
         pattern: "*.{txt,list}"
-        ontologies: []
-  - - meta4:
-        type: map
-        description: |
-          Groovy Map containing sample information
-          e.g. [ id:'test', single_end:false ]
-    - bed:
-        type: file
-        description: Optional BED file for filtering alignments by genomic region (-L)
-        pattern: "*.{bed}"
-        ontologies:
-          - edam: http://edamontology.org/format_3003 # BED
-  - index_format:
-      type: string
-      description: Index format, used together with ext.args = '--write-index'
-      pattern: "bai|csi|crai"
+  - - index_format:
+        type: string
+        description: Index format, used together with ext.args = '--write-index'
+        pattern: "bai|csi|crai"
 output:
-  bam:
-    - - meta:
+  - bam:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -85,9 +58,8 @@ output:
           type: file
           description: optional filtered/converted BAM file
           pattern: "*.{bam}"
-          ontologies: []
-  cram:
-    - - meta:
+  - cram:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -96,9 +68,8 @@ output:
           type: file
           description: optional filtered/converted CRAM file
           pattern: "*.{cram}"
-          ontologies: []
-  sam:
-    - - meta:
+  - sam:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -107,9 +78,8 @@ output:
           type: file
           description: optional filtered/converted SAM file
           pattern: "*.{sam}"
-          ontologies: []
-  bai:
-    - - meta:
+  - bai:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -118,9 +88,8 @@ output:
           type: file
           description: optional BAM file index
           pattern: "*.{bai}"
-          ontologies: []
-  csi:
-    - - meta:
+  - csi:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -129,9 +98,8 @@ output:
           type: file
           description: optional tabix BAM file index
           pattern: "*.{csi}"
-          ontologies: []
-  crai:
-    - - meta:
+  - crai:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -140,9 +108,8 @@ output:
           type: file
           description: optional CRAM file index
           pattern: "*.{crai}"
-          ontologies: []
-  unselected:
-    - - meta:
+  - unselected:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -151,9 +118,8 @@ output:
           type: file
           description: optional file with unselected alignments
           pattern: "*.unselected.{bam,cram,sam}"
-          ontologies: []
-  unselected_index:
-    - - meta:
+  - unselected_index:
+      - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -162,30 +128,11 @@ output:
           type: file
           description: index for the "unselected" file
           pattern: "*.unselected.{csi,crai}"
-          ontologies: []
-  versions_samtools:
-    - - ${task.process}:
-          type: string
-          description: Name of the process
-      - samtools:
-          type: string
-          description: Name of the tool
-      - samtools version | sed "1!d;s/.* //":
-          type: eval
-          description: The expression to obtain the version of the tool
-
-topics:
-  versions:
-    - - ${task.process}:
-          type: string
-          description: Name of the process
-      - samtools:
-          type: string
-          description: Name of the tool
-      - samtools version | sed "1!d;s/.* //":
-          type: eval
-          description: The expression to obtain the version of the tool
-
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@drpatelh"
   - "@joseespinosa"
@@ -196,4 +143,3 @@ maintainers:
   - "@joseespinosa"
   - "@FriederikeHanssen"
   - "@priyanka-surana"
-  - "@matthdsm"

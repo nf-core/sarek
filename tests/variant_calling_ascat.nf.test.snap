@@ -11,11 +11,11 @@
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
@@ -106,11 +106,11 @@
                     "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
@@ -195,18 +195,17 @@
             {
                 "ASCAT": {
                     "alleleCounter": "4.3.0",
-                    "bioconductor-ascat": "3.2.0"
+                    "ascat": "3.2.0"
                 },
                 "MOSDEPTH": {
-                    "gzip": "1.14",
-                    "mosdepth": "0.3.14"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
@@ -307,19 +306,19 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,c5095d8ac96d906979d5ead383b14d73",
                 "mosdepth_perchrom.txt:md5,a79d8d9cb20cf117f7510eb1e3674997",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
-                "samtools-stats-dp.txt:md5,a8448cbfa77d72de4e86a90bee0e5d17",
+                "samtools-stats-dp.txt:md5,272184ca54d87094df9ab12335618e9a",
                 "samtools_alignment_plot.txt:md5,cd6531ba39758cf6ad96ba9d83df2230",
                 "samtools_insert_size.txt:md5,80b42e59a90818b77a39d87cd6b590e9",
                 "NA12878.recal.mosdepth.global.dist.txt:md5,a5ccac0290f8331d0aa7d68f0c9b0934",
                 "NA12878.recal.mosdepth.region.dist.txt:md5,81a999e01ee353b6a3dd5db321053ffc",
                 "NA12878.recal.mosdepth.summary.txt:md5,f78fade2ac186184fc44eb1d7ec443d0",
                 "NA12878.recal.regions.bed.gz:md5,2870532cc9d041c21999cb0a14d453b5",
-                "NA12878.recal.regions.bed.gz.csi:md5,2cc4e07c8ef77b90542d238763002be9",
+                "NA12878.recal.regions.bed.gz.csi:md5,58b5cd4cb9ab131a0f0a601eb72bcd04",
                 "NA12878_1X.recal.mosdepth.global.dist.txt:md5,8c70c08460d008b30c231a2d00fc3fb9",
                 "NA12878_1X.recal.mosdepth.region.dist.txt:md5,ddfe117ae7b0474c1e27857a282da9fb",
                 "NA12878_1X.recal.mosdepth.summary.txt:md5,8056360df7642e84fcc4355454cf617a",
                 "NA12878_1X.recal.regions.bed.gz:md5,0e6ff7afa2678e2dc667ec650bb18f75",
-                "NA12878_1X.recal.regions.bed.gz.csi:md5,edac5d938e218575a6fd764accb7fbf2",
+                "NA12878_1X.recal.regions.bed.gz.csi:md5,5d07e60555f3087f5805dd20ed3bea8b",
                 "NA12878_1X_vs_NA12878.cnvs.txt:md5,68b329da9893e34099c7d8ad5cb9c940",
                 "NA12878_1X_vs_NA12878.purityploidy.txt:md5,f1484c2b120834d3db8774ad02a038b9",
                 "NA12878_1X_vs_NA12878.segments.txt:md5,68b329da9893e34099c7d8ad5cb9c940",
@@ -335,10 +334,10 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:27:42.266137545",
+        "timestamp": "2025-09-30T22:09:59.120270404",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.7"
         }
     },
     "-profile test --tools ascat --input ascat_somatic.csv": {
@@ -347,18 +346,17 @@
             {
                 "ASCAT": {
                     "alleleCounter": "4.3.0",
-                    "bioconductor-ascat": "3.2.0"
+                    "ascat": "3.2.0"
                 },
                 "MOSDEPTH": {
-                    "gzip": "1.14",
-                    "mosdepth": "0.3.14"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": "1.24"
+                    "samtools": 1.21
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
+                    "bgzip": "1.21",
+                    "tabix": "1.21"
                 }
             },
             [
@@ -457,19 +455,19 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,c5095d8ac96d906979d5ead383b14d73",
                 "mosdepth_perchrom.txt:md5,a79d8d9cb20cf117f7510eb1e3674997",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
-                "samtools-stats-dp.txt:md5,a8448cbfa77d72de4e86a90bee0e5d17",
+                "samtools-stats-dp.txt:md5,272184ca54d87094df9ab12335618e9a",
                 "samtools_alignment_plot.txt:md5,cd6531ba39758cf6ad96ba9d83df2230",
                 "samtools_insert_size.txt:md5,80b42e59a90818b77a39d87cd6b590e9",
                 "NA12878.recal.mosdepth.global.dist.txt:md5,a5ccac0290f8331d0aa7d68f0c9b0934",
                 "NA12878.recal.mosdepth.region.dist.txt:md5,81a999e01ee353b6a3dd5db321053ffc",
                 "NA12878.recal.mosdepth.summary.txt:md5,f78fade2ac186184fc44eb1d7ec443d0",
                 "NA12878.recal.regions.bed.gz:md5,2870532cc9d041c21999cb0a14d453b5",
-                "NA12878.recal.regions.bed.gz.csi:md5,2cc4e07c8ef77b90542d238763002be9",
+                "NA12878.recal.regions.bed.gz.csi:md5,58b5cd4cb9ab131a0f0a601eb72bcd04",
                 "NA12878_1X.recal.mosdepth.global.dist.txt:md5,8c70c08460d008b30c231a2d00fc3fb9",
                 "NA12878_1X.recal.mosdepth.region.dist.txt:md5,ddfe117ae7b0474c1e27857a282da9fb",
                 "NA12878_1X.recal.mosdepth.summary.txt:md5,8056360df7642e84fcc4355454cf617a",
                 "NA12878_1X.recal.regions.bed.gz:md5,0e6ff7afa2678e2dc667ec650bb18f75",
-                "NA12878_1X.recal.regions.bed.gz.csi:md5,edac5d938e218575a6fd764accb7fbf2",
+                "NA12878_1X.recal.regions.bed.gz.csi:md5,5d07e60555f3087f5805dd20ed3bea8b",
                 "NA12878_1X_vs_NA12878.cnvs.txt:md5,68b329da9893e34099c7d8ad5cb9c940",
                 "NA12878_1X_vs_NA12878.purityploidy.txt:md5,f1484c2b120834d3db8774ad02a038b9",
                 "NA12878_1X_vs_NA12878.segments.txt:md5,68b329da9893e34099c7d8ad5cb9c940",
@@ -487,10 +485,10 @@
                 "WARN: No LogRCorrection performed in ASCAT. For LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files."
             ]
         ],
-        "timestamp": "2026-07-27T10:28:48.645382058",
+        "timestamp": "2025-12-15T22:00:03.974713999",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         }
     }
 }
