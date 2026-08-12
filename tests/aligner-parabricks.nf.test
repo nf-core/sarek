@@ -65,6 +65,7 @@ nextflow_pipeline {
                 parabricks_applybqsr: true,
                 save_reference: true,
                 save_mapped: true,
+                tools: '',
                 wes : true,
             ],
             gpu: true,
