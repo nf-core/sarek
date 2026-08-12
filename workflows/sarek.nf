@@ -690,7 +690,7 @@ def readFirstLineOfFastq(path) {
             def InputStream gzipStream = new java.util.zip.GZIPInputStream(stream)
             def Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
             def BufferedReader buffered = new BufferedReader(decoder)
-line = buffered.readLine()
+            line = buffered.readLine()
             assert line.startsWith('@')
         }
     }
