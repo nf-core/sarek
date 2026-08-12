@@ -210,19 +210,19 @@ process {
 
 #### Using GPU accelerated variant calling
 
-Sarek supports two GPU-accelerated variant callers via [NVIDIA Clara Parabricks](https://docs.nvidia.com/clara/parabricks/latest/), both of which require a GPU and do not support `--profile conda`.
-
 > [!NOTE]
 > These are an experimental addition to the pipeline.
 
-| Tool                                                                                                                          | `--tools` value              | Equivalent to        | Command                                                                                            |
-| ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | -------------------- | -------------------------------------------------------------------------------------------------- |
-| [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html)         | `parabricks_deepvariant`     | DeepVariant          | `nextflow run nf-core/sarek --tools parabricks_deepvariant --profile <docker/singularity>,gpu`     |
-| [Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) | `parabricks_haplotypecaller` | GATK HaplotypeCaller | `nextflow run nf-core/sarek --tools parabricks_haplotypecaller --profile <docker/singularity>,gpu` |
+Sarek supports the following GPU-accelerated variant callers from [NVIDIA Parabricks](https://docs.nvidia.com/clara/parabricks/latest/) as an alternative to CPU based implementations: 
 
-Both callers take a CRAM file as input and output a single VCF per sample. Intervals can be provided via `--intervals` to restrict calling to specific regions. For DeepVariant, use `--wes` to switch from WGS to WES mode (passes `--mode wes` to pbrun). HaplotypeCaller does not support scatter/gather over intervals.
+* [Haplotypecaller](https://docs.nvidia.com/clara/parabricks/tool-reference/tools/haplotypecaller) 
+* [Deepvariant](https://docs.nvidia.com/clara/parabricks/tool-reference/tools/deepvariant) 
 
-Joint germline variant calling is not yet supported for Parabricks Haplotypecaller: it only produces per-sample VCFs, and the wiring to combine per-sample gVCFs into a joint call is still to come. `--joint_germline` is therefore ignored by this caller, and using it with `parabricks_haplotypecaller` as your only germline caller fails early rather than running and producing no joint call. Combine it with GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as well.
+There are a few differences to note about the Parabricks versions of these tools:  
+* Parabricks does not support the use of this pipeline with `--profile conda`.
+* Parabricks HaplotypeCaller does not support scatter/gather over intervals. 
+* Parabricks Haplotypecaller does not yet support joint germline variant calling, it only produces per-sample VCFs, and the wiring to combine per-sample gVCFs into a joint call is still to come. `--joint_germline` is therefore ignored by this caller, and using it with `parabricks_haplotypecaller` as your only germline caller fails early rather than running and producing no joint call. Combine it with GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as well.
+* For DeepVariant, use `--wes` to switch from WGS to WES mode (passes `--mode wes` to pbrun). 
 
 ### Start with duplicate marking (`--step markduplicates`)
 
