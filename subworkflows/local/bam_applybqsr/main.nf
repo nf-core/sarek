@@ -10,14 +10,14 @@ include { GATK4_APPLYBQSR           } from '../../../modules/nf-core/gatk4/apply
 
 workflow BAM_APPLYBQSR {
     take:
-    cram      // channel: [mandatory] [ meta, cram, crai, recal ]
-    dict      // channel: [mandatory] [ meta, dict ]
-    fasta     // channel: [mandatory] [ meta, fasta ]
-    fasta_fai // channel: [mandatory] [ meta, fasta_fai ]
-    intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
+    cram                // channel: [mandatory] [ meta, cram, crai, recal ]
+    dict                // channel: [mandatory] [ meta, dict ]
+    fasta               // channel: [mandatory] [ meta, fasta ]
+    fasta_fai           // channel: [mandatory] [ meta, fasta_fai ]
+    intervals           // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
+    save_output_as_bam  // boolean: [mandatory] params.save_output_as_bam
 
     main:
-    versions = channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     // Move num_intervals to meta map
@@ -25,22 +25,29 @@ workflow BAM_APPLYBQSR {
         .combine(intervals)
         .map { meta, cram_, crai, recal, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], cram_, crai, recal, intervals_] }
 
+    // fasta/fasta_fai/dict carry independent meta maps (computed vs user-supplied) so they
+    // can't be joined by key — reshape into one tuple the way CRAM_SAMPLEQC does in sarek.nf
+    fasta_fai_dict = fasta
+        .combine(fasta_fai)
+        .combine(dict)
+        .map { meta_fasta, fasta_, _meta_fai, fai, _meta_dict, dict_ -> [meta_fasta, fasta_, fai, dict_] }
+        .collect()
+
     // RUN APPLYBQSR
     GATK4_APPLYBQSR(
         cram_intervals,
-        fasta.map { _meta, fasta_ -> [fasta_] },
-        fasta_fai.map { _meta, fasta_fai_ -> [fasta_fai_] },
-        dict.map { _meta, dict_ -> [dict_] },
+        fasta_fai_dict,
+        save_output_as_bam ? 'bam' : 'cram',
     )
 
-    // BAM path — populated when ext.suffix='bam', empty otherwise
+    // BAM path — populated when save_output_as_bam is true, empty otherwise
     bam_to_merge = GATK4_APPLYBQSR.out.bam
         .map { meta, bam_ -> [groupKey(meta, meta.num_intervals), bam_] }
         .groupTuple()
 
     BAM_MERGE_INDEX_SAMTOOLS(bam_to_merge)
 
-    // CRAM path — populated when ext.suffix='cram', empty otherwise
+    // CRAM path — populated when save_output_as_bam is false, empty otherwise
     cram_to_merge = GATK4_APPLYBQSR.out.cram.map { meta, cram_ -> [groupKey(meta, meta.num_intervals), cram_] }.groupTuple()
 
     CRAM_MERGE_INDEX_SAMTOOLS(
@@ -54,12 +61,6 @@ workflow BAM_APPLYBQSR {
         .mix(CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai)
         .map { meta, file_, index -> [meta - meta.subMap('num_intervals'), file_, index] }
 
-    // Gather versions of all tools used
-    versions = versions.mix(BAM_MERGE_INDEX_SAMTOOLS.out.versions)
-    versions = versions.mix(CRAM_MERGE_INDEX_SAMTOOLS.out.versions)
-    versions = versions.mix(GATK4_APPLYBQSR.out.versions)
-
     emit:
     alignment = recal_out // channel: [ meta, file, index ] — BAM or CRAM
-    versions              // channel: [ versions.yml ]
 }

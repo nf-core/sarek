@@ -18,16 +18,15 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     val_outdir                      // output directory for saving mapped files
 
     main:
-    ch_versions = channel.empty()
     ch_reports  = channel.empty()
 
-    ch_reads.map { meta, reads ->
+    reads_grouping_key = ch_reads.map { meta, reads ->
             [ meta.subMap('patient', 'sample', 'sex', 'status'), reads ]
         }
         .groupTuple()
         .map { meta, reads ->
             meta + [ n_fastq: reads.size() ] // We can drop the FASTQ files now that we know how many there are
-        }.set { reads_grouping_key }
+        }
 
     ch_reads = ch_reads.map{ meta, reads ->
         // Update meta.id to meta.sample no multiple lanes or splitted fastqs
@@ -78,8 +77,6 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     // crams are merged (when multiple lanes from the same sample) and indexed
     CRAM_MERGE_INDEX_SAMTOOLS(cram_mapped, ch_fasta, ch_fasta_fai)
 
-    ch_versions = ch_versions.mix(CRAM_MERGE_INDEX_SAMTOOLS.out.versions)
-
     cram_variant_calling = CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai
         .map { meta, cram, crai ->
                 [ meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [ data_type: 'cram', id: meta.sample ], cram, crai ]
@@ -87,8 +84,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
 
     if (val_save_output_as_bam) {
         // Convert CRAM files to BAM
-        CRAM_TO_BAM(cram_variant_calling, ch_fasta, ch_fasta_fai)
-        ch_versions = ch_versions.mix(CRAM_TO_BAM.out.versions)
+        CRAM_TO_BAM(cram_variant_calling, ch_fasta.combine(ch_fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai ] }.collect())
         CHANNEL_ALIGN_CREATE_CSV(CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true), val_outdir, val_save_output_as_bam)
     } else if (val_save_mapped) {
         CHANNEL_ALIGN_CREATE_CSV(cram_variant_calling, val_outdir, val_save_output_as_bam)
@@ -96,6 +92,5 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
 
     emit:
     cram      = cram_variant_calling     // channel: [ val(meta), cram, crai ]
-    versions  = ch_versions              // channel: [ versions.yml ]
     reports   = ch_reports
 }

@@ -1,12 +1,14 @@
 name: fgbio_callmolecularconsensusreads
-description: Calls consensus sequences from reads with the same unique molecular tag.
+description: Calls consensus sequences from reads with the same unique molecular
+  tag.
 keywords:
   - UMIs
   - consensus sequence
   - bam
 tools:
   - fgbio:
-      description: Tools for working with genomic and high throughput sequencing data.
+      description: Tools for working with genomic and high throughput sequencing
+        data.
       homepage: https://github.com/fulcrumgenomics/fgbio
       documentation: http://fulcrumgenomics.github.io/fgbio/
       licence: ["MIT"]
@@ -22,15 +24,16 @@ input:
         description: |
           The input SAM or BAM file, grouped by UMIs
         pattern: "*.{bam,sam}"
-  - - min_reads:
-        type: integer
-        description: Minimum number of original reads to build each consensus read.
-  - - min_baseq:
-        type: integer
-        description: Ignore bases in raw reads that have Q below this value.
+        ontologies: []
+  - min_reads:
+      type: integer
+      description: Minimum number of original reads to build each consensus read.
+  - min_baseq:
+      type: integer
+      description: Ignore bases in raw reads that have Q below this value.
 output:
-  - bam:
-      - meta:
+  bam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -40,11 +43,29 @@ output:
           description: |
             Output SAM or BAM file to write consensus reads.
           pattern: "*.{bam,sam}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_fgbio:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - fgbio:
+          type: string
+          description: The tool name
+      - 'fgbio --version 2>&1 | tr -d "[:cntrl:]" | sed -e "s/^.*Version: //;s/\[.*$//"':
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - fgbio:
+          type: string
+          description: The tool name
+      - 'fgbio --version 2>&1 | tr -d "[:cntrl:]" | sed -e "s/^.*Version: //;s/\[.*$//"':
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@sruthipsuresh"
 maintainers:

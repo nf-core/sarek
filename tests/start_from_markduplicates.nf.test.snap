@@ -7,34 +7,35 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -158,19 +159,19 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,d75ab155c53a8469919bee1c9808eb4b",
+                "samtools-stats-dp.txt:md5,8e1141a013873b3e9dfc7718fb8c7b23",
                 "samtools_alignment_plot.txt:md5,7a727168e9bbb3f4c39894933438df98",
                 "samtools_insert_size.txt:md5,c00ec0f338c40f2f1bc129f46ffb9084",
                 "test.md.mosdepth.global.dist.txt:md5,8e875e20e3fb9cf288d68c1d223f6fd5",
                 "test.md.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.md.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
                 "test.md.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
-                "test.md.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917",
+                "test.md.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c",
                 "test.recal.mosdepth.global.dist.txt:md5,8e875e20e3fb9cf288d68c1d223f6fd5",
                 "test.recal.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.recal.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
                 "test.recal.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
-                "test.recal.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917"
+                "test.recal.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c"
             ],
             "No BAM files",
             [
@@ -180,11 +181,11 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:26:01.849929162",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T21:45:52.52962218"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --tools null": {
         "content": [
@@ -194,34 +195,35 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -345,19 +347,19 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,d75ab155c53a8469919bee1c9808eb4b",
+                "samtools-stats-dp.txt:md5,8e1141a013873b3e9dfc7718fb8c7b23",
                 "samtools_alignment_plot.txt:md5,7a727168e9bbb3f4c39894933438df98",
                 "samtools_insert_size.txt:md5,c00ec0f338c40f2f1bc129f46ffb9084",
                 "test.md.mosdepth.global.dist.txt:md5,8e875e20e3fb9cf288d68c1d223f6fd5",
                 "test.md.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.md.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
                 "test.md.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
-                "test.md.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917",
+                "test.md.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c",
                 "test.recal.mosdepth.global.dist.txt:md5,8e875e20e3fb9cf288d68c1d223f6fd5",
                 "test.recal.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test.recal.mosdepth.summary.txt:md5,b23cf96942b2ada3f41172a9349a1175",
                 "test.recal.regions.bed.gz:md5,74cd0c779c7b3228adcf3b177333886a",
-                "test.recal.regions.bed.gz.csi:md5,0dc011f3344841dc14aa488da905e917"
+                "test.recal.regions.bed.gz.csi:md5,551e8ad190dfafe3a1491661075a277c"
             ],
             "No BAM files",
             [
@@ -367,11 +369,11 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-28T11:25:22.044646175",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T21:48:22.238914133"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --skip_tools markduplicates --tools null": {
         "content": [
@@ -381,30 +383,31 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -503,19 +506,19 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,fcecb7f7ed584a1395065568e0ec1259",
                 "mosdepth_perchrom.txt:md5,4153678ed78ce01defe11f5b9fb8deb4",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
-                "samtools-stats-dp.txt:md5,dae2fa55a81049479a787e0fe5a64289",
+                "samtools-stats-dp.txt:md5,9dc8fae2db9d6106f819024bc3d8bad5",
                 "samtools_alignment_plot.txt:md5,b693942009526869bd21cbc42d54f53c",
                 "samtools_insert_size.txt:md5,7e95fe3ffb2346827b9e63da4de60842",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
                 "test.sorted.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.sorted.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.sorted.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.sorted.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.sorted.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259"
+                "test.sorted.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d"
             ],
             "No BAM files",
             [
@@ -524,11 +527,11 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:35:07.795402388",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T21:47:02.418026538"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --skip_tools markduplicates --tools null": {
         "content": [
@@ -538,30 +541,31 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -660,19 +664,19 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,fcecb7f7ed584a1395065568e0ec1259",
                 "mosdepth_perchrom.txt:md5,4153678ed78ce01defe11f5b9fb8deb4",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
-                "samtools-stats-dp.txt:md5,dae2fa55a81049479a787e0fe5a64289",
+                "samtools-stats-dp.txt:md5,9dc8fae2db9d6106f819024bc3d8bad5",
                 "samtools_alignment_plot.txt:md5,b693942009526869bd21cbc42d54f53c",
                 "samtools_insert_size.txt:md5,7e95fe3ffb2346827b9e63da4de60842",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.recal.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259",
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
                 "test.sorted.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.sorted.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.sorted.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.sorted.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
-                "test.sorted.regions.bed.gz.csi:md5,b3716e5cd1744610e69c29bd4ffad259"
+                "test.sorted.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d"
             ],
             "No BAM files",
             [
@@ -681,10 +685,10 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:19:53.572042834",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.7"
-        },
-        "timestamp": "2025-09-30T21:44:33.781719225"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

@@ -13,8 +13,7 @@ workflow BAM_SENTIEON_DEDUP {
     intervals_bed_combined // channel: [optional]  [ intervals_bed ]
 
     main:
-    versions = Channel.empty()
-    reports  = Channel.empty()
+    reports  = channel.empty()
 
     bam = bam.map{ meta, bam_ -> [ meta - meta.subMap('data_type'), bam_ ] }
     bai = bai.map{ meta, bai_ -> [ meta - meta.subMap('data_type'), bai_ ] }
@@ -30,7 +29,7 @@ workflow BAM_SENTIEON_DEDUP {
         : SENTIEON_DEDUP.out.cram.join(SENTIEON_DEDUP.out.crai, failOnDuplicate: true, failOnMismatch: true)
 
     // QC on alignment
-    CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, intervals_bed_combined)
+    CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, fasta_fai, intervals_bed_combined)
 
     // Gather all reports generated
     reports = reports.mix(SENTIEON_DEDUP.out.metrics)
@@ -38,12 +37,7 @@ workflow BAM_SENTIEON_DEDUP {
     reports = reports.mix(SENTIEON_DEDUP.out.score)
     reports = reports.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.reports)
 
-    // Gather versions of all tools used
-    versions = versions.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.versions)
-
     emit:
     alignment   // channel: [ meta, file, index ] — BAM or CRAM
     reports
-
-    versions    // channel: [ versions.yml ]
 }

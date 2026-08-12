@@ -4,20 +4,20 @@
             61,
             {
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "CAT_FASTQ": {
-                    "cat": 9.5
+                    "cat": "9.5"
                 },
                 "COLLATE_FASTQ_MAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "COLLATE_FASTQ_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -26,41 +26,42 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_MERGE_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_MAP_MAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_MAP_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_UNMAP_MAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_VIEW_UNMAP_UNMAP": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "SPRING_DECOMPRESS_TO_FQ_PAIR": {
                     "spring": "1.1.1"
@@ -72,12 +73,12 @@
                     "spring": "1.1.1"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -372,49 +373,49 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,63dfeeafbef0aa87f48ab923402dcaed",
+                "samtools-stats-dp.txt:md5,6ff529835252acfb12982e1e749a12ab",
                 "samtools_alignment_plot.txt:md5,7c53a04c42499c92735d947bc8417dd6",
                 "samtools_insert_size.txt:md5,5a1a7d2501dbb68ff13f4b7e79b63e8c",
                 "test.md.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test.md.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test.md.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
                 "test.md.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
-                "test.md.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
+                "test.md.regions.bed.gz.csi:md5,f58637ea3ed05bef11f054941c96e252",
                 "test.recal.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test.recal.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test.recal.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
                 "test.recal.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
-                "test.recal.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
+                "test.recal.regions.bed.gz.csi:md5,f58637ea3ed05bef11f054941c96e252",
                 "test2.md.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test2.md.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test2.md.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
                 "test2.md.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
-                "test2.md.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
+                "test2.md.regions.bed.gz.csi:md5,f58637ea3ed05bef11f054941c96e252",
                 "test2.recal.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test2.recal.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test2.recal.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
                 "test2.recal.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
-                "test2.recal.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
+                "test2.recal.regions.bed.gz.csi:md5,f58637ea3ed05bef11f054941c96e252",
                 "test3.md.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test3.md.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test3.md.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
                 "test3.md.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
-                "test3.md.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
+                "test3.md.regions.bed.gz.csi:md5,f58637ea3ed05bef11f054941c96e252",
                 "test3.recal.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test3.recal.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test3.recal.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
                 "test3.recal.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
-                "test3.recal.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
+                "test3.recal.regions.bed.gz.csi:md5,f58637ea3ed05bef11f054941c96e252",
                 "test_bam.md.mosdepth.global.dist.txt:md5,9cb9b181119256ed17a77dcf44d58285",
                 "test_bam.md.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test_bam.md.mosdepth.summary.txt:md5,dbe376360e437c89190139ef0ae6769a",
                 "test_bam.md.regions.bed.gz:md5,0e5ed846b9b11717e42e93eec60f4ffc",
-                "test_bam.md.regions.bed.gz.csi:md5,d0713716f63ac573f4a3385733e9a537",
+                "test_bam.md.regions.bed.gz.csi:md5,b21a943497a42870c5035d81a87524b0",
                 "test_bam.recal.mosdepth.global.dist.txt:md5,9cb9b181119256ed17a77dcf44d58285",
                 "test_bam.recal.mosdepth.region.dist.txt:md5,75e1ce7e55af51f4985fa91654a5ea2d",
                 "test_bam.recal.mosdepth.summary.txt:md5,dbe376360e437c89190139ef0ae6769a",
                 "test_bam.recal.regions.bed.gz:md5,0e5ed846b9b11717e42e93eec60f4ffc",
-                "test_bam.recal.regions.bed.gz.csi:md5,d0713716f63ac573f4a3385733e9a537"
+                "test_bam.recal.regions.bed.gz.csi:md5,b21a943497a42870c5035d81a87524b0"
             ],
             [
                 "test.sorted.bam:md5,59ecc5c82c7af1283eea7507c590c831",
@@ -434,7 +435,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-04-09T13:11:35.435247726",
+        "timestamp": "2026-07-27T10:23:15.832931857",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

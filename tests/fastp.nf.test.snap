@@ -4,50 +4,51 @@
             20,
             {
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "FASTP": {
-                    "fastp": "0.24.0"
+                    "fastp": "1.1.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -235,10 +236,10 @@
                 "preprocessing",
                 "preprocessing/fastp",
                 "preprocessing/fastp/test",
-                "preprocessing/fastp/test/test-test_L1_1.fastp.fastq.gz",
-                "preprocessing/fastp/test/test-test_L1_2.fastp.fastq.gz",
-                "preprocessing/fastp/test/test-test_L2_1.fastp.fastq.gz",
-                "preprocessing/fastp/test/test-test_L2_2.fastp.fastq.gz",
+                "preprocessing/fastp/test/test-test_L1_R1.fastp.fastq.gz",
+                "preprocessing/fastp/test/test-test_L1_R2.fastp.fastq.gz",
+                "preprocessing/fastp/test/test-test_L2_R1.fastp.fastq.gz",
+                "preprocessing/fastp/test/test-test_L2_R2.fastp.fastq.gz",
                 "preprocessing/markduplicates",
                 "preprocessing/markduplicates/test",
                 "preprocessing/markduplicates/test/test.md.cram",
@@ -320,31 +321,31 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,d97ac04e524b20bf9d261c009ac92b6a",
                 "mosdepth_perchrom.txt:md5,29af8f8744a88e2ec0486292d541559f",
                 "multiqc_citations.txt:md5,0e2971e7a873c92592112775fa99fb02",
-                "multiqc_fastp.txt:md5,2f22f6c961e432974f27a4e56d877cec",
+                "multiqc_fastp.txt:md5,39b27871814457c42ea33aa131b8ecfc",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,58ea8c88565a359af678aa588e44895c",
+                "samtools-stats-dp.txt:md5,3f430eb99682ee0d3960a42c5a43650e",
                 "samtools_alignment_plot.txt:md5,aac925e42c9da438ab9f0fb7ae77e2fa",
                 "samtools_insert_size.txt:md5,9eccc96ce006c0161497782ed3afc147",
-                "test-test_L1_1.fastp.fastq.gz:md5,f1a5c524cae7be9b5ca9a4138f847cfa",
-                "test-test_L1_2.fastp.fastq.gz:md5,e366994a1db55b5ed3cd12482f33cee7",
-                "test-test_L2_1.fastp.fastq.gz:md5,f1a5c524cae7be9b5ca9a4138f847cfa",
-                "test-test_L2_2.fastp.fastq.gz:md5,e366994a1db55b5ed3cd12482f33cee7",
-                "test-test_L1.fastp.json:md5,fb88c7b5807f6c7478b01baddf8ca4e8",
-                "test-test_L2.fastp.json:md5,708187bd90c12b1c8c3fa7046b69dc35",
+                "test-test_L1_R1.fastp.fastq.gz:md5,f1a5c524cae7be9b5ca9a4138f847cfa",
+                "test-test_L1_R2.fastp.fastq.gz:md5,e366994a1db55b5ed3cd12482f33cee7",
+                "test-test_L2_R1.fastp.fastq.gz:md5,f1a5c524cae7be9b5ca9a4138f847cfa",
+                "test-test_L2_R2.fastp.fastq.gz:md5,e366994a1db55b5ed3cd12482f33cee7",
+                "test-test_L1.fastp.json:md5,80fa7cc86ef9fa02eeb9c9d25c6f2672",
+                "test-test_L2.fastp.json:md5,138a8dbd84d89dcf19c303fdc05754e9",
                 "test.md.mosdepth.global.dist.txt:md5,b1c26e3381f220e65d683048ab6b6e2a",
                 "test.md.mosdepth.region.dist.txt:md5,02d51752367e753a6984c12f059499ba",
                 "test.md.mosdepth.summary.txt:md5,f18e776c3ee8e6947c3a69c136f54860",
                 "test.md.regions.bed.gz:md5,a3e8ccd3f04d3aee009a109d52b69920",
-                "test.md.regions.bed.gz.csi:md5,74d39fd1e463ce7b77610c96f5f57daf",
+                "test.md.regions.bed.gz.csi:md5,4b8894bcd39f647bff72e55fe6b5fe4d",
                 "test.recal.mosdepth.global.dist.txt:md5,b1c26e3381f220e65d683048ab6b6e2a",
                 "test.recal.mosdepth.region.dist.txt:md5,02d51752367e753a6984c12f059499ba",
                 "test.recal.mosdepth.summary.txt:md5,f18e776c3ee8e6947c3a69c136f54860",
                 "test.recal.regions.bed.gz:md5,a3e8ccd3f04d3aee009a109d52b69920",
-                "test.recal.regions.bed.gz.csi:md5,74d39fd1e463ce7b77610c96f5f57daf"
+                "test.recal.regions.bed.gz.csi:md5,4b8894bcd39f647bff72e55fe6b5fe4d"
             ],
             "No BAM files",
             [
@@ -356,61 +357,62 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-07-27T10:23:58.917345607",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-17T14:34:45.9737357"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --split_fastq 150000": {
         "content": [
             26,
             {
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "FASTP": {
-                    "fastp": "0.24.0"
+                    "fastp": "1.1.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -598,22 +600,22 @@
                 "preprocessing",
                 "preprocessing/fastp",
                 "preprocessing/fastp/test",
-                "preprocessing/fastp/test/0001.test-test_L1_1.fastp.fastq.gz",
-                "preprocessing/fastp/test/0001.test-test_L1_2.fastp.fastq.gz",
-                "preprocessing/fastp/test/0001.test-test_L2_1.fastp.fastq.gz",
-                "preprocessing/fastp/test/0001.test-test_L2_2.fastp.fastq.gz",
-                "preprocessing/fastp/test/0002.test-test_L1_1.fastp.fastq.gz",
-                "preprocessing/fastp/test/0002.test-test_L1_2.fastp.fastq.gz",
-                "preprocessing/fastp/test/0002.test-test_L2_1.fastp.fastq.gz",
-                "preprocessing/fastp/test/0002.test-test_L2_2.fastp.fastq.gz",
-                "preprocessing/fastp/test/0003.test-test_L1_1.fastp.fastq.gz",
-                "preprocessing/fastp/test/0003.test-test_L1_2.fastp.fastq.gz",
-                "preprocessing/fastp/test/0003.test-test_L2_1.fastp.fastq.gz",
-                "preprocessing/fastp/test/0003.test-test_L2_2.fastp.fastq.gz",
-                "preprocessing/fastp/test/0004.test-test_L1_1.fastp.fastq.gz",
-                "preprocessing/fastp/test/0004.test-test_L1_2.fastp.fastq.gz",
-                "preprocessing/fastp/test/0004.test-test_L2_1.fastp.fastq.gz",
-                "preprocessing/fastp/test/0004.test-test_L2_2.fastp.fastq.gz",
+                "preprocessing/fastp/test/0001.test-test_L1_R1.fastp.fastq.gz",
+                "preprocessing/fastp/test/0001.test-test_L1_R2.fastp.fastq.gz",
+                "preprocessing/fastp/test/0001.test-test_L2_R1.fastp.fastq.gz",
+                "preprocessing/fastp/test/0001.test-test_L2_R2.fastp.fastq.gz",
+                "preprocessing/fastp/test/0002.test-test_L1_R1.fastp.fastq.gz",
+                "preprocessing/fastp/test/0002.test-test_L1_R2.fastp.fastq.gz",
+                "preprocessing/fastp/test/0002.test-test_L2_R1.fastp.fastq.gz",
+                "preprocessing/fastp/test/0002.test-test_L2_R2.fastp.fastq.gz",
+                "preprocessing/fastp/test/0003.test-test_L1_R1.fastp.fastq.gz",
+                "preprocessing/fastp/test/0003.test-test_L1_R2.fastp.fastq.gz",
+                "preprocessing/fastp/test/0003.test-test_L2_R1.fastp.fastq.gz",
+                "preprocessing/fastp/test/0003.test-test_L2_R2.fastp.fastq.gz",
+                "preprocessing/fastp/test/0004.test-test_L1_R1.fastp.fastq.gz",
+                "preprocessing/fastp/test/0004.test-test_L1_R2.fastp.fastq.gz",
+                "preprocessing/fastp/test/0004.test-test_L2_R1.fastp.fastq.gz",
+                "preprocessing/fastp/test/0004.test-test_L2_R2.fastp.fastq.gz",
                 "preprocessing/markduplicates",
                 "preprocessing/markduplicates/test",
                 "preprocessing/markduplicates/test/test.md.cram",
@@ -695,43 +697,43 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,722e8c7583dd52b2c8d8bb923718c912",
                 "mosdepth_perchrom.txt:md5,b9304bb6dee33d25255e19693c0a4dd8",
                 "multiqc_citations.txt:md5,0e2971e7a873c92592112775fa99fb02",
-                "multiqc_fastp.txt:md5,758582c0fafe6e69ad8488eb612008de",
+                "multiqc_fastp.txt:md5,e5a4f17bb627d529e829f11fda3bddc3",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,93ec69f6db74d9de7e4a549491ae2c73",
+                "samtools-stats-dp.txt:md5,75006287063bdff5824a9ccc46567138",
                 "samtools_alignment_plot.txt:md5,962b7dd27f48ec4bbb668c8c32cbea1b",
                 "samtools_insert_size.txt:md5,555c4ca8aac120c3b23e6cd2457922cd",
-                "0001.test-test_L1_1.fastp.fastq.gz:md5,f379a60cc2a41f39fa0c0d23edf6eb61",
-                "0001.test-test_L1_2.fastp.fastq.gz:md5,e54d912158088d98f8083854079e1f5c",
-                "0001.test-test_L2_1.fastp.fastq.gz:md5,f379a60cc2a41f39fa0c0d23edf6eb61",
-                "0001.test-test_L2_2.fastp.fastq.gz:md5,e54d912158088d98f8083854079e1f5c",
-                "0002.test-test_L1_1.fastp.fastq.gz:md5,366180a220f6b78c55b1b23b35dc7f96",
-                "0002.test-test_L1_2.fastp.fastq.gz:md5,66ca650f883997310858acac94c8d236",
-                "0002.test-test_L2_1.fastp.fastq.gz:md5,366180a220f6b78c55b1b23b35dc7f96",
-                "0002.test-test_L2_2.fastp.fastq.gz:md5,66ca650f883997310858acac94c8d236",
-                "0003.test-test_L1_1.fastp.fastq.gz:md5,46bc09415a26d50230163e613cb1324b",
-                "0003.test-test_L1_2.fastp.fastq.gz:md5,500404ef12d7c6f02eb3b5367f84a978",
-                "0003.test-test_L2_1.fastp.fastq.gz:md5,46bc09415a26d50230163e613cb1324b",
-                "0003.test-test_L2_2.fastp.fastq.gz:md5,500404ef12d7c6f02eb3b5367f84a978",
-                "0004.test-test_L1_1.fastp.fastq.gz:md5,f3b1d77aa32f019f3088810cac2605e9",
-                "0004.test-test_L1_2.fastp.fastq.gz:md5,e38c0529e6ba0abce221ac39c84263b0",
-                "0004.test-test_L2_1.fastp.fastq.gz:md5,f3b1d77aa32f019f3088810cac2605e9",
-                "0004.test-test_L2_2.fastp.fastq.gz:md5,e38c0529e6ba0abce221ac39c84263b0",
-                "test-test_L1.fastp.json:md5,2f72ca9fa3c55cfd4ff67a747f7c2e46",
-                "test-test_L2.fastp.json:md5,f8b183e541878de7b24e555e23e078f1",
+                "0001.test-test_L1_R1.fastp.fastq.gz:md5,f379a60cc2a41f39fa0c0d23edf6eb61",
+                "0001.test-test_L1_R2.fastp.fastq.gz:md5,e54d912158088d98f8083854079e1f5c",
+                "0001.test-test_L2_R1.fastp.fastq.gz:md5,f379a60cc2a41f39fa0c0d23edf6eb61",
+                "0001.test-test_L2_R2.fastp.fastq.gz:md5,e54d912158088d98f8083854079e1f5c",
+                "0002.test-test_L1_R1.fastp.fastq.gz:md5,366180a220f6b78c55b1b23b35dc7f96",
+                "0002.test-test_L1_R2.fastp.fastq.gz:md5,66ca650f883997310858acac94c8d236",
+                "0002.test-test_L2_R1.fastp.fastq.gz:md5,366180a220f6b78c55b1b23b35dc7f96",
+                "0002.test-test_L2_R2.fastp.fastq.gz:md5,66ca650f883997310858acac94c8d236",
+                "0003.test-test_L1_R1.fastp.fastq.gz:md5,46bc09415a26d50230163e613cb1324b",
+                "0003.test-test_L1_R2.fastp.fastq.gz:md5,500404ef12d7c6f02eb3b5367f84a978",
+                "0003.test-test_L2_R1.fastp.fastq.gz:md5,46bc09415a26d50230163e613cb1324b",
+                "0003.test-test_L2_R2.fastp.fastq.gz:md5,500404ef12d7c6f02eb3b5367f84a978",
+                "0004.test-test_L1_R1.fastp.fastq.gz:md5,f3b1d77aa32f019f3088810cac2605e9",
+                "0004.test-test_L1_R2.fastp.fastq.gz:md5,e38c0529e6ba0abce221ac39c84263b0",
+                "0004.test-test_L2_R1.fastp.fastq.gz:md5,f3b1d77aa32f019f3088810cac2605e9",
+                "0004.test-test_L2_R2.fastp.fastq.gz:md5,e38c0529e6ba0abce221ac39c84263b0",
+                "test-test_L1.fastp.json:md5,34c54addc091d14c6c9582ef2ed16a85",
+                "test-test_L2.fastp.json:md5,607e27e248389ec266eecc847c6f9936",
                 "test.md.mosdepth.global.dist.txt:md5,e5d0c6bf323c32f5414bd48b90bb32fa",
                 "test.md.mosdepth.region.dist.txt:md5,5062f8b7bb536c9b77a68f4ccd2315c2",
                 "test.md.mosdepth.summary.txt:md5,455358d5943fd1e5f09853acff3e50b6",
                 "test.md.regions.bed.gz:md5,729091bfb7c08486c8d247f4629996e6",
-                "test.md.regions.bed.gz.csi:md5,295eb71f59c0e37b5c3cf289a467f97e",
+                "test.md.regions.bed.gz.csi:md5,fc3378906815c0591f36b0e2d9d6fad8",
                 "test.recal.mosdepth.global.dist.txt:md5,e5d0c6bf323c32f5414bd48b90bb32fa",
                 "test.recal.mosdepth.region.dist.txt:md5,5062f8b7bb536c9b77a68f4ccd2315c2",
                 "test.recal.mosdepth.summary.txt:md5,455358d5943fd1e5f09853acff3e50b6",
                 "test.recal.regions.bed.gz:md5,729091bfb7c08486c8d247f4629996e6",
-                "test.recal.regions.bed.gz.csi:md5,295eb71f59c0e37b5c3cf289a467f97e"
+                "test.recal.regions.bed.gz.csi:md5,fc3378906815c0591f36b0e2d9d6fad8"
             ],
             "No BAM files",
             [
@@ -743,61 +745,62 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-07-27T10:21:50.402269939",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-03-06T15:10:32.391037"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --trim_fastq (no save)": {
         "content": [
             20,
             {
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "FASTP": {
-                    "fastp": "0.24.0"
+                    "fastp": "1.1.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
@@ -1064,27 +1067,27 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,caee7b9e5d1a451970f87d791c3e450b",
                 "mosdepth_perchrom.txt:md5,a0990e98cdd2cd5540d07f504f516ccf",
                 "multiqc_citations.txt:md5,0e2971e7a873c92592112775fa99fb02",
-                "multiqc_fastp.txt:md5,2e4305ae77790e1948c19acc778b508c",
+                "multiqc_fastp.txt:md5,8c270b44aaec9ee1bd7bf19d2150a51e",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,ae7954084b2cd708c5e7369606bf4208",
+                "samtools-stats-dp.txt:md5,92dc10e61df31bf4286b16582bed488f",
                 "samtools_alignment_plot.txt:md5,438e719bf574a46726dbd2e0f1442e42",
                 "samtools_insert_size.txt:md5,73b933a27800b86a4012c2d525870796",
-                "test-test_L1.fastp.json:md5,ced0232bc3be313b392a9f59ff970cc2",
-                "test-test_L2.fastp.json:md5,d05b922b85ecd0e087ba05af543f8ff8",
+                "test-test_L1.fastp.json:md5,a7746b05c3ffb374c8f5d204f971879e",
+                "test-test_L2.fastp.json:md5,d896569d921616f61a829b62477c1ffa",
                 "test.md.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.md.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.md.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
                 "test.md.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
-                "test.md.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
+                "test.md.regions.bed.gz.csi:md5,1f17d398be6b9c100cb0218fa226a623",
                 "test.recal.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.recal.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.recal.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
                 "test.recal.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
-                "test.recal.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2"
+                "test.recal.regions.bed.gz.csi:md5,1f17d398be6b9c100cb0218fa226a623"
             ],
             "No BAM files",
             [
@@ -1096,10 +1099,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-07-27T10:21:18.402385401",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-03-06T15:02:50.499879"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

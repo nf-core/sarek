@@ -51,9 +51,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     main:
     // channels are often remapped to match module/subworkflow
 
-    // Gather all versions
-    versions = channel.empty()
-
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     out_indexcov     = channel.empty()
     out_msisensorpro = channel.empty()
@@ -83,7 +80,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             rt_file,
         )
 
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ASCAT.out.versions)
     }
 
     // CONTROLFREEC
@@ -95,6 +91,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             cram_normal,
             dict,
             fasta,
+            fasta_fai,
             intervals,
         )
 
@@ -102,6 +99,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             cram_tumor,
             dict,
             fasta,
+            fasta_fai,
             intervals,
         )
 
@@ -120,8 +118,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             wes ? intervals_bed_combined : [],
         )
 
-        versions = versions.mix(MPILEUP_NORMAL.out.versions)
-        versions = versions.mix(MPILEUP_TUMOR.out.versions)
     }
 
     // CNVKIT
@@ -133,8 +129,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             intervals_bed_combined.map { _intervals -> _intervals ? [[id: _intervals[0].baseName], _intervals] : [[id: 'no_intervals'], []] },
             [[id: "null"], []],
         )
-
-        versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
     // FREEBAYES
@@ -149,7 +143,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
         tbi_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
     // MANTA
@@ -161,11 +154,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             intervals_bed_gz_tbi_combined,
         )
 
-        vcf_manta = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.vcf
-        tbi_manta = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.versions)
+        vcf_manta = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.diploid_sv_vcf.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.somatic_sv_vcf)
+        tbi_manta = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.diploid_sv_vcf_tbi.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.somatic_sv_vcf_tbi)
     }
-
 
     // INDEXCOV
     //   WGS only
@@ -177,14 +168,13 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         )
 
         out_indexcov = BAM_VARIANT_CALLING_INDEXCOV.out.out_indexcov
-        versions = versions.mix(BAM_VARIANT_CALLING_INDEXCOV.out.versions)
     }
-
 
     // STRELKA
     if (tools && tools.split(',').contains('strelka')) {
         cram_strelka = tools.split(',').contains('manta')
-            ? cram.join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf, failOnDuplicate: true, failOnMismatch: true).join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf_tbi, failOnDuplicate: true, failOnMismatch: true)
+            // Manta's candidate small indels feed Strelka; strip the manta variantcaller tag so the meta matches cram for the join
+            ? cram.join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf.map { meta, vcf -> [meta - meta.subMap('variantcaller'), vcf] }, failOnDuplicate: true, failOnMismatch: true).join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf_tbi.map { meta, tbi -> [meta - meta.subMap('variantcaller'), tbi] }, failOnDuplicate: true, failOnMismatch: true)
             : cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], []] }
 
         BAM_VARIANT_CALLING_SOMATIC_STRELKA(
@@ -197,14 +187,12 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         vcf_strelka = BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.vcf
         tbi_strelka = BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.versions)
     }
 
     // MSISENSORPRO
     if (tools && tools.split(',').contains('msisensorpro')) {
         MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta, msisensorpro_scan)
 
-        versions = versions.mix(MSISENSORPRO_MSISOMATIC.out.versions)
         out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSISOMATIC.out.output_report)
     }
 
@@ -246,7 +234,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         // vcf_mutect2 and tbi_mutect2 always contain usable output (filtered if available, otherwise unfiltered)
         vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.vcf
         tbi_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
     }
 
     // TNSCOPE
@@ -268,7 +255,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         vcf_tnscope = BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.vcf
         tbi_tnscope = BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.index
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TNSCOPE.out.versions)
     }
 
     // TIDDIT
@@ -277,12 +263,12 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] },
             cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] },
             fasta,
+            fasta_fai,
             bwa,
         )
 
         vcf_tiddit = BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.vcf
         tbi_tiddit = BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.tbi
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.versions)
     }
 
     vcf_all = channel.empty()
@@ -326,5 +312,4 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     tbi_strelka
     tbi_tiddit
     tbi_tnscope
-    versions
 }

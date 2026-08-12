@@ -4,9 +4,9 @@ process DRAGMAP_ALIGN {
 
     conda "${moduleDir}/environment.yml"
     // WARN: Do not update this tool to 1.3.0 until https://github.com/Illumina/DRAGMAP/issues/47 is resolved
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
         ? 'https://depot.galaxyproject.org/singularity/mulled-v2-580d344d9d4a496cd403932da8765f9e0187774d:df80ed8d23d0a2c43181a2b3dd1b39f2d00fab5c-0'
-        : 'biocontainers/mulled-v2-580d344d9d4a496cd403932da8765f9e0187774d:df80ed8d23d0a2c43181a2b3dd1b39f2d00fab5c-0'}"
+        : 'quay.io/biocontainers/mulled-v2-580d344d9d4a496cd403932da8765f9e0187774d:df80ed8d23d0a2c43181a2b3dd1b39f2d00fab5c-0'}"
 
     input:
     tuple val(meta), path(reads)
@@ -21,7 +21,9 @@ process DRAGMAP_ALIGN {
     tuple val(meta), path("*.crai"), emit: crai, optional: true
     tuple val(meta), path("*.csi"),  emit: csi,  optional: true
     tuple val(meta), path('*.log'),  emit: log
-    path "versions.yml",             emit: versions
+    tuple val("${task.process}"), val('dragmap'), eval("dragen-os --version 2>&1"), emit: versions_dragmap, topic: versions
+    tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), emit: versions_samtools, topic: versions
+    tuple val("${task.process}"), val('pigz'), eval("pigz --version 2>&1 | sed 's/pigz //'"), emit: versions_pigz, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -46,15 +48,8 @@ process DRAGMAP_ALIGN {
         ${args} \\
         --num-threads ${task.cpus} \\
         ${reads_command} \\
-        2> >(tee ${prefix}.dragmap.log >&2) \\
+        2>| >(tee ${prefix}.dragmap.log >&2) \\
         | samtools ${samtools_command} ${args2} --threads ${task.cpus} ${reference} -o ${prefix}.${extension} -
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        dragmap: \$(echo \$(dragen-os --version 2>&1))
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        pigz: \$( pigz --version 2>&1 | sed 's/pigz //g' )
-    END_VERSIONS
     """
 
     stub:
@@ -79,12 +74,5 @@ process DRAGMAP_ALIGN {
     touch ${prefix}.${extension}
     ${create_index}
     touch ${prefix}.log
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        dragmap: \$(echo \$(dragen-os --version 2>&1))
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        pigz: \$( pigz --version 2>&1 | sed 's/pigz //g' )
-    END_VERSIONS
     """
 }
