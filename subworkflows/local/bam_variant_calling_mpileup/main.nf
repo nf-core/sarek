@@ -5,7 +5,7 @@
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
 include { BCFTOOLS_MPILEUP                          } from '../../../modules/nf-core/bcftools/mpileup'
-include { FIND_CONCATENATE  as CAT_MPILEUP          } from '../../../modules/nf-core/find/concatenate'
+include { FIND_CONCATENATE as CAT_MPILEUP           } from '../../../modules/nf-core/find/concatenate'
 include { GATK4_MERGEVCFS as MERGE_BCFTOOLS_MPILEUP } from '../../../modules/nf-core/gatk4/mergevcfs'
 include { SAMTOOLS_MPILEUP                          } from '../../../modules/nf-core/samtools/mpileup'
 
