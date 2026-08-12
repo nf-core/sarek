@@ -63,11 +63,6 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     )
 
     if (val_applybqsr) {
-        // PARABRICKS_APPLYBQSR declares 5 separate tuple input channels (one per file),
-        // so each must be passed as its own channel argument — not combined into one.
-        ch_interval_file  // already collected as [['id':'intervals'], files]
-        ch_fasta          // already [meta, fasta]
-
         PARABRICKS_APPLYBQSR(
             PARABRICKS_FQ2BAM.out.bam,
             PARABRICKS_FQ2BAM.out.bai,
@@ -79,10 +74,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
         // Native BAM (per lane) is the applybqsr output to keep when saving as BAM
         native_bam = PARABRICKS_APPLYBQSR.out.bam.join(PARABRICKS_APPLYBQSR.out.bai, failOnDuplicate: true, failOnMismatch: true)
 
-        // Inverted vs the non-BQSR path (where fq2bam already yields CRAM): the recalibrated
-        // BAM is converted back to CRAM so the rest of the pipeline still handles CRAMs.
         CRAM_TO_BAM(native_bam, fasta_fai)
-
         mapped_cram = CRAM_TO_BAM.out.cram
     }
     else {
@@ -121,7 +113,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
 
     if (val_save_output_as_bam) {
         if (val_applybqsr) {
-            // BQSR already produced BAMs, so saving as BAM needs no conversion (inverted logic)
+            // BQSR already produced BAMs, so saving as BAM needs no conversion
             CHANNEL_ALIGN_CREATE_CSV(native_bam, val_outdir, val_save_output_as_bam)
         } else {
             // Convert CRAM files to BAM
