@@ -65,17 +65,14 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     if (val_applybqsr) {
         // PARABRICKS_APPLYBQSR declares 5 separate tuple input channels (one per file),
         // so each must be passed as its own channel argument — not combined into one.
-        ch_bam        = PARABRICKS_FQ2BAM.out.bam
-        ch_bai        = PARABRICKS_FQ2BAM.out.bai
-        ch_bqsr_table = PARABRICKS_FQ2BAM.out.bqsr_table
-        ch_intervals  = ch_interval_file.collect().map { files -> [ [ 'id': 'intervals' ], files ] }
-        ch_fasta      = ch_fasta.collect().map { meta, fasta, _fai -> [ meta, fasta ] }
+        ch_interval_file  // already collected as [['id':'intervals'], files]
+        ch_fasta          // already [meta, fasta]
 
         PARABRICKS_APPLYBQSR(
-            ch_bam,
-            ch_bai,
-            ch_bqsr_table,
-            ch_intervals,
+            PARABRICKS_FQ2BAM.out.bam,
+            PARABRICKS_FQ2BAM.out.bai,
+            PARABRICKS_FQ2BAM.out.bqsr_table,
+            ch_interval_file,
             ch_fasta,
         )
 
