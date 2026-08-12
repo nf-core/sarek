@@ -290,6 +290,12 @@
                     "description": "Save mapped files.",
                     "help_text": "If the parameter `--split-fastq` is used, the sharded bam files are merged and converted to CRAM before saving them.\n\nNot compatible with `--use_gatk_spark markduplicates`: Spark markduplicates requires name-sorted input, so the saved mapped alignment would be name-sorted and cannot be indexed."
                 },
+                "parabricks_perform_bqsr": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-forward",
+                    "description": "Run applybqsr (Base Quality Score Recalibration) after fq2bam when using the parabricks aligner.",
+                    "help_text": "When enabled, fq2bam emits BAM files (required by applybqsr) which are then converted back to CRAM for variant calling."
+                },
                 "save_output_as_bam": {
                     "type": "boolean",
                     "description": "Saves output from mapping (if `--save_mapped`), Markduplicates & Baserecalibration as BAM file instead of CRAM",

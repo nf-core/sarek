@@ -57,6 +57,18 @@ nextflow_pipeline {
             ],
             gpu: true,
             no_conda: true
+        ],
+        [
+            name: "-profile test --aligner parabricks --wes --parabricks_perform_bqsr",
+            params: [
+                aligner: 'parabricks',
+                parabricks_perform_bqsr: true,
+                save_reference: true,
+                save_mapped: true,
+                wes : true,
+            ],
+            gpu: true,
+            no_conda: true
         ]
     ]
 

@@ -176,6 +176,8 @@ To use the GPU based `parabricks/fq2bam` as an alternative to the CPU bsed GATK 
 
 At the moment the implementation supports running the complete fq2bam module which does bwa-mem based alignment, coordinate sorting, duplicate marking and base quality score recalibration. We are working on making these individual components skippable (comparable to the GATK implementation) see [Issue #1853](https://github.com/nf-core/sarek/issues/1853) for more details on the ongoing work.
 
+To apply Base Quality Score Recalibration (BQSR) using the GPU-accelerated `parabricks/applybqsr` module after fq2bam, add `--parabricks_perform_bqsr` to your run command. This will run fq2bam, generate the recalibration table, apply it via the parabricks applybqsr module, and convert the recalibrated BAM back to CRAM for downstream variant calling. The known variant sites (`--dbsnp`, `--known_indels`) used to build the recalibration table are provided by the iGenomes reference configuration or can be set via command-line arguments. When `--parabricks_perform_bqsr` is set, `--save_output_as_bam` will save the native recalibrated BAM file from applybqsr (before conversion back to CRAM), whereas in the default fq2bam-only mode the CRAM is converted to BAM for saving.
+
 The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if `--save_mapped` is set.
 
 **Hints for custom configuration based on your local hardware setup:**
@@ -203,6 +205,14 @@ process {
             "--gpuwrite",
             "--gpusort",
             "--bwa-nstreams 2",
+        ].join(' ').trim() }
+    }
+    withName: 'PARABRICKS_APPLYBQSR' {
+        // Remove an executor if you do not want it to set the accelerator directive or change the number
+        accelerator = { task.executor in ['awsbatch','google-batch','hq','k8s'] ? 4 : null }
+        ext.args    = { [
+            // You can change the flags below for applybqsr
+            // "--num-gpus 2",
         ].join(' ').trim() }
     }
 }

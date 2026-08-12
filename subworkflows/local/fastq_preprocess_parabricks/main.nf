@@ -1,3 +1,4 @@
+include { PARABRICKS_APPLYBQSR            } from '../../../modules/nf-core/parabricks/applybqsr/main.nf'
 include { PARABRICKS_FQ2BAM               } from '../../../modules/nf-core/parabricks/fq2bam/main.nf'
 include { CHANNEL_ALIGN_CREATE_CSV        } from '../../../subworkflows/local/channel_align_create_csv/main'
 include { SAMTOOLS_CONVERT as CRAM_TO_BAM } from '../../../modules/nf-core/samtools/convert/main'
@@ -13,6 +14,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     ch_interval_file                // channel: [optional]  intervals_bed_combined
     ch_known_sites                  // channel: [optional]  known_sites_indels
     val_output_fmt                  // either bam or cram
+    val_perform_bqsr                // boolean
     val_save_mapped                 // boolean
     val_save_output_as_bam          // boolean
     val_outdir                      // output directory for saving mapped files
@@ -44,19 +46,53 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
         [['id': 'known_sites'], files]
     }
 
+    // Single reference genome used throughout the pipeline
+    fasta_fai = ch_fasta.combine(ch_fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai ] }.collect()
+
+    // BQSR needs fq2bam to emit BAM (applybqsr only ingests BAM), otherwise we keep the requested format
+    fq2bam_output_fmt = val_perform_bqsr ? 'bam' : val_output_fmt
+
     PARABRICKS_FQ2BAM(
         ch_reads,           // channel: [ val(meta), reads ]
         ch_fasta,           // channel: [ val(meta), fasta ]
         ch_index,           // channel: [ val(meta), index ]
         ch_interval_file,   // channel: [ val(meta), interval_file ]
         ch_known_sites,     // channel: [ val(meta), known_sites ]
-        val_output_fmt      // either bam or cram
+        fq2bam_output_fmt   // either bam or cram
     )
+
+    if (val_perform_bqsr) {
+        // Combine each fq2bam BAM with its index, recalibration table (same run -> same
+        // meta), the optional intervals and the reference into a single tuple channel.
+        // The applybqsr module takes everything in ONE tuple so this works for any number
+        // of samples (a plain multi-tuple process input would not broadcast the singletons).
+        bqsr_input = PARABRICKS_FQ2BAM.out.bam
+            .join(PARABRICKS_FQ2BAM.out.bai, failOnDuplicate: true, failOnMismatch: true)
+            .join(PARABRICKS_FQ2BAM.out.bqsr_table, failOnDuplicate: true, failOnMismatch: true)
+            .combine(ch_interval_file)
+            .combine(ch_fasta)
+            .map { meta, bam_, bai, table, _imeta, intervals, _fmeta, fasta -> [ meta, bam_, bai, table, intervals, fasta ] }
+
+        PARABRICKS_APPLYBQSR(bqsr_input)
+
+        // Native BAM (per lane) is the applybqsr output to keep when saving as BAM
+        native_bam = PARABRICKS_APPLYBQSR.out.bam.join(PARABRICKS_APPLYBQSR.out.bai, failOnDuplicate: true, failOnMismatch: true)
+
+        // Inverted vs the non-BQSR path (where fq2bam already yields CRAM): the recalibrated
+        // BAM is converted back to CRAM so the rest of the pipeline still handles CRAMs.
+        CRAM_TO_BAM(native_bam, fasta_fai)
+
+        mapped_cram = CRAM_TO_BAM.out.cram
+    }
+    else {
+        mapped_cram = PARABRICKS_FQ2BAM.out.cram
+        native_bam  = channel.empty()
+    }
 
     // Grouping the bams from the same samples not to stall the workflow
     // Use groupKey to make sure that the correct group can advance as soon as it is complete
     // and not stall the workflow until all reads from all channels are mapped
-    cram_mapped = PARABRICKS_FQ2BAM.out.cram
+    cram_mapped = mapped_cram
         .combine(reads_grouping_key) // Creates a tuple of [ meta, bam, reads_grouping_key ]
         .filter { meta1, _cram, meta2 -> meta1.sample == meta2.sample }
         // Add n_fastq and other variables to meta
@@ -83,9 +119,14 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
             }
 
     if (val_save_output_as_bam) {
-        // Convert CRAM files to BAM
-        CRAM_TO_BAM(cram_variant_calling, ch_fasta.combine(ch_fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai ] }.collect())
-        CHANNEL_ALIGN_CREATE_CSV(CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true), val_outdir, val_save_output_as_bam)
+        if (val_perform_bqsr) {
+            // BQSR already produced BAMs, so saving as BAM needs no conversion (inverted logic)
+            CHANNEL_ALIGN_CREATE_CSV(native_bam, val_outdir, val_save_output_as_bam)
+        } else {
+            // Convert CRAM files to BAM
+            CRAM_TO_BAM(cram_variant_calling, fasta_fai)
+            CHANNEL_ALIGN_CREATE_CSV(CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true), val_outdir, val_save_output_as_bam)
+        }
     } else if (val_save_mapped) {
         CHANNEL_ALIGN_CREATE_CSV(cram_variant_calling, val_outdir, val_save_output_as_bam)
     }

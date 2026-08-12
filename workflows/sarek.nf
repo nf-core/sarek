@@ -213,6 +213,7 @@ workflow SAREK {
                 intervals_bed_combined,
                 known_sites_indels,
                 channel.value("cram"),
+                params.parabricks_perform_bqsr,
                 params.save_mapped,
                 params.save_output_as_bam,
                 params.outdir,

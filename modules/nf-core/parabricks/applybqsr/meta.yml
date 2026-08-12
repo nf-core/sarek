@@ -1,0 +1,117 @@
+name: "parabricks_applybqsr"
+description: NVIDIA Clara Parabricks GPU-accelerated apply Base Quality Score Recalibration
+  (BQSR).
+keywords:
+  - bqsr
+  - bam
+  - GPU-accelerated
+  - base quality score recalibration
+tools:
+  - "parabricks":
+      description: "NVIDIA Clara Parabricks GPU-accelerated genomics tools"
+      homepage: "https://www.nvidia.com/en-us/clara/genomics/"
+      documentation: "https://docs.nvidia.com/clara/parabricks/latest/index.html"
+      licence: ["custom"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information.
+          e.g. [ id:'test' ]
+    - bam:
+        type: file
+        description: BAM file
+        pattern: "*.bam"
+        ontologies:
+          - edam: "http://edamontology.org/format_2572" # BAM
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information.
+          e.g. [ id:'test' ]
+    - bam_index:
+        type: file
+        description: BAM index file
+        pattern: "*.bam.bai"
+        ontologies: []
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing sample information.
+          e.g. [ id:'test' ]
+    - bqsr_table:
+        type: file
+        description: Table from calculating BQSR. Output from parabricks/fq2bam or gatk4/baserecalibrator.
+        pattern: "*.table"
+        ontologies: []
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing sample information.
+          e.g. [ id:'test' ]
+    - intervals:
+        type: file
+        description: intervals
+        ontologies: []
+  - - meta5:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1', single_end:false ]`
+    - fasta:
+        type: file
+        description: Reference fasta - must be unzipped.
+        pattern: "*.fasta"
+        ontologies:
+          - edam: "http://edamontology.org/format_1929" # FASTA
+output:
+  bam:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information.
+            e.g. [ id:'test' ]
+      - "*.bam":
+          type: file
+          description: BAM file after applying BQSR.
+          pattern: "*.bam"
+          ontologies:
+            - edam: "http://edamontology.org/format_2572" # BAM
+  bai:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information.
+            e.g. [ id:'test' ]
+      - "*.bai":
+          type: file
+          description: bai index corresponding to output bam file.
+          pattern: "*.bam.bai"
+          ontologies: []
+  versions_parabricks:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - parabricks:
+          type: string
+          description: The tool name
+      - "pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'":
+          type: string
+          description: The command used to generate the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - parabricks:
+          type: string
+          description: The tool name
+      - "pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'":
+          type: string
+          description: The command used to generate the version of the tool
+authors:
+  - "@bsiranosian"
+maintainers:
+  - "@bsiranosian"
+  - "@famosab"
