@@ -208,18 +208,21 @@ process {
 }
 ```
 
-#### Using GPU accelerated variant calling (`--tools parabricks_haplotypecaller`)
+#### Using GPU accelerated variant calling
 
 > [!NOTE]
-> This is an experimental addition to the pipeline which requires a GPU and does not support `--profile conda`.
+> These are an experimental addition to the pipeline.
 
-To use NVIDIA Clara Parabricks' GPU-accelerated HaplotypeCaller for germline variant calling, add `--tools parabricks_haplotypecaller --profile <docker/singularity>,gpu` to your run command. This replicates GATK HaplotypeCaller germline SNP and indel calling with GPU acceleration.
+Sarek supports the following GPU-accelerated variant callers from [NVIDIA Parabricks](https://docs.nvidia.com/clara/parabricks/latest/) as an alternative to CPU based implementations:
 
-Parabricks HaplotypeCaller takes a CRAM file as input and outputs a single VCF per sample (no scatter/gather over intervals). Intervals can be provided via `--intervals` to restrict calling to specific regions.
+- [Haplotypecaller](https://docs.nvidia.com/clara/parabricks/tool-reference/tools/haplotypecaller)
+- [Mutectcaller](https://docs.nvidia.com/clara/parabricks/tool-reference/tools/mutectcaller)
 
-Joint germline variant calling is not yet supported for this caller: it only produces per-sample VCFs, and the wiring to combine per-sample gVCFs into a joint call is still to come. `--joint_germline` is therefore ignored by this caller, and using it with `parabricks_haplotypecaller` as your only germline caller fails early rather than running and producing no joint call. Combine it with GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as well.
+There are a few differences to note about the Parabricks versions of these tools:
 
-For more details on available arguments, see the [Parabricks HaplotypeCaller documentation](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html).
+- Parabricks does not support the use of this pipeline with `--profile conda`.
+- Parabricks HaplotypeCaller does not support scatter/gather over intervals.
+- Parabricks Haplotypecaller does not yet support joint germline variant calling, it only produces per-sample VCFs, and the wiring to combine per-sample gVCFs into a joint call is still to come. `--joint_germline` is therefore ignored by this caller, and using it with `parabricks_haplotypecaller` as your only germline caller fails early rather than running and producing no joint call. Combine it with GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as well.
 
 ### Start with duplicate marking (`--step markduplicates`)
 
