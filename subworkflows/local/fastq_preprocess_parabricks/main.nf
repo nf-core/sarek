@@ -84,7 +84,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
             .groupTuple()
             .map { sample, meta_bam_list ->
                 def meta = meta_bam_list[0][1]
-                def bams = meta_bam_list.collect { _meta_, bam_ -> bam_ }
+                def bams = meta_bam_list.collect { _sample, _meta, bam_ -> bam_ }
                 [ meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [ data_type: 'bam', id: sample ], bams ]
             }
 
