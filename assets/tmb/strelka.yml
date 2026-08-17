@@ -1,0 +1,12 @@
+## Describe the fields
+## For definition, provide the expected key:values
+## Note that several keys/values can be defined
+##
+###############################################
+
+freq: "AF"
+depth: "DP" #####FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read depth for tier1 (used+filtered)">
+altDepth: "AD"
+###FORMAT=<ID=AF,Number=A,Type=Float,Description="Allele fractions of alternate alleles in the tumor">
+#####FORMAT=<ID=DP,Number=1,Type=Integer,Description="Approximate read depth (reads with MQ=255 or with bad mates are filtered)">
+###FORMAT=<ID=AD,Number=R,Type=Integer,Description="Allelic depths for the ref and alt alleles in the order listed">
