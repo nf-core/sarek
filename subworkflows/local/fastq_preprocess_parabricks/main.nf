@@ -62,23 +62,11 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
         fq2bam_output_fmt   // either bam or cram
     )
 
-    if (val_applybqsr) {
-        PARABRICKS_APPLYBQSR(
-            PARABRICKS_FQ2BAM.out.bam,
-            PARABRICKS_FQ2BAM.out.bai,
-            PARABRICKS_FQ2BAM.out.bqsr_table,
-            ch_interval_file,
-            ch_fasta,
-        )
-
-        // Native BAM (per lane) is the applybqsr output to keep when saving as BAM
-        native_bam = PARABRICKS_APPLYBQSR.out.bam.join(PARABRICKS_APPLYBQSR.out.bai, failOnDuplicate: true, failOnMismatch: true)
-
-        BAM_TO_CRAM(native_bam, fasta_fai)
-        mapped_cram = BAM_TO_CRAM.out.cram
+    if (!val_applybqsr && val_save_output_as_bam && !params.tools) {
+        native_bam = PARABRICKS_FQ2BAM.out.bam.join(PARABRICKS_FQ2BAM.out.bai, failOnDuplicate: true, failOnMismatch: true)
 
         // Merge recalibrated BAMs (same pattern as CRAM merging)
-        native_bam_grouped = PARABRICKS_APPLYBQSR.out.bam
+        native_bam_grouped = PARABRICKS_FQ2BAM.out.bam
             .map { meta, bam -> [ meta.sample, [meta, bam] ] }
             .groupTuple()
             .map { sample, meta_bam_pairs ->
@@ -88,44 +76,75 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
             }
 
         BAM_MERGE_INDEX_SAMTOOLS(native_bam_grouped)
-        native_bam_merged = BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai
+        native_bam_merged    = BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai
+        cram_variant_calling = native_bam_merged
     }
     else {
-        mapped_cram       = PARABRICKS_FQ2BAM.out.cram
-        native_bam_merged = channel.empty()
-    }
-
-    // Grouping the CRAMs from the same samples not to stall the workflow
-    // Use groupKey to make sure that the correct group can advance as soon as it is complete
-    // and not stall the workflow until all reads from all channels are mapped
-    cram_mapped = mapped_cram
-        .combine(reads_grouping_key) // Creates a tuple of [ meta, bam, reads_grouping_key ]
-        .filter { meta1, _cram, meta2 -> meta1.sample == meta2.sample }
-        // Add n_fastq and other variables to meta
-        .map { meta1, cram, meta2 ->
-            [ meta1 + meta2, cram ]
-        }
-        // Manipulate meta map to remove old fields and add new ones
-        .map { meta, cram ->
-                [ meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [ data_type: 'cram', id: meta.sample ], cram ]
-        }
-        // Create groupKey from meta map
-        .map { meta, cram ->
-            [ groupKey( meta, meta.n_fastq), cram ]
-        }
-        // Group
-        .groupTuple()
-
-    // crams are merged (when multiple lanes from the same sample) and indexed
-    CRAM_MERGE_INDEX_SAMTOOLS(cram_mapped, ch_fasta, ch_fasta_fai)
-
-    cram_variant_calling = CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai
-        .map { meta, cram, crai ->
-                [ meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [ data_type: 'cram', id: meta.sample ], cram, crai ]
-            }
-
-    if (val_save_output_as_bam) {
         if (val_applybqsr) {
+            PARABRICKS_APPLYBQSR(
+                PARABRICKS_FQ2BAM.out.bam,
+                PARABRICKS_FQ2BAM.out.bai,
+                PARABRICKS_FQ2BAM.out.bqsr_table,
+                ch_interval_file,
+                ch_fasta,
+            )
+
+            // Native BAM (per lane) is the applybqsr output to keep when saving as BAM
+            native_bam = PARABRICKS_APPLYBQSR.out.bam.join(PARABRICKS_APPLYBQSR.out.bai, failOnDuplicate: true, failOnMismatch: true)
+
+            BAM_TO_CRAM(native_bam, fasta_fai)
+            mapped_cram = BAM_TO_CRAM.out.cram
+
+            // Merge recalibrated BAMs (same pattern as CRAM merging)
+            native_bam_grouped = PARABRICKS_APPLYBQSR.out.bam
+                .map { meta, bam -> [ meta.sample, [meta, bam] ] }
+                .groupTuple()
+                .map { sample, meta_bam_pairs ->
+                    def meta = meta_bam_pairs[0][0]
+                    def bams = meta_bam_pairs.collect { _meta, bam_file -> bam_file }
+                    [ meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [ data_type: 'bam', id: sample ], bams ]
+                }
+
+            BAM_MERGE_INDEX_SAMTOOLS(native_bam_grouped)
+            native_bam_merged = BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai
+        }
+        else {
+            mapped_cram       = PARABRICKS_FQ2BAM.out.cram
+            native_bam_merged = channel.empty()
+        }
+        // Grouping the CRAMs from the same samples not to stall the workflow
+        // Use groupKey to make sure that the correct group can advance as soon as it is complete
+        // and not stall the workflow until all reads from all channels are mapped
+        cram_mapped = mapped_cram
+            .combine(reads_grouping_key) // Creates a tuple of [ meta, bam, reads_grouping_key ]
+            .filter { meta1, _cram, meta2 -> meta1.sample == meta2.sample }
+            // Add n_fastq and other variables to meta
+            .map { meta1, cram, meta2 ->
+                [ meta1 + meta2, cram ]
+            }
+            // Manipulate meta map to remove old fields and add new ones
+            .map { meta, cram ->
+                    [ meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [ data_type: 'cram', id: meta.sample ], cram ]
+            }
+            // Create groupKey from meta map
+            .map { meta, cram ->
+                [ groupKey( meta, meta.n_fastq), cram ]
+            }
+            // Group
+            .groupTuple()
+
+        // crams are merged (when multiple lanes from the same sample) and indexed
+        CRAM_MERGE_INDEX_SAMTOOLS(cram_mapped, ch_fasta, ch_fasta_fai)
+
+        cram_variant_calling = CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai
+            .map { meta, cram, crai ->
+                    [ meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [ data_type: 'cram', id: meta.sample ], cram, crai ]
+                }
+    
+    }
+    
+    if (val_save_output_as_bam) {
+        if (val_applybqsr || !params.tools) {
             // Save merged recalibrated BAMs from applybqsr (merged via BAM_MERGE_INDEX_SAMTOOLS)
             CHANNEL_ALIGN_CREATE_CSV(native_bam_merged, val_outdir, val_save_output_as_bam)
         } else {

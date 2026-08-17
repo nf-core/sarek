@@ -1,13 +1,10 @@
 {
     "-profile test --aligner parabricks --wes --save_output_as_bam": {
         "content": [
-            15,
+            14,
             {
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
-                },
-                "CRAM_TO_BAM": {
-                    "samtools": "1.24"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -18,10 +15,10 @@
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.2.0"
                 },
-                "INDEX_CRAM": {
+                "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
                 },
-                "MERGE_CRAM": {
+                "MERGE_BAM": {
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
@@ -141,8 +138,8 @@
                 "preprocessing",
                 "preprocessing/parabricks",
                 "preprocessing/parabricks/test",
-                "preprocessing/parabricks/test/test.bam",
-                "preprocessing/parabricks/test/test.bam.bai",
+                "preprocessing/parabricks/test/test.sorted.bam",
+                "preprocessing/parabricks/test/test.sorted.bam.bai",
                 "reference",
                 "reference/bwa",
                 "reference/bwa/genome.fasta.amb",
@@ -217,7 +214,7 @@
                 "test.recal.regions.bed.gz.csi:md5,6f7ee623716b66db7f62de827cec1324"
             ],
             [
-                "test.bam:md5,9da56e1adc10f4fa65303441b8a5a328"
+                "test.sorted.bam:md5,9da56e1adc10f4fa65303441b8a5a328"
             ],
             "No CRAM files",
             "No VCF files",
@@ -229,7 +226,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-08-17T13:23:26.989032897"
+        "timestamp": "2026-08-17T15:07:05.575510159"
     },
     "-profile test --aligner parabricks --wes": {
         "content": [
@@ -458,7 +455,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-08-17T11:21:06.627585459"
+        "timestamp": "2026-08-17T14:40:45.652215055"
     },
     "-profile test --aligner parabricks --wes --parabricks_applybqsr": {
         "content": [
@@ -691,16 +688,13 @@
                 "test.cram:md5,70c1f341cfcfc3814e3475943915775c"
             ],
             "No VCF files",
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"                  
-            ]                            
-
+            "No warnings"
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-08-17T13:25:21.955273935"
+        "timestamp": "2026-08-17T14:48:26.607177408"
     },
     "-profile test --aligner parabricks --tools mutect2 --wes --input fastq_pair.csv": {
         "content": [
@@ -1031,7 +1025,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-08-17T11:25:12.572250373"
+        "timestamp": "2026-08-17T14:44:42.726592467"
     },
     "-profile test --aligner parabricks --wes --intervals": {
         "content": [
@@ -1255,6 +1249,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-08-17T11:27:03.780793025"
+        "timestamp": "2026-08-17T14:46:34.611131293"
     }
 }
