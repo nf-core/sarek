@@ -5,6 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev - unreleased
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+### Dependencies - modules
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Dependencies - plugins
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
+| Params | status |
+| ------ | ------ |
+
+### Developer section
+
+#### Added
+
+#### Changed
+
+- [#2271](https://github.com/nf-core/sarek/pull/2271) - Back to dev (3.10.1dev)
+
+#### Fixed
+
+#### Removed
+
 ## [3.10.0](https://github.com/nf-core/sarek/releases/tag/3.10.0) - Aktse
 
 Aktse is a mountain hut on the northern shore of Laitaure, on the Kungsleden trail at the edge of Sarek National Park.
@@ -33,6 +70,7 @@ Aktse is a mountain hut on the northern shore of Laitaure, on the Kungsleden tra
 - [#2216](https://github.com/nf-core/sarek/pull/2216) - Fix `--normalize_vcfs` dropping a real ALT allele of `1/2` multiallelic sites (`bcftools norm --rm-dup all` → `--rm-dup exact`)
 - [#2257](https://github.com/nf-core/sarek/pull/2257) - Fix two cases that completed successfully without producing the requested output: `--tools parabricks_haplotypecaller` no longer counts as a joint-germline caller, so requesting `--joint_germline` without one now fails early instead of finishing without any variants; and `--vep_loftee` no longer silently omits `LoF` annotations under `-profile conda`, where the plugin path was hardcoded to `/opt/conda` instead of being resolved from `$CONDA_PREFIX` at runtime
 - [#2241](https://github.com/nf-core/sarek/pull/2241) - Bump `mosdepth` (0.3.10 → 0.3.14) so its htslib can decode CRAM 3.1 written by samtools 1.24; the previous container silently produced empty coverage files, dropping the mosdepth MultiQC sections (most visible in the parabricks path)
+- [#2264](https://github.com/nf-core/sarek/pull/2264) - Pin merged samtools output to CRAM 3.0 for compatibility with downstream callers, use engine-specific GPU container options for Parabricks HaplotypeCaller tests, and replace the deprecated `cat/cat` module with `find/concatenate` for merged Control-FREEC mpileups
 
 ### Removed
 
@@ -41,6 +79,8 @@ Aktse is a mountain hut on the northern shore of Laitaure, on the Kungsleden tra
 | Dependency    | Old version | New version |
 | ------------- | ----------- | ----------- |
 | bcftools      | 1.21        | 1.23.1      |
+| coreutils     | -           | 9.4         |
+| findutils     | -           | 4.6.0       |
 | htslib        | 1.21        | 1.24        |
 | varlociraptor | 8.9.3       | 8.9.5       |
 | ensembl-vep   | 115.2       | 116.0       |
