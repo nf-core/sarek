@@ -80,11 +80,11 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
 
         // Merge recalibrated BAMs (same pattern as CRAM merging)
         native_bam_grouped = PARABRICKS_APPLYBQSR.out.bam
-            .map { meta, bam -> [ meta.sample, meta, bam ] }
+            .map { meta, bam -> [ meta.sample, [meta, bam] ] }
             .groupTuple()
-            .map { sample, meta_bam_list ->
-                def meta = meta_bam_list[0][1]
-                def bams = meta_bam_list.collect { _sample, _meta, bam_ -> bam_ }
+            .map { sample, meta_bam_pairs ->
+                def meta = meta_bam_pairs[0][0]
+                def bams = meta_bam_pairs.collect { _meta, bam_file -> bam_file }
                 [ meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [ data_type: 'bam', id: sample ], bams ]
             }
 
@@ -92,7 +92,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
         native_bam_merged = BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai
     }
     else {
-        mapped_cram      = PARABRICKS_FQ2BAM.out.cram
+        mapped_cram       = PARABRICKS_FQ2BAM.out.cram
         native_bam_merged = channel.empty()
     }
 

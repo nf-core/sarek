@@ -6,7 +6,7 @@
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
                 },
-                "CRAM_TO_BAM_TO_SAVE": {
+                "CRAM_TO_BAM": {
                     "samtools": "1.24"
                 },
                 "CREATE_INTERVALS_BED": {
@@ -141,8 +141,8 @@
                 "preprocessing",
                 "preprocessing/parabricks",
                 "preprocessing/parabricks/test",
-                "preprocessing/parabricks/test-test_L1",
-                "preprocessing/parabricks/test-test_L2",
+                "preprocessing/parabricks/test/test.bam",
+                "preprocessing/parabricks/test/test.bam.bai",
                 "reference",
                 "reference/bwa",
                 "reference/bwa/genome.fasta.amb",
@@ -216,7 +216,9 @@
                 "test.recal.regions.bed.gz:md5,912777bfe53139edf4948106611d3aeb",
                 "test.recal.regions.bed.gz.csi:md5,6f7ee623716b66db7f62de827cec1324"
             ],
-            "No BAM files",
+            [
+                "test.bam:md5,9da56e1adc10f4fa65303441b8a5a328"
+            ],
             "No CRAM files",
             "No VCF files",
             [
@@ -227,7 +229,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-08-12T14:23:21.239289408"
+        "timestamp": "2026-08-17T13:23:26.989032897"
     },
     "-profile test --aligner parabricks --wes": {
         "content": [
@@ -368,12 +370,6 @@
                 "preprocessing",
                 "preprocessing/parabricks",
                 "preprocessing/parabricks/test",
-                "preprocessing/parabricks/test-test_L1",
-                "preprocessing/parabricks/test-test_L1/test-test_L1.cram",
-                "preprocessing/parabricks/test-test_L1/test-test_L1.cram.crai",
-                "preprocessing/parabricks/test-test_L2",
-                "preprocessing/parabricks/test-test_L2/test-test_L2.cram",
-                "preprocessing/parabricks/test-test_L2/test-test_L2.cram.crai",
                 "preprocessing/parabricks/test/test.cram",
                 "preprocessing/parabricks/test/test.cram.crai",
                 "reference",
@@ -451,8 +447,6 @@
             ],
             "No BAM files",
             [
-                "test-test_L1.cram:md5,4673edaace5f12d28b6904c40640d7bd",
-                "test-test_L2.cram:md5,4673edaace5f12d28b6904c40640d7bd",
                 "test.cram:md5,9da56e1adc10f4fa65303441b8a5a328"
             ],
             "No VCF files",
@@ -464,17 +458,17 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-08-12T14:21:24.169319114"
+        "timestamp": "2026-08-17T11:21:06.627585459"
     },
     "-profile test --aligner parabricks --wes --parabricks_applybqsr": {
         "content": [
-            18,
+            20,
             {
+                "BAM_TO_CRAM": {
+                    "samtools": "1.24"
+                },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
-                },
-                "CRAM_TO_BAM": {
-                    "samtools": "1.24"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -486,6 +480,12 @@
                     "gatk4": "4.6.2.0"
                 },
                 "INDEX_CRAM": {
+                    "samtools": "1.24"
+                },
+                "INDEX_MERGE_BAM": {
+                    "samtools": "1.24"
+                },
+                "MERGE_BAM": {
                     "samtools": "1.24"
                 },
                 "MERGE_CRAM": {
@@ -611,12 +611,6 @@
                 "preprocessing",
                 "preprocessing/parabricks",
                 "preprocessing/parabricks/test",
-                "preprocessing/parabricks/test-test_L1",
-                "preprocessing/parabricks/test-test_L1/test-test_L1.bam",
-                "preprocessing/parabricks/test-test_L1/test-test_L1.bam.bai",
-                "preprocessing/parabricks/test-test_L2",
-                "preprocessing/parabricks/test-test_L2/test-test_L2.bam",
-                "preprocessing/parabricks/test-test_L2/test-test_L2.bam.bai",
                 "preprocessing/parabricks/test/test.cram",
                 "preprocessing/parabricks/test/test.cram.crai",
                 "reference",
@@ -692,10 +686,7 @@
                 "test.recal.regions.bed.gz:md5,912777bfe53139edf4948106611d3aeb",
                 "test.recal.regions.bed.gz.csi:md5,6f7ee623716b66db7f62de827cec1324"
             ],
-            [
-                "test-test_L1.bam:md5,4673edaace5f12d28b6904c40640d7bd",
-                "test-test_L2.bam:md5,4673edaace5f12d28b6904c40640d7bd"
-            ],
+            "No BAM files",
             [
                 "test.cram:md5,70c1f341cfcfc3814e3475943915775c"
             ],
@@ -709,7 +700,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-08-12T14:44:42.999306669"
+        "timestamp": "2026-08-17T13:25:21.955273935"
     },
     "-profile test --aligner parabricks --tools mutect2 --wes --input fastq_pair.csv": {
         "content": [
@@ -1040,7 +1031,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-08-12T14:25:34.505632072"
+        "timestamp": "2026-08-17T11:25:12.572250373"
     },
     "-profile test --aligner parabricks --wes --intervals": {
         "content": [
@@ -1178,12 +1169,6 @@
                 "preprocessing",
                 "preprocessing/parabricks",
                 "preprocessing/parabricks/test",
-                "preprocessing/parabricks/test-test_L1",
-                "preprocessing/parabricks/test-test_L1/test-test_L1.cram",
-                "preprocessing/parabricks/test-test_L1/test-test_L1.cram.crai",
-                "preprocessing/parabricks/test-test_L2",
-                "preprocessing/parabricks/test-test_L2/test-test_L2.cram",
-                "preprocessing/parabricks/test-test_L2/test-test_L2.cram.crai",
                 "preprocessing/parabricks/test/test.cram",
                 "preprocessing/parabricks/test/test.cram.crai",
                 "reference",
@@ -1259,8 +1244,6 @@
             ],
             "No BAM files",
             [
-                "test-test_L1.cram:md5,4673edaace5f12d28b6904c40640d7bd",
-                "test-test_L2.cram:md5,4673edaace5f12d28b6904c40640d7bd",
                 "test.cram:md5,9da56e1adc10f4fa65303441b8a5a328"
             ],
             "No VCF files",
@@ -1272,6 +1255,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-08-12T14:27:26.334212473"
+        "timestamp": "2026-08-17T11:27:03.780793025"
     }
 }
