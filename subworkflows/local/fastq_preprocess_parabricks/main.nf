@@ -15,7 +15,6 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     ch_index                        // channel: [mandatory] meta, index - bwa index
     ch_interval_file                // channel: [optional]  intervals_bed_combined
     ch_known_sites                  // channel: [optional]  known_sites_indels
-    val_output_fmt                  // either bam or cram
     val_applybqsr                   // boolean
     val_save_mapped                 // boolean
     val_save_output_as_bam          // boolean
@@ -23,6 +22,9 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
 
     main:
     ch_reports  = channel.empty()
+
+    // BQSR needs fq2bam to emit BAM (applybqsr only ingests BAM), if we do not run downstream tools but want to save to bam we use bam otherwise we use cram
+    fq2bam_output_fmt = val_applybqsr || (val_save_output_as_bam && !params.tools) ? 'bam' : 'cram'
 
     reads_grouping_key = ch_reads.map { meta, reads ->
             [ meta.subMap('patient', 'sample', 'sex', 'status'), reads ]
@@ -50,9 +52,6 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
 
     // Single reference genome used throughout the pipeline
     fasta_fai = ch_fasta.combine(ch_fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai ] }.collect()
-
-    // BQSR needs fq2bam to emit BAM (applybqsr only ingests BAM), otherwise we keep the requested format
-    fq2bam_output_fmt = val_applybqsr? 'bam' : val_output_fmt
 
     PARABRICKS_FQ2BAM(
         ch_reads,           // channel: [ val(meta), reads ]

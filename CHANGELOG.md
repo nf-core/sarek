@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#2268](https://github.com/nf-core/sarek/pull/2268) - Add parabricks/applybqsr
+
 ### Changed
 
 ### Fixed
@@ -27,8 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params | status |
-| ------ | ------ |
+| Params                   | status |
+| ------------------------ | ------ |
+| `--parabricks_applybqsr` | New    |
 
 ### Developer section
 
