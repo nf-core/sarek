@@ -332,7 +332,7 @@ The resulting recalibrated CRAM files are delivered to the user. Recalibrated CR
 > [!NOTE]
 > This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
 
-[Parabricks FQ2BAM](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html) runs as alternative to GATK preprocessing, enabled by `--aligner parabricks --profile <docker/singularity>,gpu`. By default fq2bam performs alignment, coordinate sorting, duplicate marking and base quality score recalibration (BQSR) in one step, emitting recalibrated CRAM.
+[Parabricks FQ2BAM](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html) runs as alternative to GATK preprocessing, enabled by `--aligner parabricks --profile <docker/singularity>,gpu`. By default fq2bam performs alignment, coordinate sorting, duplicate marking and base quality score calculation (BQSR) in one step, emitting a CRAM.
 
 When `--parabricks_applybqsr` is set, fq2bam outputs BAM with an intermediate recalibration table, then [Parabricks ApplyBQSR](#parabricks-applybqsr) recalibrates the base qualities on the GPU, and the recalibrated BAM is converted back to CRAM for downstream variant calling. The known variant sites (`--dbsnp`, `--known_indels`) used to build the recalibration table are provided by the iGenomes reference configuration or can be set via command-line arguments.
 
