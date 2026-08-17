@@ -1,9 +1,10 @@
-include { PARABRICKS_APPLYBQSR                    } from '../../../modules/nf-core/parabricks/applybqsr/main.nf'
-include { PARABRICKS_FQ2BAM                       } from '../../../modules/nf-core/parabricks/fq2bam/main.nf'
-include { CHANNEL_ALIGN_CREATE_CSV                } from '../../../subworkflows/local/channel_align_create_csv/main'
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM         } from '../../../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM_TO_SAVE } from '../../../modules/nf-core/samtools/convert/main'
-include { CRAM_MERGE_INDEX_SAMTOOLS               } from '../../../subworkflows/local/cram_merge_index_samtools/main'
+include { PARABRICKS_APPLYBQSR            } from '../../../modules/nf-core/parabricks/applybqsr/main.nf'
+include { PARABRICKS_FQ2BAM               } from '../../../modules/nf-core/parabricks/fq2bam/main.nf'
+include { CHANNEL_ALIGN_CREATE_CSV        } from '../../../subworkflows/local/channel_align_create_csv/main'
+include { SAMTOOLS_CONVERT as BAM_TO_CRAM } from '../../../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAM_TO_BAM } from '../../../modules/nf-core/samtools/convert/main'
+include { BAM_MERGE_INDEX_SAMTOOLS        } from '../../../subworkflows/local/bam_merge_index_samtools/main'
+include { CRAM_MERGE_INDEX_SAMTOOLS       } from '../../../subworkflows/local/cram_merge_index_samtools/main'
 
 workflow FASTQ_PREPROCESS_PARABRICKS {
 
@@ -74,15 +75,28 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
         // Native BAM (per lane) is the applybqsr output to keep when saving as BAM
         native_bam = PARABRICKS_APPLYBQSR.out.bam.join(PARABRICKS_APPLYBQSR.out.bai, failOnDuplicate: true, failOnMismatch: true)
 
-        CRAM_TO_BAM(native_bam, fasta_fai)
-        mapped_cram = CRAM_TO_BAM.out.cram
+        BAM_TO_CRAM(native_bam, fasta_fai)
+        mapped_cram = BAM_TO_CRAM.out.cram
+
+        // Merge recalibrated BAMs (same pattern as CRAM merging)
+        native_bam_grouped = PARABRICKS_APPLYBQSR.out.bam
+            .map { meta, bam -> [ meta.sample, meta, bam ] }
+            .groupTuple()
+            .map { sample, meta_bam_list ->
+                def meta = meta_bam_list[0][1]
+                def bams = meta_bam_list.collect { _meta_, bam_ -> bam_ }
+                [ meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [ data_type: 'bam', id: sample ], bams ]
+            }
+
+        BAM_MERGE_INDEX_SAMTOOLS(native_bam_grouped)
+        native_bam_merged = BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai
     }
     else {
-        mapped_cram = PARABRICKS_FQ2BAM.out.cram
-        native_bam  = channel.empty()
+        mapped_cram      = PARABRICKS_FQ2BAM.out.cram
+        native_bam_merged = channel.empty()
     }
 
-    // Grouping the bams from the same samples not to stall the workflow
+    // Grouping the CRAMs from the same samples not to stall the workflow
     // Use groupKey to make sure that the correct group can advance as soon as it is complete
     // and not stall the workflow until all reads from all channels are mapped
     cram_mapped = mapped_cram
@@ -113,15 +127,19 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
 
     if (val_save_output_as_bam) {
         if (val_applybqsr) {
-            // BQSR already produced BAMs, so saving as BAM needs no conversion
-            CHANNEL_ALIGN_CREATE_CSV(native_bam, val_outdir, val_save_output_as_bam)
+            // Save merged recalibrated BAMs from applybqsr (merged via BAM_MERGE_INDEX_SAMTOOLS)
+            CHANNEL_ALIGN_CREATE_CSV(native_bam_merged, val_outdir, val_save_output_as_bam)
         } else {
-            // Convert CRAM files to BAM
-            CRAM_TO_BAM_TO_SAVE(cram_variant_calling, fasta_fai)
-            CHANNEL_ALIGN_CREATE_CSV(CRAM_TO_BAM_TO_SAVE.out.bam.join(CRAM_TO_BAM_TO_SAVE.out.bai, failOnDuplicate: true, failOnMismatch: true), val_outdir, val_save_output_as_bam)
+            // Convert merged CRAM to merged BAM for saving
+            CRAM_TO_BAM(cram_variant_calling, fasta_fai)
+            CHANNEL_ALIGN_CREATE_CSV(
+                CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true),
+                val_outdir, val_save_output_as_bam
+            )
         }
     } else if (val_save_mapped) {
-        CHANNEL_ALIGN_CREATE_CSV(cram_variant_calling, val_outdir, val_save_output_as_bam)
+        // Save merged CRAMs - the canonical merged output
+        CHANNEL_ALIGN_CREATE_CSV(cram_variant_calling, val_outdir, val_save_mapped)
     }
 
     emit:
