@@ -1,7 +1,8 @@
 name: msisensorpro_msisomatic
-description: MSIsensor-pro evaluates Microsatellite Instability (MSI) for cancer patients
-  with next generation sequencing data. It accepts the whole genome sequencing, whole
-  exome sequencing and target region (panel) sequencing data as input
+description: MSIsensor-pro evaluates Microsatellite Instability (MSI) for cancer
+  patients with next generation sequencing data. It accepts the whole genome
+  sequencing, whole exome sequencing and target region (panel) sequencing data
+  as input
 keywords:
   - micro-satellite-scan
   - msisensor-pro
@@ -9,13 +10,14 @@ keywords:
   - somatic
 tools:
   - msisensorpro:
-      description: Microsatellite Instability (MSI) detection using high-throughput
-        sequencing data.
+      description: Microsatellite Instability (MSI) detection using
+        high-throughput sequencing data.
       homepage: https://github.com/xjtu-omics/msisensor-pro
       documentation: https://github.com/xjtu-omics/msisensor-pro/wiki
       tool_dev_url: https://github.com/xjtu-omics/msisensor-pro
       doi: "10.1016/j.gpb.2020.02.001"
-      licence: ["Custom Licence"]
+      licence:
+        - "Custom Licence"
       identifier: ""
 input:
   - - meta:
@@ -72,8 +74,8 @@ output:
             e.g. [ id:'test', single_end:false ]
       - ${prefix}:
           type: file
-          description: File containing final report with all detected microsatellites,
-            unstable somatic microsatellites, msi score
+          description: File containing final report with all detected
+            microsatellites, unstable somatic microsatellites, msi score
           ontologies: []
   output_dis:
     - - meta:
@@ -105,13 +107,27 @@ output:
           type: file
           description: File containing somatic results
           ontologies: []
+  versions_msisensorpro:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - msisensor-pro:
+          type: string
+          description: The name of the tool
+      - msisensor-pro --version 2>&1 | sed -nE 's/Version:\s*v//p':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - msisensor-pro:
+          type: string
+          description: The name of the tool
+      - msisensor-pro --version 2>&1 | sed -nE 's/Version:\s*v//p':
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@FriederikeHanssen"
 maintainers:

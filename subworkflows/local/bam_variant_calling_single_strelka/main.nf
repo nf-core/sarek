@@ -17,7 +17,6 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     intervals     // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi, num_intervals ] or [ [], [], 0 ] if no intervals
 
     main:
-    versions = Channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
@@ -27,24 +26,24 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     STRELKA_SINGLE(cram_intervals, fasta, fasta_fai)
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    genome_vcf = STRELKA_SINGLE.out.genome_vcf.branch{
+    genome_vcf = STRELKA_SINGLE.out.genome_vcf.branch{ meta, _vcf ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    vcf_out = STRELKA_SINGLE.out.vcf.branch{
+    vcf_out = STRELKA_SINGLE.out.vcf.branch{ meta, _vcf ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_out = STRELKA_SINGLE.out.vcf_tbi.branch{
+    tbi_out = STRELKA_SINGLE.out.vcf_tbi.branch{ meta, _tbi ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Only when using intervals
@@ -56,21 +55,16 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
 
     // Mix intervals and no_intervals channels together
     // Only strelka variant vcf should get annotated
-    vcf = Channel.empty().mix(MERGE_STRELKA.out.vcf, vcf_out.no_intervals)
+    vcf = channel.empty().mix(MERGE_STRELKA.out.vcf, vcf_out.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], vcf ] }
 
-    tbi = Channel.empty().mix(MERGE_STRELKA.out.tbi, tbi_out.no_intervals)
+    tbi = channel.empty().mix(MERGE_STRELKA.out.tbi, tbi_out.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], tbi ] }
-
-    versions = versions.mix(MERGE_STRELKA.out.versions)
-    versions = versions.mix(MERGE_STRELKA_GENOME.out.versions)
-    versions = versions.mix(STRELKA_SINGLE.out.versions)
 
     emit:
     vcf
     tbi
 
-    versions
 }

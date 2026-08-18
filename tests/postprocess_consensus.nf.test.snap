@@ -7,16 +7,16 @@
                     "gawk": "5.3.0"
                 },
                 "BCFTOOLS_CONCAT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_ISEC": {
-                    "bcftools": 1.22
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CONSENSUS_FROM_SITES": {
                     "gawk": "mawk 1.3.4 20240123",
@@ -26,22 +26,23 @@
                     "gawk": "5.3.0"
                 },
                 "FILTER_VCFS": {
-                    "bcftools": 1.22
+                    "bcftools": "1.23.1"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "MUTECT2_PAIRED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -50,25 +51,31 @@
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_EXT_VCF": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCFS_NORM": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "VCFS_NORM_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -101,6 +108,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -120,6 +128,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -138,6 +147,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -156,6 +166,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -297,27 +308,28 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,cb7468f51b8be1230fb3ac5b130be31f",
                 "mosdepth_perchrom.txt:md5,4ee05f71086179b42a01cd2fb450346f",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
+                "samtools-stats-dp.txt:md5,bf6d30315fd7608b97b2a4eb1dc71fdc",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
-                "sample3.bcftools.bcftools_stats.txt:md5,bd86ded3843a217d429b34edd22a9a4e",
-                "sample4_vs_sample3.mutect2.bcftools_stats.txt:md5,65bc65858d3dfa1d8913119850626823",
-                "sample3.strelka.variants.bcftools_stats.txt:md5,6d4d032ba146941cb226765aaed9d67f",
-                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,62c6123f6494c3cdbd42dc7230e757b3",
-                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,8404ea88658fbc41d447ba20bf46dd0a",
+                "samtools_insert_size.txt:md5,8fa108dcbe0da42e9425dd125fe22905",
+                "sample3.bcftools.bcftools_stats.txt:md5,bb4018e2ec62ab957867c4f55ce626b8",
+                "sample4_vs_sample3.mutect2.bcftools_stats.txt:md5,c802eeeaa4ab6531bdb5d8c0b583f8b6",
+                "sample3.strelka.variants.bcftools_stats.txt:md5,2c40e667f6ee75761fe6c3b33dda0679",
+                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,0092bfd1833160732c4e3180a2a8d54d",
+                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,91f318ab5e6b017554f8f72866c6a5bd",
                 "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
                 "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
                 "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
                 "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
-                "sample3.recal.per-base.bed.gz.csi:md5,c67dcd711b096eb42f43784d5eadbc0d",
+                "sample3.recal.per-base.bed.gz.csi:md5,68451158beb41ef7fcd07821fe3a52b4",
                 "sample3.recal.regions.bed.gz:md5,314ce8d7273eff353072108aa77c327c",
-                "sample3.recal.regions.bed.gz.csi:md5,9cb0ad7039a3b703d16ca7d5b835c0ee",
+                "sample3.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
                 "sample4.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample4.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample4.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
                 "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample4.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample4.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample4.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
+                "sample4.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
                 "sample3.bcftools.FILTER.summary:md5,9b62595b026decf12e9198d531e4307a",
                 "sample3.bcftools.TsTv.count:md5,6c937125d7bac4c491bea50f18cba43a",
                 "sample4_vs_sample3.mutect2.FILTER.summary:md5,cac64448be577632a614af62a23af34a",
@@ -345,7 +357,7 @@
                 "sample4_vs_sample3.strelka.somatic_indels.bcftools_filtered.vcf.gz:md5,a7861b539e2cfd4429a02757bc9845e9",
                 "sample4_vs_sample3.strelka.somatic_snvs.bcftools_filtered.vcf.gz:md5,973d0ca572b2c94e18279a3c7694d934",
                 "sample4_vs_sample3.mutect2.vcf.gz:md5,f2c46d0dae1b1a59180c0b9e595993d2",
-                "sample3.bcftools.bcftools_filtered.norm.sorted.vcf.gz:md5,ff4832fed7bffc1b53254f635ddb8a95",
+                "sample3.bcftools.bcftools_filtered.norm.sorted.vcf.gz:md5,611a523c501d43f1810f4191267693fb",
                 "sample3.strelka.variants.bcftools_filtered.norm.sorted.vcf.gz:md5,e3f3390321c8693afd777202e15e9b5e",
                 "sample4_vs_sample3.mutect2.bcftools_filtered.norm.sorted.vcf.gz:md5,8826a34d4c7a004750b8a56fee56dcbb",
                 "sample4_vs_sample3.strelka.somatic_indels.bcftools_filtered.norm.sorted.vcf.gz:md5,e60a2a65edfea45253619ccd5c6054f0",
@@ -360,11 +372,11 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
+        "timestamp": "2026-07-27T10:23:15.482817797",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-06T14:58:25.361891009"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --snv_consensus_calling --normalize_vcfs --tools lofreq,mpileup,mutect2 (tumor-only)": {
         "content": [
@@ -374,13 +386,13 @@
                     "gawk": "5.3.0"
                 },
                 "BCFTOOLS_ISEC": {
-                    "bcftools": 1.22
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CONSENSUS_FROM_SITES": {
                     "gawk": "mawk 1.3.4 20240123",
@@ -390,43 +402,50 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "LOFREQ": {
                     "lofreq": "2.1.5"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "MUTECT2": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_EXT_VCF": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCFS_NORM": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "VCFS_NORM_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -459,6 +478,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -478,6 +498,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -496,6 +517,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -514,6 +536,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -601,18 +624,19 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,1036ea76acae803f591fd99838a8eded",
                 "mosdepth_perchrom.txt:md5,1f24f2f40467234c410a8bda544a8aae",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
+                "samtools-stats-dp.txt:md5,42facbec7ea07232de8dc0369f0da065",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
-                "sample2.bcftools.bcftools_stats.txt:md5,3299f97352e32c873c95e43922c79147",
-                "sample2.lofreq.bcftools_stats.txt:md5,a8a850fdd11644fa4b770971dfe37194",
-                "sample2.mutect2.bcftools_stats.txt:md5,846b97f3763c5316f2b7e76962d80be9",
+                "samtools_insert_size.txt:md5,5cb5779e1a7baf077b529af8c427147c",
+                "sample2.bcftools.bcftools_stats.txt:md5,47ce340432efdbb38a86d8b7c3d0c2d4",
+                "sample2.lofreq.bcftools_stats.txt:md5,064a0729f34ff2b74a1ea619cc47ecb6",
+                "sample2.mutect2.bcftools_stats.txt:md5,be37ecb07e10f0a3ea082e3fab5226fd",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample2.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample2.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample2.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample2.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
+                "sample2.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
                 "sample2.bcftools.FILTER.summary:md5,8766995f3e4119ef30dfdaa9fb3752ce",
                 "sample2.bcftools.TsTv.count:md5,01df95fcb4df593f7e1b214d90ebdb59",
                 "sample2.lofreq.FILTER.summary:md5,8dd8a0c91d5c4a260b462e04f615e502",
@@ -638,7 +662,7 @@
                 ],
                 [
                     "0002.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=55, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=56, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "sample2.lofreq.vcf.gz",
@@ -650,7 +674,7 @@
                 ],
                 [
                     "sample2.bcftools.norm.sorted.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=132, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=133, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "sample2.lofreq.norm.sorted.vcf.gz",
@@ -658,7 +682,7 @@
                 ],
                 [
                     "sample2.mutect2.norm.sorted.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=1261, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=1262, phased=false, phasedAutodetect=false]"
                 ]
             ],
             [
@@ -666,11 +690,11 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
+        "timestamp": "2026-07-27T10:22:11.362506122",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-06T15:02:50.699837449"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --snv_consensus_calling --normalize_vcfs --tools mpileup,mutect2,strelka (germline + somatic)": {
         "content": [
@@ -680,19 +704,19 @@
                     "gawk": "5.3.0"
                 },
                 "BCFTOOLS_CONCAT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_ISEC": {
-                    "bcftools": 1.22
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_MPILEUP": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CALCULATECONTAMINATION": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "CONSENSUS_FROM_SITES": {
                     "gawk": "mawk 1.3.4 20240123",
@@ -702,28 +726,29 @@
                     "gawk": "5.3.0"
                 },
                 "FILTERMUTECTCALLS": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "MUTECT2_PAIRED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -732,25 +757,31 @@
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_EXT_VCF": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCFS_NORM": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "VCFS_NORM_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -783,6 +814,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -802,6 +834,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -820,6 +853,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -838,6 +872,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -975,27 +1010,28 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,cb7468f51b8be1230fb3ac5b130be31f",
                 "mosdepth_perchrom.txt:md5,4ee05f71086179b42a01cd2fb450346f",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,e0a8d8867064083908a8ca1ea782d7ac",
+                "samtools-stats-dp.txt:md5,bf6d30315fd7608b97b2a4eb1dc71fdc",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
-                "sample3.bcftools.bcftools_stats.txt:md5,bd86ded3843a217d429b34edd22a9a4e",
-                "sample4_vs_sample3.mutect2.filtered.bcftools_stats.txt:md5,91e802a68f9d8da14bb3dcf784f0810d",
-                "sample3.strelka.variants.bcftools_stats.txt:md5,6d4d032ba146941cb226765aaed9d67f",
-                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,62c6123f6494c3cdbd42dc7230e757b3",
-                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,8404ea88658fbc41d447ba20bf46dd0a",
+                "samtools_insert_size.txt:md5,8fa108dcbe0da42e9425dd125fe22905",
+                "sample3.bcftools.bcftools_stats.txt:md5,bb4018e2ec62ab957867c4f55ce626b8",
+                "sample4_vs_sample3.mutect2.filtered.bcftools_stats.txt:md5,ef2f52e9bd9793547bb43a3828f8304c",
+                "sample3.strelka.variants.bcftools_stats.txt:md5,2c40e667f6ee75761fe6c3b33dda0679",
+                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,0092bfd1833160732c4e3180a2a8d54d",
+                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,91f318ab5e6b017554f8f72866c6a5bd",
                 "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
                 "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
                 "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
                 "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
-                "sample3.recal.per-base.bed.gz.csi:md5,c67dcd711b096eb42f43784d5eadbc0d",
+                "sample3.recal.per-base.bed.gz.csi:md5,68451158beb41ef7fcd07821fe3a52b4",
                 "sample3.recal.regions.bed.gz:md5,314ce8d7273eff353072108aa77c327c",
-                "sample3.recal.regions.bed.gz.csi:md5,9cb0ad7039a3b703d16ca7d5b835c0ee",
+                "sample3.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
                 "sample4.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample4.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample4.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
                 "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample4.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample4.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample4.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
+                "sample4.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
                 "sample3.bcftools.FILTER.summary:md5,9b62595b026decf12e9198d531e4307a",
                 "sample3.bcftools.TsTv.count:md5,6c937125d7bac4c491bea50f18cba43a",
                 "sample4_vs_sample3.mutect2.filtered.FILTER.summary:md5,b25d4d2a64f9590d0ffb119fd3adb06e",
@@ -1023,11 +1059,11 @@
                 ],
                 [
                     "sample3.consensus.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=70, phased=true, phasedAutodetect=true]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=0, variantCount=71, phased=true, phasedAutodetect=true]"
                 ],
                 [
                     "0001.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=70, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=71, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "sample4_vs_sample3.consensus.vcf.gz",
@@ -1047,11 +1083,11 @@
                 ],
                 [
                     "sample3.bcftools.norm.sorted.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=123, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=124, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "sample3.strelka.variants.norm.sorted.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=52656, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=53245, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "sample4_vs_sample3.mutect2.filtered.norm.sorted.vcf.gz",
@@ -1086,10 +1122,10 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
+        "timestamp": "2026-07-27T10:27:08.769937074",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-06T14:53:33.998324217"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

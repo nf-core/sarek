@@ -4,14 +4,14 @@
             40,
             {
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -20,26 +20,27 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -48,15 +49,21 @@
                     "strelka": "2.9.10"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
                 },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -68,6 +75,11 @@
                 "multiqc",
                 "multiqc/index.json",
                 "multiqc/multiqc_data",
+                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_SNP.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transitions.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transversions.txt",
                 "multiqc/multiqc_data/fastqc-status-check-heatmap.txt",
                 "multiqc/multiqc_data/fastqc_adapter_content_plot.txt",
                 "multiqc/multiqc_data/fastqc_per_base_n_content_plot.txt",
@@ -106,10 +118,17 @@
                 "multiqc/multiqc_data/picard_deduplication.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
                 "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc-status-check-heatmap.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_adapter_content_plot.pdf",
                 "multiqc/multiqc_plots/pdf/fastqc_per_base_n_content_plot.pdf",
@@ -132,8 +151,15 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
                 "multiqc/multiqc_plots/png/fastqc-status-check-heatmap.png",
                 "multiqc/multiqc_plots/png/fastqc_adapter_content_plot.png",
                 "multiqc/multiqc_plots/png/fastqc_per_base_n_content_plot.png",
@@ -156,8 +182,15 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
                 "multiqc/multiqc_plots/svg/fastqc-status-check-heatmap.svg",
                 "multiqc/multiqc_plots/svg/fastqc_adapter_content_plot.svg",
                 "multiqc/multiqc_plots/svg/fastqc_per_base_n_content_plot.svg",
@@ -180,6 +213,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
@@ -299,37 +333,38 @@
                 "mosdepth-coverage-per-contig-single.txt:md5,f73b2f18633bb4b386b4f9e9fcdffb6a",
                 "mosdepth-cumcoverage-dist-id.txt:md5,954642b30618e908300aa9ac1673985e",
                 "mosdepth_perchrom.txt:md5,f73b2f18633bb4b386b4f9e9fcdffb6a",
-                "multiqc_citations.txt:md5,790a7694da30294b51fa1d6c3eb8ba2b",
+                "multiqc_citations.txt:md5,ace4ca89138a5f1e2be289c157c00bd9",
                 "multiqc_fastqc.txt:md5,2fd25e8c81f962594b801d5a9df3cd87",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,13dab249f7bef935dfef234299550db8",
+                "samtools-stats-dp.txt:md5,8b8f48d0b1d134cfe3636e8577265751",
                 "samtools_alignment_plot.txt:md5,44149e0c5cc4bfa58242824b300219a2",
-                "test.strelka.variants.bcftools_stats.txt:md5,2613827870dd789fe602a8a3b739b7f2",
-                "test2_vs_test.strelka.somatic_indels.bcftools_stats.txt:md5,5e8f9a8fdbc765ced736d0c8c7dd3a52",
-                "test2_vs_test.strelka.somatic_snvs.bcftools_stats.txt:md5,edb7763fad7b6f825e47e01ffa70adbc",
+                "samtools_insert_size.txt:md5,c4b5c78eeb30a8c926d1bd9506882516",
+                "test.strelka.variants.bcftools_stats.txt:md5,6efa6598982c21c544d1833dca632b62",
+                "test2_vs_test.strelka.somatic_indels.bcftools_stats.txt:md5,b5d3cad82f19dd86895f5b7b38034bd2",
+                "test2_vs_test.strelka.somatic_snvs.bcftools_stats.txt:md5,08b597e1002f482dc549044c500eb60a",
                 "test.md.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test.md.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test.md.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
                 "test.md.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
-                "test.md.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
+                "test.md.regions.bed.gz.csi:md5,f58637ea3ed05bef11f054941c96e252",
                 "test.recal.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
                 "test.recal.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
                 "test.recal.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
                 "test.recal.regions.bed.gz:md5,b25a2798061021c0b2f4e1d18219bbbd",
-                "test.recal.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
+                "test.recal.regions.bed.gz.csi:md5,f58637ea3ed05bef11f054941c96e252",
                 "test2.md.mosdepth.global.dist.txt:md5,2020cf6dfc7ddca020c921dd9f0549b7",
                 "test2.md.mosdepth.region.dist.txt:md5,38ff8b38c33b9231f047fea8ea830aae",
                 "test2.md.mosdepth.summary.txt:md5,8b991358768cade225470a07cd34f573",
                 "test2.md.regions.bed.gz:md5,08e767f91a0a8d82733f0040e804a85f",
-                "test2.md.regions.bed.gz.csi:md5,d5f1c9389ecf52ba839e834780a94549",
+                "test2.md.regions.bed.gz.csi:md5,7357b11c67d045f7383a19845688e072",
                 "test2.recal.mosdepth.global.dist.txt:md5,2020cf6dfc7ddca020c921dd9f0549b7",
                 "test2.recal.mosdepth.region.dist.txt:md5,38ff8b38c33b9231f047fea8ea830aae",
                 "test2.recal.mosdepth.summary.txt:md5,8b991358768cade225470a07cd34f573",
                 "test2.recal.regions.bed.gz:md5,08e767f91a0a8d82733f0040e804a85f",
-                "test2.recal.regions.bed.gz.csi:md5,d5f1c9389ecf52ba839e834780a94549",
+                "test2.recal.regions.bed.gz.csi:md5,7357b11c67d045f7383a19845688e072",
                 "test.strelka.variants.FILTER.summary:md5,dd87f507da7de20d5318841af312493b",
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
                 "test2_vs_test.strelka.somatic_indels.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
@@ -355,10 +390,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-07-27T10:29:54.04260346",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T21:48:26.834713902"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

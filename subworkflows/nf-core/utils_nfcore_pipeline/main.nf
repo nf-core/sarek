@@ -17,7 +17,7 @@ workflow UTILS_NFCORE_PIPELINE {
     checkProfileProvided(nextflow_cli_args)
 
     emit:
-    valid_config
+    valid_config = valid_config
 }
 
 /*

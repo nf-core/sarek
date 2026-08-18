@@ -4,6 +4,7 @@ include { BCFTOOLS_SORT as SORT_FINAL_VCF           } from '../../../modules/nf-
 include { RBT_VCFSPLIT                              } from '../../../modules/nf-core/rbt/vcfsplit'
 include { VARLOCIRAPTOR_CALLVARIANTS                } from '../../../modules/nf-core/varlociraptor/callvariants'
 include { VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES } from '../../../modules/nf-core/varlociraptor/estimatealignmentproperties'
+include { VARLOCIRAPTOR_FILTERFDR                   } from '../../../modules/nf-core/varlociraptor/filterfdr'
 include { VARLOCIRAPTOR_PREPROCESS                  } from '../../../modules/nf-core/varlociraptor/preprocess'
 include { YTE as FILL_SCENARIO_FILE                 } from '../../../modules/nf-core/yte'
 
@@ -16,10 +17,10 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     ch_vcf
     val_num_chunks
     val_sampletype
+    val_events
+    val_fdr
 
     main:
-    ch_versions = channel.empty()
-
     meta_map = ch_cram.map { meta, _cram, _crai -> meta + [sex_string: (meta.sex == "XX" ? "female" : "male")] }
 
     FILL_SCENARIO_FILE(
@@ -107,14 +108,13 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
     SORT_CALLED_CHUNKS(
         VARLOCIRAPTOR_CALLVARIANTS.out.bcf
     )
-    ch_versions = ch_versions.mix(SORT_CALLED_CHUNKS.out.versions)
 
     ch_sort_called_chunks_vcf = SORT_CALLED_CHUNKS.out.vcf.branch {
         single: val_num_chunks <= 1
         multiple: val_num_chunks > 1
     }
 
-    ch_sort_called_chunks_tbi = SORT_CALLED_CHUNKS.out.tbi.branch {
+    ch_sort_called_chunks_tbi = SORT_CALLED_CHUNKS.out.index.branch {
         single: val_num_chunks <= 1
         multiple: val_num_chunks > 1
     }
@@ -128,16 +128,15 @@ workflow VCF_VARLOCIRAPTOR_SINGLE {
 
     CONCAT_CALLED_CHUNKS(ch_vcf_tbi_chunks)
 
-    ch_versions = ch_versions.mix(CONCAT_CALLED_CHUNKS.out.versions)
-
     ch_final_vcf = ch_sort_called_chunks_vcf.single.mix(CONCAT_CALLED_CHUNKS.out.vcf)
 
-    SORT_FINAL_VCF(ch_final_vcf)
+    VARLOCIRAPTOR_FILTERFDR(
+        ch_final_vcf.map { meta, vcf -> [ meta, vcf, val_events, val_fdr ] }
+    )
 
-    ch_versions = ch_versions.mix(SORT_FINAL_VCF.out.versions)
+    SORT_FINAL_VCF(VARLOCIRAPTOR_FILTERFDR.out.bcf)
 
     emit:
     vcf      = SORT_FINAL_VCF.out.vcf
-    tbi      = SORT_FINAL_VCF.out.tbi
-    versions = ch_versions
+    tbi      = SORT_FINAL_VCF.out.index
 }

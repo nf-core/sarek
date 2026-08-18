@@ -4,10 +4,10 @@
             19,
             {
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -16,33 +16,41 @@
                     "freebayes": "1.3.10"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MERGE_FREEBAYES": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_VC_FREEBAYES_FILT": {
-                    "tabix": 1.21
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -75,6 +83,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -94,6 +103,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -112,6 +122,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -130,6 +141,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -173,16 +185,17 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,1036ea76acae803f591fd99838a8eded",
                 "mosdepth_perchrom.txt:md5,1f24f2f40467234c410a8bda544a8aae",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
+                "samtools-stats-dp.txt:md5,42facbec7ea07232de8dc0369f0da065",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
-                "sample2.freebayes.filtered.bcftools_stats.txt:md5,58e57fe87d5eb8b7ccd9b1ecd2d196df",
+                "samtools_insert_size.txt:md5,5cb5779e1a7baf077b529af8c427147c",
+                "sample2.freebayes.filtered.bcftools_stats.txt:md5,8d125501aef859ecb64b7363d93429fe",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
                 "sample2.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample2.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample2.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample2.recal.regions.bed.gz.csi:md5,393c2749068304d8545b501b9d4658e4",
+                "sample2.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
                 "sample2.freebayes.filtered.FILTER.summary:md5,0a8ab31642123f2fc365df90166f22d5",
                 "sample2.freebayes.filtered.TsTv.count:md5,1756160098a27e7537c0fa8ea5cffc5f"
             ],
@@ -199,28 +212,28 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:28:53.984660271",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-04T12:14:50.842752"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools freebayes --no_intervals --wes --input fastq_pair.csv": {
         "content": [
             41,
             {
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -229,39 +242,48 @@
                     "freebayes": "1.3.10"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_VC_FREEBAYES": {
-                    "tabix": 1.21
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_VC_FREEBAYES_FILT": {
-                    "tabix": 1.21
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -318,6 +340,7 @@
                 "multiqc/multiqc_data/picard_deduplication.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -353,6 +376,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -387,6 +411,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -421,6 +446,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -542,29 +568,30 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,7a0481b59cdd57cc0b8bc9b5641614c6",
+                "samtools-stats-dp.txt:md5,b4eaecbb6a9f2c463337ce06f8e2f47c",
                 "samtools_alignment_plot.txt:md5,8e6178a26fe2a4fc4f45fac3175ba6c6",
-                "test.freebayes.filtered.bcftools_stats.txt:md5,dde124ceaf6f109cd274b837b950096b",
-                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,6f942caec2f4f02c69e1216226fa44a9",
+                "samtools_insert_size.txt:md5,c4b5c78eeb30a8c926d1bd9506882516",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,5b0bc956256ff340d4f7409769fa9924",
+                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,47f9e44efca5ebdc059866e6bfbb0564",
                 "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.md.mosdepth.summary.txt:md5,0010c2396a3173c7cf4983abe2eb6a4c",
                 "test.md.per-base.bed.gz:md5,34dfe443c0a0767562dd65272e3310ef",
-                "test.md.per-base.bed.gz.csi:md5,b0ab630c3241fbd7581b7a38d944ff8b",
+                "test.md.per-base.bed.gz.csi:md5,635faec9b8aea3be719bc5cb9b81b1aa",
                 "test.recal.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.recal.mosdepth.summary.txt:md5,0010c2396a3173c7cf4983abe2eb6a4c",
                 "test.recal.per-base.bed.gz:md5,34dfe443c0a0767562dd65272e3310ef",
-                "test.recal.per-base.bed.gz.csi:md5,b0ab630c3241fbd7581b7a38d944ff8b",
+                "test.recal.per-base.bed.gz.csi:md5,635faec9b8aea3be719bc5cb9b81b1aa",
                 "test2.md.mosdepth.global.dist.txt:md5,f25166c3a0051bb4d8c11a210278de6c",
                 "test2.md.mosdepth.summary.txt:md5,d5e4084de2ea2a0a7b60b2d71c804d4b",
                 "test2.md.per-base.bed.gz:md5,e1c6d60621d8f64aaf28fa1c1ddda921",
-                "test2.md.per-base.bed.gz.csi:md5,4205a09ede17cdbdaad45e3553f73105",
+                "test2.md.per-base.bed.gz.csi:md5,651986721bf7e1695fc044e06126df51",
                 "test2.recal.mosdepth.global.dist.txt:md5,f25166c3a0051bb4d8c11a210278de6c",
                 "test2.recal.mosdepth.summary.txt:md5,d5e4084de2ea2a0a7b60b2d71c804d4b",
                 "test2.recal.per-base.bed.gz:md5,e1c6d60621d8f64aaf28fa1c1ddda921",
-                "test2.recal.per-base.bed.gz.csi:md5,4205a09ede17cdbdaad45e3553f73105",
+                "test2.recal.per-base.bed.gz.csi:md5,651986721bf7e1695fc044e06126df51",
                 "test.freebayes.filtered.FILTER.summary:md5,87e753ba2ad969475fb55661852f75e0",
                 "test.freebayes.filtered.TsTv.count:md5,845f64e5bb4224af98f3a47294cd5483",
-                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,126e83dcd37b82420f7c5d7b235479f1",
+                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,1f06f857e3576c6a98c32d1e7f51f456",
                 "test2_vs_test.freebayes.filtered.TsTv.count:md5,28919c7d29c998681391d2027af3e0f9"
             ],
             "No BAM files",
@@ -581,7 +608,7 @@
                 ],
                 [
                     "test2_vs_test.freebayes.vcf.gz",
-                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=1447, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=1453, phased=false, phasedAutodetect=false]"
                 ]
             ],
             [
@@ -591,7 +618,7 @@
                 ],
                 [
                     "test2_vs_test.freebayes.filtered.vcf.gz",
-                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=137, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=125, phased=false, phasedAutodetect=false]"
                 ]
             ],
             [
@@ -599,28 +626,28 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-07-27T10:31:12.762942445",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T22:43:02.382544129"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20": {
         "content": [
             33,
             {
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -632,49 +659,57 @@
                     "freebayes": "1.3.10"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_GATHERBQSRREPORTS": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_FREEBAYES": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_VC_FREEBAYES_FILT": {
-                    "tabix": 1.21
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -731,6 +766,7 @@
                 "multiqc/multiqc_data/picard_deduplication.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -766,6 +802,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -800,6 +837,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -834,6 +872,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -925,23 +964,24 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,300b95526a211b05f18aaffd037dacd3",
+                "samtools-stats-dp.txt:md5,2f8b6ccd23ecf736af3d32dbb33699b2",
                 "samtools_alignment_plot.txt:md5,5053f650b8612fe5e8527b0bca8ab905",
-                "test.freebayes.filtered.bcftools_stats.txt:md5,5ad7fc8a51dd1dc0f827a46acbed01c4",
+                "samtools_insert_size.txt:md5,2b1da7c476290081135a2816f4231333",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,b0d8c9234a3b038c05fd14d656e43956",
                 "test.md.mosdepth.global.dist.txt:md5,531a83245143e7975f18e1988c876138",
                 "test.md.mosdepth.region.dist.txt:md5,d25723bdd3fec6b17d2462abfa097b9e",
                 "test.md.mosdepth.summary.txt:md5,87be70cd1237d7af9aa40d8cd8b3a817",
                 "test.md.per-base.bed.gz:md5,c53d26b767b6e75b3e502438a77f89b2",
-                "test.md.per-base.bed.gz.csi:md5,c3066b00781e14a9db5fc0bf0d47d777",
+                "test.md.per-base.bed.gz.csi:md5,df3802b73cb56d0301af323b18341e99",
                 "test.md.regions.bed.gz:md5,f96fa1cdae548eb7e54ce6a481d928b9",
-                "test.md.regions.bed.gz.csi:md5,c6d1ac97ef4dfe43731c8368d8391cab",
+                "test.md.regions.bed.gz.csi:md5,2cdd53425271b3ada1ee10958372331b",
                 "test.recal.mosdepth.global.dist.txt:md5,a3e6c8f6d4b5e909d0527be83a93fbae",
                 "test.recal.mosdepth.region.dist.txt:md5,d25723bdd3fec6b17d2462abfa097b9e",
                 "test.recal.mosdepth.summary.txt:md5,ca5424a709268a61200a2dc2865f1a14",
                 "test.recal.per-base.bed.gz:md5,8aaf9cb3dd5c9643e77aba91293fc39d",
-                "test.recal.per-base.bed.gz.csi:md5,d8038c7d544abd5d6335f2541de4e769",
+                "test.recal.per-base.bed.gz.csi:md5,4bbe5c3dc2ea4bdcb40a47aff885c7bb",
                 "test.recal.regions.bed.gz:md5,f96fa1cdae548eb7e54ce6a481d928b9",
-                "test.recal.regions.bed.gz.csi:md5,c6d1ac97ef4dfe43731c8368d8391cab",
+                "test.recal.regions.bed.gz.csi:md5,2cdd53425271b3ada1ee10958372331b",
                 "test.freebayes.filtered.FILTER.summary:md5,259470a9823d503d5639946162b2ed19",
                 "test.freebayes.filtered.TsTv.count:md5,162253eb6c406300678985b3ac7dc868"
             ],
@@ -963,28 +1003,28 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-07-28T11:08:49.193958384",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T22:35:44.029764132"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools freebayes --no_intervals": {
         "content": [
             24,
             {
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
@@ -993,39 +1033,48 @@
                     "freebayes": "1.3.10"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_VC_FREEBAYES": {
-                    "tabix": 1.21
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_VC_FREEBAYES_FILT": {
-                    "tabix": 1.21
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -1082,6 +1131,7 @@
                 "multiqc/multiqc_data/picard_deduplication.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -1117,6 +1167,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -1151,6 +1202,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -1185,6 +1237,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -1275,19 +1328,20 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,9e836f09043529495de9e1c268ee8e82",
+                "samtools-stats-dp.txt:md5,35b5d272beeaf4a4b926fd3ace473928",
                 "samtools_alignment_plot.txt:md5,bcc2f176a4bc51b33a36bd4381f048a5",
-                "test.freebayes.filtered.bcftools_stats.txt:md5,c6b6e221504c69ee75b209f4a0b2506a",
+                "samtools_insert_size.txt:md5,73b933a27800b86a4012c2d525870796",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,60f55a391db494db3e95bd69b6b36fa3",
                 "test.md.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.md.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.md.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
                 "test.md.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
-                "test.md.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
+                "test.md.regions.bed.gz.csi:md5,1f17d398be6b9c100cb0218fa226a623",
                 "test.recal.mosdepth.global.dist.txt:md5,ef7c375ae07aec5540f9892b9b556b73",
                 "test.recal.mosdepth.region.dist.txt:md5,212efff2213f6fc1c3204daf68bbb8c8",
                 "test.recal.mosdepth.summary.txt:md5,72114393647ff64503522760218b30f0",
                 "test.recal.regions.bed.gz:md5,985db429051ddcd5eae177da6fb55ad6",
-                "test.recal.regions.bed.gz.csi:md5,3fa0f8272fefafe3cd840376d34a94a2",
+                "test.recal.regions.bed.gz.csi:md5,1f17d398be6b9c100cb0218fa226a623",
                 "test.freebayes.filtered.FILTER.summary:md5,9ae0931339e231f90a4b5c330f7f6d55",
                 "test.freebayes.filtered.TsTv.count:md5,845f64e5bb4224af98f3a47294cd5483"
             ],
@@ -1309,49 +1363,58 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-07-27T10:32:49.236918224",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T22:38:03.564960868"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools freebayes --no_intervals --input recalibrated_tumoronly.csv": {
         "content": [
             14,
             {
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "FREEBAYES": {
                     "freebayes": "1.3.10"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_VC_FREEBAYES": {
-                    "tabix": 1.21
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_VC_FREEBAYES_FILT": {
-                    "tabix": 1.21
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -1384,6 +1447,7 @@
                 "multiqc/multiqc_data/multiqc_sources.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -1403,6 +1467,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -1421,6 +1486,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -1439,6 +1505,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -1482,13 +1549,14 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,88b94dd2dcc423983da65125ece7651e",
                 "mosdepth_perchrom.txt:md5,a0266cd06dd6f7f5463f09e3cb8af71d",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
-                "samtools-stats-dp.txt:md5,6618ece77181051a58275f504f67ea5b",
+                "samtools-stats-dp.txt:md5,42facbec7ea07232de8dc0369f0da065",
                 "samtools_alignment_plot.txt:md5,6136e5e1d072f166f280fb79424c392f",
-                "sample2.freebayes.filtered.bcftools_stats.txt:md5,b83440f3699a3258015d0ce60eea0d46",
+                "samtools_insert_size.txt:md5,5cb5779e1a7baf077b529af8c427147c",
+                "sample2.freebayes.filtered.bcftools_stats.txt:md5,6bc59a78f70ac18e8d69a779a7892673",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
-                "sample2.recal.per-base.bed.gz.csi:md5,cfb07b0ba46e8468b4342edb243536f3",
+                "sample2.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample2.freebayes.filtered.FILTER.summary:md5,fac42829b9b347413acbfc9c0a17fef0",
                 "sample2.freebayes.filtered.TsTv.count:md5,f864a8b1d6bab1d5f877b60dde36863f"
             ],
@@ -1505,28 +1573,28 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:27:39.737452077",
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.10.0"
-        },
-        "timestamp": "2025-11-04T12:22:29.186457"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv": {
         "content": [
             56,
             {
                 "BCFTOOLS_SORT": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
-                    "bcftools": 1.21
+                    "bcftools": "1.23.1"
                 },
                 "BWAMEM1_INDEX": {
-                    "bwa": "0.7.18-r1243-dirty"
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.21
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -1538,49 +1606,57 @@
                     "freebayes": "1.3.10"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_GATHERBQSRREPORTS": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.1.0",
-                    "samtools": 1.21
+                    "gatk4": "4.6.2.0",
+                    "samtools": "1.21"
                 },
                 "INDEX_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_CRAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_FREEBAYES": {
-                    "gatk4": "4.6.1.0"
+                    "gatk4": "4.6.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "TABIX_VC_FREEBAYES_FILT": {
-                    "tabix": 1.21
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "VCFLIB_VCFFILTER": {
                     "vcflib": "1.0.14"
                 },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
                 "VCFTOOLS_TSTV_COUNT": {
-                    "vcftools": "0.1.16"
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
                 }
             },
             [
@@ -1637,6 +1713,7 @@
                 "multiqc/multiqc_data/picard_deduplication.txt",
                 "multiqc/multiqc_data/samtools-stats-dp.txt",
                 "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
                 "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
                 "multiqc/multiqc_plots",
@@ -1672,6 +1749,7 @@
                 "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
                 "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
                 "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
                 "multiqc/multiqc_plots/png",
@@ -1706,6 +1784,7 @@
                 "multiqc/multiqc_plots/png/samtools-stats-dp.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
                 "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
                 "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
                 "multiqc/multiqc_plots/svg",
@@ -1740,6 +1819,7 @@
                 "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
                 "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
                 "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
                 "multiqc/multiqc_report.html",
@@ -1870,41 +1950,42 @@
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_QualityScoreDistribution_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "samtools-stats-dp.txt:md5,ff7906db0da2f9c9ba5ce85c34694124",
+                "samtools-stats-dp.txt:md5,51e64be3231a16d20f89f2e8bac9b93a",
                 "samtools_alignment_plot.txt:md5,89d0a6e7076223e9feadbecd794948d5",
-                "test.freebayes.filtered.bcftools_stats.txt:md5,b313075b3e9854e0b561dd8d754bf097",
-                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,17df64b64f9235afa93aae6bbe08e283",
+                "samtools_insert_size.txt:md5,ca54b785b1d63edd61cef58cd5558aa2",
+                "test.freebayes.filtered.bcftools_stats.txt:md5,49399853673a44189a06f171efb1c670",
+                "test2_vs_test.freebayes.filtered.bcftools_stats.txt:md5,7d4efbffe37f0a3dad729361353d32a9",
                 "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.md.mosdepth.region.dist.txt:md5,835fdc6fa52cc33e6fb76c0c20a8a6c3",
                 "test.md.mosdepth.summary.txt:md5,dcc9ab2bf3248903e02d8da87e678977",
                 "test.md.per-base.bed.gz:md5,34dfe443c0a0767562dd65272e3310ef",
-                "test.md.per-base.bed.gz.csi:md5,b0ab630c3241fbd7581b7a38d944ff8b",
+                "test.md.per-base.bed.gz.csi:md5,635faec9b8aea3be719bc5cb9b81b1aa",
                 "test.md.regions.bed.gz:md5,99cc80b920ba574e7d9ef8f59f54f7c6",
-                "test.md.regions.bed.gz.csi:md5,c6d1ac97ef4dfe43731c8368d8391cab",
+                "test.md.regions.bed.gz.csi:md5,2cdd53425271b3ada1ee10958372331b",
                 "test.recal.mosdepth.global.dist.txt:md5,0b3162def977123809598639f7698121",
                 "test.recal.mosdepth.region.dist.txt:md5,835fdc6fa52cc33e6fb76c0c20a8a6c3",
                 "test.recal.mosdepth.summary.txt:md5,a8455eb2947de529abfa62b303986e0f",
                 "test.recal.per-base.bed.gz:md5,c075ccd2b847c7c04061a39717faeb30",
-                "test.recal.per-base.bed.gz.csi:md5,4816eeb9af254ca40177b08cf11b98d2",
+                "test.recal.per-base.bed.gz.csi:md5,93782f791ac4333f6cfc02d6f38d67bc",
                 "test.recal.regions.bed.gz:md5,99cc80b920ba574e7d9ef8f59f54f7c6",
-                "test.recal.regions.bed.gz.csi:md5,c6d1ac97ef4dfe43731c8368d8391cab",
+                "test.recal.regions.bed.gz.csi:md5,2cdd53425271b3ada1ee10958372331b",
                 "test2.md.mosdepth.global.dist.txt:md5,f25166c3a0051bb4d8c11a210278de6c",
                 "test2.md.mosdepth.region.dist.txt:md5,3211135329e4077bd9bf0ba488e14371",
                 "test2.md.mosdepth.summary.txt:md5,ce0eb6d33c6d0dc720fbc6d1811abef8",
                 "test2.md.per-base.bed.gz:md5,e1c6d60621d8f64aaf28fa1c1ddda921",
-                "test2.md.per-base.bed.gz.csi:md5,4205a09ede17cdbdaad45e3553f73105",
+                "test2.md.per-base.bed.gz.csi:md5,651986721bf7e1695fc044e06126df51",
                 "test2.md.regions.bed.gz:md5,0bb2549180165a99680ba3e453ea312f",
-                "test2.md.regions.bed.gz.csi:md5,c6d1ac97ef4dfe43731c8368d8391cab",
+                "test2.md.regions.bed.gz.csi:md5,8f139abca5ac58eaf522bd96a46cff1b",
                 "test2.recal.mosdepth.global.dist.txt:md5,a1ef7e662ce993da4668e804952014ce",
                 "test2.recal.mosdepth.region.dist.txt:md5,3211135329e4077bd9bf0ba488e14371",
                 "test2.recal.mosdepth.summary.txt:md5,70ad653c0c98baeeaf5085f1209a7bdb",
                 "test2.recal.per-base.bed.gz:md5,e992ef845ec91a3612297952a23ba579",
-                "test2.recal.per-base.bed.gz.csi:md5,8072f447199c60f24b01eede8b557333",
+                "test2.recal.per-base.bed.gz.csi:md5,0f5fca336438af0a76a853c44af95b26",
                 "test2.recal.regions.bed.gz:md5,0bb2549180165a99680ba3e453ea312f",
-                "test2.recal.regions.bed.gz.csi:md5,c6d1ac97ef4dfe43731c8368d8391cab",
+                "test2.recal.regions.bed.gz.csi:md5,8f139abca5ac58eaf522bd96a46cff1b",
                 "test.freebayes.filtered.FILTER.summary:md5,449597c35ada505b4cb2530d5260e9d5",
                 "test.freebayes.filtered.TsTv.count:md5,162253eb6c406300678985b3ac7dc868",
-                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,0ae7467f2311c1382173d70d8d7efb0b",
+                "test2_vs_test.freebayes.filtered.FILTER.summary:md5,b3cdcab0fb3a666b40ef76c4193ff7f8",
                 "test2_vs_test.freebayes.filtered.TsTv.count:md5,9dc940f98dae9c0b49c9468a491836d4"
             ],
             "No BAM files",
@@ -1921,22 +2002,22 @@
                 ],
                 [
                     "test2_vs_test.freebayes.vcf.gz",
-                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=966, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=988, phased=false, phasedAutodetect=false]"
                 ]
             ],
             [
                 "test.freebayes.filtered.vcf.gz:md5,c4793897a38d6781dc512a52d9046be5",
-                "test2_vs_test.freebayes.filtered.vcf.gz:md5,d1d0916fc56a666bd7637792047b82f8"
+                "test2_vs_test.freebayes.filtered.vcf.gz:md5,6da8e1304355fedec62419d5ae1a402c"
             ],
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-07-28T11:12:34.424513234",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T22:40:36.195304962"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

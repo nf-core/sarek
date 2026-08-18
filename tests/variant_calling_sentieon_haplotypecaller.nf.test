@@ -13,7 +13,8 @@ nextflow_pipeline {
                 tools: "sentieon_haplotyper",
                 step: "variant_calling"
             ],
-            no_conda: true
+            no_conda: true,
+            sentieon: true
         ],
         [
             name: "-profile test --tools sentieon_haplotyper --no_intervals",
@@ -23,7 +24,8 @@ nextflow_pipeline {
                 step: "variant_calling",
                 no_intervals: true
             ],
-            no_conda: true
+            no_conda: true,
+            sentieon: true
         ],
         [
             name: "-profile test --tools sentieon_haplotyper --skip_tools haplotyper_filter",
@@ -32,7 +34,8 @@ nextflow_pipeline {
                 tools: "sentieon_haplotyper",
                 step: "variant_calling",
                 skip_tools: "haplotyper_filter"
-            ]
+            ],
+            sentieon: true
         ],
         [
             name: "-profile test --tools sentieon_haplotyper --joint_germline --sentieon_haplotyper_emit_mode gvcf",
@@ -43,7 +46,8 @@ nextflow_pipeline {
                 skip_tools: "haplotyper_filter",
                 joint_germline: true,
                 sentieon_haplotyper_emit_mode: "gvcf"
-            ]
+            ],
+            sentieon: true
         ]
     ]
 

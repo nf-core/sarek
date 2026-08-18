@@ -106,14 +106,29 @@ output:
           pattern: "*plots.R"
           ontologies:
             - edam: http://edamontology.org/format_3999 # R script
-  versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+  versions_sentieon:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - sentieon:
+          type: string
+          description: The tool name
+      - 'sentieon driver --version | sed "s/.*-//g"':
+          type: string
+          description: The command used to generate the version of the tool
 authors:
   - "@asp8200"
 maintainers:
   - "@asp8200"
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - sentieon:
+          type: string
+          description: The tool name
+      - 'sentieon driver --version | sed "s/.*-//g"':
+          type: string
+          description: The command used to generate the version of the tool

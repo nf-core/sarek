@@ -4,21 +4,21 @@
             5,
             {
                 "ENSEMBLVEP_VEP": {
-                    "ensemblvep": "115.2",
+                    "ensemblvep": "116.0",
                     "perl-math-cdf": "0.1",
-                    "tabix": "1.21"
+                    "tabix": "1.23.1"
+                },
+                "HTSLIB_BGZIPTABIX": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
                 "SNPEFF_SNPEFF": {
-                    "snpeff": "5.4a"
-                },
-                "TABIX_BGZIPTABIX": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "snpeff": "5.4c"
                 },
                 "VCF_ANNOTATE_MERGE": {
-                    "ensemblvep": "115.2",
+                    "ensemblvep": "116.0",
                     "perl-math-cdf": "0.1",
-                    "tabix": "1.21"
+                    "tabix": "1.23.1"
                 }
             },
             [
@@ -109,33 +109,33 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-28T14:26:31.042408461",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-07T08:54:13.050728"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools merge,snpsift": {
         "content": [
             6,
             {
+                "HTSLIB_BGZIPTABIX": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
                 "SNPEFF_SNPEFF": {
-                    "snpeff": "5.4a"
+                    "snpeff": "5.4c"
                 },
                 "SNPSIFT_ANNMEM": {
-                    "snpsift": "5.4a"
+                    "snpsift": "5.4c"
                 },
                 "SNPSIFT_ANNMEMCREATE": {
-                    "snpsift": "5.4a"
-                },
-                "TABIX_BGZIPTABIX": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                    "snpsift": "5.4c"
                 },
                 "VCF_ANNOTATE_MERGE": {
-                    "ensemblvep": "115.2",
+                    "ensemblvep": "116.0",
                     "perl-math-cdf": "0.1",
-                    "tabix": "1.21"
+                    "tabix": "1.23.1"
                 }
             },
             [
@@ -220,27 +220,27 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-28T14:26:19.448342505",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-09T15:02:33.282539192"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools merge": {
         "content": [
             4,
             {
-                "SNPEFF_SNPEFF": {
-                    "snpeff": "5.4a"
+                "HTSLIB_BGZIPTABIX": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 },
-                "TABIX_BGZIPTABIX": {
-                    "bgzip": "1.21",
-                    "tabix": "1.21"
+                "SNPEFF_SNPEFF": {
+                    "snpeff": "5.4c"
                 },
                 "VCF_ANNOTATE_MERGE": {
-                    "ensemblvep": "115.2",
+                    "ensemblvep": "116.0",
                     "perl-math-cdf": "0.1",
-                    "tabix": "1.21"
+                    "tabix": "1.23.1"
                 }
             },
             [
@@ -320,10 +320,10 @@
             ],
             "No warnings"
         ],
+        "timestamp": "2026-07-28T14:26:11.026803304",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-02-07T08:52:33.470414"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

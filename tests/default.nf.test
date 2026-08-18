@@ -7,7 +7,6 @@ nextflow_pipeline {
         [
             name: "-profile test",
             params: [],
-            snapshot: 'stderr,stdout',
         ],
         [
             name: "-profile test -stub",

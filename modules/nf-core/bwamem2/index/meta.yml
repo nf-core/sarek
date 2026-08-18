@@ -12,7 +12,14 @@ tools:
         a large reference genome, such as the human genome.
       homepage: https://github.com/bwa-mem2/bwa-mem2
       documentation: https://github.com/bwa-mem2/bwa-mem2#usage
-      licence: ["MIT"]
+      doi: "10.1109/IPDPS.2019.00041"
+      publication:
+        author: "Vasimuddin M., Misra S., Li H. & Aluru S."
+        year: 2018
+        source: "IEEE International Parallel and Distributed Processing Symposium (IPDPS)"
+        title: "Efficient Architecture-Aware Acceleration of BWA-MEM for Multicore Systems"
+      licence:
+        - "MIT"
       identifier: "biotools:bwa-mem2"
 input:
   - - meta:
@@ -24,8 +31,8 @@ input:
         type: file
         description: Input genome fasta file
         ontologies:
-          - edam: "http://edamontology.org/data_2044" # Sequence
-          - edam: "http://edamontology.org/format_1929" # FASTA
+          - edam: "http://edamontology.org/data_2044"
+          - edam: "http://edamontology.org/format_1929"
 output:
   index:
     - - meta:
@@ -34,18 +41,38 @@ output:
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
       - bwamem2:
-          type: file
+          type: string
           description: BWA genome index files
           pattern: "*.{0123,amb,ann,bwt.2bit.64,pac}"
           ontologies:
-            - edam: "http://edamontology.org/data_3210" # Genome index
+            - edam: "http://edamontology.org/data_3210"
+  versions_bwamem2:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bwamem2:
+          type: string
+          description: BWA genome index files
+          pattern: "*.{0123,amb,ann,bwt.2bit.64,pac}"
+          ontologies:
+            - edam: "http://edamontology.org/data_3210"
+      - bwa-mem2 version | grep -o -E "[0-9]+(\.[0-9]+)+":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bwamem2:
+          type: string
+          description: BWA genome index files
+          pattern: "*.{0123,amb,ann,bwt.2bit.64,pac}"
+          ontologies:
+            - edam: "http://edamontology.org/data_3210"
+      - bwa-mem2 version | grep -o -E "[0-9]+(\.[0-9]+)+":
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@maxulysse"
 maintainers:

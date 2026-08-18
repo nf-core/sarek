@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::tiddit=3.6.1
+  - bioconda::tiddit=3.9.5

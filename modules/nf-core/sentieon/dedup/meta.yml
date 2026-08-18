@@ -133,13 +133,28 @@ output:
           pattern: "*.metrics.multiqc.tsv"
           ontologies:
             - edam: http://edamontology.org/format_3475 # TSV
+  versions_sentieon:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - sentieon:
+          type: string
+          description: The tool name
+      - 'sentieon driver --version | sed "s/.*-//g"':
+          type: string
+          description: The command used to generate the version of the tool
+
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - sentieon:
+          type: string
+          description: The tool name
+      - 'sentieon driver --version | sed "s/.*-//g"':
+          type: string
+          description: The command used to generate the version of the tool
 authors:
   - "@asp8200"
 maintainers:
