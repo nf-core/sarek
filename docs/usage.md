@@ -189,7 +189,6 @@ If you need to adapt parabricks to your hardware, please copy and adapt the `cus
 ```groovy title="custom-parabricks.config"
 process {
     withName: 'PARABRICKS_FQ2BAM' {
-        // Remove an executor if you do not want it to set the accelerator directive or change the number
         accelerator = 4
         ext.args    = { [
             // Using specific read group tags for mutect compability (keep if using mutect)
