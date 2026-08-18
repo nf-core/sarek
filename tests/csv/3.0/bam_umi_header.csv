@@ -1,0 +1,2 @@
+patient,status,lane,sample,bam,bai
+test,0,1,test,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/bam/umi/test.paired_end.umi_in_header.bam,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/bam/umi/test.paired_end.umi_in_header.bam.bai

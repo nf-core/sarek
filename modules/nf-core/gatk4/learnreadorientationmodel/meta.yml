@@ -1,0 +1,68 @@
+name: gatk4_learnreadorientationmodel
+description: |
+  Uses f1r2 counts collected during mutect2 to Learn the prior probability of read orientation artifacts
+keywords:
+  - gatk4
+  - learnreadorientationmodel
+  - mutect2
+  - readorientationartifacts
+tools:
+  - gatk4:
+      description: |
+        Developed in the Data Sciences Platform at the Broad Institute, the toolkit offers a wide variety of tools
+        with a primary focus on variant discovery and genotyping. Its powerful processing engine
+        and high-performance computing features make it capable of taking on projects of any size.
+      homepage: https://gatk.broadinstitute.org/hc/en-us
+      documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
+      doi: 10.1158/1538-7445.AM2017-3590
+      licence: ["Apache-2.0"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test' ]
+    - f1r2:
+        type: list
+        description: list of f1r2 files to be used as input.
+        pattern: "*.f1r2.tar.gz"
+output:
+  artifactprior:
+    - - meta:
+          type: file
+          description: file containing artifact-priors to be used by filtermutectcalls
+          pattern: "*.tar.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+      - "*.tar.gz":
+          type: file
+          description: file containing artifact-priors to be used by filtermutectcalls
+          pattern: "*.tar.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  versions_gatk4:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gatk4:
+          type: string
+          description: The name of the tool
+      - gatk --version | sed -n '/GATK.*v/s/.*v//p':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gatk4:
+          type: string
+          description: The name of the tool
+      - gatk --version | sed -n '/GATK.*v/s/.*v//p':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@GCJMackenzie"
+maintainers:
+  - "@GCJMackenzie"

@@ -1,0 +1,2 @@
+patient,sex,status,sample,lane,bam,bai
+test,XX,1,test,1,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/bam/test_msisensor2.hg19.bam,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/bam/test_msisensor2.hg19.bam.bai

@@ -1,6 +1,6 @@
 {
     "@context": [
-        "https://w3id.org/ro/crate/1.2/context",
+        "https://w3id.org/ro/crate/1.1/context",
         {
             "GithubService": "https://w3id.org/ro/terms/test#GithubService",
             "JenkinsService": "https://w3id.org/ro/terms/test#JenkinsService",
@@ -22,14 +22,17 @@
             "@id": "./",
             "@type": "Dataset",
             "creativeWorkStatus": "InProgress",
-            "datePublished": "2026-08-17T12:39:37+00:00",
-            "description": "<h1>\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/images/nf-core-sarek_logo_dark.png\">\n    <img alt=\"nf-core/sarek\" src=\"docs/images/nf-core-sarek_logo_light.png\">\n  </picture>\n</h1>\n\n[![Open in GitHub Codespaces](https://img.shields.io/badge/Open_In_GitHub_Codespaces-black?labelColor=grey&logo=github)](https://github.com/codespaces/new/nf-core/sarek)\n[![GitHub Actions CI Status](https://github.com/nf-core/sarek/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-core/sarek/actions/workflows/nf-test.yml)\n[![GitHub Actions Linting Status](https://github.com/nf-core/sarek/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/sarek/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/sarek/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)\n[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)\n\n[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)\n[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.1.0-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.1.0)\n[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)\n[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)\n[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)\n[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/sarek)\n\n[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23sarek-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/sarek)[![Follow on Bluesky](https://img.shields.io/badge/bluesky-%40nf__core-1185fe?labelColor=000000&logo=bluesky)](https://bsky.app/profile/nf-co.re)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)\n\n## Introduction\n\n**nf-core/sarek** is a bioinformatics pipeline that ...\n\n<!-- TODO nf-core:\n   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the\n   major pipeline sections and the types of output it produces. You're giving an overview to someone new\n   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction\n-->\n\n<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core\n     workflows use the \"tube map\" design for that. See https://nf-co.re/docs/community/brand/workflow-schematics#examples for examples.   -->\n<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))\n\n## Usage\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/get_started/environment_setup/overview) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/get_started/run-your-first-pipeline) with `-profile test` before running the workflow on actual data.\n\n<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.\n     Explain what rows and columns represent. For instance (please edit as appropriate):\n\nFirst, prepare a samplesheet with your input data that looks as follows:\n\n`samplesheet.csv`:\n\n```csv\nsample,fastq_1,fastq_2\nCONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz\n```\n\nEach row represents a fastq file (single-end) or a pair of fastq files (paired end).\n\n-->\n\nNow, you can run the pipeline using:\n\n<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->\n\n```bash\nnextflow run nf-core/sarek \\\n   -profile <docker/singularity/.../institute> \\\n   --input samplesheet.csv \\\n   --outdir <OUTDIR>\n```\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/running/run-pipelines#using-parameter-files).\n\nFor more details and further functionality, please refer to the [usage documentation](https://nf-co.re/sarek/usage) and the [parameter documentation](https://nf-co.re/sarek/parameters).\n\n## Pipeline output\n\nTo see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/sarek/results) tab on the nf-core website pipeline page.\nFor more details about the output files and reports, please refer to the\n[output documentation](https://nf-co.re/sarek/output).\n\n## Credits\n\nnf-core/sarek was originally written by Maxime Garcia, Szilveszter Juhos, Friederike Hanssen.\n\nWe thank the following people for their extensive assistance in the development of this pipeline:\n\n<!-- TODO nf-core: If applicable, make list of people who have also contributed -->\n\n## Contributions and Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](docs/CONTRIBUTING.md).\n\nFor further information or help, don't hesitate to get in touch on the [Slack `#sarek` channel](https://nfcore.slack.com/channels/sarek) (you can join with [this invite](https://nf-co.re/join/slack)).\n\n## Citations\n\n<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->\n<!-- If you use nf-core/sarek for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->\n\n<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->\n\nAn extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\nYou can cite the `nf-core` publication as follows:\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n",
+            "datePublished": "2026-08-12T18:36:26+00:00",
+            "description": "<h1>\n  <picture>\n    <source media=\"(prefers-color-scheme: dark)\" srcset=\"docs/images/nf-core-sarek_logo_dark.png\">\n    <img alt=\"nf-core/sarek\" src=\"docs/images/nf-core-sarek_logo_light.png\">\n  </picture>\n</h1>\n\n[![Open in GitHub Codespaces](https://img.shields.io/badge/Open_In_GitHub_Codespaces-black?labelColor=grey&logo=github)](https://github.com/codespaces/new/nf-core/sarek)\n[![GitHub Actions CI Status](https://github.com/nf-core/sarek/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-core/sarek/actions/workflows/nf-test.yml)\n[![GitHub Actions Linting Status](https://github.com/nf-core/sarek/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/sarek/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/sarek/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3476425-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3476425)\n[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)\n\n[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)\n[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.1.0-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.1.0)\n[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)\n[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)\n[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)\n[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/sarek)\n\n[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23sarek-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/sarek)[![Follow on Bluesky](https://img.shields.io/badge/bluesky-%40nf__core-1185fe?labelColor=000000&logo=bluesky)](https://bsky.app/profile/nf-co.re)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)\n\n## Introduction\n\n**nf-core/sarek** is a workflow designed to detect variants on whole genome or targeted sequencing data. Initially designed for Human, and Mouse, it can work on any species with a reference genome. Sarek can also handle tumour / normal pairs and could include additional relapses.\n\nThe pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!\n\nOn release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/sarek/results).\n\nIt's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-core-sarek) and [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek).\n\n<p align=\"center\">\n    <img title=\"Sarek Workflow\" src=\"docs/images/sarek_workflow.png\" width=30%>\n</p>\n\n## Pipeline summary\n\nDepending on the options and samples provided, the pipeline can currently perform the following:\n\n- Form consensus reads from UMI sequences (`fgbio`)\n- Sequencing quality control and trimming (enabled by `--trim_fastq`) (`FastQC`, `fastp`)\n- Contamination removal (`BBSplit`, enabled by `--tools bbsplit`)\n- Map Reads to Reference (`BWA-mem`, `BWA-mem2`, `dragmap` or `Sentieon BWA-mem`)\n- Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator` and `GATK ApplyBQSR` or `Sentieon LocusCollector` and `Sentieon Dedup`)\n- _Experimental Feature_: Use GPU-accelerated parabricks implementation as alternative to \"Map Reads to Reference\" + \"Process BAM file\" (`--aligner parabricks`)\n- Summarise alignment statistics (`samtools stats`, `mosdepth`)\n- Variant calling (enabled by `--tools`, see [compatibility](https://nf-co.re/sarek/latest/docs/usage#which-variant-calling-tool-is-implemented-for-which-data-type)):\n  - `ASCAT`\n  - `CNVkit`\n  - `Control-FREEC`\n  - `DeepVariant`\n  - `freebayes`\n  - `GATK HaplotypeCaller`\n  - `GATK Mutect2`\n  - _Experimental Feature_: `Parabricks HaplotypeCaller` (GPU-accelerated germline calling, `--tools parabricks_haplotypecaller`)\n  - `indexcov`\n  - `Lofreq`\n  - `Manta`\n  - `mpileup`\n  - `MSIsensor2`\n  - `MSIsensor-pro`\n  - `MuSE`\n  - `Sentieon Haplotyper`\n  - `Strelka`\n  - `TIDDIT`\n- Post-variant calling options, one of:\n  - Filtering (`bcftools view` (default: filter by `PASS,.`)), normalisation (`bcftools norm`) and consensus calling (`bcftools isec`, default: called by at least 2 tools `-n+2`) on all vcfs and/or `bcftools concat` for germline vcfs\n  - `Varlociraptor` for all vcfs\n- Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`, `SnpSift`)\n- Summarise and represent QC (`MultiQC`)\n\n<p align=\"center\">\n    <img title=\"Sarek Workflow\" src=\"docs/images/sarek_subway_animated.svg\" width=60%>\n</p>\n\n## Usage\n\n> [!NOTE]\n> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/get_started/environment_setup/overview) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/get_started/run-your-first-pipeline) with `-profile test` before running the workflow on actual data.\n\nFirst, prepare a samplesheet with your input data that looks as follows:\n\n`samplesheet.csv`:\n\n```csv\npatient,sample,lane,fastq_1,fastq_2\nID1,S1,L002,ID1_S1_L002_R1_001.fastq.gz,ID1_S1_L002_R2_001.fastq.gz\n```\n\nEach row represents a pair of fastq files (paired end).\n\nNow, you can run the pipeline using:\n\n```bash\nnextflow run nf-core/sarek \\\n   -profile <docker/singularity/.../institute> \\\n   --input samplesheet.csv \\\n   --outdir <OUTDIR>\n```\n\n> [!WARNING]\n> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/running/run-pipelines#using-parameter-files).\n\nFor more details and further functionality, please refer to the [usage documentation](https://nf-co.re/sarek/usage) and the [parameter documentation](https://nf-co.re/sarek/parameters).\n\n## Pipeline output\n\nTo see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/sarek/results) tab on the nf-core website pipeline page.\nFor more details about the output files and reports, please refer to the\n[output documentation](https://nf-co.re/sarek/output).\n\n## Benchmarking\n\nOn each release, the pipeline is run on 3 full size tests:\n\n- `test_full` runs tumor-normal data for one patient from the SEQ2C consortium\n- `test_full_germline` runs a WGS 30X Genome-in-a-Bottle(NA12878) dataset\n- `test_full_germline_ncbench_agilent` runs two WES samples with 75M and 200M reads (data available [here](https://github.com/ncbench/ncbench-workflow#contributing-callsets)). The results are uploaded to Zenodo, evaluated against a truth dataset, and results are made available via the [NCBench dashboard](https://ncbench.github.io/report/report.html#).\n\n## Credits\n\nSarek was originally written by Maxime U Garcia and Szilveszter Juhos at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntum\u00f6rbanken)](https://ki.se/forskning/barntumorbanken).\nFriederike Hanssen and Gisela Gabernet at [QBiC](https://www.qbic.uni-tuebingen.de/) later joined and helped with further development.\n\nThe Nextflow DSL2 conversion of the pipeline was lead by Friederike Hanssen and Maxime U Garcia.\n\nMaintenance is now lead by Friederike Hanssen (now at [Seqera](https://seqera.io)) and Maxime U Garcia.\n\nMain developers:\n\n- [Maxime U Garcia](https://github.com/maxulysse)\n- [Friederike Hanssen](https://github.com/FriederikeHanssen)\n\nWe thank the following people for their extensive assistance in the development of this pipeline:\n\n- [Abhinav Sharma](https://github.com/abhi18av)\n- [Adam Talbot](https://github.com/adamrtalbot)\n- [Adrian L\u00e4rkeryd](https://github.com/adrlar)\n- [\u00c0itor Olivares](https://github.com/AitorPeseta)\n- [Alexander Peltzer](https://github.com/apeltzer)\n- [Alison Meynert](https://github.com/ameynert)\n- [Anders Sune Pedersen](https://github.com/asp8200)\n- [arontommi](https://github.com/arontommi)\n- [BarryDigby](https://github.com/BarryDigby)\n- [Bekir Erg\u00fcner](https://github.com/berguner)\n- [bjornnystedt](https://github.com/bjornnystedt)\n- [cgpu](https://github.com/cgpu)\n- [Chela James](https://github.com/chelauk)\n- [David Mas-Ponte](https://github.com/davidmasp)\n- [Edmund Miller](https://github.com/edmundmiller)\n- [Famke B\u00e4uerle](https://github.com/famosab)\n- [Francesco Lescai](https://github.com/lescai)\n- [Francisco Mart\u00ednez](https://github.com/nevinwu)\n- [Gavin Mackenzie](https://github.com/GCJMackenzie)\n- [Gisela Gabernet](https://github.com/ggabernet)\n- [Grant Neilson](https://github.com/grantn5)\n- [gulfshores](https://github.com/gulfshores)\n- [Harshil Patel](https://github.com/drpatelh)\n- [Hongwei Ye](https://github.com/YeHW)\n- [James A. Fellows Yates](https://github.com/jfy133)\n- [Jesper Eisfeldt](https://github.com/J35P312)\n- [Johannes Alneberg](https://github.com/alneberg)\n- [Jonas Kjellin](https://github.com/kjellinjonas)\n- [Jos\u00e9 Fern\u00e1ndez Navarro](https://github.com/jfnavarro)\n- [J\u00falia Mir Pedrol](https://github.com/mirpedrol)\n- [Ken Brewer](https://github.com/kenibrewer)\n- [Lasse Westergaard Folkersen](https://github.com/lassefolkersen)\n- [Lucia Conde](https://github.com/lconde-ucl)\n- [Louis Le N\u00e9zet](https://github.com/LouisLeNezet)\n- [Malin Larsson](https://github.com/malinlarsson)\n- [Marcel Martin](https://github.com/marcelm)\n- [Nick Smith](https://github.com/nickhsmith)\n- [Nicolas Schcolnicov](https://github.com/nschcolnicov)\n- [Nilesh Tawari](https://github.com/nilesh-tawari)\n- [Nils Homer](https://github.com/nh13)\n- [Olga Botvinnik](https://github.com/olgabot)\n- [Oskar Wacker](https://github.com/WackerO)\n- [pallolason](https://github.com/pallolason)\n- [Paul Cantalupo](https://github.com/pcantalupo)\n- [Phil Ewels](https://github.com/ewels)\n- [Pierre Lindenbaum](https://github.com/lindenb)\n- [Sabrina Krakau](https://github.com/skrakau)\n- [Sam Minot](https://github.com/sminot)\n- [Sebastian-D](https://github.com/Sebastian-D)\n- [Silvia Morini](https://github.com/silviamorins)\n- [Simon Pearce](https://github.com/SPPearce)\n- [Solenne Correard](https://github.com/scorreard)\n- [Susanne Jodoin](https://github.com/SusiJo)\n- [Szilveszter Juhos](https://github.com/szilvajuhos)\n- [Tobias Koch](https://github.com/KochTobi)\n- [Winni Kretzschmar](https://github.com/winni2k)\n- [Patricie Skal\u00e1kov\u00e1](https://github.com/Patricie34)\n\n## Acknowledgements\n\n|      [![Barntum\u00f6rbanken](docs/images/BTB_logo.png)](https://ki.se/forskning/barntumorbanken)      |            [![SciLifeLab](docs/images/SciLifeLab_logo.png)](https://scilifelab.se)             |\n| :-----------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------: |\n| [![National Genomics Infrastructure](docs/images/NGI_logo.png)](https://ngisweden.scilifelab.se/) | [![National Bioinformatics Infrastructure Sweden](docs/images/NBIS_logo.png)](https://nbis.se) |\n|              [![QBiC](docs/images/QBiC_logo.png)](https://www.qbic.uni-tuebingen.de)              |                   [![GHGA](docs/images/GHGA_logo.png)](https://www.ghga.de/)                   |\n|                     [![DNGC](docs/images/DNGC_logo.png)](https://eng.ngc.dk/)                     |                                                                                                |\n\n## Contributions & Support\n\nIf you would like to contribute to this pipeline, please see the [contributing guidelines](docs/CONTRIBUTING.md).\n\nFor further information or help, don't hesitate to get in touch on the [Slack `#sarek` channel](https://nfcore.slack.com/channels/sarek), or contact the dev team on the [Slack `#sarek_dev` channel](https://nfcore.slack.com/channels/sarek_dev). (you can join with [this invite](https://nf-co.re/join/slack)).\n\n## Citations\n\nIf you use `nf-core/sarek` for your analysis, please cite the `Sarek` article as follows:\n\n> Friederike Hanssen, Maxime U Garcia, Lasse Folkersen, Anders Sune Pedersen, Francesco Lescai, Susanne Jodoin, Edmund Miller, Oskar Wacker, Nicholas Smith, nf-core community, Gisela Gabernet, Sven Nahnsen **Scalable and efficient DNA sequencing analysis on different compute infrastructures aiding variant discovery** _NAR Genomics and Bioinformatics_ Volume 6, Issue 2, June 2024, lqae031, [doi: 10.1093/nargab/lqae031](https://doi.org/10.1093/nargab/lqae031).\n\n> Garcia M, Juhos S, Larsson M et al. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants [version 2; peer review: 2 approved]** _F1000Research_ 2020, 9:63 [doi: 10.12688/f1000research.16665.2](http://dx.doi.org/10.12688/f1000research.16665.2).\n\nYou can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.3476425](https://doi.org/10.5281/zenodo.3476425)\n\nAn extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.\n\nYou can cite the `nf-core` publication as follows:\n\n> **The nf-core framework for community-curated bioinformatics pipelines.**\n>\n> Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.\n>\n> _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).\n\n## CHANGELOG\n\n- [CHANGELOG](CHANGELOG.md)\n",
             "hasPart": [
                 {
                     "@id": "main.nf"
                 },
                 {
                     "@id": "assets/"
+                },
+                {
+                    "@id": "bin/"
                 },
                 {
                     "@id": "conf/"
@@ -42,6 +45,9 @@
                 },
                 {
                     "@id": "modules/"
+                },
+                {
+                    "@id": "modules/local/"
                 },
                 {
                     "@id": "modules/nf-core/"
@@ -99,7 +105,7 @@
             },
             "mentions": [
                 {
-                    "@id": "#f32c5091-00e2-400f-8d84-9688fa11b2a1"
+                    "@id": "#a0be6c6d-e13c-4e4c-8fbf-33103534df11"
                 }
             ],
             "name": "nf-core/sarek"
@@ -112,7 +118,7 @@
             },
             "conformsTo": [
                 {
-                    "@id": "https://w3id.org/ro/crate/1.2"
+                    "@id": "https://w3id.org/ro/crate/1.1"
                 },
                 {
                     "@id": "https://w3id.org/workflowhub/workflow-ro-crate/1.0"
@@ -121,20 +127,194 @@
         },
         {
             "@id": "main.nf",
-            "@type": ["File", "SoftwareSourceCode", "ComputationalWorkflow"],
-            "contributor": [
+            "@type": [
+                "File",
+                "SoftwareSourceCode",
+                "ComputationalWorkflow"
+            ],
+            "author": [
                 {
-                    "@id": "#d5e6a516-4b6d-4b7c-a263-21962726441c"
+                    "@id": "https://orcid.org/0009-0001-9875-5262"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-2827-9261"
                 },
                 {
                     "@id": "https://orcid.org/0000-0001-6280-4643"
+                }
+            ],
+            "contributor": [
+                {
+                    "@id": "#ce9fcd32-045f-486d-885d-d3b16befe549"
                 },
                 {
-                    "@id": "https://orcid.org/0009-0001-9875-5262"
+                    "@id": "#826dd9aa-a6c6-44ee-817d-923ac6242674"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-1424-7840"
+                },
+                {
+                    "@id": "#22867910-7e68-46f2-a889-89214bbadcd2"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-6503-2180"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0001-5839-1751"
+                },
+                {
+                    "@id": "#4622d323-eefc-48b4-8a23-1fc503cf19e2"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-5547-8568"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-8492-6585"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0001-5475-0892"
+                },
+                {
+                    "@id": "#56a5ef4c-4012-43c6-a2f3-fcf29618b33c"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-4257-7241"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-3996-0909"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0001-7409-305X"
+                },
+                {
+                    "@id": "#9cdfe5eb-9b21-45f9-8791-58d7da23532a"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-1387-0251"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-6399-9101"
+                },
+                {
+                    "@id": "#c81c1801-7d24-4bd4-bbe0-e235f9d5fc15"
+                },
+                {
+                    "@id": "#ec42ab72-f426-4c83-9985-6663c2bb70aa"
+                },
+                {
+                    "@id": "#0761a811-48af-44ef-bd48-863fe063cfb8"
+                },
+                {
+                    "@id": "#ef18a676-2bcc-43f1-8bed-a7348de96420"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0001-6813-3051"
+                },
+                {
+                    "@id": "#f406472c-4d68-42a7-8bc1-c3af34d1d344"
+                },
+                {
+                    "@id": "#986151a9-9476-4bf9-a2e4-4fde7f4bc24d"
+                },
+                {
+                    "@id": "#8978e547-cc04-4572-8b1e-4364f37e110b"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-3716-4917"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-2467-008X"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-3830-7046"
+                },
+                {
+                    "@id": "#526b8b48-42ae-4983-8301-e2276dd3dd6f"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0001-6104-9260"
+                },
+                {
+                    "@id": "#ae25ae52-e126-459f-8bd4-97fe22b93d0c"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-0708-9530"
+                },
+                {
+                    "@id": "#a1d0c43b-aa03-4269-b723-3fd0c95acbfd"
+                },
+                {
+                    "@id": "https://orcid.org/0009-0000-0202-2703"
+                },
+                {
+                    "@id": "#3636074e-8323-4f74-ab92-baceae591d1e"
+                },
+                {
+                    "@id": "#82603e9a-0ee6-406c-a7c3-ec4fa1a178a4"
+                },
+                {
+                    "@id": "#8b68a330-7395-45ba-921f-9b28c3032419"
+                },
+                {
+                    "@id": "#07e561e0-8c13-46a9-a166-b1ee57bfeb23"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-1127-0765"
+                },
+                {
+                    "@id": "https://orcid.org/0009-0007-7860-1155"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-4412-7970"
+                },
+                {
+                    "@id": "https://orcid.org/0009-0003-2041-610X"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-3350-3443"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-3966-8481"
+                },
+                {
+                    "@id": "#e580d9da-62c5-4e35-9464-e393e207a4f4"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-0148-9787"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-0603-7907"
+                },
+                {
+                    "@id": "#2fa09808-8005-4400-be37-b8652ddbda44"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-9759-2211"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-2798-9870"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-1680-5538"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-0554-5443"
+                },
+                {
+                    "@id": "https://orcid.org/0009-0001-9152-7291"
+                },
+                {
+                    "@id": "#a9990691-6068-45bf-97b3-8eddf1786bd0"
+                },
+                {
+                    "@id": "#37ecb263-7f00-45a2-a9b2-f0da316fc4fb"
+                },
+                {
+                    "@id": "https://orcid.org/0009-0009-0647-7639"
                 }
             ],
             "dateCreated": "",
-            "dateModified": "2026-08-17T12:39:37Z",
+            "dateModified": "2026-08-12T20:36:26Z",
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
             "keywords": [
                 "nf-core",
@@ -151,16 +331,33 @@
                 "whole-exome-sequencing",
                 "whole-genome-sequencing"
             ],
-            "license": ["MIT"],
-            "name": ["nf-core/sarek"],
+            "license": [
+                "MIT"
+            ],
+            "maintainer": [
+                {
+                    "@id": "https://orcid.org/0009-0001-9875-5262"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0003-2827-9261"
+                }
+            ],
+            "name": [
+                "nf-core/sarek"
+            ],
             "programmingLanguage": {
                 "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow"
             },
             "sdPublisher": {
                 "@id": "https://nf-co.re/"
             },
-            "url": ["https://github.com/nf-core/sarek", "https://nf-co.re/sarek/dev/"],
-            "version": ["3.10.1dev"]
+            "url": [
+                "https://github.com/nf-core/sarek",
+                "https://nf-co.re/sarek/dev/"
+            ],
+            "version": [
+                "3.10.1dev"
+            ]
         },
         {
             "@id": "https://w3id.org/workflowhub/workflow-ro-crate#nextflow",
@@ -175,11 +372,11 @@
             "version": "!>=25.10.4"
         },
         {
-            "@id": "#f32c5091-00e2-400f-8d84-9688fa11b2a1",
+            "@id": "#a0be6c6d-e13c-4e4c-8fbf-33103534df11",
             "@type": "TestSuite",
             "instance": [
                 {
-                    "@id": "#8bd9923e-9cf9-4ee8-a9ca-94436621207d"
+                    "@id": "#7f57da73-5ac2-4840-9bb0-b06d74da7d93"
                 }
             ],
             "mainEntity": {
@@ -188,7 +385,7 @@
             "name": "Test suite for nf-core/sarek"
         },
         {
-            "@id": "#8bd9923e-9cf9-4ee8-a9ca-94436621207d",
+            "@id": "#7f57da73-5ac2-4840-9bb0-b06d74da7d93",
             "@type": "TestInstance",
             "name": "GitHub Actions workflow for testing nf-core/sarek",
             "resource": "repos/nf-core/sarek/actions/workflows/nf-test.yml",
@@ -211,6 +408,11 @@
             "description": "Additional files"
         },
         {
+            "@id": "bin/",
+            "@type": "Dataset",
+            "description": "Scripts that must be callable from a pipeline process"
+        },
+        {
             "@id": "conf/",
             "@type": "Dataset",
             "description": "Configuration files"
@@ -229,6 +431,11 @@
             "@id": "modules/",
             "@type": "Dataset",
             "description": "Modules used by the pipeline"
+        },
+        {
+            "@id": "modules/local/",
+            "@type": "Dataset",
+            "description": "Pipeline-specific modules"
         },
         {
             "@id": "modules/nf-core/",
@@ -317,19 +524,404 @@
             "url": "https://nf-co.re/"
         },
         {
-            "@id": "#d5e6a516-4b6d-4b7c-a263-21962726441c",
+            "@id": "https://orcid.org/0009-0001-9875-5262",
             "@type": "Person",
-            "name": "Maxime Garcia"
+            "affiliation": "Seqera",
+            "email": "friederike.hanssen@seqera.io",
+            "name": "Friederike Hanssen",
+            "url": "https://github.com/friederikehanssen"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-2827-9261",
+            "@type": "Person",
+            "affiliation": "NGI",
+            "email": "maxime.garcia@scilifelab.se",
+            "name": "Maxime U Garcia",
+            "url": "https://github.com/maxulysse"
         },
         {
             "@id": "https://orcid.org/0000-0001-6280-4643",
             "@type": "Person",
-            "name": "Szilveszter Juhos"
+            "email": "szilveszter.juhos@scilifelab.se",
+            "name": "Szilveszter Juhos",
+            "url": "https://github.com/szilvajuhos"
         },
         {
-            "@id": "https://orcid.org/0009-0001-9875-5262",
+            "@id": "#ce9fcd32-045f-486d-885d-d3b16befe549",
             "@type": "Person",
-            "name": "Friederike Hanssen"
+            "email": "abhi18av@users.noreply.github.com",
+            "name": "Abhinav Sharma",
+            "url": "https://github.com/abhi18av"
+        },
+        {
+            "@id": "#826dd9aa-a6c6-44ee-817d-923ac6242674",
+            "@type": "Person",
+            "affiliation": "Seqera",
+            "email": "12817534+adamrtalbot@users.noreply.github.com",
+            "name": "Adam Talbot",
+            "url": "https://github.com/adamrtalbot"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-1424-7840",
+            "@type": "Person",
+            "name": "Adrian L\u00e4rkeryd",
+            "url": "https://github.com/adrlar"
+        },
+        {
+            "@id": "#22867910-7e68-46f2-a889-89214bbadcd2",
+            "@type": "Person",
+            "name": "\u00c0itor Olivares",
+            "url": "https://github.com/AitorPeseta"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-6503-2180",
+            "@type": "Person",
+            "email": "apeltzer@users.noreply.github.com",
+            "name": "Alexander Peltzer",
+            "url": "https://github.com/apeltzer"
+        },
+        {
+            "@id": "https://orcid.org/0000-0001-5839-1751",
+            "@type": "Person",
+            "email": "alison.meynert@ed.ac.uk",
+            "name": "Alison Meynert",
+            "url": "https://github.com/ameynert"
+        },
+        {
+            "@id": "#4622d323-eefc-48b4-8a23-1fc503cf19e2",
+            "@type": "Person",
+            "email": "37172585+asp8200@users.noreply.github.com",
+            "name": "Anders Sune Pedersen",
+            "url": "https://github.com/asp8200"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-5547-8568",
+            "@type": "Person",
+            "name": "Aron Skaftason",
+            "url": "https://github.com/arontommi"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-8492-6585",
+            "@type": "Person",
+            "name": "Barry Digby",
+            "url": "https://github.com/BarryDigby"
+        },
+        {
+            "@id": "https://orcid.org/0000-0001-5475-0892",
+            "@type": "Person",
+            "email": "bekire@gmail.com",
+            "name": "Bekir Erg\u00fcner",
+            "url": "https://github.com/berguner"
+        },
+        {
+            "@id": "#56a5ef4c-4012-43c6-a2f3-fcf29618b33c",
+            "@type": "Person",
+            "name": "Bj\u00f6rn Nystedt",
+            "url": "https://github.com/bjornnystedt"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-4257-7241",
+            "@type": "Person",
+            "name": "Christina Chatzipantsiou",
+            "url": "https://github.com/cgpu"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-3996-0909",
+            "@type": "Person",
+            "email": "chela.james@icr.ac.uk",
+            "name": "Chela James",
+            "url": "https://github.com/chelauk"
+        },
+        {
+            "@id": "https://orcid.org/0000-0001-7409-305X",
+            "@type": "Person",
+            "email": "david.mas.p@gmail.com",
+            "name": "David Mas-Ponte",
+            "url": "https://github.com/davidmasp"
+        },
+        {
+            "@id": "#9cdfe5eb-9b21-45f9-8791-58d7da23532a",
+            "@type": "Person",
+            "affiliation": "Seqera",
+            "email": "20095261+edmundmiller@users.noreply.github.com",
+            "name": "Edmund Miller",
+            "url": "https://github.com/edmundmiller"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-1387-0251",
+            "@type": "Person",
+            "affiliation": "Quantitative Biology Center (QBiC) T\u00fcbingen, University of T\u00fcbingen, Germany",
+            "email": "45968370+famosab@users.noreply.github.com",
+            "name": "Famke B\u00e4uerle",
+            "url": "https://github.com/famosab"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-6399-9101",
+            "@type": "Person",
+            "email": "53608000+lescai@users.noreply.github.com",
+            "name": "Francesco Lescai",
+            "url": "https://github.com/lescai"
+        },
+        {
+            "@id": "#c81c1801-7d24-4bd4-bbe0-e235f9d5fc15",
+            "@type": "Person",
+            "email": "f.martinezpico@gmail.com",
+            "name": "Francisco Mart\u00ednez",
+            "url": "https://github.com/nevinwu"
+        },
+        {
+            "@id": "#ec42ab72-f426-4c83-9985-6663c2bb70aa",
+            "@type": "Person",
+            "name": "Gavin Mackenzie",
+            "url": "https://github.com/GCJMackenzie"
+        },
+        {
+            "@id": "#0761a811-48af-44ef-bd48-863fe063cfb8",
+            "@type": "Person",
+            "email": "gisela.gabernet@gmail.com",
+            "name": "Gisela Gabernet",
+            "url": "https://github.com/ggabernet"
+        },
+        {
+            "@id": "#ef18a676-2bcc-43f1-8bed-a7348de96420",
+            "@type": "Person",
+            "email": "127763095+grantn5@users.noreply.github.com",
+            "name": "Grant Neilson",
+            "url": "https://github.com/grantn5"
+        },
+        {
+            "@id": "https://orcid.org/0000-0001-6813-3051",
+            "@type": "Person",
+            "name": "Max K\u00e4ller",
+            "url": "https://github.com/gulfshores"
+        },
+        {
+            "@id": "#f406472c-4d68-42a7-8bc1-c3af34d1d344",
+            "@type": "Person",
+            "affiliation": "Seqera",
+            "email": "drpatelh@users.noreply.github.com",
+            "name": "Harshil Patel",
+            "url": "https://github.com/drpatelh"
+        },
+        {
+            "@id": "#986151a9-9476-4bf9-a2e4-4fde7f4bc24d",
+            "@type": "Person",
+            "email": "yehwhey@gmail.com",
+            "name": "Hongwei Ye",
+            "url": "https://github.com/YeHW"
+        },
+        {
+            "@id": "#8978e547-cc04-4572-8b1e-4364f37e110b",
+            "@type": "Person",
+            "name": "James A. Fellows Yates",
+            "url": "https://github.com/jfy133"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-3716-4917",
+            "@type": "Person",
+            "name": "Jesper Eisfeldt",
+            "url": "https://github.com/J35P312"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-2467-008X",
+            "@type": "Person",
+            "email": "johannes.alneberg@scilifelab.se",
+            "name": "Johannes Alneberg",
+            "url": "https://github.com/alneberg"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-3830-7046",
+            "@type": "Person",
+            "affiliation": "National Genomics Infrastructure (NGI), Uppsala University, Sweden",
+            "email": "jonas.kjellin@gmail.com",
+            "name": "Jonas Kjellin",
+            "url": "https://github.com/kjellinjonas"
+        },
+        {
+            "@id": "#526b8b48-42ae-4983-8301-e2276dd3dd6f",
+            "@type": "Person",
+            "email": "jc.fernandez.navarro@gmail.com",
+            "name": "Jos\u00e9 Fern\u00e1ndez Navarro",
+            "url": "https://github.com/jfnavarro"
+        },
+        {
+            "@id": "https://orcid.org/0000-0001-6104-9260",
+            "@type": "Person",
+            "email": "mirp.julia@gmail.com",
+            "name": "J\u00falia Mir Pedrol",
+            "url": "https://github.com/mirpedrol"
+        },
+        {
+            "@id": "#ae25ae52-e126-459f-8bd4-97fe22b93d0c",
+            "@type": "Person",
+            "affiliation": "Seqera",
+            "email": "kenibrewer@users.noreply.github.com",
+            "name": "Ken Brewer",
+            "url": "https://github.com/kenibrewer"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-0708-9530",
+            "@type": "Person",
+            "name": "Lasse Westergaard Folkersen",
+            "url": "https://github.com/lassefolkersen"
+        },
+        {
+            "@id": "#a1d0c43b-aa03-4269-b723-3fd0c95acbfd",
+            "@type": "Person",
+            "email": "l.conde@ucl.ac.uk",
+            "name": "Lucia Conde",
+            "url": "https://github.com/lconde-ucl"
+        },
+        {
+            "@id": "https://orcid.org/0009-0000-0202-2703",
+            "@type": "Person",
+            "name": "Louis Le N\u00e9zet",
+            "url": "https://github.com/LouisLeNezet"
+        },
+        {
+            "@id": "#3636074e-8323-4f74-ab92-baceae591d1e",
+            "@type": "Person",
+            "email": "malin.larsson@liu.se",
+            "name": "Malin Larsson",
+            "url": "https://github.com/malinlarsson"
+        },
+        {
+            "@id": "#82603e9a-0ee6-406c-a7c3-ec4fa1a178a4",
+            "@type": "Person",
+            "name": "Marcel Martin",
+            "url": "https://github.com/marcelm"
+        },
+        {
+            "@id": "#8b68a330-7395-45ba-921f-9b28c3032419",
+            "@type": "Person",
+            "name": "Nick Smith",
+            "url": "https://github.com/nickhsmith"
+        },
+        {
+            "@id": "#07e561e0-8c13-46a9-a166-b1ee57bfeb23",
+            "@type": "Person",
+            "email": "90359308+nschcolnicov@users.noreply.github.com",
+            "name": "Nicolas Schcolnicov",
+            "url": "https://github.com/nschcolnicov"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-1127-0765",
+            "@type": "Person",
+            "name": "Nilesh Tawari",
+            "url": "https://github.com/nilesh-tawari"
+        },
+        {
+            "@id": "https://orcid.org/0009-0007-7860-1155",
+            "@type": "Person",
+            "email": "nh13@users.noreply.github.com",
+            "name": "Nils Homer",
+            "url": "https://github.com/nh13"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-4412-7970",
+            "@type": "Person",
+            "email": "olga.botvinnik@gmail.com",
+            "name": "Olga Botvinnik",
+            "url": "https://github.com/olgabot"
+        },
+        {
+            "@id": "https://orcid.org/0009-0003-2041-610X",
+            "@type": "Person",
+            "name": "Oskar Wacker",
+            "url": "https://github.com/WackerO"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-3350-3443",
+            "@type": "Person",
+            "name": "Pall Olason",
+            "url": "https://github.com/pallolason"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-3966-8481",
+            "@type": "Person",
+            "email": "pcantalupo@gmail.com",
+            "name": "Paul Cantalupo",
+            "url": "https://github.com/pcantalupo"
+        },
+        {
+            "@id": "#e580d9da-62c5-4e35-9464-e393e207a4f4",
+            "@type": "Person",
+            "affiliation": "Seqera",
+            "email": "phil.ewels@scilifelab.se",
+            "name": "Phil Ewels",
+            "url": "https://github.com/ewels"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-0148-9787",
+            "@type": "Person",
+            "email": "33838+lindenb@users.noreply.github.com",
+            "name": "Pierre Lindenbaum",
+            "url": "https://github.com/lindenb"
+        },
+        {
+            "@id": "https://orcid.org/0000-0003-0603-7907",
+            "@type": "Person",
+            "email": "sabrina.krakau.qbic@gmail.com",
+            "name": "Sabrina Krakau",
+            "url": "https://github.com/skrakau"
+        },
+        {
+            "@id": "#2fa09808-8005-4400-be37-b8652ddbda44",
+            "@type": "Person",
+            "email": "sminot@gmail.com",
+            "name": "Sam Minot",
+            "url": "https://github.com/sminot"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-9759-2211",
+            "@type": "Person",
+            "name": "Sebastian DiLorenzo",
+            "url": "https://github.com/Sebastian-D"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-2798-9870",
+            "@type": "Person",
+            "name": "Silvia Morini",
+            "url": "https://github.com/silviamorins"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-1680-5538",
+            "@type": "Person",
+            "affiliation": "NeoGenomics Laboratories",
+            "email": "24893913+SPPearce@users.noreply.github.com",
+            "name": "Simon Pearce",
+            "url": "https://github.com/SPPearce"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-0554-5443",
+            "@type": "Person",
+            "name": "Solenne Correard",
+            "url": "https://github.com/scorreard"
+        },
+        {
+            "@id": "https://orcid.org/0009-0001-9152-7291",
+            "@type": "Person",
+            "name": "Susanne Jodoin",
+            "url": "https://github.com/SusiJo"
+        },
+        {
+            "@id": "#a9990691-6068-45bf-97b3-8eddf1786bd0",
+            "@type": "Person",
+            "name": "Tobias Koch",
+            "url": "https://github.com/KochTobi"
+        },
+        {
+            "@id": "#37ecb263-7f00-45a2-a9b2-f0da316fc4fb",
+            "@type": "Person",
+            "name": "Winni Kretzschmar",
+            "url": "https://github.com/winni2k"
+        },
+        {
+            "@id": "https://orcid.org/0009-0009-0647-7639",
+            "@type": "Person",
+            "email": "158295213+Patricie34@users.noreply.github.com",
+            "name": "Patricie Skal\u00e1kov\u00e1",
+            "url": "https://github.com/Patricie34"
         }
     ]
 }

@@ -1,0 +1,119 @@
+name: NCBench Zenodo Upload
+# This workflow can be triggered manually with the GitHub actions workflow dispatch button.
+
+on:
+  # upload can only be triggered manually for now
+  workflow_dispatch:
+    inputs:
+      germline_default_agilent:
+        description: "Trigger NCBench upload"
+        type: boolean
+        default: true
+
+jobs:
+  ncbench-upload:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # TODO: Add in other test profiles
+          - profile: germline_default_agilent
+            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.germline_default_agilent ) }}
+    steps:
+      - name: Download pipeline
+        uses: actions/checkout@v4
+
+      - name: Install Nextflow
+        uses: nf-core/setup-nextflow@v1
+
+      - name: Extract Versions
+        id: extract_versions
+        run: |
+          PIPELINE_VERSION=$(awk -F"'" '/manifest {/,/version/ {if(/version/) print $2}' nextflow.config)
+          echo "PIPELINE_VERSION=${PIPELINE_VERSION}" >> $GITHUB_ENV
+          echo "PIPELINE_VERSION_NO_DOTS=$(echo $PIPELINE_VERSION | tr -d '.')" >> $GITHUB_ENV
+
+          nextflow inspect -profile test_full_germline_ncbench_agilent . --outdir ./inspect >> inspect.json
+
+          FASTP_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:FASTP") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
+          echo "FASTP_VERSION=${FASTP_VERSION}" >> $GITHUB_ENV
+
+          BWA_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:PREPARE_GENOME:BWAMEM1_INDEX") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
+          echo "BWA_VERSION=${BWA_VERSION}" >> $GITHUB_ENV
+
+          BQSR_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:BAM_BASERECALIBRATOR:GATK4_BASERECALIBRATOR") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
+          echo "BQSR_VERSION=${BQSR_VERSION}" >> $GITHUB_ENV
+
+          DEEPVARIANT_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_DEEPVARIANT:DEEPVARIANT") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
+          echo "DEEPVARIANT_VERSION=${DEEPVARIANT_VERSION}" >> $GITHUB_ENV
+
+          FREEBAYES_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_SOMATIC_ALL:BAM_VARIANT_CALLING_FREEBAYES:FREEBAYES") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
+          echo "FREEBAYES_VERSION=${FREEBAYES_VERSION}" >> $GITHUB_ENV
+
+          HAPLOTYPECALLER_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_HAPLOTYPECALLER:GATK4_HAPLOTYPECALLER") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
+          echo "HAPLOTYPECALLER_VERSION=${HAPLOTYPECALLER_VERSION}" >> $GITHUB_ENV
+
+          STRELKA_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_SINGLE_STRELKA:STRELKA_SINGLE") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
+          echo "STRELKA_VERSION=${STRELKA_VERSION}" >> $GITHUB_ENV
+
+      - name: Download files from AWS
+        uses: keithweaver/aws-s3-github-action@v1.0.0
+        if: ${{ matrix.enabled }}
+        with:
+          source: "s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-${{ github.sha }}/test_full_germline_ncbench_agilent/variant_calling"
+          command: sync
+          aws_region: eu-west-1
+          destination: ./variant_calling
+          flags: --no-sign-request --include ".vcf.gz" --exclude "g.vcf.gz"
+
+      - name: Install requests
+        run: pip install requests
+
+      - name: Upload to zenodo
+        id: upload_zenodo
+        env:
+          # TODO ATTENTION: Use SANDBOX TOKEN during development: ${{ secrets.NCBENCH_CI_TOKEN_SANDBOX }}
+          ACCESS_TOKEN: ${{ secrets.ZENODO_DEPOSIT }}
+          PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
+        run: python .github/workflows/upload.py
+
+      - name: Store Zenodo deposition ID
+        run: |
+          echo "DEPOSITION_ID=$(cat deposition_id.txt)" >> $GITHUB_ENV
+
+      # update ncbench config yml
+      - name: NCBench set config
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.NCBENCH_CI_TOKEN }}
+          repository: FriederikeHanssen/ncbench-workflow
+          path: ncbench-workflow/
+          ref: main
+
+      - name: Install yq
+        uses: mikefarah/yq@master
+
+      - name: Add entry to config
+        env:
+          PIPELINE_VERSION_NO_DOTS: ${{ env.PIPELINE_VERSION_NO_DOTS}}
+          PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
+          FASTP_VERSION: ${{ env.FASTP_VERSION }}
+          BWA_VERSION: ${{ env.BWA_VERSION }}
+          BQSR_VERSION: ${{ env.BQSR_VERSION }}
+          DEEPVARIANT_VERSION: ${{ env.DEEPVARIANT_VERSION }}
+          FREEBAYES_VERSION: ${{ env.FREEBAYES_VERSION }}
+          HAPLOTYPECALLER_VERSION: ${{ env.HAPLOTYPECALLER_VERSION }}
+          STRELKA_VERSION: ${{ env.STRELKA_VERSION }}
+          DEPOSITION_ID: ${{ env.DEPOSITION_ID }}
+        run: bash .github/workflows/set_ncbench_config.sh
+
+      - name: Commit files
+        uses: EndBug/add-and-commit@v9
+        with:
+          cwd: "./ncbench-workflow"
+          author_name: "FriederikeHanssen"
+          author_email: "FriederikeHanssen@users.noreply.github.com"
+          new_branch: "sarek_${{ env.PIPELINE_VERSION }}"
+          message: "Add changes"
+          add: "config/config.yaml"
