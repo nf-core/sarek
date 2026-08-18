@@ -140,9 +140,9 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
             .map { meta, cram, crai ->
                     [ meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [ data_type: 'cram', id: meta.sample ], cram, crai ]
                 }
-    
+
     }
-    
+
     if (val_save_output_as_bam) {
         if (val_applybqsr || !params.tools) {
             // Save merged recalibrated BAMs from applybqsr (merged via BAM_MERGE_INDEX_SAMTOOLS)
