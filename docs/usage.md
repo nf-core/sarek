@@ -178,6 +178,8 @@ At the moment the implementation supports running the complete fq2bam module whi
 
 The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if `--save_mapped` is set.
 
+You can find more information on using GPUs with nf-core pipelines in our [GPU documentation](https://nf-co.re/docs/running/configuration/gpu-pipelines).
+
 **Hints for custom configuration based on your local hardware setup:**
 
 You can supply more command-line arguments to the `fq2bam` process depending on your local setup. The performance depends on the type of GPU and the amount of CPU RAM that parabricks is able to utilize. The `--read-group-*` arguments are used by mutect2 and need to be added to your local config. Lowering `--bwa-nstreams` from 4 (standard) to 2 can help with memory issues. As well as `--gpuwrite` and `--gpusort`. For a more in-depth description of the available arguments please read the [parabricks fq2bam documentation](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html).
