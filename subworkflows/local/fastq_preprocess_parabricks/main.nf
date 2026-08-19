@@ -34,15 +34,17 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
         else [ meta, reads ]
     }
 
-    // Adjust ch_interval_file
-    ch_interval_file = ch_interval_file.collect().map { files ->
-        [['id': 'intervals'], files]
-    }
+    // Adjust ch_interval_file and ch_known_sites
+    // Both are allowed to hold nothing: [] with --no_intervals, and an empty channel when neither
+    // --dbsnp nor --known_indels is given. collect() would drop those instead of emitting them,
+    // leaving PARABRICKS_FQ2BAM with an input that never emits, so it would silently never run
+    ch_interval_file = ch_interval_file
+        .ifEmpty([])
+        .map { files -> files ? [['id': 'intervals'], files] : [['id': 'no_intervals'], []] }
 
-    // Adjust ch_known_sites
-    ch_known_sites= ch_known_sites.collect().map { files ->
-        [['id': 'known_sites'], files]
-    }
+    ch_known_sites = ch_known_sites
+        .ifEmpty([])
+        .map { files -> files ? [['id': 'known_sites'], files] : [['id': 'no_known_sites'], []] }
 
     PARABRICKS_FQ2BAM(
         ch_reads,           // channel: [ val(meta), reads ]
