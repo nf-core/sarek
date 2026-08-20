@@ -208,18 +208,24 @@ process {
 }
 ```
 
-#### Using GPU accelerated variant calling (`--tools parabricks_haplotypecaller`)
+#### Using GPU accelerated variant calling
 
 > [!NOTE]
-> This is an experimental addition to the pipeline which requires a GPU and does not support `--profile conda`.
+> These are an experimental addition to the pipeline.
 
-To use NVIDIA Clara Parabricks' GPU-accelerated HaplotypeCaller for germline variant calling, add `--tools parabricks_haplotypecaller --profile <docker/singularity>,gpu` to your run command. This replicates GATK HaplotypeCaller germline SNP and indel calling with GPU acceleration.
+Sarek supports the following GPU-accelerated variant callers from [NVIDIA Parabricks](https://docs.nvidia.com/clara/parabricks/latest/) as an alternative to CPU based implementations:
 
-Parabricks HaplotypeCaller takes a CRAM file as input and outputs a single VCF per sample (no scatter/gather over intervals). Intervals can be provided via `--intervals` to restrict calling to specific regions.
+| Tool                                                                                                                          | `--tools` value              | Equivalent to        | Command                                                                                            |
+| ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | -------------------- | -------------------------------------------------------------------------------------------------- |
+| [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html)         | `parabricks_deepvariant`     | Google DeepVariant   | `nextflow run nf-core/sarek --tools parabricks_deepvariant --profile <docker/singularity>,gpu`     |
+| [Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) | `parabricks_haplotypecaller` | GATK HaplotypeCaller | `nextflow run nf-core/sarek --tools parabricks_haplotypecaller --profile <docker/singularity>,gpu` |
 
-Joint germline variant calling is not yet supported for this caller: it only produces per-sample VCFs, and the wiring to combine per-sample gVCFs into a joint call is still to come. `--joint_germline` is therefore ignored by this caller, and using it with `parabricks_haplotypecaller` as your only germline caller fails early rather than running and producing no joint call. Combine it with GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as well.
+There are a few differences to note about the Parabricks versions of these tools:
 
-For more details on available arguments, see the [Parabricks HaplotypeCaller documentation](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html).
+- Parabricks does not support the use of this pipeline with `--profile conda`.
+
+- Parabricks Haplotypecaller does not yet support joint germline variant calling, it only produces per-sample VCFs, and the wiring to combine per-sample gVCFs into a joint call is still to come. `--joint_germline` is therefore ignored by this caller, and using it with `parabricks_haplotypecaller` as your only germline caller fails early rather than running and producing no joint call. Combine it with GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as well.
+- For DeepVariant, use `--wes` to switch from WGS to WES mode (passes `--mode wes` to pbrun).
 
 ### Start with duplicate marking (`--step markduplicates`)
 
@@ -649,25 +655,25 @@ Sarek can be started at different points in the analysis by setting the paramete
 
 This list is by no means exhaustive and it will depend on the specific analysis you would like to run. This is a suggestion based on the individual docs of the tools specifically for human genomes and a garden-variety sequencing run as well as what has been added to the pipeline.
 
-| Tool                                                                                                    | WGS | WES |  Panel |  Germline | Tumor-Only | Somatic (Tumor-Normal) |
-| :------------------------------------------------------------------------------------------------------ | :-: | :-: | :----: | :-------: | :--------: | :--------------------: |
-| [DeepVariant](https://github.com/google/deepvariant)                                                    |  x  |  x  |   x    |     x     |     -      |           -            |
-| [FreeBayes](https://github.com/ekg/freebayes)                                                           |  x  |  x  |   x    |     x     |     x      |           x            |
-| [GATK HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/5358864757787-HaplotypeCaller) |  x  |  x  |   x    |     x     |     -      |           -            |
-| [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2)                 |  x  |  x  |   x    |     -     |     x      |           x            |
-| [lofreq](https://github.com/CSB5/lofreq)                                                                |  x  |  x  |   x    |     -     |     x      |           -            |
-| [mpileup](https://www.htslib.org/doc/samtools-mpileup.html)                                             |  x  |  x  |   x    |     x     |     x      |           -            |
-| [MuSE](https://github.com/wwylab/MuSE)                                                                  |  x  |  x  |   x    |     -     |     -      |           x            |
-| [Strelka](https://github.com/Illumina/strelka)                                                          |  x  |  x  |   -    |     -     |     -      |           x            |
-| [Manta](https://github.com/Illumina/manta)                                                              |  x  |  x  |   x    |     x     |     x      |           x            |
-| [indexcov](https://github.com/brentp/goleft/tree/master/indexcov)                                       |  x  |  -  |   -    |     x     |     -      |           x            |
-| [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                          |  x  |  x  |   x    |     x     |     x      |           x            |
-| [ASCAT](https://github.com/VanLoo-lab/ascat)                                                            |  x  |  x  |   -    |     -     |     -      |           x            |
-| [CNVKit](https://cnvkit.readthedocs.io/en/stable/)                                                      |  x  |  x  |   -    |     x     |     x      |           x            |
-| [Control-FREEC](https://github.com/BoevaLab/FREEC)                                                      |  x  |  x  |   x    |     -     |     x      |           x            |
-| [MSIsensor2](https://github.com/niu-lab/msisensor2)                                                     |  x  |  x  |   x    |     -     |     x      |           -            |
-| [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro)                                             |  x  |  x  |   x    |     -     |     -      |           x            |
-| [Varlociraptor](https://varlociraptor.github.io/landing/)                                               |  x  |  x  |   x    |     x     |     x      |           x            |
+| Tool                                                                                                                        | WGS | WES |  Panel |  Germline | Tumor-Only | Somatic (Tumor-Normal) |
+| :-------------------------------------------------------------------------------------------------------------------------- | :-: | :-: | :----: | :-------: | :--------: | :--------------------: |
+| [DeepVariant](https://github.com/google/deepvariant)                                                                        |  x  |  x  |   x    |     x     |     -      |           -            |
+| [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html) (GPU) |  x  |  x  |   x    |     x     |     -      |           -            |
+| [FreeBayes](https://github.com/ekg/freebayes)                                                                               |  x  |  x  |   x    |     x     |     x      |           x            |
+| [GATK HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/5358864757787-HaplotypeCaller)                     |  x  |  x  |   x    |     x     |     -      |           -            |
+| [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2)                                     |  x  |  x  |   x    |     -     |     x      |           x            |
+| [lofreq](https://github.com/CSB5/lofreq)                                                                                    |  x  |  x  |   x    |     -     |     x      |           -            |
+| [mpileup](https://www.htslib.org/doc/samtools-mpileup.html)                                                                 |  x  |  x  |   x    |     x     |     x      |           -            |
+| [MuSE](https://github.com/wwylab/MuSE)                                                                                      |  x  |  x  |   x    |     -     |     -      |           x            |
+| [Strelka](https://github.com/Illumina/strelka)                                                                              |  x  |  x  |   -    |     -     |     -      |           x            |
+| [Manta](https://github.com/Illumina/manta)                                                                                  |  x  |  x  |   x    |     x     |     x      |           x            |
+| [indexcov](https://github.com/brentp/goleft/tree/master/indexcov)                                                           |  x  |  -  |   -    |     x     |     -      |           x            |
+| [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                                              |  x  |  x  |   x    |     x     |     x      |           x            |
+| [ASCAT](https://github.com/VanLoo-lab/ascat)                                                                                |  x  |  x  |   -    |     -     |     -      |           x            |
+| [MSIsensor2](https://github.com/niu-lab/msisensor2)                                                                         |  x  |  x  |   x    |     -     |     x      |           -            |
+| [Control-FREEC](https://github.com/BoevaLab/FREEC)                                                                          |  x  |  x  |   x    |     -     |     x      |           x            |
+| [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro)                                                                 |  x  |  x  |   x    |     -     |     -      |           x            |
+| [Varlociraptor](https://varlociraptor.github.io/landing/)                                                                   |  x  |  x  |   x    |     x     |     x      |           x            |
 
 ## How to run ASCAT with whole-exome sequencing data?
 

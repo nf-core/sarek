@@ -57,7 +57,8 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `freebayes`
   - `GATK HaplotypeCaller`
   - `GATK Mutect2`
-  - _Experimental Feature_: `Parabricks HaplotypeCaller` (GPU-accelerated germline calling, `--tools parabricks_haplotypecaller`)
+  - `Parabricks HaplotypeCaller` (Experimental Feature)
+  - `Parabricks Deepvariant` (Experimental Feature)
   - `indexcov`
   - `Lofreq`
   - `Manta`

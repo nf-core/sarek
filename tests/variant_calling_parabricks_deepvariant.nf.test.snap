@@ -1,0 +1,696 @@
+{
+    "-profile test --tools parabricks_deepvariant --input mapped_single_bam.csv": {
+        "content": [
+            13,
+            {
+                "BCFTOOLS_STATS": {
+                    "bcftools": "1.23.1"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.2.0"
+                },
+                "MOSDEPTH": {
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
+                },
+                "PARABRICKS_DEEPVARIANT": {
+                    "parabricks": "4.7.1-1"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": "1.24"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_VC_PARABRICKS_DEEPVARIANT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
+                }
+            },
+            [
+                "csv",
+                "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/index.json",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
+                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_SNP.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transitions.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transversions.txt",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-pct.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-pct.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-pct.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/bcftools",
+                "reports/bcftools/parabricks_deepvariant",
+                "reports/bcftools/parabricks_deepvariant/test",
+                "reports/bcftools/parabricks_deepvariant/test/test.bcftools_stats.txt",
+                "reports/mosdepth",
+                "reports/mosdepth/test",
+                "reports/mosdepth/test/test.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/test/test.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/test/test.recal.mosdepth.summary.txt",
+                "reports/mosdepth/test/test.recal.regions.bed.gz",
+                "reports/mosdepth/test/test.recal.regions.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/test",
+                "reports/samtools/test/test.recal.cram.stats",
+                "reports/vcftools",
+                "reports/vcftools/parabricks_deepvariant",
+                "reports/vcftools/parabricks_deepvariant/test",
+                "reports/vcftools/parabricks_deepvariant/test/test.FILTER.summary",
+                "reports/vcftools/parabricks_deepvariant/test/test.TsTv.count",
+                "reports/vcftools/parabricks_deepvariant/test/test.TsTv.qual",
+                "variant_calling",
+                "variant_calling/parabricks_deepvariant",
+                "variant_calling/parabricks_deepvariant/test",
+                "variant_calling/parabricks_deepvariant/test/test.parabricks_deepvariant.vcf.gz",
+                "variant_calling/parabricks_deepvariant/test/test.vcf.gz.tbi"
+            ],
+            [
+                "mosdepth-coverage-per-contig-single.txt:md5,115b9a93bcf511419e6622919172f321",
+                "mosdepth-cumcoverage-dist-id.txt:md5,df2fc825dfc41e30f72f5d125a6447ee",
+                "mosdepth_perchrom.txt:md5,115b9a93bcf511419e6622919172f321",
+                "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
+                "samtools-stats-dp.txt:md5,53338147cfd6cffd24eef5c07518fe4c",
+                "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
+                "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
+                "test.bcftools_stats.txt:md5,53b45777c103a87007a9bd75d94180c0",
+                "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
+                "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
+                "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
+                "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
+                "test.FILTER.summary:md5,d0fe196a8062d7d67d9018cb40f5490c",
+                "test.TsTv.count:md5,2851ce55f9813280515c2fdcacb86844"
+            ],
+            "No BAM files",
+            "No CRAM files",
+            [
+                "test.parabricks_deepvariant.vcf.gz:md5,dc50f0a5b27f3ade02c745e69e69ad29"
+            ],
+            "No warnings"
+        ],
+        "timestamp": "2026-08-20T13:45:38.383868701",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "-profile test --tools parabricks_deepvariant --input mapped_single_bam.csv --no_intervals": {
+        "content": [
+            10,
+            {
+                "BCFTOOLS_STATS": {
+                    "bcftools": "1.23.1"
+                },
+                "MOSDEPTH": {
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
+                },
+                "PARABRICKS_DEEPVARIANT": {
+                    "parabricks": "4.7.1-1"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": "1.24"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_VC_PARABRICKS_DEEPVARIANT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
+                }
+            },
+            [
+                "csv",
+                "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/index.json",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
+                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_SNP.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transitions.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transversions.txt",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-pct.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-pct.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-pct.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
+                "multiqc/multiqc_report.html",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/bcftools",
+                "reports/bcftools/parabricks_deepvariant",
+                "reports/bcftools/parabricks_deepvariant/test",
+                "reports/bcftools/parabricks_deepvariant/test/test.bcftools_stats.txt",
+                "reports/mosdepth",
+                "reports/mosdepth/test",
+                "reports/mosdepth/test/test.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/test/test.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/test/test.recal.mosdepth.summary.txt",
+                "reports/mosdepth/test/test.recal.regions.bed.gz",
+                "reports/mosdepth/test/test.recal.regions.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/test",
+                "reports/samtools/test/test.recal.cram.stats",
+                "reports/vcftools",
+                "reports/vcftools/parabricks_deepvariant",
+                "reports/vcftools/parabricks_deepvariant/test",
+                "reports/vcftools/parabricks_deepvariant/test/test.FILTER.summary",
+                "reports/vcftools/parabricks_deepvariant/test/test.TsTv.count",
+                "reports/vcftools/parabricks_deepvariant/test/test.TsTv.qual",
+                "variant_calling",
+                "variant_calling/parabricks_deepvariant",
+                "variant_calling/parabricks_deepvariant/test",
+                "variant_calling/parabricks_deepvariant/test/test.parabricks_deepvariant.vcf.gz",
+                "variant_calling/parabricks_deepvariant/test/test.vcf.gz.tbi"
+            ],
+            [
+                "mosdepth-coverage-per-contig-single.txt:md5,115b9a93bcf511419e6622919172f321",
+                "mosdepth-cumcoverage-dist-id.txt:md5,df2fc825dfc41e30f72f5d125a6447ee",
+                "mosdepth_perchrom.txt:md5,115b9a93bcf511419e6622919172f321",
+                "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
+                "samtools-stats-dp.txt:md5,53338147cfd6cffd24eef5c07518fe4c",
+                "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
+                "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
+                "test.bcftools_stats.txt:md5,53b45777c103a87007a9bd75d94180c0",
+                "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
+                "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
+                "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
+                "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
+                "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
+                "test.FILTER.summary:md5,d0fe196a8062d7d67d9018cb40f5490c",
+                "test.TsTv.count:md5,2851ce55f9813280515c2fdcacb86844"
+            ],
+            "No BAM files",
+            "No CRAM files",
+            [
+                "test.parabricks_deepvariant.vcf.gz:md5,dc50f0a5b27f3ade02c745e69e69ad29"
+            ],
+            "No warnings"
+        ],
+        "timestamp": "2026-08-20T13:42:02.332267381",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "-profile test --tools parabricks_deepvariant --input mapped_single_bam.csv --no_intervals -stub": {
+        "content": [
+            10,
+            {
+                "BCFTOOLS_STATS": {
+                    "bcftools": "1.23.1"
+                },
+                "MOSDEPTH": {
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
+                },
+                "PARABRICKS_DEEPVARIANT": {
+                    "parabricks": "4.7.1-1"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": "1.24"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_VC_PARABRICKS_DEEPVARIANT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
+                }
+            },
+            [
+                "csv",
+                "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/index.json",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/.stub",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/.stub",
+                "multiqc/multiqc_report.html",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/bcftools",
+                "reports/bcftools/parabricks_deepvariant",
+                "reports/bcftools/parabricks_deepvariant/test",
+                "reports/bcftools/parabricks_deepvariant/test/test.bcftools_stats.txt",
+                "reports/mosdepth",
+                "reports/mosdepth/test",
+                "reports/mosdepth/test/test.recal.global.dist.txt",
+                "reports/mosdepth/test/test.recal.per-base.bed.gz",
+                "reports/mosdepth/test/test.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/test/test.recal.per-base.d4",
+                "reports/mosdepth/test/test.recal.quantized.bed.gz",
+                "reports/mosdepth/test/test.recal.quantized.bed.gz.csi",
+                "reports/mosdepth/test/test.recal.region.dist.txt",
+                "reports/mosdepth/test/test.recal.regions.bed.gz",
+                "reports/mosdepth/test/test.recal.regions.bed.gz.csi",
+                "reports/mosdepth/test/test.recal.summary.txt",
+                "reports/mosdepth/test/test.recal.thresholds.bed.gz",
+                "reports/mosdepth/test/test.recal.thresholds.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/test",
+                "reports/samtools/test/test.recal.cram.stats",
+                "reports/vcftools",
+                "reports/vcftools/parabricks_deepvariant",
+                "reports/vcftools/parabricks_deepvariant/test",
+                "reports/vcftools/parabricks_deepvariant/test/test.012",
+                "reports/vcftools/parabricks_deepvariant/test/test.012.indv",
+                "reports/vcftools/parabricks_deepvariant/test/test.012.pos",
+                "reports/vcftools/parabricks_deepvariant/test/test.BEAGLE.GL",
+                "reports/vcftools/parabricks_deepvariant/test/test.BEAGLE.PL",
+                "reports/vcftools/parabricks_deepvariant/test/test.FILTER.summary",
+                "reports/vcftools/parabricks_deepvariant/test/test.FORMAT",
+                "reports/vcftools/parabricks_deepvariant/test/test.INFO",
+                "reports/vcftools/parabricks_deepvariant/test/test.LROH",
+                "reports/vcftools/parabricks_deepvariant/test/test.Tajima.D",
+                "reports/vcftools/parabricks_deepvariant/test/test.TsTv",
+                "reports/vcftools/parabricks_deepvariant/test/test.TsTv.count",
+                "reports/vcftools/parabricks_deepvariant/test/test.TsTv.qual",
+                "reports/vcftools/parabricks_deepvariant/test/test.TsTv.summary",
+                "reports/vcftools/parabricks_deepvariant/test/test.bcf",
+                "reports/vcftools/parabricks_deepvariant/test/test.diff.discordance.matrix",
+                "reports/vcftools/parabricks_deepvariant/test/test.diff.indv",
+                "reports/vcftools/parabricks_deepvariant/test/test.diff.indv_in_files",
+                "reports/vcftools/parabricks_deepvariant/test/test.diff.sites",
+                "reports/vcftools/parabricks_deepvariant/test/test.diff.sites_in_files",
+                "reports/vcftools/parabricks_deepvariant/test/test.diff.switch",
+                "reports/vcftools/parabricks_deepvariant/test/test.frq",
+                "reports/vcftools/parabricks_deepvariant/test/test.frq.count",
+                "reports/vcftools/parabricks_deepvariant/test/test.gdepth",
+                "reports/vcftools/parabricks_deepvariant/test/test.geno.chisq",
+                "reports/vcftools/parabricks_deepvariant/test/test.geno.ld",
+                "reports/vcftools/parabricks_deepvariant/test/test.hap.ld",
+                "reports/vcftools/parabricks_deepvariant/test/test.hapcount",
+                "reports/vcftools/parabricks_deepvariant/test/test.het",
+                "reports/vcftools/parabricks_deepvariant/test/test.hwe",
+                "reports/vcftools/parabricks_deepvariant/test/test.idepth",
+                "reports/vcftools/parabricks_deepvariant/test/test.ifreqburden",
+                "reports/vcftools/parabricks_deepvariant/test/test.imiss",
+                "reports/vcftools/parabricks_deepvariant/test/test.impute.hap",
+                "reports/vcftools/parabricks_deepvariant/test/test.impute.hap.indv",
+                "reports/vcftools/parabricks_deepvariant/test/test.impute.hap.legend",
+                "reports/vcftools/parabricks_deepvariant/test/test.indel.hist",
+                "reports/vcftools/parabricks_deepvariant/test/test.interchrom.geno.ld",
+                "reports/vcftools/parabricks_deepvariant/test/test.interchrom.hap.ld",
+                "reports/vcftools/parabricks_deepvariant/test/test.kept.sites",
+                "reports/vcftools/parabricks_deepvariant/test/test.ldepth",
+                "reports/vcftools/parabricks_deepvariant/test/test.ldepth.mean",
+                "reports/vcftools/parabricks_deepvariant/test/test.ldhat.locs",
+                "reports/vcftools/parabricks_deepvariant/test/test.ldhat.sites",
+                "reports/vcftools/parabricks_deepvariant/test/test.list.geno.ld",
+                "reports/vcftools/parabricks_deepvariant/test/test.list.hap.ld",
+                "reports/vcftools/parabricks_deepvariant/test/test.lmiss",
+                "reports/vcftools/parabricks_deepvariant/test/test.lqual",
+                "reports/vcftools/parabricks_deepvariant/test/test.map",
+                "reports/vcftools/parabricks_deepvariant/test/test.mendel",
+                "reports/vcftools/parabricks_deepvariant/test/test.ped",
+                "reports/vcftools/parabricks_deepvariant/test/test.relatedness",
+                "reports/vcftools/parabricks_deepvariant/test/test.relatedness2",
+                "reports/vcftools/parabricks_deepvariant/test/test.removed.sites",
+                "reports/vcftools/parabricks_deepvariant/test/test.singletons",
+                "reports/vcftools/parabricks_deepvariant/test/test.sites.pi",
+                "reports/vcftools/parabricks_deepvariant/test/test.snpden",
+                "reports/vcftools/parabricks_deepvariant/test/test.tfam",
+                "reports/vcftools/parabricks_deepvariant/test/test.tped",
+                "reports/vcftools/parabricks_deepvariant/test/test.vcf",
+                "reports/vcftools/parabricks_deepvariant/test/test.weir.fst",
+                "reports/vcftools/parabricks_deepvariant/test/test.windowed.pi",
+                "variant_calling",
+                "variant_calling/parabricks_deepvariant",
+                "variant_calling/parabricks_deepvariant/test",
+                "variant_calling/parabricks_deepvariant/test/test.parabricks_deepvariant.vcf.gz",
+                "variant_calling/parabricks_deepvariant/test/test.vcf.gz.tbi"
+            ],
+            [
+                "[WARN] WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected. HINT: A common mistake is to provide multiple values separated by spaces e.g. `-profile test, [CONTAINER]`."
+            ]
+        ],
+        "timestamp": "2026-08-20T13:48:04.740742464",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "-profile test --tools parabricks_deepvariant --input mapped_single_bam.csv -stub": {
+        "content": [
+            13,
+            {
+                "BCFTOOLS_STATS": {
+                    "bcftools": "1.23.1"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.2.0"
+                },
+                "MOSDEPTH": {
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
+                },
+                "PARABRICKS_DEEPVARIANT": {
+                    "parabricks": "4.7.1-1"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": "1.24"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_VC_PARABRICKS_DEEPVARIANT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
+                }
+            },
+            [
+                "csv",
+                "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/index.json",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/.stub",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/.stub",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/bcftools",
+                "reports/bcftools/parabricks_deepvariant",
+                "reports/bcftools/parabricks_deepvariant/test",
+                "reports/bcftools/parabricks_deepvariant/test/test.bcftools_stats.txt",
+                "reports/mosdepth",
+                "reports/mosdepth/test",
+                "reports/mosdepth/test/test.recal.global.dist.txt",
+                "reports/mosdepth/test/test.recal.per-base.bed.gz",
+                "reports/mosdepth/test/test.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/test/test.recal.per-base.d4",
+                "reports/mosdepth/test/test.recal.quantized.bed.gz",
+                "reports/mosdepth/test/test.recal.quantized.bed.gz.csi",
+                "reports/mosdepth/test/test.recal.region.dist.txt",
+                "reports/mosdepth/test/test.recal.regions.bed.gz",
+                "reports/mosdepth/test/test.recal.regions.bed.gz.csi",
+                "reports/mosdepth/test/test.recal.summary.txt",
+                "reports/mosdepth/test/test.recal.thresholds.bed.gz",
+                "reports/mosdepth/test/test.recal.thresholds.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/test",
+                "reports/samtools/test/test.recal.cram.stats",
+                "reports/vcftools",
+                "reports/vcftools/parabricks_deepvariant",
+                "reports/vcftools/parabricks_deepvariant/test",
+                "reports/vcftools/parabricks_deepvariant/test/test.012",
+                "reports/vcftools/parabricks_deepvariant/test/test.012.indv",
+                "reports/vcftools/parabricks_deepvariant/test/test.012.pos",
+                "reports/vcftools/parabricks_deepvariant/test/test.BEAGLE.GL",
+                "reports/vcftools/parabricks_deepvariant/test/test.BEAGLE.PL",
+                "reports/vcftools/parabricks_deepvariant/test/test.FILTER.summary",
+                "reports/vcftools/parabricks_deepvariant/test/test.FORMAT",
+                "reports/vcftools/parabricks_deepvariant/test/test.INFO",
+                "reports/vcftools/parabricks_deepvariant/test/test.LROH",
+                "reports/vcftools/parabricks_deepvariant/test/test.Tajima.D",
+                "reports/vcftools/parabricks_deepvariant/test/test.TsTv",
+                "reports/vcftools/parabricks_deepvariant/test/test.TsTv.count",
+                "reports/vcftools/parabricks_deepvariant/test/test.TsTv.qual",
+                "reports/vcftools/parabricks_deepvariant/test/test.TsTv.summary",
+                "reports/vcftools/parabricks_deepvariant/test/test.bcf",
+                "reports/vcftools/parabricks_deepvariant/test/test.diff.discordance.matrix",
+                "reports/vcftools/parabricks_deepvariant/test/test.diff.indv",
+                "reports/vcftools/parabricks_deepvariant/test/test.diff.indv_in_files",
+                "reports/vcftools/parabricks_deepvariant/test/test.diff.sites",
+                "reports/vcftools/parabricks_deepvariant/test/test.diff.sites_in_files",
+                "reports/vcftools/parabricks_deepvariant/test/test.diff.switch",
+                "reports/vcftools/parabricks_deepvariant/test/test.frq",
+                "reports/vcftools/parabricks_deepvariant/test/test.frq.count",
+                "reports/vcftools/parabricks_deepvariant/test/test.gdepth",
+                "reports/vcftools/parabricks_deepvariant/test/test.geno.chisq",
+                "reports/vcftools/parabricks_deepvariant/test/test.geno.ld",
+                "reports/vcftools/parabricks_deepvariant/test/test.hap.ld",
+                "reports/vcftools/parabricks_deepvariant/test/test.hapcount",
+                "reports/vcftools/parabricks_deepvariant/test/test.het",
+                "reports/vcftools/parabricks_deepvariant/test/test.hwe",
+                "reports/vcftools/parabricks_deepvariant/test/test.idepth",
+                "reports/vcftools/parabricks_deepvariant/test/test.ifreqburden",
+                "reports/vcftools/parabricks_deepvariant/test/test.imiss",
+                "reports/vcftools/parabricks_deepvariant/test/test.impute.hap",
+                "reports/vcftools/parabricks_deepvariant/test/test.impute.hap.indv",
+                "reports/vcftools/parabricks_deepvariant/test/test.impute.hap.legend",
+                "reports/vcftools/parabricks_deepvariant/test/test.indel.hist",
+                "reports/vcftools/parabricks_deepvariant/test/test.interchrom.geno.ld",
+                "reports/vcftools/parabricks_deepvariant/test/test.interchrom.hap.ld",
+                "reports/vcftools/parabricks_deepvariant/test/test.kept.sites",
+                "reports/vcftools/parabricks_deepvariant/test/test.ldepth",
+                "reports/vcftools/parabricks_deepvariant/test/test.ldepth.mean",
+                "reports/vcftools/parabricks_deepvariant/test/test.ldhat.locs",
+                "reports/vcftools/parabricks_deepvariant/test/test.ldhat.sites",
+                "reports/vcftools/parabricks_deepvariant/test/test.list.geno.ld",
+                "reports/vcftools/parabricks_deepvariant/test/test.list.hap.ld",
+                "reports/vcftools/parabricks_deepvariant/test/test.lmiss",
+                "reports/vcftools/parabricks_deepvariant/test/test.lqual",
+                "reports/vcftools/parabricks_deepvariant/test/test.map",
+                "reports/vcftools/parabricks_deepvariant/test/test.mendel",
+                "reports/vcftools/parabricks_deepvariant/test/test.ped",
+                "reports/vcftools/parabricks_deepvariant/test/test.relatedness",
+                "reports/vcftools/parabricks_deepvariant/test/test.relatedness2",
+                "reports/vcftools/parabricks_deepvariant/test/test.removed.sites",
+                "reports/vcftools/parabricks_deepvariant/test/test.singletons",
+                "reports/vcftools/parabricks_deepvariant/test/test.sites.pi",
+                "reports/vcftools/parabricks_deepvariant/test/test.snpden",
+                "reports/vcftools/parabricks_deepvariant/test/test.tfam",
+                "reports/vcftools/parabricks_deepvariant/test/test.tped",
+                "reports/vcftools/parabricks_deepvariant/test/test.vcf",
+                "reports/vcftools/parabricks_deepvariant/test/test.weir.fst",
+                "reports/vcftools/parabricks_deepvariant/test/test.windowed.pi",
+                "variant_calling",
+                "variant_calling/parabricks_deepvariant",
+                "variant_calling/parabricks_deepvariant/test",
+                "variant_calling/parabricks_deepvariant/test/test.parabricks_deepvariant.vcf.gz",
+                "variant_calling/parabricks_deepvariant/test/test.vcf.gz.tbi"
+            ],
+            [
+                "[WARN] WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected. HINT: A common mistake is to provide multiple values separated by spaces e.g. `-profile test, [CONTAINER]`."
+            ]
+        ],
+        "timestamp": "2026-08-20T13:47:24.239476582",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    }
+}
