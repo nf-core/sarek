@@ -7,12 +7,25 @@ include { HTSLIB_BGZIPTABIX as TABIX_VC_PARABRICKS_DEEPVARIANT } from '../../../
 
 workflow BAM_VARIANT_CALLING_PARABRICKS_DEEPVARIANT {
     take:
-    bam       // channel: [mandatory] [ meta, bam, bai ]
-    fasta     // channel: [mandatory] [ meta, fasta ]
+    cram                    // channel: [mandatory] [ meta, cram, crai ]
+    fasta                   // channel: [mandatory] [ meta, fasta ]
+    intervals_bed_combined  // channel: [optional]  [] or [ intervals.bed ]
 
     main:
+    // Combine each sample with the (optional) intervals list
+    // intervals_bed_combined emits [] (no intervals) or [file] (one combined BED)
+    // When no_intervals, the empty list contributes 0 elements to the combined tuple,
+    // so check the tuple size to safely extract the optional 4th element.
+    cram_intervals = cram
+        .combine(intervals_bed_combined)
+        .map { cram_combined ->
+            def (meta, cram_, crai) = cram_combined
+            def intervals_ = cram_combined.size() > 3 ? cram_combined[3] : []
+            [ meta, cram_, crai, intervals_ ]
+        }
+
     PARABRICKS_DEEPVARIANT(
-        bam.map { meta, bam_, bai -> [ meta, bam_, bai, [] ] },
+        cram_intervals,
         fasta
     )
 

@@ -26,7 +26,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     tools                             // Mandatory, list of tools to apply
     skip_tools                        // Mandatory, list of tools to skip
     bam                               // channel: [mandatory] meta, bam
-    cram                              // channel: [mandatory] meta, cram
+    cram                              // channel: [mandatory] meta, cram, crai
     bwa                               // channel: [mandatory] meta, bwa
     cnvkit_reference                  // channel: [optional] cnvkit reference
     dbsnp                             // channel: [mandatory] meta, dbsnp
@@ -131,8 +131,9 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     // PARABRICKS DEEPVARIANT
     if (tools && tools.split(',').contains('parabricks_deepvariant')) {
         BAM_VARIANT_CALLING_PARABRICKS_DEEPVARIANT(
-            bam,
-            fasta
+            cram,
+            fasta,
+            intervals_bed_combined
         )
 
         vcf_parabricks_deepvariant = BAM_VARIANT_CALLING_PARABRICKS_DEEPVARIANT.out.vcf
