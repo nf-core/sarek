@@ -212,7 +212,7 @@ workflow SAREK {
                 index_alignment,
                 intervals_bed_combined,
                 known_sites_indels,
-                params.skip_tools.split(',').contains('baserecalibrator'),
+                skip_tools.split(',').contains('baserecalibrator'),
                 params.save_mapped,
                 params.save_output_as_bam,
                 params.outdir,
