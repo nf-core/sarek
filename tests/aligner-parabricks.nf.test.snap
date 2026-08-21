@@ -463,9 +463,9 @@
         },
         "timestamp": "2026-08-21T11:59:41.620556245"
     },
-    "-profile test --aligner parabricks --wes --parabricks_applybqsr": {
+    "-profile test --aligner parabricks --wes --parabricks_applybqsr false": {
         "content": [
-            16,
+            14,
             {
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -488,9 +488,6 @@
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "PARABRICKS_APPLYBQSR": {
-                    "parabricks": "4.7.1-1"
                 },
                 "PARABRICKS_FQ2BAM": {
                     "parabricks": "4.7.1-1"
@@ -662,8 +659,8 @@
                 "mosdepth_perchrom.txt:md5,f3a4ba86603c5121a26f54616a39c1ba",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
-                "samtools-stats-dp.txt:md5,742682801a53ca9c2e443e9bd14094ec",
-                "samtools_alignment_plot.txt:md5,6e9269c38db487c567c247050f006e34",
+                "samtools-stats-dp.txt:md5,9dbdd996ce0e7edb5b7861eb13eba285",
+                "samtools_alignment_plot.txt:md5,d2729501a111a33268c008ef6f18c7cd",
                 "samtools_insert_size.txt:md5,1553c58beee5f377cddbcbe8c527720a",
                 "genome.fasta.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
                 "genome.fasta.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
@@ -684,7 +681,7 @@
             ],
             "No BAM files",
             [
-                "test.cram:md5,70c1f341cfcfc3814e3475943915775c"
+                "test.cram:md5,9da56e1adc10f4fa65303441b8a5a328"
             ],
             "No VCF files",
             "No warnings"
@@ -693,7 +690,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         },
-        "timestamp": "2026-08-21T12:07:11.209709187"
+        "timestamp": "2026-08-21T13:03:49.632093948"
     },
     "-profile test --aligner parabricks --tools mutect2 --wes --input fastq_pair.csv": {
         "content": [
