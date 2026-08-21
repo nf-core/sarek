@@ -34,6 +34,6 @@ workflow BAM_MERGE_INDEX_SAMTOOLS {
     bam_bai = bam_all.join(INDEX_MERGE_BAM.out.index, failOnDuplicate: true, failOnMismatch: true)
 
     emit:
-    bam_bai
+    bam_bai = bam_bai
 
 }
