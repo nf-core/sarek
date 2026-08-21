@@ -334,7 +334,7 @@ The resulting recalibrated CRAM files are delivered to the user. Recalibrated CR
 
 [Parabricks FQ2BAM](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html) runs as alternative to GATK preprocessing, enabled by `--aligner parabricks --profile <docker/singularity>,gpu`. By default fq2bam performs alignment, coordinate sorting, duplicate marking and base quality score calculation (BQSR) in one step, emitting a CRAM.
 
-When `--parabricks_applybqsr` is set, fq2bam outputs BAM with an intermediate recalibration table, then [Parabricks ApplyBQSR](#parabricks-applybqsr) recalibrates the base qualities on the GPU, and the recalibrated BAM / CRAM is used for downstream variant calling. The known variant sites (`--dbsnp`, `--known_indels`) used to build the recalibration table are provided by the iGenomes reference configuration or can be set via command-line arguments.
+Per default fq2bam outputs BAM with an intermediate recalibration table, then [Parabricks ApplyBQSR](#parabricks-applybqsr) recalibrates the base qualities on the GPU, and the recalibrated BAM / CRAM is used for downstream variant calling. The known variant sites (`--dbsnp`, `--known_indels`) used to build the recalibration table are provided by the iGenomes reference configuration or can be set via command-line arguments.
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
@@ -348,7 +348,7 @@ When `--parabricks_applybqsr` is set, fq2bam outputs BAM with an intermediate re
 
 #### Parabricks ApplyBQSR
 
-[Parabricks ApplyBQSR](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_applybqsr.html) recalibrates the base qualities of the input reads on the GPU, based on the recalibration table produced by the `parabricks/fq2bam` module. It is enabled via `--parabricks_applybqsr` when `--aligner parabricks` is used.
+Unless Unless `baserecalibrator` is listed under `--skip_tools` in the nextflow command, [Parabricks ApplyBQSR](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_applybqsr.html) recalibrates the base qualities of the input reads on the GPU, based on the recalibration table produced by the `parabricks/fq2bam` module.
 
 <details markdown="1">
 <summary>Output files for all samples</summary>

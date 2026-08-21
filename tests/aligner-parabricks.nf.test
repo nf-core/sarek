@@ -59,10 +59,10 @@ nextflow_pipeline {
             no_conda: true
         ],
         [
-            name: "-profile test --aligner parabricks --wes --parabricks_applybqsr false",
+            name: "-profile test --aligner parabricks --wes --skip_tools baserecalibrator",
             params: [
                 aligner: 'parabricks',
-                parabricks_applybqsr: false,
+                skip_tools: 'baserecalibrator',
                 save_reference: true,
                 save_mapped: true,
                 tools: '',

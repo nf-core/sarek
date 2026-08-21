@@ -1,8 +1,8 @@
-include { PARABRICKS_APPLYBQSR            } from '../../../modules/nf-core/parabricks/applybqsr/main.nf'
-include { PARABRICKS_FQ2BAM               } from '../../../modules/nf-core/parabricks/fq2bam/main.nf'
-include { CHANNEL_ALIGN_CREATE_CSV        } from '../../../subworkflows/local/channel_align_create_csv/main'
-include { BAM_MERGE_INDEX_SAMTOOLS        } from '../../../subworkflows/local/bam_merge_index_samtools/main'
-include { CRAM_MERGE_INDEX_SAMTOOLS       } from '../../../subworkflows/local/cram_merge_index_samtools/main'
+include { PARABRICKS_APPLYBQSR      } from '../../../modules/nf-core/parabricks/applybqsr/main.nf'
+include { PARABRICKS_FQ2BAM         } from '../../../modules/nf-core/parabricks/fq2bam/main.nf'
+include { CHANNEL_ALIGN_CREATE_CSV  } from '../../../subworkflows/local/channel_align_create_csv/main'
+include { BAM_MERGE_INDEX_SAMTOOLS  } from '../../../subworkflows/local/bam_merge_index_samtools/main'
+include { CRAM_MERGE_INDEX_SAMTOOLS } from '../../../subworkflows/local/cram_merge_index_samtools/main'
 
 workflow FASTQ_PREPROCESS_PARABRICKS {
     take:
@@ -12,7 +12,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     ch_index // channel: [mandatory] meta, index - bwa index
     ch_interval_file // channel: [optional]  intervals_bed_combined
     ch_known_sites // channel: [optional]  known_sites_indels
-    val_applybqsr // boolean
+    val_skip_applybqsr // boolean
     val_save_mapped // boolean
     val_save_output_as_bam // boolean
     val_outdir // output directory for saving mapped files
@@ -67,7 +67,10 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     fq2bam_out_aln = val_save_output_as_bam ? PARABRICKS_FQ2BAM.out.bam : PARABRICKS_FQ2BAM.out.cram
     fq2bam_out_idx = val_save_output_as_bam ? PARABRICKS_FQ2BAM.out.bai : PARABRICKS_FQ2BAM.out.crai
 
-    if (val_applybqsr) {
+    if (val_skip_applybqsr) {
+        mapped_out_aln = fq2bam_out_aln
+    }
+    else {
         aln_idx = fq2bam_out_aln.join(fq2bam_out_idx)
 
         PARABRICKS_APPLYBQSR(
@@ -79,9 +82,6 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
         )
 
         mapped_out_aln = val_save_output_as_bam ? PARABRICKS_APPLYBQSR.out.bam : PARABRICKS_APPLYBQSR.out.cram
-    }
-    else {
-        mapped_out_aln = fq2bam_out_aln
     }
 
     if (val_save_output_as_bam) {
