@@ -350,18 +350,15 @@ When `--parabricks_applybqsr` is set, fq2bam outputs BAM with an intermediate re
 
 [Parabricks ApplyBQSR](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_applybqsr.html) recalibrates the base qualities of the input reads on the GPU, based on the recalibration table produced by the `parabricks/fq2bam` module. It is enabled via `--parabricks_applybqsr` when `--aligner parabricks` is used.
 
-The recalibrated BAM files are converted to CRAM for downstream variant calling. When `--save_output_as_bam` is set in combination with `--parabricks_applybqsr`, the native recalibrated BAM (from applybqsr, before conversion back to CRAM) is delivered to the user.
-
 <details markdown="1">
 <summary>Output files for all samples</summary>
 
 **Output directory: `{outdir}/preprocessing/parabricks/<sample>/`**
 
-- `<sample>.bqsr.bam` and `<sample>.bqsr.bam.bai`
-  - Recalibrated BAM file and index (native output of applybqsr)
-- if `--save_output_as_bam`:
-  - `<sample>.bqsr.bam` and `<sample>.bqsr.bam.bai` are also published to `{outdir}/results/preprocessing/bam/<sample>/`
-  </details>
+- `<sample>.bqsr.{bam,cram}` and `<sample>.bqsr.{bam.bai,cram.crai}`
+  - BAM or CRAM file and index
+
+</details>
 
 ### CSV files
 
