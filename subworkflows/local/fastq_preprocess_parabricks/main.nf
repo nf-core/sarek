@@ -109,7 +109,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
             [meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [data_type: 'bam', id: meta.sample], bam, bai]
         }
 
-        CHANNEL_ALIGN_CREATE_CSV(bam_variant_calling, val_outdir, val_save_output_as_bam)
+        CHANNEL_ALIGN_CREATE_CSV(bam_variant_calling, val_outdir, val_save_output_as_bam, true)
 
         // use created bam for downstream tools
         cram_variant_calling = bam_variant_calling
@@ -140,7 +140,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
         }
 
         if (val_save_mapped) {
-            CHANNEL_ALIGN_CREATE_CSV(cram_variant_calling, val_outdir, val_save_mapped)
+            CHANNEL_ALIGN_CREATE_CSV(cram_variant_calling, val_outdir, val_save_mapped, true)
         }
     }
 
