@@ -61,7 +61,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Microsatellite instability (MSI)](#microsatellite-instability-msi)
     - [MSIsensor2](#msisensor2)
     - [MSIsensorPro](#msisensorpro)
-- [Post variant calling](#post-variant-calling)
+- [Post Variant Calling](#post-variant-calling)
   - [Varlociraptor](#varlociraptor)
   - [Filtering](#filtering)
   - [Normalization](#normalization)
