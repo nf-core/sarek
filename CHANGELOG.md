@@ -42,6 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Removed
 
+- [#2181](https://github.com/nf-core/sarek/pull/2181) - Remove executor dependency from accelerator directive
+
 ## [3.10.0](https://github.com/nf-core/sarek/releases/tag/3.10.0) - Aktse
 
 Aktse is a mountain hut on the northern shore of Laitaure, on the Kungsleden trail at the edge of Sarek National Park.
