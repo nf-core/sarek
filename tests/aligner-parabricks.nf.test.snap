@@ -1,13 +1,10 @@
 {
     "-profile test --aligner parabricks --wes --save_output_as_bam": {
         "content": [
-            15,
+            16,
             {
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
-                },
-                "CRAM_TO_BAM": {
-                    "samtools": "1.24"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -18,15 +15,18 @@
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.2.0"
                 },
-                "INDEX_CRAM": {
+                "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
                 },
-                "MERGE_CRAM": {
+                "MERGE_BAM": {
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
+                },
+                "PARABRICKS_APPLYBQSR": {
+                    "parabricks": "4.7.1-1"
                 },
                 "PARABRICKS_FQ2BAM": {
                     "parabricks": "4.7.1-1"
@@ -143,8 +143,8 @@
                 "preprocessing/parabricks/test",
                 "preprocessing/parabricks/test-test_L1",
                 "preprocessing/parabricks/test-test_L2",
-                "preprocessing/parabricks/test/test.bam",
-                "preprocessing/parabricks/test/test.bam.bai",
+                "preprocessing/parabricks/test/test.sorted.bam",
+                "preprocessing/parabricks/test/test.sorted.bam.bai",
                 "reference",
                 "reference/bwa",
                 "reference/bwa/genome.fasta.amb",
@@ -198,8 +198,8 @@
                 "mosdepth_perchrom.txt:md5,f3a4ba86603c5121a26f54616a39c1ba",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
-                "samtools-stats-dp.txt:md5,9dbdd996ce0e7edb5b7861eb13eba285",
-                "samtools_alignment_plot.txt:md5,d2729501a111a33268c008ef6f18c7cd",
+                "samtools-stats-dp.txt:md5,742682801a53ca9c2e443e9bd14094ec",
+                "samtools_alignment_plot.txt:md5,6e9269c38db487c567c247050f006e34",
                 "samtools_insert_size.txt:md5,1553c58beee5f377cddbcbe8c527720a",
                 "genome.fasta.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
                 "genome.fasta.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
@@ -219,7 +219,7 @@
                 "test.recal.regions.bed.gz.csi:md5,6f7ee623716b66db7f62de827cec1324"
             ],
             [
-                "test.bam:md5,9da56e1adc10f4fa65303441b8a5a328"
+                "test.sorted.bam:md5,70c1f341cfcfc3814e3475943915775c"
             ],
             "No CRAM files",
             "No VCF files",
@@ -227,15 +227,15 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-28T11:02:40.730776056",
         "meta": {
-            "nf-test": "0.9.5",
+            "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-08-21T12:01:28.301281379"
     },
     "-profile test --aligner parabricks --wes": {
         "content": [
-            14,
+            16,
             {
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -258,6 +258,9 @@
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
+                },
+                "PARABRICKS_APPLYBQSR": {
+                    "parabricks": "4.7.1-1"
                 },
                 "PARABRICKS_FQ2BAM": {
                     "parabricks": "4.7.1-1"
@@ -373,11 +376,7 @@
                 "preprocessing/parabricks",
                 "preprocessing/parabricks/test",
                 "preprocessing/parabricks/test-test_L1",
-                "preprocessing/parabricks/test-test_L1/test-test_L1.cram",
-                "preprocessing/parabricks/test-test_L1/test-test_L1.cram.crai",
                 "preprocessing/parabricks/test-test_L2",
-                "preprocessing/parabricks/test-test_L2/test-test_L2.cram",
-                "preprocessing/parabricks/test-test_L2/test-test_L2.cram.crai",
                 "preprocessing/parabricks/test/test.cram",
                 "preprocessing/parabricks/test/test.cram.crai",
                 "reference",
@@ -433,8 +432,8 @@
                 "mosdepth_perchrom.txt:md5,f3a4ba86603c5121a26f54616a39c1ba",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
-                "samtools-stats-dp.txt:md5,9dbdd996ce0e7edb5b7861eb13eba285",
-                "samtools_alignment_plot.txt:md5,d2729501a111a33268c008ef6f18c7cd",
+                "samtools-stats-dp.txt:md5,742682801a53ca9c2e443e9bd14094ec",
+                "samtools_alignment_plot.txt:md5,6e9269c38db487c567c247050f006e34",
                 "samtools_insert_size.txt:md5,1553c58beee5f377cddbcbe8c527720a",
                 "genome.fasta.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
                 "genome.fasta.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
@@ -455,24 +454,22 @@
             ],
             "No BAM files",
             [
-                "test-test_L1.cram:md5,4673edaace5f12d28b6904c40640d7bd",
-                "test-test_L2.cram:md5,4673edaace5f12d28b6904c40640d7bd",
-                "test.cram:md5,9da56e1adc10f4fa65303441b8a5a328"
+                "test.cram:md5,70c1f341cfcfc3814e3475943915775c"
             ],
             "No VCF files",
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-28T11:04:20.26832985",
         "meta": {
-            "nf-test": "0.9.5",
+            "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-08-21T15:11:27.433041433"
     },
     "-profile test --aligner parabricks --tools mutect2 --wes --input fastq_pair.csv": {
         "content": [
-            26,
+            28,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -513,6 +510,9 @@
                 },
                 "MUTECT2_PAIRED": {
                     "gatk4": "4.6.2.0"
+                },
+                "PARABRICKS_APPLYBQSR": {
+                    "parabricks": "4.7.1-1"
                 },
                 "PARABRICKS_FQ2BAM": {
                     "parabricks": "4.7.1-1"
@@ -650,11 +650,11 @@
                 "preprocessing",
                 "preprocessing/parabricks",
                 "preprocessing/parabricks/test",
-                "preprocessing/parabricks/test/test.cram",
-                "preprocessing/parabricks/test/test.cram.crai",
+                "preprocessing/parabricks/test/test.bqsr.cram",
+                "preprocessing/parabricks/test/test.bqsr.cram.crai",
                 "preprocessing/parabricks/test2",
-                "preprocessing/parabricks/test2/test2.cram",
-                "preprocessing/parabricks/test2/test2.cram.crai",
+                "preprocessing/parabricks/test2/test2.bqsr.cram",
+                "preprocessing/parabricks/test2/test2.bqsr.cram.crai",
                 "reference",
                 "reference/bwa",
                 "reference/bwa/genome.fasta.amb",
@@ -744,8 +744,8 @@
                 "mosdepth_perchrom.txt:md5,8973b4a63f05d9443da33ccd1fd48cb1",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "multiqc_fastqc.txt:md5,2fd25e8c81f962594b801d5a9df3cd87",
-                "samtools-stats-dp.txt:md5,af97f6426bc8c6b9d812cc97e880743f",
-                "samtools_alignment_plot.txt:md5,94d6398ce03eefb42aa6f106c8d36e89",
+                "samtools-stats-dp.txt:md5,ff7a54c5b8a7454367d2779df34182eb",
+                "samtools_alignment_plot.txt:md5,4ade0dce17dde30f39742bb969efcf68",
                 "samtools_insert_size.txt:md5,3cf6a33d6676f31b5433f2cc4bf887e0",
                 "genome.fasta.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
                 "genome.fasta.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
@@ -778,12 +778,12 @@
                 "test2_vs_test.mutect2.contamination.table:md5,9c5a4666d682b84be6bf5ecf4305b15c",
                 "test2_vs_test.mutect2.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
                 "test2_vs_test.mutect2.segmentation.table:md5,abed02f7a49bca992eb4e6f0006df85b",
-                "test2_vs_test.mutect2.vcf.gz.stats:md5,cfec9ffc08ea78f14706db59e38dc85b"
+                "test2_vs_test.mutect2.vcf.gz.stats:md5,6a35048bda5775c5f4f74e81122ead60"
             ],
             "No BAM files",
             [
-                "test.cram:md5,4673edaace5f12d28b6904c40640d7bd",
-                "test2.cram:md5,bde66820387c9edcff38a2dfbcb8339e"
+                "test.bqsr.cram:md5,739c5f2c5f6f68dd7642e7f0f522d241",
+                "test2.bqsr.cram:md5,c1eec6185153a1044bd296a1db065f7d"
             ],
             [
                 "test2_vs_test.mutect2.filtered.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -795,15 +795,15 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-07-28T11:09:24.032044733",
         "meta": {
-            "nf-test": "0.9.5",
+            "nf-test": "0.9.3",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-08-21T12:03:39.299719548"
     },
     "-profile test --aligner parabricks --wes --intervals": {
         "content": [
-            13,
+            15,
             {
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -823,6 +823,9 @@
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
+                },
+                "PARABRICKS_APPLYBQSR": {
+                    "parabricks": "4.7.1-1"
                 },
                 "PARABRICKS_FQ2BAM": {
                     "parabricks": "4.7.1-1"
@@ -938,11 +941,7 @@
                 "preprocessing/parabricks",
                 "preprocessing/parabricks/test",
                 "preprocessing/parabricks/test-test_L1",
-                "preprocessing/parabricks/test-test_L1/test-test_L1.cram",
-                "preprocessing/parabricks/test-test_L1/test-test_L1.cram.crai",
                 "preprocessing/parabricks/test-test_L2",
-                "preprocessing/parabricks/test-test_L2/test-test_L2.cram",
-                "preprocessing/parabricks/test-test_L2/test-test_L2.cram.crai",
                 "preprocessing/parabricks/test/test.cram",
                 "preprocessing/parabricks/test/test.cram.crai",
                 "reference",
@@ -997,9 +996,9 @@
                 "mosdepth_perchrom.txt:md5,63cfbfc1ea970a26a7f0470efd9ad692",
                 "multiqc_citations.txt:md5,6239b0f0a9736ccaf3baff3014dd585b",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
-                "samtools-stats-dp.txt:md5,9dbdd996ce0e7edb5b7861eb13eba285",
-                "samtools_alignment_plot.txt:md5,d2729501a111a33268c008ef6f18c7cd",
-                "samtools_insert_size.txt:md5,1553c58beee5f377cddbcbe8c527720a",
+                "samtools-stats-dp.txt:md5,c943582ca7d8319b2f99efb20594f02d",
+                "samtools_alignment_plot.txt:md5,f335f8e330caaed1d5c2717659498010",
+                "samtools_insert_size.txt:md5,c55044bb8fcfc29177a3735c54d07e14",
                 "genome.fasta.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
                 "genome.fasta.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
                 "genome.fasta.bwt:md5,815eded87e4cb6b0f1daab5c4d6e30af",
@@ -1008,18 +1007,185 @@
                 "chr22_2-15000.bed:md5,3cb9e9a26427faaa23b59b2ebcf55f4d",
                 "chr22_2-15000.bed.gz:md5,3cb9e9a26427faaa23b59b2ebcf55f4d",
                 "genome.multi_intervals.bed.gz:md5,3cb9e9a26427faaa23b59b2ebcf55f4d",
-                "test.recal.mosdepth.global.dist.txt:md5,45016e5a0b9afb065c56833ba66f3049",
+                "test.recal.mosdepth.global.dist.txt:md5,f520c0b61e191a81bc6fa186412a2b80",
                 "test.recal.mosdepth.region.dist.txt:md5,a9e42dc9d21073821858d40ffce5bcde",
-                "test.recal.mosdepth.summary.txt:md5,ac93e4aa5a5229d001404513816cc219",
-                "test.recal.per-base.bed.gz:md5,ab3fb06c65b28f774b22973085699d51",
-                "test.recal.per-base.bed.gz.csi:md5,2171094832c1eab19654be30cf0386d8",
+                "test.recal.mosdepth.summary.txt:md5,e52e51bf905aa93cee74c09de7d06ce2",
+                "test.recal.per-base.bed.gz:md5,8141c35f1a550003aaa91b35dc732a25",
+                "test.recal.per-base.bed.gz.csi:md5,8565fbb3a2121d95ad35b9208f38d0c9",
                 "test.recal.regions.bed.gz:md5,326c62bcdb340f213cc4514213516415",
                 "test.recal.regions.bed.gz.csi:md5,ae98c5e0c344c0961bc9273e26fcb803"
             ],
             "No BAM files",
             [
-                "test-test_L1.cram:md5,4673edaace5f12d28b6904c40640d7bd",
-                "test-test_L2.cram:md5,4673edaace5f12d28b6904c40640d7bd",
+                "test.cram:md5,8d6613a910d2f7b4c0f99992d11e9b6d"
+            ],
+            "No VCF files",
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.4"
+        },
+        "timestamp": "2026-08-21T12:05:21.770833378"
+    },
+    "-profile test --aligner parabricks --wes --skip_tools baserecalibrator": {
+        "content": [
+            12,
+            {
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.19-r1273"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "FASTQC": {
+                    "fastqc": "0.12.1"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.6.2.0"
+                },
+                "INDEX_CRAM": {
+                    "samtools": "1.24"
+                },
+                "MERGE_CRAM": {
+                    "samtools": "1.24"
+                },
+                "PARABRICKS_FQ2BAM": {
+                    "parabricks": "4.7.1-1"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                }
+            },
+            [
+                "csv",
+                "csv/mapped.csv",
+                "multiqc",
+                "multiqc/index.json",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/fastqc-status-check-heatmap.txt",
+                "multiqc/multiqc_data/fastqc_adapter_content_plot.txt",
+                "multiqc/multiqc_data/fastqc_per_base_n_content_plot.txt",
+                "multiqc/multiqc_data/fastqc_per_base_sequence_quality_plot.txt",
+                "multiqc/multiqc_data/fastqc_per_sequence_gc_content_plot_Counts.txt",
+                "multiqc/multiqc_data/fastqc_per_sequence_gc_content_plot_Percentages.txt",
+                "multiqc/multiqc_data/fastqc_per_sequence_quality_scores_plot.txt",
+                "multiqc/multiqc_data/fastqc_sequence_counts_plot.txt",
+                "multiqc/multiqc_data/fastqc_sequence_duplication_levels_plot.txt",
+                "multiqc/multiqc_data/fastqc_sequence_length_distribution_plot.txt",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_fastqc.txt",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/fastqc-status-check-heatmap.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_adapter_content_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_base_n_content_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_base_sequence_quality_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Counts.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_gc_content_plot_Percentages.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_per_sequence_quality_scores_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_counts_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_duplication_levels_plot.pdf",
+                "multiqc/multiqc_plots/pdf/fastqc_sequence_length_distribution_plot.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/fastqc-status-check-heatmap.png",
+                "multiqc/multiqc_plots/png/fastqc_adapter_content_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_per_base_n_content_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_per_base_sequence_quality_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Counts.png",
+                "multiqc/multiqc_plots/png/fastqc_per_sequence_gc_content_plot_Percentages.png",
+                "multiqc/multiqc_plots/png/fastqc_per_sequence_quality_scores_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-cnt.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_counts_plot-pct.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_duplication_levels_plot.png",
+                "multiqc/multiqc_plots/png/fastqc_sequence_length_distribution_plot.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/fastqc-status-check-heatmap.svg",
+                "multiqc/multiqc_plots/svg/fastqc_adapter_content_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_base_n_content_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_base_sequence_quality_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Counts.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_sequence_gc_content_plot_Percentages.svg",
+                "multiqc/multiqc_plots/svg/fastqc_per_sequence_quality_scores_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_counts_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_duplication_levels_plot.svg",
+                "multiqc/multiqc_plots/svg/fastqc_sequence_length_distribution_plot.svg",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/parabricks",
+                "preprocessing/parabricks/test",
+                "preprocessing/parabricks/test-test_L1",
+                "preprocessing/parabricks/test-test_L2",
+                "preprocessing/parabricks/test/test.cram",
+                "preprocessing/parabricks/test/test.cram.crai",
+                "reference",
+                "reference/bwa",
+                "reference/bwa/genome.fasta.amb",
+                "reference/bwa/genome.fasta.ann",
+                "reference/bwa/genome.fasta.bwt",
+                "reference/bwa/genome.fasta.pac",
+                "reference/bwa/genome.fasta.sa",
+                "reference/intervals",
+                "reference/intervals/chr22_1-40001.bed",
+                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/intervals/genome.bed",
+                "reference/intervals/genome.bed.gz",
+                "reports",
+                "reports/fastqc",
+                "reports/fastqc/test-test_L1",
+                "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.html",
+                "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.zip",
+                "reports/fastqc/test-test_L1/test-test_L1_2_fastqc.html",
+                "reports/fastqc/test-test_L1/test-test_L1_2_fastqc.zip",
+                "reports/fastqc/test-test_L2",
+                "reports/fastqc/test-test_L2/test-test_L2_1_fastqc.html",
+                "reports/fastqc/test-test_L2/test-test_L2_1_fastqc.zip",
+                "reports/fastqc/test-test_L2/test-test_L2_2_fastqc.html",
+                "reports/fastqc/test-test_L2/test-test_L2_2_fastqc.zip"
+            ],
+            [
+                "fastqc-status-check-heatmap.txt:md5,a020b9689ddeb4abec16b4854fe452f1",
+                "fastqc_adapter_content_plot.txt:md5,2e1b72be741319e7fadbbb39d7e5b37d",
+                "fastqc_per_base_n_content_plot.txt:md5,ad3b971a6bb4e8ba6c844c8a03584eb8",
+                "fastqc_per_base_sequence_quality_plot.txt:md5,1bc03889d243a944253ac637d81ae10c",
+                "fastqc_per_sequence_gc_content_plot_Counts.txt:md5,2c42d140ce06c08dad2b58f397c23239",
+                "fastqc_per_sequence_gc_content_plot_Percentages.txt:md5,59e22821d350bfb97c37ffd9088f5ad9",
+                "fastqc_per_sequence_quality_scores_plot.txt:md5,f33615cc98bb6225f39545a415fa7c0f",
+                "fastqc_sequence_counts_plot.txt:md5,7f0f19a58e8e54e792a751fd04a9ae13",
+                "fastqc_sequence_duplication_levels_plot.txt:md5,92b02e250ff78725deb9a10d510fcecc",
+                "fastqc_sequence_length_distribution_plot.txt:md5,fb04dce68ec566314125bc9438211b28",
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
+                "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
+                "genome.fasta.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
+                "genome.fasta.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
+                "genome.fasta.bwt:md5,815eded87e4cb6b0f1daab5c4d6e30af",
+                "genome.fasta.pac:md5,8569fbdb2c98c6fb16dfa73d8eacb070",
+                "genome.fasta.sa:md5,e7cff62b919448a3a3d0fe4aaf427594",
+                "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
+                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
+            ],
+            "No BAM files",
+            [
                 "test.cram:md5,9da56e1adc10f4fa65303441b8a5a328"
             ],
             "No VCF files",
@@ -1027,9 +1193,8 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-28T11:06:33.397663055",
         "meta": {
-            "nf-test": "0.9.5",
+            "nf-test": "0.9.3",
             "nextflow": "25.10.4"
         }
     },
