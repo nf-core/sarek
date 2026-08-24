@@ -7,6 +7,7 @@ workflow CHANNEL_ALIGN_CREATE_CSV {
         bam_indexed             // channel: [mandatory] meta, bam, bai
         outdir                  //
         save_output_as_bam      //
+        parabricks
 
     main:
         // Creating csv files to restart from this step
@@ -15,8 +16,8 @@ workflow CHANNEL_ALIGN_CREATE_CSV {
             def sample = meta.sample
             def sex = meta.sex
             def status = meta.status
-            def bam_file = "${outdir}/preprocessing/mapped/${sample}/${bam.name}"
-            def bai_file = "${outdir}/preprocessing/mapped/${sample}/${bai.name}"
+            def bam_file = parabricks ? "${outdir}/preprocessing/parabricks/${sample}/${bam.name}" : "${outdir}/preprocessing/mapped/${sample}/${bam.name}"
+            def bai_file = parabricks ? "${outdir}/preprocessing/parabricks/${sample}/${bai.name}" : "${outdir}/preprocessing/mapped/${sample}/${bai.name}"
 
             def type = save_output_as_bam ? "bam" : "cram"
             def type_index = save_output_as_bam ? "bai" : "crai"
