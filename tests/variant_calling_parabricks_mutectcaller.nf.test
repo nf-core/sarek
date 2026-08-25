@@ -7,23 +7,17 @@ nextflow_pipeline {
     script "../main.nf"
     profile "test,gpu"
 
+    // The "from cram input" scenarios below intentionally have no real (non-stub) variant.
+    // recalibrated_somatic.csv points at generic, shared test-datasets CRAM fixtures whose
+    // @RG SM: tags are hardcoded to "normal"/"tumour" and don't follow sarek's
+    // ${meta.patient}_${meta.sample} naming convention. Parabricks mutectcaller requires
+    // --tumor-name/--normal-name to exactly match the CRAM's SM: tag, so a real run against
+    // these fixtures always fails with "Invalid tumor/normal sample name" regardless of how
+    // ext.args builds the name. Real (non-stub) GPU coverage instead comes from the
+    // fastq_pair.csv-based scenarios below, where sarek's own alignment step writes the RG SM
+    // tag itself and it naturally matches. sentieon_tnscope (conf/modules/sentieon_tnscope.config),
+    // which has the same exact-match requirement, follows the same pattern.
     def test_scenario = [
-        [
-            name: "-profile test --step variant_calling --tools parabricks_mutectcaller from cram input",
-            params: [
-                genome: null,
-                igenomes_ignore: true,
-                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
-                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
-                step: "variant_calling",
-                tools: 'parabricks_mutectcaller',
-                wes: true
-            ],
-            gpu: true,
-            no_conda: true
-        ],
         [
             name: "-profile test --step variant_calling --tools parabricks_mutectcaller from cram input -stub",
             params: [
@@ -40,22 +34,6 @@ nextflow_pipeline {
             gpu: true,
             no_conda: true,
             stub: true
-        ],
-        [
-            name: "-profile test --step variant_calling --tools parabricks_mutectcaller --no_intervals from cram input",
-            params: [
-                genome: null,
-                igenomes_ignore: true,
-                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
-                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-                no_intervals: true,
-                step: "variant_calling",
-                tools: 'parabricks_mutectcaller',
-                wes: true
-            ],
-            gpu: true,
-            no_conda: true
         ],
         [
             name: "-profile test --step variant_calling --tools parabricks_mutectcaller --no_intervals from cram input -stub",
@@ -165,24 +143,6 @@ nextflow_pipeline {
             gpu: true,
             no_conda: true,
             stub: true
-        ],
-        [
-            name: "-profile test --step variant_calling --tools parabricks_mutectcaller from cram input with pon",
-            params: [
-                genome: null,
-                igenomes_ignore: true,
-                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
-                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
-                pon: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz',
-                pon_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz.tbi',
-                step: "variant_calling",
-                tools: 'parabricks_mutectcaller',
-                wes: true
-            ],
-            gpu: true,
-            no_conda: true
         ],
         [
             name: "-profile test --step variant_calling --tools parabricks_mutectcaller from cram input with pon -stub",
