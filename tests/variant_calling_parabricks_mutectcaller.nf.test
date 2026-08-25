@@ -168,6 +168,27 @@ nextflow_pipeline {
             gpu: true,
             no_conda: true,
             stub: true
+        ],
+        [
+            name: "-profile test --input fastq_tumor_only.csv --tools parabricks_mutectcaller",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_tumor_only.csv",
+                tools: 'parabricks_mutectcaller',
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true
+        ],
+        [
+            name: "-profile test --input fastq_tumor_only.csv --tools parabricks_mutectcaller -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_tumor_only.csv",
+                tools: 'parabricks_mutectcaller',
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true,
+            stub: true
         ]
     ]
 
