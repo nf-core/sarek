@@ -21,11 +21,7 @@ keywords:
 components:
   - parabricks/mutectcaller
   - gatk4/mergevcfs
-  - gatk4/mergemutectstats
-  - gatk4/getpileupsummaries
-  - gatk4/gatherpileupsummaries
-  - gatk4/calculatecontamination
-  - gatk4/filtermutectcalls
+
 input:
   - input:
       type: list
