@@ -22,11 +22,13 @@ workflow BAM_MARKDUPLICATES {
     // module emits .bai inline; CRAM mode emits .crai via samtools post-conversion.
     GATK4_MARKDUPLICATES(bam, fasta.map{ _meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] })
 
-    // Unified alignment output — BAM or CRAM depending on save_output_as_bam
-    alignment = GATK4_MARKDUPLICATES.out.bam
-        .join(GATK4_MARKDUPLICATES.out.bai, failOnDuplicate: true, failOnMismatch: true)
-        .mix(GATK4_MARKDUPLICATES.out.cram
-            .join(GATK4_MARKDUPLICATES.out.crai, failOnDuplicate: true, failOnMismatch: true))
+    // Unified alignment output — BAM or CRAM depending on save_output_as_bam.
+    // Select explicitly rather than mixing both optional channels together: the module's stub
+    // block touches both bam and cram outputs unconditionally, so relying on "only one is ever
+    // populated" doubles every downstream emission under -stub.
+    alignment = params.save_output_as_bam
+        ? GATK4_MARKDUPLICATES.out.bam.join(GATK4_MARKDUPLICATES.out.bai, failOnDuplicate: true, failOnMismatch: true)
+        : GATK4_MARKDUPLICATES.out.cram.join(GATK4_MARKDUPLICATES.out.crai, failOnDuplicate: true, failOnMismatch: true)
 
     // QC on alignment
     CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, fasta_fai, intervals_bed_combined)
