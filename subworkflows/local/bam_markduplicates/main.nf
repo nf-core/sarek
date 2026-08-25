@@ -13,6 +13,7 @@ workflow BAM_MARKDUPLICATES {
     fasta                  // channel: [mandatory] [ fasta ]
     fasta_fai              // channel: [mandatory] [ fasta_fai ]
     intervals_bed_combined // channel: [optional]  [ intervals_bed ]
+    save_output_as_bam     // boolean: [mandatory] true = emit bam, false = emit cram
 
     main:
     reports  = channel.empty()
@@ -26,7 +27,7 @@ workflow BAM_MARKDUPLICATES {
     // Select explicitly rather than mixing both optional channels together: the module's stub
     // block touches both bam and cram outputs unconditionally, so relying on "only one is ever
     // populated" doubles every downstream emission under -stub.
-    alignment = params.save_output_as_bam
+    alignment = save_output_as_bam
         ? GATK4_MARKDUPLICATES.out.bam.join(GATK4_MARKDUPLICATES.out.bai, failOnDuplicate: true, failOnMismatch: true)
         : GATK4_MARKDUPLICATES.out.cram.join(GATK4_MARKDUPLICATES.out.crai, failOnDuplicate: true, failOnMismatch: true)
 
