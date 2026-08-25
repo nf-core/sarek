@@ -51,6 +51,9 @@ include { VCF_QC_BCFTOOLS_VCFTOOLS                          } from '../subworkfl
 // Annotation
 include { VCF_ANNOTATE_ALL                                  } from '../subworkflows/local/vcf_annotate_all'
 
+// Tumor mutational burden
+include { TUMOR_MUTATIONAL_BURDEN                           } from '../subworkflows/local/tumor_mutational_burden'
+
 // MULTIQC
 include { MULTIQC                                           } from '../modules/nf-core/multiqc'
 
@@ -565,6 +568,19 @@ workflow SAREK {
                 bcftools_header_lines,
                 snpsift_db,
             )
+
+            vcf_to_postprocess = VCF_ANNOTATE_ALL.out.vcf_ann
+        }
+
+        // Post-process
+        if (params.step == 'post-process') vcf_to_postprocess = ch_input_sample
+
+        if (params.tools.split(',').contains('tmb') ) {
+
+            TUMOR_MUTATIONAL_BURDEN(vcf_to_postprocess, fasta, intervals_bed_combined)
+
+            ch_versions = ch_versions.mix(TUMOR_MUTATIONAL_BURDEN.out.versions)
+
         }
     }
 
