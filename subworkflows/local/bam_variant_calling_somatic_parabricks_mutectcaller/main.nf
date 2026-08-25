@@ -39,7 +39,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER {
         panel_of_normals,
         panel_of_normals_tbi,
     )
-    // PARABRICKS_MUTECTCALLER uses topic: versions — no out.versions to mix
+
 
     TABIX_BGZIPTABIX(PARABRICKS_MUTECTCALLER.out.vcf.map { meta, vcf -> [ meta, vcf, [], [] ] }, 'compress', true, 'vcf')
 
