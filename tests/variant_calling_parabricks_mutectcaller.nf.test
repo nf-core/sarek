@@ -9,7 +9,23 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --step variant_calling --tools parabricks_mutectcaller somatic from cram input -stub",
+            name: "-profile test --step variant_calling --tools parabricks_mutectcaller from cram input",
+            params: [
+                genome: null,
+                igenomes_ignore: true,
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                step: "variant_calling",
+                tools: 'parabricks_mutectcaller',
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true
+        ],
+        [
+            name: "-profile test --step variant_calling --tools parabricks_mutectcaller from cram input -stub",
             params: [
                 genome: null,
                 igenomes_ignore: true,
@@ -26,7 +42,23 @@ nextflow_pipeline {
             stub: true
         ],
         [
-            name: "-profile test --step variant_calling --tools parabricks_mutectcaller somatic from cram input --no_intervals -stub",
+            name: "-profile test --step variant_calling --tools parabricks_mutectcaller --no_intervals from cram input",
+            params: [
+                genome: null,
+                igenomes_ignore: true,
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
+                no_intervals: true,
+                step: "variant_calling",
+                tools: 'parabricks_mutectcaller',
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true
+        ],
+        [
+            name: "-profile test --step variant_calling --tools parabricks_mutectcaller --no_intervals from cram input -stub",
             params: [
                 genome: null,
                 igenomes_ignore: true,
@@ -43,7 +75,18 @@ nextflow_pipeline {
             stub: true
         ],
         [
-            name: "-profile test --aligner parabricks --tools parabricks_mutectcaller somatic -stub",
+            name: "-profile test --aligner parabricks --tools parabricks_mutectcaller",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                aligner: 'parabricks',
+                tools: 'parabricks_mutectcaller',
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true
+        ],
+        [
+            name: "-profile test --aligner parabricks --tools parabricks_mutectcaller -stub",
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 aligner: 'parabricks',
@@ -55,43 +98,7 @@ nextflow_pipeline {
             stub: true
         ],
         [
-            name: "-profile test --aligner parabricks --tools parabricks_mutectcaller somatic --no_intervals -stub",
-            params: [
-                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
-                aligner: 'parabricks',
-                tools: 'parabricks_mutectcaller',
-                no_intervals: true,
-                wes: true
-            ],
-            gpu: true,
-            no_conda: true,
-            stub: true
-        ],
-        [
-            name: "-profile test --tools parabricks_mutectcaller somatic -stub",
-            params: [
-                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
-                tools: 'parabricks_mutectcaller',
-                wes: true
-            ],
-            gpu: true,
-            no_conda: true,
-            stub: true
-        ],
-        [
-            name: "-profile test --tools parabricks_mutectcaller somatic --no_intervals -stub",
-            params: [
-                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
-                tools: 'parabricks_mutectcaller',
-                no_intervals: true,
-                wes: true
-            ],
-            gpu: true,
-            no_conda: true,
-            stub: true
-        ],
-        [
-            name: "-profile test --aligner parabricks --tools parabricks_mutectcaller somatic --no_intervals",
+            name: "-profile test --aligner parabricks --tools parabricks_mutectcaller --no_intervals",
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 aligner: 'parabricks',
@@ -103,7 +110,20 @@ nextflow_pipeline {
             no_conda: true
         ],
         [
-            name: "-profile test --tools parabricks_mutectcaller somatic",
+            name: "-profile test --aligner parabricks --tools parabricks_mutectcaller --no_intervals -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                aligner: 'parabricks',
+                tools: 'parabricks_mutectcaller',
+                no_intervals: true,
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true,
+            stub: true
+        ],
+        [
+            name: "-profile test --tools parabricks_mutectcaller",
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 tools: 'parabricks_mutectcaller',
@@ -111,6 +131,77 @@ nextflow_pipeline {
             ],
             gpu: true,
             no_conda: true
+        ],
+        [
+            name: "-profile test --tools parabricks_mutectcaller -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                tools: 'parabricks_mutectcaller',
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true,
+            stub: true
+        ],
+        [
+            name: "-profile test --tools parabricks_mutectcaller --no_intervals",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                tools: 'parabricks_mutectcaller',
+                no_intervals: true,
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true
+        ],
+        [
+            name: "-profile test --tools parabricks_mutectcaller --no_intervals -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                tools: 'parabricks_mutectcaller',
+                no_intervals: true,
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true,
+            stub: true
+        ],
+        [
+            name: "-profile test --step variant_calling --tools parabricks_mutectcaller from cram input with pon",
+            params: [
+                genome: null,
+                igenomes_ignore: true,
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                pon: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz',
+                pon_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz.tbi',
+                step: "variant_calling",
+                tools: 'parabricks_mutectcaller',
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true
+        ],
+        [
+            name: "-profile test --step variant_calling --tools parabricks_mutectcaller from cram input with pon -stub",
+            params: [
+                genome: null,
+                igenomes_ignore: true,
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                pon: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz',
+                pon_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz.tbi',
+                step: "variant_calling",
+                tools: 'parabricks_mutectcaller',
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true,
+            stub: true
         ]
     ]
 
