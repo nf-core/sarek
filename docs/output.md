@@ -30,6 +30,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [GATK BaseRecalibrator (Spark)](#gatk-baserecalibrator-spark)
     - [GATK ApplyBQSR (Spark)](#gatk-applybqsr-spark)
   - [Parabricks FQ2BAM](#parabricks-fq2bam)
+    - [Parabricks ApplyBQSR](#parabricks-applybqsr)
   - [CSV files](#csv-files)
 - [Variant Calling](#variant-calling)
   - [SNVs and small indels](#snvs-and-small-indels)
@@ -60,7 +61,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Microsatellite instability (MSI)](#microsatellite-instability-msi)
     - [MSIsensor2](#msisensor2)
     - [MSIsensorPro](#msisensorpro)
-- [Post variant calling](#post-variant-calling)
+- [Post Variant Calling](#post-variant-calling)
   - [Varlociraptor](#varlociraptor)
   - [Filtering](#filtering)
   - [Normalization](#normalization)
@@ -331,9 +332,9 @@ The resulting recalibrated CRAM files are delivered to the user. Recalibrated CR
 > [!NOTE]
 > This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
 
-[Parabricks FQ2BAM](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html) runs as alternative to GATK preprocessing, enables by `--aligner parabricks --profile <docker/singularity>,gpu`.
+[Parabricks FQ2BAM](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html) runs as alternative to GATK preprocessing, enabled by `--aligner parabricks --profile <docker/singularity>,gpu`. By default fq2bam performs alignment, coordinate sorting, duplicate marking and base quality score calculation (BQSR) in one step, emitting a CRAM.
 
-The resulting recalibrated BAM (if `--save_output_as_bam`) or CRAM files are delivered to the user (if `--save_reference`).
+Per default fq2bam outputs BAM with an intermediate recalibration table, then [Parabricks ApplyBQSR](#parabricks-applybqsr) recalibrates the base qualities on the GPU, and the recalibrated BAM / CRAM is used for downstream variant calling. The known variant sites (`--dbsnp`, `--known_indels`) used to build the recalibration table are provided by the iGenomes reference configuration or can be set via command-line arguments.
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
@@ -342,7 +343,22 @@ The resulting recalibrated BAM (if `--save_output_as_bam`) or CRAM files are del
 
 - `<sample>.{bam,cram}` and `<sample>.{bam.bai,cram.crai}`
   - BAM or CRAM file and index
-  </details>
+
+</details>
+
+#### Parabricks ApplyBQSR
+
+Unless Unless `baserecalibrator` is listed under `--skip_tools` in the nextflow command, [Parabricks ApplyBQSR](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_applybqsr.html) recalibrates the base qualities of the input reads on the GPU, based on the recalibration table produced by the `parabricks/fq2bam` module.
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+**Output directory: `{outdir}/preprocessing/parabricks/<sample>/`**
+
+- `<sample>.bqsr.{bam,cram}` and `<sample>.bqsr.{bam.bai,cram.crai}`
+  - BAM or CRAM file and index
+
+</details>
 
 ### CSV files
 
