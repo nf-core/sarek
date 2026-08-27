@@ -415,7 +415,7 @@
                         "branch": "master",
                         "git_sha": "3e0ec6464725c64d81abe928e15a6750d5fdd272",
                         "installed_by": ["modules"]
-                    }
+                    },
                     "parabricks/applybqsr": {
                         "branch": "master",
                         "git_sha": "006a6142690e2f4a455f77a1bc7d71459d78deb5",
