@@ -7,11 +7,18 @@ process GATK4SPARK_APPLYBQSR {
         ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/49/498aea9c9bcaf736b9fb2a01366c1b7b38ccc0d38143178afc325d6a93241447/data'
         : 'community.wave.seqera.io/library/gatk4-spark:4.6.2.0--8b5cd67ee60a714e'}"
 
+    // Spark's native UnixLoginModule fails to resolve a username for the container's UID
+    // (LoginException "invalid null input" for name), because the container's own /etc/passwd
+    // has no entry for the host UID that docker.runOptions maps it to. Bind-mounting the
+    // host's /etc/passwd/group (which do have that entry) fixes the native lookup.
+    containerOptions { workflow.containerEngine in ['docker', 'podman'] ? '-v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro' : '' }
+
     input:
     tuple val(meta), path(input), path(input_index), path(bqsr_table), path(intervals)
     path fasta
     path fai
     path dict
+    val output_suffix
 
     output:
     tuple val(meta), path("${prefix}.bam"), emit: bam, optional: true
@@ -26,7 +33,7 @@ process GATK4SPARK_APPLYBQSR {
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
     // suffix can only be bam or cram, cram being the sensible default
-    def suffix = task.ext.suffix && task.ext.suffix == "bam" ? "bam" : "cram"
+    def suffix = output_suffix == "bam" ? "bam" : "cram"
     def interval_command = intervals ? "--intervals ${intervals}" : ""
 
     def avail_mem = 3072
@@ -51,7 +58,7 @@ process GATK4SPARK_APPLYBQSR {
 
     stub:
     prefix = task.ext.prefix ?: "${meta.id}"
-    def suffix = task.ext.suffix ?: "cram"
+    def suffix = output_suffix == "bam" ? "bam" : "cram"
     """
     touch ${prefix}.${suffix}
     if [[ ${suffix} == bam ]]; then
