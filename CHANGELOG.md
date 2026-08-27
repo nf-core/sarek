@@ -130,6 +130,7 @@ Aktse is a mountain hut on the northern shore of Laitaure, on the Kungsleden tra
 
 #### Added
 
+- [#2177](https://github.com/nf-core/sarek/pull/2177) - Add Parabricks DeepVariant (`--tools parabricks_deepvariant`) as GPU-accelerated germline variant caller
 - [#2225](https://github.com/nf-core/sarek/pull/2225) - Add contributor ORCIDs to `nextflow.config`
 - [#2228](https://github.com/nf-core/sarek/pull/2228) - Add `AGENTS.md` file with nf-core agent instructions
 
