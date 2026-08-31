@@ -38,9 +38,9 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER {
     gvcf_tbi_joined = TABIX_BGZIPTABIX_GVCF.out.output.join(TABIX_BGZIPTABIX_GVCF.out.index)
 
     vcf      = vcf_tbi_joined.map  { meta, vcf_,  _tbi -> [ meta, vcf_  ] }
-    tbi      = vcf_tbi_joined.map  { meta, _vcf,  tbi  -> [ meta, tbi   ] }
+    tbi      = vcf_tbi_joined.map  { meta, _vcf,  tbi_ -> [ meta, tbi_  ] }
     gvcf     = gvcf_tbi_joined.map { meta, gvcf_, _tbi -> [ meta, gvcf_ ] }
-    gvcf_tbi = gvcf_tbi_joined.map { meta, _gvcf, tbi  -> [ meta, tbi   ] }
+    gvcf_tbi = gvcf_tbi_joined.map { meta, _gvcf, gvcf_tbi_ -> [ meta, gvcf_tbi_ ] }
 
     emit:
     vcf       // channel: [ val(meta), vcf.gz ]
