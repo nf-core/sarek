@@ -220,7 +220,7 @@ To use NVIDIA Clara Parabricks' GPU-accelerated HaplotypeCaller for germline var
 
 Parabricks HaplotypeCaller takes a CRAM file as input and outputs a single VCF per sample (no scatter/gather over intervals). Intervals can be provided via `--intervals` to restrict calling to specific regions.
 
-This caller supports gVCF generation but cannot perform joint calling on its own. Combine it with GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as follows: 
+This caller supports gVCF generation but cannot perform joint calling on its own. Combine it with GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as follows:
 
 ```
 nextflow run nf-core/sarek \
