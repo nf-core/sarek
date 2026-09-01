@@ -1,0 +1,90 @@
+name: gatk4_calculatecontamination
+description: |
+  Calculates the fraction of reads from cross-sample contamination based on summary tables from getpileupsummaries. Output to be used with filtermutectcalls.
+keywords:
+  - gatk4
+  - calculatecontamination
+  - cross-samplecontamination
+  - getpileupsummaries
+  - filtermutectcalls
+tools:
+  - gatk4:
+      description: |
+        Developed in the Data Sciences Platform at the Broad Institute, the toolkit offers a wide variety of tools
+        with a primary focus on variant discovery and genotyping. Its powerful processing engine
+        and high-performance computing features make it capable of taking on projects of any size.
+      homepage: https://gatk.broadinstitute.org/hc/en-us
+      documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
+      doi: 10.1158/1538-7445.AM2017-3590
+      licence: ["Apache-2.0"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test' ]
+    - pileup:
+        type: file
+        description: File containing the pileups summary table of a tumor sample to
+          be used to calculate contamination.
+        pattern: "*.pileups.table"
+        ontologies: []
+    - matched:
+        type: file
+        description: File containing the pileups summary table of a normal sample that
+          matches with the tumor sample specified in pileup argument. This is an optional
+          input.
+        pattern: "*.pileups.table"
+        ontologies: []
+output:
+  contamination:
+    - - meta:
+          type: file
+          description: File containing the contamination table.
+          pattern: "*.contamination.table"
+          ontologies: []
+      - "*.contamination.table":
+          type: file
+          description: File containing the contamination table.
+          pattern: "*.contamination.table"
+          ontologies: []
+  segmentation:
+    - - meta:
+          type: file
+          description: File containing the contamination table.
+          pattern: "*.contamination.table"
+          ontologies: []
+      - "*.segmentation.table":
+          type: file
+          description: output table containing segmentation of tumor minor allele fractions
+            (optional)
+          pattern: "*.segmentation.table"
+          ontologies: []
+  versions_gatk4:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gatk4:
+          type: string
+          description: The name of the tool
+      - gatk --version | sed -n '/GATK.*v/s/.*v//p':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gatk4:
+          type: string
+          description: The name of the tool
+      - gatk --version | sed -n '/GATK.*v/s/.*v//p':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@GCJMackenzie"
+  - "@maxulysse"
+maintainers:
+  - "@GCJMackenzie"
+  - "@maxulysse"

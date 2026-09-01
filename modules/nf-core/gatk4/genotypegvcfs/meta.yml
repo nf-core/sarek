@@ -1,0 +1,147 @@
+name: gatk4_genotypegvcfs
+description: |
+  Perform joint genotyping on one or more samples pre-called with HaplotypeCaller.
+keywords:
+  - gatk4
+  - genotype
+  - gvcf
+  - joint genotyping
+tools:
+  - gatk4:
+      description: Genome Analysis Toolkit (GATK4)
+      homepage: https://gatk.broadinstitute.org/hc/en-us
+      documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
+      tool_dev_url: https://github.com/broadinstitute/gatk
+      doi: "10.1158/1538-7445.AM2017-3590"
+      licence: ["BSD-3-clause"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input:
+        type: file
+        description: |
+          gVCF(.gz) file or a GenomicsDB
+        pattern: "*.{vcf,vcf.gz}"
+        ontologies: []
+    - gvcf_index:
+        type: file
+        description: |
+          index of gvcf file, or empty when providing GenomicsDB
+        pattern: "*.{idx,tbi}"
+        ontologies: []
+    - intervals:
+        type: file
+        description: Interval file with the genomic regions included in the library
+          (optional)
+        ontologies: []
+    - intervals_index:
+        type: file
+        description: Interval index file (optional)
+        ontologies: []
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing fasta information
+          e.g. [ id:'test' ]
+    - fasta:
+        type: file
+        description: Reference fasta file
+        pattern: "*.fasta"
+        ontologies: []
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing fai information
+          e.g. [ id:'test' ]
+    - fai:
+        type: file
+        description: Reference fasta index file
+        pattern: "*.fai"
+        ontologies: []
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing dict information
+          e.g. [ id:'test' ]
+    - dict:
+        type: file
+        description: Reference fasta sequence dict file
+        pattern: "*.dict"
+        ontologies: []
+  - - meta5:
+        type: map
+        description: |
+          Groovy Map containing dbsnp information
+          e.g. [ id:'test' ]
+    - dbsnp:
+        type: file
+        description: dbSNP VCF file
+        pattern: "*.vcf.gz"
+        ontologies:
+          - edam: http://edamontology.org/format_3989 # GZIP format
+  - - meta6:
+        type: map
+        description: |
+          Groovy Map containing dbsnp tbi information
+          e.g. [ id:'test' ]
+    - dbsnp_tbi:
+        type: file
+        description: dbSNP VCF index file
+        pattern: "*.tbi"
+        ontologies: []
+output:
+  vcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.vcf.gz":
+          type: file
+          description: Genotyped VCF file
+          pattern: "*.vcf.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  tbi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.tbi":
+          type: file
+          description: Tbi index for VCF file
+          pattern: "*.vcf.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  versions_gatk4:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gatk4:
+          type: string
+          description: The name of the tool
+      - gatk --version | sed -n '/GATK.*v/s/.*v//p':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gatk4:
+          type: string
+          description: The name of the tool
+      - gatk --version | sed -n '/GATK.*v/s/.*v//p':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@santiagorevale"
+  - "@maxulysse"
+maintainers:
+  - "@santiagorevale"
+  - "@maxulysse"

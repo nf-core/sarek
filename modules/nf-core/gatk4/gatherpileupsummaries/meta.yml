@@ -1,0 +1,69 @@
+name: gatk4_gatherpileupsummaries
+description: write your description here
+keywords:
+  - gatk4
+  - mpileup
+  - sort
+tools:
+  - gatk4:
+      description: Genome Analysis Toolkit (GATK4)
+      homepage: https://gatk.broadinstitute.org/hc/en-us
+      documentation: https://gatk.broadinstitute.org/hc/en-us
+      tool_dev_url: https://github.com/broadinstitute/gatk
+      doi: "10.1158/1538-7445.AM2017-3590"
+      licence: ["BSD-3-clause"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - pileup:
+        type: file
+        description: Pileup files from gatk4/getpileupsummaries
+        pattern: "*.pileups.table"
+        ontologies: []
+  - dict:
+      type: file
+      description: dictionary
+      ontologies: []
+output:
+  table:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.pileups.table":
+          type: file
+          description: pileup summaries table file
+          pattern: "*.pileups.table"
+          ontologies: []
+  versions_gatk4:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gatk4:
+          type: string
+          description: The name of the tool
+      - gatk --version | sed -n '/GATK.*v/s/.*v//p':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gatk4:
+          type: string
+          description: The name of the tool
+      - gatk --version | sed -n '/GATK.*v/s/.*v//p':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@FriederikeHanssen"
+  - "@maxulysse"
+maintainers:
+  - "@FriederikeHanssen"
+  - "@maxulysse"

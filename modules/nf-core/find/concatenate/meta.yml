@@ -1,0 +1,112 @@
+name: "find_concatenate"
+description: A module for concatenation of gzipped or uncompressed files getting around
+  UNIX terminal argument size
+keywords:
+  - concatenate
+  - gzip
+  - cat
+  - find
+  - pigz
+tools:
+  - find:
+      description: GNU find searches the directory tree rooted at each given starting-point
+        by evaluating the given expression
+      documentation: https://man7.org/linux/man-pages/man1/find.1.html
+      licence:
+        - "GPL-3.0-or-later"
+      identifier: ""
+  - pigz:
+      description: pigz, which stands for Parallel Implementation of GZip, is a fully
+        functional replacement for gzip that exploits multiple processors and multiple
+        cores to the hilt when compressing data.
+      documentation: https://zlib.net/pigz/pigz.pdf
+      licence:
+        - "other"
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test' ]
+    - files_in:
+        type: file
+        description: List of either compressed or uncompressed files
+        pattern: "*"
+        ontologies: []
+output:
+  file_out:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test' ]
+      - ${prefix}:
+          type: file
+          description: Concatenated file. Will be gzipped if ${prefix} ends with ".gz"
+            or inputs are gzipped, will be uncompressed otherwise.
+          pattern: "${file_out}"
+          ontologies: []
+  versions_find:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - find:
+          type: string
+          description: The name of the tool
+      - find --version | sed '1!d; s/.* //':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_pigz:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pigz:
+          type: string
+          description: The name of the tool
+      - pigz --version 2>&1 | sed 's/pigz //g':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_coreutils:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - coreutils:
+          type: string
+          description: The name of the tool
+      - cat --version | sed '1!d; s/.* //':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - find:
+          type: string
+          description: The name of the tool
+      - find --version | sed '1!d; s/.* //':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pigz:
+          type: string
+          description: The name of the tool
+      - pigz --version 2>&1 | sed 's/pigz //g':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - coreutils:
+          type: string
+          description: The name of the tool
+      - cat --version | sed '1!d; s/.* //':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@BioWilko"
+maintainers:
+  - "@BioWilko"

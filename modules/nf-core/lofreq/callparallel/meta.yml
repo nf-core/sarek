@@ -1,0 +1,110 @@
+name: lofreq_callparallel
+description: It predicts variants using multiple processors
+keywords:
+  - variant calling
+  - low frequency variant calling
+  - call
+  - variants
+tools:
+  - lofreq:
+      description: Lofreq is a fast and sensitive variant-caller for inferring SNVs
+        and indels from next-generation sequencing data. It's call-parallel programme
+        predicts variants using multiple processors
+      homepage: https://csb5.github.io/lofreq/
+      documentation: https://csb5.github.io/lofreq/
+      doi: "10.1093/nar/gks918"
+      licence: ["MIT"]
+      identifier: biotools:lofreq
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test' ]
+    - bam:
+        type: file
+        description: Tumor sample sorted BAM file
+        pattern: "*.{bam}"
+        ontologies: []
+    - bai:
+        type: file
+        description: BAM index file
+        pattern: "*.{bam.bai}"
+        ontologies: []
+    - intervals:
+        type: file
+        description: BED file containing target regions for variant calling
+        pattern: "*.{bed}"
+        ontologies: []
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information about the reference fasta
+          e.g. [ id:'reference' ]
+    - fasta:
+        type: file
+        description: Reference genome FASTA file
+        pattern: "*.{fasta}"
+        ontologies: []
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing sample information about the reference fasta fai
+          e.g. [ id:'reference' ]
+    - fai:
+        type: file
+        description: Reference genome FASTA index file
+        pattern: "*.{fai}"
+        ontologies: []
+output:
+  vcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.vcf.gz":
+          type: file
+          description: Predicted variants file
+          pattern: "*.{vcf}"
+          ontologies: []
+  tbi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.vcf.gz.tbi":
+          type: file
+          description: Index of vcf file
+          pattern: "*.{vcf.gz.tbi}"
+          ontologies: []
+  versions_lofreq:
+    - - ${task.process}:
+          type: string
+          description: Process which generated the version
+      - lofreq:
+          type: string
+          description: Tool name
+      - "lofreq version | sed -n '1s/^.* //p'":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: Process which generated the version
+      - lofreq:
+          type: string
+          description: Tool name
+      - "lofreq version | sed -n '1s/^.* //p'":
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@kaurravneet4123"
+  - "@bjohnnyd"
+maintainers:
+  - "@kaurravneet4123"
+  - "@bjohnnyd"
+  - "@nevinwu"
+  - "@AitorPeseta"
