@@ -54,10 +54,12 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
     main:
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    gvcf_sentieon_dnascope     = channel.empty()
-    gvcf_sentieon_haplotyper   = channel.empty()
-    gvcf_tbi_sentieon_dnascope = channel.empty()
-    gvcf_tbi_sentieon_haplotyper = channel.empty()
+    gvcf_parabricks_haplotypecaller     = channel.empty()
+    gvcf_sentieon_dnascope               = channel.empty()
+    gvcf_sentieon_haplotyper             = channel.empty()
+    gvcf_tbi_parabricks_haplotypecaller = channel.empty()
+    gvcf_tbi_sentieon_dnascope           = channel.empty()
+    gvcf_tbi_sentieon_haplotyper         = channel.empty()
 
     out_indexcov                       = channel.empty()
     vcf_deepvariant                    = channel.empty()
@@ -202,8 +204,10 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             intervals_bed_combined
         )
 
-        vcf_parabricks_haplotypecaller = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.vcf
-        tbi_parabricks_haplotypecaller = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.tbi
+        vcf_parabricks_haplotypecaller      = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.vcf
+        tbi_parabricks_haplotypecaller      = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.tbi
+        gvcf_parabricks_haplotypecaller     = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.gvcf
+        gvcf_tbi_parabricks_haplotypecaller = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.gvcf_tbi
     }
 
     // MANTA
@@ -400,8 +404,10 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     )
 
     emit:
+    gvcf_parabricks_haplotypecaller
     gvcf_sentieon_dnascope
     gvcf_sentieon_haplotyper
+    gvcf_tbi_parabricks_haplotypecaller
     gvcf_tbi_sentieon_dnascope
     gvcf_tbi_sentieon_haplotyper
     out_indexcov
