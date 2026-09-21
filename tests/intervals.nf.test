@@ -56,6 +56,17 @@ nextflow_pipeline {
             stub: true
         ],
         [
+            name: "-profile test --intervals genome.multi_intervals.bed.intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
+            params: [
+                intervals: modules_testdata_base_path + "/genomics/homo_sapiens/genome/genome.multi_intervals.bed.intervals",
+                nucleotides_per_second: 20,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null,
+                wes: true
+            ],
+            stub: true
+        ],
+        [
             name: "-profile test --intervals genome.multi_intervals.bed.list --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
             params: [
                 intervals: modules_testdata_base_path + "/genomics/homo_sapiens/genome/genome.multi_intervals.bed.list",

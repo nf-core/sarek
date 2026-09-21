@@ -56,7 +56,7 @@ workflow PREPARE_INTERVALS {
             if (intervals.endsWith(".interval_list")) {
                 GATK4_INTERVALLISTTOBED(intervals_combined)
                 intervals_combined = GATK4_INTERVALLISTTOBED.out.bed
-            } else if (intervals.endsWith(".list")) {
+            } else if (intervals.endsWith(".intervals") || intervals.endsWith(".list")) {
                 LIST_TO_BED(intervals_combined)
                 intervals_combined = LIST_TO_BED.out.bed
             }
