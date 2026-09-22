@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#2268](https://github.com/nf-core/sarek/pull/2268) - Add parabricks/applybqsr
+
 ### Changed
 
 ### Fixed
@@ -40,9 +42,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Fixed
 
+- [#2268](https://github.com/nf-core/sarek/pull/2268) - Resolve filetype output for parabricks/fq2bam
 - [#2277](https://github.com/nf-core/sarek/pull/2277) - fix(markduplicates): avoid duplicate alignment emission under -stub
 
 #### Removed
+
+- [#2181](https://github.com/nf-core/sarek/pull/2181) - Remove executor dependency from accelerator directive
 
 ## [3.10.0](https://github.com/nf-core/sarek/releases/tag/3.10.0) - Aktse
 

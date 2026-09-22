@@ -35,5 +35,5 @@ workflow CRAM_MERGE_INDEX_SAMTOOLS {
     cram_crai = cram_all.join(INDEX_CRAM.out.index, failOnDuplicate: true, failOnMismatch: true)
 
     emit:
-    cram_crai
+    cram_crai = cram_crai
 }
