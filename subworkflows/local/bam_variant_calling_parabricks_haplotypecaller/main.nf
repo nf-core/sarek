@@ -2,9 +2,9 @@
 // PARABRICKS HAPLOTYPECALLER germline variant calling (GPU-accelerated)
 //
 
-include { PARABRICKS_HAPLOTYPECALLER                  } from '../../../modules/nf-core/parabricks/haplotypecaller/main'
-include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX_VCF   } from '../../../modules/nf-core/htslib/bgziptabix/main'
-include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX_GVCF  } from '../../../modules/nf-core/htslib/bgziptabix/main'
+include { PARABRICKS_HAPLOTYPECALLER                  } from '../../../modules/nf-core/parabricks/haplotypecaller'
+include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX_VCF   } from '../../../modules/nf-core/htslib/bgziptabix'
+include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX_GVCF  } from '../../../modules/nf-core/htslib/bgziptabix'
 
 workflow BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER {
     take:
