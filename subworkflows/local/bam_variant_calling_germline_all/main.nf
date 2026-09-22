@@ -55,11 +55,11 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     main:
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     gvcf_parabricks_haplotypecaller     = channel.empty()
-    gvcf_sentieon_dnascope               = channel.empty()
-    gvcf_sentieon_haplotyper             = channel.empty()
+    gvcf_sentieon_dnascope              = channel.empty()
+    gvcf_sentieon_haplotyper            = channel.empty()
     gvcf_tbi_parabricks_haplotypecaller = channel.empty()
-    gvcf_tbi_sentieon_dnascope           = channel.empty()
-    gvcf_tbi_sentieon_haplotyper         = channel.empty()
+    gvcf_tbi_sentieon_dnascope          = channel.empty()
+    gvcf_tbi_sentieon_haplotyper        = channel.empty()
 
     out_indexcov                       = channel.empty()
     vcf_deepvariant                    = channel.empty()
