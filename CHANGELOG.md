@@ -11,10 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2177](https://github.com/nf-core/sarek/pull/2177) - Add Parabricks DeepVariant (`--tools parabricks_deepvariant`) as GPU-accelerated germline variant caller
 - [#2268](https://github.com/nf-core/sarek/pull/2268) - Add parabricks/applybqsr
+- [#2284](https://github.com/nf-core/sarek/pull/2284) - Add `manifest.diagram` to `nextflow.config`
 
 ### Changed
 
 ### Fixed
+
+- [#2275](https://github.com/nf-core/sarek/pull/2275) - Fix `--aligner parabricks` completing without producing any alignment when combined with `--no_intervals` ([#2274](https://github.com/nf-core/sarek/issues/2274)), or when no `--dbsnp`/`--known_indels` are provided: `collect()` dropped the empty intervals/known-sites lists instead of emitting them, leaving `PARABRICKS_FQ2BAM` with an input channel that never emitted
+- [#2282](https://github.com/nf-core/sarek/pull/2282) - Implement Parabricks Haplotypecaller gvcf mode for joint calling
 
 ### Removed
 

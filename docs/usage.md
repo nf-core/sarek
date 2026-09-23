@@ -224,10 +224,17 @@ Sarek supports the following GPU-accelerated variant callers from [NVIDIA Parabr
 | [Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) | `parabricks_haplotypecaller` | GATK HaplotypeCaller | `nextflow run nf-core/sarek --tools parabricks_haplotypecaller --profile <docker/singularity>,gpu` |
 
 There are a few differences to note about the Parabricks versions of these tools:
+- Parabricks variant callers support gVCF generation but cannot perform joint calling on their own. Combine them with other variant callers such as GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as follows:
+
+```
+nextflow run nf-core/sarek \
+  -profile docker,test,gpu \
+  --outdir results \
+  --tools parabricks_haplotypecaller,haplotypecaller \
+  --joint_germline
+```
 
 - Parabricks does not support the use of this pipeline with `--profile conda`.
-
-- Parabricks Haplotypecaller does not yet support joint germline variant calling, it only produces per-sample VCFs, and the wiring to combine per-sample gVCFs into a joint call is still to come. `--joint_germline` is therefore ignored by this caller, and using it with `parabricks_haplotypecaller` as your only germline caller fails early rather than running and producing no joint call. Combine it with GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as well.
 
 ### Start with duplicate marking (`--step markduplicates`)
 
