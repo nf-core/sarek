@@ -12,17 +12,13 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_DEEPVARIANT {
     intervals_bed_combined  // channel: [optional]  [] or [ intervals.bed ]
 
     main:
-    // Combine each sample with the (optional) intervals list
-    // intervals_bed_combined emits [] (no intervals) or [file] (one combined BED)
-    // When no_intervals, the empty list contributes 0 elements to the combined tuple,
-    // so check the tuple size to safely extract the optional 4th element.
-    cram_intervals = cram
-        .combine(intervals_bed_combined)
-        .map { cram_combined ->
-            def (meta, cram_, crai) = cram_combined
-            def intervals_ = cram_combined.size() > 3 ? cram_combined[3] : []
-            [ meta, cram_, crai, intervals_ ]
-        }
+    // Reshape intervals_bed_combined ([] or [file]) into a fixed-size 1-tuple ([] or file),
+    // mirroring the deepvariant intervals channel, so combine() always yields a 4-tuple
+    // and no destructuring/size-check is needed (there is no interval number here,
+    // as parabricks processes everything in a single fat process).
+    intervals_bed = intervals_bed_combined.map { bed -> [ bed ? bed[0] : [] ] }
+
+    cram_intervals = cram.combine(intervals_bed)
 
     PARABRICKS_DEEPVARIANT(
         cram_intervals,
