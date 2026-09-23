@@ -222,6 +222,7 @@ Sarek supports the following GPU-accelerated variant callers from [NVIDIA Parabr
 - [Mutectcaller](https://docs.nvidia.com/clara/parabricks/tool-reference/tools/mutectcaller)
 
 There are a few differences to note about the Parabricks versions of these tools:
+
 - Parabricks variant callers support gVCF generation but cannot perform joint calling on their own. Combine them with other variant callers such as GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as follows:
 
 ```
