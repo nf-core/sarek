@@ -11,6 +11,7 @@ include { FGBIO_FASTQTOBAM                  as FASTQTOBAM       } from '../../..
 include { FGBIO_GROUPREADSBYUMI             as GROUPREADSBYUMI  } from '../../../modules/nf-core/fgbio/groupreadsbyumi/main'
 include { FASTQ_ALIGN                       as ALIGN_UMI        } from '../fastq_align/main'
 include { SAMTOOLS_MERGE                    as MERGE_CONSENSUS  } from '../../../modules/nf-core/samtools/merge/main'
+include { SAMTOOLS_FIXMATE                                      } from '../../../modules/nf-core/samtools/fixmate/main'
 include { SAMTOOLS_BAM2FQ                   as BAM2FASTQ        } from '../../../modules/nf-core/samtools/bam2fq/main.nf'
 
 workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
@@ -58,7 +59,17 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     // Merge across runs/lanes for the same sample
     MERGE_CONSENSUS(bams_to_merge.multiple.map { meta, bams -> [ meta, bams, [] ] }, [[], [], [], []])
 
-    bams_all = MERGE_CONSENSUS.out.bam.mix(bams_to_merge.single)
+    bams_to_fixmate = MERGE_CONSENSUS.out.bam.mix(bams_to_merge.single)
+    // bwa-mem2 does not write the MQ tag and fgbio GroupReadsByUmi crashes
+    // on the missing MQ tag. samtools fixmate will add MQ tag
+        .branch { meta, bam ->
+            fixmate:      params.aligner == 'bwa-mem2'
+            skip_fixmate: params.aligner != 'bwa-mem2'
+        }
+
+    SAMTOOLS_FIXMATE(bams_to_fixmate.fixmate, [[], [], []])
+
+    bams_all = SAMTOOLS_FIXMATE.out.bam.mix(bams_to_fixmate.skip_fixmate)
 
     // appropriately tagged reads are now grouped by UMI information
     GROUPREADSBYUMI(bams_all, groupreadsbyumi_strategy)
