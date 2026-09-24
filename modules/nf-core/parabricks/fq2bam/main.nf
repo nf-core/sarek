@@ -40,9 +40,6 @@ process PARABRICKS_FQ2BAM {
     def in_fq_command = meta.single_end ? "--in-se-fq ${reads}" : "--in-fq ${reads}"
     def extension = "${output_fmt}"
 
-    // known_sites may include each VCF's .tbi alongside it (staged here so pbrun can
-    // auto-discover them next to their VCF), so filter those out when building
-    // --knownSites flags -- pbrun rejects a .tbi passed as its own --knownSites value.
     def known_sites_list = known_sites instanceof List ? known_sites : (known_sites ? [known_sites] : [])
     def known_sites_vcfs = known_sites_list.findAll { !it.toString().endsWith('.tbi') }
     def known_sites_command = known_sites_vcfs.collect { knownSite -> "--knownSites ${knownSite}" }.join(' ')
