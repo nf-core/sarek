@@ -63,10 +63,10 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
 
     // bwa-mem2 does not write the MQ tag and fgbio GroupReadsByUmi crashes
     // on the missing MQ tag. samtools fixmate will add MQ tag
-    bams_to_fixmate.branch { meta, bam ->
+    bams_for_grouping = bams_to_fixmate.branch { meta, bam ->
         fixmate:      params.aligner == 'bwa-mem2'
         skip_fixmate: params.aligner != 'bwa-mem2'
-    }.set { bams_for_grouping }
+    }
 
     SAMTOOLS_FIXMATE(bams_for_grouping.fixmate, [[], [], []])
 
