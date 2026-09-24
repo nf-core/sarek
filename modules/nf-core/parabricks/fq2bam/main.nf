@@ -40,8 +40,10 @@ process PARABRICKS_FQ2BAM {
     def in_fq_command = meta.single_end ? "--in-se-fq ${reads}" : "--in-fq ${reads}"
     def extension = "${output_fmt}"
 
-    def known_sites_command = known_sites ? (known_sites instanceof List ? known_sites.collect { knownSite -> "--knownSites ${knownSite}" }.join(' ') : "--knownSites ${known_sites}") : ""
-    def known_sites_output_cmd = known_sites ? "--out-recal-file ${prefix}.table" : ""
+    def known_sites_list = known_sites instanceof List ? known_sites : (known_sites ? [known_sites] : [])
+    def known_sites_vcfs = known_sites_list.findAll { !it.toString().endsWith('.tbi') }
+    def known_sites_command = known_sites_vcfs.collect { knownSite -> "--knownSites ${knownSite}" }.join(' ')
+    def known_sites_output_cmd = known_sites_vcfs ? "--out-recal-file ${prefix}.table" : ""
     def intervals_command = intervals ? (intervals instanceof List ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : "--interval-file ${intervals}") : ""
 
     def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
