@@ -3,8 +3,8 @@
 // PARABRICKS MUTECTCALLER: GPU-accelerated tumor-normal somatic variant calling
 //
 
-include { PARABRICKS_MUTECTCALLER                       } from '../../../modules/nf-core/parabricks/mutectcaller/main'
-include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX         } from '../../../modules/nf-core/htslib/bgziptabix/main'
+include { PARABRICKS_MUTECTCALLER               } from '../../../modules/nf-core/parabricks/mutectcaller'
+include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX } from '../../../modules/nf-core/htslib/bgziptabix'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER {
     take:
