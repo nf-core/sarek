@@ -40,11 +40,12 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [GATK HaplotypeCaller](#gatk-haplotypecaller)
       - [GATK Germline Single Sample Variant Calling](#gatk-germline-single-sample-variant-calling)
       - [GATK Joint Germline Variant Calling](#gatk-joint-germline-variant-calling)
-    - [Parabricks HaplotypeCaller](#parabricks-haplotypecaller)
-    - [Parabricks MutectCaller](#parabricks-mutectcaller)
     - [GATK Mutect2](#gatk-mutect2)
     - [Lofreq](#lofreq)
     - [MuSE](#muse)
+    - [Parabricks DeepVariant](#parabricks-deepvariant)
+    - [Parabricks HaplotypeCaller](#parabricks-haplotypecaller)
+    - [Parabricks MutectCaller](#parabricks-mutectcaller)
     - [Sentieon DNAscope](#sentieon-dnascope)
       - [Sentieon DNAscope joint germline variant calling](#sentieon-dnascope-joint-germline-variant-calling)
     - [Sentieon Haplotyper](#sentieon-haplotyper)
@@ -492,36 +493,6 @@ If the haplotype-called VCF files are not filtered, then Sarek should be run wit
 
 </details>
 
-#### Parabricks HaplotypeCaller
-
-[Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) is a GPU-accelerated implementation of GATK HaplotypeCaller for germline SNP and indel calling. Enable with `--tools parabricks_haplotypecaller --profile <docker/singularity>,gpu`.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-**Output directory: `{outdir}/variant_calling/parabricks_haplotypecaller/<sample>/`**
-
-- `<sample>.parabricks_haplotypecaller.vcf.gz` and `<sample>.parabricks_haplotypecaller.vcf.gz.tbi`
-  - VCF with tabix index
-
-</details>
-
-#### Parabricks MutectCaller
-
-[Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html) is a GPU-accelerated implementation of GATK Mutect2 for calling somatic SNVs and indels in tumor-only and tumor/normal paired samples. Enable with `--tools parabricks_mutectcaller --profile <docker/singularity>,gpu`.
-
-<details markdown="1">
-<summary>Output files for tumor-only and tumor/normal paired samples</summary>
-
-**Output directory: `{outdir}/variant_calling/parabricks_mutectcaller/{sample,tumorsample_vs_normalsample}/`**
-
-- `{sample,tumorsample_vs_normalsample}.parabricks_mutectcaller.vcf.gz` and `{sample,tumorsample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.tbi`
-  - VCF with tabix index
-- `{sample,tumorsample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.stats`
-  - a stats file generated during calling of variants
-
-</details>
-
 #### GATK Mutect2
 
 [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2) calls somatic SNVs and indels via local assembly of haplotypes.
@@ -584,6 +555,48 @@ Files created:
   - VCF with called variants. Fields are named TUMOR and NORMAL.
 
 </details>
+
+#### Parabricks DeepVariant
+
+[Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html) is a GPU-accelerated implementation of DeepVariant germline variant calling, providing equivalent results to DeepVariant at significantly reduced runtime. Enabled by `--tools parabricks_deepvariant --profile <docker/singularity>,gpu`.
+
+<details markdown="1">
+<summary>Output files for normal samples</summary>
+
+**Output directory: `{outdir}/variant_calling/parabricks_deepvariant/<sample>/`**
+
+- `<sample>.parabricks_deepvariant.vcf.gz` and `<sample>.parabricks_deepvariant.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
+#### Parabricks HaplotypeCaller
+
+[Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) is a GPU-accelerated implementation of GATK HaplotypeCaller for germline SNP and indel calling. Enable with `--tools parabricks_haplotypecaller --profile <docker/singularity>,gpu`.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+**Output directory: `{outdir}/variant_calling/parabricks_haplotypecaller/<sample>/`**
+
+- `<sample>.parabricks_haplotypecaller.vcf.gz` and `<sample>.parabricks_haplotypecaller.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
+#### Parabricks MutectCaller
+
+[Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html) is a GPU-accelerated implementation of GATK Mutect2 for calling somatic SNVs and indels in tumor-only and tumor/normal paired samples. Enable with `--tools parabricks_mutectcaller --profile <docker/singularity>,gpu`.
+
+<details markdown="1">
+<summary>Output files for tumor-only and tumor/normal paired samples</summary>
+
+**Output directory: `{outdir}/variant_calling/parabricks_mutectcaller/{sample,tumorsample_vs_normalsample}/`**
+
+- `{sample,tumorsample_vs_normalsample}.parabricks_mutectcaller.vcf.gz` and `{sample,tumorsample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.tbi`
+  - VCF with tabix index
+- `{sample,tumorsample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.stats`
+  - a stats file generated during calling of variants
 
 #### Sentieon DNAscope
 
