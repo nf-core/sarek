@@ -40,7 +40,22 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     sort = false
     ALIGN_UMI(BAM2FASTQ.out.reads, map_index, sort, fasta, fai)
 
-    bams_to_merge = ALIGN_UMI.out.bam
+    // bwa-mem2 does not write the MQ tag and fgbio GroupReadsByUmi crashes
+    // on the missing MQ tag. samtools fixmate will add MQ tag.
+    // Runs per lane on the raw aligner output, where reads of a pair are
+    // adjacent (bwa -p emits each template together), so the name-collated
+    // input requirement of fixmate is met by construction.
+    bams_to_fixmate = ALIGN_UMI.out.bam
+        .branch { meta, bam ->
+            fixmate:      params.aligner == 'bwa-mem2'
+            skip_fixmate: params.aligner != 'bwa-mem2'
+        }
+
+    SAMTOOLS_FIXMATE(bams_to_fixmate.fixmate, [[], [], []])
+
+    bams_fixed = SAMTOOLS_FIXMATE.out.bam.mix(bams_to_fixmate.skip_fixmate)
+
+    bams_to_merge = bams_fixed
     // id currently includes the lane, so swap to just id=sample and groupKey to avoid blocking
     // Remove lane-specific fields (id, sample_lane_id) so groupTuple can match lanes from the same sample
         .map { meta, bam ->
@@ -59,17 +74,7 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     // Merge across runs/lanes for the same sample
     MERGE_CONSENSUS(bams_to_merge.multiple.map { meta, bams -> [ meta, bams, [] ] }, [[], [], [], []])
 
-    bams_to_fixmate = MERGE_CONSENSUS.out.bam.mix(bams_to_merge.single)
-    // bwa-mem2 does not write the MQ tag and fgbio GroupReadsByUmi crashes
-    // on the missing MQ tag. samtools fixmate will add MQ tag
-        .branch { meta, bam ->
-            fixmate:      params.aligner == 'bwa-mem2'
-            skip_fixmate: params.aligner != 'bwa-mem2'
-        }
-
-    SAMTOOLS_FIXMATE(bams_to_fixmate.fixmate, [[], [], []])
-
-    bams_all = SAMTOOLS_FIXMATE.out.bam.mix(bams_to_fixmate.skip_fixmate)
+    bams_all = MERGE_CONSENSUS.out.bam.mix(bams_to_merge.single)
 
     // appropriately tagged reads are now grouped by UMI information
     GROUPREADSBYUMI(bams_all, groupreadsbyumi_strategy)
