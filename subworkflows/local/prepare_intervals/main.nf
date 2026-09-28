@@ -6,11 +6,12 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { CREATE_INTERVALS_BED                                   } from '../../../modules/local/create_intervals_bed'
-include { GATK4_INTERVALLISTTOBED                                } from '../../../modules/nf-core/gatk4/intervallisttobed'
-include { GAWK as BUILD_INTERVALS                                } from '../../../modules/nf-core/gawk'
+include { CREATE_INTERVALS_BED                                    } from '../../../modules/local/create_intervals_bed'
+include { GATK4_INTERVALLISTTOBED                                 } from '../../../modules/nf-core/gatk4/intervallisttobed'
+include { GAWK as BUILD_INTERVALS                                 } from '../../../modules/nf-core/gawk'
 include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT    } from '../../../modules/nf-core/htslib/bgziptabix'
 include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_COMBINED } from '../../../modules/nf-core/htslib/bgziptabix'
+include { LIST_TO_BED                                             } from '../../../modules/local/list_to_bed'
 
 workflow PREPARE_INTERVALS {
     take:
@@ -55,6 +56,9 @@ workflow PREPARE_INTERVALS {
             if (intervals.endsWith(".interval_list")) {
                 GATK4_INTERVALLISTTOBED(intervals_combined)
                 intervals_combined = GATK4_INTERVALLISTTOBED.out.bed
+            } else if (intervals.endsWith(".intervals") || intervals.endsWith(".list")) {
+                LIST_TO_BED(intervals_combined)
+                intervals_combined = LIST_TO_BED.out.bed
             }
         }
 
