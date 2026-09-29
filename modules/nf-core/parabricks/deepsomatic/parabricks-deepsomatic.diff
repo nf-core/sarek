@@ -1,0 +1,209 @@
+Changes in component 'nf-core/parabricks/deepsomatic'
+Changes in 'parabricks/deepsomatic/main.nf':
+--- modules/nf-core/parabricks/deepsomatic/main.nf
++++ modules/nf-core/parabricks/deepsomatic/main.nf
+@@ -12,10 +12,11 @@
+     tuple val(ref_meta), path(fasta)
+ 
+     output:
+-    tuple val(meta), path("*.vcf.gz"),   emit: vcf,                 optional: true
+-    tuple val(meta), path("*.g.vcf.gz"), emit: gvcf,                optional: true
+-    tuple val(meta), path("*.vcf.gz.tbi"), emit: index,             optional: true
+-    path "compatible_versions.yml",      emit: compatible_versions, optional: true
++    tuple val(meta), path("${prefix}.vcf.gz"), emit: vcf, optional: true
++    tuple val(meta), path("${prefix}.vcf.gz.tbi"), emit: vcf_tbi, optional: true
++    tuple val(meta), path("${prefix}.g.vcf.gz"), emit: gvcf, optional: true
++    tuple val(meta), path("${prefix}.g.vcf.gz.tbi"), emit: gvcf_tbi, optional: true
++    path "compatible_versions.yml", emit: compatible_versions, optional: true
+     tuple val("${task.process}"), val('parabricks'), eval("pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'"), topic: versions, emit: versions_parabricks
+ 
+     when:
+@@ -26,11 +27,15 @@
+     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+         exit(1, "Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
+     }
+-    def args = task.ext.args ?: ''
+-    def prefix = task.ext.prefix ?: "${meta.id}"
+-    def output_file = "${prefix}.vcf.gz"
+-    def interval_command = intervals ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : ""
+-    def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
++    def args: String = task.ext.args ?: ''
++    prefix = task.ext.prefix ?: "${meta.id}"
++    def output_mode: String = task.ext.output_mode ?: 'vcf'
++    if (!(output_mode in ['vcf', 'gvcf'])) {
++        error("PARABRICKS_DEEPSOMATIC output mode must be 'vcf' or 'gvcf'.")
++    }
++    def output_file: String = output_mode == 'gvcf' ? "${prefix}.g.vcf.gz" : "${prefix}.vcf.gz"
++    def interval_command: String = intervals ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : ""
++    def num_gpus: String = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
+     """
+     pbrun \\
+         deepsomatic \\
+@@ -44,11 +49,15 @@
+     """
+ 
+     stub:
+-    def args = task.ext.args ?: ''
+-    def prefix = task.ext.prefix ?: "${meta.id}"
+-    def output_cmd = "echo '' | gzip > ${prefix}.vcf.gz"
++    prefix = task.ext.prefix ?: "${meta.id}"
++    def output_mode: String = task.ext.output_mode ?: 'vcf'
++    if (!(output_mode in ['vcf', 'gvcf'])) {
++        error("PARABRICKS_DEEPSOMATIC output mode must be 'vcf' or 'gvcf'.")
++    }
++    def output_file: String = output_mode == 'gvcf' ? "${prefix}.g.vcf.gz" : "${prefix}.vcf.gz"
+     """
+-    ${output_cmd}
++    echo '' | gzip > ${output_file}
++    touch ${output_file}.tbi
+ 
+     # Capture the full version output once and store it in a variable
+     pbrun_version_output=\$(pbrun deepsomatic --version 2>&1)
+
+Changes in 'parabricks/deepsomatic/meta.yml':
+--- modules/nf-core/parabricks/deepsomatic/meta.yml
++++ modules/nf-core/parabricks/deepsomatic/meta.yml
+@@ -66,34 +66,45 @@
+           description: |
+             Groovy Map containing sample information.
+             e.g. [ id:'tumor_vs_normal' ]
+-      - "*.vcf.gz":
++      - ${prefix}.vcf.gz:
+           type: file
+           description: VCF file created with deepsomatic, optional
+           pattern: "*.vcf.gz"
+           ontologies:
+             - edam: http://edamontology.org/format_3989 # GZIP format
++  vcf_tbi:
++    - - meta:
++          type: map
++          description: |
++            Groovy Map containing sample information.
++            e.g. [ id:'tumor_vs_normal' ]
++      - ${prefix}.vcf.gz.tbi:
++          type: file
++          description: Tabix index for the VCF file
++          pattern: "*.vcf.gz.tbi"
++          ontologies: []
+   gvcf:
+     - - meta:
+           type: map
+           description: |
+             Groovy Map containing sample information.
+             e.g. [ id:'tumor_vs_normal' ]
+-      - "*.g.vcf.gz":
++      - ${prefix}.g.vcf.gz:
+           type: file
+           description: bgzipped gVCF created with deepsomatic, optional
+           pattern: "*.g.vcf.gz"
+           ontologies:
+             - edam: http://edamontology.org/format_3989 # GZIP format
+-  index:
++  gvcf_tbi:
+     - - meta:
+           type: map
+           description: |
+             Groovy Map containing sample information.
+             e.g. [ id:'tumor_vs_normal' ]
+-      - "*.vcf.gz.tbi":
++      - ${prefix}.g.vcf.gz.tbi:
+           type: file
+-          description: Tabix index for the VCF or gVCF file
+-          pattern: "*.vcf.gz.tbi"
++          description: Tabix index for the gVCF file
++          pattern: "*.g.vcf.gz.tbi"
+           ontologies: []
+   compatible_versions:
+     - compatible_versions.yml:
+
+Changes in 'parabricks/deepsomatic/tests/main.nf.test':
+--- modules/nf-core/parabricks/deepsomatic/tests/main.nf.test
++++ modules/nf-core/parabricks/deepsomatic/tests/main.nf.test
+@@ -16,6 +16,7 @@
+         when {
+             params {
+                 module_args = ''
++                output_mode = 'vcf'
+             }
+             process {
+                 """
+@@ -38,8 +39,8 @@
+         then {
+             assert process.success
+             assertAll(
+-                { assert snapshot(sanitizeOutput(process.out, variantsMD5Keys:["vcf"]).findAll { key, value -> key != "index" }).match() },
+-                { assert process.out.index[0][1].endsWith(".tbi") }
++                { assert snapshot(sanitizeOutput(process.out, variantsMD5Keys:["vcf"])).match() },
++                { assert process.out.vcf_tbi[0][1].endsWith(".tbi") }
+             )
+         }
+ 
+@@ -50,6 +51,7 @@
+         when {
+             params {
+                 module_args = ''
++                output_mode = 'vcf'
+             }
+             process {
+                 """
+@@ -72,8 +74,8 @@
+         then {
+             assert process.success
+             assertAll(
+-                { assert snapshot(sanitizeOutput(process.out, variantsMD5Keys:["vcf"]).findAll { key, value -> key != "index" }).match() },
+-                { assert process.out.index[0][1].endsWith(".tbi") }
++                { assert snapshot(sanitizeOutput(process.out, variantsMD5Keys:["vcf"])).match() },
++                { assert process.out.vcf_tbi[0][1].endsWith(".tbi") }
+             )
+         }
+ 
+@@ -84,6 +86,7 @@
+         when {
+             params {
+                 module_args = ''
++                output_mode = 'gvcf'
+             }
+             process {
+                 """
+@@ -106,8 +109,8 @@
+         then {
+             assert process.success
+             assertAll(
+-                { assert snapshot(sanitizeOutput(process.out, variantsMD5Keys:["gvcf", "vcf"]).findAll { key, value -> key != "index" }).match() },
+-                { assert process.out.index[0][1].endsWith(".tbi") }
++                { assert snapshot(sanitizeOutput(process.out, variantsMD5Keys:["gvcf"])).match() },
++                { assert process.out.gvcf_tbi[0][1].endsWith(".tbi") }
+             )
+         }
+ 
+@@ -120,6 +123,7 @@
+         when {
+             params {
+                 module_args = ''
++                output_mode = 'vcf'
+             }
+             process {
+                 """
+@@ -155,6 +159,7 @@
+         when {
+             params {
+                 module_args = ''
++                output_mode = 'gvcf'
+             }
+             process {
+                 """
+
+'modules/nf-core/parabricks/deepsomatic/tests/main.nf.test.snap' is unchanged
+Changes in 'parabricks/deepsomatic/tests/nextflow.config':
+--- modules/nf-core/parabricks/deepsomatic/tests/nextflow.config
++++ modules/nf-core/parabricks/deepsomatic/tests/nextflow.config
+@@ -2,6 +2,7 @@
+ 
+     withName: 'PARABRICKS_DEEPSOMATIC' {
+         ext.args = { params.module_args ?: '' }
++        ext.output_mode = { params.output_mode ?: 'vcf' }
+     }
+ 
+ }
+
+************************************************************

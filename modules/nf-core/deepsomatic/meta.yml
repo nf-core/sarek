@@ -1,0 +1,155 @@
+name: "deepsomatic"
+description: DeepSomatic is an extension of deep learning-based variant caller DeepVariant that takes aligned reads (in BAM or CRAM format) from tumor and normal data, produces pileup image tensors from them, classifies each tensor using a convolutional neural network, and finally reports somatic variants in a standard VCF or gVCF file.
+keywords:
+- variant calling
+- machine learning
+- neural network
+tools:
+- "deepsomatic":
+    description: ""
+    homepage: "https://github.com/google/deepsomatic"
+    documentation: "https://github.com/google/deepsomatic"
+    tool_dev_url: "https://github.com/google/deepsomatic"
+    doi: "10.1101/2024.08.16.608331"
+    licence:
+    - "BSD-3-clause"
+    identifier: "biotools:deepsomatic"
+input:
+- - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - input_normal:
+      type: file
+      description: BAM/CRAM file
+      pattern: "*.bam/cram"
+      ontologies: []
+  - index_normal:
+      type: file
+      description: Index of BAM/CRAM file
+      pattern: "*.bai/crai"
+      ontologies: []
+  - input_tumor:
+      type: file
+      description: BAM/CRAM file
+      pattern: "*.bam/cram"
+      ontologies: []
+  - index_tumor:
+      type: file
+      description: Index of BAM/CRAM file
+      pattern: "*.bai/crai"
+      ontologies: []
+- - meta2:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - intervals:
+      type: file
+      description: file containing intervals
+      ontologies: []
+- - meta3:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+      ontologies: []
+- - meta4:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "*.fai"
+      ontologies: []
+- - meta5:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - gzi:
+      type: file
+      description: GZI index of reference fasta file
+      pattern: "*.gzi"
+      ontologies: []
+output:
+  vcf:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1', single_end:false ]`
+    - ${prefix}.vcf.gz:
+        type: file
+        description: Compressed VCF file
+        pattern: "*.vcf.gz"
+        ontologies:
+        - edam: http://edamontology.org/format_3989  # GZIP format
+  vcf_tbi:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1', single_end:false ]`
+    - ${prefix}.vcf.gz.tbi:
+        type: file
+        description: Index of compressed VCF file
+        pattern: "*.vcf.gz.tbi"
+        ontologies: []
+  gvcf:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1', single_end:false ]`
+    - ${prefix}.g.vcf.gz:
+        type: file
+        description: Compressed GVCF file
+        pattern: "*.g.vcf.gz"
+        ontologies:
+        - edam: http://edamontology.org/format_3989  # GZIP format
+  gvcf_tbi:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1', single_end:false ]`
+    - ${prefix}.g.vcf.gz.tbi:
+        type: file
+        description: Index of compressed Genotyped VCF file
+        pattern: "*.g.vcf.gz.tbi"
+        ontologies: []
+  versions_deepsomatic:
+  - - ${task.process}:
+        type: string
+        description: The name of the process
+    - deepsomatic:
+        type: string
+        description: The name of the tool
+    - 1.10.0:
+        type: string
+        description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+  - - ${task.process}:
+        type: string
+        description: The name of the process
+    - deepsomatic:
+        type: string
+        description: The name of the tool
+    - 1.10.0:
+        type: string
+        description: The expression to obtain the version of the tool
+
+authors:
+- "@vaxyzek"
+maintainers:
+- "@vaxyzek"

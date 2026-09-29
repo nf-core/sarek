@@ -2,72 +2,78 @@
 // PAIRED VARIANT CALLING
 //
 
-include { BAM_VARIANT_CALLING_CNVKIT                    } from '../bam_variant_calling_cnvkit'
-include { BAM_VARIANT_CALLING_FREEBAYES                 } from '../bam_variant_calling_freebayes'
-include { BAM_VARIANT_CALLING_INDEXCOV                  } from '../bam_variant_calling_indexcov'
+include { BAM_VARIANT_CALLING_CNVKIT } from '../bam_variant_calling_cnvkit'
+include { BAM_VARIANT_CALLING_FREEBAYES } from '../bam_variant_calling_freebayes'
+include { BAM_VARIANT_CALLING_INDEXCOV } from '../bam_variant_calling_indexcov'
 include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_NORMAL } from '../bam_variant_calling_mpileup'
-include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_TUMOR  } from '../bam_variant_calling_mpileup'
-include { BAM_VARIANT_CALLING_SOMATIC_ASCAT             } from '../bam_variant_calling_somatic_ascat'
-include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC      } from '../bam_variant_calling_somatic_controlfreec'
-include { BAM_VARIANT_CALLING_SOMATIC_MANTA             } from '../bam_variant_calling_somatic_manta'
-include { BAM_VARIANT_CALLING_SOMATIC_MUSE              } from '../bam_variant_calling_somatic_muse'
-include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2           } from '../bam_variant_calling_somatic_mutect2'
-include { BAM_VARIANT_CALLING_SOMATIC_STRELKA           } from '../bam_variant_calling_somatic_strelka'
-include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_calling_somatic_tiddit'
-include { BAM_VARIANT_CALLING_SOMATIC_TNSCOPE           } from '../bam_variant_calling_somatic_tnscope'
-include { MSISENSOR2_MSI                                } from '../../../modules/nf-core/msisensor2/msi'
-include { MSISENSORPRO_MSISOMATIC                       } from '../../../modules/nf-core/msisensorpro/msisomatic'
+include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_TUMOR } from '../bam_variant_calling_mpileup'
+include { BAM_VARIANT_CALLING_SOMATIC_ASCAT } from '../bam_variant_calling_somatic_ascat'
+include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC } from '../bam_variant_calling_somatic_controlfreec'
+include { BAM_VARIANT_CALLING_SOMATIC_DEEPSOMATIC } from '../bam_variant_calling_somatic_deepsomatic'
+include { BAM_VARIANT_CALLING_SOMATIC_MANTA } from '../bam_variant_calling_somatic_manta'
+include { BAM_VARIANT_CALLING_SOMATIC_MUSE } from '../bam_variant_calling_somatic_muse'
+include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2 } from '../bam_variant_calling_somatic_mutect2'
+include { BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC } from '../bam_variant_calling_somatic_parabricks_deepsomatic'
+include { BAM_VARIANT_CALLING_SOMATIC_STRELKA } from '../bam_variant_calling_somatic_strelka'
+include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT } from '../bam_variant_calling_somatic_tiddit'
+include { BAM_VARIANT_CALLING_SOMATIC_TNSCOPE } from '../bam_variant_calling_somatic_tnscope'
+include { MSISENSOR2_MSI } from '../../../modules/nf-core/msisensor2/msi'
+include { MSISENSORPRO_MSISOMATIC } from '../../../modules/nf-core/msisensorpro/msisomatic'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     take:
-    tools                         // Mandatory, list of tools to apply
-    bam                           // channel: [mandatory] bam
-    cram                          // channel: [mandatory] cram
-    bwa                           // channel: [optional] bwa
-    cf_chrom_len                  // channel: [optional] controlfreec length file
+    tools // Mandatory, list of tools to apply
+    bam // channel: [mandatory] bam
+    cram // channel: [mandatory] cram
+    bwa // channel: [optional] bwa
+    cf_chrom_len // channel: [optional] controlfreec length file
     chr_files
-    dbsnp                         // channel: [mandatory] dbsnp
-    dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
-    dict                          // channel: [mandatory] dict
-    fasta                         // channel: [mandatory] fasta
-    fasta_fai                     // channel: [mandatory] fasta_fai
-    germline_resource             // channel: [optional]  germline_resource
-    germline_resource_tbi         // channel: [optional]  germline_resource_tbi
-    intervals                     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
-    intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
-    intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+    dbsnp // channel: [mandatory] dbsnp
+    dbsnp_tbi // channel: [mandatory] dbsnp_tbi
+    dict // channel: [mandatory] dict
+    fasta // channel: [mandatory] fasta
+    fasta_fai // channel: [mandatory] fasta_fai
+    germline_resource // channel: [optional]  germline_resource
+    germline_resource_tbi // channel: [optional]  germline_resource_tbi
+    intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
+    intervals_bed_gz_tbi // channel: [mandatory] intervals/target regions index zipped and indexed
+    intervals_bed_combined // channel: [mandatory] intervals/target regions in one file unzipped
     intervals_bed_gz_tbi_combined // channel: [mandatory] intervals/target regions in one file zipped
     mappability
-    msisensorpro_scan             // channel: [optional]  msisensorpro_scan
-    panel_of_normals              // channel: [optional]  panel_of_normals
-    panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
-    allele_files                  // channel: [optional]  ascat allele files
-    loci_files                    // channel: [optional]  ascat loci files
-    gc_file                       // channel: [optional]  ascat gc content file
-    rt_file                       // channel: [optional]  ascat rt file
-    joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
-    wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
+    msisensorpro_scan // channel: [optional]  msisensorpro_scan
+    panel_of_normals // channel: [optional]  panel_of_normals
+    panel_of_normals_tbi // channel: [optional]  panel_of_normals_tbi
+    allele_files // channel: [optional]  ascat allele files
+    loci_files // channel: [optional]  ascat loci files
+    gc_file // channel: [optional]  ascat gc content file
+    rt_file // channel: [optional]  ascat rt file
+    joint_mutect2 // boolean: [mandatory] [default: false] run mutect2 in joint mode
+    wes // boolean: [mandatory] [default: false] whether targeted data is processed
 
     main:
     // channels are often remapped to match module/subworkflow
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    out_indexcov     = channel.empty()
+    out_indexcov = channel.empty()
     out_msisensorpro = channel.empty()
-    vcf_freebayes    = channel.empty()
-    vcf_manta        = channel.empty()
-    vcf_muse         = channel.empty()
-    vcf_mutect2      = channel.empty()
-    vcf_strelka      = channel.empty()
-    vcf_tiddit       = channel.empty()
-    vcf_tnscope      = channel.empty()
-    tbi_freebayes    = channel.empty()
-    tbi_manta        = channel.empty()
-    tbi_muse         = channel.empty()
-    tbi_mutect2      = channel.empty()
-    tbi_strelka      = channel.empty()
-    tbi_tiddit       = channel.empty()
-    tbi_tnscope      = channel.empty()
+    vcf_freebayes = channel.empty()
+    vcf_deepsomatic = channel.empty()
+    vcf_manta = channel.empty()
+    vcf_muse = channel.empty()
+    vcf_mutect2 = channel.empty()
+    vcf_parabricks_deepsomatic = channel.empty()
+    vcf_strelka = channel.empty()
+    vcf_tiddit = channel.empty()
+    vcf_tnscope = channel.empty()
+    tbi_freebayes = channel.empty()
+    tbi_deepsomatic = channel.empty()
+    tbi_manta = channel.empty()
+    tbi_muse = channel.empty()
+    tbi_mutect2 = channel.empty()
+    tbi_parabricks_deepsomatic = channel.empty()
+    tbi_strelka = channel.empty()
+    tbi_tiddit = channel.empty()
+    tbi_tnscope = channel.empty()
 
     if (tools && tools.split(',').contains('ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
@@ -79,7 +85,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             gc_file,
             rt_file,
         )
-
     }
 
     // CONTROLFREEC
@@ -117,7 +122,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             mappability,
             wes ? intervals_bed_combined : [],
         )
-
     }
 
     // CNVKIT
@@ -144,6 +148,22 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
         tbi_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.tbi
     }
+
+    // DEEPSOMATIC
+    cram_deepsomatic = cram.filter { _meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai ->
+        tools && tools.split(',').contains('deepsomatic')
+    }
+
+    BAM_VARIANT_CALLING_SOMATIC_DEEPSOMATIC(
+        cram_deepsomatic,
+        dict,
+        fasta,
+        fasta_fai,
+        intervals,
+    )
+
+    vcf_deepsomatic = BAM_VARIANT_CALLING_SOMATIC_DEEPSOMATIC.out.vcf
+    tbi_deepsomatic = BAM_VARIANT_CALLING_SOMATIC_DEEPSOMATIC.out.tbi
 
     // MANTA
     if (tools && tools.split(',').contains('manta')) {
@@ -173,7 +193,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     // STRELKA
     if (tools && tools.split(',').contains('strelka')) {
         cram_strelka = tools.split(',').contains('manta')
-            // Manta's candidate small indels feed Strelka; strip the manta variantcaller tag so the meta matches cram for the join
             ? cram.join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf.map { meta, vcf -> [meta - meta.subMap('variantcaller'), vcf] }, failOnDuplicate: true, failOnMismatch: true).join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf_tbi.map { meta, tbi -> [meta - meta.subMap('variantcaller'), tbi] }, failOnDuplicate: true, failOnMismatch: true)
             : cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], []] }
 
@@ -236,6 +255,20 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         tbi_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.tbi
     }
 
+    // PARABRICKS DEEPSOMATIC
+    cram_parabricks_deepsomatic = cram.filter { _meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai ->
+        tools && tools.split(',').contains('parabricks_deepsomatic')
+    }
+
+    BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC(
+        cram_parabricks_deepsomatic,
+        fasta,
+        intervals_bed_combined,
+    )
+
+    vcf_parabricks_deepsomatic = BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC.out.vcf
+    tbi_parabricks_deepsomatic = BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC.out.tbi
+
     // TNSCOPE
     if (tools && tools.split(',').contains('sentieon_tnscope')) {
 
@@ -274,9 +307,11 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_all = channel.empty()
         .mix(
             vcf_freebayes,
+            vcf_deepsomatic,
             vcf_manta,
             vcf_muse,
             vcf_mutect2,
+            vcf_parabricks_deepsomatic,
             vcf_strelka,
             vcf_tiddit,
             vcf_tnscope,
@@ -285,9 +320,11 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     tbi_all = channel.empty()
         .mix(
             tbi_freebayes,
+            tbi_deepsomatic,
             tbi_manta,
             tbi_muse,
             tbi_mutect2,
+            tbi_parabricks_deepsomatic,
             tbi_strelka,
             tbi_tiddit,
             tbi_tnscope,
@@ -298,17 +335,21 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     out_msisensorpro
     vcf_all
     vcf_freebayes
+    vcf_deepsomatic
     vcf_manta
     vcf_muse
     vcf_mutect2
+    vcf_parabricks_deepsomatic
     vcf_strelka
     vcf_tiddit
     vcf_tnscope
     tbi_all
     tbi_freebayes
+    tbi_deepsomatic
     tbi_manta
     tbi_muse
     tbi_mutect2
+    tbi_parabricks_deepsomatic
     tbi_strelka
     tbi_tiddit
     tbi_tnscope

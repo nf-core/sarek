@@ -1,0 +1,383 @@
+Changes in component 'nf-core/deepsomatic'
+Changes in 'deepsomatic/main.nf':
+--- modules/nf-core/deepsomatic/main.nf
++++ modules/nf-core/deepsomatic/main.nf
+@@ -1,8 +1,9 @@
+ process DEEPSOMATIC {
+-    tag "$meta.id"
++    tag "${meta.id}"
+     label 'process_high'
+ 
+-    container "docker.io/google/deepsomatic:1.7.0" // version needs to be updated when container is changed
++    container "docker.io/google/deepsomatic:1.10.0"
++
+     input:
+     tuple val(meta), path(input_normal), path(index_normal), path(input_tumor), path(index_tumor)
+     tuple val(meta2), path(intervals)
+@@ -11,11 +12,11 @@
+     tuple val(meta5), path(gzi)
+ 
+     output:
+-    tuple val(meta), path("${prefix}.vcf.gz")      ,  emit: vcf
+-    tuple val(meta), path("${prefix}.vcf.gz.tbi")  ,  emit: vcf_tbi
+-    tuple val(meta), path("${prefix}.g.vcf.gz")    ,  emit: gvcf
+-    tuple val(meta), path("${prefix}.g.vcf.gz.tbi"),  emit: gvcf_tbi
+-    tuple val("${task.process}"), val("deepsomatic"), val("1.7.0"), emit: versions_deepsomatic, topic: versions
++    tuple val(meta), path("${prefix}.vcf.gz"), emit: vcf
++    tuple val(meta), path("${prefix}.vcf.gz.tbi"), emit: vcf_tbi
++    tuple val(meta), path("${prefix}.g.vcf.gz"), emit: gvcf, optional: true
++    tuple val(meta), path("${prefix}.g.vcf.gz.tbi"), emit: gvcf_tbi, optional: true
++    tuple val("${task.process}"), val("deepsomatic"), val("1.10.0"), emit: versions_deepsomatic, topic: versions
+ 
+     when:
+     task.ext.when == null || task.ext.when
+@@ -23,11 +24,12 @@
+     script:
+     // Exit if running this module with -profile conda / -profile mamba
+     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+-        error "DEEPSOMATIC module does not support Conda. Please use Docker / Singularity / Podman instead."
++        error("DEEPSOMATIC module does not support Conda. Please use Docker / Singularity / Podman instead.")
+     }
+-    def args = task.ext.args ?: ''
++    def args: String = task.ext.args ?: ''
+     prefix = task.ext.prefix ?: "${meta.id}"
+-    def regions = intervals ? "--regions=${intervals}" : ""
++    def regions: String = intervals ? "--regions=${intervals}" : ""
++    def output_gvcf: String = task.ext.output_gvcf ? "--output_gvcf=${prefix}.g.vcf.gz" : ""
+ 
+     """
+     run_deepsomatic \\
+@@ -35,9 +37,7 @@
+         --reads_normal=${input_normal} \\
+         --reads_tumor=${input_tumor} \\
+         --output_vcf=${prefix}.vcf.gz \\
+-        --output_gvcf=${prefix}.g.vcf.gz \\
+-        --sample_name_tumor="tumor" \\
+-        --sample_name_normal="normal" \\
++        ${output_gvcf} \\
+         ${args} \\
+         ${regions} \\
+         --intermediate_results_dir=tmp \\
+@@ -47,13 +47,13 @@
+     stub:
+     // Exit if running this module with -profile conda / -profile mamba
+     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+-        error "DEEPSOMATIC module does not support Conda. Please use Docker / Singularity / Podman instead."
++        error("DEEPSOMATIC module does not support Conda. Please use Docker / Singularity / Podman instead.")
+     }
+     prefix = task.ext.prefix ?: "${meta.id}"
++    def output_gvcf: String = task.ext.output_gvcf ? "echo '' | gzip > ${prefix}.g.vcf.gz; touch ${prefix}.g.vcf.gz.tbi" : ""
+     """
+     echo "" | gzip > ${prefix}.vcf.gz
+     touch ${prefix}.vcf.gz.tbi
+-    echo "" | gzip > ${prefix}.g.vcf.gz
+-    touch ${prefix}.g.vcf.gz.tbi
++    ${output_gvcf}
+     """
+ }
+
+Changes in 'deepsomatic/meta.yml':
+--- modules/nf-core/deepsomatic/meta.yml
++++ modules/nf-core/deepsomatic/meta.yml
+@@ -1,157 +1,155 @@
+ name: "deepsomatic"
+-description: DeepSomatic is an extension of deep learning-based variant caller
+-  DeepVariant that takes aligned reads (in BAM or CRAM format) from tumor and
+-  normal data, produces pileup image tensors from them, classifies each tensor
+-  using a convolutional neural network, and finally reports somatic variants in
+-  a standard VCF or gVCF file.
++description: DeepSomatic is an extension of deep learning-based variant caller DeepVariant that takes aligned reads (in BAM or CRAM format) from tumor and normal data, produces pileup image tensors from them, classifies each tensor using a convolutional neural network, and finally reports somatic variants in a standard VCF or gVCF file.
+ keywords:
+-  - variant calling
+-  - machine learning
+-  - neural network
++- variant calling
++- machine learning
++- neural network
+ tools:
+-  - "deepsomatic":
+-      description: ""
+-      homepage: "https://github.com/google/deepsomatic"
+-      documentation: "https://github.com/google/deepsomatic"
+-      tool_dev_url: "https://github.com/google/deepsomatic"
+-      doi: "10.1101/2024.08.16.608331"
+-      licence:
+-        - "BSD-3-clause"
+-      identifier: "biotools:deepsomatic"
++- "deepsomatic":
++    description: ""
++    homepage: "https://github.com/google/deepsomatic"
++    documentation: "https://github.com/google/deepsomatic"
++    tool_dev_url: "https://github.com/google/deepsomatic"
++    doi: "10.1101/2024.08.16.608331"
++    licence:
++    - "BSD-3-clause"
++    identifier: "biotools:deepsomatic"
+ input:
++- - meta:
++      type: map
++      description: |
++        Groovy Map containing sample information
++        e.g. [ id:'test', single_end:false ]
++  - input_normal:
++      type: file
++      description: BAM/CRAM file
++      pattern: "*.bam/cram"
++      ontologies: []
++  - index_normal:
++      type: file
++      description: Index of BAM/CRAM file
++      pattern: "*.bai/crai"
++      ontologies: []
++  - input_tumor:
++      type: file
++      description: BAM/CRAM file
++      pattern: "*.bam/cram"
++      ontologies: []
++  - index_tumor:
++      type: file
++      description: Index of BAM/CRAM file
++      pattern: "*.bai/crai"
++      ontologies: []
++- - meta2:
++      type: map
++      description: |
++        Groovy Map containing sample information
++        e.g. [ id:'test', single_end:false ]
++  - intervals:
++      type: file
++      description: file containing intervals
++      ontologies: []
++- - meta3:
++      type: map
++      description: |
++        Groovy Map containing sample information
++        e.g. [ id:'test', single_end:false ]
++  - fasta:
++      type: file
++      description: The reference fasta file
++      pattern: "*.fasta"
++      ontologies: []
++- - meta4:
++      type: map
++      description: |
++        Groovy Map containing sample information
++        e.g. [ id:'test', single_end:false ]
++  - fai:
++      type: file
++      description: Index of reference fasta file
++      pattern: "*.fai"
++      ontologies: []
++- - meta5:
++      type: map
++      description: |
++        Groovy Map containing sample information
++        e.g. [ id:'test', single_end:false ]
++  - gzi:
++      type: file
++      description: GZI index of reference fasta file
++      pattern: "*.gzi"
++      ontologies: []
++output:
++  vcf:
+   - - meta:
+         type: map
+         description: |
+           Groovy Map containing sample information
+-          e.g. [ id:'test', single_end:false ]
+-    - input_normal:
++          e.g. `[ id:'sample1', single_end:false ]`
++    - ${prefix}.vcf.gz:
+         type: file
+-        description: BAM/CRAM file
+-        pattern: "*.bam/cram"
+-        ontologies: []
+-    - index_normal:
+-        type: file
+-        description: Index of BAM/CRAM file
+-        pattern: "*.bai/crai"
+-        ontologies: []
+-    - input_tumor:
+-        type: file
+-        description: BAM/CRAM file
+-        pattern: "*.bam/cram"
+-        ontologies: []
+-    - index_tumor:
+-        type: file
+-        description: Index of BAM/CRAM file
+-        pattern: "*.bai/crai"
+-        ontologies: []
+-  - - meta2:
++        description: Compressed VCF file
++        pattern: "*.vcf.gz"
++        ontologies:
++        - edam: http://edamontology.org/format_3989  # GZIP format
++  vcf_tbi:
++  - - meta:
+         type: map
+         description: |
+           Groovy Map containing sample information
+-          e.g. [ id:'test', single_end:false ]
+-    - intervals:
++          e.g. `[ id:'sample1', single_end:false ]`
++    - ${prefix}.vcf.gz.tbi:
+         type: file
+-        description: file containing intervals
++        description: Index of compressed VCF file
++        pattern: "*.vcf.gz.tbi"
+         ontologies: []
+-  - - meta3:
++  gvcf:
++  - - meta:
+         type: map
+         description: |
+           Groovy Map containing sample information
+-          e.g. [ id:'test', single_end:false ]
+-    - fasta:
++          e.g. `[ id:'sample1', single_end:false ]`
++    - ${prefix}.g.vcf.gz:
+         type: file
+-        description: The reference fasta file
+-        pattern: "*.fasta"
+-        ontologies: []
+-  - - meta4:
++        description: Compressed GVCF file
++        pattern: "*.g.vcf.gz"
++        ontologies:
++        - edam: http://edamontology.org/format_3989  # GZIP format
++  gvcf_tbi:
++  - - meta:
+         type: map
+         description: |
+           Groovy Map containing sample information
+-          e.g. [ id:'test', single_end:false ]
+-    - fai:
++          e.g. `[ id:'sample1', single_end:false ]`
++    - ${prefix}.g.vcf.gz.tbi:
+         type: file
+-        description: Index of reference fasta file
+-        pattern: "*.fai"
++        description: Index of compressed Genotyped VCF file
++        pattern: "*.g.vcf.gz.tbi"
+         ontologies: []
+-  - - meta5:
+-        type: map
+-        description: |
+-          Groovy Map containing sample information
+-          e.g. [ id:'test', single_end:false ]
+-    - gzi:
+-        type: file
+-        description: GZI index of reference fasta file
+-        pattern: "*.gzi"
+-        ontologies: []
+-output:
+-  vcf:
+-    - - meta:
+-          type: map
+-          description: |
+-            Groovy Map containing sample information
+-            e.g. `[ id:'sample1', single_end:false ]`
+-      - ${prefix}.vcf.gz:
+-          type: file
+-          description: Compressed VCF file
+-          pattern: "*.vcf.gz"
+-          ontologies:
+-            - edam: http://edamontology.org/format_3989 # GZIP format
+-  vcf_tbi:
+-    - - meta:
+-          type: map
+-          description: |
+-            Groovy Map containing sample information
+-            e.g. `[ id:'sample1', single_end:false ]`
+-      - ${prefix}.vcf.gz.tbi:
+-          type: file
+-          description: Index of compressed VCF file
+-          pattern: "*.vcf.gz.tbi"
+-          ontologies: []
+-  gvcf:
+-    - - meta:
+-          type: map
+-          description: |
+-            Groovy Map containing sample information
+-            e.g. `[ id:'sample1', single_end:false ]`
+-      - ${prefix}.g.vcf.gz:
+-          type: file
+-          description: Compressed GVCF file
+-          pattern: "*.g.vcf.gz"
+-          ontologies:
+-            - edam: http://edamontology.org/format_3989
+-  gvcf_tbi:
+-    - - meta:
+-          type: map
+-          description: |
+-            Groovy Map containing sample information
+-            e.g. `[ id:'sample1', single_end:false ]`
+-      - ${prefix}.g.vcf.gz.tbi:
+-          type: file
+-          description: Index of compressed Genotyped VCF file
+-          pattern: "*.g.vcf.gz.tbi"
+-          ontologies: []
+   versions_deepsomatic:
+-    - - ${task.process}:
+-          type: string
+-          description: The name of the process
+-      - deepsomatic:
+-          type: string
+-          description: The name of the tool
+-      - 1.7.0:
+-          type: eval
+-          description: The expression to obtain the version of the tool
++  - - ${task.process}:
++        type: string
++        description: The name of the process
++    - deepsomatic:
++        type: string
++        description: The name of the tool
++    - 1.10.0:
++        type: string
++        description: The expression to obtain the version of the tool
++
+ topics:
+   versions:
+-    - - ${task.process}:
+-          type: string
+-          description: The name of the process
+-      - deepsomatic:
+-          type: string
+-          description: The name of the tool
+-      - 1.7.0:
+-          type: eval
+-          description: The expression to obtain the version of the tool
++  - - ${task.process}:
++        type: string
++        description: The name of the process
++    - deepsomatic:
++        type: string
++        description: The name of the tool
++    - 1.10.0:
++        type: string
++        description: The expression to obtain the version of the tool
++
+ authors:
+-  - "@vaxyzek"
++- "@vaxyzek"
+ maintainers:
+-  - "@vaxyzek"
++- "@vaxyzek"
+
+Changes in 'deepsomatic/tests/main.nf.test':
+--- modules/nf-core/deepsomatic/tests/main.nf.test
++++ modules/nf-core/deepsomatic/tests/main.nf.test
+@@ -47,7 +47,7 @@
+                 {
+                     assert snapshot(
+                         process.out.vcf.collect { file(it[1]).getName() },
+-                        process.out.tbi.collect { file(it[1]).getName() },
++                        process.out.vcf_tbi.collect { file(it[1]).getName() },
+                         process.out.findAll { key, val -> key.startsWith('versions') },
+                     ).match()
+                 }
+
+'modules/nf-core/deepsomatic/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/deepsomatic/tests/nextflow.config' is unchanged
+************************************************************

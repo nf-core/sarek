@@ -245,7 +245,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
             .ifEmpty {
                 // In this case, the sample-sheet contains no tumor-samples
                 if (!build_only_index) {
-                    def tools_tumor = ['ascat', 'controlfreec', 'mutect2', 'msisensorpro']
+                    def tools_tumor = ['ascat', 'controlfreec', 'deepsomatic', 'mutect2', 'msisensorpro', 'parabricks_deepsomatic']
                     def tools_tumor_asked = []
                     tools_tumor.each { tool ->
                         if (tools && tools.split(',').contains(tool)) {
@@ -262,7 +262,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
             .filter { sample -> sample[0].status == 0 }
             .ifEmpty {
                 // In this case, the sample-sheet contains no normal/germline-samples
-                def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller', 'msisensorpro']
+                def tools_requiring_normal_samples = ['ascat', 'deepsomatic', 'deepvariant', 'haplotypecaller', 'msisensorpro', 'parabricks_deepsomatic']
                 def requested_tools_requiring_normal_samples = []
                 tools_requiring_normal_samples.each { tool_requiring_normal_samples ->
                     if (tools && tools.split(',').contains(tool_requiring_normal_samples)) {

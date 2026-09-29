@@ -141,6 +141,12 @@
                         "git_sha": "8f6fc518531291208e7a665f6e8bcbeb1f05f49e",
                         "installed_by": ["modules"]
                     },
+                    "deepsomatic": {
+                        "branch": "master",
+                        "git_sha": "c604daf6b1fd88f72b93d96beb7d456ad82ef468",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/deepsomatic/deepsomatic.diff"
+                    },
                     "deepvariant/rundeepvariant": {
                         "branch": "master",
                         "git_sha": "29031bf70ae8117b235400aca32796a433c733f2",
@@ -411,14 +417,20 @@
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["bam_ngscheckmate"]
                     },
-                    "parabricks/deepvariant": {
-                        "branch": "master",
-                        "git_sha": "3e0ec6464725c64d81abe928e15a6750d5fdd272",
-                        "installed_by": ["modules"]
-                    },
                     "parabricks/applybqsr": {
                         "branch": "master",
                         "git_sha": "006a6142690e2f4a455f77a1bc7d71459d78deb5",
+                        "installed_by": ["modules"]
+                    },
+                    "parabricks/deepsomatic": {
+                        "branch": "master",
+                        "git_sha": "3ccf6cbb9868aa36cf77b9490af7b47595eaab17",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/parabricks/deepsomatic/parabricks-deepsomatic.diff"
+                    },
+                    "parabricks/deepvariant": {
+                        "branch": "master",
+                        "git_sha": "3e0ec6464725c64d81abe928e15a6750d5fdd272",
                         "installed_by": ["modules"]
                     },
                     "parabricks/fq2bam": {
