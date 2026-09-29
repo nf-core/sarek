@@ -129,6 +129,12 @@ workflow SAREK {
     main:
     // To gather all QC reports for MultiQC
     reports = channel.empty()
+    preprocessing_fastp = channel.empty()
+    preprocessing_bbsplit = channel.empty()
+    preprocessing_mapped = channel.empty()
+    preprocessing_markduplicates = channel.empty()
+    preprocessing_recalibration_tables = channel.empty()
+    preprocessing_recalibrated = channel.empty()
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -249,6 +255,13 @@ workflow SAREK {
 
             // Gather QC reports
             reports = reports.mix(FASTQ_PREPROCESS_GATK.out.reports)
+
+            preprocessing_fastp = FASTQ_PREPROCESS_GATK.out.fastp
+            preprocessing_bbsplit = FASTQ_PREPROCESS_GATK.out.bbsplit
+            preprocessing_mapped = FASTQ_PREPROCESS_GATK.out.mapped
+            preprocessing_markduplicates = FASTQ_PREPROCESS_GATK.out.markduplicates
+            preprocessing_recalibration_tables = FASTQ_PREPROCESS_GATK.out.recalibration_tables
+            preprocessing_recalibrated = FASTQ_PREPROCESS_GATK.out.recalibrated
         }
     }
 
@@ -637,6 +650,12 @@ workflow SAREK {
     emit:
     multiqc_report  = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
     multiqc = ch_multiqc // channel: SarekMultiqc
+    preprocessing_fastp
+    preprocessing_bbsplit
+    preprocessing_mapped
+    preprocessing_markduplicates
+    preprocessing_recalibration_tables
+    preprocessing_recalibrated
 }
 
 /*

@@ -338,6 +338,12 @@ workflow NFCORE_SAREK {
     emit:
     prepared_genome = PREPARE_GENOME.out.results
     prepared_intervals = PREPARE_INTERVALS.out.results
+    preprocessing_fastp = SAREK.out.preprocessing_fastp
+    preprocessing_bbsplit = SAREK.out.preprocessing_bbsplit
+    preprocessing_mapped = SAREK.out.preprocessing_mapped
+    preprocessing_markduplicates = SAREK.out.preprocessing_markduplicates
+    preprocessing_recalibration_tables = SAREK.out.preprocessing_recalibration_tables
+    preprocessing_recalibrated = SAREK.out.preprocessing_recalibrated
     multiqc = SAREK.out.multiqc
     multiqc_report  = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
 }
@@ -385,6 +391,12 @@ workflow {
     publish:
     prepared_genome = NFCORE_SAREK.out.prepared_genome
     prepared_intervals = NFCORE_SAREK.out.prepared_intervals
+    preprocessing_fastp = NFCORE_SAREK.out.preprocessing_fastp
+    preprocessing_bbsplit = NFCORE_SAREK.out.preprocessing_bbsplit
+    preprocessing_mapped = NFCORE_SAREK.out.preprocessing_mapped
+    preprocessing_markduplicates = NFCORE_SAREK.out.preprocessing_markduplicates
+    preprocessing_recalibration_tables = NFCORE_SAREK.out.preprocessing_recalibration_tables
+    preprocessing_recalibrated = NFCORE_SAREK.out.preprocessing_recalibrated
     multiqc = NFCORE_SAREK.out.multiqc
 }
 
@@ -415,6 +427,49 @@ output {
             r.split_bed_gz >> 'reference/intervals/'
             r.combined_bed >> 'reference/intervals/'
             r.combined_bed_gz >> 'reference/intervals/'
+        }
+    }
+
+    preprocessing_fastp {
+        path { r ->
+            r.html >> "reports/fastp/${r.meta.sample}/"
+            r.json >> "reports/fastp/${r.meta.sample}/"
+            r.log >> "reports/fastp/${r.meta.sample}/"
+            r.reads >> (params.save_trimmed || params.save_split_fastqs ? "preprocessing/fastp/${r.meta.sample}/" : null)
+        }
+    }
+
+    preprocessing_bbsplit {
+        path { r ->
+            r.stats >> "preprocessing/bbsplit/${r.id}/"
+            r.reads >> (params.save_bbsplit_reads ? "preprocessing/bbsplit/${r.id}/" : null)
+        }
+    }
+
+    preprocessing_mapped {
+        path { r ->
+            r.alignment >> "preprocessing/mapped/${r.id}/"
+            r.index >> "preprocessing/mapped/${r.id}/"
+        }
+    }
+
+    preprocessing_markduplicates {
+        path { r ->
+            r.alignment >> "preprocessing/${r.directory}/${r.id}/"
+            r.index >> (r.alignment.name.endsWith('.bam')
+                ? "preprocessing/${r.directory}/${r.id}/${r.alignment.name}.bai"
+                : "preprocessing/${r.directory}/${r.id}/")
+        }
+    }
+
+    preprocessing_recalibration_tables {
+        path { r -> r.table >> "preprocessing/recal_table/${r.id}/" }
+    }
+
+    preprocessing_recalibrated {
+        path { r ->
+            r.alignment >> "preprocessing/recalibrated/${r.id}/"
+            r.index >> "preprocessing/recalibrated/${r.id}/"
         }
     }
 
