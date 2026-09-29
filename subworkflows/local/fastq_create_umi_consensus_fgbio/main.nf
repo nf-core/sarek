@@ -40,11 +40,8 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     sort = false
     ALIGN_UMI(BAM2FASTQ.out.reads, map_index, sort, fasta, fai)
 
-    // bwa-mem2 does not write the MQ tag and fgbio GroupReadsByUmi crashes
-    // on the missing MQ tag. samtools fixmate will add MQ tag.
-    // Runs per lane on the raw aligner output, where reads of a pair are
-    // adjacent (bwa -p emits each template together), so the name-collated
-    // input requirement of fixmate is met by construction.
+    // fixmate adds MQ tag which is required by fgbio GroupReadsByUmi
+    // and is not emitted by bwa-mem2
     bams_to_fixmate = ALIGN_UMI.out.bam
         .branch { meta, bam ->
             fixmate:      params.aligner == 'bwa-mem2'
@@ -53,9 +50,7 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
 
     SAMTOOLS_FIXMATE(bams_to_fixmate.fixmate, [[], [], []])
 
-    bams_fixed = SAMTOOLS_FIXMATE.out.bam.mix(bams_to_fixmate.skip_fixmate)
-
-    bams_to_merge = bams_fixed
+    bams_to_merge = SAMTOOLS_FIXMATE.out.bam.mix(bams_to_fixmate.skip_fixmate)
     // id currently includes the lane, so swap to just id=sample and groupKey to avoid blocking
     // Remove lane-specific fields (id, sample_lane_id) so groupTuple can match lanes from the same sample
         .map { meta, bam ->
