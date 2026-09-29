@@ -1,65 +1,65 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
+    IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
+*/
 
-include { paramsSummaryMap } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML } from 'plugin/nf-core-utils'
-include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_sarek_pipeline'
+include { paramsSummaryMap                                  } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc                              } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML                            } from 'plugin/nf-core-utils'
+include { methodsDescriptionText                            } from '../subworkflows/local/utils_nfcore_sarek_pipeline'
 
 // Create samplesheets to restart from different steps
-include { CHANNEL_VARIANT_CALLING_CREATE_CSV } from '../subworkflows/local/channel_variant_calling_create_csv'
+include { CHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../subworkflows/local/channel_variant_calling_create_csv'
 
 // Convert BAM files to FASTQ files
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT } from '../subworkflows/local/bam_convert_samtools'
+include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT       } from '../subworkflows/local/bam_convert_samtools'
 
 // Convert fastq.gz.spring files to fastq.gz files
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R1_FQ } from '../modules/nf-core/spring/decompress'
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R2_FQ } from '../modules/nf-core/spring/decompress'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R1_FQ   } from '../modules/nf-core/spring/decompress'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R2_FQ   } from '../modules/nf-core/spring/decompress'
 include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_FQ_PAIR } from '../modules/nf-core/spring/decompress'
 
 // Run FASTQC
-include { FASTQC } from '../modules/nf-core/fastqc'
+include { FASTQC                                            } from '../modules/nf-core/fastqc'
 
 // QC on CRAM
-include { CRAM_SAMPLEQC } from '../subworkflows/local/cram_sampleqc'
+include { CRAM_SAMPLEQC                                     } from '../subworkflows/local/cram_sampleqc'
 
 // Preprocessing
-include { FASTQ_PREPROCESS_GATK } from '../subworkflows/local/fastq_preprocess_gatk'
-include { FASTQ_PREPROCESS_PARABRICKS } from '../subworkflows/local/fastq_preprocess_parabricks'
+include { FASTQ_PREPROCESS_GATK                             } from '../subworkflows/local/fastq_preprocess_gatk'
+include { FASTQ_PREPROCESS_PARABRICKS                       } from '../subworkflows/local/fastq_preprocess_parabricks'
 
 // CRAM_TO_BAM conversion
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM } from '../modules/nf-core/samtools/convert'
+include { SAMTOOLS_CONVERT as CRAM_TO_BAM                   } from '../modules/nf-core/samtools/convert'
 
 // Variant calling on a single normal sample
-include { BAM_VARIANT_CALLING_GERMLINE_ALL } from '../subworkflows/local/bam_variant_calling_germline_all'
+include { BAM_VARIANT_CALLING_GERMLINE_ALL                  } from '../subworkflows/local/bam_variant_calling_germline_all'
 
 // Variant calling on a single tumor sample
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL } from '../subworkflows/local/bam_variant_calling_tumor_only_all'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL                } from '../subworkflows/local/bam_variant_calling_tumor_only_all'
 
 // Variant calling on tumor/normal pair
-include { BAM_VARIANT_CALLING_SOMATIC_ALL } from '../subworkflows/local/bam_variant_calling_somatic_all'
+include { BAM_VARIANT_CALLING_SOMATIC_ALL                   } from '../subworkflows/local/bam_variant_calling_somatic_all'
 
 // POST VARIANTCALLING: e.g. merging
-include { POST_VARIANTCALLING } from '../subworkflows/local/post_variantcalling'
+include { POST_VARIANTCALLING                               } from '../subworkflows/local/post_variantcalling'
 
 // QC on VCF files
-include { VCF_QC_BCFTOOLS_VCFTOOLS } from '../subworkflows/local/vcf_qc_bcftools_vcftools'
+include { VCF_QC_BCFTOOLS_VCFTOOLS                          } from '../subworkflows/local/vcf_qc_bcftools_vcftools'
 
 // Annotation
-include { VCF_ANNOTATE_ALL } from '../subworkflows/local/vcf_annotate_all'
+include { VCF_ANNOTATE_ALL                                  } from '../subworkflows/local/vcf_annotate_all'
 
 // MULTIQC
-include { MULTIQC } from '../modules/nf-core/multiqc'
+include { MULTIQC                                           } from '../modules/nf-core/multiqc'
 include { SarekMultiqc } from './types'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-RUN MAIN WORKFLOW
+    RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
+*/
 
 workflow SAREK {
     take:
@@ -132,9 +132,9 @@ workflow SAREK {
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    VALIDATE INPUTS
+        VALIDATE INPUTS
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     */
+    */
 
     // PREPROCESSING
     if (step == 'mapping') {
@@ -635,15 +635,15 @@ workflow SAREK {
         }
 
     emit:
-    multiqc_report = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
+    multiqc_report  = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
     multiqc = ch_multiqc // channel: SarekMultiqc
 }
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-FUNCTIONS
+    FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
+*/
 
 // Add readgroup to meta and remove lane
 def addReadgroupToMeta(meta, files) {
