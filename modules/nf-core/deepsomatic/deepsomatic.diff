@@ -38,12 +38,10 @@ Changes in 'deepsomatic/main.nf':
 -        error "DEEPSOMATIC module does not support Conda. Please use Docker / Singularity / Podman instead."
 +        error("DEEPSOMATIC module does not support Conda. Please use Docker / Singularity / Podman instead.")
      }
--    def args = task.ext.args ?: ''
-+    def args: String = task.ext.args ?: ''
+     def args = task.ext.args ?: ''
      prefix = task.ext.prefix ?: "${meta.id}"
--    def regions = intervals ? "--regions=${intervals}" : ""
-+    def regions: String = intervals ? "--regions=${intervals}" : ""
-+    def output_gvcf: String = task.ext.output_gvcf ? "--output_gvcf=${prefix}.g.vcf.gz" : ""
+     def regions = intervals ? "--regions=${intervals}" : ""
++    def output_gvcf = task.ext.output_gvcf ? "--output_gvcf=${prefix}.g.vcf.gz" : ""
  
      """
      run_deepsomatic \\
@@ -66,7 +64,7 @@ Changes in 'deepsomatic/main.nf':
 +        error("DEEPSOMATIC module does not support Conda. Please use Docker / Singularity / Podman instead.")
      }
      prefix = task.ext.prefix ?: "${meta.id}"
-+    def output_gvcf: String = task.ext.output_gvcf ? "echo '' | gzip > ${prefix}.g.vcf.gz; touch ${prefix}.g.vcf.gz.tbi" : ""
++    def output_gvcf = task.ext.output_gvcf ? "echo '' | gzip > ${prefix}.g.vcf.gz; touch ${prefix}.g.vcf.gz.tbi" : ""
      """
      echo "" | gzip > ${prefix}.vcf.gz
      touch ${prefix}.vcf.gz.tbi

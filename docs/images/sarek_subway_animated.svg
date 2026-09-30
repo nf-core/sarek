@@ -1727,6 +1727,12 @@
       <circle id="circle1664-34-2-3" class="st2" cx="641.05" cy="102.25" r="7.5"/>
       <path id="path6741-2" class="st3" d="M644.61,123.79c2.79.03,5.98-.68,7.95-2.65l4.64-4.64c1.98-1.98,5.16-2.68,7.96-2.65" inkscape:connector-curvature="0" sodipodi:nodetypes="cscc"/>
       <circle id="circle1664-34-2-3-2" class="st2" cx="641.05" cy="126.14" r="7.5"/>
+      <g id="deepsomatic-callers">
+        <circle class="st2" cx="171" cy="369.88" r="7.5"/>
+        <circle class="st2" cx="190" cy="369.88" r="7.5"/>
+        <text transform="translate(145 414) rotate(-75)" font-family="Arial, sans-serif" font-size="7px"><tspan x="0" y="0">deepsomatic</tspan></text>
+        <text transform="translate(164 438) rotate(-75)" font-family="Arial, sans-serif" font-size="7px"><tspan x="0" y="0">parabricks deepsomatic</tspan></text>
+      </g>
     </g>
     <g id="flow-dots" inkscape:label="flow-dots">
       <path id="route_core_fastq_tt" class="st20" d="M82.2,114.06h199.69c2.79.03,5.98-.67,7.95-2.65l4.64-4.64c1.98-1.98,5.16-2.68,7.95-2.65l8.22.04c2.79-.03,5.98.67,7.95,2.65l4.64,4.64c1.98,1.98,5.16,2.68,7.95,2.65l284.18-.39c2.79.03,5.98-.67,7.96-2.65l4.64-4.64c1.98-1.98,5.16-2.68,7.95-2.65l8.67.17c2.79-.03,5.98.67,7.95,2.65l4.64,4.64c1.98,1.98,5.16,2.68,7.96,2.65l167.57.18"/>

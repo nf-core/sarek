@@ -27,15 +27,15 @@ process PARABRICKS_DEEPSOMATIC {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         exit(1, "Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
-    def args: String = task.ext.args ?: ''
+    def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
-    def output_mode: String = task.ext.output_mode ?: 'vcf'
+    def output_mode = task.ext.output_mode ?: 'vcf'
     if (!(output_mode in ['vcf', 'gvcf'])) {
         error("PARABRICKS_DEEPSOMATIC output mode must be 'vcf' or 'gvcf'.")
     }
-    def output_file: String = output_mode == 'gvcf' ? "${prefix}.g.vcf.gz" : "${prefix}.vcf.gz"
-    def interval_command: String = intervals ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : ""
-    def num_gpus: String = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
+    def output_file = output_mode == 'gvcf' ? "${prefix}.g.vcf.gz" : "${prefix}.vcf.gz"
+    def interval_command = intervals ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : ""
+    def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
     """
     pbrun \\
         deepsomatic \\
@@ -50,11 +50,11 @@ process PARABRICKS_DEEPSOMATIC {
 
     stub:
     prefix = task.ext.prefix ?: "${meta.id}"
-    def output_mode: String = task.ext.output_mode ?: 'vcf'
+    def output_mode = task.ext.output_mode ?: 'vcf'
     if (!(output_mode in ['vcf', 'gvcf'])) {
         error("PARABRICKS_DEEPSOMATIC output mode must be 'vcf' or 'gvcf'.")
     }
-    def output_file: String = output_mode == 'gvcf' ? "${prefix}.g.vcf.gz" : "${prefix}.vcf.gz"
+    def output_file = output_mode == 'gvcf' ? "${prefix}.g.vcf.gz" : "${prefix}.vcf.gz"
     """
     echo '' | gzip > ${output_file}
     touch ${output_file}.tbi
