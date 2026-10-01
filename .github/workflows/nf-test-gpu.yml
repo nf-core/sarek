@@ -54,7 +54,7 @@ jobs:
         env:
           NFT_VER: ${{ env.NFT_VER }}
         with:
-          tags: "gpu_stub,cpu_stub"
+          tags: "gpu,gpu_stub,cpu_stub"
           max_shards: 2
           all_tests: ${{ github.event.inputs.update_snapshots || 'false' }}
 
@@ -113,7 +113,7 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
-          tags: ${{ matrix.profile == 'conda' && 'gpu_conda_stub' || 'gpu_stub,gpu_conda_stub,cpu_stub' }}
+          tags: ${{ matrix.profile == 'conda' && 'gpu_conda_stub' || 'gpu,gpu_stub,cpu_stub' }}
           update_snapshots: ${{ github.event.inputs.update_snapshots || 'false' }}
       - name: Report test status
         if: ${{ always() }}
