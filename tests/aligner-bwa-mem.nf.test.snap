@@ -17,7 +17,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
@@ -79,7 +79,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-28T14:28:32.64734047",
+        "timestamp": "2026-10-01T19:39:52.752367",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -130,11 +130,11 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2025-12-15T18:57:28.07820518",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T18:57:28.07820518"
+        }
     },
     "-profile test --aligner bwa-mem --save_reference --build_only_index": {
         "content": [
@@ -147,7 +147,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "htslib": "1.24",
@@ -193,7 +193,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-28T10:56:53.177914755",
+        "timestamp": "2026-10-01T19:41:02.02124",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -264,10 +264,10 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2025-12-15T18:56:44.455023922",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T18:56:44.455023922"
+        }
     }
 }

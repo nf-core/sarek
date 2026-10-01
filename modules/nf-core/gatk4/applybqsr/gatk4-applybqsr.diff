@@ -1,0 +1,20 @@
+Changes in component 'nf-core/gatk4/applybqsr'
+'modules/nf-core/gatk4/applybqsr/environment.yml' is unchanged
+'modules/nf-core/gatk4/applybqsr/meta.yml' is unchanged
+Changes in 'gatk4/applybqsr/main.nf':
+--- modules/nf-core/gatk4/applybqsr/main.nf
++++ modules/nf-core/gatk4/applybqsr/main.nf
+@@ -37,7 +37,7 @@
+         avail_mem = (task.memory.mega * 0.8).intValue()
+     }
+     """
+-    gatk --java-options "-Xmx${avail_mem}M -XX:-UsePerfData" \\
++    gatk --java-options "-Xmx${avail_mem}M -XX:-UsePerfData -Dsamjdk.use_libdeflate=false" \\
+         ApplyBQSR \\
+         --input ${input} \\
+         --output ${prefix}.${suffix} \\
+
+'modules/nf-core/gatk4/applybqsr/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/gatk4/applybqsr/tests/nextflow.config' is unchanged
+'modules/nf-core/gatk4/applybqsr/tests/main.nf.test' is unchanged
+************************************************************
