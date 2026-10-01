@@ -209,8 +209,7 @@
                     "gatk4/applybqsr": {
                         "branch": "master",
                         "git_sha": "b2bcd8312599aacd849e69721e20ac8138018f83",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/gatk4/applybqsr/gatk4-applybqsr.diff"
+                        "installed_by": ["modules"]
                     },
                     "gatk4/applyvqsr": {
                         "branch": "master",

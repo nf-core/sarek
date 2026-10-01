@@ -1,8 +1,11 @@
 {
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null": {
         "content": [
-            9,
+            10,
             {
+                "BAM_TO_CRAM_RECAL": {
+                    "samtools": "1.24"
+                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
@@ -12,7 +15,7 @@
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.7.0.0"
                 },
-                "INDEX_CRAM": {
+                "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
@@ -121,7 +124,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-10-01T19:56:34.800662",
+        "timestamp": "2026-10-01T21:30:15.099757",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
