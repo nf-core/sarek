@@ -7,7 +7,7 @@
                     "bcftools": "1.23.1"
                 },
                 "GATK4_HAPLOTYPECALLER": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -177,7 +177,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:27:52.965412156",
+        "timestamp": "2026-10-01T22:16:44.297458087",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -194,10 +194,10 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_HAPLOTYPECALLER": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MERGE_HAPLOTYPECALLER": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -374,7 +374,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:29:55.289787759",
+        "timestamp": "2026-10-01T22:03:24.755594959",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -391,10 +391,10 @@
                     "gatk4": "4.5.0.0"
                 },
                 "FILTERVARIANTTRANCHES": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_HAPLOTYPECALLER": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -567,7 +567,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:32:53.636129324",
+        "timestamp": "2026-10-01T21:13:30.168222068",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -587,13 +587,13 @@
                     "gawk": "5.3.0"
                 },
                 "FILTERVARIANTTRANCHES": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_HAPLOTYPECALLER": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MERGE_HAPLOTYPECALLER": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -773,7 +773,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:32:48.438182421",
+        "timestamp": "2026-10-01T21:15:24.04482982",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

@@ -168,7 +168,7 @@
                     "dragmap": "1.2.1"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "htslib": "1.24",
@@ -198,10 +198,10 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-04-08T12:04:22.190861311",
+        "timestamp": "2026-10-01T23:18:22.810445894",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --aligner dragmap --save_reference skip QC/recal/md - stub": {
@@ -223,7 +223,7 @@
                     "dragmap": "1.2.1"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
@@ -265,10 +265,10 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-04-08T12:03:21.664791416",
+        "timestamp": "2026-10-01T23:18:45.855098649",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         }
     }
 }
