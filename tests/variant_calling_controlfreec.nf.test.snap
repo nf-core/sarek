@@ -350,7 +350,8 @@
                     "controlfreec": "11.6b"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_MPILEUP": {
                     "samtools": "1.24"
@@ -436,11 +437,11 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-10-01T23:20:05.101126765",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
-        },
-        "timestamp": "2026-05-28T15:30:21.092617766"
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools controlfreec somatic --nucleotides_per_second 20": {
         "content": [
@@ -650,7 +651,8 @@
                     "controlfreec": "11.6b"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_MPILEUP": {
                     "samtools": "1.24"
@@ -722,10 +724,10 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-10-01T23:20:04.066915849",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
-        },
-        "timestamp": "2026-05-28T15:31:24.029091171"
+            "nextflow": "25.10.4"
+        }
     }
 }

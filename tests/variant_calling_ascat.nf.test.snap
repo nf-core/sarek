@@ -8,7 +8,8 @@
                     "bioconductor-ascat": "3.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -25,6 +26,7 @@
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/.stub",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
                 "no_intervals.bed.gz",
@@ -88,10 +90,10 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-04-08T12:14:36.857806635",
+        "timestamp": "2026-10-01T23:18:33.431649341",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools ascat --input ascat_somatic.csv -stub": {
@@ -103,7 +105,8 @@
                     "bioconductor-ascat": "3.2.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -120,6 +123,7 @@
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/.stub",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
                 "no_intervals.bed.gz",
@@ -183,10 +187,10 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-04-08T12:14:00.856421629",
+        "timestamp": "2026-10-01T23:18:47.065044295",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools ascat --input ascat_somatic.csv --only_paired_variant_calling including gc and rt": {

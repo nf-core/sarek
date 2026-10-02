@@ -1,8 +1,11 @@
 {
     "-profile test --aligner sentieon-bwamem --tools null -stub": {
         "content": [
-            18,
+            27,
             {
+                "BAM_TO_CRAM_RECAL": {
+                    "samtools": "1.24"
+                },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
                 },
@@ -13,23 +16,24 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.2.0",
+                    "gatk4": "4.7.0.0",
                     "samtools": "1.21"
                 },
-                "INDEX_CRAM": {
+                "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -64,6 +68,8 @@
                 "preprocessing",
                 "preprocessing/markduplicates",
                 "preprocessing/markduplicates/test",
+                "preprocessing/markduplicates/test/test.bai",
+                "preprocessing/markduplicates/test/test.bam",
                 "preprocessing/markduplicates/test/test.cram",
                 "preprocessing/markduplicates/test/test.cram.crai",
                 "preprocessing/recal_table",
@@ -121,10 +127,10 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-04-08T12:12:40.530730643",
+        "timestamp": "2026-10-01T23:19:02.999047452",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.2"
+            "nextflow": "25.10.4"
         }
     }
 }
