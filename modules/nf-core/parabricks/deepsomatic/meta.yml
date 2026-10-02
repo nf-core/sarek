@@ -1,0 +1,142 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "parabricks_deepsomatic"
+description: NVIDIA Clara Parabricks GPU-accelerated somatic variant calling,
+  replicating deepsomatic.
+keywords:
+  - variant
+  - somatic
+  - vcf
+  - deepsomatic
+  - tumor
+  - normal
+tools:
+  - "parabricks":
+      description: "NVIDIA Clara Parabricks GPU-accelerated genomics tools"
+      homepage: https://www.nvidia.com/en-us/clara/genomics/
+      documentation: https://docs.nvidia.com/clara/parabricks/latest/index.html
+      licence: ["custom"]
+      identifier: ""
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information.
+          [ id:'tumor_vs_normal']
+    - input_tumor:
+        type: file
+        description: BAM/CRAM file for tumor sample.
+        pattern: "*.{bam,cram}"
+        ontologies: []
+    - index_tumor:
+        type: file
+        description: BAI/CRAI index corresponding to tumor BAM/CRAM file.
+        pattern: "*.{bai,crai}"
+        ontologies: []
+    - input_normal:
+        type: file
+        description: BAM/CRAM file for normal sample.
+        pattern: "*.{bam,cram}"
+        ontologies: []
+    - index_normal:
+        type: file
+        description: BAI/CRAI index corresponding to normal BAM/CRAM file.
+        pattern: "*.{bai,crai}"
+        ontologies: []
+    - intervals:
+        type: file
+        description: File or files containing genomic intervals for variant
+          calling.
+        pattern: "*.{bed,interval_list,picard,list,intervals}"
+        ontologies: []
+  - - ref_meta:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          [ id:'genome']
+    - fasta:
+        type: file
+        description: Reference fasta - must be unzipped.
+        pattern: "*.fasta"
+        ontologies: []
+output:
+  vcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information.
+            e.g. [ id:'tumor_vs_normal' ]
+      - ${prefix}.vcf.gz:
+          type: file
+          description: VCF file created with deepsomatic, optional
+          pattern: "*.vcf.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  vcf_tbi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information.
+            e.g. [ id:'tumor_vs_normal' ]
+      - ${prefix}.vcf.gz.tbi:
+          type: file
+          description: Tabix index for the VCF file
+          pattern: "*.vcf.gz.tbi"
+          ontologies: []
+  gvcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information.
+            e.g. [ id:'tumor_vs_normal' ]
+      - ${prefix}.g.vcf.gz:
+          type: file
+          description: bgzipped gVCF created with deepsomatic, optional
+          pattern: "*.g.vcf.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  gvcf_tbi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information.
+            e.g. [ id:'tumor_vs_normal' ]
+      - ${prefix}.g.vcf.gz.tbi:
+          type: file
+          description: Tabix index for the gVCF file
+          pattern: "*.g.vcf.gz.tbi"
+          ontologies: []
+  compatible_versions:
+    - compatible_versions.yml:
+        type: file
+        description: File containing info on compatible CPU-based software
+          versions.
+        pattern: "compatible_versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+  versions_parabricks:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - parabricks:
+          type: string
+          description: The tool name
+      - "pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - parabricks:
+          type: string
+          description: The tool name
+      - "pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+authors:
+  - "@sppearce"
+maintainers:
+  - "@sppearce"

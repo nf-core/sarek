@@ -35,6 +35,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Variant Calling](#variant-calling)
   - [SNVs and small indels](#snvs-and-small-indels)
     - [bcftools](#bcftools)
+    - [DeepSomatic](#deepsomatic)
     - [DeepVariant](#deepvariant)
     - [FreeBayes](#freebayes)
     - [GATK HaplotypeCaller](#gatk-haplotypecaller)
@@ -43,6 +44,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [GATK Mutect2](#gatk-mutect2)
     - [Lofreq](#lofreq)
     - [MuSE](#muse)
+    - [Parabricks DeepSomatic](#parabricks-deepsomatic)
     - [Parabricks DeepVariant](#parabricks-deepvariant)
     - [Parabricks HaplotypeCaller](#parabricks-haplotypecaller)
     - [Sentieon DNAscope](#sentieon-dnascope)
@@ -411,6 +413,34 @@ For further reading and documentation see the [bcftools manual](https://samtools
 
 </details>
 
+#### DeepSomatic
+
+[DeepSomatic](https://github.com/google/deepsomatic) uses a deep neural network to identify somatic SNVs and small indels. Sarek supports paired short-read tumour-normal WGS and WES calling. The CPU implementation scatters work across intervals and gathers one raw VCF for each pair.
+
+DeepSomatic obtains sample names from the input CRAM read-group `SM` values. CRAM files produced by Sarek normally use `${patient}_${sample}` for `SM`.
+
+DeepSomatic uses the following FILTER classifications in raw VCF files:
+
+- `PASS`: All filters passed and the call is somatic.
+- `GERMLINE`: The call is non-somatic.
+- `RefCall`: The genotyping model considers the site reference.
+- `LowQual`: Confidence in the call is below the calling threshold.
+- `NoCall`: The site has zero depth and could not be called.
+
+Sarek preserves these classifications. The optional general VCF filtering workflow applies the configured filtering criteria. It does not introduce a mandatory DeepSomatic-specific PASS filter.
+
+<details markdown="1">
+<summary>Output files for tumour-normal pairs</summary>
+
+**Output directory: `{outdir}/variant_calling/deepsomatic/<tumoursample_vs_normalsample>/`**
+
+- `<tumoursample_vs_normalsample>.deepsomatic.vcf.gz` and `<tumoursample_vs_normalsample>.deepsomatic.vcf.gz.tbi`
+  - Raw VCF with tabix index
+
+DeepSomatic gVCF files are not published.
+
+</details>
+
 #### DeepVariant
 
 [DeepVariant](https://github.com/google/deepvariant) is a deep learning-based variant caller that takes aligned reads, produces pileup image tensors from them, classifies each tensor using a convolutional neural network and finally reports the results in a standard VCF or gVCF file. For further documentation take a look [here](https://github.com/google/deepvariant/tree/r1.4/docs).
@@ -552,6 +582,24 @@ Files created:
   - TXT containing position-specific summary statistics.
 - `<tumorsample_vs_normalsample>.muse.vcf.gz`
   - VCF with called variants. Fields are named TUMOR and NORMAL.
+
+</details>
+
+#### Parabricks DeepSomatic
+
+[Parabricks DeepSomatic](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepsomatic.html) is the GPU-accelerated implementation of DeepSomatic. Sarek supports paired short-read tumour-normal WGS and WES calling. It runs one GPU task for each pair and publishes an ordinary raw VCF and its index.
+
+Sample names and FILTER classifications follow the DeepSomatic behaviour described in the [DeepSomatic section](#deepsomatic).
+
+<details markdown="1">
+<summary>Output files for tumour-normal pairs</summary>
+
+**Output directory: `{outdir}/variant_calling/parabricks_deepsomatic/<tumoursample_vs_normalsample>/`**
+
+- `<tumoursample_vs_normalsample>.parabricks_deepsomatic.vcf.gz` and `<tumoursample_vs_normalsample>.parabricks_deepsomatic.vcf.gz.tbi`
+  - Raw VCF with tabix index
+
+DeepSomatic gVCF files are not published.
 
 </details>
 
