@@ -1,0 +1,19 @@
+Changes in component 'nf-core/gatk4/genotypegvcfs'
+'modules/nf-core/gatk4/genotypegvcfs/environment.yml' is unchanged
+'modules/nf-core/gatk4/genotypegvcfs/meta.yml' is unchanged
+Changes in 'gatk4/genotypegvcfs/main.nf':
+--- modules/nf-core/gatk4/genotypegvcfs/main.nf
++++ modules/nf-core/gatk4/genotypegvcfs/main.nf
+@@ -53,7 +53,7 @@
+     def prefix = task.ext.prefix ?: "${meta.id}"
+ 
+     """
+-    echo "" | gzip > ${prefix}.vcf.gz
++    echo | gzip > ${prefix}.vcf.gz
+     touch ${prefix}.vcf.gz.tbi
+     """
+ }
+
+'modules/nf-core/gatk4/genotypegvcfs/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/gatk4/genotypegvcfs/tests/main.nf.test' is unchanged
+************************************************************

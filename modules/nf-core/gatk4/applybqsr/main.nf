@@ -10,7 +10,7 @@ process GATK4_APPLYBQSR {
     input:
     tuple val(meta), path(input), path(input_index), path(bqsr_table), path(intervals)
     tuple val(meta2), path(fasta), path(fai), path(dict)
-    val output_suffix
+    val(output_suffix)
 
     output:
     tuple val(meta), path("${prefix}.bam"), emit: bam, optional: true

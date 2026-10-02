@@ -40,11 +40,11 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-01T23:19:27.856206023",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-10-01T23:19:27.856206023"
     },
     "-profile test --tools msisensorpro somatic": {
         "content": [

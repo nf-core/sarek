@@ -437,11 +437,11 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-01T23:20:05.101126765",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-10-01T23:20:05.101126765"
     },
     "-profile test --tools controlfreec somatic --nucleotides_per_second 20": {
         "content": [
@@ -724,10 +724,10 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-01T23:20:04.066915849",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        }
+        },
+        "timestamp": "2026-10-01T23:20:04.066915849"
     }
 }

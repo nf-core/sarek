@@ -1,0 +1,20 @@
+Changes in component 'nf-core/gatk4/applybqsr'
+'modules/nf-core/gatk4/applybqsr/environment.yml' is unchanged
+'modules/nf-core/gatk4/applybqsr/meta.yml' is unchanged
+Changes in 'gatk4/applybqsr/main.nf':
+--- modules/nf-core/gatk4/applybqsr/main.nf
++++ modules/nf-core/gatk4/applybqsr/main.nf
+@@ -10,7 +10,7 @@
+     input:
+     tuple val(meta), path(input), path(input_index), path(bqsr_table), path(intervals)
+     tuple val(meta2), path(fasta), path(fai), path(dict)
+-    val output_suffix
++    val(output_suffix)
+ 
+     output:
+     tuple val(meta), path("${prefix}.bam"), emit: bam, optional: true
+
+'modules/nf-core/gatk4/applybqsr/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/gatk4/applybqsr/tests/nextflow.config' is unchanged
+'modules/nf-core/gatk4/applybqsr/tests/main.nf.test' is unchanged
+************************************************************
