@@ -77,7 +77,7 @@ runs:
       run: |
         # In update-snapshot mode, regenerate snapshots over ALL tagged tests
         # (drop --changed-since, which is only meaningful for PR/push diffs).
-        CHANGED_SINCE="--changed-since HEAD^"
+        CHANGED_SINCE=""
         UPDATE_SNAPSHOT=""
         CI_MODE="--ci"
         if [ "${{ inputs.update_snapshots }}" = "true" ]; then
@@ -85,7 +85,7 @@ runs:
           UPDATE_SNAPSHOT="--update-snapshot"
           CI_MODE=""
         fi
-        nf-test test \
+        nf-test test tests/samplesheets.nf.test \
           --profile=+${{ inputs.profile }} \
           $(if [ -n "${{ inputs.tags }}" ]; then echo "--tag ${{ inputs.tags }}"; fi) \
           $CI_MODE \

@@ -35,9 +35,9 @@ runs:
         # Run nf-test with dynamic parameter
         # In all_tests mode (snapshot regeneration) count every tagged test,
         # not just those changed since HEAD^.
-        CHANGED_SINCE="--changed-since HEAD^"
+        CHANGED_SINCE=""
         if [ "${{ inputs.all_tests }}" = "true" ]; then CHANGED_SINCE=""; fi
-        nftest_output=$(nf-test test \
+        nftest_output=$(nf-test test tests/samplesheets.nf.test \
           --profile +docker \
           $(if [ -n "${{ inputs.tags }}" ]; then echo "--tag ${{ inputs.tags }}"; fi) \
           --dry-run \
