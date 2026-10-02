@@ -53,6 +53,7 @@ include { VCF_ANNOTATE_ALL                                  } from '../subworkfl
 
 // MULTIQC
 include { MULTIQC                                           } from '../modules/nf-core/multiqc'
+include { SarekMultiqc } from './types'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -128,6 +129,12 @@ workflow SAREK {
     main:
     // To gather all QC reports for MultiQC
     reports = channel.empty()
+    preprocessing_fastp = channel.empty()
+    preprocessing_bbsplit = channel.empty()
+    preprocessing_mapped = channel.empty()
+    preprocessing_markduplicates = channel.empty()
+    preprocessing_recalibration_tables = channel.empty()
+    preprocessing_recalibrated = channel.empty()
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -248,6 +255,13 @@ workflow SAREK {
 
             // Gather QC reports
             reports = reports.mix(FASTQ_PREPROCESS_GATK.out.reports)
+
+            preprocessing_fastp = FASTQ_PREPROCESS_GATK.out.fastp
+            preprocessing_bbsplit = FASTQ_PREPROCESS_GATK.out.bbsplit
+            preprocessing_mapped = FASTQ_PREPROCESS_GATK.out.mapped
+            preprocessing_markduplicates = FASTQ_PREPROCESS_GATK.out.markduplicates
+            preprocessing_recalibration_tables = FASTQ_PREPROCESS_GATK.out.recalibration_tables
+            preprocessing_recalibrated = FASTQ_PREPROCESS_GATK.out.recalibrated
         }
     }
 
@@ -620,9 +634,28 @@ workflow SAREK {
         }.filter { !skip_tools.split(',').contains('multiqc') }
     )
 
+    ch_multiqc = MULTIQC.out.report
+        .join(MULTIQC.out.data)
+        .combine(MULTIQC.out.plots.toList().map { items -> [items ? items[0][1] : null] })
+        .map { meta, report, data, plots ->
+            record(
+                id: meta.id,
+                meta: meta,
+                report: report,
+                data: data,
+                plots: plots,
+            )
+        }
+
     emit:
     multiqc_report  = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
-    multiqc_publish = MULTIQC.out.data.mix(MULTIQC.out.plots, MULTIQC.out.report)
+    multiqc = ch_multiqc // channel: SarekMultiqc
+    preprocessing_fastp
+    preprocessing_bbsplit
+    preprocessing_mapped
+    preprocessing_markduplicates
+    preprocessing_recalibration_tables
+    preprocessing_recalibrated
 }
 
 /*
@@ -686,14 +719,14 @@ def readFirstLineOfFastq(path) {
     def line = null
     try {
         path.withInputStream { stream ->
-            def InputStream gzipStream = new java.util.zip.GZIPInputStream(stream)
-            def Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
-            def BufferedReader buffered = new BufferedReader(decoder)
+            def gzipStream: InputStream = new java.util.zip.GZIPInputStream(stream)
+            def decoder: Reader = new InputStreamReader(gzipStream, 'ASCII')
+            def buffered: BufferedReader = new BufferedReader(decoder)
             line = buffered.readLine()
             assert line.startsWith('@')
         }
     }
-    catch (Exception e) {
+    catch (e: Exception) {
         log.warn("FASTQ file(${path}): Error streaming")
         log.warn("${e.message}")
     }

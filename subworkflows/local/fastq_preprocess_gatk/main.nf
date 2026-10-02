@@ -44,6 +44,7 @@ include { BAM_BASERECALIBRATOR_SPARK                        } from '../../../sub
 // Create recalibrated cram files to use for variant calling (+QC)
 include { BAM_APPLYBQSR                                     } from '../../../subworkflows/local/bam_applybqsr/main'
 include { BAM_APPLYBQSR_SPARK                               } from '../../../subworkflows/local/bam_applybqsr_spark/main'
+include { FastpResult; BbsplitResult; PreprocessingAlignment; MarkduplicatesAlignment; RecalibrationTable } from './types'
 
 workflow FASTQ_PREPROCESS_GATK {
     take:
@@ -64,6 +65,12 @@ workflow FASTQ_PREPROCESS_GATK {
 
     // To gather all QC reports for MultiQC
     reports          = channel.empty()
+    fastp_results = channel.empty()
+    bbsplit_results = channel.empty()
+    mapped_results = channel.empty()
+    markduplicates_results = channel.empty()
+    recalibration_table_results = channel.empty()
+    recalibrated_results = channel.empty()
 
     // PREPROCESSING
 
@@ -114,6 +121,14 @@ workflow FASTQ_PREPROCESS_GATK {
             reports = reports.mix(FASTP.out.json.collect{ _meta, json -> json })
             reports = reports.mix(FASTP.out.html.collect{ _meta, html -> html })
 
+            fastp_results = FASTP.out.reads
+                .join(FASTP.out.html, failOnDuplicate: true, failOnMismatch: true)
+                .join(FASTP.out.json, failOnDuplicate: true, failOnMismatch: true)
+                .join(FASTP.out.log, failOnDuplicate: true, failOnMismatch: true)
+                .map { meta, reads, html, json, log ->
+                    record(id: meta.id, meta: meta, reads: reads, html: html, json: json, log: log)
+                }
+
             if (params.split_fastq) {
                 reads_for_bbsplit = FASTP.out.reads.map{ meta, reads ->
                     def read_files = reads.sort(false) { a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
@@ -140,6 +155,10 @@ workflow FASTQ_PREPROCESS_GATK {
                                     .primary_fastq
 
             reports = reports.mix(BBMAP_BBSPLIT.out.stats.collect{ _meta, stats -> stats })
+
+            bbsplit_results = BBMAP_BBSPLIT.out.all_fastq
+                .join(BBMAP_BBSPLIT.out.stats, failOnDuplicate: true, failOnMismatch: true)
+                .map { meta, reads, stats -> record(id: meta.id, meta: meta, reads: reads, stats: stats) }
 
         } else {
             reads_for_alignment = reads_for_bbsplit
@@ -234,6 +253,18 @@ workflow FASTQ_PREPROCESS_GATK {
             // Create CSV to restart from this step
             if (save_output_as_bam) CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, params.outdir, save_output_as_bam, false)
             else CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true), params.outdir, save_output_as_bam, false)
+
+            mapped_results = save_output_as_bam
+                ? BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai.map { meta, alignment, index ->
+                    def result_meta = meta.getGroupTarget()
+                    record(id: result_meta.id, meta: result_meta, alignment: alignment, index: index)
+                }
+                : BAM_TO_CRAM_MAPPING.out.cram
+                    .join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true)
+                    .map { meta, alignment, index ->
+                        def result_meta = meta.getGroupTarget()
+                        record(id: result_meta.id, meta: result_meta, alignment: alignment, index: index)
+                    }
         }
 
     }
@@ -327,14 +358,23 @@ workflow FASTQ_PREPROCESS_GATK {
         // - alignment from sentieon_dedup
         // - alignment from markduplicates_spark
         ch_md_cram_for_restart = channel.empty().mix(cram_markduplicates_no_spark, cram_markduplicates_spark, cram_sentieon_dedup)
+            // Module stubs can emit both formats even though real tasks emit only the selected one.
+            .filter { _meta, file, _index -> save_output_as_bam ? file.name.endsWith('.bam') : file.name.endsWith('.cram') }
             // Make sure correct data types are carried through
             .map{ meta, file, index -> [ meta + [data_type: file.name.endsWith('.cram') ? 'cram' : 'bam'], file, index ] }
 
         // CSV should be written for the file actually output, either CRAM or BAM
         // Create CSV to restart from this step
         csv_subfolder = (params.tools && params.tools.split(',').contains('sentieon_dedup')) ? 'sentieon_dedup' : 'markduplicates'
+        result_subfolder = (params.tools && params.tools.split(',').contains('sentieon_dedup'))
+            ? (params.sentieon_consensus ? 'sentieon_consensus' : 'sentieon_dedup')
+            : 'markduplicates'
 
         CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir)
+
+        markduplicates_results = ch_md_cram_for_restart.map { meta, alignment, index ->
+            record(id: meta.id, meta: meta, directory: result_subfolder, alignment: alignment, index: index)
+        }
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
@@ -398,6 +438,10 @@ workflow FASTQ_PREPROCESS_GATK {
                 ch_table_bqsr_no_spark,
                 ch_table_bqsr_spark)
 
+            recalibration_table_results = ch_table_bqsr.map { meta, table ->
+                record(id: meta.id, meta: meta, table: table)
+            }
+
             reports = reports.mix(ch_table_bqsr.collect{ _meta, table -> [ table ] })
 
             cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
@@ -449,6 +493,10 @@ workflow FASTQ_PREPROCESS_GATK {
                 cram_variant_calling_no_spark,
                 cram_variant_calling_spark)
 
+            recalibrated_results = cram_variant_calling.map { meta, alignment, index ->
+                record(id: meta.id, meta: meta, alignment: alignment, index: index)
+            }
+
             // Create CSV to restart from this step
             CHANNEL_APPLYBQSR_CREATE_CSV(cram_variant_calling, params.outdir)
 
@@ -467,5 +515,11 @@ workflow FASTQ_PREPROCESS_GATK {
     emit:
     cram_variant_calling
     reports
+    fastp = fastp_results
+    bbsplit = bbsplit_results
+    mapped = mapped_results
+    markduplicates = markduplicates_results
+    recalibration_tables = recalibration_table_results
+    recalibrated = recalibrated_results
 
 }
