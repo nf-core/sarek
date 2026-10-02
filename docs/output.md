@@ -365,7 +365,7 @@ Unless Unless `baserecalibrator` is listed under `--skip_tools` in the nextflow 
 
 The CSV files are auto-generated and can be used by Sarek for further processing and/or variant calling.
 
-See the [`input`](usage#input-sample-sheet-configurations) section in the usage documentation for further reading and documentation on how to make the most of them.
+See the [`input`](../usage#input-sample-sheet-configurations) section in the usage documentation for further reading and documentation on how to make the most of them.
 
 <details markdown="1">
 <summary>Output files:</summary>
@@ -394,7 +394,7 @@ If some results from a variant caller do not appear here, please check out the `
 
 ### SNVs and small indels
 
-For single nucleotide variants (SNVs) and small indels, multiple tools are available for normal (germline), tumor-only, and tumor-normal (somatic) paired data. For a list of the appropriate tool(s) for the data and sequencing type at hand, please check [here](usage#which-tool).
+For single nucleotide variants (SNVs) and small indels, multiple tools are available for normal (germline), tumor-only, and tumor-normal (somatic) paired data. For a list of the appropriate tool(s) for the data and sequencing type at hand, please check [here](../usage#which-tool).
 
 #### bcftools
 
