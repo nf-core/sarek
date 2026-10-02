@@ -222,6 +222,7 @@ Sarek supports the following GPU-accelerated variant callers from [NVIDIA Parabr
 | ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | -------------------- | -------------------------------------------------------------------------------------------------- |
 | [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html)         | `parabricks_deepvariant`     | Google DeepVariant   | `nextflow run nf-core/sarek --tools parabricks_deepvariant --profile <docker/singularity>,gpu`     |
 | [Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) | `parabricks_haplotypecaller` | GATK HaplotypeCaller | `nextflow run nf-core/sarek --tools parabricks_haplotypecaller --profile <docker/singularity>,gpu` |
+| [Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html)       | `parabricks_mutectcaller`    | GATK Mutect2         | `nextflow run nf-core/sarek --tools parabricks_mutectcaller --profile <docker/singularity>,gpu`    |
 
 There are a few differences to note about the Parabricks versions of these tools:
 
@@ -236,6 +237,7 @@ nextflow run nf-core/sarek \
 ```
 
 - Parabricks does not support the use of this pipeline with `--profile conda`.
+- Parabricks HaplotypeCaller does not support scatter/gather over intervals.
 
 ### Start with duplicate marking (`--step markduplicates`)
 

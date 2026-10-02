@@ -52,8 +52,6 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `freebayes`
   - `GATK HaplotypeCaller`
   - `GATK Mutect2`
-  - `Parabricks HaplotypeCaller` (Experimental Feature)
-  - `Parabricks Deepvariant` (Experimental Feature)
   - `indexcov`
   - `Lofreq`
   - `Manta`
@@ -61,6 +59,9 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `MSIsensor2`
   - `MSIsensor-pro`
   - `MuSE`
+  - `Parabricks Deepvariant` (Experimental Feature)
+  - `Parabricks HaplotypeCaller` (Experimental Feature)
+  - `Parabricks MutectCaller` (Experimental Feature)
   - `Sentieon Haplotyper`
   - `Strelka`
   - `TIDDIT`

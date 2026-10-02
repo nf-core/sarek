@@ -1,0 +1,71 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "bam_variant_calling_tumor_only_parabricks_mutectcaller"
+description: |
+  Perform tumor-only somatic variant calling using the Parabricks GPU-accelerated
+  mutectcaller. No matched normal sample is used.
+keywords:
+  - parabricks
+  - mutectcaller
+  - mutect2
+  - tumor_only
+  - variant_calling
+  - gpu
+components:
+  - parabricks/mutectcaller
+  - htslib/bgziptabix
+
+input:
+  - reads:
+      type: list
+      description: |
+        Structure: [ val(meta), path(tumor_reads), path(tumor_index) ]
+      pattern: "*.{bam,cram}"
+  - fasta:
+      type: file
+      description: |
+        The reference FASTA file as a ref_meta tuple (used by the Parabricks module).
+        Structure: [ val(ref_meta), path(fasta) ]
+      pattern: "*.{fa,fasta}"
+  - fasta_fai:
+      type: file
+      description: |
+        Index of the reference FASTA file, required for CRAM input.
+        Structure: [ val(ref_meta), path(fasta_fai) ]
+      pattern: "*.fai"
+  - panel_of_normals:
+      type: file
+      description: VCF file to be used as a panel of normals by the Parabricks mutectcaller.
+      pattern: "*.vcf.gz"
+  - panel_of_normals_tbi:
+      type: file
+      description: Index for the panel of normals VCF.
+      pattern: "*.vcf.gz.tbi"
+  - intervals_bed_combined:
+      type: file
+      description: |
+        Channel containing interval file(s) for scatter/gather, or [] if no intervals.
+      pattern: "*.{bed,interval_list,list}"
+output:
+  - vcf:
+      type: file
+      description: |
+        Compressed VCF of tumor-only somatic variant calls. Contains variantcaller
+        metadata in the meta map.
+        Structure: [ val(meta), path(vcf) ]
+      pattern: "*.vcf.gz"
+  - tbi:
+      type: file
+      description: |
+        Index for the output VCF file.
+        Structure: [ val(meta), path(tbi) ]
+      pattern: "*.vcf.gz.tbi"
+  - stats:
+      type: file
+      description: |
+        Statistics file produced by the Parabricks mutectcaller.
+        Structure: [ val(meta), path(stats) ]
+      pattern: "*.vcf.gz.stats"
+authors:
+  - "@JoeSaelens"
+maintainers:
+  - "@JoeSaelens"
