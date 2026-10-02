@@ -132,12 +132,13 @@ workflow POST_VARIANTCALLING {
 
             CONSENSUS(small_variant_vcfs.join(small_variant_tbis, failOnDuplicate: true, failOnMismatch: true))
 
-            // Copy metadata so downstream labelling cannot race the consensus publisher.
             consensus_vcfs = CONSENSUS.out.vcfs.map { meta, vcfs_ ->
-                                        [meta + [variantcaller: 'consensus'], vcfs_]
+                                        meta.variantcaller = 'consensus'
+                                        [meta, vcfs_]
                                     }
             consensus_tbis = CONSENSUS.out.tbis.map { meta, tbis_ ->
-                                        [meta + [variantcaller: 'consensus'], tbis_]
+                                        meta.variantcaller = 'consensus'
+                                        [meta, tbis_]
                                     }
 
             // Mix consensus VCF with individual caller VCFs for downstream annotation

@@ -198,10 +198,10 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-01T23:18:22.810445894",
+        "timestamp": "2026-04-08T12:04:22.190861311",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "25.10.2"
         }
     },
     "-profile test --aligner dragmap --save_reference skip QC/recal/md - stub": {
@@ -265,10 +265,10 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-01T23:18:45.855098649",
+        "timestamp": "2026-04-08T12:03:21.664791416",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "25.10.2"
         }
     }
 }

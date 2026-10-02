@@ -114,7 +114,6 @@
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
-                "multiqc/multiqc_plots/.stub",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
                 "no_intervals.bed.gz",
@@ -152,10 +151,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.3"
         },
-        "timestamp": "2026-10-01T23:19:20.300447988"
+        "timestamp": "2026-02-09T09:59:14.877299469"
     },
     "-profile test --tools msisensor2 tumor_only": {
         "content": [

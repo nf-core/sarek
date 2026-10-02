@@ -53,10 +53,6 @@ nextflow_pipeline {
     ]
 
     test_scenario.each { scenario ->
-        scenario.snapshot_ignore = [
-            'WARN: Failed to render execution report -- see the log file for details',
-            'WARN: Failed to render execution timeline -- see the log file for details'
-        ]
         test(scenario.name, UTILS.getTest(scenario))
     }
 }

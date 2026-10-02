@@ -49,7 +49,7 @@ process GATK4_FILTERVARIANTTRANCHES {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    echo "" | gzip -c > ${prefix}.vcf.gz
+    echo "" | gzip > ${prefix}.vcf.gz
     touch ${prefix}.vcf.gz.tbi
     """
 }

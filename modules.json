@@ -209,8 +209,7 @@
                     "gatk4/applybqsr": {
                         "branch": "master",
                         "git_sha": "b2bcd8312599aacd849e69721e20ac8138018f83",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/gatk4/applybqsr/gatk4-applybqsr.diff"
+                        "installed_by": ["modules"]
                     },
                     "gatk4/applyvqsr": {
                         "branch": "master",
@@ -250,8 +249,7 @@
                     "gatk4/filtervarianttranches": {
                         "branch": "master",
                         "git_sha": "b2bcd8312599aacd849e69721e20ac8138018f83",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/gatk4/filtervarianttranches/gatk4-filtervarianttranches.diff"
+                        "installed_by": ["modules"]
                     },
                     "gatk4/gatherbqsrreports": {
                         "branch": "master",
@@ -271,8 +269,7 @@
                     "gatk4/genotypegvcfs": {
                         "branch": "master",
                         "git_sha": "b2bcd8312599aacd849e69721e20ac8138018f83",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/gatk4/genotypegvcfs/gatk4-genotypegvcfs.diff"
+                        "installed_by": ["modules"]
                     },
                     "gatk4/getpileupsummaries": {
                         "branch": "master",
@@ -312,8 +309,7 @@
                     "gatk4/mutect2": {
                         "branch": "master",
                         "git_sha": "b2bcd8312599aacd849e69721e20ac8138018f83",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/gatk4/mutect2/gatk4-mutect2.diff"
+                        "installed_by": ["modules"]
                     },
                     "gatk4/variantrecalibrator": {
                         "branch": "master",

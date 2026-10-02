@@ -131,10 +131,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-10-01T23:18:21.292752243"
+        "timestamp": "2025-12-15T18:57:28.07820518"
     },
     "-profile test --aligner bwa-mem --save_reference --build_only_index": {
         "content": [
@@ -265,9 +265,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-10-01T23:18:21.072577288"
+        "timestamp": "2025-12-15T18:56:44.455023922"
     }
 }

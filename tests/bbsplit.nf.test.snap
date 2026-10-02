@@ -419,8 +419,7 @@
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
-                    "gzip": "1.14",
-                    "mosdepth": "0.3.14"
+                    "mosdepth": "0.3.10"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"

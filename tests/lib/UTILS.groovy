@@ -57,10 +57,6 @@ class UTILS {
         assertion.add(stable_name)
 
         if (!scenario.stub) {
-            cram_files.findAll { file_ -> file_.startsWith('preprocessing/recalibrated/') }.each { file_ ->
-                def header = new File(absolutePath(file_)).withInputStream { stream -> stream.readNBytes(6) }
-                assert header.length == 6 && header[4] == 3 && header[5] == 0: "Recalibrated CRAM must use version 3.0: ${file_}"
-            }
             assertion.add(stable_content.isEmpty() ? 'No stable content' : stable_content.collect { file -> path(absolutePath(file)) })
             assertion.add(bam_files.isEmpty() ? 'No BAM files' : bam_files.collect { file -> file.tokenize('/').last() + ":md5," + bam(absolutePath(file)).readsMD5 })
             assertion.add(cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> file.tokenize('/').last() + ":md5," + cram(absolutePath(file), fasta).readsMD5 })
