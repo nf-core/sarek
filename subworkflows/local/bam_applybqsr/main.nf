@@ -4,18 +4,18 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { BAM_MERGE_INDEX_SAMTOOLS              } from '../bam_merge_index_samtools'
-include { GATK4_APPLYBQSR                       } from '../../../modules/nf-core/gatk4/applybqsr'
+include { BAM_MERGE_INDEX_SAMTOOLS  } from '../bam_merge_index_samtools'
+include { GATK4_APPLYBQSR           } from '../../../modules/nf-core/gatk4/applybqsr'
 include { SAMTOOLS_CONVERT as BAM_TO_CRAM_RECAL } from '../../../modules/nf-core/samtools/convert'
 
 workflow BAM_APPLYBQSR {
     take:
-    cram // channel: [mandatory] [ meta, cram, crai, recal ]
-    dict // channel: [mandatory] [ meta, dict ]
-    fasta // channel: [mandatory] [ meta, fasta ]
-    fasta_fai // channel: [mandatory] [ meta, fasta_fai ]
-    intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
-    save_output_as_bam // boolean: [mandatory] params.save_output_as_bam
+    cram                // channel: [mandatory] [ meta, cram, crai, recal ]
+    dict                // channel: [mandatory] [ meta, dict ]
+    fasta               // channel: [mandatory] [ meta, fasta ]
+    fasta_fai           // channel: [mandatory] [ meta, fasta_fai ]
+    intervals           // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
+    save_output_as_bam  // boolean: [mandatory] params.save_output_as_bam
 
     main:
 
@@ -26,7 +26,7 @@ workflow BAM_APPLYBQSR {
         .map { meta, cram_, crai, recal, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], cram_, crai, recal, intervals_] }
 
     // fasta/fasta_fai/dict carry independent meta maps (computed vs user-supplied) so they
-    // cannot be joined by key; reshape into one tuple the way CRAM_SAMPLEQC does in sarek.nf
+    // can't be joined by key — reshape into one tuple the way CRAM_SAMPLEQC does in sarek.nf
     fasta_fai_dict = fasta
         .combine(fasta_fai)
         .combine(dict)
@@ -59,5 +59,5 @@ workflow BAM_APPLYBQSR {
         .map { meta, file_, index -> [meta - meta.subMap('num_intervals'), file_, index] }
 
     emit:
-    alignment = recal_out // channel: [ meta, file, index ], BAM or CRAM
+    alignment = recal_out // channel: [ meta, file, index ] — BAM or CRAM
 }
