@@ -85,7 +85,7 @@ runs:
           UPDATE_SNAPSHOT="--update-snapshot"
           CI_MODE=""
         fi
-        nf-test test tests/samplesheets.nf.test \
+        nf-test test tests/samplesheets.nf.test tests/postprocess_consensus.nf.test@e196555b \
           --profile=+${{ inputs.profile }} \
           $(if [ -n "${{ inputs.tags }}" ]; then echo "--tag ${{ inputs.tags }}"; fi) \
           $CI_MODE \
@@ -94,6 +94,14 @@ runs:
           --verbose \
           --tap=test.tap \
           --shard ${{ inputs.shard }}/${{ inputs.total_shards }}
+
+        for repeat in 1 2 3; do
+          NFT_WORKDIR="${NFT_WORKDIR}/consensus-repeat-${repeat}" nf-test test tests/postprocess_consensus.nf.test@e196555b \
+            --profile=+${{ inputs.profile }} \
+            --ci \
+            --verbose \
+            --tap="consensus-repeat-${repeat}.tap"
+        done
 
           # Save the absolute path of the test.tap file to the output
           echo "tap_file_path=$(realpath test.tap)" >> $GITHUB_OUTPUT
