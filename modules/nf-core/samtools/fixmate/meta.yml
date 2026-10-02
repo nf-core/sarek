@@ -1,0 +1,135 @@
+name: samtools_fixmate
+description: Samtools fixmate is a tool that can fill in information (insert size,
+  cigar, mapq) about paired end reads onto the corresponding other read. Also has
+  options to remove secondary/unmapped alignments and recalculate whether reads are
+  proper pairs.
+keywords:
+  - fixmate
+  - samtools
+  - insert size
+  - repair
+  - bam
+  - paired
+  - read pairs
+tools:
+  - samtools:
+      description: |
+        SAMtools is a set of utilities for interacting with and post-processing
+        short DNA sequence read alignments in the SAM, BAM and CRAM formats, written by Heng Li.
+        These files are generated as output by short read aligners like BWA.
+      homepage: http://www.htslib.org/
+      documentation: http://www.htslib.org/doc/samtools.html
+      tool_dev_url: https://github.com/samtools/samtools
+      doi: 10.1093/bioinformatics/btp352
+      licence: ["MIT"]
+      identifier: biotools:samtools
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input:
+        type: file
+        description: BAM/CRAM/SAM file, must be sorted by name, not coordinate
+        pattern: "*.{bam,cram,sam}"
+        ontologies:
+          - edam: http://edamontology.org/format_2572 # BAM
+          - edam: http://edamontology.org/format_3462 # CRAM
+          - edam: http://edamontology.org/format_2573 # SAM
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - fasta:
+        type: file
+        description: Reference genome FASTA file
+        pattern: "*.{fa,fasta,fna}"
+        optional: true
+        ontologies: []
+    - fai:
+        type: file
+        description: Reference genome FASTA index file
+        pattern: "*.{fai}"
+        optional: true
+        ontologies: []
+output:
+  bam:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*.{bam}"
+          ontologies:
+            - edam: http://edamontology.org/format_2572
+      - ${prefix}.bam:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*.{bam}"
+          ontologies:
+            - edam: http://edamontology.org/format_2572
+  cram:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*.{bam}"
+          ontologies:
+            - edam: http://edamontology.org/format_2572
+      - ${prefix}.cram:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*.{cram}"
+          ontologies:
+            - edam: http://edamontology.org/format_3462
+  sam:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*.{bam}"
+          ontologies:
+            - edam: http://edamontology.org/format_2572
+      - ${prefix}.sam:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*.{sam}"
+          ontologies:
+            - edam: http://edamontology.org/format_2573
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - samtools:
+          type: string
+          description: The tool name
+      - "samtools version | sed '1!d;s/.* //'":
+          type: string
+          description: The command used to generate the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - samtools:
+          type: string
+          description: The tool name
+      - "samtools version | sed '1!d;s/.* //'":
+          type: string
+          description: The command used to generate the version of the tool
+authors:
+  - "@sppearce"
+maintainers:
+  - "@sppearce"
+  - "@GallVp"
+  - "@matthdsm"
