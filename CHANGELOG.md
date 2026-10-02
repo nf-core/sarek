@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2296](https://github.com/nf-core/sarek/pull/2296) - Preserve CRAM 3.0 after recalibration with the existing Samtools converter so GATK 4.7 output remains compatible with legacy callers.
 - [#2296](https://github.com/nf-core/sarek/pull/2296) - Separate Parabricks DeepVariant intermediate filenames from compression outputs, preserving VCF, gVCF and index publishing names.
+- [#2296](https://github.com/nf-core/sarek/pull/2296) - Copy consensus metadata before downstream labelling to preserve sample publishing directories.
 
 - [#2275](https://github.com/nf-core/sarek/pull/2275) - Fix `--aligner parabricks` completing without producing any alignment when combined with `--no_intervals` ([#2274](https://github.com/nf-core/sarek/issues/2274)), or when no `--dbsnp`/`--known_indels` are provided: `collect()` dropped the empty intervals/known-sites lists instead of emitting them, leaving `PARABRICKS_FQ2BAM` with an input channel that never emitted
 - [#2282](https://github.com/nf-core/sarek/pull/2282) - Implement Parabricks Haplotypecaller gvcf mode for joint calling
@@ -54,6 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Fixed
 
 - [#2296](https://github.com/nf-core/sarek/pull/2296) - Keep GPU devices visible to Parabricks tests under strict profile ordering.
+- [#2296](https://github.com/nf-core/sarek/pull/2296) - Exclude incidental report-rendering warnings from intentional samplesheet failure snapshots across Nextflow versions.
 - [#2268](https://github.com/nf-core/sarek/pull/2268) - Resolve filetype output for parabricks/fq2bam
 
 #### Removed
