@@ -1,0 +1,394 @@
+{
+    "-profile test --tools varnet --input recalibrated_somatic.csv": {
+        "content": [
+            19,
+            {
+                "BCFTOOLS_STATS": {
+                    "bcftools": "1.23.1"
+                },
+                "CRAM_TO_BAM": {
+                    "samtools": "1.24"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.6.2.0"
+                },
+                "MOSDEPTH": {
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": "1.24"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_VARNET": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "VARNET_FILTER": {
+                    "varnet": "1.5.3"
+                },
+                "VARNET_PREDICT": {
+                    "varnet": "1.5.3"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
+                }
+            },
+            [
+                "csv",
+                "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/index.json",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_SNP.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transitions.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transversions.txt",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/dict",
+                "reports",
+                "reports/bcftools",
+                "reports/bcftools/varnet",
+                "reports/bcftools/varnet/sample4_vs_sample3",
+                "reports/bcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.bcftools_stats.txt",
+                "reports/mosdepth",
+                "reports/mosdepth/sample3",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample3/sample3.recal.regions.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.regions.bed.gz.csi",
+                "reports/mosdepth/sample4",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample4/sample4.recal.regions.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.regions.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample3",
+                "reports/samtools/sample3/sample3.recal.cram.stats",
+                "reports/samtools/sample4",
+                "reports/samtools/sample4/sample4.recal.cram.stats",
+                "reports/vcftools",
+                "reports/vcftools/varnet",
+                "reports/vcftools/varnet/sample4_vs_sample3",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.FILTER.summary",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.TsTv.count",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.TsTv.qual",
+                "variant_calling",
+                "variant_calling/varnet",
+                "variant_calling/varnet/sample4_vs_sample3",
+                "variant_calling/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.vcf.gz",
+                "variant_calling/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.vcf.gz.tbi"
+            ],
+            [
+                "mosdepth-coverage-per-contig-single.txt:md5,4ee05f71086179b42a01cd2fb450346f",
+                "mosdepth-cumcoverage-dist-id.txt:md5,cb7468f51b8be1230fb3ac5b130be31f",
+                "mosdepth_perchrom.txt:md5,4ee05f71086179b42a01cd2fb450346f",
+                "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
+                "samtools-stats-dp.txt:md5,bf6d30315fd7608b97b2a4eb1dc71fdc",
+                "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
+                "samtools_insert_size.txt:md5,8fa108dcbe0da42e9425dd125fe22905",
+                "sample4_vs_sample3.varnet.bcftools_stats.txt:md5,5bd5ec9b0da7ae24407a283ad69bac06",
+                "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
+                "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
+                "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
+                "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
+                "sample3.recal.per-base.bed.gz.csi:md5,68451158beb41ef7fcd07821fe3a52b4",
+                "sample3.recal.regions.bed.gz:md5,314ce8d7273eff353072108aa77c327c",
+                "sample3.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
+                "sample4.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
+                "sample4.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
+                "sample4.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
+                "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
+                "sample4.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
+                "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
+                "sample4.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
+                "sample4_vs_sample3.varnet.FILTER.summary:md5,2c4353f7af16cc266a0d23e1d0cf4254",
+                "sample4_vs_sample3.varnet.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
+            ],
+            "No BAM files",
+            "No CRAM files",
+            [
+                "sample4_vs_sample3.varnet.vcf.gz:md5,a584d88cc76900133af4cc9fb6181806"
+            ],
+            "No warnings"
+        ],
+        "timestamp": "2026-10-05T12:22:45.676669809",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    },
+    "-profile test --tools varnet --input recalibrated_somatic.csv -stub": {
+        "content": [
+            18,
+            {
+                "BCFTOOLS_STATS": {
+                    "bcftools": "1.23.1"
+                },
+                "CRAM_TO_BAM": {
+                    "samtools": "1.24"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.6.2.0"
+                },
+                "MOSDEPTH": {
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": "1.24"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_VARNET": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "VARNET_FILTER": {
+                    "varnet": "1.5.3"
+                },
+                "VARNET_PREDICT": {
+                    "varnet": "1.5.3"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
+                }
+            },
+            [
+                "csv",
+                "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/index.json",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/.stub",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/.stub",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/dict",
+                "reports",
+                "reports/bcftools",
+                "reports/bcftools/varnet",
+                "reports/bcftools/varnet/sample4_vs_sample3",
+                "reports/bcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.bcftools_stats.txt",
+                "reports/mosdepth",
+                "reports/mosdepth/sample3",
+                "reports/mosdepth/sample3/sample3.recal.global.dist.txt",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample3/sample3.recal.per-base.d4",
+                "reports/mosdepth/sample3/sample3.recal.quantized.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.quantized.bed.gz.csi",
+                "reports/mosdepth/sample3/sample3.recal.region.dist.txt",
+                "reports/mosdepth/sample3/sample3.recal.regions.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.regions.bed.gz.csi",
+                "reports/mosdepth/sample3/sample3.recal.summary.txt",
+                "reports/mosdepth/sample3/sample3.recal.thresholds.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.thresholds.bed.gz.csi",
+                "reports/mosdepth/sample4",
+                "reports/mosdepth/sample4/sample4.recal.global.dist.txt",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample4/sample4.recal.per-base.d4",
+                "reports/mosdepth/sample4/sample4.recal.quantized.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.quantized.bed.gz.csi",
+                "reports/mosdepth/sample4/sample4.recal.region.dist.txt",
+                "reports/mosdepth/sample4/sample4.recal.regions.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.regions.bed.gz.csi",
+                "reports/mosdepth/sample4/sample4.recal.summary.txt",
+                "reports/mosdepth/sample4/sample4.recal.thresholds.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.thresholds.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample3",
+                "reports/samtools/sample3/sample3.recal.cram.stats",
+                "reports/samtools/sample4",
+                "reports/samtools/sample4/sample4.recal.cram.stats",
+                "reports/vcftools",
+                "reports/vcftools/varnet",
+                "reports/vcftools/varnet/sample4_vs_sample3",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.012",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.012.indv",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.012.pos",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.BEAGLE.GL",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.BEAGLE.PL",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.FILTER.summary",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.FORMAT",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.INFO",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.LROH",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.Tajima.D",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.TsTv",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.TsTv.count",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.TsTv.qual",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.TsTv.summary",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.bcf",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.diff.discordance.matrix",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.diff.indv",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.diff.indv_in_files",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.diff.sites",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.diff.sites_in_files",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.diff.switch",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.frq",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.frq.count",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.gdepth",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.geno.chisq",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.geno.ld",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.hap.ld",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.hapcount",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.het",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.hwe",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.idepth",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.ifreqburden",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.imiss",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.impute.hap",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.impute.hap.indv",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.impute.hap.legend",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.indel.hist",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.interchrom.geno.ld",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.interchrom.hap.ld",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.kept.sites",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.ldepth",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.ldepth.mean",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.ldhat.locs",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.ldhat.sites",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.list.geno.ld",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.list.hap.ld",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.lmiss",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.lqual",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.map",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.mendel",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.ped",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.relatedness",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.relatedness2",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.removed.sites",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.singletons",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.sites.pi",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.snpden",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.tfam",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.tped",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.vcf",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.weir.fst",
+                "reports/vcftools/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.windowed.pi",
+                "variant_calling",
+                "variant_calling/varnet",
+                "variant_calling/varnet/sample4_vs_sample3",
+                "variant_calling/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.vcf.gz",
+                "variant_calling/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.vcf.gz.tbi"
+            ],
+            "No warnings"
+        ],
+        "timestamp": "2026-10-05T12:23:06.179879188",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.3"
+        }
+    }
+}

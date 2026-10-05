@@ -75,11 +75,12 @@ workflow POST_VARIANTCALLING {
         // Excluded callers (not eligible for normalization/consensus):
         // - manta, tiddit: structural variant callers (separate workflow)
         // - samtools mpileup produces pileup format for ControlFREEC, not consensus-ready VCFs
+        // - varnet: its VCF header lacks contigs and the INFO fields it uses, so bcftools cannot rewrite it
         def small_variantcallers = ['bcftools', 'deepvariant', 'freebayes', 'haplotypecaller',
                                     'lofreq', 'muse', 'mutect2', 'parabricks_deepvariant', 'parabricks_haplotypecaller',
                                     'sentieon_dnascope', 'sentieon_haplotyper', 'sentieon_tnscope', 'strelka' ]
 
-        def excluded_variantcallers = ['manta', 'tiddit', 'samtools']
+        def excluded_variantcallers = ['manta', 'tiddit', 'samtools', 'varnet']
 
         all_vcfs = channel.empty().mix(germline_vcfs, tumor_only_vcfs, somatic_vcfs)
                                 .branch{ meta, _vcf ->

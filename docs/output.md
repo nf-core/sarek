@@ -51,6 +51,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
       - [Sentieon Haplotyper joint germline variant calling](#sentieon-haplotyper-joint-germline-variant-calling)
     - [Sentieon TNscope](#sentieon-tnscope)
     - [Strelka](#strelka)
+    - [VarNet](#varnet)
   - [Structural Variants](#structural-variants)
     - [indexcov](#indexcov)
     - [Manta](#manta)
@@ -718,6 +719,20 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
   - VCF with tabix index with all somatic indels inferred in the tumor sample.
 - `<tumorsample_vs_normalsample>.strelka.somatic_snvs.vcf.gz` and `<tumorsample_vs_normalsample>.strelka.somatic_snvs.vcf.gz.tbi`
   - VCF with tabix index with all somatic SNVs inferred in the tumor sample.
+
+</details>
+
+#### VarNet
+
+[VarNet](https://github.com/skandlab/VarNet) is a deep learning somatic variant caller for SNVs and indels in tumor-normal pairs. It was trained with weak supervision on whole-genome sequencing data. For further reading see the [VarNet paper](https://doi.org/10.1038/s41467-022-31765-8).
+
+<details markdown="1">
+<summary>Output files for tumor-normal samples</summary>
+
+**Output directory: `{outdir}/variant_calling/varnet/<tumorsample_vs_normalsample>/`**
+
+- `<tumorsample_vs_normalsample>.varnet.vcf.gz` and `<tumorsample_vs_normalsample>.varnet.vcf.gz.tbi`
+  - VCF with tabix index containing all scored candidate variants. Variants with a prediction score of at least 0.5 have the `PASS` filter, and all others have `REJECT`.
 
 </details>
 
