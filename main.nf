@@ -90,6 +90,10 @@ workflow NFCORE_SAREK {
     samplesheet
 
     main:
+    if (params.vep_loftee_gerp_bigwig && !params.vep_loftee) {
+        error("--vep_loftee_gerp_bigwig requires --vep_loftee.")
+    }
+
     // build indexes if needed
     PREPARE_GENOME(
         params.ascat_alleles,
@@ -199,6 +203,10 @@ workflow NFCORE_SAREK {
     }
 
     vep_extra_files = []
+
+    if (params.vep_loftee && params.vep_loftee_gerp_bigwig) {
+        vep_extra_files.add(file(params.vep_loftee_gerp_bigwig, checkIfExists: true))
+    }
 
     if (params.dbnsfp && params.dbnsfp_tbi) {
         vep_extra_files.add(file(params.dbnsfp, checkIfExists: true))

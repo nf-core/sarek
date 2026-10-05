@@ -657,6 +657,14 @@
                     "description": "Enable the use of the VEP LOFTEE plugin.",
                     "help_text": "For details, see [here](https://github.com/konradjk/loftee)."
                 },
+                "vep_loftee_gerp_bigwig": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to the GERP conservation BigWig file for the VEP LOFTEE plugin.",
+                    "help_text": "Requires `--vep_loftee`. Use a BigWig file for the same genome assembly as the VEP cache."
+                },
                 "vep_mastermind": {
                     "type": "boolean",
                     "fa_icon": "fas fa-database",
