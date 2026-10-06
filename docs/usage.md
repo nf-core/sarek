@@ -692,7 +692,6 @@ VarNet runs on tumor-normal pairs only. Tumor-only mode needs dbSNP and gnomAD r
 
 VarNet has the following additional constraints:
 
-- The VarNet models were trained on GRCh38 data.
 - VarNet VCF files are excluded from `--normalize_vcfs`, `--filter_vcfs` and `--snv_consensus_calling`, because their headers do not declare contigs or all INFO fields.
 - VarNet is distributed under the [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0/), which does not permit commercial use.
 
