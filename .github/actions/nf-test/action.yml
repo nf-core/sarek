@@ -91,10 +91,20 @@ runs:
           $UPDATE_SNAPSHOT \
           --verbose \
           --tap=test.tap \
+          --csv=test-results.csv \
           --shard ${{ inputs.shard }}/${{ inputs.total_shards }}
 
           # Save the absolute path of the test.tap file to the output
           echo "tap_file_path=$(realpath test.tap)" >> $GITHUB_OUTPUT
+
+    - name: Upload nf-test runtime report
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      with:
+        name: nf-test-results-${{ inputs.profile }}-${{ env.NXF_VERSION }}-${{ inputs.shard }}
+        path: test-results.csv
+        if-no-files-found: warn
+        retention-days: 14
 
     # ---- update-snapshot mode: collect & upload regenerated snapshots ----
     # Only the canonical docker + pinned-Nextflow leg uploads, to avoid
