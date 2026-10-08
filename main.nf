@@ -21,49 +21,57 @@
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    GENOME PARAMETER VALUES
+    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-params.ascat_alleles           = getGenomeAttribute('ascat_alleles')
-params.ascat_genome            = getGenomeAttribute('ascat_genome')
-params.ascat_loci              = getGenomeAttribute('ascat_loci')
-params.ascat_loci_gc           = getGenomeAttribute('ascat_loci_gc')
-params.ascat_loci_rt           = getGenomeAttribute('ascat_loci_rt')
-params.bwa                     = getGenomeAttribute('bwa')
-params.bwamem2                 = getGenomeAttribute('bwamem2')
-params.cf_chrom_len            = getGenomeAttribute('cf_chrom_len')
-params.chr_dir                 = getGenomeAttribute('chr_dir')
-params.dbsnp                   = getGenomeAttribute('dbsnp')
-params.dbsnp_tbi               = getGenomeAttribute('dbsnp_tbi')
-params.dbsnp_vqsr              = getGenomeAttribute('dbsnp_vqsr')
-params.dict                    = getGenomeAttribute('dict')
-params.dragmap                 = getGenomeAttribute('dragmap')
-params.fasta                   = getGenomeAttribute('fasta')
-params.fasta_fai               = getGenomeAttribute('fasta_fai')
-params.germline_resource       = getGenomeAttribute('germline_resource')
-params.germline_resource_tbi   = getGenomeAttribute('germline_resource_tbi')
-params.intervals               = getGenomeAttribute('intervals')
-params.known_indels            = getGenomeAttribute('known_indels')
-params.known_indels_tbi        = getGenomeAttribute('known_indels_tbi')
-params.known_indels_vqsr       = getGenomeAttribute('known_indels_vqsr')
-params.known_snps              = getGenomeAttribute('known_snps')
-params.known_snps_tbi          = getGenomeAttribute('known_snps_tbi')
-params.known_snps_vqsr         = getGenomeAttribute('known_snps_vqsr')
-params.mappability             = getGenomeAttribute('mappability')
-params.msisensor2_models       = getGenomeAttribute('msisensor2_models')
-params.msisensorpro_scan       = getGenomeAttribute('msisensorpro_scan')
-params.ngscheckmate_bed        = getGenomeAttribute('ngscheckmate_bed')
-params.pon                     = getGenomeAttribute('pon')
-params.pon_tbi                 = getGenomeAttribute('pon_tbi')
-params.sentieon_dnascope_model = getGenomeAttribute('sentieon_dnascope_model')
-params.snpeff_db               = getGenomeAttribute('snpeff_db')
-params.vep_cache_version       = getGenomeAttribute('vep_cache_version')
-params.vep_genome              = getGenomeAttribute('vep_genome')
-params.vep_species             = getGenomeAttribute('vep_species')
+
+include { samplesheetToList } from 'plugin/nf-schema'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
+    GENOME PARAMETER VALUES
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+params.ascat_alleles           = resolveReferenceAttribute('ascat_alleles')
+params.ascat_genome            = resolveReferenceAttribute('ascat_genome')
+params.ascat_loci              = resolveReferenceAttribute('ascat_loci')
+params.ascat_loci_gc           = resolveReferenceAttribute('ascat_loci_gc')
+params.ascat_loci_rt           = resolveReferenceAttribute('ascat_loci_rt')
+params.bwa                     = resolveReferenceAttribute('bwa')
+params.bwamem2                 = resolveReferenceAttribute('bwamem2')
+params.cf_chrom_len            = resolveReferenceAttribute('cf_chrom_len')
+params.chr_dir                 = resolveReferenceAttribute('chr_dir')
+params.dbsnp                   = resolveReferenceAttribute('dbsnp')
+params.dbsnp_tbi               = resolveReferenceAttribute('dbsnp_tbi')
+params.dbsnp_vqsr              = resolveReferenceAttribute('dbsnp_vqsr')
+params.dict                    = resolveReferenceAttribute('dict')
+params.dragmap                 = resolveReferenceAttribute('dragmap')
+params.fasta                   = resolveReferenceAttribute('fasta')
+params.fasta_fai               = resolveReferenceAttribute('fasta_fai')
+params.germline_resource       = resolveReferenceAttribute('germline_resource')
+params.germline_resource_tbi   = resolveReferenceAttribute('germline_resource_tbi')
+params.intervals               = resolveReferenceAttribute('intervals')
+params.known_indels            = resolveReferenceAttribute('known_indels')
+params.known_indels_tbi        = resolveReferenceAttribute('known_indels_tbi')
+params.known_indels_vqsr       = resolveReferenceAttribute('known_indels_vqsr')
+params.known_snps              = resolveReferenceAttribute('known_snps')
+params.known_snps_tbi          = resolveReferenceAttribute('known_snps_tbi')
+params.known_snps_vqsr         = resolveReferenceAttribute('known_snps_vqsr')
+params.mappability             = resolveReferenceAttribute('mappability')
+params.msisensor2_models       = resolveReferenceAttribute('msisensor2_models')
+params.msisensorpro_scan       = resolveReferenceAttribute('msisensorpro_scan')
+params.ngscheckmate_bed        = resolveReferenceAttribute('ngscheckmate_bed')
+params.pon                     = resolveReferenceAttribute('pon')
+params.pon_tbi                 = resolveReferenceAttribute('pon_tbi')
+params.sentieon_dnascope_model = resolveReferenceAttribute('sentieon_dnascope_model')
+params.snpeff_db               = resolveReferenceAttribute('snpeff_db')
+params.vep_cache_version       = resolveReferenceAttribute('vep_cache_version')
+params.vep_genome              = resolveReferenceAttribute('vep_genome')
+params.vep_species             = resolveReferenceAttribute('vep_species')
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    IMPORT MODULES / SUBWORKFLOWS / WORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -76,7 +84,6 @@ include { PREPARE_REFERENCE_CNVKIT         } from './subworkflows/local/prepare_
 include { PREPARE_SNPSIFT_DATABASES        } from './subworkflows/local/prepare_snpsift_databases'
 include { CACHE_DOWNLOAD_ENSEMBLVEP_SNPEFF } from './subworkflows/nf-core/cache_download_ensemblvep_snpeff'
 include { UTILS_ANNOTATION_CACHE           } from './subworkflows/nf-core/utils_annotation_cache'
-include { samplesheetToList                } from 'plugin/nf-schema'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -399,6 +406,68 @@ output {
     FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
+//
+// Resolve a reference attribute from the first source that provides a usable value.
+// Precedence: explicit params > --references datasheet > --genome+igenomes_ignore
+// datasheet > iGenomes catalogue. Explicit params win automatically, since Nextflow
+// keeps CLI values over assignments made in the script. The datasheet is loaded once
+// and reused for the remaining attributes.
+//
+
+def resolveReferenceAttribute(String name) {
+    if (!params.containsKey('__reference_sheet')) {
+        params.__reference_sheet = referenceDatasheet()
+    }
+    def value = params.__reference_sheet[name]
+    return value ?: getGenomeAttribute(name)
+}
+
+def referenceDatasheet() {
+    if (params.references) {
+        return loadReferenceDatasheet(params.references)
+    }
+    if (params.genome && params.igenomes_ignore) {
+        return loadReferenceDatasheet(referencesDatasheetUrl(params.genome))
+    }
+    return [:]
+}
+
+def loadReferenceDatasheet(path) {
+    def rows = samplesheetToList(path, "${projectDir}/assets/schema_references.json")
+    def meta = referenceMeta(selectReferenceRow(rows))
+    return meta.findAll { _key, value -> value != null && value != '' }
+}
+
+def referencesDatasheetUrl(genomeKey) {
+    def base = (params.references_base_path ?: '').toString().replaceAll(/\/+$/, '')
+    if (!base) {
+        error("--references_base_path is empty; cannot load datasheet for --genome '${genomeKey}'")
+    }
+    def key = genomeKey.toString().replace('.', '/')
+    return "${base}/${key}.yml"
+}
+
+def selectReferenceRow(rows) {
+    if (!(rows instanceof List) || rows.isEmpty()) {
+        error("Reference datasheet did not contain any genome records")
+    }
+    if (rows.size() > 1) {
+        def names = rows.collect { row -> referenceMeta(row).genome }.findAll { name -> name }
+        error("Reference datasheet has multiple genomes (${names.join(', ')}). Use a datasheet with one genome record.")
+    }
+    return rows[0]
+}
+
+def referenceMeta(row) {
+    if (row instanceof Map) {
+        return row
+    }
+    if (row instanceof List && row && row[0] instanceof Map) {
+        return row[0]
+    }
+    return [:]
+}
 
 //
 // Get attribute from genome config file e.g. fasta

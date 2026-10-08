@@ -1,0 +1,25 @@
+# Test references datasheet for nf-core/sarek
+# Mirrors the 'testdata.nf-core.sarek' iGenomes entry with sarek parameter names.
+# known_indels and known_indels_tbi are YAML lists to exercise multi-file keys.
+- genome: testdata.nf-core.sarek
+  source: nf-core
+  species: Homo_sapiens
+  dbsnp: https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz
+  dbsnp_tbi: https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz.tbi
+  dbsnp_vqsr: "--resource:dbsnp,known=false,training=true,truth=false,prior=2.0 dbsnp_146.hg38.vcf.gz"
+  dict: https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.dict
+  fasta: https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta
+  fasta_fai: https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta.fai
+  germline_resource: https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz
+  germline_resource_tbi: https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz.tbi
+  intervals: https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.interval_list
+  known_indels:
+    - https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz
+  known_indels_tbi:
+    - https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz.tbi
+  known_indels_vqsr: "--resource:mills,known=false,training=true,truth=true,prior=10.0 mills_and_1000G.indels.vcf.gz"
+  ngscheckmate_bed: https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/chr21/germlineresources/SNP_GRCh38_hg38_wChr.bed
+  snpeff_db: WBcel235.99
+  vep_cache_version: "114"
+  vep_genome: WBcel235
+  vep_species: caenorhabditis_elegans
