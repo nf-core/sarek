@@ -1,0 +1,29 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+
+    def test_scenario = [
+        [
+            name: "-profile test --references tests/config/references_testdata.yml --genome null",
+            params: [
+                references: "${projectDir}/tests/config/references_testdata.yml",
+                genome: null,
+            ],
+        ],
+        [
+            name: "-profile test --references tests/config/references_testdata.yml with --genome (expects failure)",
+            params: [
+                references: "${projectDir}/tests/config/references_testdata.yml",
+            ],
+            failure: true,
+        ],
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}
