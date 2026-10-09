@@ -177,16 +177,21 @@ class UTILS {
                 } else {
                     assert workflow.success
                 }
-                assertAll(
-                    { assert snapshot(
-                        // All assertions based on the scenario
-                        *UTILS.getAssertions(
-                            outdir: params.outdir,
-                            scenario: scenario,
-                            workflow: workflow
-                        )
-                    ).match() }
-                )
+                if (scenario.check) {
+                    scenario.check.call(workflow, workDir)
+                }
+                if (!scenario.no_snapshot) {
+                    assertAll(
+                        { assert snapshot(
+                            // All assertions based on the scenario
+                            *UTILS.getAssertions(
+                                outdir: params.outdir,
+                                scenario: scenario,
+                                workflow: workflow
+                            )
+                        ).match() }
+                    )
+                }
             }
             cleanup {
                 if (System.getenv('NFT_CLEANUP')) {
