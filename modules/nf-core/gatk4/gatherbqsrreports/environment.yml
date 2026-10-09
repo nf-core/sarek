@@ -4,7 +4,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  # renovate: datasource=conda depName=bioconda/gatk4
-  - bioconda::gatk4=4.6.2.0
-  # renovate: datasource=conda depName=bioconda/gcnvkernel
-  - bioconda::gcnvkernel=0.9
+  # renovate: datasource=conda depName=bioconda/gatk4-lite
+  - bioconda::gatk4-lite=4.7.0.0

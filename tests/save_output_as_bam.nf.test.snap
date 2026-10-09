@@ -39,16 +39,16 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.2.0",
+                    "gatk4": "4.7.0.0",
                     "samtools": "1.21"
                 },
                 "INDEX_MERGE_BAM": {
@@ -374,7 +374,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-28T14:39:40.512178305",
+        "timestamp": "2026-10-01T21:09:28.710550352",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -395,7 +395,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
@@ -436,7 +436,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-28T14:39:25.431547577",
+        "timestamp": "2026-10-01T21:08:17.886168657",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -450,7 +450,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "SENTIEON_DEDUP": {
                     "sentieon": "202503.02"
@@ -491,7 +491,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-28T10:59:38.19303281",
+        "timestamp": "2026-10-01T20:58:34.05479004",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
