@@ -1,0 +1,97 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    profile "test,gpu"
+
+    def test_scenario = [
+        [
+            name: "-profile test,gpu --tools parabricks_deepsomatic somatic WGS",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_somatic_parabricks_deepsomatic.csv",
+                step: "variant_calling",
+                tools: 'parabricks_deepsomatic'
+            ],
+            gpu: true,
+            no_conda: true,
+            no_vcf_md5sum: true
+        ],
+        [
+            name: "-profile test,gpu --tools parabricks_deepsomatic somatic WGS -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_somatic_parabricks_deepsomatic.csv",
+                step: "variant_calling",
+                tools: 'parabricks_deepsomatic'
+            ],
+            gpu: true,
+            no_conda: true,
+            stub: true
+        ],
+        [
+            name: "-profile test,gpu --tools parabricks_deepsomatic somatic WES",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_somatic_parabricks_deepsomatic.csv",
+                step: "variant_calling",
+                tools: 'parabricks_deepsomatic',
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true,
+            no_vcf_md5sum: true
+        ],
+        [
+            name: "-profile test,gpu --tools parabricks_deepsomatic somatic WES -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_somatic_parabricks_deepsomatic.csv",
+                step: "variant_calling",
+                tools: 'parabricks_deepsomatic',
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true,
+            stub: true
+        ],
+        [
+            name: "-profile test,gpu --tools parabricks_deepsomatic somatic WGS --no_intervals",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_somatic_parabricks_deepsomatic.csv",
+                no_intervals: true,
+                step: "variant_calling",
+                tools: 'parabricks_deepsomatic'
+            ],
+            gpu: true,
+            no_conda: true,
+            no_vcf_md5sum: true
+        ],
+        [
+            name: "-profile test,gpu --tools parabricks_deepsomatic somatic WGS --no_intervals -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_somatic_parabricks_deepsomatic.csv",
+                no_intervals: true,
+                step: "variant_calling",
+                tools: 'parabricks_deepsomatic'
+            ],
+            gpu: true,
+            no_conda: true,
+            stub: true
+        ],
+        [
+            name: "-profile test,gpu --aligner parabricks --tools parabricks_deepsomatic somatic WES",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                aligner: 'parabricks',
+                tools: 'parabricks_deepsomatic',
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true,
+            no_vcf_md5sum: true
+        ]
+    ]
+
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}
