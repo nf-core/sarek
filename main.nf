@@ -408,11 +408,12 @@ output {
 */
 
 //
-// Resolve a reference attribute from the first source that provides a usable value.
+// Resolve a reference attribute from the highest-priority source that defines it.
 // Precedence: explicit params > --references datasheet > --genome+igenomes_ignore
-// datasheet > iGenomes catalogue. Explicit params win automatically, since Nextflow
-// keeps CLI values over assignments made in the script. The datasheet is loaded once
-// and reused for the remaining attributes.
+// datasheet > iGenomes catalogue. Explicit params win because Nextflow keeps CLI
+// values over assignments made in the script. The datasheet loads once and caches
+// in params: strict syntax allows no other state to persist across these
+// top-level declarations.
 //
 
 def resolveReferenceAttribute(String name) {
