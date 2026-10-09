@@ -13,7 +13,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"
@@ -193,7 +193,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -369,7 +369,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:39:31.857457867",
+        "timestamp": "2026-10-01T21:22:06.917352843",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
