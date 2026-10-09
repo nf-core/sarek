@@ -61,11 +61,11 @@
                 "pattern": "^\\S+\\.zip$"
             },
             "bwamem1_index": {
-                "meta": ["bwamem1_index"],
+                "meta": ["bwa"],
                 "type": "string"
             },
             "bwamem2_index": {
-                "meta": ["bwamem2_index"],
+                "meta": ["bwamem2"],
                 "type": "string"
             },
             "cf_chrom_len": {
@@ -73,11 +73,11 @@
                 "type": "string"
             },
             "chromosomes_fasta": {
-                "meta": ["chromosomes_fasta"],
+                "meta": ["chr_dir"],
                 "type": "string"
             },
             "dragmap_hashtable": {
-                "meta": ["dragmap_hashtable"],
+                "meta": ["dragmap"],
                 "type": "string"
             },
             "fasta": {
@@ -93,12 +93,12 @@
                 "errorMessage": "Fasta index must end in '.fa.fai', '.fna.fai', or '.fasta.fai' (optionally .gz) and cannot contain spaces"
             },
             "fasta_dict": {
-                "meta": ["fasta_dict"],
+                "meta": ["dict"],
                 "type": "string",
                 "pattern": "^\\S+\\.dict$"
             },
             "intervals_bed": {
-                "meta": ["intervals_bed"],
+                "meta": ["intervals"],
                 "type": "string"
             },
             "mappability": {
@@ -124,18 +124,34 @@
                 "type": "string",
                 "pattern": "^\\S+\\.model$"
             },
+            "snpeff_db": {
+                "meta": ["snpeff_db"],
+                "type": "string"
+            },
+            "vep_cache_version": {
+                "meta": ["vep_cache_version"],
+                "type": "string"
+            },
+            "vep_genome": {
+                "meta": ["vep_genome"],
+                "type": "string"
+            },
+            "vep_species": {
+                "meta": ["vep_species"],
+                "type": "string"
+            },
             "vcf_dbsnp_vcf": {
-                "meta": ["vcf_dbsnp_vcf"],
+                "meta": ["dbsnp"],
                 "type": "string",
                 "pattern": "^\\S+\\.vcf\\.gz$"
             },
             "vcf_dbsnp_vcf_tbi": {
-                "meta": ["vcf_dbsnp_vcf_tbi"],
+                "meta": ["dbsnp_tbi"],
                 "type": "string",
                 "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
             },
             "vcf_dbsnp_vcf_vqsr": {
-                "meta": ["vcf_dbsnp_vcf_vqsr"],
+                "meta": ["dbsnp_vqsr"],
                 "type": "string"
             },
             "vcf_dbsnp_vcf_source": {
@@ -143,12 +159,12 @@
                 "type": "string"
             },
             "vcf_germline_resource_vcf": {
-                "meta": ["vcf_germline_resource_vcf"],
+                "meta": ["germline_resource"],
                 "type": "string",
                 "pattern": "^\\S+\\.vcf\\.gz$"
             },
             "vcf_germline_resource_vcf_tbi": {
-                "meta": ["vcf_germline_resource_vcf_tbi"],
+                "meta": ["germline_resource_tbi"],
                 "type": "string",
                 "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
             },
@@ -157,7 +173,7 @@
                 "type": "string"
             },
             "vcf_known_indels_vcf": {
-                "meta": ["vcf_known_indels_vcf"],
+                "meta": ["known_indels"],
                 "type": ["string", "array"],
                 "items": {
                     "type": "string",
@@ -165,7 +181,7 @@
                 }
             },
             "vcf_known_indels_vcf_tbi": {
-                "meta": ["vcf_known_indels_vcf_tbi"],
+                "meta": ["known_indels_tbi"],
                 "type": ["string", "array"],
                 "items": {
                     "type": "string",
@@ -173,7 +189,7 @@
                 }
             },
             "vcf_known_indels_vcf_vqsr": {
-                "meta": ["vcf_known_indels_vcf_vqsr"],
+                "meta": ["known_indels_vqsr"],
                 "type": "string"
             },
             "vcf_known_indels_vcf_source": {
@@ -181,7 +197,7 @@
                 "type": "string"
             },
             "vcf_known_snps_vcf": {
-                "meta": ["vcf_known_snps_vcf"],
+                "meta": ["known_snps"],
                 "type": ["string", "array"],
                 "items": {
                     "type": "string",
@@ -189,7 +205,7 @@
                 }
             },
             "vcf_known_snps_vcf_tbi": {
-                "meta": ["vcf_known_snps_vcf_tbi"],
+                "meta": ["known_snps_tbi"],
                 "type": ["string", "array"],
                 "items": {
                     "type": "string",
@@ -197,7 +213,7 @@
                 }
             },
             "vcf_known_snps_vcf_vqsr": {
-                "meta": ["vcf_known_snps_vcf_vqsr"],
+                "meta": ["known_snps_vqsr"],
                 "type": "string"
             },
             "vcf_known_snps_vcf_source": {
@@ -205,12 +221,12 @@
                 "type": "string"
             },
             "vcf_pon_vcf": {
-                "meta": ["vcf_pon_vcf"],
+                "meta": ["pon"],
                 "type": "string",
                 "pattern": "^\\S+\\.vcf\\.gz$"
             },
             "vcf_pon_vcf_tbi": {
-                "meta": ["vcf_pon_vcf_tbi"],
+                "meta": ["pon_tbi"],
                 "type": "string",
                 "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
             },
