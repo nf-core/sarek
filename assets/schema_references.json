@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/sarek/dev/assets/schema_references.json",
     "title": "nf-core/sarek references datasheet schema",
-    "description": "Datasheet schema for sarek: genome plus optional reference files, indices, VQSR labels, and annotation metadata",
+    "description": "References datasheet schema for sarek",
     "type": "array",
     "items": {
         "type": "object",
@@ -60,43 +60,24 @@
                 "type": "string",
                 "pattern": "^\\S+\\.zip$"
             },
-            "bwa": {
-                "meta": ["bwa"],
+            "bwamem1_index": {
+                "meta": ["bwamem1_index"],
                 "type": "string"
             },
-            "bwamem2": {
-                "meta": ["bwamem2"],
+            "bwamem2_index": {
+                "meta": ["bwamem2_index"],
                 "type": "string"
             },
             "cf_chrom_len": {
                 "meta": ["cf_chrom_len"],
                 "type": "string"
             },
-            "chr_dir": {
-                "meta": ["chr_dir"],
+            "chromosomes_fasta": {
+                "meta": ["chromosomes_fasta"],
                 "type": "string"
             },
-            "dbsnp": {
-                "meta": ["dbsnp"],
-                "type": "string",
-                "pattern": "^\\S+\\.vcf\\.gz$"
-            },
-            "dbsnp_tbi": {
-                "meta": ["dbsnp_tbi"],
-                "type": "string",
-                "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
-            },
-            "dbsnp_vqsr": {
-                "meta": ["dbsnp_vqsr"],
-                "type": "string"
-            },
-            "dict": {
-                "meta": ["dict"],
-                "type": "string",
-                "pattern": "^\\S+\\.dict$"
-            },
-            "dragmap": {
-                "meta": ["dragmap"],
+            "dragmap_hashtable": {
+                "meta": ["dragmap_hashtable"],
                 "type": "string"
             },
             "fasta": {
@@ -111,58 +92,13 @@
                 "pattern": "^\\S+\\.f(ast|n)?a\\.fai(\\.gz)?$",
                 "errorMessage": "Fasta index must end in '.fa.fai', '.fna.fai', or '.fasta.fai' (optionally .gz) and cannot contain spaces"
             },
-            "germline_resource": {
-                "meta": ["germline_resource"],
+            "fasta_dict": {
+                "meta": ["fasta_dict"],
                 "type": "string",
-                "pattern": "^\\S+\\.vcf\\.gz$"
+                "pattern": "^\\S+\\.dict$"
             },
-            "germline_resource_tbi": {
-                "meta": ["germline_resource_tbi"],
-                "type": "string",
-                "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
-            },
-            "intervals": {
-                "meta": ["intervals"],
-                "type": "string"
-            },
-            "known_indels": {
-                "meta": ["known_indels"],
-                "type": ["string", "array"],
-                "items": {
-                    "type": "string",
-                    "pattern": "^\\S+\\.vcf\\.gz$"
-                }
-            },
-            "known_indels_tbi": {
-                "meta": ["known_indels_tbi"],
-                "type": ["string", "array"],
-                "items": {
-                    "type": "string",
-                    "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
-                }
-            },
-            "known_indels_vqsr": {
-                "meta": ["known_indels_vqsr"],
-                "type": "string"
-            },
-            "known_snps": {
-                "meta": ["known_snps"],
-                "type": ["string", "array"],
-                "items": {
-                    "type": "string",
-                    "pattern": "^\\S+\\.vcf\\.gz$"
-                }
-            },
-            "known_snps_tbi": {
-                "meta": ["known_snps_tbi"],
-                "type": ["string", "array"],
-                "items": {
-                    "type": "string",
-                    "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
-                }
-            },
-            "known_snps_vqsr": {
-                "meta": ["known_snps_vqsr"],
+            "intervals_bed": {
+                "meta": ["intervals_bed"],
                 "type": "string"
             },
             "mappability": {
@@ -183,35 +119,103 @@
                 "type": "string",
                 "pattern": "^\\S+\\.bed$"
             },
-            "pon": {
-                "meta": ["pon"],
-                "type": "string",
-                "pattern": "^\\S+\\.vcf\\.gz$"
-            },
-            "pon_tbi": {
-                "meta": ["pon_tbi"],
-                "type": "string",
-                "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
-            },
             "sentieon_dnascope_model": {
                 "meta": ["sentieon_dnascope_model"],
                 "type": "string",
                 "pattern": "^\\S+\\.model$"
             },
-            "snpeff_db": {
-                "meta": ["snpeff_db"],
+            "vcf_dbsnp_vcf": {
+                "meta": ["vcf_dbsnp_vcf"],
+                "type": "string",
+                "pattern": "^\\S+\\.vcf\\.gz$"
+            },
+            "vcf_dbsnp_vcf_tbi": {
+                "meta": ["vcf_dbsnp_vcf_tbi"],
+                "type": "string",
+                "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
+            },
+            "vcf_dbsnp_vcf_vqsr": {
+                "meta": ["vcf_dbsnp_vcf_vqsr"],
                 "type": "string"
             },
-            "vep_cache_version": {
-                "meta": ["vep_cache_version"],
+            "vcf_dbsnp_vcf_source": {
+                "meta": ["vcf_dbsnp_vcf_source"],
                 "type": "string"
             },
-            "vep_genome": {
-                "meta": ["vep_genome"],
+            "vcf_germline_resource_vcf": {
+                "meta": ["vcf_germline_resource_vcf"],
+                "type": "string",
+                "pattern": "^\\S+\\.vcf\\.gz$"
+            },
+            "vcf_germline_resource_vcf_tbi": {
+                "meta": ["vcf_germline_resource_vcf_tbi"],
+                "type": "string",
+                "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
+            },
+            "vcf_germline_resource_vcf_source": {
+                "meta": ["vcf_germline_resource_vcf_source"],
                 "type": "string"
             },
-            "vep_species": {
-                "meta": ["vep_species"],
+            "vcf_known_indels_vcf": {
+                "meta": ["vcf_known_indels_vcf"],
+                "type": ["string", "array"],
+                "items": {
+                    "type": "string",
+                    "pattern": "^\\S+\\.vcf\\.gz$"
+                }
+            },
+            "vcf_known_indels_vcf_tbi": {
+                "meta": ["vcf_known_indels_vcf_tbi"],
+                "type": ["string", "array"],
+                "items": {
+                    "type": "string",
+                    "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
+                }
+            },
+            "vcf_known_indels_vcf_vqsr": {
+                "meta": ["vcf_known_indels_vcf_vqsr"],
+                "type": "string"
+            },
+            "vcf_known_indels_vcf_source": {
+                "meta": ["vcf_known_indels_vcf_source"],
+                "type": "string"
+            },
+            "vcf_known_snps_vcf": {
+                "meta": ["vcf_known_snps_vcf"],
+                "type": ["string", "array"],
+                "items": {
+                    "type": "string",
+                    "pattern": "^\\S+\\.vcf\\.gz$"
+                }
+            },
+            "vcf_known_snps_vcf_tbi": {
+                "meta": ["vcf_known_snps_vcf_tbi"],
+                "type": ["string", "array"],
+                "items": {
+                    "type": "string",
+                    "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
+                }
+            },
+            "vcf_known_snps_vcf_vqsr": {
+                "meta": ["vcf_known_snps_vcf_vqsr"],
+                "type": "string"
+            },
+            "vcf_known_snps_vcf_source": {
+                "meta": ["vcf_known_snps_vcf_source"],
+                "type": "string"
+            },
+            "vcf_pon_vcf": {
+                "meta": ["vcf_pon_vcf"],
+                "type": "string",
+                "pattern": "^\\S+\\.vcf\\.gz$"
+            },
+            "vcf_pon_vcf_tbi": {
+                "meta": ["vcf_pon_vcf_tbi"],
+                "type": "string",
+                "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
+            },
+            "vcf_pon_vcf_source": {
+                "meta": ["vcf_pon_vcf_source"],
                 "type": "string"
             },
             "readme": {

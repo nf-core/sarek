@@ -414,15 +414,42 @@ output {
 // --references and --genome are mutually exclusive. Explicit params win because
 // Nextflow keeps CLI values over assignments made in the script. The datasheet
 // loads once and caches in params: strict syntax allows no other state to persist
-// across these top-level declarations.
+// across these top-level declarations. Datasheet keys follow the
+// references-datasheets convention; datasheetKey() maps sarek parameter names
+// onto them, and parameters without a mapping keep their own name.
 //
 
 def resolveReferenceAttribute(String name) {
     if (!params.containsKey('__reference_sheet')) {
         params.__reference_sheet = referenceDatasheet()
     }
-    def value = params.__reference_sheet[name]
+    def value = params.__reference_sheet[datasheetKey(name)]
     return value ?: getGenomeAttribute(name)
+}
+
+def datasheetKey(String name) {
+    def keys = [
+        bwa:                     'bwamem1_index',
+        bwamem2:                 'bwamem2_index',
+        chr_dir:                 'chromosomes_fasta',
+        dict:                    'fasta_dict',
+        dragmap:                 'dragmap_hashtable',
+        intervals:               'intervals_bed',
+        dbsnp:                   'vcf_dbsnp_vcf',
+        dbsnp_tbi:               'vcf_dbsnp_vcf_tbi',
+        dbsnp_vqsr:              'vcf_dbsnp_vcf_vqsr',
+        germline_resource:       'vcf_germline_resource_vcf',
+        germline_resource_tbi:   'vcf_germline_resource_vcf_tbi',
+        known_indels:            'vcf_known_indels_vcf',
+        known_indels_tbi:        'vcf_known_indels_vcf_tbi',
+        known_indels_vqsr:       'vcf_known_indels_vcf_vqsr',
+        known_snps:              'vcf_known_snps_vcf',
+        known_snps_tbi:          'vcf_known_snps_vcf_tbi',
+        known_snps_vqsr:         'vcf_known_snps_vcf_vqsr',
+        pon:                     'vcf_pon_vcf',
+        pon_tbi:                 'vcf_pon_vcf_tbi',
+    ]
+    return keys[name] ?: name
 }
 
 def referenceDatasheet() {

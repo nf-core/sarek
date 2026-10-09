@@ -1,22 +1,24 @@
-def projectDir = new File('.').absolutePath
-
 nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
 
+    def references_datasheet = 'https://raw.githubusercontent.com/nf-core/references-datasheets/latest/genomes/Homo_sapiens/GATK/GRCh38_chr22.yml'
+
     def test_scenario = [
         [
-            name: "-profile test --references tests/config/references_testdata.yml --genome null",
+            name: "-profile test --references genomes/Homo_sapiens/GATK/GRCh38_chr22.yml --genome null",
             params: [
-                references: "${projectDir}/tests/config/references_testdata.yml",
+                references: references_datasheet,
                 genome: null,
             ],
+            // The datasheet carries snpeff_db and vep_* keys that sarek does not map
+            snapshot_ignore: ['unidentified headers'],
         ],
         [
-            name: "-profile test --references tests/config/references_testdata.yml with --genome (expects failure)",
+            name: "-profile test --references genomes/Homo_sapiens/GATK/GRCh38_chr22.yml with --genome (expects failure)",
             params: [
-                references: "${projectDir}/tests/config/references_testdata.yml",
+                references: references_datasheet,
             ],
             failure: true,
         ],

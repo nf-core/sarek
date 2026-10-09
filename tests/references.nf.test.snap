@@ -1,13 +1,10 @@
 {
-    "-profile test --references tests/config/references_testdata.yml --genome null": {
+    "-profile test --references genomes/Homo_sapiens/GATK/GRCh38_chr22.yml --genome null": {
         "content": [
-            23,
+            21,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
-                },
-                "BWAMEM1_INDEX": {
-                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.19-r1273",
@@ -23,9 +20,6 @@
                     "gatk4": "4.6.2.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
-                },
-                "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.6.2.0"
                 },
                 "GATK4_MARKDUPLICATES": {
@@ -325,13 +319,13 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-09T10:48:00.611719979",
+        "timestamp": "2026-10-09T15:45:31.856368898",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
         }
     },
-    "-profile test --references tests/config/references_testdata.yml with --genome (expects failure)": {
+    "-profile test --references genomes/Homo_sapiens/GATK/GRCh38_chr22.yml with --genome (expects failure)": {
         "content": [
             [
                 "pipeline_info"
@@ -342,7 +336,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-10-09T10:48:31.991341206",
+        "timestamp": "2026-10-09T15:45:53.217311614",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
