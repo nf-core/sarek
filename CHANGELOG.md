@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2177](https://github.com/nf-core/sarek/pull/2177) - Add Parabricks DeepVariant (`--tools parabricks_deepvariant`) as GPU-accelerated germline variant caller
 - [#2268](https://github.com/nf-core/sarek/pull/2268) - Add parabricks/applybqsr
 - [#2284](https://github.com/nf-core/sarek/pull/2284) - Add `manifest.diagram` to `nextflow.config`
+- [#2303](https://github.com/nf-core/sarek/pull/2303) - Add VarNet (`--tools varnet`) as somatic SNV and indel caller for tumor-normal pairs
 
 ### Changed
 
@@ -30,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
 | gatk4      | 4.6.2.0     | 4.7.0.0     |
+| varnet     |             | 1.5.3       |
 
 ### Dependencies - plugins
 
