@@ -1,0 +1,245 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/sarek/dev/assets/schema_references.json",
+    "title": "nf-core/sarek references datasheet schema",
+    "description": "References datasheet schema for sarek",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "genome": {
+                "meta": ["genome"],
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Genome name must be provided and cannot contain spaces"
+            },
+            "site": {
+                "meta": ["site"],
+                "type": "string",
+                "pattern": "^\\S+$",
+                "default": "unknown"
+            },
+            "source": {
+                "meta": ["source"],
+                "type": "string",
+                "pattern": "^\\S+$"
+            },
+            "source_version": {
+                "meta": ["source_version"],
+                "type": "string",
+                "pattern": "^\\S+$",
+                "default": "unknown"
+            },
+            "species": {
+                "meta": ["species"],
+                "type": "string",
+                "pattern": "^\\S+$"
+            },
+            "ascat_alleles": {
+                "meta": ["ascat_alleles"],
+                "type": "string",
+                "pattern": "^\\S+\\.zip$"
+            },
+            "ascat_genome": {
+                "meta": ["ascat_genome"],
+                "type": "string",
+                "enum": ["hg19", "hg38"]
+            },
+            "ascat_loci": {
+                "meta": ["ascat_loci"],
+                "type": "string",
+                "pattern": "^\\S+\\.zip$"
+            },
+            "ascat_loci_gc": {
+                "meta": ["ascat_loci_gc"],
+                "type": "string",
+                "pattern": "^\\S+\\.zip$"
+            },
+            "ascat_loci_rt": {
+                "meta": ["ascat_loci_rt"],
+                "type": "string",
+                "pattern": "^\\S+\\.zip$"
+            },
+            "bwamem1_index": {
+                "meta": ["bwa"],
+                "type": "string"
+            },
+            "bwamem2_index": {
+                "meta": ["bwamem2"],
+                "type": "string"
+            },
+            "cf_chrom_len": {
+                "meta": ["cf_chrom_len"],
+                "type": "string"
+            },
+            "chromosomes_fasta": {
+                "meta": ["chr_dir"],
+                "type": "string"
+            },
+            "dragmap_hashtable": {
+                "meta": ["dragmap"],
+                "type": "string"
+            },
+            "fasta": {
+                "meta": ["fasta"],
+                "type": "string",
+                "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
+                "errorMessage": "Fasta must end in '.fa', '.fna', or '.fasta' (optionally .gz) and cannot contain spaces"
+            },
+            "fasta_fai": {
+                "meta": ["fasta_fai"],
+                "type": "string",
+                "pattern": "^\\S+\\.f(ast|n)?a\\.fai(\\.gz)?$",
+                "errorMessage": "Fasta index must end in '.fa.fai', '.fna.fai', or '.fasta.fai' (optionally .gz) and cannot contain spaces"
+            },
+            "fasta_dict": {
+                "meta": ["dict"],
+                "type": "string",
+                "pattern": "^\\S+\\.dict$"
+            },
+            "intervals_bed": {
+                "meta": ["intervals"],
+                "type": "string"
+            },
+            "mappability": {
+                "meta": ["mappability"],
+                "type": "string",
+                "pattern": "^\\S+\\.gem$"
+            },
+            "msisensor2_models": {
+                "meta": ["msisensor2_models"],
+                "type": "string"
+            },
+            "msisensorpro_scan": {
+                "meta": ["msisensorpro_scan"],
+                "type": "string"
+            },
+            "ngscheckmate_bed": {
+                "meta": ["ngscheckmate_bed"],
+                "type": "string",
+                "pattern": "^\\S+\\.bed$"
+            },
+            "sentieon_dnascope_model": {
+                "meta": ["sentieon_dnascope_model"],
+                "type": "string",
+                "pattern": "^\\S+\\.model$"
+            },
+            "snpeff_db": {
+                "meta": ["snpeff_db"],
+                "type": "string"
+            },
+            "vep_cache_version": {
+                "meta": ["vep_cache_version"],
+                "type": "string"
+            },
+            "vep_genome": {
+                "meta": ["vep_genome"],
+                "type": "string"
+            },
+            "vep_species": {
+                "meta": ["vep_species"],
+                "type": "string"
+            },
+            "vcf_dbsnp_vcf": {
+                "meta": ["dbsnp"],
+                "type": "string",
+                "pattern": "^\\S+\\.vcf\\.gz$"
+            },
+            "vcf_dbsnp_vcf_tbi": {
+                "meta": ["dbsnp_tbi"],
+                "type": "string",
+                "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
+            },
+            "vcf_dbsnp_vcf_vqsr": {
+                "meta": ["dbsnp_vqsr"],
+                "type": "string"
+            },
+            "vcf_dbsnp_vcf_source": {
+                "meta": ["vcf_dbsnp_vcf_source"],
+                "type": "string"
+            },
+            "vcf_germline_resource_vcf": {
+                "meta": ["germline_resource"],
+                "type": "string",
+                "pattern": "^\\S+\\.vcf\\.gz$"
+            },
+            "vcf_germline_resource_vcf_tbi": {
+                "meta": ["germline_resource_tbi"],
+                "type": "string",
+                "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
+            },
+            "vcf_germline_resource_vcf_source": {
+                "meta": ["vcf_germline_resource_vcf_source"],
+                "type": "string"
+            },
+            "vcf_known_indels_vcf": {
+                "meta": ["known_indels"],
+                "type": ["string", "array"],
+                "items": {
+                    "type": "string",
+                    "pattern": "^\\S+\\.vcf\\.gz$"
+                }
+            },
+            "vcf_known_indels_vcf_tbi": {
+                "meta": ["known_indels_tbi"],
+                "type": ["string", "array"],
+                "items": {
+                    "type": "string",
+                    "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
+                }
+            },
+            "vcf_known_indels_vcf_vqsr": {
+                "meta": ["known_indels_vqsr"],
+                "type": "string"
+            },
+            "vcf_known_indels_vcf_source": {
+                "meta": ["vcf_known_indels_vcf_source"],
+                "type": "string"
+            },
+            "vcf_known_snps_vcf": {
+                "meta": ["known_snps"],
+                "type": ["string", "array"],
+                "items": {
+                    "type": "string",
+                    "pattern": "^\\S+\\.vcf\\.gz$"
+                }
+            },
+            "vcf_known_snps_vcf_tbi": {
+                "meta": ["known_snps_tbi"],
+                "type": ["string", "array"],
+                "items": {
+                    "type": "string",
+                    "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
+                }
+            },
+            "vcf_known_snps_vcf_vqsr": {
+                "meta": ["known_snps_vqsr"],
+                "type": "string"
+            },
+            "vcf_known_snps_vcf_source": {
+                "meta": ["vcf_known_snps_vcf_source"],
+                "type": "string"
+            },
+            "vcf_pon_vcf": {
+                "meta": ["pon"],
+                "type": "string",
+                "pattern": "^\\S+\\.vcf\\.gz$"
+            },
+            "vcf_pon_vcf_tbi": {
+                "meta": ["pon_tbi"],
+                "type": "string",
+                "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
+            },
+            "vcf_pon_vcf_source": {
+                "meta": ["vcf_pon_vcf_source"],
+                "type": "string"
+            },
+            "readme": {
+                "meta": ["readme"],
+                "type": "string",
+                "pattern": "^\\S+\\.(md|txt)$"
+            }
+        },
+        "required": ["genome"]
+    }
+}

@@ -840,6 +840,23 @@
             "description": "General options to interact with reference genomes.",
             "default": "",
             "properties": {
+                "references": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "pattern": "^\\S+\\.(yaml|yml)$",
+                    "description": "Path to a references-datasheets YAML supplying reference files and metadata. Do not combine with --genome.",
+                    "help_text": "Provides reference files and metadata (fasta, dbsnp, known indels, VQSR labels) from a single datasheet. Explicit reference flags such as `--fasta` win over the datasheet. Do not combine with `--genome`. See [usage docs](https://nf-co.re/sarek/docs/usage).",
+                    "fa_icon": "fas fa-file-alt",
+                    "schema": "assets/schema_references.json"
+                },
+                "references_base_path": {
+                    "type": "string",
+                    "description": "Base URL or path for references-datasheets files loaded via --genome with --igenomes_ignore.",
+                    "default": "https://raw.githubusercontent.com/nf-core/references-datasheets/latest/igenomes",
+                    "fa_icon": "fas fa-database",
+                    "hidden": true
+                },
                 "igenomes_base": {
                     "type": "string",
                     "description": "The base path to the igenomes reference files",
@@ -881,10 +898,10 @@
             "properties": {
                 "genome": {
                     "type": "string",
-                    "description": "Name of iGenomes reference.",
+                    "description": "Reference genome name: an iGenomes catalogue key, or a references-datasheets path when igenomes_ignore is set. Do not combine with --references.",
                     "default": "GATK.GRCh38",
                     "fa_icon": "fas fa-book",
-                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`.\n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
+                    "help_text": "iGenomes: key in conf/igenomes.config (e.g. GATK.GRCh38). With --igenomes_ignore: path under --references_base_path (e.g. GATK/GRCh38, file igenomes/GATK/GRCh38.yml). Explicit reference flags outrank this. Do not combine with --references.\n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
                 },
                 "ascat_genome": {
                     "type": "string",
@@ -1030,21 +1047,33 @@
                     "help_text": "> **NB** If none provided, will be generated automatically from the Germline Resource file, if provided. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "known_indels": {
-                    "type": "string",
+                    "type": ["string", "array"],
                     "fa_icon": "fas fa-copy",
                     "format": "file-path-pattern",
                     "exists": true,
+                    "items": {
+                        "type": "string",
+                        "format": "file-path",
+                        "exists": true,
+                        "mimetype": "text/plain"
+                    },
                     "mimetype": "text/plain",
-                    "description": "Path to known indels file.",
+                    "description": "Path to known indels file, or list of paths.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "known_indels_tbi": {
-                    "type": "string",
+                    "type": ["string", "array"],
                     "fa_icon": "fas fa-copy",
                     "format": "file-path-pattern",
                     "exists": true,
+                    "items": {
+                        "type": "string",
+                        "format": "file-path",
+                        "exists": true,
+                        "mimetype": "text/plain"
+                    },
                     "mimetype": "text/plain",
-                    "description": "Path to known indels file index.",
+                    "description": "Path to known indels file index, or list of paths.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the known index file, if provided. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "known_indels_vqsr": {
@@ -1053,23 +1082,37 @@
                     "description": "Label string for VariantRecalibration (haplotypecaller joint variant calling). If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "known_snps": {
-                    "type": "string",
+                    "type": ["string", "array"],
                     "fa_icon": "fas fa-copy",
-                    "format": "file-path",
-                    "pattern": "^\\S+\\.vcf\\.gz$",
+                    "format": "file-path-pattern",
                     "exists": true,
+                    "items": {
+                        "type": "string",
+                        "format": "file-path",
+                        "exists": true,
+                        "pattern": "^\\S+\\.vcf\\.gz$",
+                        "mimetype": "text/plain"
+                    },
+                    "pattern": "^\\S+\\.vcf\\.gz$",
                     "mimetype": "text/plain",
-                    "description": "Path to known snps file.",
+                    "description": "Path to known snps file, or list of paths.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "known_snps_tbi": {
-                    "type": "string",
+                    "type": ["string", "array"],
                     "fa_icon": "fas fa-copy",
-                    "format": "file-path",
-                    "pattern": "^\\S+\\.vcf\\.gz\\.tbi$",
+                    "format": "file-path-pattern",
                     "exists": true,
+                    "items": {
+                        "type": "string",
+                        "format": "file-path",
+                        "exists": true,
+                        "pattern": "^\\S+\\.vcf\\.gz\\.tbi$",
+                        "mimetype": "text/plain"
+                    },
+                    "pattern": "^\\S+\\.vcf\\.gz\\.tbi$",
                     "mimetype": "text/plain",
-                    "description": "Path to known snps file snps.",
+                    "description": "Path to known snps file snps, or list of paths.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the known index file, if provided. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "known_snps_vqsr": {
