@@ -409,11 +409,12 @@ output {
 
 //
 // Resolve a reference attribute from the highest-priority source that defines it.
-// Precedence: explicit params > --references datasheet > --genome+igenomes_ignore
-// datasheet > iGenomes catalogue. Explicit params win because Nextflow keeps CLI
-// values over assignments made in the script. The datasheet loads once and caches
-// in params: strict syntax allows no other state to persist across these
-// top-level declarations.
+// Precedence: explicit params > --references datasheet, or --genome (iGenomes
+// catalogue, or a datasheet under --references_base_path with igenomes_ignore).
+// --references and --genome are mutually exclusive. Explicit params win because
+// Nextflow keeps CLI values over assignments made in the script. The datasheet
+// loads once and caches in params: strict syntax allows no other state to persist
+// across these top-level declarations.
 //
 
 def resolveReferenceAttribute(String name) {
@@ -425,11 +426,15 @@ def resolveReferenceAttribute(String name) {
 }
 
 def referenceDatasheet() {
+    def genome = params.genome in [null, 'null'] ? null : params.genome
+    if (params.references && genome) {
+        error("Use either --references or --genome, not both.")
+    }
     if (params.references) {
         return loadReferenceDatasheet(params.references)
     }
-    if (params.genome && params.igenomes_ignore) {
-        return loadReferenceDatasheet(referencesDatasheetUrl(params.genome))
+    if (genome && params.igenomes_ignore) {
+        return loadReferenceDatasheet(referencesDatasheetUrl(genome))
     }
     return [:]
 }
@@ -445,8 +450,7 @@ def referencesDatasheetUrl(genomeKey) {
     if (!base) {
         error("--references_base_path is empty; cannot load datasheet for --genome '${genomeKey}'")
     }
-    def key = genomeKey.toString().replace('.', '/')
-    return "${base}/${key}.yml"
+    return "${base}/${genomeKey}.yml"
 }
 
 def selectReferenceRow(rows) {

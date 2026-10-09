@@ -1,6 +1,7 @@
 # Test references datasheet for nf-core/sarek
 # Mirrors the 'testdata.nf-core.sarek' iGenomes entry with sarek parameter names.
 # known_indels and known_indels_tbi are YAML lists to exercise multi-file keys.
+# Requires --genome null: --references and --genome are mutually exclusive.
 - genome: testdata.nf-core.sarek
   source: nf-core
   species: Homo_sapiens

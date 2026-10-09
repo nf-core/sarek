@@ -253,6 +253,8 @@ def validateInputParameters() {
 
 // Exit pipeline if incorrect --genome key provided
 def genomeExistsError() {
+    // Skip with --references: --genome must be unset there, and the documented
+    // "--genome null" idiom is a truthy string the key check would reject
     if (params.references) {
         return
     }

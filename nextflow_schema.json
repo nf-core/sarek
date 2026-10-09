@@ -845,8 +845,8 @@
                     "format": "file-path",
                     "exists": true,
                     "pattern": "^\\S+\\.(yaml|yml)$",
-                    "description": "Path to a references-datasheets YAML supplying reference files and metadata.",
-                    "help_text": "Provides reference files and metadata (fasta, dbsnp, known indels, VQSR labels) from a single datasheet. Explicit reference flags such as `--fasta` win over the datasheet; the datasheet wins over `--genome` and the iGenomes catalogue. See [usage docs](https://nf-co.re/sarek/docs/usage).",
+                    "description": "Path to a references-datasheets YAML supplying reference files and metadata. Do not combine with --genome.",
+                    "help_text": "Provides reference files and metadata (fasta, dbsnp, known indels, VQSR labels) from a single datasheet. Explicit reference flags such as `--fasta` win over the datasheet. Do not combine with `--genome`. See [usage docs](https://nf-co.re/sarek/docs/usage).",
                     "fa_icon": "fas fa-file-alt",
                     "schema": "assets/schema_references.json"
                 },
@@ -898,10 +898,10 @@
             "properties": {
                 "genome": {
                     "type": "string",
-                    "description": "Reference genome name: an iGenomes catalogue key, or a references-datasheets path when igenomes_ignore is set. Outranked by --references and explicit reference flags.",
+                    "description": "Reference genome name: an iGenomes catalogue key, or a references-datasheets path when igenomes_ignore is set. Do not combine with --references.",
                     "default": "GATK.GRCh38",
                     "fa_icon": "fas fa-book",
-                    "help_text": "iGenomes: key in conf/igenomes.config (e.g. GATK.GRCh38). With --igenomes_ignore: path under --references_base_path (e.g. GATK/GRCh38 or GATK.GRCh38, file igenomes/GATK/GRCh38.yml). Individual reference flags and --references outrank this.\n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
+                    "help_text": "iGenomes: key in conf/igenomes.config (e.g. GATK.GRCh38). With --igenomes_ignore: path under --references_base_path (e.g. GATK/GRCh38, file igenomes/GATK/GRCh38.yml). Explicit reference flags outrank this. Do not combine with --references.\n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
                 },
                 "ascat_genome": {
                     "type": "string",
