@@ -90,10 +90,6 @@ workflow NFCORE_SAREK {
     samplesheet
 
     main:
-    if (params.vep_loftee_gerp_bigwig && !params.vep_loftee) {
-        error("--vep_loftee_gerp_bigwig requires --vep_loftee.")
-    }
-
     // build indexes if needed
     PREPARE_GENOME(
         params.ascat_alleles,
