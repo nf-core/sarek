@@ -13,7 +13,7 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
@@ -227,7 +227,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-08-28T12:33:55.456819608",
+        "timestamp": "2026-10-01T21:02:46.684318459",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -247,7 +247,7 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": "1.24"
@@ -461,7 +461,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-08-28T12:31:55.73950735",
+        "timestamp": "2026-10-01T23:34:33.9383969",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -478,7 +478,7 @@
                     "bwa": "0.7.19-r1273"
                 },
                 "CALCULATECONTAMINATION": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -487,29 +487,29 @@
                     "fastqc": "0.12.1"
                 },
                 "FILTERMUTECTCALLS": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": "1.24"
                 },
                 "LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
                 },
                 "MUTECT2_PAIRED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_APPLYBQSR": {
                     "parabricks": "4.7.1-1"
@@ -795,7 +795,7 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-08-28T12:36:23.136358596",
+        "timestamp": "2026-10-01T23:38:14.51377999",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1261,7 +1261,7 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": "1.24"
@@ -1410,7 +1410,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-08-28T12:42:20.879362227",
+        "timestamp": "2026-10-01T21:08:31.91722215",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
