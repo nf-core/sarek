@@ -25,22 +25,22 @@
                     "yte": "1.9.4"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MERGE_GERMLINE_SOMATIC_VCFS": {
                     "bcftools": "1.23.1"
                 },
                 "MERGE_STRELKA": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MERGE_STRELKA_GENOME": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MERGE_STRELKA_INDELS": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MERGE_STRELKA_SNVS": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -325,7 +325,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:34:10.078345824",
+        "timestamp": "2026-10-01T21:15:02.911055372",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -339,7 +339,7 @@
                     "bcftools": "1.23.1"
                 },
                 "CALCULATECONTAMINATION": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "CONCAT_CALLED_CHUNKS": {
                     "bcftools": "1.23.1"
@@ -351,32 +351,32 @@
                     "yte": "1.9.4"
                 },
                 "FILTERMUTECTCALLS": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATHERPILEUPSUMMARIES": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GETPILEUPSUMMARIES": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MERGEMUTECTSTATS": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MERGE_MUTECT2": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
                 },
                 "MUTECT2": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "RBT_VCFSPLIT": {
                     "rbt": "0.42.2"
@@ -592,7 +592,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-28T11:20:47.323833718",
+        "timestamp": "2026-10-01T21:14:32.801328307",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -615,13 +615,13 @@
                     "yte": "1.9.4"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MERGE_STRELKA": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MERGE_STRELKA_GENOME": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -836,7 +836,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:23:35.977627481",
+        "timestamp": "2026-10-01T21:05:09.548903346",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

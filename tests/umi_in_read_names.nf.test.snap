@@ -1,8 +1,11 @@
 {
     "-profile test --input tests/csv/3.0/bam_umi_header.csv --umi_in_read_header --tools markduplicates --step markduplicates": {
         "content": [
-            19,
+            20,
             {
+                "BAM_TO_CRAM_RECAL": {
+                    "samtools": "1.24"
+                },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
                 },
@@ -13,19 +16,19 @@
                     "fgbio": "3.1.2"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.2.0",
+                    "gatk4": "4.7.0.0",
                     "samtools": "1.21"
                 },
-                "INDEX_CRAM": {
+                "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
@@ -262,7 +265,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:36:55.243190299",
+        "timestamp": "2026-10-01T21:19:22.734778274",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -270,8 +273,11 @@
     },
     "-profile test --input tests/csv/3.0/bam_umi_header.csv --umi_in_read_header --tools markduplicates --step mapping": {
         "content": [
-            30,
+            31,
             {
+                "BAM_TO_CRAM_RECAL": {
+                    "samtools": "1.24"
+                },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
                 },
@@ -301,19 +307,19 @@
                     "fgbio": "3.1.2"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.2.0",
+                    "gatk4": "4.7.0.0",
                     "samtools": "1.21"
                 },
-                "INDEX_CRAM": {
+                "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
@@ -635,7 +641,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-28T11:27:38.221141795",
+        "timestamp": "2026-10-01T21:18:05.133292825",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
