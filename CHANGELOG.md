@@ -16,10 +16,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [#2296](https://github.com/nf-core/sarek/pull/2296) - Update 21 Java GATK4 modules to GATK 4.7.0.0 Lite containers from [nf-core/modules#13062](https://github.com/nf-core/modules/pull/13062), retaining the CNN and Spark environments ([@adamrtalbot](https://github.com/adamrtalbot)).
+
 ### Fixed
 
 - [#2275](https://github.com/nf-core/sarek/pull/2275) - Fix `--aligner parabricks` completing without producing any alignment when combined with `--no_intervals` ([#2274](https://github.com/nf-core/sarek/issues/2274)), or when no `--dbsnp`/`--known_indels` are provided: `collect()` dropped the empty intervals/known-sites lists instead of emitting them, leaving `PARABRICKS_FQ2BAM` with an input channel that never emitted
 - [#2282](https://github.com/nf-core/sarek/pull/2282) - Implement Parabricks Haplotypecaller gvcf mode for joint calling
+- [#2287](https://github.com/nf-core/sarek/pull/2287) - Fix `PARABRICKS_FQ2BAM` running BQSR without indexed known-sites VCFs ([#2193](https://github.com/nf-core/sarek/issues/2193)): `known_sites_indels_tbi` was never passed to `FASTQ_PREPROCESS_PARABRICKS`, so `pbrun` found no `.tbi` next to the VCFs it was given, fell back to loading them whole into memory, and BQSR could stall or OOM with no progress
+- [#2296](https://github.com/nf-core/sarek/pull/2296) - Preserve CRAM 3.0 after recalibration with the existing Samtools converter so GATK 4.7 output remains compatible with legacy callers.
+- [#2230](https://github.com/nf-core/sarek/pull/2230) - Varlociraptor: fix custom scenario file parsing
 
 ### Removed
 
@@ -27,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+| gatk4      | 4.6.2.0     | 4.7.0.0     |
 
 ### Dependencies - plugins
 
