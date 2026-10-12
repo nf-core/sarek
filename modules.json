@@ -423,7 +423,7 @@
                     },
                     "parabricks/fq2bam": {
                         "branch": "master",
-                        "git_sha": "3e0ec6464725c64d81abe928e15a6750d5fdd272",
+                        "git_sha": "4bfaaac6e5818b452040366ed85a42eeddcf46a2",
                         "installed_by": ["modules"]
                     },
                     "parabricks/haplotypecaller": {
