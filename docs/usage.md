@@ -44,7 +44,7 @@ If you wish to repeatedly use the same parameters for multiple runs, rather than
 Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <file>`.
 
 > [!WARNING]
-> Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
+> Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/running/run-pipelines#configuring-pipelines), other infrastructural tweaks (such as output directories), or module arguments (args).
 
 The above pipeline run specified with a params file in yaml format:
 
@@ -209,21 +209,24 @@ To use the GPU based `parabricks/fq2bam` as an alternative to the CPU bsed GATK 
 
 At the moment the implementation supports running the complete fq2bam module which does bwa-mem based alignment, coordinate sorting, duplicate marking and base quality score recalibration. We are working on making these individual components skippable (comparable to the GATK implementation) see [Issue #1853](https://github.com/nf-core/sarek/issues/1853) for more details on the ongoing work.
 
+To apply Base Quality Score Recalibration (BQSR) using the GPU-accelerated `parabricks/applybqsr` module after fq2bam, add `--parabricks_applybqsr` to your run command. This will run fq2bam, generate the recalibration table, apply it via the parabricks applybqsr module. The known variant sites (`--dbsnp`, `--known_indels`) used to build the recalibration table are provided by the iGenomes reference configuration or can be set via command-line arguments.
+
 The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if `--save_mapped` is set.
+
+You can find more information on using GPUs with nf-core pipelines in our [GPU documentation](https://nf-co.re/docs/running/configuration/gpu-pipelines).
 
 **Hints for custom configuration based on your local hardware setup:**
 
 You can supply more command-line arguments to the `fq2bam` process depending on your local setup. The performance depends on the type of GPU and the amount of CPU RAM that parabricks is able to utilize. The `--read-group-*` arguments are used by mutect2 and need to be added to your local config. Lowering `--bwa-nstreams` from 4 (standard) to 2 can help with memory issues. As well as `--gpuwrite` and `--gpusort`. For a more in-depth description of the available arguments please read the [parabricks fq2bam documentation](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html).
 
-You will need to add the accelerator directive to your local config in order to make use of the GPUs correctly if you do not use a cluster setup with a dedicated GPU queue. The accelerator directive is added automatically for the executors `'awsbatch','google-batch','hq','k8s'`. See [Nextflow executors](https://www.nextflow.io/docs/latest/executor.html) for more infos.
+You will need to add the accelerator directive to your local config in order to make use of the GPUs correctly if you do not use a cluster setup with a dedicated GPU queue. See [Nextflow executors](https://www.nextflow.io/docs/latest/executor.html) for more infos. To setup your local config you can check `task.accelerator` to identify jobs that need a GPU.
 
 If you need to adapt parabricks to your hardware, please copy and adapt the `custom-parabricks.config` provided below. More info on custom configs can be found [here](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
 
 ```groovy title="custom-parabricks.config"
 process {
     withName: 'PARABRICKS_FQ2BAM' {
-        // Remove an executor if you do not want it to set the accelerator directive or change the number
-        accelerator = { task.executor in ['awsbatch','google-batch','hq','k8s'] ? 4 : null }
+        accelerator = 4
         ext.args    = { [
             // Using specific read group tags for mutect compability (keep if using mutect)
             "--read-group-id-prefix ${meta.sample_lane_id}",
@@ -240,6 +243,32 @@ process {
     }
 }
 ```
+
+#### Using GPU accelerated variant calling
+
+> [!NOTE]
+> These are experimental additions to the pipeline.
+
+Sarek supports the following GPU-accelerated variant callers from [NVIDIA Parabricks](https://docs.nvidia.com/clara/parabricks/latest/) as an alternative to CPU based implementations:
+
+| Tool                                                                                                                          | `--tools` value              | Equivalent to        | Command                                                                                            |
+| ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | -------------------- | -------------------------------------------------------------------------------------------------- |
+| [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html)         | `parabricks_deepvariant`     | Google DeepVariant   | `nextflow run nf-core/sarek --tools parabricks_deepvariant --profile <docker/singularity>,gpu`     |
+| [Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) | `parabricks_haplotypecaller` | GATK HaplotypeCaller | `nextflow run nf-core/sarek --tools parabricks_haplotypecaller --profile <docker/singularity>,gpu` |
+
+There are a few differences to note about the Parabricks versions of these tools:
+
+- Parabricks variant callers support gVCF generation but cannot perform joint calling on their own. Combine them with other variant callers such as GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as follows:
+
+```
+nextflow run nf-core/sarek \
+  -profile docker,test,gpu \
+  --outdir results \
+  --tools parabricks_haplotypecaller,haplotypecaller \
+  --joint_germline
+```
+
+- Parabricks does not support the use of this pipeline with `--profile conda`.
 
 ### Start with duplicate marking (`--step markduplicates`)
 
@@ -461,7 +490,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
 - `wave`
-  - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow ` 24.03.0-edge` or later).
+  - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow `24.03.0-edge` or later).
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 - `gpu`
@@ -488,19 +517,19 @@ NXF_OPTS='-Xms1g -Xmx4g'
 
 Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the pipeline steps, if the job exits with any of the error codes specified [here](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L18) it will automatically be resubmitted with higher resources request (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
 
-To change the resource requests, please see the [max resources](https://nf-co.re/docs/usage/configuration#max-resources) and [tuning workflow resources](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources) section of the nf-core website.
+To change the resource requests, please see the [max resources](https://nf-co.re/docs/running/configuration/nextflow-for-your-system#set-max-resources) and [customise process resources](https://nf-co.re/docs/running/configuration/nextflow-for-your-system#customize-process-resources) section of the nf-core website.
 
 ### Custom Containers
 
 In some cases, you may wish to change the container or conda environment used by a pipeline steps for a particular tool. By default, nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However, in some cases the pipeline specified version maybe out of date.
 
-To use a different container from the default container or conda environment specified in a pipeline, please see the [updating tool versions](https://nf-co.re/docs/usage/configuration#updating-tool-versions) section of the nf-core website.
+To use a different container from the default container or conda environment specified in a pipeline, please see the [updating tool versions](https://nf-co.re/docs/running/configuration/nextflow-for-your-system#update-tool-versions) section of the nf-core website.
 
 ### Custom Tool Arguments
 
 A pipeline might not always support every possible argument or option of a particular tool used in pipeline. Fortunately, nf-core pipelines provide some freedom to users to insert additional parameters that the pipeline does not include by default.
 
-To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/usage/configuration#customising-tool-arguments) section of the nf-core website.
+To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/running/configuration/nextflow-for-your-system#modifying-tool-arguments) section of the nf-core website.
 
 ### nf-core/configs
 
@@ -608,7 +637,6 @@ Expected run output:
 [88/3af664] process > NFCORE_SAREK:SAREK:BAM_APPLYBQSR:CRAM_MERGE_INDEX_SAMTOOLS:INDEX_CRAM (test)                                  [100%] 1 of 1 ✔
 [f4/828fde] process > NFCORE_SAREK:SAREK:CRAM_QC_RECAL:SAMTOOLS_STATS (test)                                                        [100%] 1 of 1 ✔
 [fb/a9d66f] process > NFCORE_SAREK:SAREK:CRAM_QC_RECAL:MOSDEPTH (test)                                                              [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:CRAM_TO_BAM_RECAL                                                                          -
 [ef/026185] process > NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_SINGLE_STRELKA:STRELKA_SINGLE (test)  [100%] 1 of 1 ✔
 [-        ] process > NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_SINGLE_STRELKA:MERGE_STRELKA          -
 [-        ] process > NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_SINGLE_STRELKA:MERGE_STRELKA_GENOME   -
@@ -668,27 +696,27 @@ Sarek can be started at different points in the analysis by setting the paramete
 
 ## Which variant calling tool is implemented for which data type?
 
-This list is by no means exhaustive and it will depend on the specific analysis you would like to run. This is a suggestion based on the individual docs of the tools specifically for human genomes and a garden-variety sequencing run as well as what has been added to the pipeline.
-
-| Tool                                                                                                    | WGS | WES |  Panel |  Germline | Tumor-Only | Somatic (Tumor-Normal) |
-| :------------------------------------------------------------------------------------------------------ | :-: | :-: | :----: | :-------: | :--------: | :--------------------: |
-| [DeepVariant](https://github.com/google/deepvariant)                                                    |  x  |  x  |   x    |     x     |     -      |           -            |
-| [FreeBayes](https://github.com/ekg/freebayes)                                                           |  x  |  x  |   x    |     x     |     x      |           x            |
-| [GATK HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/5358864757787-HaplotypeCaller) |  x  |  x  |   x    |     x     |     -      |           -            |
-| [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2)                 |  x  |  x  |   x    |     -     |     x      |           x            |
-| [lofreq](https://github.com/CSB5/lofreq)                                                                |  x  |  x  |   x    |     -     |     x      |           -            |
-| [mpileup](https://www.htslib.org/doc/samtools-mpileup.html)                                             |  x  |  x  |   x    |     x     |     x      |           -            |
-| [MuSE](https://github.com/wwylab/MuSE)                                                                  |  x  |  x  |   x    |     -     |     -      |           x            |
-| [Strelka](https://github.com/Illumina/strelka)                                                          |  x  |  x  |   -    |     -     |     -      |           x            |
-| [Manta](https://github.com/Illumina/manta)                                                              |  x  |  x  |   x    |     x     |     x      |           x            |
-| [indexcov](https://github.com/brentp/goleft/tree/master/indexcov)                                       |  x  |  -  |   -    |     x     |     -      |           x            |
-| [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                          |  x  |  x  |   x    |     x     |     x      |           x            |
-| [ASCAT](https://github.com/VanLoo-lab/ascat)                                                            |  x  |  x  |   -    |     -     |     -      |           x            |
-| [CNVKit](https://cnvkit.readthedocs.io/en/stable/)                                                      |  x  |  x  |   -    |     x     |     x      |           x            |
-| [Control-FREEC](https://github.com/BoevaLab/FREEC)                                                      |  x  |  x  |   x    |     -     |     x      |           x            |
-| [MSIsensor2](https://github.com/niu-lab/msisensor2)                                                     |  x  |  x  |   x    |     -     |     X      |           -            |
-| [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro)                                             |  x  |  x  |   x    |     -     |     -      |           x            |
-| [Varlociraptor](https://varlociraptor.github.io/landing/)                                               |  x  |  x  |   x    |     x     |     x      |           x            |
+| Tool                                                                                                                                | WGS | WES | Panel | Germline | Tumor-Only | Somatic (Tumor-Normal) |
+| :---------------------------------------------------------------------------------------------------------------------------------- | :-: | :-: | :---: | :------: | :--------: | :--------------------: |
+| [ASCAT](https://github.com/VanLoo-lab/ascat)                                                                                        |  x  |  x  |   -   |    -     |     -      |           x            |
+| [CNVKit](https://cnvkit.readthedocs.io/en/stable/)                                                                                  |  x  |  x  |   -   |    x     |     x      |           x            |
+| [Control-FREEC](https://github.com/BoevaLab/FREEC)                                                                                  |  x  |  x  |   x   |    -     |     x      |           x            |
+| [DeepVariant](https://github.com/google/deepvariant)                                                                                |  x  |  x  |   x   |    x     |     -      |           -            |
+| [FreeBayes](https://github.com/ekg/freebayes)                                                                                       |  x  |  x  |   x   |    x     |     x      |           x            |
+| [GATK HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/5358864757787-HaplotypeCaller)                             |  x  |  x  |   x   |    x     |     -      |           -            |
+| [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2)                                             |  x  |  x  |   x   |    -     |     x      |           x            |
+| [indexcov](https://github.com/brentp/goleft/tree/master/indexcov)                                                                   |  x  |  -  |   -   |    x     |     -      |           x            |
+| [lofreq](https://github.com/CSB5/lofreq)                                                                                            |  x  |  x  |   x   |    -     |     x      |           -            |
+| [Manta](https://github.com/Illumina/manta)                                                                                          |  x  |  x  |   x   |    x     |     x      |           x            |
+| [mpileup](https://www.htslib.org/doc/samtools-mpileup.html)                                                                         |  x  |  x  |   x   |    x     |     x      |           -            |
+| [MSIsensor2](https://github.com/niu-lab/msisensor2)                                                                                 |  x  |  x  |   x   |    -     |     x      |           -            |
+| [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro)                                                                         |  x  |  x  |   x   |    -     |     -      |           x            |
+| [MuSE](https://github.com/wwylab/MuSE)                                                                                              |  x  |  x  |   x   |    -     |     -      |           x            |
+| [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html) (GPU)         |  x  |  x  |   x   |    x     |     -      |           -            |
+| [Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) (GPU) |  x  |  x  |   x   |    x     |     -      |           -            |
+| [Strelka](https://github.com/Illumina/strelka)                                                                                      |  x  |  x  |   -   |    -     |     -      |           x            |
+| [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                                                      |  x  |  x  |   x   |    x     |     x      |           x            |
+| [Varlociraptor](https://varlociraptor.github.io/landing/)                                                                           |  x  |  x  |   x   |    x     |     x      |           x            |
 
 ## How to run ASCAT with whole-exome sequencing data?
 
@@ -938,6 +966,8 @@ Varlociraptor allows the usage of different scenario files, a few examples can b
 
 You can control the number of chunks that the candidate VCF file is split into by `--varlociraptor_chunk_size <integer>`, it is set to reasonable default (15) but more chunks might aid in accelerating your workflow run if you can run more processes in parallel.
 
+Varlociraptor by default just returns all candidate variants annotated with probabilities. The variants need to be filtered to yield a representative result, see the [docs](https://varlociraptor.github.io/docs/filtering/) for more info. In sarek this is implemented with default set events related to the scenario files which are used by default. If you use your own scenario file please adapt the events accordingly by using the flags `--varlociraptor_events_tumor_only`, `--varlociraptor_events_somatic` and `--varlociraptor_events_germline`. The events need to be supplied as a list with spaces between the events. Filtering also depends on the False Discovery Rate (FDR) in sarek we opted for a default of filtering in `--mode local-smart` to a FDR of 5% with `--fdr 0.05`. The FDR can be controlled by `--varlociraptor_fdr`.
+
 ## Spark related issues
 
 If you have problems running processes that make use of Spark such as `MarkDuplicates`.
@@ -982,7 +1012,7 @@ Command error:
   [E::sam_index] Read 'LH00271:69:2237HHLT4:7:1101:1000:11758' with ref_name='chr16', ref_length=90338345, flags=163, pos=58528490 cannot be indexed  samtools index: failed to create index for "sample_19.sorted.bam"
 ```
 
-Please be aware that `--use_gatk_spark` is not compatible with `--save_output_as_bam --save_mapped` because merging the reads to export them to bam files only works when they are coordinate sorted - spark works with name-sorting the reads.
+Please be aware that `--use_gatk_spark markduplicates` is not compatible with `--save_mapped`, regardless of `--save_output_as_bam`. Spark MarkDuplicates requires name-sorted input, so the reads exiting the mapping stage are name-sorted. The saved mapped alignment (whether published as BAM or CRAM) is therefore name-sorted and cannot be indexed or used by downstream tools. Either drop `--save_mapped`, or switch to the non-Spark markduplicates path.
 
 ## How to handle Unique Molecular Identifiers (UMIs)
 

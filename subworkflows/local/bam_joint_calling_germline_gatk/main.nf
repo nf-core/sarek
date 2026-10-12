@@ -31,7 +31,6 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     known_snps_vqsr
 
     main:
-    versions = Channel.empty()
 
     // Map input for GenomicsDBImport
     // Rename based on num_intervals, group all samples by their interval_name/interval_file and restructure for channel
@@ -52,7 +51,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     // Joint genotyping performed using GenotypeGVCFs
     // Sort vcfs called by interval within each VCF
 
-    GATK4_GENOTYPEGVCFS(genotype_input, fasta, fai, dict, dbsnp.map{ it -> [ [:], it ] }, dbsnp_tbi.map{ it -> [ [:], it ] })
+    GATK4_GENOTYPEGVCFS(genotype_input, fasta, fai, dict, dbsnp.map{ dbsnp_ -> [ [:], dbsnp_ ] }, dbsnp_tbi.map{ dbsnp_tbi_ -> [ [:], dbsnp_tbi_ ] })
 
     BCFTOOLS_SORT(GATK4_GENOTYPEGVCFS.out.vcf)
     gvcf_to_merge = BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [ meta.subMap('num_intervals') + [ id:'joint_variant_calling', patient:'all_samples', variantcaller:'haplotypecaller' ], vcf ]}.groupTuple()
@@ -71,18 +70,18 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         resource_indels_vcf,
         resource_indels_tbi,
         indels_resource_label,
-        fasta.map{ meta, fasta_ -> [ fasta_ ] },
-        fai.map{ meta, fai_ -> [ fai_ ] },
-        dict.map{ meta, dict_ -> [ dict_ ] })
+        fasta.map{ _meta, fasta_ -> [ fasta_ ] },
+        fai.map{ _meta, fai_ -> [ fai_ ] },
+        dict.map{ _meta, dict_ -> [ dict_ ] })
 
     VARIANTRECALIBRATOR_SNP(
         vqsr_input,
         resource_snps_vcf,
         resource_snps_tbi,
         snps_resource_label,
-        fasta.map{ meta, fasta_ -> [ fasta_ ] },
-        fai.map{ meta, fai_ -> [ fai_ ] },
-        dict.map{ meta, dict_ -> [ dict_ ] })
+        fasta.map{ _meta, fasta_ -> [ fasta_ ] },
+        fai.map{ _meta, fai_ -> [ fai_ ] },
+        dict.map{ _meta, dict_ -> [ dict_ ] })
 
     //Prepare SNPs and INDELs for ApplyVQSR
     // Step 1. : ApplyVQSR to SNPs
@@ -97,9 +96,9 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
 
     GATK4_APPLYVQSR_SNP(
         vqsr_input_snp,
-        fasta.map{ meta, fasta_ -> [ fasta_ ] },
-        fai.map{ meta, fai_ -> [ fai_ ] },
-        dict.map{ meta, dict_ -> [ dict_ ] })
+        fasta.map{ _meta, fasta_ -> [ fasta_ ] },
+        fai.map{ _meta, fai_ -> [ fai_ ] },
+        dict.map{ _meta, dict_ -> [ dict_ ] })
 
     // Join results of ApplyVQSR_SNP and use as input for Indels to avoid duplicate entries in the result
     // Rework meta for variantscalled.csv and annotation tools
@@ -111,28 +110,28 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
 
     GATK4_APPLYVQSR_INDEL(
         vqsr_input_indel,
-        fasta.map{ meta, fasta_ -> [ fasta_ ] },
-        fai.map{ meta, fai_ -> [ fai_ ] },
-        dict.map{ meta, dict_ -> [ dict_ ] })
+        fasta.map{ _meta, fasta_ -> [ fasta_ ] },
+        fai.map{ _meta, fai_ -> [ fai_ ] },
+        dict.map{ _meta, dict_ -> [ dict_ ] })
 
 
     // The following is an ugly monster to achieve the following:
     // When MERGE_GENOTYPEGVCFS and GATK4_APPLYVQSR are run, then use output from APPLYVQSR
     // When MERGE_GENOTYPEGVCFS and NOT GATK4_APPLYVQSR , then use the output from MERGE_GENOTYPEGVCFS
 
-    merge_vcf_for_join = MERGE_GENOTYPEGVCFS.out.vcf.map{meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
-    merge_tbi_for_join = MERGE_GENOTYPEGVCFS.out.tbi.map{meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
+    merge_vcf_for_join = MERGE_GENOTYPEGVCFS.out.vcf.map{_meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
+    merge_tbi_for_join = MERGE_GENOTYPEGVCFS.out.tbi.map{_meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
 
     // Remap for both to have the same key, if ApplyBQSR is not run, the channel is empty --> populate with empty elements
-    vqsr_vcf_for_join = GATK4_APPLYVQSR_INDEL.out.vcf.ifEmpty([[:], []]).map{meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
-    vqsr_tbi_for_join = GATK4_APPLYVQSR_INDEL.out.tbi.ifEmpty([[:], []]).map{meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
+    vqsr_vcf_for_join = GATK4_APPLYVQSR_INDEL.out.vcf.ifEmpty([[:], []]).map{_meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
+    vqsr_tbi_for_join = GATK4_APPLYVQSR_INDEL.out.tbi.ifEmpty([[:], []]).map{_meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
 
     // Join on metamap
     // If both --> meta, vcf_merged, vcf_bqsr
     // If not VQSR --> meta, vcf_merged, []
     // if the second is empty, use the first
     genotype_vcf = merge_vcf_for_join.join(vqsr_vcf_for_join, remainder: true).map{
-        meta, joint_vcf, recal_vcf ->
+        _meta, joint_vcf, recal_vcf ->
 
         def vcf_out = recal_vcf ?: joint_vcf
 
@@ -140,21 +139,16 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     }
 
     genotype_index = merge_tbi_for_join.join(vqsr_tbi_for_join, remainder: true).map{
-        meta, joint_tbi, recal_tbi ->
+        _meta, joint_tbi, recal_tbi ->
 
         def tbi_out = recal_tbi ?: joint_tbi
 
         [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"haplotypecaller"], tbi_out]
     }
 
-    versions = versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)
-    versions = versions.mix(GATK4_GENOTYPEGVCFS.out.versions)
-    versions = versions.mix(VARIANTRECALIBRATOR_SNP.out.versions)
-    versions = versions.mix(GATK4_APPLYVQSR_SNP.out.versions)
 
     emit:
     genotype_index  // channel: [ val(meta), [ tbi ] ]
     genotype_vcf    // channel: [ val(meta), [ vcf ] ]
 
-    versions        // channel: [ versions.yml ]
 }

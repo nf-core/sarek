@@ -29,38 +29,59 @@ input:
         description: File containing the pileups summary table of a tumor sample to
           be used to calculate contamination.
         pattern: "*.pileups.table"
+        ontologies: []
     - matched:
         type: file
         description: File containing the pileups summary table of a normal sample that
           matches with the tumor sample specified in pileup argument. This is an optional
           input.
         pattern: "*.pileups.table"
+        ontologies: []
 output:
-  - contamination:
-      - meta:
+  contamination:
+    - - meta:
           type: file
           description: File containing the contamination table.
           pattern: "*.contamination.table"
+          ontologies: []
       - "*.contamination.table":
           type: file
           description: File containing the contamination table.
           pattern: "*.contamination.table"
-  - segmentation:
-      - meta:
+          ontologies: []
+  segmentation:
+    - - meta:
           type: file
-          description: output table containing segmentation of tumor minor allele fractions
-            (optional)
-          pattern: "*.segmentation.table"
+          description: File containing the contamination table.
+          pattern: "*.contamination.table"
+          ontologies: []
       - "*.segmentation.table":
           type: file
           description: output table containing segmentation of tumor minor allele fractions
             (optional)
           pattern: "*.segmentation.table"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_gatk4:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gatk4:
+          type: string
+          description: The name of the tool
+      - gatk --version | sed -n '/GATK.*v/s/.*v//p':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gatk4:
+          type: string
+          description: The name of the tool
+      - gatk --version | sed -n '/GATK.*v/s/.*v//p':
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@GCJMackenzie"
   - "@maxulysse"

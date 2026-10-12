@@ -33,6 +33,10 @@ input:
         type: string
         description: |
           cache version
+  - preflight_check:
+      type: boolean
+      description: |
+        Whether to check that the expected cache file is listed in the Ensembl CHECKSUMS file before downloading
 output:
   cache:
     - - meta:

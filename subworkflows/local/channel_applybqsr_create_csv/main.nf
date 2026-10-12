@@ -4,9 +4,8 @@
 
 workflow CHANNEL_APPLYBQSR_CREATE_CSV {
     take:
-    cram_recalibrated_index // channel: [mandatory] meta, cram, crai
+    cram_recalibrated_index // channel: [mandatory] meta, file, index
     outdir //
-    save_output_as_bam //
 
     main:
     // Creating csv files to restart from this step
@@ -15,11 +14,11 @@ workflow CHANNEL_APPLYBQSR_CREATE_CSV {
         def sample = meta.sample
         def sex = meta.sex
         def status = meta.status
+        def is_bam = file.name.endsWith('.bam')
+        def type = is_bam ? "bam" : "cram"
+        def type_index = is_bam ? "bai" : "crai"
         def out_file = "${outdir}/preprocessing/recalibrated/${sample}/${file.name}"
         def out_index = "${outdir}/preprocessing/recalibrated/${sample}/${index.name}"
-
-        def type = save_output_as_bam ? "bam" : "cram"
-        def type_index = save_output_as_bam ? "bai" : "crai"
 
         ["recalibrated.csv", "patient,sex,status,sample,${type},${type_index}\n${patient},${sex},${status},${sample},${out_file},${out_index}\n"]
     }

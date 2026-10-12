@@ -4,4 +4,4 @@ channels:
   - bioconda
 dependencies:
   - bioconda::htslib=1.23
-  - bioconda::snpsift=5.4.0a
+  - bioconda::snpsift=5.4.0c

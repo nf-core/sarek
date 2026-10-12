@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: cache_download_ensemblvep_snpeff
+description: downlad annotation cache for snpeff and ensemblvep
+keywords:
+  - ensemblvep
+  - snpeff
+  - download
+  - annotation
+  - cache
+components:
+  - ensemblvep/download
+  - snpeff/download
+input:
+  - ensemblvep_info:
+      description: |
+        All information necessary to download the cache
+        Structure: [ val(meta), val(ensemblvep_genome), val(ensemblvep_species), val(ensemblvep_cache_version) ]
+  - snpeff_info:
+      description: |
+        All information necessary to download the cache
+        Structure: [ val(meta), val(snpeff_db) ]
+  - ensemblvep_preflight_check:
+      description: |
+        Whether to check that the expected cache file is listed in the Ensembl CHECKSUMS file before downloading
+        Structure: val(true/false)
+output:
+  - ensemblvep_cache:
+      description: |
+        Path to ensemblvep cache
+        Structure: [ val(meta), path(cache) ]
+  - snpeff_cache:
+      description: |
+        Path to snpeff cache
+        Structure: [ val(meta), path(cache) ]
+authors:
+  - "@maxulysse"
+maintainers:
+  - "@maxulysse"

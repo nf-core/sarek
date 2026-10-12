@@ -13,7 +13,7 @@ process CREATE_INTERVALS_BED {
 
     output:
     path ("*.bed"),      emit: bed
-    path "versions.yml", emit: versions
+    tuple val("${task.process}"), val('gawk'), eval("awk --version | head -n1 | sed 's/GNU Awk //; s/, .*//'"), emit: versions_gawk, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -41,11 +41,6 @@ process CREATE_INTERVALS_BED {
             chunk += t
             print \$0 > name
         }' ${intervals}
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            gawk: \$(awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//')
-        END_VERSIONS
         """
     }
     else if (intervals.toString().toLowerCase().endsWith("interval_list")) {
@@ -54,11 +49,6 @@ process CREATE_INTERVALS_BED {
             name = sprintf("%s_%d-%d", \$1, \$2, \$3);
             printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
         }'
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            gawk: \$(awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//')
-        END_VERSIONS
         """
     }
     else {
@@ -67,11 +57,6 @@ process CREATE_INTERVALS_BED {
             name = sprintf("%s_%d-%d", \$1, \$2, \$3);
             printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
         }' ${intervals}
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            gawk: \$(awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//')
-        END_VERSIONS
         """
     }
 
@@ -79,10 +64,5 @@ process CREATE_INTERVALS_BED {
     def prefix = task.ext.prefix ?: "${intervals.baseName}"
     """
     touch ${prefix}.stub.bed
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        gawk: \$(awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//')
-    END_VERSIONS
     """
 }

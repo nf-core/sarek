@@ -1,7 +1,7 @@
 name: strelka_somatic
-description: Strelka2 is a fast and accurate small variant caller optimized for analysis
-  of germline variation in small cohorts and somatic variation in tumor/normal sample
-  pairs
+description: Strelka2 is a fast and accurate small variant caller optimized for
+  analysis of germline variation in small cohorts and somatic variation in
+  tumor/normal sample pairs
 keywords:
   - variant calling
   - germline
@@ -10,13 +10,14 @@ keywords:
   - variants
 tools:
   - strelka:
-      description: Strelka calls somatic and germline small variants from mapped sequencing
-        reads
+      description: Strelka calls somatic and germline small variants from mapped
+        sequencing reads
       homepage: https://github.com/Illumina/strelka
       documentation: https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md
       tool_dev_url: https://github.com/Illumina/strelka
       doi: 10.1038/s41592-018-0051-x
-      licence: ["GPL v3"]
+      licence:
+        - "GPL v3"
       identifier: biotools:strelka
 input:
   - - meta:
@@ -61,7 +62,8 @@ input:
         ontologies: []
     - target_bed_index:
         type: file
-        description: Index for BED file containing target regions for variant calling
+        description: Index for BED file containing target regions for variant
+          calling
         pattern: "*.{bed.tbi}"
         ontologies: []
   - fasta:
@@ -119,13 +121,29 @@ output:
           description: Index for gzipped VCF file containing variants
           pattern: "*.{vcf.gz.tbi}"
           ontologies: []
+  versions_strelka:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - strelka:
+          type: string
+          description: The name of the tool
+      - configureStrelkaSomaticWorkflow.py --version:
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - strelka:
+          type: string
+          description: The name of the tool
+      - configureStrelkaSomaticWorkflow.py --version:
+          type: eval
+          description: The expression to obtain the version of the tool
+
 authors:
   - "@drpatelh"
 maintainers:

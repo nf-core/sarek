@@ -4,9 +4,9 @@ process SENTIEON_BWAMEM {
     label 'sentieon'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/0f/0f1dfe59ef66d7326b43db9ab1f39ce6220b358a311078c949a208f9c9815d4e/data'
-        : 'community.wave.seqera.io/library/sentieon:202503.01--1863def31ed8e4d5'}"
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/73/73e9111552beb76e2ad3ad89eb75bed162d7c5b85b2433723ecb4fc96a02674a/data'
+        : 'community.wave.seqera.io/library/sentieon:202503.02--def60555294d04fa'}"
 
     input:
     tuple val(meta), path(reads)
@@ -16,7 +16,8 @@ process SENTIEON_BWAMEM {
 
     output:
     tuple val(meta), path("${prefix}"), path("${prefix}.{bai,crai}"), emit: bam_and_bai
-    path "versions.yml",                                              emit: versions
+    tuple val("${task.process}"), val('bwa'), eval('sentieon bwa 2>&1 | sed -n "s/^Version: *//p"'), topic: versions, emit: versions_bwa
+    tuple val("${task.process}"), val('sentieon'), eval('sentieon driver --version | sed "s/.*-//g"'), topic: versions, emit: versions_sentieon
 
     when:
     task.ext.when == null || task.ext.when
@@ -45,26 +46,13 @@ process SENTIEON_BWAMEM {
     if [[ "${prefix}" == *.cram ]]; then
         rm -f "${prefix}.bai"
     fi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bwa: \$(echo \$(sentieon bwa 2>&1) | sed 's/^.*Version: //; s/Contact:.*\$//')
-        sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
-    END_VERSIONS
     """
 
     stub:
     prefix = task.ext.prefix ?: "${meta.id}.bam"
     index = prefix.tokenize('.')[-1] == "bam" ? "bai" : "crai"
-
     """
     touch ${prefix}
     touch ${prefix}.${index}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        bwa: \$(echo \$(sentieon bwa 2>&1) | sed 's/^.*Version: //; s/Contact:.*\$//')
-        sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
-    END_VERSIONS
     """
 }

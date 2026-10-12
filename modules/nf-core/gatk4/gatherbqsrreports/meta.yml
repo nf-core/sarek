@@ -24,9 +24,10 @@ input:
         type: file
         description: File(s) containing BQSR table(s)
         pattern: "*.table"
+        ontologies: []
 output:
-  - table:
-      - meta:
+  table:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -35,11 +36,28 @@ output:
           type: file
           description: File containing joined BQSR table
           pattern: "*.table"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_gatk4:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gatk4:
+          type: string
+          description: The name of the tool
+      - gatk --version | sed -n '/GATK.*v/s/.*v//p':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - gatk4:
+          type: string
+          description: The name of the tool
+      - gatk --version | sed -n '/GATK.*v/s/.*v//p':
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@FriederikeHanssen"
 maintainers:

@@ -1,3 +1,5 @@
+def projectDir = new File('.').absolutePath
+
 nextflow_pipeline {
 
     name "Test pipeline"
@@ -11,6 +13,24 @@ nextflow_pipeline {
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: ''
             ]
+        ],
+        [
+            name: "-profile test --save_output_as_bam with variant calling",
+            params: [
+                save_output_as_bam: true,
+                tools: 'strelka,cnvkit'
+            ]
+        ],
+        [
+            name: "-profile test --save_output_as_bam --tools sentieon_dedup",
+            params: [
+                save_output_as_bam: true,
+                tools: 'sentieon_dedup',
+                step: 'markduplicates',
+                skip_tools: 'baserecalibrator,fastqc,mosdepth,multiqc,samtools',
+                input: "${projectDir}/tests/csv/3.0/mapped_single_cram.csv"
+            ],
+            sentieon: true,
         ]
     ]
 

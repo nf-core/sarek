@@ -16,7 +16,8 @@ tools:
       homepage: "https://github.com/niu-lab/msisensor2"
       documentation: "https://github.com/niu-lab/msisensor2/blob/master/README.md"
       tool_dev_url: "https://github.com/niu-lab/msisensor2"
-      license: ["GPL-3.0"]
+      license:
+        - "GPL-3.0"
       identifier: ""
 input:
   - - meta:
@@ -76,13 +77,27 @@ output:
           type: file
           description: Somatic MSI regions detected.
           ontologies: []
+  versions_msisensor2:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - msisensor2:
+          type: string
+          description: The name of the tool
+      - "msisensor2 2> >(grep Version) | sed 's/Version: v//g'":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - msisensor2:
+          type: string
+          description: The name of the tool
+      - "msisensor2 2> >(grep Version) | sed 's/Version: v//g'":
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@adamrtalbot"
 maintainers:

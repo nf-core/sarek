@@ -10,6 +10,10 @@ inputs:
   tags:
     description: "Tags to pass as argument for nf-test --tag parameter"
     required: false
+  all_tests:
+    description: "Count all tagged tests instead of only those changed since HEAD^ (used for snapshot regeneration)"
+    required: false
+    default: "false"
 outputs:
   shard:
     description: "Array of shard numbers"
@@ -21,7 +25,7 @@ runs:
   using: "composite"
   steps:
     - name: Install nf-test
-      uses: nf-core/setup-nf-test@v1
+      uses: nf-core/setup-nf-test@4069fbbaabe94c08faba4ad261bfa88225ba133f # v2
       with:
         version: ${{ env.NFT_VER }}
     - name: Get number of shards
@@ -29,12 +33,16 @@ runs:
       shell: bash
       run: |
         # Run nf-test with dynamic parameter
+        # In all_tests mode (snapshot regeneration) count every tagged test,
+        # not just those changed since HEAD^.
+        CHANGED_SINCE="--changed-since HEAD^"
+        if [ "${{ inputs.all_tests }}" = "true" ]; then CHANGED_SINCE=""; fi
         nftest_output=$(nf-test test \
           --profile +docker \
           $(if [ -n "${{ inputs.tags }}" ]; then echo "--tag ${{ inputs.tags }}"; fi) \
           --dry-run \
           --ci \
-          --changed-since HEAD^) || {
+          $CHANGED_SINCE) || {
             echo "nf-test command failed with exit code $?"
             echo "Full output: $nftest_output"
             exit 1

@@ -6,8 +6,8 @@ channels:
 
 dependencies:
   # renovate: datasource=conda depName=bioconda/bwa-mem2
-  - bwa-mem2=2.2.1
+  - bwa-mem2=2.3
   # renovate: datasource=conda depName=bioconda/htslib
-  - htslib=1.21
+  - htslib=1.22.1
   # renovate: datasource=conda depName=bioconda/samtools
-  - samtools=1.21
+  - samtools=1.22.1

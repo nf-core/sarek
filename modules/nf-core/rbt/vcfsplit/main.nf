@@ -3,9 +3,9 @@ process RBT_VCFSPLIT {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
         ? 'https://depot.galaxyproject.org/singularity/rust-bio-tools:0.42.2--h4458251_1'
-        : 'biocontainers/rust-bio-tools:0.42.2--h4458251_1'}"
+        : 'quay.io/biocontainers/rust-bio-tools:0.42.2--h4458251_1'}"
 
     input:
     tuple val(meta), path(vcf)

@@ -1,6 +1,6 @@
 name: bcftools_view
-description: View, subset and filter VCF or BCF files by position and filtering expression.
-  Convert between VCF and BCF
+description: View, subset and filter VCF or BCF files by position and filtering
+  expression. Convert between VCF and BCF
 keywords:
   - variant calling
   - view
@@ -13,7 +13,8 @@ tools:
       homepage: http://samtools.github.io/bcftools/bcftools.html
       documentation: http://www.htslib.org/doc/bcftools.html
       doi: 10.1093/bioinformatics/btp352
-      licence: ["MIT"]
+      licence:
+        - "MIT"
       identifier: biotools:bcftools
 input:
   - - meta:
@@ -63,35 +64,37 @@ output:
           description: VCF normalized output file
           pattern: "*.{vcf,vcf.gz,bcf,bcf.gz}"
           ontologies: []
-  tbi:
+  index:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.tbi":
+      - "*.{tbi,csi}":
           type: file
-          description: Alternative VCF file index
-          pattern: "*.tbi"
-          ontologies: []
-  csi:
-    - - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-      - "*.csi":
-          type: file
-          description: Default VCF file index
-          pattern: "*.csi"
-          ontologies: []
+          description: VCF file index
+          pattern: "*.{tbi,csi}"
+  versions_bcftools:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - bcftools:
+          type: string
+          description: The tool name
+      - bcftools --version | sed '1!d; s/^.*bcftools //':
+          type: eval
+          description: The command used to generate the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - bcftools:
+          type: string
+          description: The tool name
+      - bcftools --version | sed '1!d; s/^.*bcftools //':
+          type: eval
+          description: The command used to generate the version of the tool
 authors:
   - "@abhi18av"
 maintainers:

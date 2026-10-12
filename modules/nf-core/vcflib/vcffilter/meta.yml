@@ -12,7 +12,8 @@ tools:
       documentation: "https://github.com/vcflib/vcflib"
       tool_dev_url: "https://github.com/vcflib/vcflib"
       doi: "10.1371/journal.pcbi.1009123"
-      licence: ["MIT"]
+      licence:
+        - "MIT"
       identifier: biotools:vcflib
 input:
   - - meta:
@@ -42,13 +43,27 @@ output:
           description: Filtered VCF file
           pattern: "*.{vcf.gz}"
           ontologies: []
+  versions_vcflib:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - vcflib:
+          type: string
+          description: The name of the tool
+      - 1.0.14:
+          type: string
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - vcflib:
+          type: string
+          description: The name of the tool
+      - 1.0.14:
+          type: string
+          description: The expression to obtain the version of the tool
 authors:
   - "@zachary-foster"
 maintainers:

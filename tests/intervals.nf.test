@@ -25,9 +25,9 @@ nextflow_pipeline {
             ]
         ],
         [
-            name: "-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
+            name: "-profile test --intervals null --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
             params: [
-                intervals: false,
+                intervals: null,
                 save_reference: true,
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: null
@@ -54,9 +54,9 @@ nextflow_pipeline {
             stub: true
         ],
         [
-            name: "-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
+            name: "-profile test --intervals null --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
             params: [
-                intervals: false,
+                intervals: null,
                 save_reference: true,
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: null

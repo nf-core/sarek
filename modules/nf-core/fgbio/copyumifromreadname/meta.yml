@@ -2,9 +2,10 @@
 name: "fgbio_copyumifromreadname"
 description: Copies the UMI at the end of a bam files read name to the RX tag.
 keywords:
-  - sort
-  - example
-  - genomics
+  - fgbio
+  - copy
+  - umi
+  - readname
 tools:
   - "fgbio":
       description: "A set of tools for working with genomic and high throughput sequencing
@@ -65,14 +66,28 @@ output:
           pattern: "*.{bai}"
           ontologies:
             - edam: "http://edamontology.org/format_3327" # BAI
-  versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
+  versions_fgbio:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - fgbio:
+          type: string
+          description: The tool name
+      - 'fgbio --version 2>&1 | tr -d "[:cntrl:]" | sed -e "s/^.*Version: //;s/\[.*$//"':
+          type: eval
+          description: The expression to obtain the version of the tool
 
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - fgbio:
+          type: string
+          description: The tool name
+      - 'fgbio --version 2>&1 | tr -d "[:cntrl:]" | sed -e "s/^.*Version: //;s/\[.*$//"':
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@sppearce"
 maintainers:

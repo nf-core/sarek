@@ -5,8 +5,7 @@ channels:
   - bioconda
 
 dependencies:
-  # renovate: datasource=conda depName=bioconda/gatk4
-  - bioconda::gatk4=4.6.1.0
-  - bioconda::gcnvkernel=0.9
-  - bioconda::htslib=1.21
+  # renovate: datasource=conda depName=bioconda/gatk4-lite
+  - bioconda::gatk4-lite=4.7.0.0
+  # renovate: datasource=conda depName=bioconda/samtools
   - bioconda::samtools=1.21

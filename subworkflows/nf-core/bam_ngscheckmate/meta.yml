@@ -37,6 +37,10 @@ input:
       type: file
       description: fasta file for the genome
       pattern: "*.{fasta}"
+  - fai:
+      type: file
+      description: fasta file index for the genome
+      pattern: "*.{fai}"
 output:
   - pdf:
       type: file

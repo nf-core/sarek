@@ -4,9 +4,9 @@ process STRELKA_SOMATIC {
     label 'error_retry'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
         ? 'https://depot.galaxyproject.org/singularity/strelka:2.9.10--h9ee0642_1'
-        : 'biocontainers/strelka:2.9.10--h9ee0642_1'}"
+        : 'quay.io/biocontainers/strelka:2.9.10--h9ee0642_1'}"
 
     input:
     tuple val(meta), path(input_normal), path(input_index_normal), path(input_tumor), path(input_index_tumor), path(manta_candidate_small_indels), path(manta_candidate_small_indels_tbi), path(target_bed), path(target_bed_index)
@@ -18,7 +18,7 @@ process STRELKA_SOMATIC {
     tuple val(meta), path("*.somatic_indels.vcf.gz.tbi"), emit: vcf_indels_tbi
     tuple val(meta), path("*.somatic_snvs.vcf.gz"),       emit: vcf_snvs
     tuple val(meta), path("*.somatic_snvs.vcf.gz.tbi"),   emit: vcf_snvs_tbi
-    path "versions.yml", emit: versions
+    tuple val("${task.process}"), val('strelka'), eval("configureStrelkaSomaticWorkflow.py --version"), emit: versions_strelka, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -45,11 +45,6 @@ process STRELKA_SOMATIC {
     mv strelka/results/variants/somatic.indels.vcf.gz.tbi ${prefix}.somatic_indels.vcf.gz.tbi
     mv strelka/results/variants/somatic.snvs.vcf.gz       ${prefix}.somatic_snvs.vcf.gz
     mv strelka/results/variants/somatic.snvs.vcf.gz.tbi   ${prefix}.somatic_snvs.vcf.gz.tbi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        strelka: \$( configureStrelkaSomaticWorkflow.py --version )
-    END_VERSIONS
     """
 
     stub:
@@ -59,10 +54,5 @@ process STRELKA_SOMATIC {
     touch ${prefix}.somatic_indels.vcf.gz.tbi
     echo "" | gzip > ${prefix}.somatic_snvs.vcf.gz
     touch ${prefix}.somatic_snvs.vcf.gz.tbi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        strelka: \$( configureStrelkaSomaticWorkflow.py --version )
-    END_VERSIONS
     """
 }

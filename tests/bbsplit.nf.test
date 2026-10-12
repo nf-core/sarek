@@ -44,7 +44,7 @@ nextflow_pipeline {
                 input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
                 fasta: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta',
                 igenomes_ignore: true,
-                genome: false,
+                genome: null,
                 skip_tools: 'baserecalibrator',
                 modules_testdata_base_path: 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
             ],

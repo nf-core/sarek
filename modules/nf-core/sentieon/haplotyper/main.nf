@@ -4,9 +4,9 @@ process SENTIEON_HAPLOTYPER {
     label 'sentieon'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/0f/0f1dfe59ef66d7326b43db9ab1f39ce6220b358a311078c949a208f9c9815d4e/data'
-        : 'community.wave.seqera.io/library/sentieon:202503.01--1863def31ed8e4d5'}"
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/73/73e9111552beb76e2ad3ad89eb75bed162d7c5b85b2433723ecb4fc96a02674a/data'
+        : 'community.wave.seqera.io/library/sentieon:202503.02--def60555294d04fa'}"
 
     input:
     tuple val(meta), path(input), path(input_index), path(intervals), path(recal_table)
@@ -24,7 +24,7 @@ process SENTIEON_HAPLOTYPER {
     // these output-files have to have the extension ".vcf.gz", otherwise the subsequent GATK-MergeVCFs will fail.
     tuple val(meta), path("*.g.vcf.gz"),              emit: gvcf,     optional: true
     tuple val(meta), path("*.g.vcf.gz.tbi"),          emit: gvcf_tbi, optional: true
-    path "versions.yml",                              emit: versions
+    tuple val("${task.process}"), val('sentieon'), eval('sentieon driver --version | sed "s/.*-//g"'), topic: versions, emit: versions_sentieon
 
     when:
     task.ext.when == null || task.ext.when
@@ -34,7 +34,7 @@ process SENTIEON_HAPLOTYPER {
     def args2 = task.ext.args2 ?: '' // options for the vcf generation
     def args3 = task.ext.args3 ?: '' // options for the gvcf generation
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def input_list = input instanceof List ? input.collect { "-i ${it}" }.join(' ') : "-i ${input}"
+    def input_list = input instanceof List ? input.collect {in -> "-i ${in}" }.join(' ') : "-i ${input}"
     def dbsnp_command = dbsnp ? "-d ${dbsnp} " : ""
     def interval_command = intervals ? "--interval ${intervals}" : ""
     def recal_table_command = recal_table ? "-q ${recal_table}" : ""
@@ -70,11 +70,6 @@ process SENTIEON_HAPLOTYPER {
         ${recal_table_command} \\
         ${vcf_cmd} \\
         ${gvcf_cmd}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
-    END_VERSIONS
     """
 
     stub:
@@ -84,10 +79,5 @@ process SENTIEON_HAPLOTYPER {
     touch ${prefix}.unfiltered.vcf.gz.tbi
     echo "" | gzip > ${prefix}.g.vcf.gz
     touch ${prefix}.g.vcf.gz.tbi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
-    END_VERSIONS
     """
 }

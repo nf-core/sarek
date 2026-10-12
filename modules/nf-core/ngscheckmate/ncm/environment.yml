@@ -4,5 +4,5 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::ngscheckmate=1.0.1
   - bioconda::bcftools=1.21
+  - bioconda::ngscheckmate=1.0.1

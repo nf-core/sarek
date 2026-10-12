@@ -9,14 +9,20 @@ keywords:
   - bam
   - sam
 tools:
-  - bwa:
+  - bwamem2:
       description: |
         BWA-mem2 is a software package for mapping DNA sequences against
         a large reference genome, such as the human genome.
       homepage: https://github.com/bwa-mem2/bwa-mem2
-      documentation: http://www.htslib.org/doc/samtools.html
-      arxiv: arXiv:1303.3997
-      licence: ["MIT"]
+      documentation: https://github.com/bwa-mem2/bwa-mem2#usage
+      doi: "10.1109/IPDPS.2019.00041"
+      publication:
+        author: "Vasimuddin M., Misra S., Li H. & Aluru S."
+        year: 2018
+        source: "IEEE International Parallel and Distributed Processing Symposium (IPDPS)"
+        title: "Efficient Architecture-Aware Acceleration of BWA-MEM for Multicore Systems"
+      licence:
+        - "MIT"
       identifier: "biotools:bwa-mem2"
 input:
   - - meta:
@@ -30,8 +36,8 @@ input:
           List of input FastQ files of size 1 and 2 for single-end and paired-end data,
           respectively.
         ontologies:
-          - edam: "http://edamontology.org/data_2044" # Sequence
-          - edam: "http://edamontology.org/format_1930" # FASTQ
+          - edam: "http://edamontology.org/data_2044"
+          - edam: "http://edamontology.org/format_1930"
   - - meta2:
         type: map
         description: |
@@ -42,7 +48,7 @@ input:
         description: BWA genome index files
         pattern: "Directory containing BWA index *.{0132,amb,ann,bwt.2bit.64,pac}"
         ontologies:
-          - edam: "http://edamontology.org/data_3210" # Genome index
+          - edam: "http://edamontology.org/data_3210"
   - - meta3:
         type: map
         description: |
@@ -53,15 +59,15 @@ input:
         description: Reference genome in FASTA format
         pattern: "*.{fa,fasta,fna}"
         ontologies:
-          - edam: "http://edamontology.org/data_2044" # Sequence
-          - edam: "http://edamontology.org/format_1929" # FASTA
-  - - sort_bam:
-        type: boolean
-        description: use samtools sort (true) or samtools view (false)
-        pattern: "true or false"
+          - edam: "http://edamontology.org/data_2044"
+          - edam: "http://edamontology.org/format_1929"
+  - sort_bam:
+      type: boolean
+      description: use samtools sort (true) or samtools view (false)
+      pattern: "true or false"
 output:
-  - sam:
-      - meta:
+  sam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -71,9 +77,9 @@ output:
           description: Output SAM file containing read alignments
           pattern: "*.{sam}"
           ontologies:
-            - edam: "http://edamontology.org/format_2573" # SAM
-  - bam:
-      - meta:
+            - edam: "http://edamontology.org/format_2573"
+  bam:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -83,9 +89,9 @@ output:
           description: Output BAM file containing read alignments
           pattern: "*.{bam}"
           ontologies:
-            - edam: "http://edamontology.org/format_2572" # BAM
-  - cram:
-      - meta:
+            - edam: "http://edamontology.org/format_2572"
+  cram:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -95,9 +101,9 @@ output:
           description: Output CRAM file containing read alignments
           pattern: "*.{cram}"
           ontologies:
-            - edam: "http://edamontology.org/format_3462" # CRAM
-  - crai:
-      - meta:
+            - edam: "http://edamontology.org/format_3462"
+  crai:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -106,8 +112,9 @@ output:
           type: file
           description: Index file for CRAM file
           pattern: "*.{crai}"
-  - csi:
-      - meta:
+          ontologies: []
+  csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -116,11 +123,47 @@ output:
           type: file
           description: Index file for BAM file
           pattern: "*.{csi}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_bwamem2:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bwamem2:
+          type: string
+          description: The name of the tool
+      - bwa-mem2 version | grep -o -E "[0-9]+(\.[0-9]+)+":
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - samtools version | sed '1!d;s/.* //':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bwamem2:
+          type: string
+          description: The name of the tool
+      - bwa-mem2 version | grep -o -E "[0-9]+(\.[0-9]+)+":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - samtools version | sed '1!d;s/.* //':
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@maxulysse"
   - "@matthdsm"
