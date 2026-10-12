@@ -11,8 +11,8 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     ch_fasta_fai // channel: [mandatory] meta, fasta_fai
     ch_index // channel: [mandatory] meta, index - bwa index
     ch_interval_file // channel: [optional]  intervals_bed_combined
-    ch_known_sites // channel: [optional]  known_sites_indels
-    ch_known_sites_tbi // channel: [optional]  known_sites_indels_tbi
+    ch_known_sites // channel: [optional]  known_sites
+    ch_known_sites_tbi // channel: [optional]  known_sites_tbi
     val_skip_applybqsr // boolean
     val_save_mapped // boolean
     val_save_output_as_bam // boolean
@@ -50,20 +50,16 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
         .ifEmpty([])
         .map { files -> files ? [['id': 'intervals'], files] : [['id': 'no_intervals'], []] }
 
-    // Merge in known_sites_indels_tbi so both land in the same staged path input (see #2193)
-    ch_known_sites = ch_known_sites
-        .concat(ch_known_sites_tbi)
-        .flatten()
-        .collect()
-        .ifEmpty([])
-        .map { files -> files ? [['id': 'known_sites'], files] : [['id': 'no_known_sites'], []] }
+    ch_known_sites_plus_tbi = ch_known_sites
+        .combine(ch_known_sites_tbi)
+        .map { vcf, tbi -> [[id: 'known_sites'], vcf, tbi] }
 
     PARABRICKS_FQ2BAM(
         ch_reads,
         ch_fasta,
         ch_index,
         ch_interval_file,
-        ch_known_sites,
+        ch_known_sites_plus_tbi,
         output_fmt,
     )
 
