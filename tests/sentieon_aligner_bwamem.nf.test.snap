@@ -13,7 +13,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
@@ -79,7 +79,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-28T11:00:26.802531111",
+        "timestamp": "2026-10-01T20:58:53.887232129",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -102,7 +102,7 @@
                     "fgbio": "3.1.2"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
@@ -156,7 +156,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_umi_cleanname_1.fastq.gz): Cannot extract flowcell ID from @922332"
             ]
         ],
-        "timestamp": "2026-07-28T14:28:02.089129479",
+        "timestamp": "2026-10-01T20:59:09.031849396",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -173,7 +173,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "htslib": "1.24",
@@ -219,7 +219,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-28T10:59:35.355041067",
+        "timestamp": "2026-10-01T20:58:29.223467362",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

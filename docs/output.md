@@ -40,10 +40,11 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [GATK HaplotypeCaller](#gatk-haplotypecaller)
       - [GATK Germline Single Sample Variant Calling](#gatk-germline-single-sample-variant-calling)
       - [GATK Joint Germline Variant Calling](#gatk-joint-germline-variant-calling)
-    - [Parabricks HaplotypeCaller](#parabricks-haplotypecaller)
     - [GATK Mutect2](#gatk-mutect2)
     - [Lofreq](#lofreq)
     - [MuSE](#muse)
+    - [Parabricks DeepVariant](#parabricks-deepvariant)
+    - [Parabricks HaplotypeCaller](#parabricks-haplotypecaller)
     - [Sentieon DNAscope](#sentieon-dnascope)
       - [Sentieon DNAscope joint germline variant calling](#sentieon-dnascope-joint-germline-variant-calling)
     - [Sentieon Haplotyper](#sentieon-haplotyper)
@@ -364,7 +365,7 @@ Unless Unless `baserecalibrator` is listed under `--skip_tools` in the nextflow 
 
 The CSV files are auto-generated and can be used by Sarek for further processing and/or variant calling.
 
-See the [`input`](usage#input-sample-sheet-configurations) section in the usage documentation for further reading and documentation on how to make the most of them.
+See the [`input`](../usage#input-sample-sheet-configurations) section in the usage documentation for further reading and documentation on how to make the most of them.
 
 <details markdown="1">
 <summary>Output files:</summary>
@@ -393,7 +394,7 @@ If some results from a variant caller do not appear here, please check out the `
 
 ### SNVs and small indels
 
-For single nucleotide variants (SNVs) and small indels, multiple tools are available for normal (germline), tumor-only, and tumor-normal (somatic) paired data. For a list of the appropriate tool(s) for the data and sequencing type at hand, please check [here](usage#which-tool).
+For single nucleotide variants (SNVs) and small indels, multiple tools are available for normal (germline), tumor-only, and tumor-normal (somatic) paired data. For a list of the appropriate tool(s) for the data and sequencing type at hand, please check [here](../usage#which-tool).
 
 #### bcftools
 
@@ -491,20 +492,6 @@ If the haplotype-called VCF files are not filtered, then Sarek should be run wit
 
 </details>
 
-#### Parabricks HaplotypeCaller
-
-[Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) is a GPU-accelerated implementation of GATK HaplotypeCaller for germline SNP and indel calling. Enable with `--tools parabricks_haplotypecaller --profile <docker/singularity>,gpu`.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-**Output directory: `{outdir}/variant_calling/parabricks_haplotypecaller/<sample>/`**
-
-- `<sample>.parabricks_haplotypecaller.vcf.gz` and `<sample>.parabricks_haplotypecaller.vcf.gz.tbi`
-  - VCF with tabix index
-
-</details>
-
 #### GATK Mutect2
 
 [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2) calls somatic SNVs and indels via local assembly of haplotypes.
@@ -565,6 +552,34 @@ Files created:
   - TXT containing position-specific summary statistics.
 - `<tumorsample_vs_normalsample>.muse.vcf.gz`
   - VCF with called variants. Fields are named TUMOR and NORMAL.
+
+</details>
+
+#### Parabricks DeepVariant
+
+[Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html) is a GPU-accelerated implementation of DeepVariant germline variant calling, providing equivalent results to DeepVariant at significantly reduced runtime. Enabled by `--tools parabricks_deepvariant --profile <docker/singularity>,gpu`.
+
+<details markdown="1">
+<summary>Output files for normal samples</summary>
+
+**Output directory: `{outdir}/variant_calling/parabricks_deepvariant/<sample>/`**
+
+- `<sample>.parabricks_deepvariant.vcf.gz` and `<sample>.parabricks_deepvariant.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
+#### Parabricks HaplotypeCaller
+
+[Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) is a GPU-accelerated implementation of GATK HaplotypeCaller for germline SNP and indel calling. Enable with `--tools parabricks_haplotypecaller --profile <docker/singularity>,gpu`.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+**Output directory: `{outdir}/variant_calling/parabricks_haplotypecaller/<sample>/`**
+
+- `<sample>.parabricks_haplotypecaller.vcf.gz` and `<sample>.parabricks_haplotypecaller.vcf.gz.tbi`
+  - VCF with tabix index
 
 </details>
 

@@ -10,7 +10,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "LOFREQ": {
                     "lofreq": "2.1.5"
@@ -185,7 +185,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:22:20.09841282",
+        "timestamp": "2026-10-01T21:11:25.926435796",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -199,7 +199,7 @@
                     "bcftools": "1.23.1"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "LOFREQ": {
                     "lofreq": "2.1.5"
@@ -367,7 +367,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:30:44.706814777",
+        "timestamp": "2026-10-01T21:21:16.390523022",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
