@@ -51,9 +51,8 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
         .map { files -> files ? [['id': 'intervals'], files] : [['id': 'no_intervals'], []] }
 
     ch_known_sites_plus_tbi = ch_known_sites
-        .toSortedList()
-        .map { vcfs -> [[id: 'known_sites'], vcfs] }
-        .combine(ch_known_sites_tbi.toSortedList().map { tbis -> [tbis] })
+        .map { vcfs -> [[id: vcfs ? 'known_sites' : 'no_known_sites'], vcfs] }
+        .combine(ch_known_sites_tbi.map { tbis -> [tbis] })
 
     PARABRICKS_FQ2BAM(
         ch_reads,
