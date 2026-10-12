@@ -53,6 +53,7 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
     ch_known_sites_plus_tbi = ch_known_sites
         .map { vcfs -> [[id: vcfs ? 'known_sites' : 'no_known_sites'], vcfs] }
         .combine(ch_known_sites_tbi.map { tbis -> [tbis] })
+        .first()
 
     PARABRICKS_FQ2BAM(
         ch_reads,
