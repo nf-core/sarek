@@ -54,7 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Fixed
 
 - [#2268](https://github.com/nf-core/sarek/pull/2268) - Resolve filetype output for parabricks/fq2bam
-- [#2310](https://github.com/nf-core/sarek/pull/2310) - Fix parabricks/applybqsr input channel logic
+- [#2312](https://github.com/nf-core/sarek/pull/2312) - Fix parabricks/applybqsr input channel logic
 
 #### Removed
 
