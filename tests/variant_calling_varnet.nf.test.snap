@@ -13,7 +13,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -204,7 +204,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-05T12:22:45.676669809",
+        "timestamp": "2026-10-12T14:39:38.653300248",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.3"
@@ -224,7 +224,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -385,7 +385,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-05T12:23:06.179879188",
+        "timestamp": "2026-10-12T14:39:58.915717102",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.3"
