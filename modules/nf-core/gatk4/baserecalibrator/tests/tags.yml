@@ -1,2 +1,0 @@
-gatk4/baserecalibrator:
-  - "modules/nf-core/gatk4/baserecalibrator/**"

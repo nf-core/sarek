@@ -10,7 +10,8 @@ tools:
       homepage: https://github.com/SciLifeLab/TIDDIT
       documentation: https://github.com/SciLifeLab/TIDDIT/blob/master/README.md
       doi: 10.12688/f1000research.11168.1
-      licence: ["GPL-3.0-or-later"]
+      licence:
+        - "GPL-3.0-or-later"
       identifier: biotools:tiddit
 input:
   - - meta:
@@ -22,10 +23,12 @@ input:
         type: file
         description: BAM/CRAM file
         pattern: "*.{bam,cram}"
+        ontologies: []
     - input_index:
         type: file
         description: BAM/CRAM index file
         pattern: "*.{bai,crai}"
+        ontologies: []
   - - meta2:
         type: map
         description: |
@@ -35,6 +38,12 @@ input:
         type: file
         description: Input FASTA file
         pattern: "*.{fasta,fa}"
+        ontologies: []
+    - fai:
+        type: file
+        description: Input FASTA index file
+        pattern: "*.{fai}"
+        ontologies: []
   - - meta3:
         type: map
         description: |
@@ -44,32 +53,51 @@ input:
         type: file
         description: BWA genome index files
         pattern: "Directory containing BWA index *.{amb,ann,bwt,pac,sa}"
+        ontologies: []
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.vcf":
+      - "${prefix}.vcf":
           type: file
           description: vcf
           pattern: "*.{vcf}"
-  - ploidy:
-      - meta:
+          ontologies: []
+  ploidy:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.ploidies.tab":
+      - "${prefix}.ploidies.tab":
           type: file
           description: tab
           pattern: "*.{ploidies.tab}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_tiddit:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - tiddit:
+          type: string
+          description: The name of the tool
+      - "tiddit | sed -n 's/^usage: tiddit-//; s/ .*//p'":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - tiddit:
+          type: string
+          description: The name of the tool
+      - "tiddit | sed -n 's/^usage: tiddit-//; s/ .*//p'":
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@maxulysse"
 maintainers:

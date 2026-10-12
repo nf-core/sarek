@@ -1,28 +1,44 @@
 {
-    "Run with profile test | --aligner bwa-mem --save_reference | skip QC/recal/md": {
+    "-profile test --aligner bwa-mem --save_reference skip QC/recal/md": {
         "content": [
             10,
             {
                 "BAM_TO_CRAM_MAPPING": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
+                },
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.19-r1273"
                 },
                 "BWAMEM1_MEM": {
-                    "bwa": "0.7.18-r1243-dirty",
-                    "samtools": 1.2
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.7.0.0"
                 },
                 "INDEX_MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
                 "MERGE_BAM": {
-                    "samtools": 1.21
+                    "samtools": "1.24"
                 },
-                "Workflow": {
-                    "nf-core/sarek": "v3.5.1"
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
                 "csv",
                 "csv/mapped.csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
@@ -54,29 +70,98 @@
                 "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
                 "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
             ],
+            "No BAM files",
             [
-                [
-                    "test.sorted.cram",
-                    "5534c350547fd253f0f2b9450362bed"
-                ]
+                "test.sorted.cram:md5,5534c350547fd253f0f2b9450362bed"
+            ],
+            "No VCF files",
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
+        "timestamp": "2026-10-01T19:39:52.752367",
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.09.0"
-        },
-        "timestamp": "2024-10-08T11:22:13.394114"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
-    "Run with profile test | --aligner bwa-mem --save_reference --build_only_index": {
+    "-profile test --aligner bwa-mem --save_reference --build_only_index -stub": {
         "content": [
             5,
             {
-                "Workflow": {
-                    "nf-core/sarek": "v3.5.1"
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.19-r1273"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.7.0.0"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
                 }
             },
             [
                 "csv",
+                "multiqc",
+                "multiqc/index.json",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/bwa",
+                "reference/bwa/genome.amb",
+                "reference/bwa/genome.ann",
+                "reference/bwa/genome.bwt",
+                "reference/bwa/genome.pac",
+                "reference/bwa/genome.sa",
+                "reference/intervals",
+                "reference/intervals/genome.bed",
+                "reference/intervals/genome.bed.gz",
+                "reference/intervals/genome.stub.bed",
+                "reference/intervals/genome.stub.bed.gz"
+            ],
+            [
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2025-12-15T18:57:28.07820518"
+    },
+    "-profile test --aligner bwa-mem --save_reference --build_only_index": {
+        "content": [
+            5,
+            {
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.19-r1273"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.7.0.0"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                }
+            },
+            [
+                "csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
@@ -102,12 +187,87 @@
                 "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
                 "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
+            ],
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files",
+            "No warnings"
+        ],
+        "timestamp": "2026-10-01T19:41:02.02124",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "-profile test --aligner bwa-mem --save_reference skip QC/recal/md -stub": {
+        "content": [
+            10,
+            {
+                "BAM_TO_CRAM_MAPPING": {
+                    "samtools": "1.24"
+                },
+                "BWAMEM1_INDEX": {
+                    "bwa": "0.7.19-r1273"
+                },
+                "BWAMEM1_MEM": {
+                    "bwa": "0.7.19-r1273",
+                    "samtools": "1.22.1"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.7.0.0"
+                },
+                "INDEX_MERGE_BAM": {
+                    "samtools": "1.24"
+                },
+                "MERGE_BAM": {
+                    "samtools": "1.24"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                }
+            },
+            [
+                "csv",
+                "csv/mapped.csv",
+                "multiqc",
+                "multiqc/index.json",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/mapped",
+                "preprocessing/mapped/test",
+                "preprocessing/mapped/test/test.sorted.cram",
+                "preprocessing/mapped/test/test.sorted.cram.crai",
+                "reference",
+                "reference/bwa",
+                "reference/bwa/genome.amb",
+                "reference/bwa/genome.ann",
+                "reference/bwa/genome.bwt",
+                "reference/bwa/genome.pac",
+                "reference/bwa/genome.sa",
+                "reference/intervals",
+                "reference/intervals/genome.bed",
+                "reference/intervals/genome.bed.gz",
+                "reference/intervals/genome.stub.bed",
+                "reference/intervals/genome.stub.bed.gz"
+            ],
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.09.0"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2024-10-08T11:23:05.203586"
+        "timestamp": "2025-12-15T18:56:44.455023922"
     }
 }

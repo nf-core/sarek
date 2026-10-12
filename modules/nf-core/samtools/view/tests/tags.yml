@@ -1,2 +1,0 @@
-samtools/view:
-  - "modules/nf-core/samtools/view/**"

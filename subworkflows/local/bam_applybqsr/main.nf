@@ -4,44 +4,60 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { GATK4_APPLYBQSR           } from '../../../modules/nf-core/gatk4/applybqsr/main'
-include { CRAM_MERGE_INDEX_SAMTOOLS } from '../cram_merge_index_samtools/main'
+include { BAM_MERGE_INDEX_SAMTOOLS  } from '../bam_merge_index_samtools'
+include { GATK4_APPLYBQSR           } from '../../../modules/nf-core/gatk4/applybqsr'
+include { SAMTOOLS_CONVERT as BAM_TO_CRAM_RECAL } from '../../../modules/nf-core/samtools/convert'
 
 workflow BAM_APPLYBQSR {
     take:
-    cram          // channel: [mandatory] [ meta, cram, crai, recal ]
-    dict          // channel: [mandatory] [ dict ]
-    fasta         // channel: [mandatory] [ fasta ]
-    fasta_fai     // channel: [mandatory] [ fasta_fai ]
-    intervals     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
+    cram                // channel: [mandatory] [ meta, cram, crai, recal ]
+    dict                // channel: [mandatory] [ meta, dict ]
+    fasta               // channel: [mandatory] [ meta, fasta ]
+    fasta_fai           // channel: [mandatory] [ meta, fasta_fai ]
+    intervals           // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
+    save_output_as_bam  // boolean: [mandatory] params.save_output_as_bam
 
     main:
-    versions = Channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
-    cram_intervals = cram.combine(intervals)
-        // Move num_intervals to meta map
-        .map{ meta, cram, crai, recal, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, recal, intervals ] }
+    // Move num_intervals to meta map
+    cram_intervals = cram
+        .combine(intervals)
+        .map { meta, cram_, crai, recal, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], cram_, crai, recal, intervals_] }
 
-    // RUN APPLYBQSR
-    GATK4_APPLYBQSR(cram_intervals, fasta.map{ meta, it -> [ it ] }, fasta_fai.map{ meta, it -> [ it ] }, dict.map{ meta, it -> [ it ] })
+    // fasta/fasta_fai/dict carry independent meta maps (computed vs user-supplied) so they
+    // can't be joined by key — reshape into one tuple the way CRAM_SAMPLEQC does in sarek.nf
+    fasta_fai_dict = fasta
+        .combine(fasta_fai)
+        .combine(dict)
+        .map { meta_fasta, fasta_, _meta_fai, fai, _meta_dict, dict_ -> [meta_fasta, fasta_, fai, dict_] }
+        .collect()
 
-    // Gather the recalibrated cram files
-    cram_to_merge = GATK4_APPLYBQSR.out.cram.map{ meta, cram -> [ groupKey(meta, meta.num_intervals), cram ] }.groupTuple()
+    // GATK 4.7 CRAM codecs are incompatible with legacy callers; Samtools writes CRAM 3.0.
+    GATK4_APPLYBQSR(
+        cram_intervals,
+        fasta_fai_dict,
+        'bam',
+    )
 
-    // Merge and index the recalibrated cram files
-    CRAM_MERGE_INDEX_SAMTOOLS(cram_to_merge, fasta.map{ meta, it -> [ it ] }, fasta_fai.map{ meta, it -> [ it ] })
+    bam_to_merge = GATK4_APPLYBQSR.out.bam
+        .map { meta, bam_ -> [groupKey(meta, meta.num_intervals), bam_] }
+        .groupTuple()
 
-    cram_recal = CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai
-        // Remove no longer necessary field: num_intervals
-        .map{ meta, cram, crai -> [ meta - meta.subMap('num_intervals'), cram, crai ] }
+    BAM_MERGE_INDEX_SAMTOOLS(bam_to_merge)
 
-    // Gather versions of all tools used
-    versions = versions.mix(GATK4_APPLYBQSR.out.versions)
-    versions = versions.mix(CRAM_MERGE_INDEX_SAMTOOLS.out.versions)
+    BAM_TO_CRAM_RECAL(
+        BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai.filter { _meta, _bam, _bai -> !save_output_as_bam },
+        fasta_fai_dict.map { meta_fasta, fasta_, fai, _dict -> [meta_fasta, fasta_, fai] },
+    )
+
+    cram_crai = BAM_TO_CRAM_RECAL.out.cram.join(BAM_TO_CRAM_RECAL.out.crai, failOnDuplicate: true, failOnMismatch: true)
+
+    recal_out = BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai
+        .filter { _meta, _bam, _bai -> save_output_as_bam }
+        .mix(cram_crai)
+        .map { meta, file_, index -> [meta - meta.subMap('num_intervals'), file_, index] }
 
     emit:
-    cram = cram_recal // channel: [ meta, cram, crai ]
-
-    versions          // channel: [ versions.yml ]
+    alignment = recal_out // channel: [ meta, file, index ] — BAM or CRAM
 }

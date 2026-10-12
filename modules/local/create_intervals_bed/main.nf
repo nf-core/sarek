@@ -1,19 +1,19 @@
 process CREATE_INTERVALS_BED {
-    tag "$intervals"
+    tag "${intervals}"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gawk:5.1.0' :
-        'biocontainers/gawk:5.1.0' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/gawk:5.3.0'
+        : 'biocontainers/gawk:5.3.0'}"
 
     input:
-    path(intervals)
-    val(nucleotides_per_second)
+    path intervals
+    val nucleotides_per_second
 
     output:
-    path("*.bed")       , emit: bed
-    path "versions.yml" , emit: versions
+    path ("*.bed"),      emit: bed
+    tuple val("${task.process}"), val('gawk'), eval("awk --version | head -n1 | sed 's/GNU Awk //; s/, .*//'"), emit: versions_gawk, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -41,49 +41,28 @@ process CREATE_INTERVALS_BED {
             chunk += t
             print \$0 > name
         }' ${intervals}
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            gawk: \$(awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//')
-        END_VERSIONS
         """
-    } else if (intervals.toString().toLowerCase().endsWith("interval_list")) {
+    }
+    else if (intervals.toString().toLowerCase().endsWith("interval_list")) {
         """
         grep -v '^@' ${intervals} | awk -vFS="\t" '{
             name = sprintf("%s_%d-%d", \$1, \$2, \$3);
             printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
         }'
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            gawk: \$(awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//')
-        END_VERSIONS
         """
-    } else {
+    }
+    else {
         """
         awk -vFS="[:-]" '{
             name = sprintf("%s_%d-%d", \$1, \$2, \$3);
             printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
         }' ${intervals}
-
-        cat <<-END_VERSIONS > versions.yml
-        "${task.process}":
-            gawk: \$(awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//')
-        END_VERSIONS
         """
     }
 
     stub:
     def prefix = task.ext.prefix ?: "${intervals.baseName}"
-    def metrics = task.ext.metrics ?: "${prefix}.metrics"
-    // def prefix_basename = prefix.substring(0, prefix.lastIndexOf("."))
-
     """
     touch ${prefix}.stub.bed
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        gawk: \$(awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//')
-    END_VERSIONS
     """
 }

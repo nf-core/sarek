@@ -1,2 +1,0 @@
-manta/tumoronly:
-  - "modules/nf-core/manta/tumoronly/**"

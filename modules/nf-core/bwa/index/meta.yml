@@ -14,7 +14,7 @@ tools:
       documentation: https://bio-bwa.sourceforge.net/bwa.shtml
       arxiv: arXiv:1303.3997
       licence: ["GPL-3.0-or-later"]
-      identifier: ""
+      identifier: "biotools:bwa"
 input:
   - - meta:
         type: map
@@ -24,26 +24,48 @@ input:
     - fasta:
         type: file
         description: Input genome fasta file
+        ontologies:
+          - edam: "http://edamontology.org/data_2044" # Sequence
+          - edam: "http://edamontology.org/format_1929" # FASTA
 output:
-  - index:
-      - meta:
+  index:
+    - - meta:
           type: map
           description: |
             Groovy Map containing reference information.
             e.g. [ id:'test', single_end:false ]
       - bwa:
-          type: file
-          description: BWA genome index files
+          type: map
+          description: |
+            Groovy Map containing reference information.
+            e.g. [ id:'test', single_end:false ]
           pattern: "*.{amb,ann,bwt,pac,sa}"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies:
+            - edam: "http://edamontology.org/data_3210" # Genome index
+  versions_bwa:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - bwa:
+          type: string
+          description: The tool name
+      - 'bwa 2>&1 | sed -n "s/^Version: //p"':
+          type: string
+          description: The command used to generate the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - bwa:
+          type: string
+          description: The tool name
+      - 'bwa 2>&1 | sed -n "s/^Version: //p"':
+          type: string
+          description: The command used to generate the version of the tool
 authors:
   - "@drpatelh"
   - "@maxulysse"
 maintainers:
-  - "@drpatelh"
   - "@maxulysse"
   - "@gallvp"

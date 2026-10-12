@@ -14,7 +14,11 @@ jobs:
         run: |
           echo "topics=$(curl -s https://nf-co.re/pipelines.json | jq -r '.remote_workflows[] | select(.full_name == "${{ github.repository }}") | .topics[]' | awk '{print "#"$0}' | tr '\n' ' ')" | sed 's/-//g' >> $GITHUB_OUTPUT
 
-      - uses: rzr/fediverse-action@master
+      - name: get description
+        id: get_description
+        run: |
+          echo "description=$(curl -s https://nf-co.re/pipelines.json | jq -r '.remote_workflows[] | select(.full_name == "${{ github.repository }}") | .description')" >> $GITHUB_OUTPUT
+      - uses: rzr/fediverse-action@66c2cbb5b1997666b0e28d597631b6a4f09a2719 # v0.0.6
         with:
           access-token: ${{ secrets.MASTODON_ACCESS_TOKEN }}
           host: "mstdn.science" # custom host if not "mastodon.social" (default)
@@ -22,48 +26,15 @@ jobs:
           # https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#release
           message: |
             Pipeline release! ${{ github.repository }} v${{ github.event.release.tag_name }} - ${{ github.event.release.name }}!
-
+            ${{ steps.get_description.outputs.description }}
             Please see the changelog: ${{ github.event.release.html_url }}
 
             ${{ steps.get_topics.outputs.topics }} #nfcore #openscience #nextflow #bioinformatics
 
-  send-tweet:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5
-        with:
-          python-version: "3.10"
-      - name: Install dependencies
-        run: pip install tweepy==4.14.0
-      - name: Send tweet
-        shell: python
-        run: |
-          import os
-          import tweepy
-
-          client = tweepy.Client(
-              access_token=os.getenv("TWITTER_ACCESS_TOKEN"),
-              access_token_secret=os.getenv("TWITTER_ACCESS_TOKEN_SECRET"),
-              consumer_key=os.getenv("TWITTER_CONSUMER_KEY"),
-              consumer_secret=os.getenv("TWITTER_CONSUMER_SECRET"),
-          )
-          tweet = os.getenv("TWEET")
-          client.create_tweet(text=tweet)
-        env:
-          TWEET: |
-            Pipeline release! ${{ github.repository }} v${{ github.event.release.tag_name }} - ${{ github.event.release.name }}!
-
-            Please see the changelog: ${{ github.event.release.html_url }}
-          TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
-          TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
-          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
-
   bsky-post:
     runs-on: ubuntu-latest
     steps:
-      - uses: zentered/bluesky-post-action@80dbe0a7697de18c15ad22f4619919ceb5ccf597 # v0.1.0
+      - uses: zentered/bluesky-post-action@5a91cc2ad10a304a4e96c16182dbe4918710bcf6 # v0.4.0
         with:
           post: |
             Pipeline release! ${{ github.repository }} v${{ github.event.release.tag_name }} - ${{ github.event.release.name }}!

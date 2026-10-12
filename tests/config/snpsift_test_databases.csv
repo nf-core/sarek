@@ -1,0 +1,2 @@
+vcf,tbi,fields,prefix,vardb
+https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/vcf/test2.vcf.gz,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/illumina/vcf/test2.vcf.gz.tbi,DP;VDB;MQB;BQB,TEST_,

@@ -24,16 +24,19 @@ input:
         description: |
           gVCF(.gz) file
         pattern: "*.{vcf,vcf.gz}"
+        ontologies: []
     - tbis:
         type: file
         description: |
           index of gvcf file
         pattern: "*.tbi"
+        ontologies: []
     - intervals:
         type: file
-        description: Interval file with the genomic regions included in the library
-          (optional)
-  - - meta1:
+        description: Interval file with the genomic regions included in the
+          library (optional)
+        ontologies: []
+  - - meta2:
         type: map
         description: |
           Groovy Map containing sample information
@@ -42,7 +45,8 @@ input:
         type: file
         description: Reference fasta file
         pattern: "*.fasta"
-  - - meta2:
+        ontologies: []
+  - - meta3:
         type: map
         description: |
           Groovy Map containing sample information
@@ -51,7 +55,8 @@ input:
         type: file
         description: Reference fasta index file
         pattern: "*.fai"
-  - - meta3:
+        ontologies: []
+  - - meta4:
         type: map
         description: |
           Groovy Map containing sample information
@@ -60,7 +65,9 @@ input:
         type: file
         description: dbSNP VCF file
         pattern: "*.vcf.gz"
-  - - meta4:
+        ontologies:
+          - edam: http://edamontology.org/format_3989
+  - - meta5:
         type: map
         description: |
           Groovy Map containing sample information
@@ -69,9 +76,10 @@ input:
         type: file
         description: dbSNP VCF index file
         pattern: "*.tbi"
+        ontologies: []
 output:
-  - vcf_gz:
-      - meta:
+  vcf_gz:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -80,8 +88,10 @@ output:
           type: file
           description: VCF file
           pattern: "*.vcf.gz"
-  - vcf_gz_tbi:
-      - meta:
+          ontologies:
+            - edam: http://edamontology.org/format_3989
+  vcf_gz_tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -90,11 +100,28 @@ output:
           type: file
           description: VCF index file
           pattern: "*.vcf.gz.tbi"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_sentieon:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - sentieon:
+          type: string
+          description: The tool name
+      - sentieon driver --version | sed "s/.*-//g":
+          type: eval
+          description: The command used to generate the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - sentieon:
+          type: string
+          description: The tool name
+      - sentieon driver --version | sed "s/.*-//g":
+          type: eval
+          description: The command used to generate the version of the tool
 authors:
   - "@asp8200"
 maintainers:

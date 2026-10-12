@@ -4,9 +4,9 @@ process MANTA_TUMORONLY {
     label 'error_retry'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/manta:1.6.0--h9ee0642_1' :
-        'biocontainers/manta:1.6.0--h9ee0642_1' }"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/f6/f696c93e6209e33ac0d15f1ecfa799bc67329eec07b0569e065ea8b220b53953/data' :
+        'community.wave.seqera.io/library/manta_python:0eb71149179b3920' }"
 
     input:
     tuple val(meta), path(input), path(input_index), path(target_bed), path(target_bed_tbi)
@@ -21,7 +21,7 @@ process MANTA_TUMORONLY {
     tuple val(meta), path("*candidate_sv.vcf.gz.tbi")          , emit: candidate_sv_vcf_tbi
     tuple val(meta), path("*tumor_sv.vcf.gz")                  , emit: tumor_sv_vcf
     tuple val(meta), path("*tumor_sv.vcf.gz.tbi")              , emit: tumor_sv_vcf_tbi
-    path "versions.yml"                                        , emit: versions
+    tuple val("${task.process}"), val("manta"), eval("configManta.py --version"), topic: versions, emit: versions_manta
 
     when:
     task.ext.when == null || task.ext.when
@@ -54,11 +54,6 @@ process MANTA_TUMORONLY {
         ${prefix}.tumor_sv.vcf.gz
     mv manta/results/variants/tumorSV.vcf.gz.tbi \\
         ${prefix}.tumor_sv.vcf.gz.tbi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        manta: \$( configManta.py --version )
-    END_VERSIONS
     """
 
     stub:
@@ -70,10 +65,5 @@ process MANTA_TUMORONLY {
     touch ${prefix}.candidate_sv.vcf.gz.tbi
     echo "" | gzip > ${prefix}.tumor_sv.vcf.gz
     touch ${prefix}.tumor_sv.vcf.gz.tbi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        manta: \$( configManta.py --version )
-    END_VERSIONS
     """
 }

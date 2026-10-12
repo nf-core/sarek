@@ -1,3 +1,0 @@
-bwa/mem:
-  - modules/nf-core/bwa/index/**
-  - modules/nf-core/bwa/mem/**

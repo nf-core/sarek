@@ -1,18 +1,18 @@
 process SNPEFF_DOWNLOAD {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/snpeff:5.1--hdfd78af_2' :
-        'biocontainers/snpeff:5.1--hdfd78af_2' }"
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/cb/cbd585b788eeafff9b9a018e8775de24eeb6b380d95bb22629a5f14ee3fff519/data'
+        : 'community.wave.seqera.io/library/snpeff:5.4.0c--e08ddc54579e82bd'}"
 
     input:
     tuple val(meta), val(snpeff_db)
 
     output:
     tuple val(meta), path('snpeff_cache'), emit: cache
-    path "versions.yml"                  , emit: versions
+    tuple val("${task.process}"), val('snpeff'), eval("snpEff -version 2>&1 | cut -f 2 -d '\t'"), topic: versions, emit: versions_snpeff
 
     when:
     task.ext.when == null || task.ext.when
@@ -21,9 +21,10 @@ process SNPEFF_DOWNLOAD {
     def args = task.ext.args ?: ''
     def avail_mem = 6144
     if (!task.memory) {
-        log.info '[snpEff] Available memory not known - defaulting to 6GB. Specify process memory requirements to change this.'
-    } else {
-        avail_mem = (task.memory.mega*0.8).intValue()
+        log.info('[snpEff] Available memory not known - defaulting to 6GB. Specify process memory requirements to change this.')
+    }
+    else {
+        avail_mem = (task.memory.mega * 0.8).intValue()
     }
     """
     snpEff \\
@@ -31,12 +32,6 @@ process SNPEFF_DOWNLOAD {
         download ${snpeff_db} \\
         -dataDir \${PWD}/snpeff_cache \\
         ${args}
-
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        snpeff: \$(echo \$(snpEff -version 2>&1) | cut -f 2 -d ' ')
-    END_VERSIONS
     """
 
     stub:
@@ -45,10 +40,5 @@ process SNPEFF_DOWNLOAD {
 
     touch snpeff_cache/${snpeff_db}/sequence.I.bin
     touch snpeff_cache/${snpeff_db}/sequence.bin
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        snpeff: \$(echo \$(snpEff -version 2>&1) | cut -f 2 -d ' ')
-    END_VERSIONS
     """
 }
