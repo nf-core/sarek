@@ -57,6 +57,31 @@ nextflow_pipeline {
             ],
             gpu: true,
             no_conda: true
+        ],
+        [
+            name: "-profile test --aligner parabricks --no_intervals",
+            params: [
+                aligner: 'parabricks',
+                no_intervals: true,
+                save_reference: true,
+                save_mapped: true,
+                tools: '',
+            ],
+            gpu: true,
+            no_conda: true
+        ],
+        [
+            name: "-profile test --aligner parabricks --wes --skip_tools baserecalibrator",
+            params: [
+                aligner: 'parabricks',
+                skip_tools: 'baserecalibrator',
+                save_reference: true,
+                save_mapped: true,
+                tools: '',
+                wes : true,
+            ],
+            gpu: true,
+            no_conda: true
         ]
     ]
 

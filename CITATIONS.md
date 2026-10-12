@@ -170,6 +170,10 @@
 
   > Köster, J., Dijkstra, L.J., Marschall, T. et al. Varlociraptor: enhancing sensitivity and controlling false discovery rate in somatic indel discovery. Genome Biol 21, 98 (2020). https://doi.org/10.1186/s13059-020-01993-6
 
+- [VarNet](https://doi.org/10.1038/s41467-022-31765-8)
+
+  > Krishnamachari K, Lu D, Swift-Scott A, Yeraliyev A, Lee K, Huang W, Leng SN, Skanderup AJ. Accurate somatic variant detection using weakly supervised deep learning. Nat Commun 13, 4248 (2022). https://doi.org/10.1038/s41467-022-31765-8
+
 - [VCFTools](https://pubmed.ncbi.nlm.nih.gov/21653522/)
 
   > Danecek P, Auton A, Abecasis G, et al.: The variant call format and VCFtools. Bioinformatics. 2011 Aug 1;27(15):2156-8. doi: 10.1093/bioinformatics/btr330. Epub 2011 Jun 7. PubMed PMID: 21653522; PubMed Central PMCID: PMC3137218.

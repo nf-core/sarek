@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "bam_variant_calling_somatic_varnet"
+description: Call somatic SNVs and indels in tumor-normal pairs with VarNet, then recompress the VCF as BGZF and index it
+keywords:
+  - variant calling
+  - somatic
+  - deep learning
+  - varnet
+  - vcf
+components:
+  - varnet/filter
+  - varnet/predict
+  - htslib/bgziptabix
+input:
+  - bam:
+      type: file
+      description: |
+        Channel of tumor-normal BAM pairs
+        Structure: [ val(meta), path(normal_bam), path(normal_bai), path(tumor_bam), path(tumor_bai) ]
+      pattern: "*.{bam,bai}"
+  - fasta:
+      type: file
+      description: |
+        Channel with the reference fasta
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.{fasta,fa}"
+  - fasta_fai:
+      type: file
+      description: |
+        Channel with the reference fasta index
+        Structure: [ val(meta), path(fai) ]
+      pattern: "*.fai"
+  - intervals:
+      type: file
+      description: |
+        Channel with the target regions as a single BED file, or an empty list for none
+        Structure: [ val(meta), path(bed) ]
+      pattern: "*.bed"
+output:
+  - vcf:
+      type: file
+      description: |
+        Channel containing the BGZF-compressed VCF, with variantcaller added to the meta map
+        Structure: [ val(meta), path(vcf) ]
+      pattern: "*.vcf.gz"
+  - tbi:
+      type: file
+      description: |
+        Channel containing the tabix index of the VCF, with variantcaller added to the meta map
+        Structure: [ val(meta), path(tbi) ]
+      pattern: "*.vcf.gz.tbi"
+authors:
+  - "@kiranchari"
+maintainers:
+  - "@kiranchari"

@@ -5,6 +5,60 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev - unreleased
+
+### Added
+
+- [#2177](https://github.com/nf-core/sarek/pull/2177) - Add Parabricks DeepVariant (`--tools parabricks_deepvariant`) as GPU-accelerated germline variant caller
+- [#2268](https://github.com/nf-core/sarek/pull/2268) - Add parabricks/applybqsr
+- [#2284](https://github.com/nf-core/sarek/pull/2284) - Add `manifest.diagram` to `nextflow.config`
+- [#2303](https://github.com/nf-core/sarek/pull/2303) - Add VarNet (`--tools varnet`) as somatic SNV and indel caller for tumor-normal pairs
+
+### Changed
+
+- [#2296](https://github.com/nf-core/sarek/pull/2296) - Update 21 Java GATK4 modules to GATK 4.7.0.0 Lite containers from [nf-core/modules#13062](https://github.com/nf-core/modules/pull/13062), retaining the CNN and Spark environments ([@adamrtalbot](https://github.com/adamrtalbot)).
+
+### Fixed
+
+- [#2275](https://github.com/nf-core/sarek/pull/2275) - Fix `--aligner parabricks` completing without producing any alignment when combined with `--no_intervals` ([#2274](https://github.com/nf-core/sarek/issues/2274)), or when no `--dbsnp`/`--known_indels` are provided: `collect()` dropped the empty intervals/known-sites lists instead of emitting them, leaving `PARABRICKS_FQ2BAM` with an input channel that never emitted
+- [#2282](https://github.com/nf-core/sarek/pull/2282) - Implement Parabricks Haplotypecaller gvcf mode for joint calling
+- [#2296](https://github.com/nf-core/sarek/pull/2296) - Preserve CRAM 3.0 after recalibration with the existing Samtools converter so GATK 4.7 output remains compatible with legacy callers.
+
+### Removed
+
+### Dependencies - modules
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| gatk4      | 4.6.2.0     | 4.7.0.0     |
+| varnet     |             | 1.5.3       |
+
+### Dependencies - plugins
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
+| Params | status |
+| ------ | ------ |
+
+### Developer section
+
+#### Added
+
+#### Changed
+
+- [#2271](https://github.com/nf-core/sarek/pull/2271) - Back to dev (3.10.1dev)
+
+#### Fixed
+
+- [#2268](https://github.com/nf-core/sarek/pull/2268) - Resolve filetype output for parabricks/fq2bam
+
+#### Removed
+
+- [#2181](https://github.com/nf-core/sarek/pull/2181) - Remove executor dependency from accelerator directive
+
 ## [3.10.0](https://github.com/nf-core/sarek/releases/tag/3.10.0) - Aktse
 
 Aktse is a mountain hut on the northern shore of Laitaure, on the Kungsleden trail at the edge of Sarek National Park.

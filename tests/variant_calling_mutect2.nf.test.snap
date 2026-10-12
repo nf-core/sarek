@@ -7,17 +7,17 @@
                     "bcftools": "1.23.1"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
                 },
                 "MUTECT2": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -187,7 +187,7 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-07-27T10:36:37.905823869",
+        "timestamp": "2026-10-01T21:15:29.954074196",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -204,17 +204,17 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
                 },
                 "MUTECT2_PAIRED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -408,7 +408,7 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-07-28T11:35:37.049228309",
+        "timestamp": "2026-10-01T21:25:24.899473598",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -422,17 +422,17 @@
                     "bcftools": "1.23.1"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
                 },
                 "MUTECT2_PAIRED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -613,7 +613,7 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-07-27T10:42:39.618205653",
+        "timestamp": "2026-10-01T21:14:28.587247407",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -633,17 +633,17 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
                 },
                 "MUTECT2": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -820,7 +820,7 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-07-28T11:12:58.603126898",
+        "timestamp": "2026-10-01T21:16:13.218887626",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

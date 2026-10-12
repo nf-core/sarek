@@ -1,0 +1,115 @@
+name: "varnet_filter"
+description: Finds candidate somatic variants in a tumor/normal pair. This is the first
+  of VarNet's two stages; the candidates it emits are scored by varnet/predict.
+keywords:
+  - variant calling
+  - machine learning
+  - neural network
+  - somatic
+tools:
+  - "varnet":
+      description: "A deep learning-based somatic variant caller"
+      homepage: "https://github.com/skandlab/VarNet"
+      documentation: "https://github.com/skandlab/VarNet"
+      tool_dev_url: "https://github.com/skandlab/VarNet"
+      doi: "10.1038/s41467-022-31765-8"
+      licence:
+        - "PolyForm Noncommercial License 1.0.0"
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input_tumor:
+        type: file
+        description: BAM file from tumor sample
+        pattern: "*.bam"
+        ontologies:
+          - edam: http://edamontology.org/format_2572 # BAM
+    - index_tumor:
+        type: file
+        description: Index of tumor BAM file
+        pattern: "*.bai"
+        ontologies:
+          - edam: http://edamontology.org/format_3327 # BAI
+    - input_normal:
+        type: file
+        description: BAM file from matched normal sample (required; tumor-only mode is not supported)
+        pattern: "*.bam"
+        ontologies:
+          - edam: http://edamontology.org/format_2572 # BAM
+    - index_normal:
+        type: file
+        description: Index of normal BAM file
+        pattern: "*.bai"
+        ontologies:
+          - edam: http://edamontology.org/format_3327 # BAI
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+    - intervals:
+        type: file
+        description: BED file containing target intervals
+        pattern: "*.bed"
+        ontologies:
+          - edam: http://edamontology.org/format_3003 # BED
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing reference information
+    - fasta:
+        type: file
+        description: The reference fasta file
+        pattern: "*.{fasta,fa}"
+        ontologies:
+          - edam: http://edamontology.org/format_1929 # FASTA
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing reference information
+    - fai:
+        type: file
+        description: Index of reference fasta file
+        pattern: "*.fai"
+        ontologies:
+          - edam: http://edamontology.org/format_3475 # TSV
+output:
+  candidates:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1', single_end:false ]`
+      - ${prefix}/candidates:
+          type: directory
+          description: Directory of candidate variant positions, holding snvs/Positions.csv
+            and indels/Positions.csv. Pass this to varnet/predict.
+
+  versions_varnet:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - varnet:
+          type: string
+          description: The name of the tool
+      - "1.5.3":
+          type: string
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - varnet:
+          type: string
+          description: The name of the tool
+      - "1.5.3":
+          type: string
+          description: The expression to obtain the version of the tool
+authors:
+  - "@kiranchari"
+maintainers:
+  - "@kiranchari"
