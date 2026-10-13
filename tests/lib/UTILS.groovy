@@ -144,7 +144,7 @@ class UTILS {
             tag "pipeline"
             tag "pipeline_sarek"
 
-            options "-output-dir ${outputDir}${scenario.stub ? ' -stub' : ''}"
+            options "-output-dir ${outputDir}${scenario.stub ? ' -stub' : ''}${scenario.config ? ' -c ' + scenario.config : ''}"
 
             def tag_prefix = scenario.gpu ? "gpu" : scenario.sentieon ? "sentieon" : "cpu"
             tag "${tag_prefix}${!scenario.no_conda ? '_conda' : ''}${scenario.stub ? '_stub' : ''}"
@@ -176,6 +176,27 @@ class UTILS {
                     assert workflow.failed
                 } else {
                     assert workflow.success
+                }
+                if (scenario.vcf_samples && !scenario.stub) {
+                    def vcfs = getAllFilesFromPath(params.outdir, include: [scenario.vcf_samples.pattern])
+                    assert !vcfs.isEmpty()
+                    vcfs.each { file ->
+                        def vcfFile = new File(file.toString())
+                        if (!vcfFile.isAbsolute()) vcfFile = new File(params.outdir.toString(), file.toString())
+                        def input = new java.util.zip.GZIPInputStream(vcfFile.newInputStream())
+                        def header = input.withReader { reader ->
+                            String line
+                            while ((line = reader.readLine()) != null) {
+                                if (line.startsWith('#CHROM\t')) return line
+                            }
+                            return null
+                        }
+                        assert header != null
+                        assert header.split('\t').drop(9) == scenario.vcf_samples.names
+                    }
+                }
+                if (scenario.assertions) {
+                    scenario.assertions(workflow, params.outdir, workDir)
                 }
                 assertAll(
                     { assert snapshot(

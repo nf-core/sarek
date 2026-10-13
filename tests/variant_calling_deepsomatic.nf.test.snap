@@ -600,7 +600,7 @@
                     "deepsomatic": "1.10.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -786,7 +786,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-09-30T16:32:51.57040433",
+        "timestamp": "2026-10-13T12:34:21.97841337",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -803,7 +803,7 @@
                     "deepsomatic": "1.10.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -953,7 +953,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-09-30T17:33:13.986732661",
+        "timestamp": "2026-10-13T10:27:58.295714281",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

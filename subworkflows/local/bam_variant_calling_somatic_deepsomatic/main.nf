@@ -2,14 +2,14 @@
 // DEEPSOMATIC: tumour-normal somatic variant calling
 //
 
-include { DEEPSOMATIC } from '../../../modules/nf-core/deepsomatic/main'
+include { DEEPSOMATIC                              } from '../../../modules/nf-core/deepsomatic/main'
 include { GATK4_MERGEVCFS as MERGE_DEEPSOMATIC_VCF } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_DEEPSOMATIC {
     take:
-    cram // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ]
-    dict // channel: [mandatory] [ meta, dict ]
-    fasta // channel: [mandatory] [ meta, fasta ]
+    cram      // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ]
+    dict      // channel: [mandatory] [ meta, dict ]
+    fasta     // channel: [mandatory] [ meta, fasta ]
     fasta_fai // channel: [mandatory] [ meta, fasta_fai ]
     intervals // channel: [mandatory] [ interval, num_intervals ] or [ [], 0 ]
 

@@ -2,23 +2,23 @@
 // PAIRED VARIANT CALLING
 //
 
-include { BAM_VARIANT_CALLING_CNVKIT                    } from '../bam_variant_calling_cnvkit'
-include { BAM_VARIANT_CALLING_FREEBAYES                 } from '../bam_variant_calling_freebayes'
-include { BAM_VARIANT_CALLING_INDEXCOV                  } from '../bam_variant_calling_indexcov'
-include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_NORMAL } from '../bam_variant_calling_mpileup'
-include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_TUMOR  } from '../bam_variant_calling_mpileup'
-include { BAM_VARIANT_CALLING_SOMATIC_ASCAT             } from '../bam_variant_calling_somatic_ascat'
-include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC      } from '../bam_variant_calling_somatic_controlfreec'
-include { BAM_VARIANT_CALLING_SOMATIC_DEEPSOMATIC       } from '../bam_variant_calling_somatic_deepsomatic'
-include { BAM_VARIANT_CALLING_SOMATIC_MANTA             } from '../bam_variant_calling_somatic_manta'
-include { BAM_VARIANT_CALLING_SOMATIC_MUSE              } from '../bam_variant_calling_somatic_muse'
-include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2           } from '../bam_variant_calling_somatic_mutect2'
+include { BAM_VARIANT_CALLING_CNVKIT                         } from '../bam_variant_calling_cnvkit'
+include { BAM_VARIANT_CALLING_FREEBAYES                      } from '../bam_variant_calling_freebayes'
+include { BAM_VARIANT_CALLING_INDEXCOV                       } from '../bam_variant_calling_indexcov'
+include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_NORMAL      } from '../bam_variant_calling_mpileup'
+include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_TUMOR       } from '../bam_variant_calling_mpileup'
+include { BAM_VARIANT_CALLING_SOMATIC_ASCAT                  } from '../bam_variant_calling_somatic_ascat'
+include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC           } from '../bam_variant_calling_somatic_controlfreec'
+include { BAM_VARIANT_CALLING_SOMATIC_DEEPSOMATIC            } from '../bam_variant_calling_somatic_deepsomatic'
+include { BAM_VARIANT_CALLING_SOMATIC_MANTA                  } from '../bam_variant_calling_somatic_manta'
+include { BAM_VARIANT_CALLING_SOMATIC_MUSE                   } from '../bam_variant_calling_somatic_muse'
+include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2                } from '../bam_variant_calling_somatic_mutect2'
 include { BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC } from '../bam_variant_calling_somatic_parabricks_deepsomatic'
-include { BAM_VARIANT_CALLING_SOMATIC_STRELKA           } from '../bam_variant_calling_somatic_strelka'
-include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_calling_somatic_tiddit'
-include { BAM_VARIANT_CALLING_SOMATIC_TNSCOPE           } from '../bam_variant_calling_somatic_tnscope'
-include { MSISENSOR2_MSI                                } from '../../../modules/nf-core/msisensor2/msi'
-include { MSISENSORPRO_MSISOMATIC                       } from '../../../modules/nf-core/msisensorpro/msisomatic'
+include { BAM_VARIANT_CALLING_SOMATIC_STRELKA                } from '../bam_variant_calling_somatic_strelka'
+include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT                 } from '../bam_variant_calling_somatic_tiddit'
+include { BAM_VARIANT_CALLING_SOMATIC_TNSCOPE                } from '../bam_variant_calling_somatic_tnscope'
+include { MSISENSOR2_MSI                                     } from '../../../modules/nf-core/msisensor2/msi'
+include { MSISENSORPRO_MSISOMATIC                            } from '../../../modules/nf-core/msisensorpro/msisomatic'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     take:
@@ -57,20 +57,16 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     out_indexcov     = channel.empty()
     out_msisensorpro = channel.empty()
     vcf_freebayes    = channel.empty()
-    vcf_deepsomatic  = channel.empty()
     vcf_manta        = channel.empty()
     vcf_muse         = channel.empty()
     vcf_mutect2      = channel.empty()
-    vcf_parabricks_deepsomatic = channel.empty()
     vcf_strelka      = channel.empty()
     vcf_tiddit       = channel.empty()
     vcf_tnscope      = channel.empty()
     tbi_freebayes    = channel.empty()
-    tbi_deepsomatic  = channel.empty()
     tbi_manta        = channel.empty()
     tbi_muse         = channel.empty()
     tbi_mutect2      = channel.empty()
-    tbi_parabricks_deepsomatic = channel.empty()
     tbi_strelka      = channel.empty()
     tbi_tiddit       = channel.empty()
     tbi_tnscope      = channel.empty()

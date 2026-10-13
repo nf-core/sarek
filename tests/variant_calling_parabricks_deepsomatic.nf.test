@@ -16,7 +16,8 @@ nextflow_pipeline {
             ],
             gpu: true,
             no_conda: true,
-            no_vcf_md5sum: true
+            no_vcf_md5sum: true,
+            vcf_samples: [pattern: 'variant_calling/parabricks_deepsomatic/**/*.vcf.gz', names: ['testT']]
         ],
         [
             name: "-profile test,gpu --tools parabricks_deepsomatic somatic WGS -stub",
@@ -25,9 +26,10 @@ nextflow_pipeline {
                 step: "variant_calling",
                 tools: 'parabricks_deepsomatic'
             ],
-            gpu: true,
             no_conda: true,
-            stub: true
+            stub: true,
+            config: "${projectDir}/tests/config/deepsomatic_stub.config",
+            tag: 'cpu'
         ],
         [
             name: "-profile test,gpu --tools parabricks_deepsomatic somatic WES",
@@ -39,7 +41,8 @@ nextflow_pipeline {
             ],
             gpu: true,
             no_conda: true,
-            no_vcf_md5sum: true
+            no_vcf_md5sum: true,
+            vcf_samples: [pattern: 'variant_calling/parabricks_deepsomatic/**/*.vcf.gz', names: ['testT']]
         ],
         [
             name: "-profile test,gpu --tools parabricks_deepsomatic somatic WES -stub",
@@ -49,9 +52,10 @@ nextflow_pipeline {
                 tools: 'parabricks_deepsomatic',
                 wes: true
             ],
-            gpu: true,
             no_conda: true,
-            stub: true
+            stub: true,
+            config: "${projectDir}/tests/config/deepsomatic_stub.config",
+            tag: 'cpu'
         ],
         [
             name: "-profile test,gpu --tools parabricks_deepsomatic somatic WGS --no_intervals",
@@ -63,7 +67,8 @@ nextflow_pipeline {
             ],
             gpu: true,
             no_conda: true,
-            no_vcf_md5sum: true
+            no_vcf_md5sum: true,
+            vcf_samples: [pattern: 'variant_calling/parabricks_deepsomatic/**/*.vcf.gz', names: ['testT']]
         ],
         [
             name: "-profile test,gpu --tools parabricks_deepsomatic somatic WGS --no_intervals -stub",
@@ -73,9 +78,10 @@ nextflow_pipeline {
                 step: "variant_calling",
                 tools: 'parabricks_deepsomatic'
             ],
-            gpu: true,
             no_conda: true,
-            stub: true
+            stub: true,
+            config: "${projectDir}/tests/config/deepsomatic_stub.config",
+            tag: 'cpu'
         ],
         [
             name: "-profile test,gpu --aligner parabricks --tools parabricks_deepsomatic somatic WES",
@@ -87,7 +93,8 @@ nextflow_pipeline {
             ],
             gpu: true,
             no_conda: true,
-            no_vcf_md5sum: true
+            no_vcf_md5sum: true,
+            vcf_samples: [pattern: 'variant_calling/parabricks_deepsomatic/**/*.vcf.gz', names: ['test_test2']]
         ]
     ]
 

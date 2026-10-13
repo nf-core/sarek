@@ -6,8 +6,8 @@ include { PARABRICKS_DEEPSOMATIC } from '../../../modules/nf-core/parabricks/dee
 
 workflow BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC {
     take:
-    cram // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ]
-    fasta // channel: [mandatory] [ meta, fasta ]
+    cram                   // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ]
+    fasta                  // channel: [mandatory] [ meta, fasta ]
     intervals_bed_combined // channel: [optional] [] or [ intervals.bed ]
 
     main:

@@ -21,7 +21,8 @@ nextflow_pipeline {
                 tools: 'deepsomatic'
             ],
             no_conda: true,
-            no_vcf_md5sum: true
+            no_vcf_md5sum: true,
+            vcf_samples: [pattern: 'variant_calling/deepsomatic/**/*.vcf.gz', names: ['tumour']]
         ],
         [
             name: "-profile test --tools deepsomatic somatic WES",
@@ -37,7 +38,39 @@ nextflow_pipeline {
                 wes: true
             ],
             no_conda: true,
-            no_vcf_md5sum: true
+            no_vcf_md5sum: true,
+            vcf_samples: [pattern: 'variant_calling/deepsomatic/**/*.vcf.gz', names: ['tumour']]
+        ],
+        [
+            name: "-profile test --tools deepsomatic somatic scatter/gather",
+            tag: 'deepsomatic_scatter',
+            params: [
+                genome: null,
+                igenomes_ignore: true,
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai',
+                input: "${projectDir}/tests/csv/3.0/mapped_somatic_parabricks_deepsomatic.csv",
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                nucleotides_per_second: 1,
+                step: "variant_calling",
+                tools: 'deepsomatic'
+            ],
+            no_conda: true,
+            no_vcf_md5sum: true,
+            vcf_samples: [pattern: 'variant_calling/deepsomatic/**/*.vcf.gz', names: ['testT']],
+            assertions: { workflow, outdir, workDir ->
+                assert workflow.trace.succeeded().count { it.name.contains(':DEEPSOMATIC (') } == 2
+                assert workflow.trace.succeeded().count { it.name.contains(':MERGE_DEEPSOMATIC_VCF (') } == 1
+                def published = new File("${outdir}/variant_calling/deepsomatic/testT_vs_testN").listFiles()*.name.sort()
+                assert published == ['testT_vs_testN.deepsomatic.vcf.gz', 'testT_vs_testN.deepsomatic.vcf.gz.tbi']
+                def shardNames = [] as Set
+                new File(workDir.toString()).eachFileRecurse { file ->
+                    if (file.name.startsWith('testT_vs_testN.deepsomatic.chr22_') && file.name.endsWith('.vcf.gz')) {
+                        shardNames.add(file.name)
+                    }
+                }
+                assert shardNames.size() == 2
+            }
         ],
         [
             name: "-profile test --tools deepsomatic somatic --no_intervals -stub",
@@ -53,7 +86,9 @@ nextflow_pipeline {
                 tools: 'deepsomatic'
             ],
             no_conda: true,
-            stub: true
+            stub: true,
+            config: "${projectDir}/tests/config/deepsomatic_stub.config",
+            tag: 'cpu'
         ],
         [
             name: "-profile test --tools deepsomatic,strelka --filter_vcfs --normalize_vcfs --snv_consensus_calling",
@@ -73,7 +108,8 @@ nextflow_pipeline {
             ],
             ignoreFiles: '**/consensus/**/{0000.vcf,0000.vcf.gz,sites.txt}',
             no_conda: true,
-            no_vcf_md5sum: true
+            no_vcf_md5sum: true,
+            vcf_samples: [pattern: 'variant_calling/deepsomatic/**/*.vcf.gz', names: ['tumour']]
         ]
     ]
 

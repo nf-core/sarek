@@ -10,7 +10,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -206,7 +206,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-09-30T16:05:36.273145729",
+        "timestamp": "2026-10-13T12:15:18.793766742",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -223,7 +223,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -376,7 +376,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-09-30T16:06:34.765840802",
+        "timestamp": "2026-10-13T10:29:57.031709779",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -556,7 +556,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -744,7 +744,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-09-30T16:03:17.853379104",
+        "timestamp": "2026-10-13T12:14:02.022064332",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -761,7 +761,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -914,7 +914,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-09-30T16:04:14.25948508",
+        "timestamp": "2026-10-13T10:29:02.752848696",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -937,7 +937,7 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": "1.24"
@@ -1210,12 +1210,9 @@
                     "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=1984, phased=false, phasedAutodetect=false]"
                 ]
             ],
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
-            ]   
+            "No warnings"
         ],
-        "timestamp": "2026-09-30T16:11:10.472973512",
+        "timestamp": "2026-10-13T12:18:41.842866355",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
