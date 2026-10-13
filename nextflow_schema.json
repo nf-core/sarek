@@ -999,7 +999,7 @@
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA genome file.",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified.\n\nIf you use AWS iGenomes, this has already been set for you appropriately.",
+                    "help_text": "This parameter is *mandatory* if `--genome` is not specified.\n\nIf you use AWS iGenomes, this has already been set for you appropriately.\n\n> **NB** When using a custom FASTA without an igenomes genome, you must also set `--genome null` and `--igenomes_ignore`.",
                     "fa_icon": "fas fa-file"
                 },
                 "fasta_fai": {
