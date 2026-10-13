@@ -1020,7 +1020,7 @@ If none of your required genome files are in igenomes, `--igenomes_ignore` must 
 Minimal example for custom genomes:
 
 ```bash
-nextflow run nf-core/sarek --genome null --igenomes_ignore --fasta <custom.fasta>
+nextflow run nf-core/sarek --genome null --igenomes_ignore --fasta <custom.fasta> --outdir <outdir> --tools <TOOLS>
 ```
 
 ### Overwrite specific reference files
