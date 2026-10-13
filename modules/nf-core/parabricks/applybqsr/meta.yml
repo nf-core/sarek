@@ -19,33 +19,23 @@ input:
         description: |
           Groovy Map containing sample information.
           e.g. [ id:'test' ]
-    - bam:
+    - input:
         type: file
         description: Input BAM / CRAM file
         pattern: "*.{bam,cram}"
         ontologies:
           - edam: "http://edamontology.org/format_2572" # BAM
           - edam: "http://edamontology.org/format_3462" # CRAM
-    - bai:
+    - input_index:
         type: file
         description: BAM / CRAM index file
         pattern: "*.{bam.bai,cram.crai}"
         ontologies: []
-  - - meta3:
-        type: map
-        description: |
-          Groovy Map containing sample information.
-          e.g. [ id:'test' ]
     - bqsr_table:
         type: file
         description: Table from calculating BQSR. Output from parabricks/fq2bam or gatk4/baserecalibrator.
         pattern: "*.table"
         ontologies: []
-  - - meta4:
-        type: map
-        description: |
-          Groovy Map containing sample information.
-          e.g. [ id:'test' ]
     - intervals:
         type: file
         description: intervals

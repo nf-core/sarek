@@ -26,10 +26,10 @@
                     "gatk4": "4.6.2.0"
                 },
                 "GATK4_ESTIMATELIBRARYCOMPLEXITY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": "1.24"
@@ -243,7 +243,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1"
             ]
         ],
-        "timestamp": "2026-07-27T10:24:08.645314579",
+        "timestamp": "2026-10-01T21:07:19.070022701",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -273,7 +273,7 @@
                     "gatk4": "4.6.2.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": "1.24"
@@ -324,7 +324,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1"
             ]
         ],
-        "timestamp": "2026-07-28T14:32:00.112214223",
+        "timestamp": "2026-10-01T21:56:56.467924768",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
