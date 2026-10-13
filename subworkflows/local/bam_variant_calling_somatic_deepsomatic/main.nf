@@ -20,14 +20,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_DEEPSOMATIC {
             [meta + [num_intervals: num_intervals], normal_cram, normal_crai, tumor_cram, tumor_crai, interval]
         }
 
-    deepsomatic_input = cram_intervals.multiMap { meta, normal_cram, normal_crai, tumor_cram, tumor_crai, interval ->
-        cram: [meta, normal_cram, normal_crai, tumor_cram, tumor_crai]
-        interval: [[id: interval ? interval.baseName : 'no_intervals'], interval]
-    }
-
     DEEPSOMATIC(
-        deepsomatic_input.cram,
-        deepsomatic_input.interval,
+        cram_intervals,
         fasta,
         fasta_fai,
         [[id: 'no_gzi'], []],

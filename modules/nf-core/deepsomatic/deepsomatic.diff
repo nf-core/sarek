@@ -2,7 +2,7 @@ Changes in component 'nf-core/deepsomatic'
 Changes in 'deepsomatic/main.nf':
 --- modules/nf-core/deepsomatic/main.nf
 +++ modules/nf-core/deepsomatic/main.nf
-@@ -1,8 +1,9 @@
+@@ -1,21 +1,21 @@
  process DEEPSOMATIC {
 -    tag "$meta.id"
 +    tag "${meta.id}"
@@ -12,10 +12,15 @@ Changes in 'deepsomatic/main.nf':
 +    container "docker.io/google/deepsomatic:1.10.0"
 +
      input:
-     tuple val(meta), path(input_normal), path(index_normal), path(input_tumor), path(index_tumor)
-     tuple val(meta2), path(intervals)
-@@ -11,11 +12,11 @@
-     tuple val(meta5), path(gzi)
+-    tuple val(meta), path(input_normal), path(index_normal), path(input_tumor), path(index_tumor)
+-    tuple val(meta2), path(intervals)
+-    tuple val(meta3), path(fasta)
+-    tuple val(meta4), path(fai)
+-    tuple val(meta5), path(gzi)
++    tuple val(meta), path(input_normal), path(index_normal), path(input_tumor), path(index_tumor), path(intervals)
++    tuple val(meta2), path(fasta)
++    tuple val(meta3), path(fai)
++    tuple val(meta4), path(gzi)
  
      output:
 -    tuple val(meta), path("${prefix}.vcf.gz")      ,  emit: vcf
@@ -31,7 +36,7 @@ Changes in 'deepsomatic/main.nf':
  
      when:
      task.ext.when == null || task.ext.when
-@@ -23,11 +24,12 @@
+@@ -23,11 +23,12 @@
      script:
      // Exit if running this module with -profile conda / -profile mamba
      if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
@@ -45,7 +50,7 @@ Changes in 'deepsomatic/main.nf':
  
      """
      run_deepsomatic \\
-@@ -35,9 +37,7 @@
+@@ -35,9 +36,7 @@
          --reads_normal=${input_normal} \\
          --reads_tumor=${input_tumor} \\
          --output_vcf=${prefix}.vcf.gz \\
@@ -56,7 +61,7 @@ Changes in 'deepsomatic/main.nf':
          ${args} \\
          ${regions} \\
          --intermediate_results_dir=tmp \\
-@@ -47,13 +47,13 @@
+@@ -47,13 +46,13 @@
      stub:
      // Exit if running this module with -profile conda / -profile mamba
      if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
@@ -77,7 +82,7 @@ Changes in 'deepsomatic/main.nf':
 Changes in 'deepsomatic/meta.yml':
 --- modules/nf-core/deepsomatic/meta.yml
 +++ modules/nf-core/deepsomatic/meta.yml
-@@ -1,157 +1,155 @@
+@@ -1,157 +1,151 @@
  name: "deepsomatic"
 -description: DeepSomatic is an extension of deep learning-based variant caller
 -  DeepVariant that takes aligned reads (in BAM or CRAM format) from tumor and
@@ -137,16 +142,12 @@ Changes in 'deepsomatic/meta.yml':
 +      description: Index of BAM/CRAM file
 +      pattern: "*.bai/crai"
 +      ontologies: []
-+- - meta2:
-+      type: map
-+      description: |
-+        Groovy Map containing sample information
-+        e.g. [ id:'test', single_end:false ]
 +  - intervals:
 +      type: file
-+      description: file containing intervals
++      description: Optional interval file paired with the tumour-normal alignments; pass an empty list for unrestricted calling.
++      pattern: "*.bed"
 +      ontologies: []
-+- - meta3:
++- - meta2:
 +      type: map
 +      description: |
 +        Groovy Map containing sample information
@@ -156,7 +157,7 @@ Changes in 'deepsomatic/meta.yml':
 +      description: The reference fasta file
 +      pattern: "*.fasta"
 +      ontologies: []
-+- - meta4:
++- - meta3:
 +      type: map
 +      description: |
 +        Groovy Map containing sample information
@@ -166,7 +167,7 @@ Changes in 'deepsomatic/meta.yml':
 +      description: Index of reference fasta file
 +      pattern: "*.fai"
 +      ontologies: []
-+- - meta5:
++- - meta4:
 +      type: map
 +      description: |
 +        Groovy Map containing sample information
@@ -366,7 +367,34 @@ Changes in 'deepsomatic/meta.yml':
 Changes in 'deepsomatic/tests/main.nf.test':
 --- modules/nf-core/deepsomatic/tests/main.nf.test
 +++ modules/nf-core/deepsomatic/tests/main.nf.test
-@@ -47,7 +47,7 @@
+@@ -19,21 +19,18 @@
+                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam', checkIfExists: true),
+                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true),
+                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam', checkIfExists: true),
+-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true)
++                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true),
++                    []
+                 ]
+                 input[1] = [
+-                    [ id:'intervals' ],
+-                    []
++                    [ id:'genome' ],
++                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+                 ]
+                 input[2] = [
+                     [ id:'genome' ],
+-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
++                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
+                 ]
+                 input[3] = [
+-                    [ id:'genome' ],
+-                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
+-                ]
+-                input[4] = [
+                     [ id: 'gzi' ],
+                     []
+                 ]
+@@ -47,7 +44,7 @@
                  {
                      assert snapshot(
                          process.out.vcf.collect { file(it[1]).getName() },

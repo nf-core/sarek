@@ -40,16 +40,12 @@ input:
       description: Index of BAM/CRAM file
       pattern: "*.bai/crai"
       ontologies: []
-- - meta2:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - intervals:
       type: file
-      description: file containing intervals
+      description: Optional interval file paired with the tumour-normal alignments; pass an empty list for unrestricted calling.
+      pattern: "*.bed"
       ontologies: []
-- - meta3:
+- - meta2:
       type: map
       description: |
         Groovy Map containing sample information
@@ -59,7 +55,7 @@ input:
       description: The reference fasta file
       pattern: "*.fasta"
       ontologies: []
-- - meta4:
+- - meta3:
       type: map
       description: |
         Groovy Map containing sample information
@@ -69,7 +65,7 @@ input:
       description: Index of reference fasta file
       pattern: "*.fai"
       ontologies: []
-- - meta5:
+- - meta4:
       type: map
       description: |
         Groovy Map containing sample information

@@ -25,7 +25,7 @@
                     "bcftools": "1.23.1"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -366,7 +366,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-09-30T18:33:17.053919039",
+        "timestamp": "2026-10-13T14:32:20.793258093",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -386,7 +386,7 @@
                     "deepsomatic": "1.10.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -580,7 +580,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-09-30T17:32:17.790243033",
+        "timestamp": "2026-10-13T13:32:55.224771544",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

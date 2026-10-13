@@ -5,11 +5,10 @@ process DEEPSOMATIC {
     container "docker.io/google/deepsomatic:1.10.0"
 
     input:
-    tuple val(meta), path(input_normal), path(index_normal), path(input_tumor), path(index_tumor)
-    tuple val(meta2), path(intervals)
-    tuple val(meta3), path(fasta)
-    tuple val(meta4), path(fai)
-    tuple val(meta5), path(gzi)
+    tuple val(meta), path(input_normal), path(index_normal), path(input_tumor), path(index_tumor), path(intervals)
+    tuple val(meta2), path(fasta)
+    tuple val(meta3), path(fai)
+    tuple val(meta4), path(gzi)
 
     output:
     tuple val(meta), path("${prefix}.vcf.gz"), emit: vcf
