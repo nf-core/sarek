@@ -413,7 +413,7 @@
                     },
                     "parabricks/applybqsr": {
                         "branch": "master",
-                        "git_sha": "006a6142690e2f4a455f77a1bc7d71459d78deb5",
+                        "git_sha": "541af7c6735edaae882567b910071b563e9b1317",
                         "installed_by": ["modules"]
                     },
                     "parabricks/deepvariant": {
