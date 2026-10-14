@@ -73,14 +73,12 @@
                 "test.sorted.cram:md5,5534c350547fd253f0f2b9450362bed"
             ],
             "No VCF files",
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
-            ]
+            "No warnings"
         ],
-        "timestamp": "2026-07-28T14:27:36.729918989",
+        "timestamp": "2026-10-14T10:53:29.983560429",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
@@ -135,14 +133,12 @@
                 "test.sorted.cram:md5,5534c350547fd253f0f2b9450362bed"
             ],
             "No VCF files",
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
-            ]
+            "No warnings"
         ],
-        "timestamp": "2026-07-28T14:27:26.457705565",
+        "timestamp": "2026-10-14T10:51:14.421483723",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
@@ -193,14 +189,12 @@
                 "test.sorted.cram:md5,5534c350547fd253f0f2b9450362bed"
             ],
             "No VCF files",
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
-            ]
+            "No warnings"
         ],
-        "timestamp": "2026-07-28T14:27:48.805959532",
+        "timestamp": "2026-10-14T10:52:14.517887807",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub": {
@@ -245,15 +239,12 @@
                 "preprocessing/mapped/test/test.sorted.cram.crai",
                 "reference"
             ],
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
-                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
-            ]
+            "No warnings"
         ],
-        "timestamp": "2025-12-15T19:55:39.716558447",
+        "timestamp": "2026-10-14T10:55:08.357113781",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub": {
@@ -302,15 +293,12 @@
                 "preprocessing/mapped/test/test.sorted.cram.crai",
                 "reference"
             ],
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
-                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
-            ]
+            "No warnings"
         ],
-        "timestamp": "2025-12-15T19:54:48.88067349",
+        "timestamp": "2026-10-14T10:54:15.484994349",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --intervals null --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub": {
@@ -372,15 +360,12 @@
                 "reference/intervals/fai.stub.bed",
                 "reference/intervals/fai.stub.bed.gz"
             ],
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
-                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
-            ]
+            "No warnings"
         ],
-        "timestamp": "2025-12-15T19:56:30.038317094",
+        "timestamp": "2026-10-14T10:56:00.734790802",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.0"
         }
     }
 }

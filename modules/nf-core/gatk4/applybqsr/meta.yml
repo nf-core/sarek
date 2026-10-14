@@ -33,13 +33,14 @@ input:
           - edam: "http://edamontology.org/format_3462" #CRAM
     - input_index:
         type: file
-        description: BAI/CRAI file from alignment
-        pattern: "*.{bai,crai}"
+        description: BAI/CSI/CRAI file from alignment
+        pattern: "*.{bai,csi,crai}"
         ontologies:
           - edam: "http://edamontology.org/format_3327" #BAI
     - bqsr_table:
         type: file
         description: Recalibration table from gatk4_baserecalibrator
+        ontologies: []
     - intervals:
         type: file
         description: Bed file with the genomic regions included in the library (optional)
@@ -66,46 +67,42 @@ input:
         type: file
         description: GATK sequence dictionary
         pattern: "*.dict"
-  - output_suffix:
-      type: string
-      description: Output file format, either "bam" or "cram" (cram is the default)
+        ontologies: []
+  - output_format:
+      type: list
+      description: |
+        Output file type and index format as a two-element list.
+        First element: 'bam' or 'cram'.
+        Second element: 'bai', 'csi', or 'crai'.
+
+        Valid combinations: ['bam', 'bai'], ['bam', 'csi'], ['cram', 'crai'].
+        Defaults to ['cram', 'crai'] when not provided.
+      pattern: "{bam,cram}"
 output:
-  bam:
+  reads:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - ${prefix}.bam:
+      - "*.{bam,cram}":
           type: file
-          description: Recalibrated BAM file
-          pattern: "${prefix}.bam"
+          description: Recalibrated BAM or CRAM file
+          pattern: "*.{bam,cram}"
           ontologies:
             - edam: "http://edamontology.org/format_2572" #BAM
-  bai:
+            - edam: "http://edamontology.org/format_3462" #CRAM
+  index:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - ${prefix}*bai:
+      - "*.{bai,csi,crai}":
           type: file
-          description: Recalibrated BAM index file
-          pattern: "${prefix}*bai"
-          ontologies:
-            - edam: "http://edamontology.org/format_3327" #BAI
-  cram:
-    - - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-      - ${prefix}.cram:
-          type: file
-          description: Recalibrated CRAM file
-          pattern: "${prefix}.cram"
-          ontologies:
-            - edam: "http://edamontology.org/format_3462" #CRAM"
+          description: Index of the recalibrated BAM or CRAM file
+          pattern: "*.{bai,csi,crai}"
+          ontologies: []
   versions_gatk4:
     - - ${task.process}:
           type: string
@@ -114,6 +111,16 @@ output:
           type: string
           description: The name of the tool
       - gatk --version | sed -n '/GATK.*v/s/.*v//p':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - samtools version | sed '1!d;s/.* //':
           type: eval
           description: The expression to obtain the version of the tool
 topics:
@@ -127,9 +134,32 @@ topics:
       - gatk --version | sed -n '/GATK.*v/s/.*v//p':
           type: eval
           description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - samtools version | sed '1!d;s/.* //':
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@yocra3"
   - "@FriederikeHanssen"
 maintainers:
   - "@yocra3"
   - "@FriederikeHanssen"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/gatk4-lite_samtools:9b6806e26dd32afe
+      build_id: bd-9b6806e26dd32afe_1
+      scan_id: sc-bacce8dec6a6b034_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/gatk4-lite_samtools:3f27e1efa58a508c
+      build_id: bd-3f27e1efa58a508c_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/3b/3b33544fcc9268dad01801b928e566f1beaacd078b1d58d7904d7c6aa68eba9a/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/gatk4/applybqsr/.conda-lock/linux_amd64-bd-9b6806e26dd32afe_1.txt

@@ -1,25 +1,20 @@
 {
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step prepare_recalibration --tools null": {
         "content": [
-            11,
+            9,
             {
-                "BAM_TO_CRAM_RECAL": {
-                    "samtools": "1.24"
-                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.7.0.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.7.0.0"
-                },
-                "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -144,10 +139,10 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-10-01T21:17:42.211198311",
+        "timestamp": "2026-10-14T11:13:49.895592082",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --skip_tools baserecalibrator --tools strelka": {
@@ -420,25 +415,20 @@
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --tools null": {
         "content": [
-            11,
+            9,
             {
-                "BAM_TO_CRAM_RECAL": {
-                    "samtools": "1.24"
-                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.7.0.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.7.0.0"
-                },
-                "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -563,10 +553,10 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-10-01T21:05:42.393377282",
+        "timestamp": "2026-10-14T11:18:12.234310492",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     }
 }

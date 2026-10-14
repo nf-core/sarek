@@ -208,8 +208,8 @@
                     },
                     "gatk4/applybqsr": {
                         "branch": "master",
-                        "git_sha": "b2bcd8312599aacd849e69721e20ac8138018f83",
-                        "installed_by": ["modules"]
+                        "git_sha": "2542be48ddea1d6a684da672befdd99d825f2f7b",
+                        "installed_by": ["bam_applybqsr", "modules"]
                     },
                     "gatk4/applyvqsr": {
                         "branch": "master",
@@ -293,7 +293,7 @@
                     },
                     "gatk4/markduplicates": {
                         "branch": "master",
-                        "git_sha": "b2bcd8312599aacd849e69721e20ac8138018f83",
+                        "git_sha": "74a8e23cebde312a1533020504a6de77468c03f5",
                         "installed_by": ["modules"]
                     },
                     "gatk4/mergemutectstats": {
@@ -463,8 +463,8 @@
                     },
                     "samtools/merge": {
                         "branch": "master",
-                        "git_sha": "9339809fcb90af8a8b7051e6cd914894d5c52002",
-                        "installed_by": ["modules"]
+                        "git_sha": "972faf6f783fe9685267220965a91690741465f9",
+                        "installed_by": ["bam_applybqsr", "modules"]
                     },
                     "samtools/mpileup": {
                         "branch": "master",
@@ -620,6 +620,11 @@
             },
             "subworkflows": {
                 "nf-core": {
+                    "bam_applybqsr": {
+                        "branch": "master",
+                        "git_sha": "74a8e23cebde312a1533020504a6de77468c03f5",
+                        "installed_by": ["subworkflows"]
+                    },
                     "bam_ngscheckmate": {
                         "branch": "master",
                         "git_sha": "3d9c2f4beaa4f62b3f006928fd9095a496d1e5a8",
