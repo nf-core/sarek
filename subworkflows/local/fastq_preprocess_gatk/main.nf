@@ -1,49 +1,49 @@
 // Create samplesheets to restart from different steps
-include { CHANNEL_ALIGN_CREATE_CSV } from '../../../subworkflows/local/channel_align_create_csv/main'
-include { CHANNEL_MARKDUPLICATES_CREATE_CSV } from '../../../subworkflows/local/channel_markduplicates_create_csv/main'
-include { CHANNEL_BASERECALIBRATOR_CREATE_CSV } from '../../../subworkflows/local/channel_baserecalibrator_create_csv/main'
-include { CHANNEL_APPLYBQSR_CREATE_CSV } from '../../../subworkflows/local/channel_applybqsr_create_csv/main'
+include { CHANNEL_ALIGN_CREATE_CSV                   } from '../../../subworkflows/local/channel_align_create_csv'
+include { CHANNEL_MARKDUPLICATES_CREATE_CSV          } from '../../../subworkflows/local/channel_markduplicates_create_csv'
+include { CHANNEL_BASERECALIBRATOR_CREATE_CSV        } from '../../../subworkflows/local/channel_baserecalibrator_create_csv'
+include { CHANNEL_APPLYBQSR_CREATE_CSV               } from '../../../subworkflows/local/channel_applybqsr_create_csv'
 
 // Convert BAM files to FASTQ files
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI } from '../../../subworkflows/local/bam_convert_samtools/main'
+include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI  } from '../../../subworkflows/local/bam_convert_samtools'
 
 // TRIM/SPLIT FASTQ Files
-include { FASTP } from '../../../modules/nf-core/fastp/main'
+include { FASTP                                      } from '../../../modules/nf-core/fastp'
 
 // remove genomic contaminants with bbsplit
-include { BBMAP_BBSPLIT } from '../../../modules/nf-core/bbmap/bbsplit'
+include { BBMAP_BBSPLIT                              } from '../../../modules/nf-core/bbmap/bbsplit'
 //TODO: WHAT ABOUT BBSPLIT RUNS WITH PARABRICKS?
 
 // Create umi consensus bams from fastq
-include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO } from '../../../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
+include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO           } from '../../../subworkflows/local/fastq_create_umi_consensus_fgbio'
 
 // Map input reads to reference genome
-include { FASTQ_ALIGN } from '../../../subworkflows/local/fastq_align/main'
+include { FASTQ_ALIGN                                } from '../../../subworkflows/local/fastq_align'
 
 // Merge and index BAM files (optional)
-include { BAM_MERGE_INDEX_SAMTOOLS } from '../../../subworkflows/local/bam_merge_index_samtools/main'
+include { BAM_MERGE_INDEX_SAMTOOLS                   } from '../../../subworkflows/local/bam_merge_index_samtools'
 
 // Convert BAM files
-include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING } from '../../../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING    } from '../../../modules/nf-core/samtools/convert'
 
 // Copy UMIs from read name to RX tag
-include { FGBIO_COPYUMIFROMREADNAME } from '../../../modules/nf-core/fgbio/copyumifromreadname/main'
+include { FGBIO_COPYUMIFROMREADNAME                  } from '../../../modules/nf-core/fgbio/copyumifromreadname'
 
 // Mark Duplicates (+QC)
-include { BAM_MARKDUPLICATES } from '../../../subworkflows/local/bam_markduplicates/main'
-include { BAM_MARKDUPLICATES_SPARK } from '../../../subworkflows/local/bam_markduplicates_spark/main'
-include { BAM_SENTIEON_DEDUP } from '../../../subworkflows/local/bam_sentieon_dedup/main'
+include { BAM_MARKDUPLICATES                         } from '../../../subworkflows/local/bam_markduplicates'
+include { BAM_MARKDUPLICATES_SPARK                   } from '../../../subworkflows/local/bam_markduplicates_spark'
+include { BAM_SENTIEON_DEDUP                         } from '../../../subworkflows/local/bam_sentieon_dedup'
 
 // QC on CRAM
-include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD } from '../../../subworkflows/local/cram_qc_mosdepth_samtools/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD } from '../../../subworkflows/local/cram_qc_mosdepth_samtools'
 
 // Create recalibration tables
-include { BAM_BASERECALIBRATOR } from '../../../subworkflows/local/bam_baserecalibrator/main'
-include { BAM_BASERECALIBRATOR_SPARK } from '../../../subworkflows/local/bam_baserecalibrator_spark/main'
+include { BAM_BASERECALIBRATOR                       } from '../../../subworkflows/local/bam_baserecalibrator'
+include { BAM_BASERECALIBRATOR_SPARK                 } from '../../../subworkflows/local/bam_baserecalibrator_spark'
 
 // Create recalibrated cram files to use for variant calling (+QC)
-include { BAM_APPLYBQSR } from '../../../subworkflows/nf-core/bam_applybqsr/main'
-include { BAM_APPLYBQSR_SPARK } from '../../../subworkflows/local/bam_applybqsr_spark/main'
+include { BAM_APPLYBQSR                              } from '../../../subworkflows/nf-core/bam_applybqsr'
+include { BAM_APPLYBQSR_SPARK                        } from '../../../subworkflows/local/bam_applybqsr_spark'
 
 workflow FASTQ_PREPROCESS_GATK {
     take:
