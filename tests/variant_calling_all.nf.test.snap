@@ -1,11 +1,8 @@
 {
     "-profile test --input tests/csv/3.0/fastq_pair.csv --tools cnvkit,deepvariant,freebayes,mpileup,msisensorpro,strelka,tiddit": {
         "content": [
-            99,
+            95,
             {
-                "BAM_TO_CRAM_RECAL": {
-                    "samtools": "1.24"
-                },
                 "BCFTOOLS_MPILEUP": {
                     "bcftools": "1.23.1"
                 },
@@ -57,7 +54,8 @@
                     "freebayes": "1.3.10"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.7.0.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
                     "gatk4": "4.7.0.0"
@@ -67,9 +65,6 @@
                 },
                 "GATK4_MARKDUPLICATES": {
                     "gatk4": "4.7.0.0",
-                    "samtools": "1.21"
-                },
-                "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
@@ -642,24 +637,18 @@
                 "test2_vs_test.tiddit.tumor.vcf.gz:md5,4dfb5e0e5aa2c961d887a1633167ba71",
                 "test2_vs_test.tiddit_sv_merge.vcf.gz:md5,720f6c1c5b88e02529cb62d7d3d0a543"
             ],
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
-            ]
+            "No warnings"
         ],
-        "timestamp": "2026-10-01T21:10:32.642812797",
+        "timestamp": "2026-10-14T15:18:02.556190123",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --input tests/csv/3.0/fastq_single.csv --tools cnvkit,deepvariant,freebayes,mpileup,strelka,tiddit": {
         "content": [
-            56,
+            54,
             {
-                "BAM_TO_CRAM_RECAL": {
-                    "samtools": "1.24"
-                },
                 "BCFTOOLS_MPILEUP": {
                     "bcftools": "1.23.1"
                 },
@@ -711,7 +700,8 @@
                     "freebayes": "1.3.10"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.7.0.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
                     "gatk4": "4.7.0.0"
@@ -721,9 +711,6 @@
                 },
                 "GATK4_MARKDUPLICATES": {
                     "gatk4": "4.7.0.0",
-                    "samtools": "1.21"
-                },
-                "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
@@ -1150,23 +1137,18 @@
                 "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565",
                 "test.tiddit.vcf.gz:md5,5e603e7e628756413a2056ea873e14e1"
             ],
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
-            ]
+            "No warnings"
         ],
-        "timestamp": "2026-10-01T21:09:48.446786366",
+        "timestamp": "2026-10-14T15:19:51.988011461",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --input tests/csv/3.0/fastq_tumor_only.csv --tools cnvkit,freebayes,mpileup,mutect2,tiddit": {
         "content": [
-            50,
+            48,
             {
-                "BAM_TO_CRAM_RECAL": {
-                    "samtools": "1.24"
-                },
                 "BCFTOOLS_MPILEUP": {
                     "bcftools": "1.23.1"
                 },
@@ -1212,7 +1194,8 @@
                     "freebayes": "1.3.10"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.7.0.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
                     "gatk4": "4.7.0.0"
@@ -1222,13 +1205,10 @@
                 },
                 "GATK4_MARKDUPLICATES": {
                     "gatk4": "4.7.0.0",
-                    "samtools": "1.21"
+                    "samtools": "1.24"
                 },
                 "GETPILEUPSUMMARIES": {
                     "gatk4": "4.7.0.0"
-                },
-                "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
                 },
                 "LEARNREADORIENTATIONMODEL": {
                     "gatk4": "4.7.0.0"
@@ -1620,15 +1600,12 @@
                 "test2.mutect2.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2.tiddit.vcf.gz:md5,4dfb5e0e5aa2c961d887a1633167ba71"
             ],
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
-                "WARN: No Panel-of-normal was specified for Mutect2."
-            ]
+            "No warnings"
         ],
-        "timestamp": "2026-10-01T21:08:36.711209124",
+        "timestamp": "2026-10-14T15:13:55.473264204",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     }
 }
