@@ -215,6 +215,7 @@
                 "preprocessing/recalibrated",
                 "preprocessing/recalibrated/test",
                 "preprocessing/recalibrated/test/test.recal.bam",
+                "preprocessing/recalibrated/test/test.recal.bam.bai",
                 "reference",
                 "reports",
                 "reports/fastqc",
@@ -286,7 +287,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-10-14T14:49:33.06507659",
+        "timestamp": "2026-10-14T17:53:03.330762174",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.0"

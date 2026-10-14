@@ -243,6 +243,7 @@
                 "preprocessing/recalibrated",
                 "preprocessing/recalibrated/test",
                 "preprocessing/recalibrated/test/test.recal.bam",
+                "preprocessing/recalibrated/test/test.recal.bam.bai",
                 "reference",
                 "reports",
                 "reports/bcftools",
@@ -369,7 +370,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-14T11:01:24.94837727",
+        "timestamp": "2026-10-14T17:55:57.238868222",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.0"

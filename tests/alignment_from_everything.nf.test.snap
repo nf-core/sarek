@@ -252,12 +252,16 @@
                 "preprocessing/recalibrated",
                 "preprocessing/recalibrated/test",
                 "preprocessing/recalibrated/test/test.recal.bam",
+                "preprocessing/recalibrated/test/test.recal.bam.bai",
                 "preprocessing/recalibrated/test2",
                 "preprocessing/recalibrated/test2/test2.recal.bam",
+                "preprocessing/recalibrated/test2/test2.recal.bam.bai",
                 "preprocessing/recalibrated/test3",
                 "preprocessing/recalibrated/test3/test3.recal.bam",
+                "preprocessing/recalibrated/test3/test3.recal.bam.bai",
                 "preprocessing/recalibrated/test_bam",
                 "preprocessing/recalibrated/test_bam/test_bam.recal.bam",
+                "preprocessing/recalibrated/test_bam/test_bam.recal.bam.bai",
                 "reference",
                 "reports",
                 "reports/fastqc",
@@ -432,7 +436,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-10-14T14:48:28.229817902",
+        "timestamp": "2026-10-14T17:51:38.604577455",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.10.0"
