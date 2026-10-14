@@ -619,7 +619,10 @@
                     "VcfFile [chromosomes=[chr22], sampleCount=2, variantCount=125, phased=false, phasedAutodetect=false]"
                 ]
             ],
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ]
         ],
         "timestamp": "2026-10-14T15:26:29.827990363",
         "meta": {
@@ -992,7 +995,9 @@
             [
                 "test.freebayes.filtered.vcf.gz:md5,2062214d7062a3cf37ea4c1d123c1a43"
             ],
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ]
         ],
         "timestamp": "2026-10-14T15:21:35.438347715",
         "meta": {
@@ -1348,7 +1353,9 @@
             [
                 "test.freebayes.filtered.vcf.gz:md5,bf085c88aa26191a55fbd23bff6a498f"
             ],
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ]
         ],
         "timestamp": "2026-10-14T15:23:08.222615137",
         "meta": {
@@ -1994,7 +2001,10 @@
                 "test.freebayes.filtered.vcf.gz:md5,c4793897a38d6781dc512a52d9046be5",
                 "test2_vs_test.freebayes.filtered.vcf.gz:md5,6da8e1304355fedec62419d5ae1a402c"
             ],
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ]
         ],
         "timestamp": "2026-10-14T15:24:36.348428646",
         "meta": {

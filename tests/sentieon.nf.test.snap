@@ -117,7 +117,10 @@
                 "reports/samtools/test/test.md.cram.stats",
                 "reports/samtools/test/test.recal.cram.stats"
             ],
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
         ],
         "timestamp": "2026-10-14T15:02:14.017061651",
         "meta": {

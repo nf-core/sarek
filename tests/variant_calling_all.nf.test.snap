@@ -637,7 +637,10 @@
                 "test2_vs_test.tiddit.tumor.vcf.gz:md5,4dfb5e0e5aa2c961d887a1633167ba71",
                 "test2_vs_test.tiddit_sv_merge.vcf.gz:md5,720f6c1c5b88e02529cb62d7d3d0a543"
             ],
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ]
         ],
         "timestamp": "2026-10-14T15:18:02.556190123",
         "meta": {
@@ -1137,7 +1140,9 @@
                 "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565",
                 "test.tiddit.vcf.gz:md5,5e603e7e628756413a2056ea873e14e1"
             ],
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ]
         ],
         "timestamp": "2026-10-14T15:19:51.988011461",
         "meta": {
@@ -1600,7 +1605,10 @@
                 "test2.mutect2.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2.tiddit.vcf.gz:md5,4dfb5e0e5aa2c961d887a1633167ba71"
             ],
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
+                "WARN: No Panel-of-normal was specified for Mutect2."
+            ]
         ],
         "timestamp": "2026-10-14T15:13:55.473264204",
         "meta": {

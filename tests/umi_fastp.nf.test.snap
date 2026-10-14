@@ -344,7 +344,9 @@
                 "test.recal.cram:md5,dc339a125287041fa36a4cdda432ec8c"
             ],
             "No VCF files",
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_umi_cleanname_1.fastq.gz): Cannot extract flowcell ID from @922332"
+            ]
         ],
         "timestamp": "2026-10-14T15:08:42.69420559",
         "meta": {

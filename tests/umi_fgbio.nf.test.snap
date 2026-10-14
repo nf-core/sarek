@@ -10,7 +10,7 @@
             "No VCF files",
             "No warnings",
             [
-                "[ERROR] parabricks is currently not compatible with FGBio UMI handling. Please choose a different aligner."
+                "parabricks is currently not compatible with FGBio UMI handling. Please choose a different aligner."
             ]
         ],
         "timestamp": "2026-10-14T11:27:30.858549169",
@@ -324,7 +324,9 @@
                 "test.recal.cram:md5,a8f60b321cc24e782dcf6470fd310b08"
             ],
             "No VCF files",
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_umi_cleanname_1.fastq.gz): Cannot extract flowcell ID from @922332"
+            ]
         ],
         "timestamp": "2026-10-14T11:26:13.761282222",
         "meta": {
@@ -343,7 +345,7 @@
             "No VCF files",
             "No warnings",
             [
-                "[ERROR] sentieon-bwamem is currently not compatible with FGBio UMI handling. Please choose a different aligner."
+                "sentieon-bwamem is currently not compatible with FGBio UMI handling. Please choose a different aligner."
             ]
         ],
         "timestamp": "2026-10-14T11:27:04.940865013",
