@@ -90,7 +90,6 @@ workflow FASTQ_PREPROCESS_GATK {
             // No need for fasta.fai -> []
             // Currently don't allow interleaved input
             interleave_input = false
-            // Currently don't allow interleaved input
             CONVERT_FASTQ_UMI(
                 bam_converted_from_fastq,
                 fasta,
