@@ -445,6 +445,7 @@ workflow FASTQ_PREPROCESS_GATK {
                     .combine(fasta_fai)
                     .combine(dict)
                     .map { meta_fasta, fasta_, _meta_fai, fai, _meta_dict, dict_ -> [meta_fasta, fasta_, fai, dict_] }
+                    .collect()
 
                 BAM_APPLYBQSR(
                     cram_applybqsr,
