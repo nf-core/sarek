@@ -88,6 +88,7 @@ workflow FASTQ_PREPROCESS_GATK {
             // Convert back to fastq for further preprocessing
             // fasta are not needed when converting bam to fastq -> [ id:"fasta" ], []
             // No need for fasta.fai -> []
+            // Currently don't allow interleaved input
             interleave_input = false
             // Currently don't allow interleaved input
             CONVERT_FASTQ_UMI(
@@ -109,8 +110,8 @@ workflow FASTQ_PREPROCESS_GATK {
             save_trimmed_fail = false
             save_merged = false
             FASTP(
-                reads_for_fastp.map { meta, reads -> [meta, reads, []] },
-                false,
+                reads_for_fastp.map { meta, reads -> [meta, reads, []] }, // adapter_fasta folded into the reads tuple (unused)
+                false, // we don't use discard_trimmed_pass at the moment
                 save_trimmed_fail,
                 save_merged,
             )
@@ -163,7 +164,7 @@ workflow FASTQ_PREPROCESS_GATK {
             }
             .groupTuple()
             .map { meta, reads ->
-                meta + [n_fastq: reads.size()]
+                meta + [n_fastq: reads.size()] // We can drop the FASTQ files now that we know how many there are
             }
 
         reads_for_alignment = reads_for_alignment.map { meta, reads ->
@@ -197,11 +198,13 @@ workflow FASTQ_PREPROCESS_GATK {
         // Use groupKey to make sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all reads from all channels are mapped
         bam_mapped = aligned_bam
-            .combine(reads_grouping_key)
+            .combine(reads_grouping_key) // Creates a tuple of [ meta, bam, reads_grouping_key ]
             .filter { meta1, _bam, meta2 -> meta1.sample == meta2.sample }
+            // Add n_fastq and other variables to meta
             .map { meta1, bam, meta2 ->
                 [meta1 + meta2, bam]
             }
+            // Manipulate meta map to remove old fields and add new ones
             .map { meta, bam ->
                 [meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [data_type: 'bam', id: meta.sample], bam]
             }
@@ -211,14 +214,17 @@ workflow FASTQ_PREPROCESS_GATK {
             .groupTuple()
 
         bai_mapped = aligned_bai
-            .combine(reads_grouping_key)
+            .combine(reads_grouping_key) // Creates a tuple of [ meta, bai, reads_grouping_key ]
             .filter { meta1, _bai, meta2 -> meta1.sample == meta2.sample }
+            // Add n_fastq and other variables to meta
             .map { meta1, bai, meta2 ->
                 [meta1 + meta2, bai]
             }
+            // Manipulate meta map to remove old fields and add new ones
             .map { meta, bai ->
                 [meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [data_type: 'bai', id: meta.sample], bai]
             }
+            // Create groupKey from meta map
             .map { meta, bai ->
                 [groupKey(meta, meta.n_fastq), bai]
             }
@@ -329,7 +335,7 @@ workflow FASTQ_PREPROCESS_GATK {
         // - alignment from sentieon_dedup
         // - alignment from markduplicates_spark
         ch_md_cram_for_restart = channel.empty()
-            .mix(cram_markduplicates_no_spark, cram_markduplicates_spark, cram_sentieon_dedup)
+            .mix(cram_markduplicates_no_spark, cram_markduplicates_spark, cram_sentieon_dedup) // Make sure correct data types are carried through
             .map { meta, file, index -> [meta + [data_type: file.name.endsWith('.cram') ? 'cram' : 'bam'], file, index] }
 
         // CSV should be written for the file actually output, either CRAM or BAM
@@ -357,7 +363,7 @@ workflow FASTQ_PREPROCESS_GATK {
             // - crams converted from bam mapped when skipping markduplicates
             // - input cram files, when start from step markduplicates
             ch_cram_for_bam_baserecalibrator = channel.empty()
-                .mix(ch_md_cram_for_restart, cram_skip_markduplicates)
+                .mix(ch_md_cram_for_restart, cram_skip_markduplicates) // Make sure correct data types are carried through
                 .map { meta, file, index -> [meta + [data_type: file.name.endsWith('.cram') ? 'cram' : 'bam'], file, index] }
         }
 
