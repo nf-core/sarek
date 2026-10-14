@@ -77,8 +77,12 @@ When building an index during the run, provide:
 Alternatively, reuse an existing index with `--xengsort_index`.
 For details about the appropriate nobjects and kmersize to use,
 see https://gitlab.com/genomeinformatics/xengsort.
+The classification algorithm can be selected with `--xengsort_mode`; supported
+values are `count`, `coverage`, and `quick`. The default is `count`. See the
+[Xengsort usage guide](https://gitlab.com/genomeinformatics/xengsort/-/tree/master#how-to-classify)
+for details about each mode.
 
-When Sarek builds a xengsort index, it is only published to `outdir/reference` if
+When Sarek builds a xengsort index, it is only published to `outdir/reference/xengsort_index` if
 `--save_reference` or `--build_only_index` is enabled.
 
 Example:

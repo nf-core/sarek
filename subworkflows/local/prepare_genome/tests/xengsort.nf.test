@@ -69,6 +69,7 @@ nextflow_workflow {
                 """
                 def mock_index_dir = file("${workDir}/mock_xengsort_index")
                 mock_index_dir.mkdirs()
+                file("${workDir}/mock_xengsort_index/index.hash").text = 'dummy'
                 file("${workDir}/mock_xengsort_index/index.info").text = 'dummy'
 
                 input[0]  = null                                                                                                                                       // ascat_alleles

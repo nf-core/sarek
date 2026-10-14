@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - "bioconda::xengsort=2.1.0"
+  - bioconda::xengsort=2.2.1

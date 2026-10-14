@@ -289,6 +289,14 @@
                     "description": "Value passed to Xengsort index `--kmersize`.",
                     "help_text": "No default is set. Provide this together with `--xengsort_nobjects` when building a Xengsort index (https://gitlab.com/genomeinformatics/xengsort)."
                 },
+                "xengsort_mode": {
+                    "type": "string",
+                    "default": "count",
+                    "enum": ["count", "coverage", "quick"],
+                    "fa_icon": "fas fa-cog",
+                    "description": "Classification mode used by Xengsort.",
+                    "help_text": "Choose `count` to classify by the number of host/graft k-mers, `coverage` to classify by the proportion of covered bases, or `quick` to classify using a reduced set of k-mers."
+                },
                 "save_bbsplit_reads": {
                     "type": "boolean",
                     "fa_icon": "fas fa-save",

@@ -18,7 +18,7 @@ include { UNZIP as UNZIP_ALLELES                    } from '../../../modules/nf-
 include { UNZIP as UNZIP_GC                         } from '../../../modules/nf-core/unzip'
 include { UNZIP as UNZIP_LOCI                       } from '../../../modules/nf-core/unzip'
 include { UNZIP as UNZIP_RT                         } from '../../../modules/nf-core/unzip'
-include { XENGSORT_INDEX                            } from '../../../modules/local/xengsort/index/main.nf'
+include { XENGSORT_INDEX                            } from '../../../modules/nf-core/xengsort/index/main.nf'
 
 workflow PREPARE_GENOME {
     take:
@@ -146,17 +146,50 @@ workflow PREPARE_GENOME {
     if (tools && tools.split(',').contains('xengsort')) {
         if (xengsort_index_in) {
             // Use user-provided xengsort index
-                xengsort_index = channel.value(file(xengsort_index_in, checkIfExists: true))
+            ch_xengsort_hash = channel.fromPath("${xengsort_index_in}/*.hash", checkIfExists: true)
+                .map { hash -> [[id: hash.baseName], hash] }
+            ch_xengsort_info = channel.fromPath("${xengsort_index_in}/*.info", checkIfExists: true)
+                .map { info -> [[id: info.baseName], info] }
+
+            // The value channel can be reused to classify every input sample.
+            xengsort_index = ch_xengsort_hash
+                .join(ch_xengsort_info, failOnDuplicate: true, failOnMismatch: true)
+                .collect(flat: false)
+                .map { indices ->
+                    if (indices.size() != 1) {
+                        error("Pipeline error: '--xengsort_index' must contain exactly one matching .hash/.info pair.")
+                    }
+                    indices[0]
+                }
         }
         else {
             if (!xengsort_host_fasta_in) {
                 error("Pipeline error: '--xengsort_host_fasta' is missing. Cannot build index.")
             }
-            // Build index from scratch using main fasta as graft and xengsort_host_fasta as host
-            xengsort_index = XENGSORT_INDEX(
-                fasta.map { _meta, fasta_ -> fasta_ },
-                channel.fromPath(xengsort_host_fasta_in, checkIfExists: true).collect()
-            ).index
+            if (!params.xengsort_nobjects) {
+                error("Pipeline error: '--xengsort_nobjects' is missing. Cannot build Xengsort index.")
+            }
+            if (!params.xengsort_kmersize) {
+                error("Pipeline error: '--xengsort_kmersize' is missing. Cannot build Xengsort index.")
+            }
+
+            // Build the index using the host reference first and the main FASTA as the graft reference.
+            ch_xengsort_host_fasta = channel.fromPath(xengsort_host_fasta_in, checkIfExists: true)
+                .collect()
+                .map { host_fastas -> [[id: 'xengsort_host'], host_fastas] }
+
+            XENGSORT_INDEX(ch_xengsort_host_fasta, fasta, params.xengsort_nobjects)
+
+            // Pair the two index files and expose them as a reusable value channel.
+            xengsort_index = XENGSORT_INDEX.out.hash
+                .join(XENGSORT_INDEX.out.info, failOnDuplicate: true, failOnMismatch: true)
+                .collect(flat: false)
+                .map { indices ->
+                    if (indices.size() != 1) {
+                        error('Pipeline error: Xengsort index creation did not produce exactly one .hash/.info pair.')
+                    }
+                    indices[0]
+                }
         }
     }
 
@@ -325,5 +358,5 @@ workflow PREPARE_GENOME {
     pon                      // Channel: [pon]
     pon_tbi                  // Channel: [pon_tbi]
     vep_fasta                // Channel: [meta, vep_fasta]
-    xengsort_index           // Channel: [xengsort_index/]
+    xengsort_index           // Channel: [meta, hash, info]
 }

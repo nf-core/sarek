@@ -1,0 +1,95 @@
+name: "xengsort_index"
+description: Build a bucketed 3-way Cuckoo hash table index from host and graft reference FASTA files for xenograft read sorting.
+keywords:
+  - index
+  - xenograft
+  - sorting
+  - cuckoo hash
+  - k-mer
+  - host
+  - graft
+tools:
+  - "xengsort":
+      description: "Fast lightweight accurate xenograft sorting using 3-way bucketed Cuckoo hashing"
+      homepage: "https://gitlab.com/genomeinformatics/xengsort"
+      documentation: "https://gitlab.com/genomeinformatics/xengsort"
+      tool_dev_url: "https://gitlab.com/genomeinformatics/xengsort"
+      doi: "10.4230/LIPIcs.WABI.2020.4"
+      licence:
+        - "MIT"
+      identifier: ""
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing host reference information
+          e.g. `[ id:'host_ref' ]`
+    - host_fasta:
+        type: file
+        description: Reference FASTA file(s) for the host organism.
+        pattern: "*.{fasta,fa,fasta.gz,fa.gz,fasta.bz2,fa.bz2,fasta.xz,fa.xz}"
+        ontologies: []
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing graft reference information
+          e.g. `[ id:'graft_ref' ]`
+    - graft_fasta:
+        type: file
+        description: Reference FASTA file(s) for the graft organism.
+        pattern: "*.{fasta,fa,fasta.gz,fa.gz,fasta.bz2,fa.bz2,fasta.xz,fa.xz}"
+        ontologies: []
+  - nobjects:
+      type: integer
+      description: Estimated total number of k-mers to be stored in the hash table.
+
+output:
+  hash:
+    - - meta2:
+          type: map
+          description: |
+            Groovy Map containing metadata from the graft or combined reference.
+      - "*.hash":
+          type: file
+          description: Binary Cuckoo hash table file.
+          pattern: "*.hash"
+          ontologies: []
+  info:
+    - - meta2:
+          type: map
+          description: |
+            Groovy Map containing metadata from the graft or combined reference.
+      - "*.info":
+          type: file
+          description: Header and metadata file containing hash table parameters.
+          pattern: "*.info"
+          ontologies: []
+  versions_xengsort:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - xengsort:
+          type: string
+          description: The name of the tool
+      - xengsort --version:
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - xengsort:
+          type: string
+          description: The name of the tool
+      - xengsort --version:
+          type: eval
+          description: The expression to obtain the version of the tool
+
+authors:
+  - "@diegomscoelho"
+  - "@LeonHornich"
+maintainers:
+  - "@LeonHornich"
