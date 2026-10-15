@@ -1,7 +1,7 @@
 {
     "-profile test --input tests/csv/3.0/fastq_multi_lane.csv --save_mapped --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools --tools null": {
         "content": [
-            18,
+            19,
             {
                 "BAM_TO_CRAM_MAPPING": {
                     "samtools": "1.24"
@@ -76,6 +76,9 @@
                 "preprocessing/recal_table/test2",
                 "preprocessing/recal_table/test2/test2.recal.table",
                 "preprocessing/recalibrated",
+                "preprocessing/recalibrated/test",
+                "preprocessing/recalibrated/test/test.recal.cram",
+                "preprocessing/recalibrated/test/test.recal.cram.crai",
                 "preprocessing/recalibrated/test2",
                 "preprocessing/recalibrated/test2/test2.recal.cram",
                 "preprocessing/recalibrated/test2/test2.recal.cram.crai",
@@ -94,15 +97,19 @@
                 "test2.sorted.cram:md5,bac87cf9290577fd9a4def63e046031f",
                 "test.md.cram:md5,724c601c9daf019d356a53a7d5e1c8b1",
                 "test2.md.cram:md5,bac87cf9290577fd9a4def63e046031f",
+                "test.recal.cram:md5,dbd6f40b1e6d72501dc034e62e9d54eb",
                 "test2.recal.cram:md5,f4205ab086600ba2927e1468dc732976"
             ],
             "No VCF files",
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ]
         ],
-        "timestamp": "2026-10-14T10:57:44.399864154",
+        "timestamp": "2026-10-15T09:53:52.186089174",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.0"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --input tests/csv/3.0/fastq_umi_multi_lane.csv --umi_read_structure '+T 7M1S+T' --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools --tools null": {
@@ -209,12 +216,15 @@
                 "test.sorted.cram:md5,d07bc9529dff41207c4cac3ecbd47071"
             ],
             "No VCF files",
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2.umi_1.fastq.gz): Cannot extract flowcell ID from @811842/1",
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_umi_cleanname_1.fastq.gz): Cannot extract flowcell ID from @922332"
+            ]
         ],
-        "timestamp": "2026-10-14T10:58:46.880574175",
+        "timestamp": "2026-10-15T09:55:04.0031094",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.0"
+            "nextflow": "25.10.4"
         }
     }
 }
