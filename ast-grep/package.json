@@ -3,7 +3,7 @@
     "private": true,
     "scripts": {
         "setup": "bash setup-parser.sh",
-        "test": "node --test parser.test.mjs && ast-grep test -c sgconfig.yml --skip-snapshot-tests",
+        "test": "node --test *.test.mjs && ast-grep test -c sgconfig.yml --skip-snapshot-tests",
         "lint": "ast-grep scan -c sgconfig.yml ../main.nf ../workflows ../subworkflows/local ../modules/local",
         "check": "npm test && npm run lint"
     },

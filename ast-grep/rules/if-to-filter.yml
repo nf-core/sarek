@@ -1,0 +1,57 @@
+id: if-to-filter
+language: nextflow
+severity: warning
+message: Prefer filtering the driving input channel to conditionally invoking $PROCESS.
+note: |
+  Review whether the condition can move into a filter on the execution-driving
+  queue channel. Preserve other inputs and review output wiring and empty-input
+  behaviour. This is a naming-based suggestion, not a resolved process call.
+  No automatic fix: channel types and subworkflow side effects require review.
+files:
+  - "**/*.nf"
+ignores:
+  - "**/modules/**"
+  - "**/subworkflows/nf-core/**"
+  - "**/tests/**"
+  - "**/work/**"
+  - "**/.nf-test/**"
+  - "**/ast-grep/**"
+utils:
+  comment:
+    any:
+      - kind: line_comment
+      - kind: block_comment
+rule:
+  kind: if_statement
+  has:
+    field: consequence
+    kind: block
+    has:
+      kind: expression_statement
+      has:
+        kind: call_expression
+        pattern: $PROCESS($$$ARGS)
+      all:
+        - nthChild:
+            position: 1
+            ofRule:
+              not:
+                matches: comment
+        - nthChild:
+            position: 1
+            reverse: true
+            ofRule:
+              not:
+                matches: comment
+  inside:
+    any:
+      - kind: workflow_definition
+      - kind: main_section
+  not:
+    has:
+      field: alternative
+      regex: .*
+constraints:
+  PROCESS:
+    kind: identifier
+    regex: ^[A-Z][A-Z0-9_]*$
