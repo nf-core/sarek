@@ -5,20 +5,21 @@ and rule tests. It does not replace Nextflow linting or pipeline execution tests
 
 ## Setup
 
-Install Node.js 24 with npm, a C compiler, curl, tar and either `sha256sum` or
+Install [mise](https://mise.jdx.dev/walkthrough.html), a C compiler, curl, tar and either `sha256sum` or
 `shasum`. macOS and Linux on arm64 and x86_64 are supported. From the repository root:
 
 ```bash
-npm ci --prefix ast-grep
-npm run setup --prefix ast-grep
-npm run check --prefix ast-grep
+mise trust ast-grep/mise.toml
+mise -C ast-grep run setup
+mise -C ast-grep run check
 ```
 
-The lockfile pins ast-grep. `setup-parser.sh` downloads a pinned, SHA-256-verified
+Mise installs the pinned native ast-grep binary. Node.js and npm are not required.
+`setup-parser.sh` downloads a pinned, SHA-256-verified
 [tree-sitter-nextflow](https://github.com/nextflow-io/tree-sitter-nextflow) source
 archive and compiles its generated C parser. It retains the upstream licence in
-`lib/`. Source downloads are temporary; libraries and npm dependencies are ignored
-by Git. Set `CC` to a compiler executable to override `cc`. Rerun setup after
+`lib/`. Source downloads are temporary; libraries are ignored by Git.
+Set `CC` to a compiler executable to override `cc`. Rerun setup after
 changing the parser pin or moving the checkout to another platform.
 
 The existing prek hook runs the same check as CI. Run setup before using prek.
@@ -30,9 +31,9 @@ Imported nf-core code and configuration files remain outside this policy.
 Keep the configuration here and pass it explicitly:
 
 ```bash
-ast-grep/node_modules/.bin/ast-grep run -c ast-grep/sgconfig.yml \
-    -l nextflow -p 'if ($COND) { $$$BODY }' workflows subworkflows/local
-ast-grep/node_modules/.bin/ast-grep scan -c ast-grep/sgconfig.yml --inspect summary workflows
+mise -C ast-grep exec -- ast-grep run -c sgconfig.yml \
+    -l nextflow -p 'if ($COND) { $$$BODY }' ../workflows ../subworkflows/local
+mise -C ast-grep exec -- ast-grep scan -c sgconfig.yml --inspect summary ../workflows
 ```
 
 Use normal `$NAME` and `$$$BODY` metavariables. `expandoChar` makes them compatible
