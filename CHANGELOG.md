@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - [#2296](https://github.com/nf-core/sarek/pull/2296) - Update 21 Java GATK4 modules to GATK 4.7.0.0 Lite containers from [nf-core/modules#13062](https://github.com/nf-core/modules/pull/13062), retaining the CNN and Spark environments ([@adamrtalbot](https://github.com/adamrtalbot)).
+- [#2318](https://github.com/nf-core/sarek/pull/2318) - Use the nf-core `bam_applybqsr` subworkflow for recalibration. GATK streams BAM and samtools writes the CRAM, pinned to 3.0 so legacy htslib tools can still read it. CRAI indexes are published alongside recalibrated CRAMs.
 
 ### Fixed
 
@@ -27,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- [#2318](https://github.com/nf-core/sarek/pull/2318) - Remove `subworkflows/local/bam_applybqsr`, superseded by the nf-core `bam_applybqsr` subworkflow.
+
 ### Dependencies - modules
 
 | Dependency | Old version | New version |
@@ -37,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+| nft-bam    | 0.6.1       | 0.7.0       |
 
 ### Parameters
 
