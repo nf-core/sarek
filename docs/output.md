@@ -1019,7 +1019,7 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
 
 ## Post Variant Calling
 
-Optional steps to further filter or fine tune variant calling results. There are two branch: `Varlociraptor` or `bcftools` (filtering, normalisation, and concatenation).
+Optional steps to further filter or fine tune variant calling results. There are two branches: `Varlociraptor` or `bcftools` (filtering, normalisation, consensus and concatenation).
 
 ### Varlociraptor
 
