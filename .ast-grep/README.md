@@ -9,17 +9,18 @@ Install [mise](https://mise.jdx.dev/walkthrough.html), a C compiler, curl, tar a
 `shasum`. macOS and Linux on arm64 and x86_64 are supported. From the repository root:
 
 ```bash
-mise trust ast-grep/mise.toml
-mise -C ast-grep run setup
-mise -C ast-grep run check
+mise trust .ast-grep/mise.toml
+mise -C .ast-grep run setup-parser
+mise -C .ast-grep run check
 ```
 
 Mise installs the pinned native ast-grep binary. Node.js and npm are not required.
-`setup-parser.sh` downloads a pinned, SHA-256-verified
+The file task `mise-tasks/setup-parser` downloads a pinned, SHA-256-verified
 [tree-sitter-nextflow](https://github.com/nextflow-io/tree-sitter-nextflow) source
 archive and compiles its generated C parser. It retains the upstream licence in
 `lib/`. Source downloads are temporary; libraries are ignored by Git.
-Set `CC` to a compiler executable to override `cc`. Rerun setup after
+The task also smoke-tests the parser. `setup` is an alias for `setup-parser`.
+Set `CC` to a compiler executable to override `cc`. Rerun setup-parser after
 changing the parser pin or moving the checkout to another platform.
 
 The existing prek hook runs the same check as CI. Run setup before using prek.
@@ -31,15 +32,17 @@ Imported nf-core code and configuration files remain outside this policy.
 Keep the configuration here and pass it explicitly:
 
 ```bash
-mise -C ast-grep exec -- ast-grep run -c sgconfig.yml \
+mise -C .ast-grep exec -- ast-grep run -c sgconfig.yml \
     -l nextflow -p 'if ($COND) { $$$BODY }' ../workflows ../subworkflows/local
-mise -C ast-grep exec -- ast-grep scan -c sgconfig.yml --inspect summary ../workflows
+mise -C .ast-grep exec -- ast-grep scan -c sgconfig.yml --inspect summary ../workflows
 ```
 
 Use normal `$NAME` and `$$$BODY` metavariables. `expandoChar` makes them compatible
 with the Nextflow grammar. Add each policy to `rules/<id>.yml` with matching
-`valid` and `invalid` snippets in `rule-tests/<id>-test.yml`. Detection-only tests
-skip diagnostic snapshots. A rule with a fix must also test its rewritten output.
+`valid` and `invalid` snippets in `rule-tests/<id>-test.yml`. Generate snapshots with
+`mise -C .ast-grep exec -- ast-grep test -c sgconfig.yml --update-all`, then review
+and commit them. The `check` task verifies both matching and snapshot results.
+A rule with a fix must also test its rewritten output.
 
 Warnings report findings without failing the scan. Promote an individual rule
 with `--error=<id>` after reviewing its baseline. Suppress an intentional exception

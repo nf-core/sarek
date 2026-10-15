@@ -84,7 +84,7 @@ Two types of tests are typically run:
 
 #### Lint tests
 
-Use [ast-grep](../ast-grep/README.md) for Nextflow structural rules.
+Use [ast-grep](../.ast-grep/README.md) for Nextflow structural rules.
 Follow its setup instructions before running prek. Keep formatting and syntax
 validation in Nextflow lint, and runtime behaviour in nf-test.
 
