@@ -46,7 +46,7 @@ repos:
     hooks:
       - id: nextflow-ast-grep
         name: Test and scan Nextflow structural rules
-        entry: npm --prefix ast-grep run check
+        entry: mise -C ast-grep run check
         language: system
         files: '^(ast-grep/|main\.nf$|workflows/.*\.nf$|subworkflows/local/.*\.nf$|modules/local/.*\.nf$)'
         pass_filenames: false
