@@ -1,0 +1,157 @@
+id: if-to-filter
+snapshots:
+  ? |
+    workflow ALIGNMENT {
+        // Run the selected aligner.
+        if (params.align) {
+            // Keep the reference input reusable.
+            ALIGN(reads, reference)
+            /* Reference remains a value channel. */
+        }
+    }
+  : labels:
+      - source: |-
+          if (params.align) {
+                  // Keep the reference input reusable.
+                  ALIGN(reads, reference)
+                  /* Reference remains a value channel. */
+              }
+        style: primary
+        start: 58
+        end: 210
+      - source: |-
+          workflow ALIGNMENT {
+              // Run the selected aligner.
+              if (params.align) {
+                  // Keep the reference input reusable.
+                  ALIGN(reads, reference)
+                  /* Reference remains a value channel. */
+              }
+          }
+        style: secondary
+        start: 0
+        end: 212
+      - source: ALIGN(reads, reference)
+        style: secondary
+        start: 132
+        end: 155
+      - source: ALIGN(reads, reference)
+        style: secondary
+        start: 132
+        end: 155
+      - source: |-
+          {
+                  // Keep the reference input reusable.
+                  ALIGN(reads, reference)
+                  /* Reference remains a value channel. */
+              }
+        style: secondary
+        start: 76
+        end: 210
+  ? |
+    workflow ALIGNMENT {
+        take:
+        reads
+        reference
+        main:
+        if (params.align) {
+            ALIGN(reads, reference)
+        }
+    }
+  : labels:
+      - source: |-
+          if (params.align) {
+                  ALIGN(reads, reference)
+              }
+        style: primary
+        start: 69
+        end: 126
+      - source: |-
+          main:
+              if (params.align) {
+                  ALIGN(reads, reference)
+              }
+        style: secondary
+        start: 59
+        end: 126
+      - source: ALIGN(reads, reference)
+        style: secondary
+        start: 97
+        end: 120
+      - source: ALIGN(reads, reference)
+        style: secondary
+        start: 97
+        end: 120
+      - source: |-
+          {
+                  ALIGN(reads, reference)
+              }
+        style: secondary
+        start: 87
+        end: 126
+  ? |
+    workflow {
+        if (!params.skip_alignment && params.tools?.split(',')?.contains('align')) {
+            ALIGN_FASTQ(reads.map { meta, fastq -> [meta, fastq] }, reference)
+        }
+    }
+  : labels:
+      - source: |-
+          if (!params.skip_alignment && params.tools?.split(',')?.contains('align')) {
+                  ALIGN_FASTQ(reads.map { meta, fastq -> [meta, fastq] }, reference)
+              }
+        style: primary
+        start: 15
+        end: 172
+      - source: |-
+          workflow {
+              if (!params.skip_alignment && params.tools?.split(',')?.contains('align')) {
+                  ALIGN_FASTQ(reads.map { meta, fastq -> [meta, fastq] }, reference)
+              }
+          }
+        style: secondary
+        start: 0
+        end: 174
+      - source: ALIGN_FASTQ(reads.map { meta, fastq -> [meta, fastq] }, reference)
+        style: secondary
+        start: 100
+        end: 166
+      - source: ALIGN_FASTQ(reads.map { meta, fastq -> [meta, fastq] }, reference)
+        style: secondary
+        start: 100
+        end: 166
+      - source: |-
+          {
+                  ALIGN_FASTQ(reads.map { meta, fastq -> [meta, fastq] }, reference)
+              }
+        style: secondary
+        start: 90
+        end: 172
+  ? |
+    workflow {
+        if (params.align) { ALIGN(reads) }
+    }
+  : labels:
+      - source: if (params.align) { ALIGN(reads) }
+        style: primary
+        start: 15
+        end: 49
+      - source: |-
+          workflow {
+              if (params.align) { ALIGN(reads) }
+          }
+        style: secondary
+        start: 0
+        end: 51
+      - source: ALIGN(reads)
+        style: secondary
+        start: 35
+        end: 47
+      - source: ALIGN(reads)
+        style: secondary
+        start: 35
+        end: 47
+      - source: "{ ALIGN(reads) }"
+        style: secondary
+        start: 33
+        end: 49

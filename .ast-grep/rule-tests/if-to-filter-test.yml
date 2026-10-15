@@ -1,0 +1,102 @@
+id: if-to-filter
+valid:
+  - |
+    workflow {
+        ALIGN(reads.filter { _read -> params.align }, reference)
+    }
+  - |
+    workflow {
+        if (params.align) {
+            ALIGN(reads)
+        } else {
+            OTHER_ALIGN(reads)
+        }
+    }
+  - |
+    workflow {
+        if (params.align) { ALIGN(reads) }
+        else if (params.other) { OTHER_ALIGN(reads) }
+    }
+  - |
+    workflow {
+        if (params.align) {
+            ALIGN(reads)
+            output = ALIGN.out.bam
+        }
+    }
+  - |
+    workflow {
+        if (params.align) {
+            ALIGN(reads)
+            INDEX(ALIGN.out.bam)
+        }
+    }
+  - |
+    workflow {
+        if (params.align) {
+            reads = channel.of('reads.fastq')
+            ALIGN(reads)
+        }
+    }
+  - |
+    workflow {
+        if (params.align) ALIGN(reads)
+    }
+  - |
+    workflow {
+        if (!params.input) { error('Missing input') }
+    }
+  - |
+    workflow {
+        reads.map { read ->
+            if (params.align) { ALIGN(read) }
+        }
+    }
+  - |
+    def choose(reads) {
+        if (params.align) { ALIGN(reads) }
+    }
+  - |
+    workflow {
+        if (params.align) { helpers.ALIGN(reads) }
+    }
+  - |
+    workflow {
+        if (params.align) { output = ALIGN(reads) }
+    }
+  - |
+    workflow {
+        if (params.outer) {
+            if (params.align) { ALIGN(reads) }
+        }
+    }
+invalid:
+  - |
+    workflow {
+        if (params.align) { ALIGN(reads) }
+    }
+  - |
+    workflow ALIGNMENT {
+        take:
+        reads
+        reference
+        main:
+        if (params.align) {
+            ALIGN(reads, reference)
+        }
+    }
+  - |
+    workflow {
+        if (!params.skip_alignment && params.tools?.split(',')?.contains('align')) {
+            ALIGN_FASTQ(reads.map { meta, fastq -> [meta, fastq] }, reference)
+        }
+    }
+  - |
+    workflow ALIGNMENT {
+        // Run the selected aligner.
+        if (params.align) {
+            // Keep the reference input reusable.
+            ALIGN(reads, reference)
+            /* Reference remains a value channel. */
+        }
+    }
