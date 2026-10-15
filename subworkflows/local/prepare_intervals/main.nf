@@ -11,6 +11,8 @@ include { GATK4_INTERVALLISTTOBED                                } from '../../.
 include { GAWK as BUILD_INTERVALS                                } from '../../../modules/nf-core/gawk'
 include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT    } from '../../../modules/nf-core/htslib/bgziptabix'
 include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_COMBINED } from '../../../modules/nf-core/htslib/bgziptabix'
+include { taskOutputOrNull } from '../utils_nfcore_sarek_pipeline'
+include { PreparedIntervals } from './types'
 
 workflow PREPARE_INTERVALS {
     take:
@@ -96,6 +98,25 @@ workflow PREPARE_INTERVALS {
     intervals_bed_combined        = intervals_combined.map{_meta, bed -> bed }.collect()
     intervals_bed_gz_tbi_combined = TABIX_BGZIPTABIX_INTERVAL_COMBINED.out.output.join(TABIX_BGZIPTABIX_INTERVAL_COMBINED.out.index).map{_meta, gz, tbi -> [gz, tbi] }.collect()
 
+    ch_results = intervals_bed
+        .map { bed, _num_intervals -> bed }
+        .toList()
+        .map { items -> [items.collect { item -> taskOutputOrNull(item) }.findAll { item -> item != null } ?: null] }
+        .combine(
+            intervals_bed_gz_tbi.map { files, _num_intervals -> files[0] }.toList().map { items -> [items.collect { item -> taskOutputOrNull(item) }.findAll { item -> item != null } ?: null] }
+        )
+        .combine(intervals_bed_combined.map { items -> [taskOutputOrNull(items[0])] })
+        .combine(intervals_bed_gz_tbi_combined.map { items -> [taskOutputOrNull(items[0])] })
+        .filter { fields -> fields.any { field -> field != null } }
+        .map { split_bed, split_bed_gz, combined_bed, combined_bed_gz ->
+            record(
+                split_bed: split_bed,
+                split_bed_gz: split_bed_gz,
+                combined_bed: combined_bed,
+                combined_bed_gz: combined_bed_gz,
+            )
+        }
+
     emit:
     // Intervals split for parallel execution
     intervals_bed                 // [ intervals.bed, num_intervals ]
@@ -103,4 +124,5 @@ workflow PREPARE_INTERVALS {
     // All intervals in one file
     intervals_bed_combined        // [ intervals.bed ]
     intervals_bed_gz_tbi_combined // [ intervals.bed.gz, intervals.bed.gz.tbi]
+    results = ch_results           // PreparedIntervals
 }

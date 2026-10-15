@@ -271,6 +271,16 @@ def sparkAndBam() {
     }
 }
 
+// Workflow outputs can only route files created below the current work directory.
+def taskOutputOrNull(path) {
+    return path instanceof Path && path.startsWith(workflow.workDir) ? path : null
+}
+
+// Preserve one record position when an optional task channel is empty.
+def firstTaskOutputOrNull(items) {
+    return [taskOutputOrNull(items[0])]
+}
+
 // Generate methods description for MultiQC
 def toolCitationText() {
     // TODO nf-core: Optionally add in-text citation tools to this list.
