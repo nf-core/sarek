@@ -15,7 +15,7 @@ ignores:
   - "**/tests/**"
   - "**/work/**"
   - "**/.nf-test/**"
-  - "**/ast-grep/**"
+  - "**/.ast-grep/**"
 utils:
   comment:
     any:

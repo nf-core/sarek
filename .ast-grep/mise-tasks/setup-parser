@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
+#MISE description="Build and smoke-test the Nextflow parser"
+#MISE alias="setup"
 set -euo pipefail
 
-root=$(dirname "$(realpath "$0")")
+root=$(dirname "$(dirname "$(realpath "$0")")")
 revision=21b5ed2114207b93439e283d2bc2107e1420b4bf
 checksum=e1f59765101586b08f2033d90c592553e8c3bfbb97b3ae0976b8921dd298db06
 compiler=${CC:-cc}
@@ -35,3 +37,5 @@ source_dir="$temporary/tree-sitter-nextflow-$revision"
 mkdir -p "$root/lib"
 cp "$source_dir/LICENSE" "$root/lib/LICENSE"
 mv "$temporary/libnextflow.$extension" "$root/lib/libnextflow.$extension"
+printf 'workflow { channel.of(42).view() }' | ast-grep run -c "$root/sgconfig.yml" \
+    -l nextflow -p 'channel.of($VALUE)' --stdin

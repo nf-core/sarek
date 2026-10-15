@@ -18,10 +18,10 @@ jobs:
 
       - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3
         with:
-          working_directory: ast-grep
+          working_directory: .ast-grep
 
       - name: Set up Nextflow structural checks
-        run: mise -C ast-grep run setup
+        run: mise -C .ast-grep run setup-parser
 
       - name: Run prek
         uses: j178/prek-action@5337cb91e0fa35a7ff31b9ca345126d8bbbcdf16 # v2
