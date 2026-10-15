@@ -684,6 +684,16 @@ Sarek can be started at different points in the analysis by setting the paramete
 | [Strelka](https://github.com/Illumina/strelka)                                                                                      |  x  |  x  |   -   |    -     |     -      |           x            |
 | [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                                                      |  x  |  x  |   x   |    x     |     x      |           x            |
 | [Varlociraptor](https://varlociraptor.github.io/landing/)                                                                           |  x  |  x  |   x   |    x     |     x      |           x            |
+| [VarNet](https://github.com/skandlab/VarNet)                                                                                        |  x  |  x  |   x   |    -     |     -      |           x            |
+
+## What are the limitations of VarNet?
+
+VarNet runs on tumor-normal pairs only. Tumor-only mode needs dbSNP and gnomAD resource files that are not distributed with the VarNet package. To call tumor-only samples with VarNet, use the [VarNet Docker image](https://github.com/skandlab/VarNet) directly.
+
+VarNet has the following additional constraints:
+
+- VarNet VCF files are excluded from `--normalize_vcfs`, `--filter_vcfs` and `--snv_consensus_calling`, because their headers do not declare contigs or all INFO fields.
+- VarNet is distributed under the [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0/), which does not permit commercial use.
 
 ## How to run ASCAT with whole-exome sequencing data?
 

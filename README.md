@@ -64,6 +64,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `Sentieon Haplotyper`
   - `Strelka`
   - `TIDDIT`
+  - `VarNet`
 - Post-variant calling options, one of:
   - Filtering (`bcftools view` (default: filter by `PASS,.`)), normalisation (`bcftools norm`) and consensus calling (`bcftools isec`, default: called by at least 2 tools `-n+2`) on all vcfs and/or `bcftools concat` for germline vcfs
   - `Varlociraptor` for all vcfs

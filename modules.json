@@ -601,6 +601,16 @@
                         "git_sha": "289374af2f576e1040db10c42759c4a4804ffeb5",
                         "installed_by": ["modules"]
                     },
+                    "varnet/filter": {
+                        "branch": "master",
+                        "git_sha": "45778ac3f84844e33a7afd9282a3a26409c277b2",
+                        "installed_by": ["modules"]
+                    },
+                    "varnet/predict": {
+                        "branch": "master",
+                        "git_sha": "45778ac3f84844e33a7afd9282a3a26409c277b2",
+                        "installed_by": ["modules"]
+                    },
                     "vcflib/vcffilter": {
                         "branch": "master",
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
