@@ -14,6 +14,7 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 - [#2177](https://github.com/nf-core/sarek/pull/2177) - Add Parabricks DeepVariant (`--tools parabricks_deepvariant`) as GPU-accelerated germline variant caller
 - [#2268](https://github.com/nf-core/sarek/pull/2268) - Add parabricks/applybqsr
 - [#2284](https://github.com/nf-core/sarek/pull/2284) - Add `manifest.diagram` to `nextflow.config`
+- [#2327](https://github.com/nf-core/sarek/pull/2327) - Add nf-snapshot output check to the `test_full` profile ([@adamrtalbot](https://github.com/adamrtalbot))
 
 ### Changed
 
