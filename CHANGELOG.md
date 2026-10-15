@@ -47,6 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added
 
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Set up pinned ast-grep tooling and the Nextflow parser for structural checks ([@edmundmiller](https://github.com/edmundmiller)).
+
 #### Changed
 
 - [#2271](https://github.com/nf-core/sarek/pull/2271) - Back to dev (3.10.1dev)

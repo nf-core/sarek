@@ -44,6 +44,12 @@ repos:
         args: ["-output", "json"]
   - repo: local
     hooks:
+      - id: nextflow-ast-grep
+        name: Test and scan Nextflow structural rules
+        entry: npm --prefix ast-grep run check
+        language: system
+        files: '^(ast-grep/|main\.nf$|workflows/.*\.nf$|subworkflows/local/.*\.nf$|modules/local/.*\.nf$)'
+        pass_filenames: false
       - id: block-pipeline-outdir
         name: Prevent committing output from pipeline test runs to the pipeline code itself
         entry: ./.hooks/block_pipeline_outdir.sh
