@@ -7,7 +7,7 @@
                 "nf-core": {
                     "ascat": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "d91c5a536f501b122e528222ec32630b0e3df5fd",
                         "installed_by": ["modules"]
                     },
                     "bbmap/bbsplit": {
