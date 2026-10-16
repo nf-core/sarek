@@ -249,6 +249,7 @@ workflow PIPELINE_COMPLETION {
 def validateInputParameters() {
     genomeExistsError()
     sparkAndBam()
+    lofteeGerpRequiresLoftee()
 }
 
 // Exit pipeline if incorrect --genome key provided
@@ -268,6 +269,12 @@ def sparkAndBam() {
         def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  --use_gatk_spark with 'markduplicates' is not compatible with --save_mapped.\n" + "  Spark markduplicates requires name-sorted input, so the saved mapped\n" + "  alignment (BAM or CRAM) would be name-sorted and cannot be indexed.\n" + "  Either drop --save_mapped, or switch to the non-Spark markduplicates path.\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         System.err.println(error_string)
         error(error_string)
+    }
+}
+
+def lofteeGerpRequiresLoftee() {
+    if (params.vep_loftee_gerp_bigwig && !params.vep_loftee) {
+        error("--vep_loftee_gerp_bigwig requires --vep_loftee.")
     }
 }
 
