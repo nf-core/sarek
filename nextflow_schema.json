@@ -364,6 +364,14 @@
                     "description": "Overwrite ASCAT purity.",
                     "help_text": "Overwrites ASCAT's `rho_manual` parameter. Expert use only, see [here](https://raw.githubusercontent.com/VanLoo-lab/ascat/master/man/ASCAT-manual.pdf) for details.\nRequires that `--ascat_ploidy` is set."
                 },
+                "ascat_penalty": {
+                    "type": "number",
+                    "default": 70,
+                    "minimum": 0,
+                    "fa_icon": "fas fa-sliders-h",
+                    "description": "Set the penalty for ASCAT segmentation.",
+                    "help_text": "Controls the sensitivity of ASCAT's ascat.aspcf() function to segment breakpoints. Lower values allow more breakpoints, while higher values favour fewer breakpoints. Default: 70."
+                },
                 "cf_chrom_len": {
                     "type": "string",
                     "format": "file-path",
