@@ -775,7 +775,7 @@ From 'Reference files' https://github.com/VanLoo-lab/ascat:
 
    ASCAT generates a list of GC correction loci with sufficient coverage in a sample, then intersects that with the list of all loci with tumour logR values in that sample. If the intersection is <10% the size of the latter, it will fail with an error. Because the Battenberg loci/allele sets are very dense, subsetting to on-target regions is still too many loci. This script ensures that all SNPs with GC correction information are included in the loci list, plus a random sample of another 30% of all on target loci. You may need to vary this proportion depending on your set of targets. A good rule of thumb is that the size of your GC correction loci list should be about 15% the size of your total loci list. This allows for a margin of error.
 
-   Please note that loci files provided from ASCAT developers (https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WES) are not 'chr'-based (chromosome names are '1', '2', '3', etc. and not 'chr1', 'chr2', 'chr3', etc.). If your BAMs are 'chr'-based, you will need to add 'chr'
+   Please note that loci files provided from ASCAT developers (<https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WES>) are not 'chr'-based (chromosome names are '1', '2', '3', etc. and not 'chr1', 'chr2', 'chr3', etc.). If your BAMs are 'chr'-based, you will need to add 'chr'
 
    ```bash
    for i in {1..22} X;
@@ -790,30 +790,30 @@ From 'Reference files' https://github.com/VanLoo-lab/ascat:
 
    # Function to check and correct 'chr' prefix
    check_and_correct_chr_prefix() {
-       local file=$1
-       local chr_number=$2
+      local file=$1
+      local chr_number=$2
 
-       # Check if file exists
-       if [ ! -f "$file" ]; then
-           echo "Error: File $file not found."
-           exit 1
-       fi
+      # Check if file exists
+      if [ ! -f "$file" ]; then
+          echo "Error: File $file not found."
+          exit 1
+      fi
 
-       # Check first line of the file
-       first_line=$(head -n 1 "$file")
+      # Check first line of the file
+      first_line=$(head -n 1 "$file")
 
-       if [[ $first_line == chr${chr_number}* ]]; then
-           echo "File $file already has correct 'chr' prefix. No changes needed."
-       elif [[ $first_line == chrchr${chr_number}* ]]; then
-           echo "File $file has duplicate 'chr' prefix. Correcting..."
-           sed -i 's/^chrchr/chr/' "$file"
-       elif [[ $first_line == ${chr_number}* ]]; then
-           echo "File $file is missing 'chr' prefix. Adding..."
-           sed -i 's/^/chr/' "$file"
-       else
-           echo "Error: Unexpected format in $file. Please check manually."
-           exit 1
-       fi
+      if [[ $first_line == chr${chr_number}* ]]; then
+          echo "File $file already has correct 'chr' prefix. No changes needed."
+      elif [[ $first_line == chrchr${chr_number}* ]]; then
+          echo "File $file has duplicate 'chr' prefix. Correcting..."
+          sed -i 's/^chrchr/chr/' "$file"
+      elif [[ $first_line == ${chr_number}* ]]; then
+          echo "File $file is missing 'chr' prefix. Adding..."
+          sed -i 's/^/chr/' "$file"
+      else
+          echo "Error: Unexpected format in $file. Please check manually."
+          exit 1
+      fi
    }
 
    # Check and correct 'chr' prefix for each loci file
