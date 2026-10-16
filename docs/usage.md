@@ -695,7 +695,7 @@ The sensitivity of ASCAT segmentation can be adjusted using
 `--ascat_penalty`. This parameter controls the penalty for introducing
 additional breakpoints in the `ascat.aspcf()` function.
 
-The default value is `70`. Lower values generally result in more
+The default value is `70` [see code](https://github.com/VanLoo-lab/ascat/blob/61ddf3b24453eea91134798cc41d4e828a82fa90/ASCAT/R/ascat.aspcf.R#L26). Lower values generally result in more
 breakpoints, while higher values favour fewer breakpoints.
 
 For example, to use a penalty of `25`:
