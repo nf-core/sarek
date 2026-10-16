@@ -689,6 +689,24 @@ Sarek can be started at different points in the analysis by setting the paramete
 
 ASCAT runs out of the box on whole genome sequencing data using iGenomes resources. While the ASCAT implementation in sarek is capable of running with whole-exome sequencing data, the needed references are currently not provided with the igenomes.config. According to the [developers](https://github.com/VanLoo-lab/ascat/issues/97) of ASCAT, loci and allele files (one file per chromosome) can be downloaded directly from the [Battenberg repository](https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52).
 
+### Adjusting ASCAT segmentation penalty
+
+The sensitivity of ASCAT segmentation can be adjusted using
+`--ascat_penalty`. This parameter controls the penalty for introducing
+additional breakpoints in the `ascat.aspcf()` function.
+
+The default value is `70`. Lower values generally result in more
+breakpoints, while higher values favour fewer breakpoints.
+
+For example, to use a penalty of `25`:
+
+```bash
+nextflow run nf-core/sarek \
+    --tools ascat \
+    --ascat_penalty 25 \
+    ...
+```
+
 Please note that:
 
 - Row names (for GC and RT correction files) should be `${chr}_${position}` (there is no SNP/probe ID for HTS data).
