@@ -53,14 +53,14 @@
                 "test_VEP.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "test_VEP.ann.vcf.gz:header.contains(|LoF|),false"
+                "test_VEP.ann.vcf.gz:header.contains(|LoF|),true"
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-16T14:12:37.26289814",
+        "timestamp": "2026-10-16T14:53:24.494997928",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.0"
+            "nextflow": "25.10.4"
         }
     },
     "Fails with profile test --dbnsfp and no dbnsfp_tbi": {
@@ -74,13 +74,13 @@
             "No VCF files",
             "No warnings",
             [
-                "[ERROR] Execution halted due to dbnsfp inconsistency."
+                "Execution halted due to dbnsfp inconsistency."
             ]
         ],
-        "timestamp": "2026-10-16T14:11:13.833608649",
+        "timestamp": "2026-10-16T14:51:39.45754633",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.0"
+            "nextflow": "25.10.4"
         }
     },
     "Fails with profile test --tools vep --vep_cache_version 1 --build_only_index": {
@@ -94,14 +94,14 @@
             "No VCF files",
             "No warnings",
             [
-                "[ERROR] This path is not available within annotation-cache.",
+                "This path is not available within annotation-cache.",
                 "Please check https://annotation-cache.github.io/ to create a request for it."
             ]
         ],
-        "timestamp": "2026-10-16T14:10:25.425947013",
+        "timestamp": "2026-10-16T14:48:12.675160389",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.0"
+            "nextflow": "25.10.4"
         }
     }
 }
