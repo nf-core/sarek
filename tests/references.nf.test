@@ -1,0 +1,47 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+
+    def references_base_path = 'https://raw.githubusercontent.com/nf-core/references-datasheets/latest/genomes/Homo_sapiens/GATK'
+
+    def test_scenario = [
+        [
+            name: "-profile test --references genomes/Homo_sapiens/GATK/GRCh38_chr22.yml --genome null",
+            params: [
+                genome: null,
+                references: references_base_path + '/GRCh38_chr22.yml',
+                snpeff_db: 'WBcel235.99',
+                vep_cache_version: '114',
+                vep_genome: 'WBcel235',
+                vep_species: 'caenorhabditis_elegans',
+            ],
+        ],
+        [
+            name: "-profile test --igenomes_ignore --genome GRCh38_chr22 --references_base_path genomes/Homo_sapiens/GATK",
+            params: [
+                genome: 'GRCh38_chr22',
+                igenomes_ignore: true,
+                references_base_path: references_base_path,
+                snpeff_db: 'WBcel235.99',
+                vep_cache_version: '114',
+                vep_genome: 'WBcel235',
+                vep_species: 'caenorhabditis_elegans',
+            ],
+        ],
+        [
+            name: "-profile test --references genomes/Homo_sapiens/GATK/GRCh38_chr22.yml",
+            params: [
+                references: references_base_path + '/GRCh38_chr22.yml',
+            ],
+            failure: true,
+            snapshot: 'stdout',
+            snapshot_include: 'Use either --references or --genome',
+        ],
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}
