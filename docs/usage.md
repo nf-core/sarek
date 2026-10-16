@@ -705,8 +705,6 @@ nextflow run nf-core/sarek \
     --tools ascat \
     --ascat_penalty 25 \
     ...
-```
-
 Please note that:
 
 - Row names (for GC and RT correction files) should be `${chr}_${position}` (there is no SNP/probe ID for HTS data).
