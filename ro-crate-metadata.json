@@ -1,6 +1,6 @@
 {
     "@context": [
-        "https://w3id.org/ro/crate/1.1/context",
+        "https://w3id.org/ro/crate/1.2/context",
         {
             "GithubService": "https://w3id.org/ro/terms/test#GithubService",
             "JenkinsService": "https://w3id.org/ro/terms/test#JenkinsService",
@@ -105,7 +105,7 @@
             },
             "mentions": [
                 {
-                    "@id": "#a0be6c6d-e13c-4e4c-8fbf-33103534df11"
+                    "@id": "#79f1a2ef-7216-496f-a3b1-fb9dd9a3d585"
                 }
             ],
             "name": "nf-core/sarek"
@@ -118,7 +118,7 @@
             },
             "conformsTo": [
                 {
-                    "@id": "https://w3id.org/ro/crate/1.1"
+                    "@id": "https://w3id.org/ro/crate/1.2"
                 },
                 {
                     "@id": "https://w3id.org/workflowhub/workflow-ro-crate/1.0"
@@ -145,16 +145,16 @@
             ],
             "contributor": [
                 {
-                    "@id": "#ce9fcd32-045f-486d-885d-d3b16befe549"
+                    "@id": "#6802b55f-32f5-4512-afd9-eb9baa88c00a"
                 },
                 {
-                    "@id": "#826dd9aa-a6c6-44ee-817d-923ac6242674"
+                    "@id": "#d65aa496-dce4-44bf-8745-aef55fb11c82"
                 },
                 {
                     "@id": "https://orcid.org/0000-0003-1424-7840"
                 },
                 {
-                    "@id": "#22867910-7e68-46f2-a889-89214bbadcd2"
+                    "@id": "#d265b36c-7797-4b5a-9c9c-a72fe3b47395"
                 },
                 {
                     "@id": "https://orcid.org/0000-0002-6503-2180"
@@ -163,7 +163,7 @@
                     "@id": "https://orcid.org/0000-0001-5839-1751"
                 },
                 {
-                    "@id": "#4622d323-eefc-48b4-8a23-1fc503cf19e2"
+                    "@id": "#b41b2bad-9379-4989-a00b-468f67ca558a"
                 },
                 {
                     "@id": "https://orcid.org/0000-0002-5547-8568"
@@ -175,7 +175,7 @@
                     "@id": "https://orcid.org/0000-0001-5475-0892"
                 },
                 {
-                    "@id": "#56a5ef4c-4012-43c6-a2f3-fcf29618b33c"
+                    "@id": "#a66108a3-70e4-4526-bf21-524ce0ffced4"
                 },
                 {
                     "@id": "https://orcid.org/0000-0002-4257-7241"
@@ -187,7 +187,7 @@
                     "@id": "https://orcid.org/0000-0001-7409-305X"
                 },
                 {
-                    "@id": "#9cdfe5eb-9b21-45f9-8791-58d7da23532a"
+                    "@id": "#143e569b-7ed6-48fd-ad76-f1a819916d43"
                 },
                 {
                     "@id": "https://orcid.org/0000-0003-1387-0251"
@@ -196,28 +196,28 @@
                     "@id": "https://orcid.org/0000-0002-6399-9101"
                 },
                 {
-                    "@id": "#c81c1801-7d24-4bd4-bbe0-e235f9d5fc15"
+                    "@id": "#9ea5580a-d421-4c67-8341-61370dca7691"
                 },
                 {
-                    "@id": "#ec42ab72-f426-4c83-9985-6663c2bb70aa"
+                    "@id": "#9b80c3fc-6f19-4b55-b5d6-f4963f6ebbf3"
                 },
                 {
-                    "@id": "#0761a811-48af-44ef-bd48-863fe063cfb8"
+                    "@id": "#0406e500-6d70-4f97-bb6f-35ad242bfee1"
                 },
                 {
-                    "@id": "#ef18a676-2bcc-43f1-8bed-a7348de96420"
+                    "@id": "#4222d25b-f1c8-4802-ab22-a0983b9c7596"
                 },
                 {
                     "@id": "https://orcid.org/0000-0001-6813-3051"
                 },
                 {
-                    "@id": "#f406472c-4d68-42a7-8bc1-c3af34d1d344"
+                    "@id": "#60d6bc3d-8894-4ada-94d0-a37f39b758c6"
                 },
                 {
-                    "@id": "#986151a9-9476-4bf9-a2e4-4fde7f4bc24d"
+                    "@id": "#23efbcc8-cea2-4b6f-8933-bf0f1b8e4eaa"
                 },
                 {
-                    "@id": "#8978e547-cc04-4572-8b1e-4364f37e110b"
+                    "@id": "#c0b4a634-488b-4b6f-bdc7-7ce05a69a841"
                 },
                 {
                     "@id": "https://orcid.org/0000-0003-3716-4917"
@@ -229,34 +229,34 @@
                     "@id": "https://orcid.org/0000-0002-3830-7046"
                 },
                 {
-                    "@id": "#526b8b48-42ae-4983-8301-e2276dd3dd6f"
+                    "@id": "#6b4ca503-1b4a-465c-9e97-5a5ef25ae125"
                 },
                 {
                     "@id": "https://orcid.org/0000-0001-6104-9260"
                 },
                 {
-                    "@id": "#ae25ae52-e126-459f-8bd4-97fe22b93d0c"
+                    "@id": "#210cf0c7-3211-438e-a089-f1794c826735"
                 },
                 {
                     "@id": "https://orcid.org/0000-0003-0708-9530"
                 },
                 {
-                    "@id": "#a1d0c43b-aa03-4269-b723-3fd0c95acbfd"
+                    "@id": "#3616d3ad-262e-45f4-af9a-7d147b472606"
                 },
                 {
                     "@id": "https://orcid.org/0009-0000-0202-2703"
                 },
                 {
-                    "@id": "#3636074e-8323-4f74-ab92-baceae591d1e"
+                    "@id": "#05550169-494d-41a7-8d83-7f47d0056d3c"
                 },
                 {
-                    "@id": "#82603e9a-0ee6-406c-a7c3-ec4fa1a178a4"
+                    "@id": "#65686fed-b78a-4163-8e34-646d52d432be"
                 },
                 {
-                    "@id": "#8b68a330-7395-45ba-921f-9b28c3032419"
+                    "@id": "#7b3e5d61-ee04-4642-8111-17222cb21d46"
                 },
                 {
-                    "@id": "#07e561e0-8c13-46a9-a166-b1ee57bfeb23"
+                    "@id": "#ba7e89cd-1ff8-4e66-992c-8fc5f3d53aa6"
                 },
                 {
                     "@id": "https://orcid.org/0000-0002-1127-0765"
@@ -277,7 +277,7 @@
                     "@id": "https://orcid.org/0000-0003-3966-8481"
                 },
                 {
-                    "@id": "#e580d9da-62c5-4e35-9464-e393e207a4f4"
+                    "@id": "#c0b3fbd1-d329-47c4-afcb-47b3589c8321"
                 },
                 {
                     "@id": "https://orcid.org/0000-0003-0148-9787"
@@ -286,7 +286,7 @@
                     "@id": "https://orcid.org/0000-0003-0603-7907"
                 },
                 {
-                    "@id": "#2fa09808-8005-4400-be37-b8652ddbda44"
+                    "@id": "#7fed8e77-c11d-46ad-a4bb-c6f45f73ef30"
                 },
                 {
                     "@id": "https://orcid.org/0000-0002-9759-2211"
@@ -304,17 +304,17 @@
                     "@id": "https://orcid.org/0009-0001-9152-7291"
                 },
                 {
-                    "@id": "#a9990691-6068-45bf-97b3-8eddf1786bd0"
+                    "@id": "#001c2e3b-502e-4054-9345-b29ced506443"
                 },
                 {
-                    "@id": "#37ecb263-7f00-45a2-a9b2-f0da316fc4fb"
+                    "@id": "#9b5a513c-0051-4c37-91b0-71aa6228836a"
                 },
                 {
                     "@id": "https://orcid.org/0009-0009-0647-7639"
                 }
             ],
             "dateCreated": "",
-            "dateModified": "2026-08-12T20:36:26Z",
+            "dateModified": "2026-10-13T11:20:57Z",
             "dct:conformsTo": "https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE/",
             "keywords": [
                 "nf-core",
@@ -353,10 +353,10 @@
             },
             "url": [
                 "https://github.com/nf-core/sarek",
-                "https://nf-co.re/sarek/dev/"
+                "https://nf-co.re/sarek/3.11.0/"
             ],
             "version": [
-                "3.10.1dev"
+                "3.11.0"
             ]
         },
         {
@@ -372,11 +372,11 @@
             "version": "!>=25.10.4"
         },
         {
-            "@id": "#a0be6c6d-e13c-4e4c-8fbf-33103534df11",
+            "@id": "#79f1a2ef-7216-496f-a3b1-fb9dd9a3d585",
             "@type": "TestSuite",
             "instance": [
                 {
-                    "@id": "#7f57da73-5ac2-4840-9bb0-b06d74da7d93"
+                    "@id": "#3966592a-5d77-4034-83d2-aa0799a1d521"
                 }
             ],
             "mainEntity": {
@@ -385,7 +385,7 @@
             "name": "Test suite for nf-core/sarek"
         },
         {
-            "@id": "#7f57da73-5ac2-4840-9bb0-b06d74da7d93",
+            "@id": "#3966592a-5d77-4034-83d2-aa0799a1d521",
             "@type": "TestInstance",
             "name": "GitHub Actions workflow for testing nf-core/sarek",
             "resource": "repos/nf-core/sarek/actions/workflows/nf-test.yml",
@@ -547,14 +547,14 @@
             "url": "https://github.com/szilvajuhos"
         },
         {
-            "@id": "#ce9fcd32-045f-486d-885d-d3b16befe549",
+            "@id": "#6802b55f-32f5-4512-afd9-eb9baa88c00a",
             "@type": "Person",
             "email": "abhi18av@users.noreply.github.com",
             "name": "Abhinav Sharma",
             "url": "https://github.com/abhi18av"
         },
         {
-            "@id": "#826dd9aa-a6c6-44ee-817d-923ac6242674",
+            "@id": "#d65aa496-dce4-44bf-8745-aef55fb11c82",
             "@type": "Person",
             "affiliation": "Seqera",
             "email": "12817534+adamrtalbot@users.noreply.github.com",
@@ -564,13 +564,13 @@
         {
             "@id": "https://orcid.org/0000-0003-1424-7840",
             "@type": "Person",
-            "name": "Adrian L\u00e4rkeryd",
+            "name": "Adrian Lärkeryd",
             "url": "https://github.com/adrlar"
         },
         {
-            "@id": "#22867910-7e68-46f2-a889-89214bbadcd2",
+            "@id": "#d265b36c-7797-4b5a-9c9c-a72fe3b47395",
             "@type": "Person",
-            "name": "\u00c0itor Olivares",
+            "name": "Àitor Olivares",
             "url": "https://github.com/AitorPeseta"
         },
         {
@@ -588,7 +588,7 @@
             "url": "https://github.com/ameynert"
         },
         {
-            "@id": "#4622d323-eefc-48b4-8a23-1fc503cf19e2",
+            "@id": "#b41b2bad-9379-4989-a00b-468f67ca558a",
             "@type": "Person",
             "email": "37172585+asp8200@users.noreply.github.com",
             "name": "Anders Sune Pedersen",
@@ -610,13 +610,13 @@
             "@id": "https://orcid.org/0000-0001-5475-0892",
             "@type": "Person",
             "email": "bekire@gmail.com",
-            "name": "Bekir Erg\u00fcner",
+            "name": "Bekir Ergüner",
             "url": "https://github.com/berguner"
         },
         {
-            "@id": "#56a5ef4c-4012-43c6-a2f3-fcf29618b33c",
+            "@id": "#a66108a3-70e4-4526-bf21-524ce0ffced4",
             "@type": "Person",
-            "name": "Bj\u00f6rn Nystedt",
+            "name": "Björn Nystedt",
             "url": "https://github.com/bjornnystedt"
         },
         {
@@ -640,7 +640,7 @@
             "url": "https://github.com/davidmasp"
         },
         {
-            "@id": "#9cdfe5eb-9b21-45f9-8791-58d7da23532a",
+            "@id": "#143e569b-7ed6-48fd-ad76-f1a819916d43",
             "@type": "Person",
             "affiliation": "Seqera",
             "email": "20095261+edmundmiller@users.noreply.github.com",
@@ -650,9 +650,9 @@
         {
             "@id": "https://orcid.org/0000-0003-1387-0251",
             "@type": "Person",
-            "affiliation": "Quantitative Biology Center (QBiC) T\u00fcbingen, University of T\u00fcbingen, Germany",
+            "affiliation": "Quantitative Biology Center (QBiC) Tübingen, University of Tübingen, Germany",
             "email": "45968370+famosab@users.noreply.github.com",
-            "name": "Famke B\u00e4uerle",
+            "name": "Famke Bäuerle",
             "url": "https://github.com/famosab"
         },
         {
@@ -663,27 +663,27 @@
             "url": "https://github.com/lescai"
         },
         {
-            "@id": "#c81c1801-7d24-4bd4-bbe0-e235f9d5fc15",
+            "@id": "#9ea5580a-d421-4c67-8341-61370dca7691",
             "@type": "Person",
             "email": "f.martinezpico@gmail.com",
-            "name": "Francisco Mart\u00ednez",
+            "name": "Francisco Martínez",
             "url": "https://github.com/nevinwu"
         },
         {
-            "@id": "#ec42ab72-f426-4c83-9985-6663c2bb70aa",
+            "@id": "#9b80c3fc-6f19-4b55-b5d6-f4963f6ebbf3",
             "@type": "Person",
             "name": "Gavin Mackenzie",
             "url": "https://github.com/GCJMackenzie"
         },
         {
-            "@id": "#0761a811-48af-44ef-bd48-863fe063cfb8",
+            "@id": "#0406e500-6d70-4f97-bb6f-35ad242bfee1",
             "@type": "Person",
             "email": "gisela.gabernet@gmail.com",
             "name": "Gisela Gabernet",
             "url": "https://github.com/ggabernet"
         },
         {
-            "@id": "#ef18a676-2bcc-43f1-8bed-a7348de96420",
+            "@id": "#4222d25b-f1c8-4802-ab22-a0983b9c7596",
             "@type": "Person",
             "email": "127763095+grantn5@users.noreply.github.com",
             "name": "Grant Neilson",
@@ -692,11 +692,11 @@
         {
             "@id": "https://orcid.org/0000-0001-6813-3051",
             "@type": "Person",
-            "name": "Max K\u00e4ller",
+            "name": "Max Käller",
             "url": "https://github.com/gulfshores"
         },
         {
-            "@id": "#f406472c-4d68-42a7-8bc1-c3af34d1d344",
+            "@id": "#60d6bc3d-8894-4ada-94d0-a37f39b758c6",
             "@type": "Person",
             "affiliation": "Seqera",
             "email": "drpatelh@users.noreply.github.com",
@@ -704,14 +704,14 @@
             "url": "https://github.com/drpatelh"
         },
         {
-            "@id": "#986151a9-9476-4bf9-a2e4-4fde7f4bc24d",
+            "@id": "#23efbcc8-cea2-4b6f-8933-bf0f1b8e4eaa",
             "@type": "Person",
             "email": "yehwhey@gmail.com",
             "name": "Hongwei Ye",
             "url": "https://github.com/YeHW"
         },
         {
-            "@id": "#8978e547-cc04-4572-8b1e-4364f37e110b",
+            "@id": "#c0b4a634-488b-4b6f-bdc7-7ce05a69a841",
             "@type": "Person",
             "name": "James A. Fellows Yates",
             "url": "https://github.com/jfy133"
@@ -738,21 +738,21 @@
             "url": "https://github.com/kjellinjonas"
         },
         {
-            "@id": "#526b8b48-42ae-4983-8301-e2276dd3dd6f",
+            "@id": "#6b4ca503-1b4a-465c-9e97-5a5ef25ae125",
             "@type": "Person",
             "email": "jc.fernandez.navarro@gmail.com",
-            "name": "Jos\u00e9 Fern\u00e1ndez Navarro",
+            "name": "José Fernández Navarro",
             "url": "https://github.com/jfnavarro"
         },
         {
             "@id": "https://orcid.org/0000-0001-6104-9260",
             "@type": "Person",
             "email": "mirp.julia@gmail.com",
-            "name": "J\u00falia Mir Pedrol",
+            "name": "Júlia Mir Pedrol",
             "url": "https://github.com/mirpedrol"
         },
         {
-            "@id": "#ae25ae52-e126-459f-8bd4-97fe22b93d0c",
+            "@id": "#210cf0c7-3211-438e-a089-f1794c826735",
             "@type": "Person",
             "affiliation": "Seqera",
             "email": "kenibrewer@users.noreply.github.com",
@@ -766,7 +766,7 @@
             "url": "https://github.com/lassefolkersen"
         },
         {
-            "@id": "#a1d0c43b-aa03-4269-b723-3fd0c95acbfd",
+            "@id": "#3616d3ad-262e-45f4-af9a-7d147b472606",
             "@type": "Person",
             "email": "l.conde@ucl.ac.uk",
             "name": "Lucia Conde",
@@ -775,30 +775,30 @@
         {
             "@id": "https://orcid.org/0009-0000-0202-2703",
             "@type": "Person",
-            "name": "Louis Le N\u00e9zet",
+            "name": "Louis Le Nézet",
             "url": "https://github.com/LouisLeNezet"
         },
         {
-            "@id": "#3636074e-8323-4f74-ab92-baceae591d1e",
+            "@id": "#05550169-494d-41a7-8d83-7f47d0056d3c",
             "@type": "Person",
             "email": "malin.larsson@liu.se",
             "name": "Malin Larsson",
             "url": "https://github.com/malinlarsson"
         },
         {
-            "@id": "#82603e9a-0ee6-406c-a7c3-ec4fa1a178a4",
+            "@id": "#65686fed-b78a-4163-8e34-646d52d432be",
             "@type": "Person",
             "name": "Marcel Martin",
             "url": "https://github.com/marcelm"
         },
         {
-            "@id": "#8b68a330-7395-45ba-921f-9b28c3032419",
+            "@id": "#7b3e5d61-ee04-4642-8111-17222cb21d46",
             "@type": "Person",
             "name": "Nick Smith",
             "url": "https://github.com/nickhsmith"
         },
         {
-            "@id": "#07e561e0-8c13-46a9-a166-b1ee57bfeb23",
+            "@id": "#ba7e89cd-1ff8-4e66-992c-8fc5f3d53aa6",
             "@type": "Person",
             "email": "90359308+nschcolnicov@users.noreply.github.com",
             "name": "Nicolas Schcolnicov",
@@ -844,7 +844,7 @@
             "url": "https://github.com/pcantalupo"
         },
         {
-            "@id": "#e580d9da-62c5-4e35-9464-e393e207a4f4",
+            "@id": "#c0b3fbd1-d329-47c4-afcb-47b3589c8321",
             "@type": "Person",
             "affiliation": "Seqera",
             "email": "phil.ewels@scilifelab.se",
@@ -866,7 +866,7 @@
             "url": "https://github.com/skrakau"
         },
         {
-            "@id": "#2fa09808-8005-4400-be37-b8652ddbda44",
+            "@id": "#7fed8e77-c11d-46ad-a4bb-c6f45f73ef30",
             "@type": "Person",
             "email": "sminot@gmail.com",
             "name": "Sam Minot",
@@ -905,13 +905,13 @@
             "url": "https://github.com/SusiJo"
         },
         {
-            "@id": "#a9990691-6068-45bf-97b3-8eddf1786bd0",
+            "@id": "#001c2e3b-502e-4054-9345-b29ced506443",
             "@type": "Person",
             "name": "Tobias Koch",
             "url": "https://github.com/KochTobi"
         },
         {
-            "@id": "#37ecb263-7f00-45a2-a9b2-f0da316fc4fb",
+            "@id": "#9b5a513c-0051-4c37-91b0-71aa6228836a",
             "@type": "Person",
             "name": "Winni Kretzschmar",
             "url": "https://github.com/winni2k"
@@ -920,7 +920,7 @@
             "@id": "https://orcid.org/0009-0009-0647-7639",
             "@type": "Person",
             "email": "158295213+Patricie34@users.noreply.github.com",
-            "name": "Patricie Skal\u00e1kov\u00e1",
+            "name": "Patricie Skaláková",
             "url": "https://github.com/Patricie34"
         }
     ]
