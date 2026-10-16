@@ -4,9 +4,9 @@
             2,
             {
                 "ENSEMBLVEP_VEP": {
-                    "ensemblvep": "116.0",
+                    "ensemblvep": "116.3",
                     "perl-math-cdf": "0.1",
-                    "tabix": "1.23.1"
+                    "tabix": "1.21"
                 }
             },
             [
@@ -53,14 +53,14 @@
                 "test_VEP.ann.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                "test_VEP.ann.vcf.gz:header.contains(|LoF|),true"
+                "test_VEP.ann.vcf.gz:header.contains(|LoF|),false"
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-08T10:26:06.53157943",
+        "timestamp": "2026-10-16T14:12:37.26289814",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.10.0"
         }
     },
     "Fails with profile test --dbnsfp and no dbnsfp_tbi": {
@@ -74,13 +74,13 @@
             "No VCF files",
             "No warnings",
             [
-                "Execution halted due to dbnsfp inconsistency."
+                "[ERROR] Execution halted due to dbnsfp inconsistency."
             ]
         ],
-        "timestamp": "2026-05-27T13:37:29.419583359",
+        "timestamp": "2026-10-16T14:11:13.833608649",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
+            "nextflow": "26.10.0"
         }
     },
     "Fails with profile test --tools vep --vep_cache_version 1 --build_only_index": {
@@ -94,14 +94,14 @@
             "No VCF files",
             "No warnings",
             [
-                "This path is not available within annotation-cache.",
+                "[ERROR] This path is not available within annotation-cache.",
                 "Please check https://annotation-cache.github.io/ to create a request for it."
             ]
         ],
-        "timestamp": "2026-05-27T13:36:59.68443869",
+        "timestamp": "2026-10-16T14:10:25.425947013",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
+            "nextflow": "26.10.0"
         }
     }
 }
