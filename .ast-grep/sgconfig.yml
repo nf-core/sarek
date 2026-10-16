@@ -1,0 +1,13 @@
+ruleDirs:
+  - rules
+testConfigs:
+  - testDir: rule-tests
+customLanguages:
+  nextflow:
+    libraryPath:
+      aarch64-apple-darwin: lib/libnextflow.dylib
+      x86_64-apple-darwin: lib/libnextflow.dylib
+      aarch64-unknown-linux-gnu: lib/libnextflow.so
+      x86_64-unknown-linux-gnu: lib/libnextflow.so
+    extensions: [nf]
+    expandoChar: _
