@@ -1,19 +1,17 @@
 {
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null": {
         "content": [
-            9,
+            8,
             {
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
-                },
-                "INDEX_CRAM": {
-                    "samtools": "1.24"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -121,10 +119,10 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:28:54.131141033",
+        "timestamp": "2026-10-14T11:23:41.566097232",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
@@ -138,7 +136,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -255,7 +253,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-28T14:35:23.521371406",
+        "timestamp": "2026-10-01T21:58:19.219588102",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -272,7 +270,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "STRELKA_SINGLE": {
                     "strelka": "2.9.10"
@@ -389,7 +387,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-28T14:35:07.543185264",
+        "timestamp": "2026-10-01T21:04:00.904764869",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -397,19 +395,17 @@
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null": {
         "content": [
-            9,
+            8,
             {
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
-                },
-                "INDEX_CRAM": {
-                    "samtools": "1.24"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -517,10 +513,10 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:27:44.513392658",
+        "timestamp": "2026-10-14T11:20:02.371979688",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     }
 }

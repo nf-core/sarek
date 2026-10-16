@@ -32,6 +32,27 @@ nextflow_pipeline {
             no_conda: true
         ],
         [
+            // Parabricks HaplotypeCaller alone can't satisfy --joint_germline (see the failure
+            // scenario below), but combining it with a joint-capable caller is fine: it emits its
+            // own per-sample gVCF (via tests/nextflow.config's `params.joint_germline ? "--gvcf" : ""`
+            // for PARABRICKS_HAPLOTYPECALLER) while GATK HaplotypeCaller drives the actual joint call.
+            name: "-profile test,gpu --tools parabricks_haplotypecaller,haplotypecaller --joint_germline",
+            params: [
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
+                tools: "parabricks_haplotypecaller,haplotypecaller",
+                step: "variant_calling",
+                joint_germline: true,
+                dbsnp_vqsr: null,
+                known_snps_vqsr: null,
+                known_indels_vqsr: null,
+                wes: true,
+                nucleotides_per_second: 20
+            ],
+            gpu: true,
+            no_conda: true
+        ],
+        [
             name: "Fails with --joint_germline and no joint-capable caller",
             params: [
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',

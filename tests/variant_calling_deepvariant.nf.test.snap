@@ -13,7 +13,7 @@
                     "deepvariant": "1.10.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -185,7 +185,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-28T11:29:42.272387988",
+        "timestamp": "2026-10-01T21:21:06.337862413",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -205,7 +205,7 @@
                     "deepvariant": "1.10.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "mosdepth": "0.3.10"

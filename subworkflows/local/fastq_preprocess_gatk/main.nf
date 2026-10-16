@@ -1,69 +1,69 @@
 // Create samplesheets to restart from different steps
-include { CHANNEL_ALIGN_CREATE_CSV                          } from '../../../subworkflows/local/channel_align_create_csv/main'
-include { CHANNEL_MARKDUPLICATES_CREATE_CSV                 } from '../../../subworkflows/local/channel_markduplicates_create_csv/main'
-include { CHANNEL_BASERECALIBRATOR_CREATE_CSV               } from '../../../subworkflows/local/channel_baserecalibrator_create_csv/main'
-include { CHANNEL_APPLYBQSR_CREATE_CSV                      } from '../../../subworkflows/local/channel_applybqsr_create_csv/main'
+include { CHANNEL_ALIGN_CREATE_CSV                   } from '../../../subworkflows/local/channel_align_create_csv'
+include { CHANNEL_MARKDUPLICATES_CREATE_CSV          } from '../../../subworkflows/local/channel_markduplicates_create_csv'
+include { CHANNEL_BASERECALIBRATOR_CREATE_CSV        } from '../../../subworkflows/local/channel_baserecalibrator_create_csv'
+include { CHANNEL_APPLYBQSR_CREATE_CSV               } from '../../../subworkflows/local/channel_applybqsr_create_csv'
 
 // Convert BAM files to FASTQ files
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI         } from '../../../subworkflows/local/bam_convert_samtools/main'
+include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI  } from '../../../subworkflows/local/bam_convert_samtools'
 
 // TRIM/SPLIT FASTQ Files
-include { FASTP                                             } from '../../../modules/nf-core/fastp/main'
+include { FASTP                                      } from '../../../modules/nf-core/fastp'
 
 // remove genomic contaminants with bbsplit
-include { BBMAP_BBSPLIT                                     } from '../../../modules/nf-core/bbmap/bbsplit'
+include { BBMAP_BBSPLIT                              } from '../../../modules/nf-core/bbmap/bbsplit'
 //TODO: WHAT ABOUT BBSPLIT RUNS WITH PARABRICKS?
 
 // Create umi consensus bams from fastq
-include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO                  } from '../../../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
+include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO           } from '../../../subworkflows/local/fastq_create_umi_consensus_fgbio'
 
 // Map input reads to reference genome
-include { FASTQ_ALIGN                                       } from '../../../subworkflows/local/fastq_align/main'
+include { FASTQ_ALIGN                                } from '../../../subworkflows/local/fastq_align'
 
 // Merge and index BAM files (optional)
-include { BAM_MERGE_INDEX_SAMTOOLS                          } from '../../../subworkflows/local/bam_merge_index_samtools/main'
+include { BAM_MERGE_INDEX_SAMTOOLS                   } from '../../../subworkflows/local/bam_merge_index_samtools'
 
 // Convert BAM files
-include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING           } from '../../../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING    } from '../../../modules/nf-core/samtools/convert'
 
 // Copy UMIs from read name to RX tag
-include { FGBIO_COPYUMIFROMREADNAME                         } from '../../../modules/nf-core/fgbio/copyumifromreadname/main'
+include { FGBIO_COPYUMIFROMREADNAME                  } from '../../../modules/nf-core/fgbio/copyumifromreadname'
 
 // Mark Duplicates (+QC)
-include { BAM_MARKDUPLICATES                                } from '../../../subworkflows/local/bam_markduplicates/main'
-include { BAM_MARKDUPLICATES_SPARK                          } from '../../../subworkflows/local/bam_markduplicates_spark/main'
-include { BAM_SENTIEON_DEDUP                                } from '../../../subworkflows/local/bam_sentieon_dedup/main'
+include { BAM_MARKDUPLICATES                         } from '../../../subworkflows/local/bam_markduplicates'
+include { BAM_MARKDUPLICATES_SPARK                   } from '../../../subworkflows/local/bam_markduplicates_spark'
+include { BAM_SENTIEON_DEDUP                         } from '../../../subworkflows/local/bam_sentieon_dedup'
 
 // QC on CRAM
-include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD        } from '../../../subworkflows/local/cram_qc_mosdepth_samtools/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD } from '../../../subworkflows/local/cram_qc_mosdepth_samtools'
 
 // Create recalibration tables
-include { BAM_BASERECALIBRATOR                              } from '../../../subworkflows/local/bam_baserecalibrator/main'
-include { BAM_BASERECALIBRATOR_SPARK                        } from '../../../subworkflows/local/bam_baserecalibrator_spark/main'
+include { BAM_BASERECALIBRATOR                       } from '../../../subworkflows/local/bam_baserecalibrator'
+include { BAM_BASERECALIBRATOR_SPARK                 } from '../../../subworkflows/local/bam_baserecalibrator_spark'
 
 // Create recalibrated cram files to use for variant calling (+QC)
-include { BAM_APPLYBQSR                                     } from '../../../subworkflows/local/bam_applybqsr/main'
-include { BAM_APPLYBQSR_SPARK                               } from '../../../subworkflows/local/bam_applybqsr_spark/main'
+include { BAM_APPLYBQSR                              } from '../../../subworkflows/nf-core/bam_applybqsr'
+include { BAM_APPLYBQSR_SPARK                        } from '../../../subworkflows/local/bam_applybqsr_spark'
 
 workflow FASTQ_PREPROCESS_GATK {
     take:
-        input_fastq
-        input_sample
-        dict
-        fasta
-        fasta_fai
-        index_alignment
-        intervals_and_num_intervals
-        intervals_for_preprocessing
-        known_sites_indels
-        known_sites_indels_tbi
-        bbsplit_index
-        save_output_as_bam
+    input_fastq
+    input_sample
+    dict
+    fasta
+    fasta_fai
+    index_alignment
+    intervals_and_num_intervals
+    intervals_for_preprocessing
+    known_sites_indels
+    known_sites_indels_tbi
+    bbsplit_index
+    save_output_as_bam
 
     main:
 
     // To gather all QC reports for MultiQC
-    reports          = channel.empty()
+    reports = channel.empty()
 
     // PREPROCESSING
 
@@ -80,22 +80,26 @@ workflow FASTQ_PREPROCESS_GATK {
                 fasta,
                 fasta_fai,
                 index_alignment,
-                params.group_by_umi_strategy)
+                params.group_by_umi_strategy,
+            )
 
-            bam_converted_from_fastq = FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.consensusbam.map{ meta, bam -> [ meta, bam, [] ] }
+            bam_converted_from_fastq = FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.consensusbam.map { meta, bam -> [meta, bam, []] }
 
             // Convert back to fastq for further preprocessing
             // fasta are not needed when converting bam to fastq -> [ id:"fasta" ], []
             // No need for fasta.fai -> []
-            interleave_input = false // Currently don't allow interleaved input
+            // Currently don't allow interleaved input
+            interleave_input = false
             CONVERT_FASTQ_UMI(
                 bam_converted_from_fastq,
                 fasta,
                 fasta_fai,
-                interleave_input)
+                interleave_input,
+            )
 
             reads_for_fastp = CONVERT_FASTQ_UMI.out.reads
-        } else {
+        }
+        else {
             reads_for_fastp = input_fastq
         }
 
@@ -105,23 +109,28 @@ workflow FASTQ_PREPROCESS_GATK {
             save_trimmed_fail = false
             save_merged = false
             FASTP(
-                reads_for_fastp.map { meta, reads -> [ meta, reads, [] ] }, // adapter_fasta folded into the reads tuple (unused)
+                reads_for_fastp.map { meta, reads -> [meta, reads, []] }, // adapter_fasta folded into the reads tuple (unused)
                 false, // we don't use discard_trimmed_pass at the moment
                 save_trimmed_fail,
-                save_merged
+                save_merged,
             )
 
-            reports = reports.mix(FASTP.out.json.collect{ _meta, json -> json })
-            reports = reports.mix(FASTP.out.html.collect{ _meta, html -> html })
+            reports = reports.mix(FASTP.out.json.collect { _meta, json -> json })
+            reports = reports.mix(FASTP.out.html.collect { _meta, html -> html })
 
             if (params.split_fastq) {
-                reads_for_bbsplit = FASTP.out.reads.map{ meta, reads ->
-                    def read_files = reads.sort(false) { a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
-                    [ meta + [ n_fastq: read_files.size() ], read_files ]
-                }.transpose()
-            } else reads_for_bbsplit = FASTP.out.reads
-
-        } else {
+                reads_for_bbsplit = FASTP.out.reads
+                    .map { meta, reads ->
+                        def read_files = reads.sort(false) { a, b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+                        [meta + [n_fastq: read_files.size()], read_files]
+                    }
+                    .transpose()
+            }
+            else {
+                reads_for_bbsplit = FASTP.out.reads
+            }
+        }
+        else {
             reads_for_bbsplit = reads_for_fastp
         }
 
@@ -130,18 +139,17 @@ workflow FASTQ_PREPROCESS_GATK {
         //
         if (params.tools && params.tools.split(',').contains('bbsplit')) {
 
-            reads_for_alignment = BBMAP_BBSPLIT (
-                                        reads_for_bbsplit,
-                                        bbsplit_index,
-                                        [],
-                                        [ [], [] ],
-                                        false
-                                    )
-                                    .primary_fastq
+            reads_for_alignment = BBMAP_BBSPLIT(
+                reads_for_bbsplit,
+                bbsplit_index,
+                [],
+                [[], []],
+                false,
+            ).primary_fastq
 
-            reports = reports.mix(BBMAP_BBSPLIT.out.stats.collect{ _meta, stats -> stats })
-
-        } else {
+            reports = reports.mix(BBMAP_BBSPLIT.out.stats.collect { _meta, stats -> stats })
+        }
+        else {
             reads_for_alignment = reads_for_bbsplit
         }
 
@@ -149,18 +157,23 @@ workflow FASTQ_PREPROCESS_GATK {
         // First, we must calculate number of lanes for each sample (meta.n_fastq)
         // This is needed to group reads from the same sample together using groupKey to avoid stalling the workflow
         // when reads from different samples are mixed together
-        reads_grouping_key = reads_for_alignment.map { meta, reads ->
-                [ meta.subMap('patient', 'sample', 'sex', 'status'), reads ]
+        reads_grouping_key = reads_for_alignment
+            .map { meta, reads ->
+                [meta.subMap('patient', 'sample', 'sex', 'status'), reads]
             }
             .groupTuple()
             .map { meta, reads ->
-                meta + [ n_fastq: reads.size() ] // We can drop the FASTQ files now that we know how many there are
+                meta + [n_fastq: reads.size()] // We can drop the FASTQ files now that we know how many there are
             }
 
-        reads_for_alignment = reads_for_alignment.map{ meta, reads ->
+        reads_for_alignment = reads_for_alignment.map { meta, reads ->
             // Update meta.id to meta.sample no multiple lanes or splitted fastqs
-            if (meta.size * meta.num_lanes == 1) [ meta + [ id:meta.sample ], reads ]
-            else [ meta, reads ]
+            if (meta.size * meta.num_lanes == 1) {
+                [meta + [id: meta.sample], reads]
+            }
+            else {
+                [meta, reads]
+            }
         }
 
         // reads will be sorted
@@ -171,10 +184,11 @@ workflow FASTQ_PREPROCESS_GATK {
         aligned_bai = channel.empty()
         // If UMIs started in read header or were put there by fastp, copy to RX tag
         if (params.umi_in_read_header || params.umi_location) {
-            FGBIO_COPYUMIFROMREADNAME(FASTQ_ALIGN.out.bam.map{meta, bam -> [meta, bam, []]})
+            FGBIO_COPYUMIFROMREADNAME(FASTQ_ALIGN.out.bam.map { meta, bam -> [meta, bam, []] })
             aligned_bam = FGBIO_COPYUMIFROMREADNAME.out.bam
             aligned_bai = FGBIO_COPYUMIFROMREADNAME.out.bai
-        } else {
+        }
+        else {
             aligned_bam = FASTQ_ALIGN.out.bam
             aligned_bai = FASTQ_ALIGN.out.bai
         }
@@ -187,17 +201,15 @@ workflow FASTQ_PREPROCESS_GATK {
             .filter { meta1, _bam, meta2 -> meta1.sample == meta2.sample }
             // Add n_fastq and other variables to meta
             .map { meta1, bam, meta2 ->
-                [ meta1 + meta2, bam ]
+                [meta1 + meta2, bam]
             }
             // Manipulate meta map to remove old fields and add new ones
             .map { meta, bam ->
-                [ meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [ data_type: 'bam', id: meta.sample ], bam ]
+                [meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [data_type: 'bam', id: meta.sample], bam]
             }
-            // Create groupKey from meta map
             .map { meta, bam ->
-                [ groupKey( meta, meta.n_fastq), bam ]
+                [groupKey(meta, meta.n_fastq), bam]
             }
-            // Group
             .groupTuple()
 
         bai_mapped = aligned_bai
@@ -205,54 +217,50 @@ workflow FASTQ_PREPROCESS_GATK {
             .filter { meta1, _bai, meta2 -> meta1.sample == meta2.sample }
             // Add n_fastq and other variables to meta
             .map { meta1, bai, meta2 ->
-                [ meta1 + meta2, bai ]
+                [meta1 + meta2, bai]
             }
             // Manipulate meta map to remove old fields and add new ones
             .map { meta, bai ->
-                [ meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [ data_type: 'bai', id: meta.sample ], bai ]
+                [meta - meta.subMap('id', 'read_group', 'data_type', 'size', 'sample_lane_id', 'lane') + [data_type: 'bai', id: meta.sample], bai]
             }
             // Create groupKey from meta map
             .map { meta, bai ->
-                [ groupKey( meta, meta.n_fastq), bai ]
+                [groupKey(meta, meta.n_fastq), bai]
             }
-            // Group
             .groupTuple()
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
         // Except if and only if save_mapped or (skipping markduplicates and sentieon-dedup)
-        if (
-            params.save_mapped ||
-            (
-                (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) &&
-                !(params.tools && params.tools.split(',').contains('sentieon_dedup'))
-            )
-        ) {
+        if (params.save_mapped || ((params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) && !(params.tools && params.tools.split(',').contains('sentieon_dedup')))) {
             // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
             BAM_MERGE_INDEX_SAMTOOLS(bam_mapped)
 
-            BAM_TO_CRAM_MAPPING(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai ] }.collect())
+            BAM_TO_CRAM_MAPPING(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fai -> [meta, fasta_, fai] }.collect())
             // Create CSV to restart from this step
-            if (save_output_as_bam) CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, params.outdir, save_output_as_bam)
-            else CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true), params.outdir, save_output_as_bam)
+            if (save_output_as_bam) {
+                CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, params.outdir, save_output_as_bam, false)
+            }
+            else {
+                CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true), params.outdir, save_output_as_bam, false)
+            }
         }
-
     }
 
     if (params.step in ['mapping', 'markduplicates']) {
 
         // ch_cram_no_markduplicates_restart = channel.empty()
         cram_markduplicates_no_spark = channel.empty()
-        cram_sentieon_dedup          = channel.empty()
-        cram_markduplicates_spark    = channel.empty()
+        cram_sentieon_dedup = channel.empty()
+        cram_markduplicates_spark = channel.empty()
 
         // STEP 2: markduplicates (+QC) + convert to CRAM
 
         // ch_bam_for_markduplicates will contain bam mapped with FASTQ_ALIGN when step is mapping
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
-        cram_for_markduplicates = params.step == 'mapping' ? bam_mapped : input_sample.map{ meta, input, _index -> [ meta, input ] }
+        cram_for_markduplicates = params.step == 'mapping' ? bam_mapped : input_sample.map { meta, input, _index -> [meta, input] }
 
-        if(params.step == 'markduplicates' && params.umi_in_read_header) {
-            FGBIO_COPYUMIFROMREADNAME(cram_for_markduplicates.map{ meta, bam -> [ meta, bam, [] ] })
+        if (params.step == 'markduplicates' && params.umi_in_read_header) {
+            FGBIO_COPYUMIFROMREADNAME(cram_for_markduplicates.map { meta, bam -> [meta, bam, []] })
             cram_for_markduplicates = FGBIO_COPYUMIFROMREADNAME.out.bam
         }
 
@@ -263,72 +271,71 @@ workflow FASTQ_PREPROCESS_GATK {
         // Should it be possible to restart from converted crams?
         // For now, conversion from bam to cram is only done when skipping markduplicates
 
-        if (
-            params.skip_tools &&
-            params.skip_tools.split(',').contains('markduplicates') &&
-            !(params.tools && params.tools.split(',').contains('sentieon_dedup'))
-        ) {
+        if (params.skip_tools && params.skip_tools.split(',').contains('markduplicates') && !(params.tools && params.tools.split(',').contains('sentieon_dedup'))) {
             if (params.step == 'mapping') {
                 cram_skip_markduplicates = BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true)
-            } else {
+            }
+            else {
                 cram_skip_markduplicates = channel.empty().mix(input_sample)
             }
 
             CRAM_QC_NO_MD(cram_skip_markduplicates, fasta, fasta_fai, intervals_for_preprocessing)
 
             // Gather QC reports
-            reports = reports.mix(CRAM_QC_NO_MD.out.reports.collect{ _meta, report -> [ report ] })
-
-        } else if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates')) {
+            reports = reports.mix(CRAM_QC_NO_MD.out.reports.collect { _meta, report -> [report] })
+        }
+        else if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates')) {
             BAM_MARKDUPLICATES_SPARK(
                 cram_for_markduplicates,
                 dict,
                 fasta,
                 fasta_fai,
-                intervals_for_preprocessing)
+                intervals_for_preprocessing,
+            )
             cram_markduplicates_spark = BAM_MARKDUPLICATES_SPARK.out.alignment
 
             // Gather QC reports
-            reports = reports.mix(BAM_MARKDUPLICATES_SPARK.out.reports.collect{ _meta, report -> [ report ] })
-
-        } else if (params.tools && params.tools.split(',').contains('sentieon_dedup')) {
+            reports = reports.mix(BAM_MARKDUPLICATES_SPARK.out.reports.collect { _meta, report -> [report] })
+        }
+        else if (params.tools && params.tools.split(',').contains('sentieon_dedup')) {
             crai_for_markduplicates = params.step == 'mapping'
                 ? bai_mapped
-                : ( params.umi_in_read_header ? FGBIO_COPYUMIFROMREADNAME.out.bai : input_sample.map{ meta, _input, index -> [ meta, index ] } )
+                : (params.umi_in_read_header ? FGBIO_COPYUMIFROMREADNAME.out.bai : input_sample.map { meta, _input, index -> [meta, index] })
             BAM_SENTIEON_DEDUP(
                 cram_for_markduplicates,
                 crai_for_markduplicates,
                 fasta,
                 fasta_fai,
-                intervals_for_preprocessing)
+                intervals_for_preprocessing,
+            )
 
             cram_sentieon_dedup = BAM_SENTIEON_DEDUP.out.alignment
 
             // Gather QC reports
-            reports = reports.mix(BAM_SENTIEON_DEDUP.out.reports.collect{ _meta, report -> [ report ] })
-
-        } else {
+            reports = reports.mix(BAM_SENTIEON_DEDUP.out.reports.collect { _meta, report -> [report] })
+        }
+        else {
 
             BAM_MARKDUPLICATES(
                 cram_for_markduplicates,
                 fasta,
                 fasta_fai,
-                intervals_for_preprocessing)
+                intervals_for_preprocessing,
+            )
 
             cram_markduplicates_no_spark = BAM_MARKDUPLICATES.out.alignment
 
             // Gather QC reports
-            reports = reports.mix(BAM_MARKDUPLICATES.out.reports.collect{ _meta, report -> [ report ] })
-
+            reports = reports.mix(BAM_MARKDUPLICATES.out.reports.collect { _meta, report -> [report] })
         }
 
         // ch_md_cram_for_restart contains either:
         // - alignment (BAM or CRAM) from markduplicates
         // - alignment from sentieon_dedup
         // - alignment from markduplicates_spark
-        ch_md_cram_for_restart = channel.empty().mix(cram_markduplicates_no_spark, cram_markduplicates_spark, cram_sentieon_dedup)
-            // Make sure correct data types are carried through
-            .map{ meta, file, index -> [ meta + [data_type: file.name.endsWith('.cram') ? 'cram' : 'bam'], file, index ] }
+        ch_md_cram_for_restart = channel.empty()
+            .mix(cram_markduplicates_no_spark, cram_markduplicates_spark, cram_sentieon_dedup) // Make sure correct data types are carried through
+            .map { meta, file, index -> [meta + [data_type: file.name.endsWith('.cram') ? 'cram' : 'bam'], file, index] }
 
         // CSV should be written for the file actually output, either CRAM or BAM
         // Create CSV to restart from this step
@@ -345,48 +352,50 @@ workflow FASTQ_PREPROCESS_GATK {
             ch_cram_for_bam_baserecalibrator = channel.empty().mix(input_sample)
 
             // Set the input samples for restart so we generate a samplesheet that contains the input files together with the recalibration table
-            ch_md_cram_for_restart           = ch_cram_for_bam_baserecalibrator
-
-        } else {
+            ch_md_cram_for_restart = ch_cram_for_bam_baserecalibrator
+        }
+        else {
 
             // ch_cram_for_bam_baserecalibrator contains either:
             // - crams from markduplicates
             // - crams from markduplicates_spark
             // - crams converted from bam mapped when skipping markduplicates
             // - input cram files, when start from step markduplicates
-            ch_cram_for_bam_baserecalibrator = channel.empty().mix(ch_md_cram_for_restart, cram_skip_markduplicates )
-                // Make sure correct data types are carried through
-                .map{ meta, file, index -> [ meta + [data_type: file.name.endsWith('.cram') ? 'cram' : 'bam'], file, index ] }
-
+            ch_cram_for_bam_baserecalibrator = channel.empty()
+                .mix(ch_md_cram_for_restart, cram_skip_markduplicates) // Make sure correct data types are carried through
+                .map { meta, file, index -> [meta + [data_type: file.name.endsWith('.cram') ? 'cram' : 'bam'], file, index] }
         }
 
         // STEP 3: Create recalibration tables
         if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
 
             ch_table_bqsr_no_spark = channel.empty()
-            ch_table_bqsr_spark    = channel.empty()
+            ch_table_bqsr_spark = channel.empty()
 
             if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
-            BAM_BASERECALIBRATOR_SPARK(
-                ch_cram_for_bam_baserecalibrator,
-                dict,
-                fasta,
-                fasta_fai,
-                intervals_and_num_intervals,
-                known_sites_indels,
-                known_sites_indels_tbi)
+                BAM_BASERECALIBRATOR_SPARK(
+                    ch_cram_for_bam_baserecalibrator,
+                    dict,
+                    fasta,
+                    fasta_fai,
+                    intervals_and_num_intervals,
+                    known_sites_indels,
+                    known_sites_indels_tbi,
+                )
 
                 ch_table_bqsr_spark = BAM_BASERECALIBRATOR_SPARK.out.table_bqsr
-            } else {
+            }
+            else {
 
-            BAM_BASERECALIBRATOR(
-                ch_cram_for_bam_baserecalibrator,
-                dict,
-                fasta,
-                fasta_fai,
-                intervals_and_num_intervals,
-                known_sites_indels,
-                known_sites_indels_tbi)
+                BAM_BASERECALIBRATOR(
+                    ch_cram_for_bam_baserecalibrator,
+                    dict,
+                    fasta,
+                    fasta_fai,
+                    intervals_and_num_intervals,
+                    known_sites_indels,
+                    known_sites_indels_tbi,
+                )
 
                 ch_table_bqsr_no_spark = BAM_BASERECALIBRATOR.out.table_bqsr
             }
@@ -394,11 +403,13 @@ workflow FASTQ_PREPROCESS_GATK {
             // ch_table_bqsr contains either:
             // - bqsr table from baserecalibrator
             // - bqsr table from baserecalibrator_spark
-            ch_table_bqsr = channel.empty().mix(
-                ch_table_bqsr_no_spark,
-                ch_table_bqsr_spark)
+            ch_table_bqsr = channel.empty()
+                .mix(
+                    ch_table_bqsr_no_spark,
+                    ch_table_bqsr_spark,
+                )
 
-            reports = reports.mix(ch_table_bqsr.collect{ _meta, table -> [ table ] })
+            reports = reports.mix(ch_table_bqsr.collect { _meta, table -> [table] })
 
             cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
 
@@ -414,12 +425,11 @@ workflow FASTQ_PREPROCESS_GATK {
         if (params.step == 'recalibrate') {
 
             cram_applybqsr = channel.empty().mix(input_sample)
-
         }
 
         if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
             cram_variant_calling_no_spark = channel.empty()
-            cram_variant_calling_spark    = channel.empty()
+            cram_variant_calling_spark = channel.empty()
 
             if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
 
@@ -429,35 +439,45 @@ workflow FASTQ_PREPROCESS_GATK {
                     fasta,
                     fasta_fai,
                     intervals_and_num_intervals,
-                    save_output_as_bam)
+                    save_output_as_bam,
+                )
 
                 cram_variant_calling_spark = BAM_APPLYBQSR_SPARK.out.alignment
-            } else {
+            }
+            else {
+
+                references = fasta
+                    .combine(fasta_fai)
+                    .combine(dict)
+                    .map { meta_fasta, fasta_, _meta_fai, fai, _meta_dict, dict_ -> [meta_fasta, fasta_, fai, dict_] }
+                    .collect()
 
                 BAM_APPLYBQSR(
                     cram_applybqsr,
-                    dict,
-                    fasta,
-                    fasta_fai,
+                    references,
                     intervals_and_num_intervals,
-                    save_output_as_bam)
+                    save_output_as_bam ? ['bam', 'bai'] : ['cram', 'crai'],
+                )
 
-                cram_variant_calling_no_spark = BAM_APPLYBQSR.out.alignment
+                cram_variant_calling_no_spark = BAM_APPLYBQSR.out.recal_out
             }
 
-            cram_variant_calling = channel.empty().mix(
-                cram_variant_calling_no_spark,
-                cram_variant_calling_spark)
+            cram_variant_calling = channel.empty()
+                .mix(
+                    cram_variant_calling_no_spark,
+                    cram_variant_calling_spark,
+                )
 
             // Create CSV to restart from this step
             CHANNEL_APPLYBQSR_CREATE_CSV(cram_variant_calling, params.outdir)
-
-        } else if (params.step == 'recalibrate') {
+        }
+        else if (params.step == 'recalibrate') {
             // cram_variant_calling contains either:
             // - input bams converted to crams, if started from step recal + skip BQSR
             // - input crams if started from step recal + skip BQSR
-            cram_variant_calling = channel.empty().mix(input_sample.map{ meta, cram, crai, _table -> [ meta, cram, crai ] })
-        } else {
+            cram_variant_calling = channel.empty().mix(input_sample.map { meta, cram, crai, _table -> [meta, cram, crai] })
+        }
+        else {
             // cram_variant_calling contains either:
             // - crams from markduplicates = ch_cram_for_bam_baserecalibrator if skip BQSR but not started from step recalibration
             cram_variant_calling = channel.empty().mix(ch_cram_for_bam_baserecalibrator)
@@ -467,5 +487,4 @@ workflow FASTQ_PREPROCESS_GATK {
     emit:
     cram_variant_calling
     reports
-
 }
