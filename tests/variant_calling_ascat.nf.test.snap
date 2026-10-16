@@ -636,7 +636,6 @@
             "No CRAM files",
             "No VCF files",
             [
-                "WARN: Apptainer cache directory has not been defined -- Remote image will be stored in the path: [PATH]/.nf-test/tests/[NFT_HASH]/work/[CONTAINER] -- Use the environment variable NXF_APPTAINER_CACHEDIR to specify a different location",
                 "WARN: No LogRCorrection performed in ASCAT. For LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files."
             ]
         ],
