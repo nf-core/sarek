@@ -1,0 +1,81 @@
+name: Dev GPU and ARM startup smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Compute environment to test with one small task
+        required: true
+        type: choice
+        options:
+          - gpu
+          - arm
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    if: github.repository == 'nf-core/sarek' && github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      TARGET: ${{ inputs.target }}
+      WORKSPACE_ID: ${{ vars.SAREK_DEV_WORKSPACE_ID }}
+      COMPUTE_ENV_ID: ${{ inputs.target == 'gpu' && vars.SAREK_DEV_GPU_COMPUTE_ENV_ID || vars.SAREK_DEV_ARM_COMPUTE_ENV_ID }}
+      BUCKET_PREFIX: ${{ vars.SAREK_DEV_BUCKET_PREFIX }}
+      NEXTFLOW_VERSION: ${{ vars.SAREK_DEV_SMOKE_NEXTFLOW_VERSION }}
+    steps:
+      - name: Verify live compute environment before launch
+        env:
+          SEQERA_TOKEN: ${{ secrets.TOWER_ACCESS_TOKEN }}
+        run: |
+          : "${SEQERA_TOKEN:?Missing TOWER_ACCESS_TOKEN}"
+          : "${WORKSPACE_ID:?Missing dev workspace variable}"
+          : "${COMPUTE_ENV_ID:?Missing dev compute environment variable}"
+          : "${BUCKET_PREFIX:?Missing dev bucket prefix variable}"
+          : "${NEXTFLOW_VERSION:?Missing smoke Nextflow version variable}"
+          case "$TARGET" in gpu|arm) ;; *) exit 1 ;; esac
+          response=$(mktemp)
+          trap 'rm -f "$response"' EXIT
+          curl --fail-with-body --silent --show-error --max-time 30 \
+            -H "Authorization: Bearer $SEQERA_TOKEN" \
+            "https://api.cloud.seqera.io/compute-envs/$COMPUTE_ENV_ID?workspaceId=$WORKSPACE_ID" \
+            -o "$response"
+          jq -e --arg id "$COMPUTE_ENV_ID" --arg workspace "$WORKSPACE_ID" --arg target "$TARGET" '
+            .computeEnv |
+            .id == $id and (.workspaceId | tostring) == $workspace and
+            .status == "AVAILABLE" and .platform == "aws-batch" and
+            .config.region == "eu-west-1" and
+            (if $target == "gpu" then .config.forge.gpuEnabled == true
+             else .config.forge.arm64Enabled == true end)
+          ' "$response" > /dev/null
+          jq '.computeEnv | {id, name, workspaceId, status, platform, config: {region: .config.region, forge: {gpuEnabled: .config.forge.gpuEnabled, arm64Enabled: .config.forge.arm64Enabled}}}' "$response"
+
+      - name: Run one bounded architecture task
+        id: launch
+        uses: seqeralabs/action-seqera-launch@f7b1a39afc8bb65f58b84150cd214b33fe416fef
+        with:
+          access-token: ${{ secrets.TOWER_ACCESS_TOKEN }}
+          workspace-id: ${{ env.WORKSPACE_ID }}
+          compute-env-id: ${{ env.COMPUTE_ENV_ID }}
+          revision: ${{ github.sha }}
+          nextflow-version: ${{ env.NEXTFLOW_VERSION }}
+          syntax-parser: v2
+          run-name: dev_${{ inputs.target }}_smoke_${{ github.run_id }}
+          work-dir: ${{ env.BUCKET_PREFIX }}/work/architecture-smoke/${{ github.run_id }}-${{ github.run_attempt }}/${{ inputs.target }}
+          parameters: |
+            {
+              "target": "${{ inputs.target }}",
+              "outdir": "${{ env.BUCKET_PREFIX }}/results/architecture-smoke/${{ github.run_id }}-${{ github.run_attempt }}/${{ inputs.target }}/"
+            }
+          wait: completion
+          timeout: 20m
+
+      - name: Record Seqera run
+        if: always()
+        env:
+          WORKFLOW_URL: ${{ steps.launch.outputs.workflow-url }}
+          WORKFLOW_STATUS: ${{ steps.launch.outputs.status }}
+        run: |
+          printf 'Target: %s\nRun: %s\nStatus: %s\n' "$TARGET" "$WORKFLOW_URL" "$WORKFLOW_STATUS" >> "$GITHUB_STEP_SUMMARY"
