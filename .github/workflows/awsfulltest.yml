@@ -87,7 +87,7 @@ jobs:
 
       - name: Launch workflow via Seqera Platform
         id: tower-launch
-        uses: seqeralabs/action-seqera-launch@v1.0.0-rc.2
+        uses: seqeralabs/action-seqera-launch@f7b1a39afc8bb65f58b84150cd214b33fe416fef # v1.0.0
         with:
           wait: none
           run-name: sarek_${{ matrix.profile }}
