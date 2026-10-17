@@ -68,12 +68,12 @@ jobs:
     steps:
       - name: Check dev trial configuration
         env:
-          SEQERA_TOKEN: ${{ secrets.SAREK_DEV_TOWER_ACCESS_TOKEN }}
+          SEQERA_TOKEN: ${{ secrets.TOWER_ACCESS_TOKEN }}
           SEQERA_WORKSPACE_ID: ${{ vars.SAREK_DEV_WORKSPACE_ID }}
           SEQERA_COMPUTE_ENV_ID: ${{ vars.SAREK_DEV_CPU_COMPUTE_ENV_ID }}
           BUCKET_PREFIX: ${{ vars.SAREK_DEV_BUCKET_PREFIX }}
         run: |
-          : "${SEQERA_TOKEN:?Set the SAREK_DEV_TOWER_ACCESS_TOKEN repository secret}"
+          : "${SEQERA_TOKEN:?The TOWER_ACCESS_TOKEN secret must be available to this repository}"
           : "${SEQERA_WORKSPACE_ID:?Set the SAREK_DEV_WORKSPACE_ID repository variable}"
           : "${SEQERA_COMPUTE_ENV_ID:?Set the SAREK_DEV_CPU_COMPUTE_ENV_ID repository variable}"
           : "${BUCKET_PREFIX:?Set the SAREK_DEV_BUCKET_PREFIX repository variable}"
@@ -85,7 +85,7 @@ jobs:
           wait: completion
           run-name: sarek_dev_${{ matrix.profile }}
           workspace-id: ${{ vars.SAREK_DEV_WORKSPACE_ID }}
-          access-token: ${{ secrets.SAREK_DEV_TOWER_ACCESS_TOKEN }}
+          access-token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute-env-id: ${{ vars.SAREK_DEV_CPU_COMPUTE_ENV_ID }}
           revision: ${{ github.sha }}
           work-dir: ${{ vars.SAREK_DEV_BUCKET_PREFIX }}/work/sarek/${{ github.run_id }}-${{ github.run_attempt }}/${{ matrix.profile }}
