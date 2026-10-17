@@ -15,6 +15,7 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 - [#2268](https://github.com/nf-core/sarek/pull/2268) - Add parabricks/applybqsr
 - [#2284](https://github.com/nf-core/sarek/pull/2284) - Add `manifest.diagram` to `nextflow.config`
 - [#2328](https://github.com/nf-core/sarek/pull/2328) - Add `ascat_penalty` as configurable ASCAT parameter (default 70)
+- [#2327](https://github.com/nf-core/sarek/pull/2327) - Add nf-snapshot output check to the AWS full-size somatic test ([@adamrtalbot](https://github.com/adamrtalbot))
 
 ### Changed
 
