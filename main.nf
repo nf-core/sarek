@@ -1,7 +1,7 @@
 process GPU_SMOKE {
     accelerator 1
     arch 'linux/amd64'
-    container 'nvidia/cuda:12.4.1-base-ubuntu22.04@sha256:0f6bfcbf267e65123bcc2287e2153dedfc0f24772fb5ce84afe16ac4b2fada95'
+    container 'docker.io/nvidia/cuda:12.4.1-base-ubuntu22.04'
     publishDir params.outdir, mode: 'copy'
 
     output:
@@ -19,7 +19,7 @@ process GPU_SMOKE {
 
 process ARM_SMOKE {
     arch 'linux/arm64'
-    container 'ubuntu:24.04@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac'
+    container 'docker.io/library/ubuntu:24.04'
     publishDir params.outdir, mode: 'copy'
 
     output:
