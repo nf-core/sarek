@@ -1,25 +1,20 @@
 {
     "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/mapped_single_bam.csv": {
         "content": [
-            14,
+            12,
             {
-                "BAM_TO_CRAM_RECAL": {
-                    "samtools": "1.24"
-                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.7.0.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.7.0.0"
-                },
-                "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -189,7 +184,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-10-01T20:59:07.75335661",
+        "timestamp": "2026-10-15T08:55:17.256501559",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -197,25 +192,20 @@
     },
     "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/mapped_single_cram.csv --sentieon_consensus": {
         "content": [
-            14,
+            12,
             {
-                "BAM_TO_CRAM_RECAL": {
-                    "samtools": "1.24"
-                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.7.0.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.7.0.0"
-                },
-                "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -385,7 +375,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-10-01T20:59:13.173471109",
+        "timestamp": "2026-10-15T08:55:09.485539392",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -393,25 +383,20 @@
     },
     "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/mapped_single_cram.csv": {
         "content": [
-            14,
+            12,
             {
-                "BAM_TO_CRAM_RECAL": {
-                    "samtools": "1.24"
-                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.7.0.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.7.0.0"
-                },
-                "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -581,7 +566,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-10-01T20:59:11.483955629",
+        "timestamp": "2026-10-15T08:54:42.461950144",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -589,11 +574,8 @@
     },
     "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/bam_umi_header.csv --sentieon_consensus --umi_in_read_header": {
         "content": [
-            15,
+            13,
             {
-                "BAM_TO_CRAM_RECAL": {
-                    "samtools": "1.24"
-                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
@@ -601,16 +583,14 @@
                     "fgbio": "3.1.2"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.7.0.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.7.0.0"
-                },
-                "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -780,7 +760,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-10-01T20:59:33.517223874",
+        "timestamp": "2026-10-15T08:55:29.009510569",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -788,11 +768,8 @@
     },
     "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/bam_umi_header.csv --umi_in_read_header": {
         "content": [
-            15,
+            13,
             {
-                "BAM_TO_CRAM_RECAL": {
-                    "samtools": "1.24"
-                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
@@ -800,16 +777,14 @@
                     "fgbio": "3.1.2"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.7.0.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.7.0.0"
-                },
-                "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -979,7 +954,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-10-01T20:59:50.277203805",
+        "timestamp": "2026-10-15T08:55:39.317127623",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
