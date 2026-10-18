@@ -82,6 +82,10 @@ values are `count`, `coverage`, and `quick`. The default is `count`. See the
 [Xengsort usage guide](https://gitlab.com/genomeinformatics/xengsort/-/tree/master#how-to-classify)
 for details about each mode.
 
+For patient-derived xenograft (PDX) samples generated using NOD scid gamma (NSG) mice,
+consider using a [host-matched NSG-adapted mouse reference genome](https://www.nature.com/articles/s41467-024-47547-3)
+as `--xengsort_host_fasta`. This can improve the removal of mouse-derived reads and may reduce recurrent false-positive variants.
+
 When Sarek builds a xengsort index, it is only published to `outdir/reference/xengsort_index` if
 `--save_reference` or `--build_only_index` is enabled.
 
