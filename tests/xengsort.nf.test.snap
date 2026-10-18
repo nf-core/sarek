@@ -1,11 +1,8 @@
 {
     "-profile test --tools xengsort,strelka --xengsort_host_fasta (pair)": {
         "content": [
-            45,
+            41,
             {
-                "BAM_TO_CRAM_RECAL": {
-                    "samtools": "1.24"
-                },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
                 },
@@ -23,7 +20,8 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.7.0.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
                     "gatk4": "4.7.0.0"
@@ -33,9 +31,6 @@
                 },
                 "GATK4_MARKDUPLICATES": {
                     "gatk4": "4.7.0.0",
-                    "samtools": "1.21"
-                },
-                "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
@@ -391,7 +386,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-14T02:38:09.006399964",
+        "timestamp": "2026-10-18T02:55:15.783733894",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -672,11 +667,8 @@
     },
     "-profile test --tools xengsort,strelka --xengsort_host_fasta (single)": {
         "content": [
-            27,
+            25,
             {
-                "BAM_TO_CRAM_RECAL": {
-                    "samtools": "1.24"
-                },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
                 },
@@ -694,7 +686,8 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.7.0.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
                     "gatk4": "4.7.0.0"
@@ -704,9 +697,6 @@
                 },
                 "GATK4_MARKDUPLICATES": {
                     "gatk4": "4.7.0.0",
-                    "samtools": "1.21"
-                },
-                "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
@@ -1011,7 +1001,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-14T02:44:54.384881089",
+        "timestamp": "2026-10-18T02:53:36.464363741",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
