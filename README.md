@@ -178,6 +178,7 @@ We thank the following people for their extensive assistance in the development 
 - [Oskar Wacker](https://github.com/WackerO)
 - [pallolason](https://github.com/pallolason)
 - [Paul Cantalupo](https://github.com/pcantalupo)
+- [Peter Zoescher](https://github.com/petanska)
 - [Phil Ewels](https://github.com/ewels)
 - [Pierre Lindenbaum](https://github.com/lindenb)
 - [Sabrina Krakau](https://github.com/skrakau)

@@ -73,6 +73,23 @@ nextflow_pipeline {
                 validate_params : false
             ],
             stub: true
+        ],
+        [
+            name: "-profile test --tools ascat --input ascat_somatic.csv --ascat_penalty 25",
+            params: [
+                fasta : modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr22/sequence/chr22_23800000-23980000.fa',
+                ascat_alleles : modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_alleles_hg38_chr22.txt',
+                ascat_genome : "hg38",
+                ascat_loci : modules_testdata_base_path + 'genomics/homo_sapiens/genome/ascat/G1000_loci_hg38_chr22.txt',
+                ascat_loci_gc : null,
+                ascat_loci_rt : null,
+                ascat_penalty : 25,
+                input : "${projectDir}/tests/csv/3.0/ascat_somatic.csv",
+                step : "variant_calling",
+                tools : 'ascat',
+                no_intervals : true,
+                validate_params : false
+            ]
         ]
     ]
 

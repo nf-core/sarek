@@ -404,6 +404,14 @@
                     "description": "Overwrite ASCAT purity.",
                     "help_text": "Overwrites ASCAT's `rho_manual` parameter. Expert use only, see [here](https://raw.githubusercontent.com/VanLoo-lab/ascat/master/man/ASCAT-manual.pdf) for details.\nRequires that `--ascat_ploidy` is set."
                 },
+                "ascat_penalty": {
+                    "type": "number",
+                    "default": 70,
+                    "minimum": 0,
+                    "fa_icon": "fas fa-sliders-h",
+                    "description": "Set the penalty for ASCAT segmentation.",
+                    "help_text": "Controls the sensitivity of ASCAT's ascat.aspcf() function to segment breakpoints. Lower values allow more breakpoints, while higher values favour fewer breakpoints. Default: 70 [see here](https://github.com/VanLoo-lab/ascat/blob/61ddf3b24453eea91134798cc41d4e828a82fa90/ASCAT/R/ascat.aspcf.R#L26)."
+                },
                 "cf_chrom_len": {
                     "type": "string",
                     "format": "file-path",
@@ -817,7 +825,7 @@
                 },
                 "vep_version": {
                     "type": "string",
-                    "default": "116.0-0",
+                    "default": "116.3-0",
                     "fa_icon": "fas fa-toolbox",
                     "description": "Should reflect the VEP version used in the container.",
                     "help_text": "Used by the loftee plugin which needs the full path to the VEP installation (e.g. `/opt/conda/share/ensembl-vep-${vep_version}`). Update this when the VEP container version changes."
@@ -1039,7 +1047,7 @@
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA genome file.",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified.\n\nIf you use AWS iGenomes, this has already been set for you appropriately.",
+                    "help_text": "This parameter is *mandatory* if `--genome` is not specified.\n\nIf you use AWS iGenomes, this has already been set for you appropriately.\n\n> **NB** When using a custom FASTA without an igenomes genome, you must also set `--genome null` and `--igenomes_ignore`.",
                     "fa_icon": "fas fa-file"
                 },
                 "fasta_fai": {

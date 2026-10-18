@@ -71,12 +71,18 @@ workflow FASTQ_PREPROCESS_PARABRICKS {
         mapped_out_aln = fq2bam_out_aln
     }
     else {
-        aln_idx = fq2bam_out_aln.join(fq2bam_out_idx)
+        aln_idx_recal = fq2bam_out_aln
+            .map { meta, aln -> [meta.id, meta, aln] }
+            .join(fq2bam_out_idx.map { meta, idx -> [meta.id, idx] }, failOnDuplicate: true, failOnMismatch: true)
+            .join(PARABRICKS_FQ2BAM.out.bqsr_table.map { meta, table -> [meta.id, table] }, failOnDuplicate: true, failOnMismatch: true)
+            .map { _id, meta, aln, idx, table -> [meta, aln, idx, table] }
+
+        // ch_interval_file is [meta, [beds]] or [[id: 'no_intervals'], []]; add the beds as the 5th element
+        ch_applybqsr_in = aln_idx_recal
+            .combine(ch_interval_file.map { _meta, intervals -> [intervals] })
 
         PARABRICKS_APPLYBQSR(
-            aln_idx,
-            PARABRICKS_FQ2BAM.out.bqsr_table,
-            ch_interval_file,
+            ch_applybqsr_in,
             ch_fasta,
             output_fmt,
         )
