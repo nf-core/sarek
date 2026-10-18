@@ -69,10 +69,10 @@
                     "vcftools": "0.1.17"
                 },
                 "XENGSORT_CLASSIFY": {
-                    "xengsort": "2.1.0"
+                    "xengsort": "2.2.1"
                 },
                 "XENGSORT_INDEX": {
-                    "xengsort": "2.1.0"
+                    "xengsort": "2.2.1"
                 }
             },
             [
@@ -391,7 +391,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-13T01:32:13.883191103",
+        "timestamp": "2026-10-14T02:38:09.006399964",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -737,10 +737,10 @@
                     "vcftools": "0.1.17"
                 },
                 "XENGSORT_CLASSIFY": {
-                    "xengsort": "2.1.0"
+                    "xengsort": "2.2.1"
                 },
                 "XENGSORT_INDEX": {
-                    "xengsort": "2.1.0"
+                    "xengsort": "2.2.1"
                 }
             },
             [
@@ -1011,7 +1011,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-13T01:40:58.148826511",
+        "timestamp": "2026-10-14T02:44:54.384881089",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
