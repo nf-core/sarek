@@ -336,7 +336,7 @@
     },
     "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null --aligner bwa-mem2": {
         "content": [
-            30,
+            29,
             {
                 "BAM2FASTQ": {
                     "bgzip": "1.24",
@@ -371,23 +371,21 @@
                     "fgbio": "3.1.2"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.2.0",
-                    "samtools": "1.21"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GROUPREADSBYUMI": {
                     "fgbio": "3.1.2"
-                },
-                "INDEX_CRAM": {
-                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -648,7 +646,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_umi_cleanname_1.fastq.gz): Cannot extract flowcell ID from @922332"
             ]
         ],
-        "timestamp": "2026-09-24T15:07:50.820726665",
+        "timestamp": "2026-10-19T02:41:03.197700094",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -656,7 +654,7 @@
     },
     "-profile test --input tests/csv/3.0/fastq_umi_multi_lane.csv --umi_read_structure '+T 7M1S+T' --tools null --aligner bwa-mem2": {
         "content": [
-            36,
+            35,
             {
                 "BAM2FASTQ": {
                     "bgzip": "1.24",
@@ -691,23 +689,21 @@
                     "fgbio": "3.1.2"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.2.0",
-                    "samtools": "1.21"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GROUPREADSBYUMI": {
                     "fgbio": "3.1.2"
-                },
-                "INDEX_CRAM": {
-                    "samtools": "1.24"
                 },
                 "MERGE_CONSENSUS": {
                     "samtools": "1.24"
@@ -977,7 +973,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_umi_cleanname_1.fastq.gz): Cannot extract flowcell ID from @922332"
             ]
         ],
-        "timestamp": "2026-09-28T16:16:24.073929864",
+        "timestamp": "2026-10-19T02:42:03.650705751",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
