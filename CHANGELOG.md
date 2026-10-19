@@ -38,11 +38,12 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 
 ### Dependencies - modules
 
-| Dependency  | Old version | New version |
-| ----------- | ----------- | ----------- |
-| ensembl-vep | 116.0       | 116.3       |
-| gatk4       | 4.6.2.0     | 4.7.0.0     |
-| htslib      | 1.23.1      | 1.21        |
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| ensembl-vep.  | 116.0       | 116.3       |
+| gatk4         | 4.6.2.0     | 4.7.0.0     |
+| htslib        | 1.23.1      | 1.21        |
+| varlociraptor | 8.9.5       | 8.12.0      |
 
 ### Dependencies - plugins
 
@@ -62,6 +63,7 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 #### Changed
 
 - [#2271](https://github.com/nf-core/sarek/pull/2271) - Back to dev (3.10.1dev)
+- [#2332](https://github.com/nf-core/sarek/pull/2332) - Update varlociraptor to 8.12.0, add --atomic-candidate-variants flag
 
 #### Fixed
 
