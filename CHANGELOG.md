@@ -31,6 +31,7 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 - [#2287](https://github.com/nf-core/sarek/pull/2287),[2310](https://github.com/nf-core/sarek/pull/#2310) - Fix `PARABRICKS_FQ2BAM` running BQSR without indexed known-sites VCFs ([#2193](https://github.com/nf-core/sarek/issues/2193)): `known_sites_indels_tbi` was never passed to `FASTQ_PREPROCESS_PARABRICKS`, so `pbrun` found no `.tbi` next to the VCFs it was given, fell back to loading them whole into memory, and BQSR could stall or OOM with no progress
 - [#2296](https://github.com/nf-core/sarek/pull/2296) - Preserve CRAM 3.0 after recalibration with the existing Samtools converter so GATK 4.7 output remains compatible with legacy callers.
 - [#2230](https://github.com/nf-core/sarek/pull/2230) - Varlociraptor: fix custom scenario file parsing
+- [#2335](https://github.com/nf-core/sarek/pull/2335) - Fix: pass `markduplicates_pixel_distance` to `GATK4SPARK_MARKDUPLICATES` ([#2334](https://github.com/nf-core/sarek/issues/2334)).
 
 ### Removed
 
