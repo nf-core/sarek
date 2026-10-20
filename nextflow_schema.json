@@ -304,7 +304,7 @@
                 },
                 "markduplicates_pixel_distance": {
                     "type": "integer",
-                    "help_text": "Pixel distance for GATK MarkDuplicates. Applies to both GATK MarkDuplicates and MarkDuplicatesSpark (`--use_gatk_spark markduplicates`)."
+                    "help_text": "Pixel distance for GATK MarkDuplicates."
                 },
                 "sentieon_consensus": {
                     "type": "boolean",
