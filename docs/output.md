@@ -415,19 +415,7 @@ For further reading and documentation see the [bcftools manual](https://samtools
 
 #### DeepSomatic
 
-[DeepSomatic](https://github.com/google/deepsomatic) uses a deep neural network to identify somatic SNVs and small indels. Sarek supports paired short-read tumour-normal WGS and WES calling. The CPU implementation scatters work across intervals and gathers one raw VCF for each pair.
-
-DeepSomatic obtains sample names from the input CRAM read-group `SM` values. CRAM files produced by Sarek normally use `${patient}_${sample}` for `SM`.
-
-DeepSomatic uses the following FILTER classifications in raw VCF files:
-
-- `PASS`: All filters passed and the call is somatic.
-- `GERMLINE`: The call is non-somatic.
-- `RefCall`: The genotyping model considers the site reference.
-- `LowQual`: Confidence in the call is below the calling threshold.
-- `NoCall`: The site has zero depth and could not be called.
-
-Sarek preserves these classifications. The optional general VCF filtering workflow applies the configured filtering criteria. It does not introduce a mandatory DeepSomatic-specific PASS filter.
+[DeepSomatic](https://github.com/google/deepsomatic) is a deep learning-based caller for somatic SNVs and small indels in paired tumour-normal samples.
 
 <details markdown="1">
 <summary>Output files for tumour-normal pairs</summary>
@@ -435,9 +423,7 @@ Sarek preserves these classifications. The optional general VCF filtering workfl
 **Output directory: `{outdir}/variant_calling/deepsomatic/<tumoursample_vs_normalsample>/`**
 
 - `<tumoursample_vs_normalsample>.deepsomatic.vcf.gz` and `<tumoursample_vs_normalsample>.deepsomatic.vcf.gz.tbi`
-  - Raw VCF with tabix index
-
-DeepSomatic gVCF files are not published.
+  - VCF with tabix index
 
 </details>
 
@@ -587,9 +573,7 @@ Files created:
 
 #### Parabricks DeepSomatic
 
-[Parabricks DeepSomatic](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepsomatic.html) is the GPU-accelerated implementation of DeepSomatic. Sarek supports paired short-read tumour-normal WGS and WES calling. It runs one GPU task for each pair and publishes an ordinary raw VCF and its index.
-
-Sample names and FILTER classifications follow the DeepSomatic behaviour described in the [DeepSomatic section](#deepsomatic).
+[Parabricks DeepSomatic](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepsomatic.html) is a GPU-accelerated implementation of DeepSomatic for somatic SNVs and small indels in paired tumour-normal samples.
 
 <details markdown="1">
 <summary>Output files for tumour-normal pairs</summary>
@@ -597,9 +581,7 @@ Sample names and FILTER classifications follow the DeepSomatic behaviour describ
 **Output directory: `{outdir}/variant_calling/parabricks_deepsomatic/<tumoursample_vs_normalsample>/`**
 
 - `<tumoursample_vs_normalsample>.parabricks_deepsomatic.vcf.gz` and `<tumoursample_vs_normalsample>.parabricks_deepsomatic.vcf.gz.tbi`
-  - Raw VCF with tabix index
-
-DeepSomatic gVCF files are not published.
+  - VCF with tabix index
 
 </details>
 
