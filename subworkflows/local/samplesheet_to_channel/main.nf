@@ -81,7 +81,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 if (step == 'annotate') {
                     def variantcaller = combination_list[0][4]
                     def vcf = combination_list[0][5]
-                    System.err.println("Duplicate patient-sample-status-lane-variantcaller-vcf combination found: Patient '${patient}', Sample '${sample}', Status '${status}', Lane '${lane}', Variantcaller '${variantcaller}', VCF '${vcf}' appears ${combination_list.size()} times. Please ensure each combination is unique.")
+                    System.err.println("Duplicate patient-sample-status-variantcaller-vcf combination found: Patient '${patient}', Sample '${sample}', Status '${status}', Variantcaller '${variantcaller}', VCF '${vcf}' appears ${combination_list.size()} times. Please ensure each combination is unique.")
                     error("Execution halted due to duplicate patient-sample-status-lane-variantcaller-vcf combination.")
                 }
                 else {
