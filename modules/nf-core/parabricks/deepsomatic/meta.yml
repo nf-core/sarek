@@ -66,45 +66,34 @@ output:
           description: |
             Groovy Map containing sample information.
             e.g. [ id:'tumor_vs_normal' ]
-      - ${prefix}.vcf.gz:
+      - "*.vcf.gz":
           type: file
           description: VCF file created with deepsomatic, optional
           pattern: "*.vcf.gz"
           ontologies:
             - edam: http://edamontology.org/format_3989 # GZIP format
-  vcf_tbi:
-    - - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information.
-            e.g. [ id:'tumor_vs_normal' ]
-      - ${prefix}.vcf.gz.tbi:
-          type: file
-          description: Tabix index for the VCF file
-          pattern: "*.vcf.gz.tbi"
-          ontologies: []
   gvcf:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information.
             e.g. [ id:'tumor_vs_normal' ]
-      - ${prefix}.g.vcf.gz:
+      - "*.g.vcf.gz":
           type: file
           description: bgzipped gVCF created with deepsomatic, optional
           pattern: "*.g.vcf.gz"
           ontologies:
             - edam: http://edamontology.org/format_3989 # GZIP format
-  gvcf_tbi:
+  index:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information.
             e.g. [ id:'tumor_vs_normal' ]
-      - ${prefix}.g.vcf.gz.tbi:
+      - "*.vcf.gz.tbi":
           type: file
-          description: Tabix index for the gVCF file
-          pattern: "*.g.vcf.gz.tbi"
+          description: Tabix index for the VCF or gVCF file
+          pattern: "*.vcf.gz.tbi"
           ontologies: []
   compatible_versions:
     - compatible_versions.yml:

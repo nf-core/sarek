@@ -424,6 +424,8 @@ For further reading and documentation see the [bcftools manual](https://samtools
 
 - `<tumoursample_vs_normalsample>.deepsomatic.vcf.gz` and `<tumoursample_vs_normalsample>.deepsomatic.vcf.gz.tbi`
   - VCF with tabix index
+- `<tumoursample_vs_normalsample>.deepsomatic.g.vcf.gz` and `<tumoursample_vs_normalsample>.deepsomatic.g.vcf.gz.tbi`
+  - Tumour somatic gVCF with tabix index
 
 </details>
 

@@ -10,13 +10,14 @@ nextflow_pipeline {
     def test_scenario = [
         [
             name: "-profile test --tools deepsomatic somatic WGS",
+            tag: 'deepsomatic_wgs',
             params: [
                 genome: null,
                 igenomes_ignore: true,
                 fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                intervals: "${projectDir}/tests/bed/deepsomatic.bed",
                 step: "variant_calling",
                 tools: 'deepsomatic'
             ],
@@ -26,13 +27,14 @@ nextflow_pipeline {
         ],
         [
             name: "-profile test --tools deepsomatic somatic WES",
+            tag: 'deepsomatic_wes',
             params: [
                 genome: null,
                 igenomes_ignore: true,
                 fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                intervals: "${projectDir}/tests/bed/deepsomatic.bed",
                 step: "variant_calling",
                 tools: 'deepsomatic',
                 wes: true
@@ -61,15 +63,17 @@ nextflow_pipeline {
             assertions: { workflow, outdir, workDir ->
                 assert workflow.trace.succeeded().count { it.name.contains(':DEEPSOMATIC (') } == 2
                 assert workflow.trace.succeeded().count { it.name.contains(':MERGE_DEEPSOMATIC_VCF (') } == 1
+                assert workflow.trace.succeeded().count { it.name.contains(':MERGE_DEEPSOMATIC_GVCF (') } == 1
                 def published = new File("${outdir}/variant_calling/deepsomatic/testT_vs_testN").listFiles()*.name.sort()
-                assert published == ['testT_vs_testN.deepsomatic.vcf.gz', 'testT_vs_testN.deepsomatic.vcf.gz.tbi']
+                assert published == ['testT_vs_testN.deepsomatic.g.vcf.gz', 'testT_vs_testN.deepsomatic.g.vcf.gz.tbi', 'testT_vs_testN.deepsomatic.vcf.gz', 'testT_vs_testN.deepsomatic.vcf.gz.tbi']
                 def shardNames = [] as Set
                 new File(workDir.toString()).eachFileRecurse { file ->
                     if (file.name.startsWith('testT_vs_testN.deepsomatic.chr22_') && file.name.endsWith('.vcf.gz')) {
                         shardNames.add(file.name)
                     }
                 }
-                assert shardNames.size() == 2
+                assert shardNames.count { name -> name.endsWith('.g.vcf.gz') } == 2
+                assert shardNames.count { name -> !name.endsWith('.g.vcf.gz') } == 2
             }
         ],
         [
@@ -80,7 +84,7 @@ nextflow_pipeline {
                 fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                intervals: "${projectDir}/tests/bed/deepsomatic.bed",
                 no_intervals: true,
                 step: "variant_calling",
                 tools: 'deepsomatic'
@@ -92,13 +96,14 @@ nextflow_pipeline {
         ],
         [
             name: "-profile test --tools deepsomatic,strelka --filter_vcfs --normalize_vcfs --snv_consensus_calling",
+            tag: 'deepsomatic_postprocessing',
             params: [
                 genome: null,
                 igenomes_ignore: true,
                 fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                intervals: "${projectDir}/tests/bed/deepsomatic.bed",
                 step: "variant_calling",
                 tools: 'deepsomatic,strelka',
                 wes: true,

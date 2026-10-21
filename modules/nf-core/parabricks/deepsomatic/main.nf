@@ -12,11 +12,10 @@ process PARABRICKS_DEEPSOMATIC {
     tuple val(ref_meta), path(fasta)
 
     output:
-    tuple val(meta), path("${prefix}.vcf.gz"), emit: vcf, optional: true
-    tuple val(meta), path("${prefix}.vcf.gz.tbi"), emit: vcf_tbi, optional: true
-    tuple val(meta), path("${prefix}.g.vcf.gz"), emit: gvcf, optional: true
-    tuple val(meta), path("${prefix}.g.vcf.gz.tbi"), emit: gvcf_tbi, optional: true
-    path "compatible_versions.yml", emit: compatible_versions, optional: true
+    tuple val(meta), path("*.vcf.gz"),   emit: vcf,                 optional: true
+    tuple val(meta), path("*.g.vcf.gz"), emit: gvcf,                optional: true
+    tuple val(meta), path("*.vcf.gz.tbi"), emit: index,             optional: true
+    path "compatible_versions.yml",      emit: compatible_versions, optional: true
     tuple val("${task.process}"), val('parabricks'), eval("pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'"), topic: versions, emit: versions_parabricks
 
     when:
@@ -28,12 +27,8 @@ process PARABRICKS_DEEPSOMATIC {
         exit(1, "Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
-    def output_mode = task.ext.output_mode ?: 'vcf'
-    if (!(output_mode in ['vcf', 'gvcf'])) {
-        error("PARABRICKS_DEEPSOMATIC output mode must be 'vcf' or 'gvcf'.")
-    }
-    def output_file = output_mode == 'gvcf' ? "${prefix}.g.vcf.gz" : "${prefix}.vcf.gz"
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def output_file = "${prefix}.vcf.gz"
     def interval_command = intervals ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : ""
     def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
     """
@@ -49,15 +44,11 @@ process PARABRICKS_DEEPSOMATIC {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
-    def output_mode = task.ext.output_mode ?: 'vcf'
-    if (!(output_mode in ['vcf', 'gvcf'])) {
-        error("PARABRICKS_DEEPSOMATIC output mode must be 'vcf' or 'gvcf'.")
-    }
-    def output_file = output_mode == 'gvcf' ? "${prefix}.g.vcf.gz" : "${prefix}.vcf.gz"
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def output_cmd = "echo '' | gzip > ${prefix}.vcf.gz"
     """
-    echo '' | gzip > ${output_file}
-    touch ${output_file}.tbi
+    ${output_cmd}
 
     # Capture the full version output once and store it in a variable
     pbrun_version_output=\$(pbrun deepsomatic --version 2>&1)

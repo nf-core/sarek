@@ -244,9 +244,9 @@ Parabricks DeepSomatic requires an NVIDIA GPU. The `--profile docker,gpu` combin
 
 Sarek supports DeepSomatic for paired short-read WGS and WES data. This integration does not support tumour-only, panel, FFPE, PacBio, or ONT data. Select the CPU implementation with `--tools deepsomatic` or the GPU implementation with `--tools parabricks_deepsomatic`.
 
-The CPU implementation scatters calling across Sarek intervals and gathers the shards into one indexed VCF. It uses the `WGS` model by default and the `WES` model when `--wes` is set. The GPU implementation runs one task per pair. Both implementations run without a region restriction when `--no_intervals` is set.
+The CPU implementation scatters calling across Sarek intervals and gathers the shards into an indexed VCF and tumour somatic gVCF. It uses the `WGS` model by default and the `WES` model when `--wes` is set. The GPU implementation runs one task per pair. Both implementations run without a region restriction when `--no_intervals` is set.
 
-Both callers publish a raw VCF and tabix index. Sarek does not publish a DeepSomatic gVCF and does not apply a mandatory PASS filter. The existing optional filtering, normalisation, annotation, consensus, and QC workflows can process these VCF files.
+Both callers publish a raw VCF and tabix index. The CPU implementation also publishes the tumour somatic gVCF and its tabix index. Sarek does not apply a mandatory PASS filter. The existing optional filtering, normalisation, annotation, consensus, and QC workflows process the VCF files.
 
 The implementations can be selected together with `--tools deepsomatic,parabricks_deepsomatic`. Their metadata and published output directories remain separate.
 

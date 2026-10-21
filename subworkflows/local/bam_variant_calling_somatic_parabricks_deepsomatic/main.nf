@@ -2,7 +2,8 @@
 // PARABRICKS DEEPSOMATIC: GPU-accelerated tumour-normal somatic variant calling
 //
 
-include { PARABRICKS_DEEPSOMATIC } from '../../../modules/nf-core/parabricks/deepsomatic/main'
+include { PARABRICKS_DEEPSOMATIC                               } from '../../../modules/nf-core/parabricks/deepsomatic/main'
+include { HTSLIB_BGZIPTABIX as TABIX_VC_PARABRICKS_DEEPSOMATIC } from '../../../modules/nf-core/htslib/bgziptabix/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC {
     take:
@@ -21,9 +22,16 @@ workflow BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC {
 
     PARABRICKS_DEEPSOMATIC(cram_intervals, fasta)
 
-    vcf = PARABRICKS_DEEPSOMATIC.out.vcf.map { meta, vcf -> [meta + [variantcaller: 'parabricks_deepsomatic'], vcf] }
+    TABIX_VC_PARABRICKS_DEEPSOMATIC(
+        PARABRICKS_DEEPSOMATIC.out.vcf.map { meta, vcf -> [meta, vcf, [], []] },
+        'compress',
+        true,
+        'vcf',
+    )
 
-    tbi = PARABRICKS_DEEPSOMATIC.out.vcf_tbi.map { meta, tbi -> [meta + [variantcaller: 'parabricks_deepsomatic'], tbi] }
+    vcf = TABIX_VC_PARABRICKS_DEEPSOMATIC.out.output.map { meta, vcf -> [meta + [variantcaller: 'parabricks_deepsomatic'], vcf] }
+
+    tbi = TABIX_VC_PARABRICKS_DEEPSOMATIC.out.index.map { meta, tbi -> [meta + [variantcaller: 'parabricks_deepsomatic'], tbi] }
 
     emit:
     vcf // channel: [ meta, vcf.gz ]

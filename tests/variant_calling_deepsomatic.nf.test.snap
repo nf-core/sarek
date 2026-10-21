@@ -233,6 +233,8 @@
                 "variant_calling/consensus/sample4_vs_sample3/sample4_vs_sample3_consensus/sites.txt",
                 "variant_calling/deepsomatic",
                 "variant_calling/deepsomatic/sample4_vs_sample3",
+                "variant_calling/deepsomatic/sample4_vs_sample3/sample4_vs_sample3.deepsomatic.g.vcf.gz",
+                "variant_calling/deepsomatic/sample4_vs_sample3/sample4_vs_sample3.deepsomatic.g.vcf.gz.tbi",
                 "variant_calling/deepsomatic/sample4_vs_sample3/sample4_vs_sample3.deepsomatic.vcf.gz",
                 "variant_calling/deepsomatic/sample4_vs_sample3/sample4_vs_sample3.deepsomatic.vcf.gz.tbi",
                 "variant_calling/filtered",
@@ -270,39 +272,39 @@
                 "variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi"
             ],
             [
-                "mosdepth-coverage-per-contig-single.txt:md5,4ee05f71086179b42a01cd2fb450346f",
-                "mosdepth-cumcoverage-dist-id.txt:md5,cb7468f51b8be1230fb3ac5b130be31f",
-                "mosdepth_perchrom.txt:md5,4ee05f71086179b42a01cd2fb450346f",
+                "mosdepth-coverage-per-contig-single.txt:md5,e330a7f4ed8500ab89e1d538eacc6fcb",
+                "mosdepth-cumcoverage-dist-id.txt:md5,3d2cab36c1dec3769c44fbfe9d4f5943",
+                "mosdepth_perchrom.txt:md5,e330a7f4ed8500ab89e1d538eacc6fcb",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,bf6d30315fd7608b97b2a4eb1dc71fdc",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
                 "samtools_insert_size.txt:md5,8fa108dcbe0da42e9425dd125fe22905",
-                "sample4_vs_sample3.deepsomatic.bcftools_stats.txt:md5,41ef1cde6a1b97d22f4dc974ff7827d5",
-                "sample3.strelka.variants.bcftools_stats.txt:md5,2c40e667f6ee75761fe6c3b33dda0679",
-                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,0092bfd1833160732c4e3180a2a8d54d",
-                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,91f318ab5e6b017554f8f72866c6a5bd",
+                "sample4_vs_sample3.deepsomatic.bcftools_stats.txt:md5,ef6c0da1ceb6836592751a4db7df9108",
+                "sample3.strelka.variants.bcftools_stats.txt:md5,5f39ff0be11bddd08cd82e5519eb97c0",
+                "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,2a92e5314191a48c812fc318e8ddbea6",
+                "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,76dbfe5aeda4879c4bafbbe56638039d",
                 "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
-                "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
-                "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
+                "sample3.recal.mosdepth.region.dist.txt:md5,c286df3490a2478cf25b53d0a0044ad4",
+                "sample3.recal.mosdepth.summary.txt:md5,d8c9711f550bae55f19b9b4933945db5",
                 "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
                 "sample3.recal.per-base.bed.gz.csi:md5,68451158beb41ef7fcd07821fe3a52b4",
-                "sample3.recal.regions.bed.gz:md5,314ce8d7273eff353072108aa77c327c",
-                "sample3.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
+                "sample3.recal.regions.bed.gz:md5,a89beab28194b811efcc235bc30b6c3b",
+                "sample3.recal.regions.bed.gz.csi:md5,955cb31d2e591ac14e4ecf139e188367",
                 "sample4.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
-                "sample4.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
-                "sample4.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
+                "sample4.recal.mosdepth.region.dist.txt:md5,912a679e557a020806d42ce7b9c89b1b",
+                "sample4.recal.mosdepth.summary.txt:md5,6d9889a3656b7166884d547fbdbfe8b4",
                 "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
                 "sample4.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
-                "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample4.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
-                "sample4_vs_sample3.deepsomatic.FILTER.summary:md5,a9e4d5687f4e5db03b607187fed8a4ca",
-                "sample4_vs_sample3.deepsomatic.TsTv.count:md5,f269d04e5341b50494ced773d3a909c3",
-                "sample3.strelka.variants.FILTER.summary:md5,2048a5de0201a6052c988a0189979a5f",
-                "sample3.strelka.variants.TsTv.count:md5,c5b7a8eda2526d899098439ae4c06a49",
-                "sample4_vs_sample3.strelka.somatic_indels.FILTER.summary:md5,3441628cd6550ed459ca1c3db989ceea",
+                "sample4.recal.regions.bed.gz:md5,19b118e27693959e91e02bf3c024019e",
+                "sample4.recal.regions.bed.gz.csi:md5,955cb31d2e591ac14e4ecf139e188367",
+                "sample4_vs_sample3.deepsomatic.FILTER.summary:md5,c48a214d09b8951d675720ffe8b36ebc",
+                "sample4_vs_sample3.deepsomatic.TsTv.count:md5,95bde441e148c7408e022d011565cace",
+                "sample3.strelka.variants.FILTER.summary:md5,652a49b564f095f19df0480212b59e24",
+                "sample3.strelka.variants.TsTv.count:md5,72074aa712af682177e214842fcb783c",
+                "sample4_vs_sample3.strelka.somatic_indels.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample4_vs_sample3.strelka.somatic_indels.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,4fc17fa5625b4d1dcc5d791b1eb22d85",
-                "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae"
+                "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,db8dab7b499406efdfafc671ad7af2db",
+                "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,5c34dc406129c105d2096f03a2d90e5f"
             ],
             "No BAM files",
             "No CRAM files",
@@ -312,12 +314,16 @@
                     "VcfFile [chromosomes=[], sampleCount=2, variantCount=0, phased=true, phasedAutodetect=true]"
                 ],
                 [
+                    "sample4_vs_sample3.deepsomatic.g.vcf.gz",
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=285, phased=false, phasedAutodetect=false]"
+                ],
+                [
                     "sample4_vs_sample3.deepsomatic.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=138929, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=152, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "sample3.strelka.variants.bcftools_filtered.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=15, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[], sampleCount=1, variantCount=0, phased=true, phasedAutodetect=true]"
                 ],
                 [
                     "sample4_vs_sample3.deepsomatic.bcftools_filtered.vcf.gz",
@@ -325,15 +331,15 @@
                 ],
                 [
                     "sample4_vs_sample3.strelka.somatic_indels.bcftools_filtered.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=3, phased=true, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[], sampleCount=2, variantCount=0, phased=true, phasedAutodetect=true]"
                 ],
                 [
                     "sample4_vs_sample3.strelka.somatic_snvs.bcftools_filtered.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=10, phased=true, phasedAutodetect=true]"
+                    "VcfFile [chromosomes=[], sampleCount=2, variantCount=0, phased=true, phasedAutodetect=true]"
                 ],
                 [
                     "sample3.strelka.variants.bcftools_filtered.norm.sorted.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=15, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[], sampleCount=1, variantCount=0, phased=true, phasedAutodetect=true]"
                 ],
                 [
                     "sample4_vs_sample3.deepsomatic.bcftools_filtered.norm.sorted.vcf.gz",
@@ -341,32 +347,32 @@
                 ],
                 [
                     "sample4_vs_sample3.strelka.somatic_indels.bcftools_filtered.norm.sorted.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=3, phased=true, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[], sampleCount=2, variantCount=0, phased=true, phasedAutodetect=true]"
                 ],
                 [
                     "sample4_vs_sample3.strelka.somatic_snvs.bcftools_filtered.norm.sorted.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=10, phased=true, phasedAutodetect=true]"
+                    "VcfFile [chromosomes=[], sampleCount=2, variantCount=0, phased=true, phasedAutodetect=true]"
                 ],
                 [
                     "sample3.strelka.genome.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=898748, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=545, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "sample3.strelka.variants.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=52656, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=11, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "sample4_vs_sample3.strelka.somatic_indels.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=5, phased=true, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[], sampleCount=2, variantCount=0, phased=true, phasedAutodetect=true]"
                 ],
                 [
                     "sample4_vs_sample3.strelka.somatic_snvs.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=1602, phased=true, phasedAutodetect=true]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=2, variantCount=2, phased=true, phasedAutodetect=true]"
                 ]
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-13T14:32:20.793258093",
+        "timestamp": "2026-10-21T10:13:55.495945874",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -541,46 +547,52 @@
                 "variant_calling",
                 "variant_calling/deepsomatic",
                 "variant_calling/deepsomatic/sample4_vs_sample3",
+                "variant_calling/deepsomatic/sample4_vs_sample3/sample4_vs_sample3.deepsomatic.g.vcf.gz",
+                "variant_calling/deepsomatic/sample4_vs_sample3/sample4_vs_sample3.deepsomatic.g.vcf.gz.tbi",
                 "variant_calling/deepsomatic/sample4_vs_sample3/sample4_vs_sample3.deepsomatic.vcf.gz",
                 "variant_calling/deepsomatic/sample4_vs_sample3/sample4_vs_sample3.deepsomatic.vcf.gz.tbi"
             ],
             [
-                "mosdepth-coverage-per-contig-single.txt:md5,4ee05f71086179b42a01cd2fb450346f",
-                "mosdepth-cumcoverage-dist-id.txt:md5,cb7468f51b8be1230fb3ac5b130be31f",
-                "mosdepth_perchrom.txt:md5,4ee05f71086179b42a01cd2fb450346f",
+                "mosdepth-coverage-per-contig-single.txt:md5,e330a7f4ed8500ab89e1d538eacc6fcb",
+                "mosdepth-cumcoverage-dist-id.txt:md5,3d2cab36c1dec3769c44fbfe9d4f5943",
+                "mosdepth_perchrom.txt:md5,e330a7f4ed8500ab89e1d538eacc6fcb",
                 "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
                 "samtools-stats-dp.txt:md5,bf6d30315fd7608b97b2a4eb1dc71fdc",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
                 "samtools_insert_size.txt:md5,8fa108dcbe0da42e9425dd125fe22905",
-                "sample4_vs_sample3.deepsomatic.bcftools_stats.txt:md5,41ef1cde6a1b97d22f4dc974ff7827d5",
+                "sample4_vs_sample3.deepsomatic.bcftools_stats.txt:md5,ef6c0da1ceb6836592751a4db7df9108",
                 "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
-                "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
-                "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
+                "sample3.recal.mosdepth.region.dist.txt:md5,c286df3490a2478cf25b53d0a0044ad4",
+                "sample3.recal.mosdepth.summary.txt:md5,d8c9711f550bae55f19b9b4933945db5",
                 "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
                 "sample3.recal.per-base.bed.gz.csi:md5,68451158beb41ef7fcd07821fe3a52b4",
-                "sample3.recal.regions.bed.gz:md5,314ce8d7273eff353072108aa77c327c",
-                "sample3.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
+                "sample3.recal.regions.bed.gz:md5,a89beab28194b811efcc235bc30b6c3b",
+                "sample3.recal.regions.bed.gz.csi:md5,955cb31d2e591ac14e4ecf139e188367",
                 "sample4.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
-                "sample4.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
-                "sample4.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
+                "sample4.recal.mosdepth.region.dist.txt:md5,912a679e557a020806d42ce7b9c89b1b",
+                "sample4.recal.mosdepth.summary.txt:md5,6d9889a3656b7166884d547fbdbfe8b4",
                 "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
                 "sample4.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
-                "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
-                "sample4.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
-                "sample4_vs_sample3.deepsomatic.FILTER.summary:md5,a9e4d5687f4e5db03b607187fed8a4ca",
-                "sample4_vs_sample3.deepsomatic.TsTv.count:md5,f269d04e5341b50494ced773d3a909c3"
+                "sample4.recal.regions.bed.gz:md5,19b118e27693959e91e02bf3c024019e",
+                "sample4.recal.regions.bed.gz.csi:md5,955cb31d2e591ac14e4ecf139e188367",
+                "sample4_vs_sample3.deepsomatic.FILTER.summary:md5,c48a214d09b8951d675720ffe8b36ebc",
+                "sample4_vs_sample3.deepsomatic.TsTv.count:md5,95bde441e148c7408e022d011565cace"
             ],
             "No BAM files",
             "No CRAM files",
             [
                 [
+                    "sample4_vs_sample3.deepsomatic.g.vcf.gz",
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=285, phased=false, phasedAutodetect=false]"
+                ],
+                [
                     "sample4_vs_sample3.deepsomatic.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=138929, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=152, phased=false, phasedAutodetect=false]"
                 ]
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-13T13:32:55.224771544",
+        "timestamp": "2026-10-21T10:08:50.684471157",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -751,6 +763,8 @@
                 "variant_calling",
                 "variant_calling/deepsomatic",
                 "variant_calling/deepsomatic/sample4_vs_sample3",
+                "variant_calling/deepsomatic/sample4_vs_sample3/sample4_vs_sample3.deepsomatic.g.vcf.gz",
+                "variant_calling/deepsomatic/sample4_vs_sample3/sample4_vs_sample3.deepsomatic.g.vcf.gz.tbi",
                 "variant_calling/deepsomatic/sample4_vs_sample3/sample4_vs_sample3.deepsomatic.vcf.gz",
                 "variant_calling/deepsomatic/sample4_vs_sample3/sample4_vs_sample3.deepsomatic.vcf.gz.tbi"
             ],
@@ -762,7 +776,7 @@
                 "samtools-stats-dp.txt:md5,bf6d30315fd7608b97b2a4eb1dc71fdc",
                 "samtools_alignment_plot.txt:md5,f4b1a7cef760291172144a8614b4a1cd",
                 "samtools_insert_size.txt:md5,8fa108dcbe0da42e9425dd125fe22905",
-                "sample4_vs_sample3.deepsomatic.bcftools_stats.txt:md5,3d72b0d9ddb87a302aa6cbd55cedbed5",
+                "sample4_vs_sample3.deepsomatic.bcftools_stats.txt:md5,eb7df78a21f77032b5dc5172c3b39501",
                 "sample3.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample3.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
                 "sample3.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
@@ -773,20 +787,24 @@
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
                 "sample4.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
-                "sample4_vs_sample3.deepsomatic.FILTER.summary:md5,c9fd0826b02eaf48107ff6faee88af07",
-                "sample4_vs_sample3.deepsomatic.TsTv.count:md5,738ea4aaad5721d08c65d9e287463a7c"
+                "sample4_vs_sample3.deepsomatic.FILTER.summary:md5,c48a214d09b8951d675720ffe8b36ebc",
+                "sample4_vs_sample3.deepsomatic.TsTv.count:md5,95bde441e148c7408e022d011565cace"
             ],
             "No BAM files",
             "No CRAM files",
             [
                 [
+                    "sample4_vs_sample3.deepsomatic.g.vcf.gz",
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=285, phased=false, phasedAutodetect=false]"
+                ],
+                [
                     "sample4_vs_sample3.deepsomatic.vcf.gz",
-                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=138929, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr21], sampleCount=1, variantCount=152, phased=false, phasedAutodetect=false]"
                 ]
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-13T12:34:21.97841337",
+        "timestamp": "2026-10-21T10:07:12.381391376",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -948,12 +966,232 @@
                 "variant_calling",
                 "variant_calling/deepsomatic",
                 "variant_calling/deepsomatic/sample4_vs_sample3",
+                "variant_calling/deepsomatic/sample4_vs_sample3/sample4_vs_sample3.deepsomatic.g.vcf.gz",
+                "variant_calling/deepsomatic/sample4_vs_sample3/sample4_vs_sample3.deepsomatic.g.vcf.gz.tbi",
                 "variant_calling/deepsomatic/sample4_vs_sample3/sample4_vs_sample3.deepsomatic.vcf.gz",
                 "variant_calling/deepsomatic/sample4_vs_sample3/sample4_vs_sample3.deepsomatic.vcf.gz.tbi"
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-13T10:27:58.295714281",
+        "timestamp": "2026-10-21T09:03:31.332273426",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "-profile test --tools deepsomatic somatic scatter/gather": {
+        "content": [
+            18,
+            {
+                "BCFTOOLS_STATS": {
+                    "bcftools": "1.23.1"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "DEEPSOMATIC": {
+                    "deepsomatic": "1.10.0"
+                },
+                "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.7.0.0"
+                },
+                "MERGE_DEEPSOMATIC_GVCF": {
+                    "gatk4": "4.7.0.0"
+                },
+                "MERGE_DEEPSOMATIC_VCF": {
+                    "gatk4": "4.7.0.0"
+                },
+                "MOSDEPTH": {
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": "1.24"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
+                }
+            },
+            [
+                "csv",
+                "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/index.json",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
+                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_SNP.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transitions.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transversions.txt",
+                "multiqc/multiqc_data/llms-full.txt",
+                "multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt",
+                "multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt",
+                "multiqc/multiqc_data/mosdepth_cov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_cumcov_dist.txt",
+                "multiqc/multiqc_data/mosdepth_perchrom.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc.parquet",
+                "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_samtools_stats.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/samtools-stats-dp.txt",
+                "multiqc/multiqc_data/samtools_alignment_plot.txt",
+                "multiqc/multiqc_data/samtools_insert_size.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-pct.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths-log.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-coverage-per-contig-single-pct.pdf",
+                "multiqc/multiqc_plots/pdf/mosdepth-cumcoverage-dist-id.pdf",
+                "multiqc/multiqc_plots/pdf/samtools-stats-dp.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_alignment_plot-pct.pdf",
+                "multiqc/multiqc_plots/pdf/samtools_insert_size.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-pct.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths-log.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-cnt.png",
+                "multiqc/multiqc_plots/png/mosdepth-coverage-per-contig-single-pct.png",
+                "multiqc/multiqc_plots/png/mosdepth-cumcoverage-dist-id.png",
+                "multiqc/multiqc_plots/png/samtools-stats-dp.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-cnt.png",
+                "multiqc/multiqc_plots/png/samtools_alignment_plot-pct.png",
+                "multiqc/multiqc_plots/png/samtools_insert_size.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-pct.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths-log.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-cnt.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-coverage-per-contig-single-pct.svg",
+                "multiqc/multiqc_plots/svg/mosdepth-cumcoverage-dist-id.svg",
+                "multiqc/multiqc_plots/svg/samtools-stats-dp.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-cnt.svg",
+                "multiqc/multiqc_plots/svg/samtools_alignment_plot-pct.svg",
+                "multiqc/multiqc_plots/svg/samtools_insert_size.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/dict",
+                "reports",
+                "reports/bcftools",
+                "reports/bcftools/deepsomatic",
+                "reports/bcftools/deepsomatic/testT_vs_testN",
+                "reports/bcftools/deepsomatic/testT_vs_testN/testT_vs_testN.deepsomatic.bcftools_stats.txt",
+                "reports/mosdepth",
+                "reports/mosdepth/testN",
+                "reports/mosdepth/testN/testN.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/testN/testN.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/testN/testN.recal.mosdepth.summary.txt",
+                "reports/mosdepth/testN/testN.recal.regions.bed.gz",
+                "reports/mosdepth/testN/testN.recal.regions.bed.gz.csi",
+                "reports/mosdepth/testT",
+                "reports/mosdepth/testT/testT.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/testT/testT.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/testT/testT.recal.mosdepth.summary.txt",
+                "reports/mosdepth/testT/testT.recal.regions.bed.gz",
+                "reports/mosdepth/testT/testT.recal.regions.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/testN",
+                "reports/samtools/testN/testN.recal.cram.stats",
+                "reports/samtools/testT",
+                "reports/samtools/testT/testT.recal.cram.stats",
+                "reports/vcftools",
+                "reports/vcftools/deepsomatic",
+                "reports/vcftools/deepsomatic/testT_vs_testN",
+                "reports/vcftools/deepsomatic/testT_vs_testN/testT_vs_testN.deepsomatic.FILTER.summary",
+                "reports/vcftools/deepsomatic/testT_vs_testN/testT_vs_testN.deepsomatic.TsTv.count",
+                "reports/vcftools/deepsomatic/testT_vs_testN/testT_vs_testN.deepsomatic.TsTv.qual",
+                "variant_calling",
+                "variant_calling/deepsomatic",
+                "variant_calling/deepsomatic/testT_vs_testN",
+                "variant_calling/deepsomatic/testT_vs_testN/testT_vs_testN.deepsomatic.g.vcf.gz",
+                "variant_calling/deepsomatic/testT_vs_testN/testT_vs_testN.deepsomatic.g.vcf.gz.tbi",
+                "variant_calling/deepsomatic/testT_vs_testN/testT_vs_testN.deepsomatic.vcf.gz",
+                "variant_calling/deepsomatic/testT_vs_testN/testT_vs_testN.deepsomatic.vcf.gz.tbi"
+            ],
+            [
+                "mosdepth-coverage-per-contig-single.txt:md5,9cfd38310d4da59c7242b2a7ae6bd651",
+                "mosdepth-cumcoverage-dist-id.txt:md5,f0177ed551b6ec930854d0d221904ec0",
+                "mosdepth_perchrom.txt:md5,9cfd38310d4da59c7242b2a7ae6bd651",
+                "multiqc_citations.txt:md5,d40980f61eb64026d58102841b7f3860",
+                "samtools-stats-dp.txt:md5,1f1da592b5ef6dc0339d4d0b7b9aa03c",
+                "samtools_alignment_plot.txt:md5,563784066de81f3bc8ccf5fbbe82b3d5",
+                "samtools_insert_size.txt:md5,f3dd80e14876d827eb924c6cc888c782",
+                "testT_vs_testN.deepsomatic.bcftools_stats.txt:md5,661f7ec1250d07c983b9bacce8d907a1",
+                "testN.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
+                "testN.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
+                "testN.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
+                "testN.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
+                "testN.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
+                "testT.recal.mosdepth.global.dist.txt:md5,3106c114529adc4231badeb3bb38b6d1",
+                "testT.recal.mosdepth.region.dist.txt:md5,ccf646922b05cb4759c4f89072be2b69",
+                "testT.recal.mosdepth.summary.txt:md5,024649a659caff330dfbef4ac3560542",
+                "testT.recal.regions.bed.gz:md5,14b36a2cf428840aab471f95cfbe399f",
+                "testT.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
+                "testT_vs_testN.deepsomatic.FILTER.summary:md5,f518a15301e24595633338ca6dcdc805",
+                "testT_vs_testN.deepsomatic.TsTv.count:md5,7c0980a08616cc73015426b8419de417"
+            ],
+            "No BAM files",
+            "No CRAM files",
+            [
+                [
+                    "testT_vs_testN.deepsomatic.g.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=216, phased=false, phasedAutodetect=false]"
+                ],
+                [
+                    "testT_vs_testN.deepsomatic.vcf.gz",
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=11, phased=false, phasedAutodetect=false]"
+                ]
+            ],
+            "No warnings"
+        ],
+        "timestamp": "2026-10-21T08:58:33.537024792",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

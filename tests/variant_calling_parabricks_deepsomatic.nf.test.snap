@@ -1,7 +1,7 @@
 {
     "-profile test,gpu --tools parabricks_deepsomatic somatic WES": {
         "content": [
-            14,
+            15,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -27,6 +27,10 @@
                     "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_VC_PARABRICKS_DEEPSOMATIC": {
                     "htslib": "1.24",
                     "xz": "5.8.3"
                 },
@@ -206,7 +210,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-13T12:15:18.793766742",
+        "timestamp": "2026-10-21T09:04:34.402210592",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -214,7 +218,7 @@
     },
     "-profile test,gpu --tools parabricks_deepsomatic somatic WES -stub": {
         "content": [
-            14,
+            15,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -240,6 +244,10 @@
                     "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_VC_PARABRICKS_DEEPSOMATIC": {
                     "htslib": "1.24",
                     "xz": "5.8.3"
                 },
@@ -376,7 +384,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-13T10:29:57.031709779",
+        "timestamp": "2026-10-21T08:57:49.955928445",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -384,7 +392,7 @@
     },
     "-profile test,gpu --tools parabricks_deepsomatic somatic WGS --no_intervals -stub": {
         "content": [
-            11,
+            12,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -400,6 +408,10 @@
                     "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_VC_PARABRICKS_DEEPSOMATIC": {
                     "htslib": "1.24",
                     "xz": "5.8.3"
                 },
@@ -539,7 +551,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-09-30T16:08:39.41113777",
+        "timestamp": "2026-10-21T09:00:13.769362717",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -547,7 +559,7 @@
     },
     "-profile test,gpu --tools parabricks_deepsomatic somatic WGS": {
         "content": [
-            14,
+            15,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -573,6 +585,10 @@
                     "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_VC_PARABRICKS_DEEPSOMATIC": {
                     "htslib": "1.24",
                     "xz": "5.8.3"
                 },
@@ -744,7 +760,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-13T12:14:02.022064332",
+        "timestamp": "2026-10-21T09:01:19.057947056",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -752,7 +768,7 @@
     },
     "-profile test,gpu --tools parabricks_deepsomatic somatic WGS -stub": {
         "content": [
-            14,
+            15,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -778,6 +794,10 @@
                     "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_VC_PARABRICKS_DEEPSOMATIC": {
                     "htslib": "1.24",
                     "xz": "5.8.3"
                 },
@@ -914,7 +934,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-13T10:29:02.752848696",
+        "timestamp": "2026-10-21T08:54:42.446807415",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -922,7 +942,7 @@
     },
     "-profile test,gpu --aligner parabricks --tools parabricks_deepsomatic somatic WES": {
         "content": [
-            23,
+            24,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -963,6 +983,10 @@
                     "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_VC_PARABRICKS_DEEPSOMATIC": {
                     "htslib": "1.24",
                     "xz": "5.8.3"
                 },
@@ -1212,7 +1236,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-13T12:18:41.842866355",
+        "timestamp": "2026-10-21T09:11:36.645437446",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1220,7 +1244,7 @@
     },
     "-profile test,gpu --tools parabricks_deepsomatic somatic WGS --no_intervals": {
         "content": [
-            11,
+            12,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -1236,6 +1260,10 @@
                     "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_VC_PARABRICKS_DEEPSOMATIC": {
                     "htslib": "1.24",
                     "xz": "5.8.3"
                 },
@@ -1410,7 +1438,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-09-30T16:07:45.670396247",
+        "timestamp": "2026-10-21T09:07:22.27218093",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
