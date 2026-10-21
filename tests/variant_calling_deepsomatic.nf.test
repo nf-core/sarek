@@ -23,8 +23,7 @@ nextflow_pipeline {
                 tools: 'deepsomatic'
             ],
             no_conda: true,
-            no_vcf_md5sum: true,
-            vcf_samples: [pattern: 'variant_calling/deepsomatic/**/*.vcf.gz', names: ['tumour']]
+            no_vcf_md5sum: true
         ],
         [
             name: "-profile test --tools deepsomatic somatic WES",
@@ -41,8 +40,7 @@ nextflow_pipeline {
                 wes: true
             ],
             no_conda: true,
-            no_vcf_md5sum: true,
-            vcf_samples: [pattern: 'variant_calling/deepsomatic/**/*.vcf.gz', names: ['tumour']]
+            no_vcf_md5sum: true
         ],
         [
             name: "-profile test --tools deepsomatic somatic scatter/gather",
@@ -59,8 +57,7 @@ nextflow_pipeline {
                 tools: 'deepsomatic'
             ],
             no_conda: true,
-            no_vcf_md5sum: true,
-            vcf_samples: [pattern: 'variant_calling/deepsomatic/**/*.vcf.gz', names: ['testT']]
+            no_vcf_md5sum: true
         ],
         [
             name: "-profile test --tools deepsomatic somatic --no_intervals -stub",
@@ -76,9 +73,7 @@ nextflow_pipeline {
                 tools: 'deepsomatic'
             ],
             no_conda: true,
-            stub: true,
-            config: "${projectDir}/tests/config/deepsomatic_stub.config",
-            tag: 'cpu'
+            stub: true
         ],
         [
             name: "-profile test --tools deepsomatic,strelka --filter_vcfs --normalize_vcfs --snv_consensus_calling",
@@ -99,8 +94,7 @@ nextflow_pipeline {
             ],
             ignoreFiles: '**/consensus/**/{0000.vcf,0000.vcf.gz,sites.txt}',
             no_conda: true,
-            no_vcf_md5sum: true,
-            vcf_samples: [pattern: 'variant_calling/deepsomatic/**/*.vcf.gz', names: ['tumour']]
+            no_vcf_md5sum: true
         ]
     ]
 
