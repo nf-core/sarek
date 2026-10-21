@@ -238,12 +238,6 @@ nextflow run nf-core/sarek \
 
 - Parabricks does not support the use of this pipeline with `--profile conda`.
 
-#### Using DeepSomatic for tumour-normal variant calling
-
-Select DeepSomatic with `--tools deepsomatic` or its GPU implementation with `--tools parabricks_deepsomatic`. Both callers support paired short-read WGS and WES data. Use `--wes` to select the WES model.
-
-DeepSomatic scatters calling across intervals and gathers the results. Parabricks DeepSomatic runs one task per tumour-normal pair using the combined intervals. Both callers support `--no_intervals` to call without a region restriction.
-
 ### Start with duplicate marking (`--step markduplicates`)
 
 #### Duplicate Marking
