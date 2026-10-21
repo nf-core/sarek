@@ -195,9 +195,6 @@ class UTILS {
                         assert header.split('\t').drop(9) == scenario.vcf_samples.names
                     }
                 }
-                if (scenario.assertions) {
-                    scenario.assertions(workflow, params.outdir, workDir)
-                }
                 assertAll(
                     { assert snapshot(
                         // All assertions based on the scenario

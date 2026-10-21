@@ -16,7 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [#2293](https://github.com/nf-core/sarek/pull/2293) - Use upstream DeepSomatic modules without local patches, publish indexed CPU gVCFs, and index Parabricks VCFs in the workflow.
 - [#2296](https://github.com/nf-core/sarek/pull/2296) - Update 21 Java GATK4 modules to GATK 4.7.0.0 Lite containers from [nf-core/modules#13062](https://github.com/nf-core/modules/pull/13062), retaining the CNN and Spark environments ([@adamrtalbot](https://github.com/adamrtalbot)).
 
 ### Fixed

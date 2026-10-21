@@ -1,5 +1,6 @@
 def projectDir = new File('.').absolutePath
 def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+def small_intervals = 'https://raw.githubusercontent.com/nf-core/test-datasets/decd254e36bbd1af32753258cfd7e1852d9c7c66/data/genomics/homo_sapiens/genome/chr21/sequence/small.bed'
 
 nextflow_pipeline {
 
@@ -17,7 +18,7 @@ nextflow_pipeline {
                 fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-                intervals: "${projectDir}/tests/bed/deepsomatic.bed",
+                intervals: small_intervals,
                 step: "variant_calling",
                 tools: 'deepsomatic'
             ],
@@ -34,7 +35,7 @@ nextflow_pipeline {
                 fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-                intervals: "${projectDir}/tests/bed/deepsomatic.bed",
+                intervals: small_intervals,
                 step: "variant_calling",
                 tools: 'deepsomatic',
                 wes: true
@@ -59,22 +60,7 @@ nextflow_pipeline {
             ],
             no_conda: true,
             no_vcf_md5sum: true,
-            vcf_samples: [pattern: 'variant_calling/deepsomatic/**/*.vcf.gz', names: ['testT']],
-            assertions: { workflow, outdir, workDir ->
-                assert workflow.trace.succeeded().count { it.name.contains(':DEEPSOMATIC (') } == 2
-                assert workflow.trace.succeeded().count { it.name.contains(':MERGE_DEEPSOMATIC_VCF (') } == 1
-                assert workflow.trace.succeeded().count { it.name.contains(':MERGE_DEEPSOMATIC_GVCF (') } == 1
-                def published = new File("${outdir}/variant_calling/deepsomatic/testT_vs_testN").listFiles()*.name.sort()
-                assert published == ['testT_vs_testN.deepsomatic.g.vcf.gz', 'testT_vs_testN.deepsomatic.g.vcf.gz.tbi', 'testT_vs_testN.deepsomatic.vcf.gz', 'testT_vs_testN.deepsomatic.vcf.gz.tbi']
-                def shardNames = [] as Set
-                new File(workDir.toString()).eachFileRecurse { file ->
-                    if (file.name.startsWith('testT_vs_testN.deepsomatic.chr22_') && file.name.endsWith('.vcf.gz')) {
-                        shardNames.add(file.name)
-                    }
-                }
-                assert shardNames.count { name -> name.endsWith('.g.vcf.gz') } == 2
-                assert shardNames.count { name -> !name.endsWith('.g.vcf.gz') } == 2
-            }
+            vcf_samples: [pattern: 'variant_calling/deepsomatic/**/*.vcf.gz', names: ['testT']]
         ],
         [
             name: "-profile test --tools deepsomatic somatic --no_intervals -stub",
@@ -84,7 +70,7 @@ nextflow_pipeline {
                 fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-                intervals: "${projectDir}/tests/bed/deepsomatic.bed",
+                intervals: small_intervals,
                 no_intervals: true,
                 step: "variant_calling",
                 tools: 'deepsomatic'
@@ -103,7 +89,7 @@ nextflow_pipeline {
                 fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
                 fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-                intervals: "${projectDir}/tests/bed/deepsomatic.bed",
+                intervals: small_intervals,
                 step: "variant_calling",
                 tools: 'deepsomatic,strelka',
                 wes: true,

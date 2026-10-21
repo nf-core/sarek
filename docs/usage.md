@@ -214,7 +214,7 @@ process {
 #### Using GPU accelerated variant calling
 
 > [!NOTE]
-> Parabricks DeepVariant and Parabricks HaplotypeCaller are experimental additions to the pipeline. Parabricks DeepSomatic is supported for short-read tumour-normal WGS and WES.
+> Parabricks DeepVariant and Parabricks HaplotypeCaller are experimental additions to the pipeline.
 
 Sarek supports the following GPU-accelerated variant callers from [NVIDIA Parabricks](https://docs.nvidia.com/clara/parabricks/latest/) as an alternative to CPU based implementations:
 
@@ -238,19 +238,11 @@ nextflow run nf-core/sarek \
 
 - Parabricks does not support the use of this pipeline with `--profile conda`.
 
-Parabricks DeepSomatic requires an NVIDIA GPU. The `--profile docker,gpu` combination is an example configuration. Custom executor configurations can allocate GPUs without using a profile named `gpu`. It runs one task per tumour-normal pair and uses the combined interval BED. When `--wes` is set, Sarek enables the WES model. When `--no_intervals` is set, Sarek does not restrict calling to intervals.
-
 #### Using DeepSomatic for tumour-normal variant calling
 
-Sarek supports DeepSomatic for paired short-read WGS and WES data. This integration does not support tumour-only, panel, FFPE, PacBio, or ONT data. Select the CPU implementation with `--tools deepsomatic` or the GPU implementation with `--tools parabricks_deepsomatic`.
+Select DeepSomatic with `--tools deepsomatic` or its GPU implementation with `--tools parabricks_deepsomatic`. Both callers support paired short-read WGS and WES data. Use `--wes` to select the WES model.
 
-The CPU implementation scatters calling across Sarek intervals and gathers the shards into an indexed VCF and tumour somatic gVCF. It uses the `WGS` model by default and the `WES` model when `--wes` is set. The GPU implementation runs one task per pair. Both implementations run without a region restriction when `--no_intervals` is set.
-
-Both callers publish a raw VCF and tabix index. The CPU implementation also publishes the tumour somatic gVCF and its tabix index. Sarek does not apply a mandatory PASS filter. The existing optional filtering, normalisation, annotation, consensus, and QC workflows process the VCF files.
-
-The implementations can be selected together with `--tools deepsomatic,parabricks_deepsomatic`. Their metadata and published output directories remain separate.
-
-Pair identifiers and filenames use `${tumor_id}_vs_${normal_id}`. DeepSomatic obtains sample names from the input CRAM read-group `SM` values. CRAM files produced by Sarek normally use `${patient}_${sample}` for `SM`.
+DeepSomatic scatters calling across intervals and gathers the results. Parabricks DeepSomatic runs one task per tumour-normal pair using the combined intervals. Both callers support `--no_intervals` to call without a region restriction.
 
 ### Start with duplicate marking (`--step markduplicates`)
 
