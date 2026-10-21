@@ -1,54 +1,32 @@
+def projectDir = new File('.').absolutePath
 def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
 
-nextflow_process {
+nextflow_pipeline {
 
-    name "DeepSomatic sample-interval tuples"
-    script "../modules/nf-core/deepsomatic/main.nf"
-    process "DEEPSOMATIC"
+    name "Test pipeline"
+    script "../main.nf"
     profile "test"
 
-    test("Keep each interval attached to its sample") {
-        tag "cpu"
-        tag "cpu_stub"
-        options "-stub"
+    def test_scenario = [
+        [
+            name: "-profile test --tools deepsomatic multiple tumour-normal pairs -stub",
+            params: [
+                genome: null,
+                igenomes_ignore: true,
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic_joint.csv",
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                step: "variant_calling",
+                tools: 'deepsomatic'
+            ],
+            no_conda: true,
+            stub: true,
+            tag: 'cpu'
+        ]
+    ]
 
-        when {
-            params {
-                outdir = "${outputDir}"
-            }
-            process {
-                """
-                def normal = file('${modules_testdata_base_path}genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
-                def normal_index = file('${modules_testdata_base_path}genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)
-                def tumour = file('${modules_testdata_base_path}genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam', checkIfExists: true)
-                def tumour_index = file('${modules_testdata_base_path}genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam.bai', checkIfExists: true)
-
-                input[0] = Channel.of(
-                    [[id: 'first', num_intervals: 2], normal, normal_index, tumour, tumour_index,
-                        file('${modules_testdata_base_path}genomics/homo_sapiens/genome/genome.intervals1_multi.bed', checkIfExists: true)],
-                    [[id: 'second', num_intervals: 2], normal, normal_index, tumour, tumour_index,
-                        file('${modules_testdata_base_path}genomics/homo_sapiens/genome/genome.intervals2_multi.bed', checkIfExists: true)]
-                )
-                input[1] = Channel.value([[id: 'genome'], file('${modules_testdata_base_path}genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
-                input[2] = Channel.value([[id: 'genome'], file('${modules_testdata_base_path}genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)])
-                input[3] = Channel.value([[id: 'no_gzi'], []])
-                """
-            }
-        }
-
-        then {
-            assert process.success
-            assert process.trace.succeeded().size() == 2
-            assert process.out.vcf.collect { [it[0].id, file(it[1]).name] }.sort { it[0] } == [
-                ['first', 'first.deepsomatic.genome.intervals1_multi.vcf.gz'],
-                ['second', 'second.deepsomatic.genome.intervals2_multi.vcf.gz']
-            ]
-            assert process.out.vcf_tbi.collect { [it[0].id, file(it[1]).name] }.sort { it[0] } == [
-                ['first', 'first.deepsomatic.genome.intervals1_multi.vcf.gz.tbi'],
-                ['second', 'second.deepsomatic.genome.intervals2_multi.vcf.gz.tbi']
-            ]
-            assert process.out.gvcf.isEmpty()
-            assert process.out.gvcf_tbi.isEmpty()
-        }
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
     }
 }
