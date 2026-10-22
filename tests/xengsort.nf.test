@@ -1,0 +1,60 @@
+def projectDir = new File('.').absolutePath
+
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
+nextflow_pipeline {
+
+    name "Test pipeline - Xengsort contamination removal"
+    script "../main.nf"
+
+    def test_scenario = [
+        [
+            name: "-profile test --tools xengsort,strelka --xengsort_host_fasta (single)",
+            params: [
+                tools: 'xengsort,strelka',
+                xengsort_host_fasta: modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta',
+                input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
+                modules_testdata_base_path: modules_testdata_base_path,
+                igenomes_base: modules_testdata_base_path,
+                genome: 'testdata.nf-core.sarek',
+                save_reference: true,
+                validate_params: false
+            ],
+            ignoreFiles: '{multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt,multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt,multiqc/multiqc_data/mosdepth_perchrom.txt,multiqc/multiqc_data/samtools*.txt,preprocessing/**/*.cram,reports/mosdepth/*/*,**/xengsort_index/*.hash,**/xengsort_index/*.info}'
+        ],
+        [
+            name: "-profile test --tools xengsort,strelka --xengsort_host_fasta (pair)",
+            params: [
+                tools: 'xengsort,strelka',
+                xengsort_host_fasta: modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta',
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                modules_testdata_base_path: modules_testdata_base_path,
+                igenomes_base: modules_testdata_base_path,
+                genome: 'testdata.nf-core.sarek',
+                save_reference: true,
+                validate_params: false
+            ],
+            ignoreFiles: '{multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt,multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt,multiqc/multiqc_data/mosdepth_perchrom.txt,multiqc/multiqc_data/samtools*.txt,preprocessing/**/*.cram,reports/mosdepth/*/*,**/xengsort_index/*.hash,**/xengsort_index/*.info}'
+        ],
+        [
+            name: "-profile test --tools xengsort,strelka --xengsort_host_fasta -stub",
+            params: [
+                tools: 'xengsort,strelka',
+                xengsort_host_fasta: modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta',
+                input: "${projectDir}/tests/csv/3.0/fastq_single.csv",
+                modules_testdata_base_path: modules_testdata_base_path,
+                igenomes_base: modules_testdata_base_path,
+                genome: 'testdata.nf-core.sarek',
+                save_reference: true,
+                validate_params: false
+            ],
+            stub: true,
+            ignoreFiles: '{multiqc/multiqc_data/mosdepth-coverage-per-contig-single.txt,multiqc/multiqc_data/mosdepth-cumcoverage-dist-id.txt,multiqc/multiqc_data/mosdepth_perchrom.txt,multiqc/multiqc_data/samtools*.txt,preprocessing/**/*.cram,reports/mosdepth/*/*}'
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}
