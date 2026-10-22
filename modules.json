@@ -413,22 +413,22 @@
                     },
                     "parabricks/applybqsr": {
                         "branch": "master",
-                        "git_sha": "541af7c6735edaae882567b910071b563e9b1317",
+                        "git_sha": "78522f4889133e32443c76ba9b4703cbdf3ac331",
                         "installed_by": ["modules"]
                     },
                     "parabricks/deepvariant": {
                         "branch": "master",
-                        "git_sha": "3e0ec6464725c64d81abe928e15a6750d5fdd272",
+                        "git_sha": "78522f4889133e32443c76ba9b4703cbdf3ac331",
                         "installed_by": ["modules"]
                     },
                     "parabricks/fq2bam": {
                         "branch": "master",
-                        "git_sha": "4bfaaac6e5818b452040366ed85a42eeddcf46a2",
+                        "git_sha": "78522f4889133e32443c76ba9b4703cbdf3ac331",
                         "installed_by": ["modules"]
                     },
                     "parabricks/haplotypecaller": {
                         "branch": "master",
-                        "git_sha": "3e0ec6464725c64d81abe928e15a6750d5fdd272",
+                        "git_sha": "78522f4889133e32443c76ba9b4703cbdf3ac331",
                         "installed_by": ["modules"]
                     },
                     "rbt/vcfsplit": {
