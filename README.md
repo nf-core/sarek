@@ -48,10 +48,12 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `ASCAT`
   - `CNVkit`
   - `Control-FREEC`
+  - `DeepSomatic`
   - `DeepVariant`
   - `freebayes`
   - `GATK HaplotypeCaller`
   - `GATK Mutect2`
+  - `Parabricks DeepSomatic` (GPU-accelerated)
   - `Parabricks HaplotypeCaller` (Experimental Feature)
   - `Parabricks Deepvariant` (Experimental Feature)
   - `indexcov`
