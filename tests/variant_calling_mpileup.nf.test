@@ -27,7 +27,9 @@ nextflow_pipeline {
                 input: "${projectDir}/tests/csv/3.0/recalibrated_germline.csv",
                 step: "variant_calling",
                 tools: 'mpileup',
-                nucleotides_per_second: 20
+                nucleotides_per_second: 20,
+                genome: null,
+                igenomes_ignore: true
             ]
         ],
         [
