@@ -14,6 +14,7 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 - [#2177](https://github.com/nf-core/sarek/pull/2177) - Add Parabricks DeepVariant (`--tools parabricks_deepvariant`) as GPU-accelerated germline variant caller
 - [#2268](https://github.com/nf-core/sarek/pull/2268) - Add parabricks/applybqsr
 - [#2284](https://github.com/nf-core/sarek/pull/2284) - Add `manifest.diagram` to `nextflow.config`
+- [#2293](https://github.com/nf-core/sarek/pull/2293) - Add DeepSomatic and Parabricks DeepSomatic as short-read tumour-normal variant callers (`--tools deepsomatic` and `--tools parabricks_deepsomatic`)
 - [#2328](https://github.com/nf-core/sarek/pull/2328) - Add `ascat_penalty` as configurable ASCAT parameter (default 70)
 
 ### Changed
@@ -33,6 +34,7 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 - [#2296](https://github.com/nf-core/sarek/pull/2296) - Preserve CRAM 3.0 after recalibration with the existing Samtools converter so GATK 4.7 output remains compatible with legacy callers.
 - [#2230](https://github.com/nf-core/sarek/pull/2230) - Varlociraptor: fix custom scenario file parsing
 - [#2335](https://github.com/nf-core/sarek/pull/2335) - Fix: pass `markduplicates_pixel_distance` to `GATK4SPARK_MARKDUPLICATES` ([#2334](https://github.com/nf-core/sarek/issues/2334)).
+- [#2338](https://github.com/nf-core/sarek/pull/2338) - Fix undefined `intervals` reference in the BCFtools mpileup output prefix ([#2294](https://github.com/nf-core/sarek/issues/2294)).
 
 ### Removed
 

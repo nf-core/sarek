@@ -35,6 +35,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Variant Calling](#variant-calling)
   - [SNVs and small indels](#snvs-and-small-indels)
     - [bcftools](#bcftools)
+    - [DeepSomatic](#deepsomatic)
     - [DeepVariant](#deepvariant)
     - [FreeBayes](#freebayes)
     - [GATK HaplotypeCaller](#gatk-haplotypecaller)
@@ -43,6 +44,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [GATK Mutect2](#gatk-mutect2)
     - [Lofreq](#lofreq)
     - [MuSE](#muse)
+    - [Parabricks DeepSomatic](#parabricks-deepsomatic)
     - [Parabricks DeepVariant](#parabricks-deepvariant)
     - [Parabricks HaplotypeCaller](#parabricks-haplotypecaller)
     - [Sentieon DNAscope](#sentieon-dnascope)
@@ -411,6 +413,22 @@ For further reading and documentation see the [bcftools manual](https://samtools
 
 </details>
 
+#### DeepSomatic
+
+[DeepSomatic](https://github.com/google/deepsomatic) is a deep learning-based caller for somatic SNVs and small indels in paired tumour-normal samples.
+
+<details markdown="1">
+<summary>Output files for tumour-normal pairs</summary>
+
+**Output directory: `{outdir}/variant_calling/deepsomatic/<tumoursample_vs_normalsample>/`**
+
+- `<tumoursample_vs_normalsample>.deepsomatic.vcf.gz` and `<tumoursample_vs_normalsample>.deepsomatic.vcf.gz.tbi`
+  - VCF with tabix index
+- `<tumoursample_vs_normalsample>.deepsomatic.g.vcf.gz` and `<tumoursample_vs_normalsample>.deepsomatic.g.vcf.gz.tbi`
+  - Tumour somatic gVCF with tabix index
+
+</details>
+
 #### DeepVariant
 
 [DeepVariant](https://github.com/google/deepvariant) is a deep learning-based variant caller that takes aligned reads, produces pileup image tensors from them, classifies each tensor using a convolutional neural network and finally reports the results in a standard VCF or gVCF file. For further documentation take a look [here](https://github.com/google/deepvariant/tree/r1.4/docs).
@@ -552,6 +570,20 @@ Files created:
   - TXT containing position-specific summary statistics.
 - `<tumorsample_vs_normalsample>.muse.vcf.gz`
   - VCF with called variants. Fields are named TUMOR and NORMAL.
+
+</details>
+
+#### Parabricks DeepSomatic
+
+[Parabricks DeepSomatic](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepsomatic.html) is a GPU-accelerated implementation of DeepSomatic for somatic SNVs and small indels in paired tumour-normal samples.
+
+<details markdown="1">
+<summary>Output files for tumour-normal pairs</summary>
+
+**Output directory: `{outdir}/variant_calling/parabricks_deepsomatic/<tumoursample_vs_normalsample>/`**
+
+- `<tumoursample_vs_normalsample>.parabricks_deepsomatic.vcf.gz` and `<tumoursample_vs_normalsample>.parabricks_deepsomatic.vcf.gz.tbi`
+  - VCF with tabix index
 
 </details>
 
