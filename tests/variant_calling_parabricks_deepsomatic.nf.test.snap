@@ -11,7 +11,7 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_DEEPSOMATIC": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -158,9 +158,11 @@
                 "variant_calling/parabricks_deepsomatic/testT_vs_testN/testT_vs_testN.parabricks_deepsomatic.vcf.gz",
                 "variant_calling/parabricks_deepsomatic/testT_vs_testN/testT_vs_testN.parabricks_deepsomatic.vcf.gz.tbi"
             ],
-            "No warnings"
+            [
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
         ],
-        "timestamp": "2026-10-21T09:00:13.769362717",
+        "timestamp": "2026-10-23T09:23:57.772236337",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -184,7 +186,7 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_DEEPSOMATIC": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -369,7 +371,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-21T09:01:19.057947056",
+        "timestamp": "2026-10-23T09:23:01.032894526",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
