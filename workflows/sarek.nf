@@ -212,7 +212,8 @@ workflow SAREK {
                 index_alignment,
                 intervals_bed_combined,
                 known_sites_indels,
-                channel.value("cram"),
+                known_sites_indels_tbi,
+                skip_tools.split(',').contains('baserecalibrator'),
                 params.save_mapped,
                 params.save_output_as_bam,
                 params.outdir,
@@ -265,7 +266,7 @@ workflow SAREK {
     CRAM_SAMPLEQC(
         cram_variant_calling,
         ngscheckmate_bed,
-        fasta.combine(fasta_fai).map { meta_fasta_, fasta_file , _meta_fai, fai -> [meta_fasta_, fasta_file, fai] }.collect(),
+        fasta.combine(fasta_fai).map { meta_fasta_, fasta_file, _meta_fai, fai -> [meta_fasta_, fasta_file, fai] }.collect(),
         skip_tools.split(',').contains('baserecalibrator'),
         intervals_for_preprocessing,
     )
@@ -286,7 +287,7 @@ workflow SAREK {
             }
 
             // convert cram files
-            CRAM_TO_BAM(cram_variant_calling_status_tmp.cram, fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai ] }.collect())
+            CRAM_TO_BAM(cram_variant_calling_status_tmp.cram, fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fai -> [meta, fasta_, fai] }.collect())
 
             // gather all bam files
             bam_variant_calling = CRAM_TO_BAM.out.bam

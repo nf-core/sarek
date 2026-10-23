@@ -1,7 +1,7 @@
 {
     "-profile test --input bam_for_remapping.csv --save_mapped --save_output_as_bam": {
         "content": [
-            25,
+            24,
             {
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -26,17 +26,18 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.2.0",
-                    "samtools": "1.21"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
@@ -286,10 +287,10 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:21:40.510324699",
+        "timestamp": "2026-10-14T17:53:03.330762174",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     }
 }
