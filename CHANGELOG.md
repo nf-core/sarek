@@ -24,6 +24,7 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 - [#2318](https://github.com/nf-core/sarek/pull/2318) - Use the nf-core `bam_applybqsr` subworkflow for recalibration. GATK streams BAM and samtools writes the CRAM, pinned to 3.0 so legacy htslib tools can still read it. CRAI indexes are published alongside recalibrated CRAMs.
 - [#2321](https://github.com/nf-core/sarek/pull/2321) - Migrate AWS test workflows to `seqeralabs/action-seqera-launch@v1.0.0-rc.2`
 - [#2329](https://github.com/nf-core/sarek/pull/2329) - Update ensemblvep modules to ensembl-vep 116.3, pin htslib to 1.21 to fix conda solving ([nf-core/modules#13299](https://github.com/nf-core/modules/pull/13299))
+- [#2339](https://github.com/nf-core/sarek/pull/XXXX) - Update `parabricks/applybqsr`, `parabricks/deepvariant`, `parabricks/fq2bam` `parabricks/deepsomatic` and `parabricks/haplotypecaller` modules to Parabricks 4.8.0.
 
 ### Fixed
 
@@ -137,7 +138,7 @@ Aktse is a mountain hut on the northern shore of Laitaure, on the Kungsleden tra
 | mosdepth      | 0.3.10      | 0.3.14      |
 | cnvkit        | 0.9.11      | 0.9.12      |
 | xz            | -           | 5.8.3       |
-| parabricks    | 4.6.0-1     | 4.7.1-1     |
+| parabricks    | 4.6.0-1     | 4.8.0-1     |
 | snpsift       | 5.4.0a      | 5.4.0c      |
 
 ### Dependencies - plugins

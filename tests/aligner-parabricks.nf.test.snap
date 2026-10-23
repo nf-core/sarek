@@ -26,10 +26,10 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_APPLYBQSR": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -227,7 +227,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-01T21:02:46.684318459",
+        "timestamp": "2026-10-22T11:43:13.33508876",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -260,10 +260,10 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_APPLYBQSR": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -461,7 +461,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-01T23:34:33.9383969",
+        "timestamp": "2026-10-22T11:41:21.218523269",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -512,10 +512,10 @@
                     "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_APPLYBQSR": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -795,7 +795,7 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-10-01T23:38:14.51377999",
+        "timestamp": "2026-10-22T11:45:30.179743299",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -822,10 +822,10 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_APPLYBQSR": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -1012,7 +1012,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-08-28T12:40:23.308679391",
+        "timestamp": "2026-10-22T11:59:13.892169542",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1042,10 +1042,10 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_APPLYBQSR": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -1241,7 +1241,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-08-28T12:38:16.440171744",
+        "timestamp": "2026-10-22T11:47:19.595643459",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1270,7 +1270,7 @@
                     "samtools": "1.24"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "htslib": "1.24",
@@ -1410,7 +1410,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-01T21:08:31.91722215",
+        "timestamp": "2026-10-22T12:01:05.326026242",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
