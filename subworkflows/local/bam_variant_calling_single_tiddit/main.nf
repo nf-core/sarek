@@ -16,7 +16,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_TIDDIT {
 
     main:
 
-    TIDDIT_SV(cram, fasta.combine(fasta_fai).map { fasta_meta, fasta_path, _fai_meta, fai_path -> [ fasta_meta, fasta_path, fai_path ] }, bwa)
+    TIDDIT_SV(cram, fasta.combine(fasta_fai).map { fasta_meta, fasta_path, _fai_meta, fai_path -> [ fasta_meta, fasta_path, fai_path ] }.collect(), bwa)
 
     TABIX_BGZIP_TIDDIT_SV(TIDDIT_SV.out.vcf.map { meta, vcf -> [ meta, vcf, [], [] ] }, 'compress', true, 'vcf')
 
