@@ -1,11 +1,8 @@
 {
     "-profile test --references genomes/Homo_sapiens/GATK/GRCh38_chr22.yml --genome null": {
         "content": [
-            22,
+            20,
             {
-                "BAM_TO_CRAM_RECAL": {
-                    "samtools": "1.24"
-                },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
                 },
@@ -20,16 +17,14 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.7.0.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "GATK4_MARKDUPLICATES": {
                     "gatk4": "4.7.0.0",
-                    "samtools": "1.21"
-                },
-                "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
@@ -322,7 +317,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-24T14:39:48.057518534",
+        "timestamp": "2026-10-24T17:56:07.081824493",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"
@@ -330,11 +325,8 @@
     },
     "-profile test --references tests/assets/references.yml --genome null with references_base_path substitution": {
         "content": [
-            22,
+            20,
             {
-                "BAM_TO_CRAM_RECAL": {
-                    "samtools": "1.24"
-                },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
                 },
@@ -349,16 +341,14 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.7.0.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "GATK4_MARKDUPLICATES": {
                     "gatk4": "4.7.0.0",
-                    "samtools": "1.21"
-                },
-                "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
@@ -651,10 +641,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-24T13:40:59.68615094",
+        "timestamp": "2026-10-24T17:59:07.37406767",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.0"
+            "nextflow": "26.04.0"
         }
     },
     "-profile test --references genomes/Homo_sapiens/GATK/GRCh38_chr22.yml": {
@@ -679,11 +669,8 @@
     },
     "-profile test --igenomes_ignore --genome GRCh38_chr22 --references_datasheets_path genomes/Homo_sapiens/GATK": {
         "content": [
-            22,
+            20,
             {
-                "BAM_TO_CRAM_RECAL": {
-                    "samtools": "1.24"
-                },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
                 },
@@ -698,16 +685,14 @@
                     "fastqc": "0.12.1"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.7.0.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "GATK4_MARKDUPLICATES": {
                     "gatk4": "4.7.0.0",
-                    "samtools": "1.21"
-                },
-                "INDEX_MERGE_BAM": {
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
@@ -1000,10 +985,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-24T13:39:18.033389748",
+        "timestamp": "2026-10-24T17:57:33.983554408",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.0"
+            "nextflow": "26.04.0"
         }
     }
 }
