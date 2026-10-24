@@ -398,6 +398,20 @@ test,sample4_vs_sample3,manta,sample4_vs_sample3.diploid_sv.vcf.gz
 test,sample4_vs_sample3,manta,sample4_vs_sample3.somatic_sv.vcf.gz
 ```
 
+## Reference selection
+
+Reference attributes (`--fasta`, `--dbsnp`, `--known_indels`, and the other reference flags) are each resolved from the first source that supplies them:
+
+1. Explicit parameters.
+2. A references datasheet, passed with `--references`, or located from `--references_datasheets_path` with `--genome` and `--igenomes_ignore`.
+3. An iGenomes catalogue entry for `--genome`.
+
+`--references` and `--genome` are mutually exclusive: passing both is an error. Sarek defaults `--genome` to `GATK.GRCh38`, so runs that pass `--references` must unset it with `--genome ''`.
+
+A datasheet can also supply annotation attributes (`snpeff_db`, `vep_cache_version`, `vep_genome`, `vep_species`); explicit flags still outrank it.
+
+Datasheet paths may carry `${params.references_base_path}` placeholders, resolved against this pipeline's `references_base_path` when the datasheet loads. The shared resolution order and the datasheet format behind it are documented in the [nf-core/references usage documentation](https://nf-co.re/references/usage).
+
 ## Updating the pipeline
 
 When you launch a pipeline from the command-line with `nextflow run nf-core/sarek -params-file params.yaml`, Nextflow will automatically pull the pipeline code from GitHub and store it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:

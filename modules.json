@@ -662,7 +662,7 @@
                     },
                     "utils_nfschema_plugin": {
                         "branch": "master",
-                        "git_sha": "a7b27fd25bfa8dcc07d299e88bd790585901a436",
+                        "git_sha": "f6d4527ae18ee2e3276e6965ac64ee798e12d24b",
                         "installed_by": ["subworkflows"]
                     },
                     "vcf_annotate_snpeff": {
