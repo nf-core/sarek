@@ -16,6 +16,7 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 - [#2284](https://github.com/nf-core/sarek/pull/2284) - Add `manifest.diagram` to `nextflow.config`
 - [#2293](https://github.com/nf-core/sarek/pull/2293) - Add DeepSomatic and Parabricks DeepSomatic as short-read tumour-normal variant callers (`--tools deepsomatic` and `--tools parabricks_deepsomatic`)
 - [#2328](https://github.com/nf-core/sarek/pull/2328) - Add `ascat_penalty` as configurable ASCAT parameter (default 70)
+- [#2327](https://github.com/nf-core/sarek/pull/2327) - Add nf-snapshot output check to the AWS full-size somatic test ([@adamrtalbot](https://github.com/adamrtalbot))
 
 ### Changed
 
