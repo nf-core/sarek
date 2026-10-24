@@ -63,6 +63,8 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 
 #### Added
 
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Set up pinned ast-grep tooling and the Nextflow parser for structural checks ([@edmundmiller](https://github.com/edmundmiller)).
+
 #### Changed
 
 - [#2271](https://github.com/nf-core/sarek/pull/2271) - Back to dev (3.10.1dev)
