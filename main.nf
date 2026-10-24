@@ -410,7 +410,7 @@ output {
 //
 // Resolve a reference attribute from the highest-priority source that defines it.
 // Precedence: explicit params > --references datasheet, or --genome (iGenomes
-// catalogue, or a datasheet under --references_base_path with igenomes_ignore).
+// catalogue, or a datasheet under --references_datasheets_path with igenomes_ignore).
 // --references and --genome are mutually exclusive. Explicit params win because
 // Nextflow keeps CLI values over assignments made in the script. The datasheet
 // loads once and caches in params: strict syntax allows no other state to persist
@@ -448,9 +448,9 @@ def loadReferenceDatasheet(path) {
 }
 
 def referencesDatasheetUrl(genomeKey) {
-    def base = (params.references_base_path ?: '').toString().replaceAll(/\/+$/, '')
+    def base = (params.references_datasheets_path ?: '').toString().replaceAll(/\/+$/, '')
     if (!base) {
-        error("--references_base_path is empty; cannot load datasheet for --genome '${genomeKey}'")
+        error("--references_datasheets_path is empty; cannot load datasheet for --genome '${genomeKey}'")
     }
     return "${base}/${genomeKey}.yml"
 }

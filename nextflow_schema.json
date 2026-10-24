@@ -850,12 +850,20 @@
                     "fa_icon": "fas fa-file-alt",
                     "schema": "assets/schema_references.json"
                 },
-                "references_base_path": {
+                "references_datasheets_path": {
                     "type": "string",
                     "description": "Base URL or path for references-datasheets files loaded via --genome with --igenomes_ignore.",
                     "default": "https://raw.githubusercontent.com/nf-core/references-datasheets/latest/igenomes",
                     "fa_icon": "fas fa-database",
                     "hidden": true
+                },
+                "references_base_path": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "description": "Base path substituted for ${params.references_base_path} placeholders in datasheet paths.",
+                    "help_text": "Datasheet paths may carry a ${params.references_base_path} placeholder instead of a hardcoded root. The placeholder is replaced by this parameter when the datasheet loads, so one datasheet works against any mirror of the reference files. The default is s3://ngi-igenomes/igenomes, the root that published datasheets are written against. The placeholder carries the leading slash, so the value must not end with one. This parameter only rewrites paths inside the datasheet; the location of the datasheet itself is set with --references_datasheets_path.",
+                    "default": "s3://ngi-igenomes/igenomes",
+                    "fa_icon": "fas fa-ban"
                 },
                 "igenomes_base": {
                     "type": "string",
@@ -901,7 +909,7 @@
                     "description": "Reference genome name: an iGenomes catalogue key, or a references-datasheets path when igenomes_ignore is set. Do not combine with --references.",
                     "default": "GATK.GRCh38",
                     "fa_icon": "fas fa-book",
-                    "help_text": "iGenomes: key in conf/igenomes.config (e.g. GATK.GRCh38). With --igenomes_ignore: path under --references_base_path (e.g. GATK/GRCh38, file igenomes/GATK/GRCh38.yml). Explicit reference flags outrank this. Do not combine with --references.\n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
+                    "help_text": "iGenomes: key in conf/igenomes.config (e.g. GATK.GRCh38). With --igenomes_ignore: path under --references_datasheets_path (e.g. GATK/GRCh38, file igenomes/GATK/GRCh38.yml). Explicit reference flags outrank this. Do not combine with --references.\n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
                 },
                 "ascat_genome": {
                     "type": "string",

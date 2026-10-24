@@ -19,13 +19,13 @@
                 "pattern": "^\\S+$",
                 "default": "unknown"
             },
-            "source": {
-                "meta": ["source"],
+            "reference_source": {
+                "meta": ["reference_source"],
                 "type": "string",
                 "pattern": "^\\S+$"
             },
-            "source_version": {
-                "meta": ["source_version"],
+            "annotation_version": {
+                "meta": ["annotation_version"],
                 "type": "string",
                 "pattern": "^\\S+$",
                 "default": "unknown"
