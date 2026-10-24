@@ -7,7 +7,7 @@
                 "nf-core": {
                     "ascat": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "d91c5a536f501b122e528222ec32630b0e3df5fd",
                         "installed_by": ["modules"]
                     },
                     "bbmap/bbsplit": {
@@ -141,6 +141,11 @@
                         "git_sha": "8f6fc518531291208e7a665f6e8bcbeb1f05f49e",
                         "installed_by": ["modules"]
                     },
+                    "deepsomatic": {
+                        "branch": "master",
+                        "git_sha": "a064a845f0c2afec03e02ae7e8cfb832486a2ea1",
+                        "installed_by": ["modules"]
+                    },
                     "deepvariant/rundeepvariant": {
                         "branch": "master",
                         "git_sha": "29031bf70ae8117b235400aca32796a433c733f2",
@@ -158,12 +163,12 @@
                     },
                     "ensemblvep/download": {
                         "branch": "master",
-                        "git_sha": "db055f5f8c726a924bf51dadce3978da3bbdad7e",
+                        "git_sha": "35e732a577f9a83dd75d061150c5ebda8e6fc388",
                         "installed_by": ["cache_download_ensemblvep_snpeff", "modules"]
                     },
                     "ensemblvep/vep": {
                         "branch": "master",
-                        "git_sha": "db055f5f8c726a924bf51dadce3978da3bbdad7e",
+                        "git_sha": "35e732a577f9a83dd75d061150c5ebda8e6fc388",
                         "installed_by": ["modules"]
                     },
                     "fastp": {
@@ -208,8 +213,8 @@
                     },
                     "gatk4/applybqsr": {
                         "branch": "master",
-                        "git_sha": "b2bcd8312599aacd849e69721e20ac8138018f83",
-                        "installed_by": ["modules"]
+                        "git_sha": "2542be48ddea1d6a684da672befdd99d825f2f7b",
+                        "installed_by": ["bam_applybqsr", "modules"]
                     },
                     "gatk4/applyvqsr": {
                         "branch": "master",
@@ -293,7 +298,7 @@
                     },
                     "gatk4/markduplicates": {
                         "branch": "master",
-                        "git_sha": "b2bcd8312599aacd849e69721e20ac8138018f83",
+                        "git_sha": "74a8e23cebde312a1533020504a6de77468c03f5",
                         "installed_by": ["modules"]
                     },
                     "gatk4/mergemutectstats": {
@@ -413,7 +418,12 @@
                     },
                     "parabricks/applybqsr": {
                         "branch": "master",
-                        "git_sha": "006a6142690e2f4a455f77a1bc7d71459d78deb5",
+                        "git_sha": "541af7c6735edaae882567b910071b563e9b1317",
+                        "installed_by": ["modules"]
+                    },
+                    "parabricks/deepsomatic": {
+                        "branch": "master",
+                        "git_sha": "3ccf6cbb9868aa36cf77b9490af7b47595eaab17",
                         "installed_by": ["modules"]
                     },
                     "parabricks/deepvariant": {
@@ -423,7 +433,7 @@
                     },
                     "parabricks/fq2bam": {
                         "branch": "master",
-                        "git_sha": "3e0ec6464725c64d81abe928e15a6750d5fdd272",
+                        "git_sha": "4bfaaac6e5818b452040366ed85a42eeddcf46a2",
                         "installed_by": ["modules"]
                     },
                     "parabricks/haplotypecaller": {
@@ -463,8 +473,8 @@
                     },
                     "samtools/merge": {
                         "branch": "master",
-                        "git_sha": "9339809fcb90af8a8b7051e6cd914894d5c52002",
-                        "installed_by": ["modules"]
+                        "git_sha": "972faf6f783fe9685267220965a91690741465f9",
+                        "installed_by": ["bam_applybqsr", "modules"]
                     },
                     "samtools/mpileup": {
                         "branch": "master",
@@ -528,7 +538,7 @@
                     },
                     "snpeff/download": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "c565f1b27c06a1e8b726e2a646d4c822ae3b514a",
                         "installed_by": ["cache_download_ensemblvep_snpeff", "modules"]
                     },
                     "snpeff/snpeff": {
@@ -583,22 +593,22 @@
                     },
                     "varlociraptor/callvariants": {
                         "branch": "master",
-                        "git_sha": "289374af2f576e1040db10c42759c4a4804ffeb5",
+                        "git_sha": "d2faee3063ab628dac7c33af2c135c4a8e057428",
                         "installed_by": ["modules"]
                     },
                     "varlociraptor/estimatealignmentproperties": {
                         "branch": "master",
-                        "git_sha": "289374af2f576e1040db10c42759c4a4804ffeb5",
+                        "git_sha": "d2faee3063ab628dac7c33af2c135c4a8e057428",
                         "installed_by": ["modules"]
                     },
                     "varlociraptor/filterfdr": {
                         "branch": "master",
-                        "git_sha": "289374af2f576e1040db10c42759c4a4804ffeb5",
+                        "git_sha": "d2faee3063ab628dac7c33af2c135c4a8e057428",
                         "installed_by": ["modules"]
                     },
                     "varlociraptor/preprocess": {
                         "branch": "master",
-                        "git_sha": "289374af2f576e1040db10c42759c4a4804ffeb5",
+                        "git_sha": "d2faee3063ab628dac7c33af2c135c4a8e057428",
                         "installed_by": ["modules"]
                     },
                     "vcflib/vcffilter": {
@@ -620,6 +630,11 @@
             },
             "subworkflows": {
                 "nf-core": {
+                    "bam_applybqsr": {
+                        "branch": "master",
+                        "git_sha": "74a8e23cebde312a1533020504a6de77468c03f5",
+                        "installed_by": ["subworkflows"]
+                    },
                     "bam_ngscheckmate": {
                         "branch": "master",
                         "git_sha": "3d9c2f4beaa4f62b3f006928fd9095a496d1e5a8",

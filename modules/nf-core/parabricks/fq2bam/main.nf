@@ -12,7 +12,7 @@ process PARABRICKS_FQ2BAM {
     tuple val(meta2), path(fasta)
     tuple val(meta3), path(index)
     tuple val(meta4), path(intervals)
-    tuple val(meta5), path(known_sites)
+    tuple val(meta5), path(known_sites), path(known_sites_index)
     val output_fmt
 
     output:
