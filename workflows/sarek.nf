@@ -597,7 +597,7 @@ workflow SAREK {
     ch_multiqc_files = ch_multiqc_files.mix(collated_reports)
     ch_multiqc_files = ch_multiqc_files.mix(reports)
 
-    def summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    def summary_params = paramsSummaryMap(parameters_schema: "nextflow_schema.json")
     def workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
     def multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
     def methods_description = channel.value(methodsDescriptionText(multiqc_custom_methods_description))
