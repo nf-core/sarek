@@ -420,34 +420,20 @@ output {
 //
 
 def resolveReferenceAttribute(String name) {
-    if (!params.containsKey('__reference_sheet')) {
-        params.__reference_sheet = referenceDatasheet()
-    }
-    def value = params.__reference_sheet[name]
-    return value ?: getGenomeAttribute(name)
-}
-
-def referenceDatasheet() {
     def genome = params.genome in [null, 'null'] ? null : params.genome
     if (params.references && genome) {
         error("Use either --references or --genome, not both.")
     }
+    def sheet = [:]
     if (params.references) {
-        return loadReferenceDatasheet(params.references)
+        sheet = loadReferenceDatasheet(params.references)
+    } else if (genome && params.igenomes_ignore) {
+        sheet = loadReferenceDatasheet(referencesDatasheetUrl(genome))
     }
-    if (genome && params.igenomes_ignore) {
-        return loadReferenceDatasheet(referencesDatasheetUrl(genome))
-    }
-    return [:]
+    return sheet[name] ?: getGenomeAttribute(name)
 }
 
-def loadReferenceDatasheet(path) {
-    def rows = samplesheetToList(path, "${projectDir}/assets/schema_references.json")
-    def meta = referenceMeta(selectReferenceRow(rows))
-    return meta.findAll { _key, value -> value != null && value != '' }
-}
-
-def referencesDatasheetUrl(genomeKey) {
+def referencesDatasheetUrl(String genomeKey) {
     def base = (params.references_datasheets_path ?: '').toString().replaceAll(/\/+$/, '')
     if (!base) {
         error("--references_datasheets_path is empty; cannot load datasheet for --genome '${genomeKey}'")
@@ -455,7 +441,7 @@ def referencesDatasheetUrl(genomeKey) {
     return "${base}/${genomeKey}.yml"
 }
 
-def selectReferenceRow(rows) {
+def selectReferenceRow(List rows) {
     if (!(rows instanceof List) || rows.isEmpty()) {
         error("Reference datasheet did not contain any genome records")
     }
@@ -480,11 +466,17 @@ def referenceMeta(row) {
 // Get attribute from genome config file e.g. fasta
 //
 
-def getGenomeAttribute(attribute) {
+def getGenomeAttribute(String attribute) {
     if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
         if (params.genomes[params.genome].containsKey(attribute)) {
             return params.genomes[params.genome][attribute]
         }
     }
     return null
+}
+
+def loadReferenceDatasheet(String path) {
+    def rows = samplesheetToList(path, "${projectDir}/assets/schema_references.json")
+    def meta = referenceMeta(selectReferenceRow(rows))
+    return meta.findAll { _key, value -> value != null && value != '' }
 }
