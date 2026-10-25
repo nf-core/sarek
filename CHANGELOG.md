@@ -75,6 +75,7 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 - [#2314](https://github.com/nf-core/sarek/pull/2314) - Improve docs on nonhuman genome
 - [#2316](https://github.com/nf-core/sarek/pull/2316) - Load `nf-schema` in the AWS full-size test `nextflow_config`, so that the `nf-slack` plugin block does not drop it
 - [#2317](https://github.com/nf-core/sarek/pull/2317) - Improve docs on Post Variantcalling (bcftools and varlociraptor)
+- [#XXXX](https://github.com/nf-core/sarek/pull/XXXX) - Fix double slashes in the `test` profile URLs (`igenomes_base` and `bcftools_annotations`) ([#2289](https://github.com/nf-core/sarek/issues/2289))
 
 #### Removed
 
