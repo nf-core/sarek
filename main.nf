@@ -33,7 +33,7 @@ include { samplesheetToList } from 'plugin/nf-schema'
 //
 
 def referencesDatasheetUrl(genomeKey: String) {
-    def base = (params.references_datasheets_path ?: '').toString().replaceAll(/\/+$/, '')
+    def base = (params.references_datasheets_path ?: '').replaceAll(/\/+$/, '')
     if (!base) {
         error("--references_datasheets_path is empty; cannot load datasheet for --genome '${genomeKey}'")
     }
@@ -88,8 +88,7 @@ def getReferenceAttribute(name: String) {
 
 def loadReferenceDatasheet(path: String) {
     def rows = samplesheetToList(path, "${projectDir}/assets/schema_references.json")
-    def meta = referenceMeta(selectReferenceRow(rows))
-    return meta.findAll { _key, value -> value != null && value != '' }
+    return referenceMeta(selectReferenceRow(rows))
 }
 
 /*
