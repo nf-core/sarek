@@ -27,6 +27,71 @@
 
 include { samplesheetToList } from 'plugin/nf-schema'
 
+//
+// Reference helper functions. These are reference implementations; identical versions
+// exist in nf-core-utils plugin (ReferenceHelpers class) for use in other contexts.
+//
+
+def referencesDatasheetUrl(genomeKey: String) {
+    def base = (params.references_datasheets_path ?: '').toString().replaceAll(/\/+$/, '')
+    if (!base) {
+        error("--references_datasheets_path is empty; cannot load datasheet for --genome '${genomeKey}'")
+    }
+    return "${base}/${genomeKey}.yml"
+}
+
+def selectReferenceRow(rows: List) {
+    if (!(rows instanceof List) || rows.isEmpty()) {
+        error("Reference datasheet did not contain any genome records")
+    }
+    if (rows.size() > 1) {
+        def names = rows.collect { row -> referenceMeta(row).genome }.findAll { name -> name }
+        error("Reference datasheet has multiple genomes (${names.join(', ')}). Use a datasheet with one genome record.")
+    }
+    return rows[0]
+}
+
+def referenceMeta(row) {
+    if (row instanceof Map) {
+        return row.findAll { _key, value -> value != null && value != '' }
+    }
+    if (row instanceof List && row && row[0] instanceof Map) {
+        Map meta = row[0] as Map
+        return meta.findAll { _key, value -> value != null && value != '' }
+    }
+    error("Reference datasheet record is not a genome mapping: ${row}")
+}
+
+def getGenomeAttribute(attribute: String) {
+    if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
+        if (params.genomes[params.genome].containsKey(attribute)) {
+            return params.genomes[params.genome][attribute]
+        }
+    }
+    return null
+}
+
+def getReferenceAttribute(name: String) {
+    def genome = params.genome in [null, 'null'] ? null : params.genome
+    if (params.references && genome) {
+        error("Use either --references or --genome, not both.")
+    }
+    def sheet = [:]
+    if (params.references) {
+        sheet = loadReferenceDatasheet(params.references)
+    }
+    else if (genome && params.igenomes_ignore) {
+        sheet = loadReferenceDatasheet(referencesDatasheetUrl(genome))
+    }
+    return sheet[name] ?: getGenomeAttribute(name)
+}
+
+def loadReferenceDatasheet(path: String) {
+    def rows = samplesheetToList(path, "${projectDir}/assets/schema_references.json")
+    def meta = referenceMeta(selectReferenceRow(rows))
+    return meta.findAll { _key, value -> value != null && value != '' }
+}
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     GENOME PARAMETER VALUES
@@ -418,65 +483,3 @@ output {
 // references-datasheets convention; the schema maps them onto sarek parameter
 // names through meta tags.
 //
-
-def getReferenceAttribute(String name) {
-    def genome = params.genome in [null, 'null'] ? null : params.genome
-    if (params.references && genome) {
-        error("Use either --references or --genome, not both.")
-    }
-    def sheet = [:]
-    if (params.references) {
-        sheet = loadReferenceDatasheet(params.references)
-    } else if (genome && params.igenomes_ignore) {
-        sheet = loadReferenceDatasheet(referencesDatasheetUrl(genome))
-    }
-    return sheet[name] ?: getGenomeAttribute(name)
-}
-
-def referencesDatasheetUrl(String genomeKey) {
-    def base = (params.references_datasheets_path ?: '').toString().replaceAll(/\/+$/, '')
-    if (!base) {
-        error("--references_datasheets_path is empty; cannot load datasheet for --genome '${genomeKey}'")
-    }
-    return "${base}/${genomeKey}.yml"
-}
-
-def selectReferenceRow(List rows) {
-    if (!(rows instanceof List) || rows.isEmpty()) {
-        error("Reference datasheet did not contain any genome records")
-    }
-    if (rows.size() > 1) {
-        def names = rows.collect { row -> referenceMeta(row).genome }.findAll { name -> name }
-        error("Reference datasheet has multiple genomes (${names.join(', ')}). Use a datasheet with one genome record.")
-    }
-    return rows[0]
-}
-
-def referenceMeta(row) {
-    if (row instanceof Map) {
-        return row
-    }
-    if (row instanceof List && row && row[0] instanceof Map) {
-        return row[0]
-    }
-    error("Reference datasheet record is not a genome mapping: ${row}")
-}
-
-//
-// Get attribute from genome config file e.g. fasta
-//
-
-def getGenomeAttribute(String attribute) {
-    if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
-        if (params.genomes[params.genome].containsKey(attribute)) {
-            return params.genomes[params.genome][attribute]
-        }
-    }
-    return null
-}
-
-def loadReferenceDatasheet(String path) {
-    def rows = samplesheetToList(path, "${projectDir}/assets/schema_references.json")
-    def meta = referenceMeta(selectReferenceRow(rows))
-    return meta.findAll { _key, value -> value != null && value != '' }
-}
