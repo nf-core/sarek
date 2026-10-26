@@ -25,10 +25,7 @@ IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-include { getGenomeAttributeStatic } from 'plugin/nf-core-utils'
 include { getReferenceAttribute } from 'plugin/nf-core-utils'
-include { referenceMeta } from 'plugin/nf-core-utils'
-include { selectReferenceRow } from 'plugin/nf-core-utils'
 include { samplesheetToList } from 'plugin/nf-schema'
 
 /*
