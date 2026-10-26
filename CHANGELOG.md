@@ -35,6 +35,8 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 - [#2230](https://github.com/nf-core/sarek/pull/2230) - Varlociraptor: fix custom scenario file parsing
 - [#2335](https://github.com/nf-core/sarek/pull/2335) - Fix: pass `markduplicates_pixel_distance` to `GATK4SPARK_MARKDUPLICATES` ([#2334](https://github.com/nf-core/sarek/issues/2334)).
 - [#2338](https://github.com/nf-core/sarek/pull/2338) - Fix undefined `intervals` reference in the BCFtools mpileup output prefix ([#2294](https://github.com/nf-core/sarek/issues/2294)).
+- [#2343](https://github.com/nf-core/sarek/pull/2343) - `--tools parabricks_deepvariant` and `parabricks_haplotypecaller` now stop with the "expect at least one normal-sample" error on a tumor-only samplesheet, instead of finishing without variant calls.
+- [#2344](https://github.com/nf-core/sarek/pull/2344) - Fix DeepSomatic colour in the subway map (green dot)
 
 ### Removed
 
@@ -71,7 +73,7 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 
 #### Fixed
 
-- [#2268](https://github.com/nf-core/sarek/pull/2268) - Resolve filetype output for parabricks/fq2bam
+- [#2268](https://github.com/nf-core/sarek/pull/2268),[#2342](https://github.com/nf-core/sarek/pull/2342) - Resolve filetype output for parabricks/fq2bam
 - [#2312](https://github.com/nf-core/sarek/pull/2312) - Fix parabricks/applybqsr input channel logic
 - [#2314](https://github.com/nf-core/sarek/pull/2314) - Improve docs on nonhuman genome
 - [#2316](https://github.com/nf-core/sarek/pull/2316) - Load `nf-schema` in the AWS full-size test `nextflow_config`, so that the `nf-slack` plugin block does not drop it
