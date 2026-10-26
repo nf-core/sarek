@@ -70,7 +70,7 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 
 #### Fixed
 
-- [#2268](https://github.com/nf-core/sarek/pull/2268) - Resolve filetype output for parabricks/fq2bam
+- [#2268](https://github.com/nf-core/sarek/pull/2268),[#2342](https://github.com/nf-core/sarek/pull/2342) - Resolve filetype output for parabricks/fq2bam
 - [#2312](https://github.com/nf-core/sarek/pull/2312) - Fix parabricks/applybqsr input channel logic
 - [#2314](https://github.com/nf-core/sarek/pull/2314) - Improve docs on nonhuman genome
 - [#2316](https://github.com/nf-core/sarek/pull/2316) - Load `nf-schema` in the AWS full-size test `nextflow_config`, so that the `nf-slack` plugin block does not drop it
