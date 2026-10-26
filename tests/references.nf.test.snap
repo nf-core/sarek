@@ -658,13 +658,13 @@
             "No VCF files",
             "No warnings",
             [
-                "[ERROR] Use either --references or --genome, not both."
+                "ERROR ~ Use either --references or --genome, not both."
             ]
         ],
-        "timestamp": "2026-10-24T14:40:52.1057475",
+        "timestamp": "2026-10-26T18:36:18.699996085",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.0"
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --igenomes_ignore --genome GRCh38_chr22 --references_datasheets_path genomes/Homo_sapiens/GATK": {

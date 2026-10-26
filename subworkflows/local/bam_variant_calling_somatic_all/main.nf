@@ -47,6 +47,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     loci_files                    // channel: [optional]  ascat loci files
     gc_file                       // channel: [optional]  ascat gc content file
     rt_file                       // channel: [optional]  ascat rt file
+    ascat_genome                  // value:   [optional]  ascat genome build (hg19 or hg38)
     joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
     wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
 
@@ -80,6 +81,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             fasta.map { _meta, fasta_ -> [fasta_] },
             gc_file,
             rt_file,
+            ascat_genome,
         )
 
     }

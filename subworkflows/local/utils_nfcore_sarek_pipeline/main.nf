@@ -11,6 +11,7 @@ include { paramsSummaryMap } from 'plugin/nf-schema'
 include { samplesheetToList } from 'plugin/nf-schema'
 include { paramsHelp } from 'plugin/nf-schema'
 include { getReferencePath } from 'plugin/nf-core-utils'
+include { getReferenceAttribute } from 'plugin/nf-core-utils'
 include { getReferenceMetadata } from 'plugin/nf-core-utils'
 include { completionEmail } from '../../nf-core/utils_nfcore_pipeline'
 include { completionSummary } from '../../nf-core/utils_nfcore_pipeline'
@@ -101,57 +102,6 @@ workflow PIPELINE_INITIALISATION {
     // Custom validation for pipeline parameters
     validateInputParameters()
 
-    // Check input path parameters to see if they exist
-    def checkPathParamList = [
-        params.ascat_alleles,
-        params.ascat_loci,
-        params.ascat_loci_gc,
-        params.ascat_loci_rt,
-        params.bwa,
-        params.bwamem2,
-        params.bcftools_annotations,
-        params.bcftools_annotations_tbi,
-        params.bcftools_columns,
-        params.bcftools_header_lines,
-        params.cf_chrom_len,
-        params.chr_dir,
-        params.cnvkit_reference,
-        params.dbnsfp,
-        params.dbnsfp_tbi,
-        params.dbsnp,
-        params.dbsnp_tbi,
-        params.dict,
-        params.dragmap,
-        params.fasta,
-        params.fasta_fai,
-        params.germline_resource,
-        params.germline_resource_tbi,
-        params.input,
-        params.intervals,
-        params.known_indels,
-        params.known_indels_tbi,
-        params.known_snps,
-        params.known_snps_tbi,
-        params.mappability,
-        params.multiqc_config,
-        params.ngscheckmate_bed,
-        params.pon,
-        params.pon_tbi,
-        params.sentieon_dnascope_model,
-        params.spliceai_indel,
-        params.spliceai_indel_tbi,
-        params.spliceai_snv,
-        params.spliceai_snv_tbi,
-    ]
-
-    // only check if we are using the tools
-    if (params.tools && (params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('merge'))) {
-        checkPathParamList.add(params.snpeff_cache)
-    }
-    if (params.tools && (params.tools.split(',').contains('vep') || params.tools.split(',').contains('merge'))) {
-        checkPathParamList.add(params.vep_cache)
-    }
-
     params.input_restart = retrieveInput((!params.build_only_index && !input), params.step, params.outdir)
 
     ch_from_samplesheet = params.build_only_index
@@ -164,34 +114,41 @@ workflow PIPELINE_INITIALISATION {
     def referencePath = getReferencePath(references: params.references, genome: params.genome, igenomesIgnore: params.igenomes_ignore, datasheetPath: params.references_datasheets_path)
     def referenceSheet = referencePath ? getReferenceMetadata(rows: samplesheetToList(referencePath, "${projectDir}/assets/schema_references.json")) : null
 
+    // Resolve each reference once: an explicit param wins, then the datasheet, then params.genomes.
+    // Passed on as a value, not written back to params: included files and config closures never see params set inside a workflow.
+    def resolvedReferences = referenceParamNames().collectEntries { name ->
+        def explicit = params.containsKey(name) ? params.get(name) : null
+        [name, explicit ?: getReferenceAttribute(param: name, datasheet: referenceSheet, genomeMap: params.genomes, genomeKey: params.genome)]
+    }
+
     SAMPLESHEET_TO_CHANNEL(
         ch_from_samplesheet,
         params.aligner,
-        params.ascat_alleles,
-        params.ascat_loci,
-        params.ascat_loci_gc,
-        params.ascat_loci_rt,
+        resolvedReferences.ascat_alleles,
+        resolvedReferences.ascat_loci,
+        resolvedReferences.ascat_loci_gc,
+        resolvedReferences.ascat_loci_rt,
         params.bcftools_annotations,
         params.bcftools_annotations_tbi,
         params.bcftools_header_lines,
         params.build_only_index,
-        params.dbsnp,
-        params.fasta,
-        params.germline_resource,
-        params.intervals,
+        resolvedReferences.dbsnp,
+        resolvedReferences.fasta,
+        resolvedReferences.germline_resource,
+        resolvedReferences.intervals,
         params.joint_germline,
         params.joint_mutect2,
-        params.known_indels,
-        params.known_snps,
+        resolvedReferences.known_indels,
+        resolvedReferences.known_snps,
         params.no_intervals,
-        params.pon,
+        resolvedReferences.pon,
         params.sentieon_dnascope_emit_mode,
         params.sentieon_haplotyper_emit_mode,
         params.seq_center,
         params.seq_platform,
         params.skip_tools,
         params.snpeff_cache,
-        params.snpeff_db,
+        resolvedReferences.snpeff_db,
         params.step,
         params.tools,
         params.umi_length,
@@ -202,7 +159,7 @@ workflow PIPELINE_INITIALISATION {
     )
 
     emit:
-    datasheet = referenceSheet
+    references = resolvedReferences
     samplesheet = SAMPLESHEET_TO_CHANNEL.out.input_sample
 }
 
@@ -256,6 +213,48 @@ FUNCTIONS
 def validateInputParameters() {
     genomeExistsError()
     sparkAndBam()
+}
+
+// Reference params resolved from --references, a genome datasheet, or params.genomes
+def referenceParamNames() {
+    return [
+        'ascat_alleles',
+        'ascat_genome',
+        'ascat_loci',
+        'ascat_loci_gc',
+        'ascat_loci_rt',
+        'bwa',
+        'bwamem2',
+        'cf_chrom_len',
+        'chr_dir',
+        'dbsnp',
+        'dbsnp_tbi',
+        'dbsnp_vqsr',
+        'dict',
+        'dragmap',
+        'fasta',
+        'fasta_fai',
+        'germline_resource',
+        'germline_resource_tbi',
+        'intervals',
+        'known_indels',
+        'known_indels_tbi',
+        'known_indels_vqsr',
+        'known_snps',
+        'known_snps_tbi',
+        'known_snps_vqsr',
+        'mappability',
+        'msisensor2_models',
+        'msisensorpro_scan',
+        'ngscheckmate_bed',
+        'pon',
+        'pon_tbi',
+        'sentieon_dnascope_model',
+        'snpeff_db',
+        'vep_cache_version',
+        'vep_genome',
+        'vep_species',
+    ]
 }
 
 // Exit pipeline if incorrect --genome key provided

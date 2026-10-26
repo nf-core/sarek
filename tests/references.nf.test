@@ -49,7 +49,7 @@ nextflow_pipeline {
                 references: references_datasheets_path + '/GRCh38_chr22.yml',
             ],
             failure: true,
-            snapshot: 'stdout',
+            snapshot: 'stdout,stderr',
             snapshot_include: 'Use either --references or --genome',
         ],
     ]

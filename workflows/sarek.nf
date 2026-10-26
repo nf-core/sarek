@@ -71,6 +71,7 @@ workflow SAREK {
     ascat_loci
     ascat_loci_gc
     ascat_loci_rt
+    ascat_genome
     bbsplit_index
     bcftools_annotations
     bcftools_annotations_tbi
@@ -85,6 +86,7 @@ workflow SAREK {
     dict
     fasta
     fasta_fai
+    fasta_path
     germline_resource
     germline_resource_tbi
     index_alignment
@@ -146,12 +148,12 @@ workflow SAREK {
         }
 
         // Two fastq.gz-files
-        fastq_gz = input_sample_type.fastq_gz.map { meta, files -> addReadgroupToMeta(meta, files) }
+        fastq_gz = input_sample_type.fastq_gz.map { meta, files -> addReadgroupToMeta(meta, files, fasta_path) }
 
         // Just one fastq.gz.spring-file with both R1 and R2
         fastq_gz_pair_from_spring = SPRING_DECOMPRESS_TO_FQ_PAIR(input_sample_type.one_fastq_gz_spring, false)
 
-        one_fastq_gz_from_spring = fastq_gz_pair_from_spring.fastq.map { meta, files -> addReadgroupToMeta(meta, files) }
+        one_fastq_gz_from_spring = fastq_gz_pair_from_spring.fastq.map { meta, files -> addReadgroupToMeta(meta, files, fasta_path) }
 
         // Two fastq.gz.spring-files - one for R1 and one for R2
         r1_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R1_FQ(
@@ -169,7 +171,7 @@ workflow SAREK {
 
         two_fastq_gz_from_spring = r1_fastq_gz_from_spring.fastq.join(r2_fastq_gz_from_spring.fastq).map { meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]] }
 
-        two_fastq_gz_from_spring = two_fastq_gz_from_spring.map { meta, files -> addReadgroupToMeta(meta, files) }
+        two_fastq_gz_from_spring = two_fastq_gz_from_spring.map { meta, files -> addReadgroupToMeta(meta, files, fasta_path) }
 
         // Convert any bam input to fastq
         // fasta are not needed when converting bam to fastq -> [ id:"fasta" ], []
@@ -489,6 +491,7 @@ workflow SAREK {
             ascat_loci,
             ascat_loci_gc,
             ascat_loci_rt,
+            ascat_genome,
             params.joint_mutect2,
             params.wes,
         )
@@ -633,7 +636,7 @@ workflow SAREK {
 */
 
 // Add readgroup to meta and remove lane
-def addReadgroupToMeta(meta, files) {
+def addReadgroupToMeta(meta, files, fasta_path) {
     def CN = params.seq_center ? "CN:${params.seq_center}\\t" : ''
     def flowcell = flowcellLaneFromFastq(files[0])
 
@@ -647,8 +650,8 @@ def addReadgroupToMeta(meta, files) {
 
     // Don't use a random element for ID, it breaks resuming
     def read_group = params.umi_read_structure
-        ? "\"@RG\\tID:${meta.sample}\\t${CN}PU:consensus\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
-        : "\"@RG\\tID:${sample_lane_id}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
+        ? "\"@RG\\tID:${meta.sample}\\t${CN}PU:consensus\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${fasta_path}\\tPL:${params.seq_platform}\""
+        : "\"@RG\\tID:${sample_lane_id}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${fasta_path}\\tPL:${params.seq_platform}\""
 
     meta = meta - meta.subMap('lane') + [read_group: read_group.toString(), sample_lane_id: sample_lane_id.toString()]
     return [meta, files]
