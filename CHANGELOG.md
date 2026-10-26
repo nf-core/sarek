@@ -34,6 +34,7 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 - [#2230](https://github.com/nf-core/sarek/pull/2230) - Varlociraptor: fix custom scenario file parsing
 - [#2335](https://github.com/nf-core/sarek/pull/2335) - Fix: pass `markduplicates_pixel_distance` to `GATK4SPARK_MARKDUPLICATES` ([#2334](https://github.com/nf-core/sarek/issues/2334)).
 - [#2338](https://github.com/nf-core/sarek/pull/2338) - Fix undefined `intervals` reference in the BCFtools mpileup output prefix ([#2294](https://github.com/nf-core/sarek/issues/2294)).
+- [#2343](https://github.com/nf-core/sarek/pull/2343) - `--tools parabricks_deepvariant` and `parabricks_haplotypecaller` now stop with the "expect at least one normal-sample" error on a tumor-only samplesheet, instead of finishing without variant calls.
 
 ### Removed
 
