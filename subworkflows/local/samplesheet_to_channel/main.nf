@@ -262,7 +262,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
             .filter { sample -> sample[0].status == 0 }
             .ifEmpty {
                 // In this case, the sample-sheet contains no normal/germline-samples
-                def tools_requiring_normal_samples = ['ascat', 'deepsomatic', 'deepvariant', 'haplotypecaller', 'msisensorpro', 'parabricks_deepsomatic']
+                def tools_requiring_normal_samples = ['ascat', 'deepsomatic', 'deepvariant', 'haplotypecaller', 'msisensorpro', 'parabricks_deepsomatic', 'parabricks_deepvariant', 'parabricks_haplotypecaller']
                 def requested_tools_requiring_normal_samples = []
                 tools_requiring_normal_samples.each { tool_requiring_normal_samples ->
                     if (tools && tools.split(',').contains(tool_requiring_normal_samples)) {
