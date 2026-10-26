@@ -8,7 +8,7 @@
         "type": "object",
         "properties": {
             "genome": {
-                "meta": ["genome"],
+                "meta": ["genome", "id"],
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Genome name must be provided and cannot contain spaces"
@@ -83,14 +83,14 @@
             "fasta": {
                 "meta": ["fasta"],
                 "type": "string",
-                "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
-                "errorMessage": "Fasta must end in '.fa', '.fna', or '.fasta' (optionally .gz) and cannot contain spaces"
+                "pattern": "^\\S+\\.f(ast|n)?a(\\.gz)?$",
+                "errorMessage": "Fasta must end in '.fa', '.fasta', or '.fna' (optionally .gz) and cannot contain spaces"
             },
             "fasta_fai": {
                 "meta": ["fasta_fai"],
                 "type": "string",
                 "pattern": "^\\S+\\.f(ast|n)?a\\.fai(\\.gz)?$",
-                "errorMessage": "Fasta index must end in '.fa.fai', '.fna.fai', or '.fasta.fai' (optionally .gz) and cannot contain spaces"
+                "errorMessage": "Fasta index must end in '.fa.fai', '.fasta.fai', or '.fna.fai' (optionally .gz) and cannot contain spaces"
             },
             "fasta_dict": {
                 "meta": ["dict"],

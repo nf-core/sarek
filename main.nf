@@ -2,105 +2,108 @@
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    nf-core/sarek
+nf-core/sarek
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Started March 2016.
-    Ported to nf-core May 2019.
-    Ported to DSL 2 July 2020.
+Started March 2016.
+Ported to nf-core May 2019.
+Ported to DSL 2 July 2020.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    nf-core/sarek:
-        An open-source analysis pipeline to detect germline or somatic variants
-        from whole genome or targeted sequencing
+nf-core/sarek:
+An open-source analysis pipeline to detect germline or somatic variants
+from whole genome or targeted sequencing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/nf-core/sarek
-    Website: https://nf-co.re/sarek
-    Docs   : https://nf-co.re/sarek/usage
-    Slack  : https://nfcore.slack.com/channels/sarek
+Github : https://github.com/nf-core/sarek
+Website: https://nf-co.re/sarek
+Docs   : https://nf-co.re/sarek/usage
+Slack  : https://nfcore.slack.com/channels/sarek
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
+IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 include { getGenomeAttributeStatic } from 'plugin/nf-core-utils'
-include { referenceMeta            } from 'plugin/nf-core-utils'
-include { referencesDatasheetUrl   } from 'plugin/nf-core-utils'
-include { selectReferenceRow       } from 'plugin/nf-core-utils'
-include { samplesheetToList        } from 'plugin/nf-schema'
+include { getReferenceAttribute } from 'plugin/nf-core-utils'
+include { referenceMeta } from 'plugin/nf-core-utils'
+include { selectReferenceRow } from 'plugin/nf-core-utils'
+include { samplesheetToList } from 'plugin/nf-schema'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    GENOME PARAMETER VALUES
+GENOME PARAMETER VALUES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-params.ascat_alleles           = getReferenceAttribute('ascat_alleles')
-params.ascat_genome            = getReferenceAttribute('ascat_genome')
-params.ascat_loci              = getReferenceAttribute('ascat_loci')
-params.ascat_loci_gc           = getReferenceAttribute('ascat_loci_gc')
-params.ascat_loci_rt           = getReferenceAttribute('ascat_loci_rt')
-params.bwa                     = getReferenceAttribute('bwa')
-params.bwamem2                 = getReferenceAttribute('bwamem2')
-params.cf_chrom_len            = getReferenceAttribute('cf_chrom_len')
-params.chr_dir                 = getReferenceAttribute('chr_dir')
-params.dbsnp                   = getReferenceAttribute('dbsnp')
-params.dbsnp_tbi               = getReferenceAttribute('dbsnp_tbi')
-params.dbsnp_vqsr              = getReferenceAttribute('dbsnp_vqsr')
-params.dict                    = getReferenceAttribute('dict')
-params.dragmap                 = getReferenceAttribute('dragmap')
-params.fasta                   = getReferenceAttribute('fasta')
-params.fasta_fai               = getReferenceAttribute('fasta_fai')
-params.germline_resource       = getReferenceAttribute('germline_resource')
-params.germline_resource_tbi   = getReferenceAttribute('germline_resource_tbi')
-params.intervals               = getReferenceAttribute('intervals')
-params.known_indels            = getReferenceAttribute('known_indels')
-params.known_indels_tbi        = getReferenceAttribute('known_indels_tbi')
-params.known_indels_vqsr       = getReferenceAttribute('known_indels_vqsr')
-params.known_snps              = getReferenceAttribute('known_snps')
-params.known_snps_tbi          = getReferenceAttribute('known_snps_tbi')
-params.known_snps_vqsr         = getReferenceAttribute('known_snps_vqsr')
-params.mappability             = getReferenceAttribute('mappability')
-params.msisensor2_models       = getReferenceAttribute('msisensor2_models')
-params.msisensorpro_scan       = getReferenceAttribute('msisensorpro_scan')
-params.ngscheckmate_bed        = getReferenceAttribute('ngscheckmate_bed')
-params.pon                     = getReferenceAttribute('pon')
-params.pon_tbi                 = getReferenceAttribute('pon_tbi')
-params.sentieon_dnascope_model = getReferenceAttribute('sentieon_dnascope_model')
-params.snpeff_db               = getReferenceAttribute('snpeff_db')
-params.vep_cache_version       = getReferenceAttribute('vep_cache_version')
-params.vep_genome              = getReferenceAttribute('vep_genome')
-params.vep_species             = getReferenceAttribute('vep_species')
+ */
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT MODULES / SUBWORKFLOWS / WORKFLOWS
+IMPORT MODULES / SUBWORKFLOWS / WORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
-include { SAREK                            } from './workflows/sarek'
-include { PIPELINE_COMPLETION              } from './subworkflows/local/utils_nfcore_sarek_pipeline'
-include { PIPELINE_INITIALISATION          } from './subworkflows/local/utils_nfcore_sarek_pipeline'
-include { PREPARE_GENOME                   } from './subworkflows/local/prepare_genome'
-include { PREPARE_INTERVALS                } from './subworkflows/local/prepare_intervals'
-include { PREPARE_REFERENCE_CNVKIT         } from './subworkflows/local/prepare_reference_cnvkit'
-include { PREPARE_SNPSIFT_DATABASES        } from './subworkflows/local/prepare_snpsift_databases'
+include { SAREK } from './workflows/sarek'
+include { PIPELINE_COMPLETION } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { PREPARE_GENOME } from './subworkflows/local/prepare_genome'
+include { PREPARE_INTERVALS } from './subworkflows/local/prepare_intervals'
+include { PREPARE_REFERENCE_CNVKIT } from './subworkflows/local/prepare_reference_cnvkit'
+include { PREPARE_SNPSIFT_DATABASES } from './subworkflows/local/prepare_snpsift_databases'
 include { CACHE_DOWNLOAD_ENSEMBLVEP_SNPEFF } from './subworkflows/nf-core/cache_download_ensemblvep_snpeff'
-include { UTILS_ANNOTATION_CACHE           } from './subworkflows/nf-core/utils_annotation_cache'
+include { UTILS_ANNOTATION_CACHE } from './subworkflows/nf-core/utils_annotation_cache'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    NAMED WORKFLOW FOR PIPELINE
+NAMED WORKFLOW FOR PIPELINE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 // WORKFLOW: Run main nf-core/sarek analysis pipeline
 workflow NFCORE_SAREK {
     take:
     samplesheet
+    datasheet
 
     main:
+    // Resolve reference attributes with fallback to igenomes
+    params.ascat_alleles = getReferenceAttribute(param: 'ascat_alleles', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.ascat_genome = getReferenceAttribute(param: 'ascat_genome', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.ascat_loci = getReferenceAttribute(param: 'ascat_loci', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.ascat_loci_gc = getReferenceAttribute(param: 'ascat_loci_gc', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.ascat_loci_rt = getReferenceAttribute(param: 'ascat_loci_rt', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.bwa = getReferenceAttribute(param: 'bwa', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.bwamem2 = getReferenceAttribute(param: 'bwamem2', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.cf_chrom_len = getReferenceAttribute(param: 'cf_chrom_len', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.chr_dir = getReferenceAttribute(param: 'chr_dir', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.dbsnp = getReferenceAttribute(param: 'dbsnp', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.dbsnp_tbi = getReferenceAttribute(param: 'dbsnp_tbi', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.dbsnp_vqsr = getReferenceAttribute(param: 'dbsnp_vqsr', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.dict = getReferenceAttribute(param: 'dict', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.dragmap = getReferenceAttribute(param: 'dragmap', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.fasta = getReferenceAttribute(param: 'fasta', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.fasta_fai = getReferenceAttribute(param: 'fasta_fai', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.germline_resource = getReferenceAttribute(param: 'germline_resource', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.germline_resource_tbi = getReferenceAttribute(param: 'germline_resource_tbi', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.intervals = getReferenceAttribute(param: 'intervals', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.known_indels = getReferenceAttribute(param: 'known_indels', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.known_indels_tbi = getReferenceAttribute(param: 'known_indels_tbi', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.known_indels_vqsr = getReferenceAttribute(param: 'known_indels_vqsr', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.known_snps = getReferenceAttribute(param: 'known_snps', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.known_snps_tbi = getReferenceAttribute(param: 'known_snps_tbi', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.known_snps_vqsr = getReferenceAttribute(param: 'known_snps_vqsr', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.mappability = getReferenceAttribute(param: 'mappability', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.msisensor2_models = getReferenceAttribute(param: 'msisensor2_models', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.msisensorpro_scan = getReferenceAttribute(param: 'msisensorpro_scan', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.ngscheckmate_bed = getReferenceAttribute(param: 'ngscheckmate_bed', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.pon = getReferenceAttribute(param: 'pon', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.pon_tbi = getReferenceAttribute(param: 'pon_tbi', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.sentieon_dnascope_model = getReferenceAttribute(param: 'sentieon_dnascope_model', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.snpeff_db = getReferenceAttribute(param: 'snpeff_db', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.vep_cache_version = getReferenceAttribute(param: 'vep_cache_version', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.vep_genome = getReferenceAttribute(param: 'vep_genome', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+    params.vep_species = getReferenceAttribute(param: 'vep_species', datasheet: datasheet, genomeMap: params.genomes, genomeKey: params.genome)
+
     // build indexes if needed
     PREPARE_GENOME(
         params.ascat_alleles,
@@ -348,13 +351,13 @@ workflow NFCORE_SAREK {
 
     emit:
     multiqc_publish = SAREK.out.multiqc_publish
-    multiqc_report  = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
+    multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN MAIN WORKFLOW
+RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 workflow {
 
@@ -377,7 +380,7 @@ workflow {
     //
     // WORKFLOW: Run main workflow
     //
-    NFCORE_SAREK(PIPELINE_INITIALISATION.out.samplesheet)
+    NFCORE_SAREK(PIPELINE_INITIALISATION.out.samplesheet, PIPELINE_INITIALISATION.out.datasheet.getVal())
 
     //
     // SUBWORKFLOW: Run completion tasks
@@ -407,39 +410,6 @@ output {
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    FUNCTIONS
+FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-
-def getReferenceAttribute(name: String) {
-    def genome = params.genome in [null, 'null'] ? null : params.genome
-    if (params.references && genome) {
-        error("Use either --references or --genome, not both.")
-    }
-    def sheet = [:]
-    if (params.references) {
-        sheet = loadReferenceDatasheet(params.references)
-    }
-    else if (genome && params.igenomes_ignore) {
-        sheet = loadReferenceDatasheet(referencesDatasheetUrl(genome, params.references_datasheets_path))
-    }
-    return sheet[name] ?: getGenomeAttributeStatic(name, params.genomes, genome)
-}
-
-def loadReferenceDatasheet(path: String) {
-    def rows = samplesheetToList(path, "${projectDir}/assets/schema_references.json")
-    return referenceMeta(selectReferenceRow(rows))
-}
-
-//
-// Resolve a reference attribute from the highest-priority source that defines it.
-// Precedence: explicit params > --references datasheet, or --genome (iGenomes
-// catalogue, or a datasheet under --references_datasheets_path with igenomes_ignore).
-// --references and --genome are mutually exclusive. Explicit params win because
-// Nextflow keeps CLI values over assignments made in the script. The datasheet
-// loads once and caches in params: strict syntax allows no other state to persist
-// across these top-level declarations. Datasheet keys follow the
-// references-datasheets convention; the schema maps them onto sarek parameter
-// names through meta tags.
-//
+ */

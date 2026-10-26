@@ -929,7 +929,6 @@
                     "type": "string",
                     "format": "file-path",
                     "pattern": "^\\S+\\.zip$",
-                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to ASCAT allele zip file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
@@ -938,7 +937,6 @@
                     "type": "string",
                     "format": "file-path",
                     "pattern": "^\\S+\\.zip$",
-                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to ASCAT loci zip file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
@@ -948,7 +946,6 @@
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
                     "pattern": "^\\S+\\.zip$",
-                    "exists": true,
                     "description": "Path to ASCAT GC content correction file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
@@ -957,14 +954,12 @@
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
                     "pattern": "^\\S+\\.zip$",
-                    "exists": true,
                     "description": "Path to ASCAT RT (replictiming) correction file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "bwa": {
                     "type": "string",
                     "format": "directory-path",
-                    "exists": true,
                     "fa_icon": "fas fa-copy",
                     "description": "Path to BWA mem indices.",
                     "help_text": "If you wish to recompute indices available on igenomes, set `--bwa false`.\n\n> **NB** If none provided, will be generated automatically from the FASTA reference. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -972,7 +967,6 @@
                 "bwamem2": {
                     "type": "string",
                     "format": "directory-path",
-                    "exists": true,
                     "fa_icon": "fas fa-copy",
                     "description": "Path to bwa-mem2 mem indices.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\n\nIf you wish to recompute indices available on igenomes, set `--bwamem2 false`.\n\n> **NB** If none provided, will be generated automatically from the FASTA reference, if `--aligner bwa-mem2` is specified. Combine with `--save_reference` to save for future runs."
@@ -980,7 +974,6 @@
                 "chr_dir": {
                     "type": "string",
                     "format": "path",
-                    "exists": true,
                     "fa_icon": "fas fa-folder-open",
                     "description": "Path to chromosomes folder used with ControLFREEC.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
@@ -989,7 +982,6 @@
                     "type": "string",
                     "format": "file-path",
                     "pattern": "^\\S+\\.vcf\\.gz$",
-                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to dbsnp file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
@@ -998,7 +990,6 @@
                     "type": "string",
                     "format": "file-path",
                     "pattern": "^\\S+\\.vcf\\.gz\\.tbi$",
-                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to dbsnp index.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the dbsnp file. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -1012,7 +1003,6 @@
                     "type": "string",
                     "format": "file-path",
                     "pattern": "^\\S+\\.dict$",
-                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to FASTA dictionary file.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -1020,7 +1010,6 @@
                 "dragmap": {
                     "type": "string",
                     "format": "directory-path",
-                    "exists": true,
                     "fa_icon": "fas fa-copy",
                     "description": "Path to dragmap indices.",
                     "help_text": "If you wish to recompute indices available on igenomes, set `--dragmap false`.\n\n> **NB** If none provided, will be generated automatically from the FASTA reference, if `--aligner dragmap` is specified. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -1028,7 +1017,6 @@
                 "fasta": {
                     "type": "string",
                     "format": "file-path",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA genome file.",
@@ -1039,7 +1027,6 @@
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately.",
                     "description": "Path to FASTA reference index."
@@ -1066,7 +1053,6 @@
                     "type": ["string", "array"],
                     "fa_icon": "fas fa-copy",
                     "format": "file-path-pattern",
-                    "exists": true,
                     "items": {
                         "type": "string",
                         "format": "file-path",
@@ -1081,7 +1067,6 @@
                     "type": ["string", "array"],
                     "fa_icon": "fas fa-copy",
                     "format": "file-path-pattern",
-                    "exists": true,
                     "items": {
                         "type": "string",
                         "format": "file-path",
@@ -1101,7 +1086,6 @@
                     "type": ["string", "array"],
                     "fa_icon": "fas fa-copy",
                     "format": "file-path-pattern",
-                    "exists": true,
                     "items": {
                         "type": "string",
                         "format": "file-path",
@@ -1118,7 +1102,6 @@
                     "type": ["string", "array"],
                     "fa_icon": "fas fa-copy",
                     "format": "file-path-pattern",
-                    "exists": true,
                     "items": {
                         "type": "string",
                         "format": "file-path",
@@ -1148,7 +1131,6 @@
                 "msisensor2_models": {
                     "type": "string",
                     "format": "path",
-                    "exists": true,
                     "fa_icon": "fas fa-folder-open",
                     "description": "Path to models folder used with MSIsensor2.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
@@ -1156,7 +1138,6 @@
                 "msisensorpro_scan": {
                     "type": "string",
                     "format": "path",
-                    "exists": true,
                     "fa_icon": "fas fa-folder-open",
                     "description": "Path to scan file used with MSIsensorPro.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
