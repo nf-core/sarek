@@ -16,7 +16,7 @@ lint:
   nf_test_content: false
   schema_params: false
   template_strings: false
-nf_core_version: 4.1.0
+nf_core_version: 4.2.1
 repository_type: pipeline
 template:
   author: Maxime Garcia, Szilveszter Juhos, Friederike Hanssen
@@ -27,4 +27,4 @@ template:
   name: sarek
   org: nf-core
   outdir: .
-  version: 3.10.1dev
+  version: 3.11.0
