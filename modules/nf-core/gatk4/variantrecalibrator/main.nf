@@ -4,8 +4,8 @@ process GATK4_VARIANTRECALIBRATOR {
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/ce/ced519873646379e287bc28738bdf88e975edd39a92e7bc6a34bccd37153d9d0/data'
-        : 'community.wave.seqera.io/library/gatk4_gcnvkernel:edb12e4f0bf02cd3'}"
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/99/995b2a710d77be89a04150c6d0e8303236da166648a37e072d5f5e0ca2eca593/data'
+        : 'community.wave.seqera.io/library/gatk4-lite_r-base_r-ggplot2_r-gplots_r-gsalib:c2ff597f2b22489d'}"
 
     input:
     tuple val(meta), path(vcf), path(tbi)

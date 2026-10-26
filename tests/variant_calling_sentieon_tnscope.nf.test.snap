@@ -10,7 +10,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
@@ -86,7 +86,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1"
             ]
         ],
-        "timestamp": "2026-07-28T10:59:00.525116855",
+        "timestamp": "2026-10-01T21:00:29.291605391",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -103,7 +103,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
@@ -205,7 +205,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-28T11:02:18.439914438",
+        "timestamp": "2026-10-01T21:00:18.598764753",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -316,7 +316,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "SENTIEON_BWAMEM": {
                     "bwa": "0.7.17-r1188",
@@ -400,7 +400,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-28T11:01:53.081165903",
+        "timestamp": "2026-10-01T21:00:23.654105001",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
