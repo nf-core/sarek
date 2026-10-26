@@ -11,7 +11,7 @@ include { paramsSummaryMap } from 'plugin/nf-schema'
 include { samplesheetToList } from 'plugin/nf-schema'
 include { paramsHelp } from 'plugin/nf-schema'
 include { getReferencePath } from 'plugin/nf-core-utils'
-include { loadDatasheetFile } from 'plugin/nf-core-utils'
+include { getReferenceMetadata } from 'plugin/nf-core-utils'
 include { completionEmail } from '../../nf-core/utils_nfcore_pipeline'
 include { completionSummary } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE } from '../../nf-core/utils_nfcore_pipeline'
@@ -162,7 +162,7 @@ workflow PIPELINE_INITIALISATION {
 
     // Load and resolve references from datasheet
     def referencePath = getReferencePath(references: params.references, genome: params.genome, igenomesIgnore: params.igenomes_ignore, datasheetPath: params.references_datasheets_path)
-    def referenceSheet = referencePath ? loadDatasheetFile(datasheet: samplesheetToList(referencePath, "${projectDir}/assets/schema_references.json")) : null
+    def referenceSheet = referencePath ? getReferenceMetadata(rows: samplesheetToList(referencePath, "${projectDir}/assets/schema_references.json")) : null
 
     SAMPLESHEET_TO_CHANNEL(
         ch_from_samplesheet,
