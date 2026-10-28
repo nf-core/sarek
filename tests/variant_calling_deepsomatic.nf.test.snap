@@ -168,9 +168,9 @@
             "nextflow": "26.04.6"
         }
     },
-    "-profile test --tools deepsomatic somatic scatter/gather": {
+    "-profile test --tools deepsomatic somatic scatter/gather with empty interval": {
         "content": [
-            18,
+            19,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -193,6 +193,9 @@
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
+                },
+                "SAMTOOLS_FAIDX": {
+                    "samtools": "1.24"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -307,6 +310,7 @@
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
                 "reference/dict",
+                "reference/fai",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/deepsomatic",
@@ -371,7 +375,7 @@
             [
                 [
                     "testT_vs_testN.deepsomatic.g.vcf.gz",
-                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=216, phased=false, phasedAutodetect=false]"
+                    "VcfFile [chromosomes=[chr22], sampleCount=1, variantCount=195, phased=false, phasedAutodetect=false]"
                 ],
                 [
                     "testT_vs_testN.deepsomatic.vcf.gz",
@@ -380,7 +384,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-21T08:58:33.537024792",
+        "timestamp": "2026-10-28T16:18:10.626411724",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
