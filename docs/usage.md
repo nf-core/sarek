@@ -214,7 +214,7 @@ process {
 #### Using GPU accelerated variant calling
 
 > [!NOTE]
-> Parabricks DeepVariant and Parabricks HaplotypeCaller are experimental additions to the pipeline.
+> Parabricks DeepVariant, Parabricks HaplotypeCaller and Parabricks MutectCaller are experimental additions to the pipeline.
 
 Sarek supports the following GPU-accelerated variant callers from [NVIDIA Parabricks](https://docs.nvidia.com/clara/parabricks/latest/) as an alternative to CPU based implementations:
 
@@ -238,22 +238,6 @@ nextflow run nf-core/sarek \
 ```
 
 - Parabricks does not support the use of this pipeline with `--profile conda`.
-
-##### Parabricks MutectCaller (`--tools parabricks_mutectcaller`)
-
-`parabricks_mutectcaller` calls somatic SNVs and indels in tumor-only and tumor/normal paired samples on the GPU. It is run as one job per sample or pair (the calling is not scattered over intervals) and uses the combined intervals BED via `--interval-file`. The output is raw, unfiltered Mutect calls.
-
-Differences to GATK Mutect2 in Sarek:
-
-- No filtering is applied after calling (see above).
-- `--germline_resource` is not used by `parabricks_mutectcaller`.
-- `--pon` and `--pon_tbi` are used for PoN annotation via `prepon`/`postpon`.
-- `--joint_mutect2` and `--ignore_soft_clipped_bases` are ignored with a warning.
-
-Requirements:
-
-- A GPU is required (`-profile gpu` or a GPU-enabled executor). The `--run-partition` option requires at least 2 GPUs.
-- Sample names are passed to Parabricks as `<patient>_<sample>` and must match the `SM` read-group tag of the BAM/CRAM. Sarek writes this tag when mapping. If you use externally aligned files with `--step variant_calling`, make sure their `SM` tags match, otherwise Parabricks fails.
 
 ### Start with duplicate marking (`--step markduplicates`)
 
