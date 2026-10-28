@@ -1,5 +1,7 @@
 def projectDir = new File('.').absolutePath
 def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+// TODO: switch to modules_testdata_base_path once https://github.com/nf-core/test-datasets/pull/2353 is merged
+def extra_contig_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/c5e0aafb2d773dfb70a918e7e1f7031baa60f3fb/data/genomics/homo_sapiens/genome/'
 
 nextflow_pipeline {
 
@@ -9,15 +11,15 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --tools deepsomatic somatic scatter/gather",
+            // chrExtra is not in the BAM headers, so its interval has no records and must still get the same sample name for the merge
+            name: "-profile test --tools deepsomatic somatic scatter/gather with empty interval",
             tag: 'deepsomatic_scatter',
             params: [
                 genome: null,
                 igenomes_ignore: true,
-                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta',
-                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai',
+                fasta: extra_contig_base_path + 'genome_extra_contig.fasta',
                 input: "${projectDir}/tests/csv/3.0/mapped_somatic_parabricks_deepsomatic.csv",
-                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                intervals: extra_contig_base_path + 'genome_extra_contig.multi_intervals.bed',
                 nucleotides_per_second: 1,
                 step: "variant_calling",
                 tools: 'deepsomatic'
