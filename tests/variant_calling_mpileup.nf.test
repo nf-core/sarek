@@ -19,6 +19,20 @@ nextflow_pipeline {
             ]
         ],
         [
+            name: "-profile test --tools mpileup --input recalibrated_germline.csv --nucleotides_per_second 20",
+            params: [
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_germline.csv",
+                step: "variant_calling",
+                tools: 'mpileup',
+                nucleotides_per_second: 20,
+                genome: null,
+                igenomes_ignore: true
+            ]
+        ],
+        [
             name: "-profile test --tools mpileup --input recalibrated_germline.csv --no_intervals",
             params: [
                 fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',

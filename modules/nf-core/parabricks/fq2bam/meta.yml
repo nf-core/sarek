@@ -68,6 +68,12 @@ input:
         ontologies:
           - edam: "http://edamontology.org/format_3016" # VCF
           - edam: "http://edamontology.org/format_3989" # GZIP
+    - known_sites_index:
+        type: file
+        description: (optional) known sites file(s) index for calculating BQSR. markdups
+          must be true to perform BQSR.
+        pattern: "*.vcf.gz.tbi"
+        ontologies: []
   - output_fmt:
       type: string
       description: Output format for the alignment. Options are 'bam' or 'cram'

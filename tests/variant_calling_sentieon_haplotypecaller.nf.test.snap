@@ -13,10 +13,10 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MERGE_GENOTYPEGVCFS": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -216,7 +216,7 @@
                 "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
             ]
         ],
-        "timestamp": "2026-07-28T11:02:16.293619207",
+        "timestamp": "2026-10-01T21:00:20.307194895",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -233,7 +233,7 @@
                     "gatk4": "4.5.0.0"
                 },
                 "FILTERVARIANTTRANCHES": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -411,7 +411,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T11:36:40.990413214",
+        "timestamp": "2026-10-01T21:01:19.423055781",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -428,7 +428,7 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -604,7 +604,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-28T10:58:16.960328143",
+        "timestamp": "2026-10-01T21:00:01.760156663",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -624,10 +624,10 @@
                     "gawk": "5.3.0"
                 },
                 "FILTERVARIANTTRANCHES": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -806,7 +806,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-28T11:01:47.702910053",
+        "timestamp": "2026-10-01T21:00:41.618241508",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

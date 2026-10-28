@@ -117,15 +117,6 @@ output:
           pattern: "${prefix}.vcf.gz"
           ontologies:
             - edam: http://edamontology.org/format_3989 # GZIP format
-  tbi:
-    - - meta:
-          type: map
-          description: A Groovy map containing sample information
-      - "${prefix}.vcf.gz.tbi":
-          type: file
-          description: Index of vcf file
-          pattern: "${prefix}.vcf.gz.tbi"
-          ontologies: []
   stats:
     - - meta:
           type: map
@@ -134,6 +125,15 @@ output:
           type: file
           description: Stats file that pairs with output vcf file
           pattern: "${prefix}.vcf.gz.stats"
+          ontologies: []
+  tbi:
+    - - meta:
+          type: map
+          description: A Groovy map containing sample information
+      - "${prefix}.vcf.gz.tbi":
+          type: file
+          description: Index of vcf file
+          pattern: "${prefix}.vcf.gz.tbi"
           ontologies: []
   f1r2:
     - - meta:

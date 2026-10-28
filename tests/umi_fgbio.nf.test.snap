@@ -13,15 +13,15 @@
                 "parabricks is currently not compatible with FGBio UMI handling. Please choose a different aligner."
             ]
         ],
+        "timestamp": "2026-10-14T11:27:30.858549169",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-16T11:40:06.112688481"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.0"
+        }
     },
     "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null": {
         "content": [
-            29,
+            28,
             {
                 "BAM2FASTQ": {
                     "bgzip": "1.24",
@@ -56,23 +56,21 @@
                     "fgbio": "3.1.2"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.2.0",
-                    "samtools": "1.21"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GROUPREADSBYUMI": {
                     "fgbio": "3.1.2"
-                },
-                "INDEX_CRAM": {
-                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -330,10 +328,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_umi_cleanname_1.fastq.gz): Cannot extract flowcell ID from @922332"
             ]
         ],
-        "timestamp": "2026-07-27T10:25:14.330200197",
+        "timestamp": "2026-10-14T11:26:13.761282222",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '+T 7M1S+T' --tools null --aligner sentieon-bwamem": {
@@ -350,11 +348,11 @@
                 "sentieon-bwamem is currently not compatible with FGBio UMI handling. Please choose a different aligner."
             ]
         ],
+        "timestamp": "2026-10-14T11:27:04.940865013",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-16T11:39:15.062875515"
+            "nf-test": "0.9.5",
+            "nextflow": "26.10.0"
+        }
     },
     "-profile test --input tests/csv/3.0/fastq_umi.csv --umi_read_structure '12+T S' --tools null": {
         "content": [
@@ -370,10 +368,10 @@
                 "Please check the input UMI Read structure`12+T S` invalid"
             ]
         ],
+        "timestamp": "2025-12-16T11:45:20.994546242",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-16T11:45:20.994546242"
+        }
     }
 }
