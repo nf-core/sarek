@@ -45,25 +45,23 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     // Channels are often remapped to match module/subworkflow
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    out_msisensor2              = channel.empty()
-    vcf_freebayes               = channel.empty()
-    vcf_lofreq                  = channel.empty()
-    vcf_manta                   = channel.empty()
-    vcf_mpileup                 = channel.empty()
-    vcf_mutect2                 = channel.empty()
-    vcf_parabricks_mutectcaller = channel.empty()
-    vcf_tiddit                  = channel.empty()
-    vcf_tnscope                 = channel.empty()
+    out_msisensor2 = channel.empty()
+    vcf_freebayes  = channel.empty()
+    vcf_lofreq     = channel.empty()
+    vcf_manta      = channel.empty()
+    vcf_mpileup    = channel.empty()
+    vcf_mutect2    = channel.empty()
+    vcf_tiddit     = channel.empty()
+    vcf_tnscope    = channel.empty()
 
     // Initialize empty TBI channels
-    tbi_freebayes               = channel.empty()
-    tbi_lofreq                  = channel.empty()
-    tbi_manta                   = channel.empty()
-    tbi_mpileup                 = channel.empty()
-    tbi_mutect2                 = channel.empty()
-    tbi_parabricks_mutectcaller = channel.empty()
-    tbi_tiddit                  = channel.empty()
-    tbi_tnscope                 = channel.empty()
+    tbi_freebayes  = channel.empty()
+    tbi_lofreq     = channel.empty()
+    tbi_manta      = channel.empty()
+    tbi_mpileup    = channel.empty()
+    tbi_mutect2    = channel.empty()
+    tbi_tiddit     = channel.empty()
+    tbi_tnscope    = channel.empty()
 
     // MPILEUP
     if (tools && tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')) {
@@ -152,19 +150,21 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // PARABRICKS MUTECTCALLER
-    if (tools && tools.split(',').contains('parabricks_mutectcaller')) {
-        BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER(
-            cram,
-            fasta,
-            fasta_fai,
-            panel_of_normals,
-            panel_of_normals_tbi,
-            intervals_bed_combined,
-        )
-
-        vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER.out.vcf
-        tbi_parabricks_mutectcaller = BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER.out.tbi
+    cram_parabricks_mutectcaller = cram.filter { _meta, _cram, _crai ->
+        tools && tools.split(',').contains('parabricks_mutectcaller')
     }
+
+    BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER(
+        cram_parabricks_mutectcaller,
+        fasta,
+        fasta_fai,
+        panel_of_normals,
+        panel_of_normals_tbi,
+        intervals_bed_combined,
+    )
+
+    vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER.out.vcf
+    tbi_parabricks_mutectcaller = BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER.out.tbi
 
     //LOFREQ
     if (tools && tools.split(',').contains('lofreq')) {
