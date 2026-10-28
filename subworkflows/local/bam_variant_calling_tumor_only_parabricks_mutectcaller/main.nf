@@ -1,24 +1,24 @@
 //
-//
 // PARABRICKS MUTECTCALLER: GPU-accelerated tumor-only somatic variant calling
 //
 
-include { PARABRICKS_MUTECTCALLER               } from '../../../modules/nf-core/parabricks/mutectcaller/main'
-include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX } from '../../../modules/nf-core/htslib/bgziptabix/main'
+include { HTSLIB_BGZIPTABIX as TABIX_PARABRICKS_MUTECTCALLER } from '../../../modules/nf-core/htslib/bgziptabix'
+include { PARABRICKS_MUTECTCALLER                            } from '../../../modules/nf-core/parabricks/mutectcaller'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER {
     take:
     reads                  // channel: [ meta, tumor_reads, tumor_index ] (BAM or CRAM)
     fasta                  // channel: [ meta, fasta ]
     fasta_fai              // channel: [ meta, fasta_fai ] - required for CRAM input
-    panel_of_normals       // path: panel_of_normals or []
-    panel_of_normals_tbi   // path: panel_of_normals_tbi or []
-    intervals_bed_combined // channel: intervals or []
+    panel_of_normals       // channel: [ panel_of_normals ] or []
+    panel_of_normals_tbi   // channel: [ panel_of_normals_tbi ] or []
+    intervals_bed_combined // channel: [ intervals.bed ] or []
 
     main:
     // Rearrange to [ meta, tumor_reads, tumor_index, normal_reads, normal_index, intervals ]
-    // Use single-param closure: when no_intervals, intervals_bed_combined is Channel.value([])
+    // Use single-param closure: when no_intervals, intervals_bed_combined is channel.value([])
     // and combine passes the 3-element reads tuple as a single LinkedList item.
+    // Parabricks runs a single job per sample, so the combined intervals bed (or none) is used, no scatter/gather.
     ch_input = reads
         .combine(intervals_bed_combined)
         .map { row ->
@@ -38,11 +38,11 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER {
         panel_of_normals_tbi,
     )
 
-
-    TABIX_BGZIPTABIX(PARABRICKS_MUTECTCALLER.out.vcf.map { meta, vcf -> [ meta, vcf, [], [] ] }, 'compress', true, 'vcf')
+    // The Parabricks VCF is already bgzip-compressed: only link it under its final name and index it (no re-compression)
+    TABIX_PARABRICKS_MUTECTCALLER(PARABRICKS_MUTECTCALLER.out.vcf.map { meta, vcf_ -> [ meta, vcf_, [], [] ] }, 'compress', true, 'vcf')
 
     emit:
-    vcf   = TABIX_BGZIPTABIX.out.output.map { meta, vcf -> [ meta + [ variantcaller: 'parabricks_mutectcaller' ], vcf ] }
-    tbi   = TABIX_BGZIPTABIX.out.index.map  { meta, tbi -> [ meta + [ variantcaller: 'parabricks_mutectcaller' ], tbi ] }
-    stats = PARABRICKS_MUTECTCALLER.out.stats
+    vcf   = TABIX_PARABRICKS_MUTECTCALLER.out.output.map { meta, vcf_ -> [ meta + [ variantcaller: 'parabricks_mutectcaller' ], vcf_ ] } // channel: [ meta, vcf ]
+    tbi   = TABIX_PARABRICKS_MUTECTCALLER.out.index.map  { meta, tbi_ -> [ meta + [ variantcaller: 'parabricks_mutectcaller' ], tbi_ ] } // channel: [ meta, tbi ]
+    stats = PARABRICKS_MUTECTCALLER.out.stats                                                                                          // channel: [ meta, vcf.gz.stats ]
 }
