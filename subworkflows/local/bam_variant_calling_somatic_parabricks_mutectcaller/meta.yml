@@ -22,11 +22,11 @@ components:
   - parabricks/mutectcaller
   - htslib/bgziptabix
 input:
-  - reads:
+  - cram:
       type: list
       description: |
         Normal and tumor BAM/CRAM files with their indexes.
-        Structure: [ val(meta), path(normal_reads), path(normal_index), path(tumor_reads), path(tumor_index) ]
+        Structure: [ val(meta), path(normal_cram), path(normal_crai), path(tumour_cram), path(tumour_crai) ]
       pattern: "*.{bam,bai,cram,crai}"
   - fasta:
       type: file
