@@ -141,6 +141,11 @@
                         "git_sha": "8f6fc518531291208e7a665f6e8bcbeb1f05f49e",
                         "installed_by": ["modules"]
                     },
+                    "deepsomatic": {
+                        "branch": "master",
+                        "git_sha": "a064a845f0c2afec03e02ae7e8cfb832486a2ea1",
+                        "installed_by": ["modules"]
+                    },
                     "deepvariant/rundeepvariant": {
                         "branch": "master",
                         "git_sha": "29031bf70ae8117b235400aca32796a433c733f2",
@@ -416,6 +421,11 @@
                         "git_sha": "541af7c6735edaae882567b910071b563e9b1317",
                         "installed_by": ["modules"]
                     },
+                    "parabricks/deepsomatic": {
+                        "branch": "master",
+                        "git_sha": "3ccf6cbb9868aa36cf77b9490af7b47595eaab17",
+                        "installed_by": ["modules"]
+                    },
                     "parabricks/deepvariant": {
                         "branch": "master",
                         "git_sha": "3e0ec6464725c64d81abe928e15a6750d5fdd272",
@@ -583,22 +593,22 @@
                     },
                     "varlociraptor/callvariants": {
                         "branch": "master",
-                        "git_sha": "289374af2f576e1040db10c42759c4a4804ffeb5",
+                        "git_sha": "d2faee3063ab628dac7c33af2c135c4a8e057428",
                         "installed_by": ["modules"]
                     },
                     "varlociraptor/estimatealignmentproperties": {
                         "branch": "master",
-                        "git_sha": "289374af2f576e1040db10c42759c4a4804ffeb5",
+                        "git_sha": "d2faee3063ab628dac7c33af2c135c4a8e057428",
                         "installed_by": ["modules"]
                     },
                     "varlociraptor/filterfdr": {
                         "branch": "master",
-                        "git_sha": "289374af2f576e1040db10c42759c4a4804ffeb5",
+                        "git_sha": "d2faee3063ab628dac7c33af2c135c4a8e057428",
                         "installed_by": ["modules"]
                     },
                     "varlociraptor/preprocess": {
                         "branch": "master",
-                        "git_sha": "289374af2f576e1040db10c42759c4a4804ffeb5",
+                        "git_sha": "d2faee3063ab628dac7c33af2c135c4a8e057428",
                         "installed_by": ["modules"]
                     },
                     "vcflib/vcffilter": {

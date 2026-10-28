@@ -5,6 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev - unreleased
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+### Dependencies - modules
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Dependencies - plugins
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
+| Params | status |
+| ------ | ------ |
+
+### Developer section
+
+#### Added
+
+#### Changed
+
+- [#2346](https://github.com/nf-core/sarek/pull/2346) - Back to dev (3.11.1dev)
+
+#### Fixed
+
+#### Removed
+
 ## [3.11.0](https://github.com/nf-core/sarek/releases/tag/3.11.0) - Guhkesvákkjåhkå
 
 Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bridge.
@@ -16,6 +53,7 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 - [#2177](https://github.com/nf-core/sarek/pull/2177) - Add Parabricks DeepVariant (`--tools parabricks_deepvariant`) as GPU-accelerated germline variant caller
 - [#2268](https://github.com/nf-core/sarek/pull/2268) - Add parabricks/applybqsr
 - [#2284](https://github.com/nf-core/sarek/pull/2284) - Add `manifest.diagram` to `nextflow.config`
+- [#2293](https://github.com/nf-core/sarek/pull/2293) - Add DeepSomatic and Parabricks DeepSomatic as short-read tumour-normal variant callers (`--tools deepsomatic` and `--tools parabricks_deepsomatic`)
 - [#2328](https://github.com/nf-core/sarek/pull/2328) - Add `ascat_penalty` as configurable ASCAT parameter (default 70)
 
 ### Changed
@@ -33,6 +71,10 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 - [#2287](https://github.com/nf-core/sarek/pull/2287),[2310](https://github.com/nf-core/sarek/pull/#2310) - Fix `PARABRICKS_FQ2BAM` running BQSR without indexed known-sites VCFs ([#2193](https://github.com/nf-core/sarek/issues/2193)): `known_sites_indels_tbi` was never passed to `FASTQ_PREPROCESS_PARABRICKS`, so `pbrun` found no `.tbi` next to the VCFs it was given, fell back to loading them whole into memory, and BQSR could stall or OOM with no progress
 - [#2296](https://github.com/nf-core/sarek/pull/2296) - Preserve CRAM 3.0 after recalibration with the existing Samtools converter so GATK 4.7 output remains compatible with legacy callers.
 - [#2230](https://github.com/nf-core/sarek/pull/2230) - Varlociraptor: fix custom scenario file parsing
+- [#2335](https://github.com/nf-core/sarek/pull/2335) - Fix: pass `markduplicates_pixel_distance` to `GATK4SPARK_MARKDUPLICATES` ([#2334](https://github.com/nf-core/sarek/issues/2334)).
+- [#2338](https://github.com/nf-core/sarek/pull/2338) - Fix undefined `intervals` reference in the BCFtools mpileup output prefix ([#2294](https://github.com/nf-core/sarek/issues/2294)).
+- [#2343](https://github.com/nf-core/sarek/pull/2343) - `--tools parabricks_deepvariant` and `parabricks_haplotypecaller` now stop with the "expect at least one normal-sample" error on a tumor-only samplesheet, instead of finishing without variant calls.
+- [#2344](https://github.com/nf-core/sarek/pull/2344) - Fix DeepSomatic colour in the subway map (green dot)
 
 ### Removed
 
@@ -40,11 +82,12 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 
 ### Dependencies - modules
 
-| Dependency  | Old version | New version |
-| ----------- | ----------- | ----------- |
-| ensembl-vep | 116.0       | 116.3       |
-| gatk4       | 4.6.2.0     | 4.7.0.0     |
-| htslib      | 1.23.1      | 1.21        |
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| ensembl-vep.  | 116.0       | 116.3       |
+| gatk4         | 4.6.2.0     | 4.7.0.0     |
+| htslib        | 1.23.1      | 1.21        |
+| varlociraptor | 8.9.5       | 8.12.0      |
 
 ### Dependencies - plugins
 
@@ -70,10 +113,11 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 #### Changed
 
 - [#2271](https://github.com/nf-core/sarek/pull/2271) - Back to dev (3.10.1dev)
+- [#2332](https://github.com/nf-core/sarek/pull/2332) - Update varlociraptor to 8.12.0, add --atomic-candidate-variants flag
 
 #### Fixed
 
-- [#2268](https://github.com/nf-core/sarek/pull/2268) - Resolve filetype output for parabricks/fq2bam
+- [#2268](https://github.com/nf-core/sarek/pull/2268),[#2342](https://github.com/nf-core/sarek/pull/2342) - Resolve filetype output for parabricks/fq2bam
 - [#2312](https://github.com/nf-core/sarek/pull/2312) - Fix parabricks/applybqsr input channel logic
 - [#2314](https://github.com/nf-core/sarek/pull/2314) - Improve docs on nonhuman genome
 - [#2316](https://github.com/nf-core/sarek/pull/2316) - Load `nf-schema` in the AWS full-size test `nextflow_config`, so that the `nf-slack` plugin block does not drop it
