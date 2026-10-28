@@ -241,7 +241,7 @@ nextflow run nf-core/sarek \
 
 ##### Parabricks MutectCaller (`--tools parabricks_mutectcaller`)
 
-`parabricks_mutectcaller` calls somatic SNVs and indels in tumor-only and tumor/normal paired samples on the GPU. It is run as one job per sample or pair (the calling is not scattered over intervals) and uses the combined intervals BED via `--interval-file`. The output is raw, unfiltered Mutect calls: unlike `--tools mutect2`, there is no `FilterMutectCalls`, contamination estimation or read-orientation filtering, so results carry no `PASS`/filter labels and are not directly comparable to Mutect2 output. Filtering is planned as a follow-up.
+`parabricks_mutectcaller` calls somatic SNVs and indels in tumor-only and tumor/normal paired samples on the GPU. It is run as one job per sample or pair (the calling is not scattered over intervals) and uses the combined intervals BED via `--interval-file`. The output is raw, unfiltered Mutect calls.
 
 Differences to GATK Mutect2 in Sarek:
 

@@ -618,7 +618,7 @@ Files created:
 #### Parabricks MutectCaller
 
 [Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html) is a GPU-accelerated implementation of GATK Mutect2 for calling somatic SNVs and indels in tumor-only and tumor/normal paired samples. Enable with `--tools parabricks_mutectcaller --profile <docker/singularity>,gpu`; a GPU is required.
-Calling runs as one job per sample or pair. The output is the raw, unfiltered Mutect calls: unlike `--tools mutect2`, no `FilterMutectCalls`, contamination estimation or read-orientation filtering is applied, so the VCF carries no `PASS`/filter labels and is not directly comparable to Mutect2 output. Filtering is planned as a follow-up. A panel of normals (`--pon`) is used via Parabricks PoN annotation (`prepon`/`postpon`).
+Calling runs as one job per sample or pair. The output is the raw, unfiltered Mutect calls. A panel of normals (`--pon`) is used via Parabricks PoN annotation (`prepon`/`postpon`).
 
 <details markdown="1">
 <summary>Output files for tumor-only and tumor/normal paired samples</summary>
