@@ -1,25 +1,23 @@
 {
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --tools null": {
         "content": [
-            13,
+            12,
             {
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.2.0",
-                    "samtools": "1.21"
-                },
-                "INDEX_CRAM": {
+                    "gatk4": "4.7.0.0",
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
@@ -181,33 +179,31 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:26:01.849929162",
+        "timestamp": "2026-10-14T11:07:20.079195864",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --tools null": {
         "content": [
-            13,
+            12,
             {
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_MARKDUPLICATES": {
-                    "gatk4": "4.6.2.0",
-                    "samtools": "1.21"
-                },
-                "INDEX_CRAM": {
+                    "gatk4": "4.7.0.0",
                     "samtools": "1.24"
                 },
                 "MOSDEPTH": {
@@ -369,30 +365,28 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-28T11:25:22.044646175",
+        "timestamp": "2026-10-14T11:09:40.64363138",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --skip_tools markduplicates --tools null": {
         "content": [
-            12,
+            11,
             {
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
-                },
-                "INDEX_CRAM": {
-                    "samtools": "1.24"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -527,30 +521,28 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:35:07.795402388",
+        "timestamp": "2026-10-14T11:08:19.653409417",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --skip_tools markduplicates --tools null": {
         "content": [
-            12,
+            11,
             {
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
-                },
-                "INDEX_CRAM": {
-                    "samtools": "1.24"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -685,10 +677,10 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:19:53.572042834",
+        "timestamp": "2026-10-14T11:06:13.929498738",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     }
 }

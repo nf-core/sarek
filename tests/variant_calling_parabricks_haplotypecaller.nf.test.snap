@@ -33,19 +33,19 @@
                     "gawk": "5.3.0"
                 },
                 "GATK4_GENOMICSDBIMPORT": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_GENOTYPEGVCFS": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_HAPLOTYPECALLER": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MERGE_GENOTYPEGVCFS": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MERGE_HAPLOTYPECALLER": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -265,7 +265,7 @@
                 "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
             ]
         ],
-        "timestamp": "2026-08-31T11:44:12.740129377",
+        "timestamp": "2026-10-01T23:52:01.019316312",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

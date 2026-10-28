@@ -87,21 +87,23 @@ jobs:
 
       - name: Launch workflow via Seqera Platform
         id: tower-launch
-        uses: seqeralabs/action-tower-launch@51565b514bff1827cf34620de25d0055759f1fc9 # v2
+        uses: seqeralabs/action-seqera-launch@f7b1a39afc8bb65f58b84150cd214b33fe416fef #v1
         with:
-          run_name: sarek_${{ matrix.profile }}
-          workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
-          access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute_env: ${{ secrets[matrix.compute_env] }}
+          wait: none
+          run-name: sarek_${{ matrix.profile }}
+          workspace-id: ${{ secrets.TOWER_WORKSPACE_ID }}
+          access-token: ${{ secrets.TOWER_ACCESS_TOKEN }}
+          compute-env: ${{ secrets[matrix.compute_env] }}
           revision: ${{ steps.revision.outputs.revision }}
-          workdir: ${{ secrets[matrix.workdir] }}/work/sarek/work-${{ steps.revision.outputs.revision }}/${{ matrix.profile }}
+          work-dir: ${{ secrets[matrix.workdir] }}/work/sarek/work-${{ steps.revision.outputs.revision }}/${{ matrix.profile }}
           parameters: |
             {
               "outdir": "${{ secrets[matrix.workdir] }}/sarek/results-${{ steps.revision.outputs.revision }}/${{ matrix.profile }}/"
             }
-          nextflow_config: |
+          nextflow-config: |
             plugins {
               id 'nf-slack@0.5.0'
+              id 'nf-schema@2.7.2'
             }
             slack {
               enabled = true
@@ -128,11 +130,4 @@ jobs:
         run: |
           gh pr comment ${{ github.event.pull_request.number }} \
             --repo ${{ github.repository }} \
-            --body "Cloud test **${{ matrix.profile }}** launched on [Seqera Platform](${{ steps.tower-launch.outputs.workflowUrl }})"
-
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
-        with:
-          name: Seqera Platform debug log file - ${{ matrix.profile }}
-          path: |
-            tower_action_*.log
-            tower_action_*.json
+            --body "Cloud test **${{ matrix.profile }}** launched on [Seqera Platform](${{ steps.tower-launch.outputs.workflow-url }})"

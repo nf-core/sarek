@@ -4,9 +4,9 @@
             2,
             {
                 "ENSEMBLVEP_VEP": {
-                    "ensemblvep": "116.0",
+                    "ensemblvep": "116.3",
                     "perl-math-cdf": "0.1",
-                    "tabix": "1.23.1"
+                    "tabix": "1.21"
                 }
             },
             [
@@ -57,10 +57,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-08T10:26:06.53157943",
+        "timestamp": "2026-10-16T14:53:24.494997928",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "25.10.4"
         }
     },
     "Fails with profile test --dbnsfp and no dbnsfp_tbi": {
@@ -77,10 +77,10 @@
                 "Execution halted due to dbnsfp inconsistency."
             ]
         ],
-        "timestamp": "2026-05-27T13:37:29.419583359",
+        "timestamp": "2026-10-16T14:51:39.45754633",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
+            "nextflow": "25.10.4"
         }
     },
     "Fails with profile test --tools vep --vep_cache_version 1 --build_only_index": {
@@ -98,10 +98,10 @@
                 "Please check https://annotation-cache.github.io/ to create a request for it."
             ]
         ],
-        "timestamp": "2026-05-27T13:36:59.68443869",
+        "timestamp": "2026-10-16T14:48:12.675160389",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
+            "nextflow": "25.10.4"
         }
     }
 }

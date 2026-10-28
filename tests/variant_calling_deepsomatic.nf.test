@@ -1,0 +1,48 @@
+def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    profile "test"
+
+    def test_scenario = [
+        [
+            name: "-profile test --tools deepsomatic somatic scatter/gather",
+            tag: 'deepsomatic_scatter',
+            params: [
+                genome: null,
+                igenomes_ignore: true,
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai',
+                input: "${projectDir}/tests/csv/3.0/mapped_somatic_parabricks_deepsomatic.csv",
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                nucleotides_per_second: 1,
+                step: "variant_calling",
+                tools: 'deepsomatic'
+            ],
+            no_conda: true,
+            no_vcf_md5sum: true
+        ],
+        [
+            name: "-profile test --tools deepsomatic somatic --no_intervals -stub",
+            params: [
+                genome: null,
+                igenomes_ignore: true,
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
+                no_intervals: true,
+                step: "variant_calling",
+                tools: 'deepsomatic'
+            ],
+            no_conda: true,
+            stub: true
+        ]
+    ]
+
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}

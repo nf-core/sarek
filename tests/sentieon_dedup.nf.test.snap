@@ -1,22 +1,20 @@
 {
     "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/mapped_single_bam.csv": {
         "content": [
-            13,
+            12,
             {
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
-                },
-                "INDEX_CRAM": {
-                    "samtools": "1.24"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -186,7 +184,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-28T10:57:26.744377427",
+        "timestamp": "2026-10-15T08:55:17.256501559",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -194,22 +192,20 @@
     },
     "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/mapped_single_cram.csv --sentieon_consensus": {
         "content": [
-            13,
+            12,
             {
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
-                },
-                "INDEX_CRAM": {
-                    "samtools": "1.24"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -379,7 +375,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-28T11:00:34.291406145",
+        "timestamp": "2026-10-15T08:55:09.485539392",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -387,22 +383,20 @@
     },
     "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/mapped_single_cram.csv": {
         "content": [
-            13,
+            12,
             {
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
-                },
-                "INDEX_CRAM": {
-                    "samtools": "1.24"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -572,7 +566,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-28T11:01:09.715185863",
+        "timestamp": "2026-10-15T08:54:42.461950144",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -580,7 +574,7 @@
     },
     "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/bam_umi_header.csv --sentieon_consensus --umi_in_read_header": {
         "content": [
-            14,
+            13,
             {
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -589,16 +583,14 @@
                     "fgbio": "3.1.2"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
-                },
-                "INDEX_CRAM": {
-                    "samtools": "1.24"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -768,7 +760,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-28T10:58:09.138069802",
+        "timestamp": "2026-10-15T08:55:29.009510569",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -776,7 +768,7 @@
     },
     "-profile test --tools sentieon_dedup --step markduplicates --input tests/csv/3.0/bam_umi_header.csv --umi_in_read_header": {
         "content": [
-            14,
+            13,
             {
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -785,16 +777,14 @@
                     "fgbio": "3.1.2"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_BASERECALIBRATOR": {
-                    "gatk4": "4.6.2.0"
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_INTERVALLISTTOBED": {
-                    "gatk4": "4.6.2.0"
-                },
-                "INDEX_CRAM": {
-                    "samtools": "1.24"
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -964,7 +954,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-07-27T11:35:19.642136626",
+        "timestamp": "2026-10-15T08:55:39.317127623",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
