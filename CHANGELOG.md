@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#2180](https://github.com/nf-core/sarek/pull/2180) - Add Parabricks MutectCaller (`--tools parabricks_mutectcaller`) as GPU-accelerated somatic variant caller for tumor-only and tumor/normal samples (raw, unfiltered calls)
+- [#2351](https://github.com/nf-core/sarek/pull/2351) - Add `--mosdepth_fast_mode` to control Mosdepth fast mode for whole-genome coverage calculations. Fast mode remains enabled by default.
 
 ### Changed
 
@@ -32,8 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params | status |
-| ------ | ------ |
+| Params                 | status |
+| ---------------------- | ------ |
+| `--mosdepth_fast_mode` | Added  |
 
 ### Developer section
 

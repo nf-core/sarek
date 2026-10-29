@@ -311,6 +311,13 @@
                     "fa_icon": "fas fa-tape",
                     "description": "Generate consensus reads with Sentieon dedup rather than choosing one best read.",
                     "help_text": "If set, the Sentieon dedup output will combine duplicate reads into single consensus read. This is only relevant if `--tools` contains `sentieon_dedup`."
+                },
+                "mosdepth_fast_mode": {
+                    "type": "boolean",
+                    "default": true,
+                    "fa_icon": "fas fa-chart-area",
+                    "description": "Enable Mosdepth fast mode for whole-genome coverage calculations.",
+                    "help_text": "Fast mode skips internal CIGAR operations and does not correct overlapping mates. Disable this option to account for overlapping read pairs. Whole-exome and targeted sequencing runs with --wes already disable fast mode."
                 }
             }
         },
