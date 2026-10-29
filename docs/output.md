@@ -617,17 +617,19 @@ Files created:
 
 #### Parabricks MutectCaller
 
-[Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html) is a GPU-accelerated implementation of GATK Mutect2 for calling somatic SNVs and indels in tumor-only and tumor/normal paired samples. Enable with `--tools parabricks_mutectcaller --profile <docker/singularity>,gpu`.
+[Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html) is a GPU-accelerated implementation of GATK Mutect2 for somatic SNVs and small indels in tumour-only and tumour-normal samples. Calls are not filtered.
 
 <details markdown="1">
-<summary>Output files for tumor-only and tumor/normal paired samples</summary>
+<summary>Output files for tumour-only and tumour-normal samples</summary>
 
-**Output directory: `{outdir}/variant_calling/parabricks_mutectcaller/{sample,tumorsample_vs_normalsample}/`**
+**Output directory: `{outdir}/variant_calling/parabricks_mutectcaller/{sample,tumoursample_vs_normalsample}/`**
 
-- `{sample,tumorsample_vs_normalsample}.parabricks_mutectcaller.vcf.gz` and `{sample,tumorsample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.tbi`
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.vcf.gz` and `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.tbi`
   - VCF with tabix index
-- `{sample,tumorsample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.stats`
-  - a stats file generated during calling of variants
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.stats`
+  - stats file from calling
+
+</details>
 
 #### Sentieon DNAscope
 

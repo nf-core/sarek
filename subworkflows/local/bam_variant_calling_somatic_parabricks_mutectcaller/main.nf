@@ -1,50 +1,39 @@
 //
-//
-// PARABRICKS MUTECTCALLER: GPU-accelerated tumor-normal somatic variant calling
+// PARABRICKS MUTECTCALLER: GPU-accelerated tumour-normal somatic variant calling
 //
 
-include { PARABRICKS_MUTECTCALLER               } from '../../../modules/nf-core/parabricks/mutectcaller'
-include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX } from '../../../modules/nf-core/htslib/bgziptabix'
+include { PARABRICKS_MUTECTCALLER } from '../../../modules/nf-core/parabricks/mutectcaller'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER {
     take:
-    reads                  // channel: [ meta, normal_reads, normal_index, tumor_reads, tumor_index ] (BAM or CRAM)
-    fasta                  // channel: [ meta, fasta ]
-    fasta_fai              // channel: [ meta, fasta_fai ] - required for CRAM input
-    panel_of_normals       // path: panel_of_normals or []
-    panel_of_normals_tbi   // path: panel_of_normals_tbi or []
-    intervals_bed_combined // channel: intervals or []
+    cram                   // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ]
+    fasta                  // channel: [mandatory] [ meta, fasta ]
+    fasta_fai              // channel: [mandatory] [ meta, fasta_fai ]
+    panel_of_normals       // channel: [optional] [ panel_of_normals ] or []
+    panel_of_normals_tbi   // channel: [optional] [ panel_of_normals_tbi ] or []
+    intervals_bed_combined // channel: [optional] [] or [ intervals.bed ]
 
     main:
-    // Rearrange to [ meta, tumor_reads, tumor_index, normal_reads, normal_index, intervals ]
-    // Use single-param closure: when no_intervals, intervals_bed_combined is Channel.value([])
-    // and combine passes the 5-element reads tuple as a single LinkedList item.
-    ch_input = reads
-        .combine(intervals_bed_combined)
-        .map { row ->
-            def meta         = row[0]
-            def normal_reads = row[1]
-            def normal_index = row[2]
-            def tumor_reads  = row[3]
-            def tumor_index  = row[4]
-            def intervals    = row.size() > 5 ? row[5] : []
-            [ meta, tumor_reads, tumor_index, normal_reads, normal_index, intervals ]
+    intervals_bed = intervals_bed_combined.map { bed -> [bed ? bed[0] : []] }
+
+    cram_intervals = cram
+        .combine(intervals_bed)
+        .map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai, interval ->
+            [meta, tumor_cram, tumor_crai, normal_cram, normal_crai, interval]
         }
 
     fasta_with_fai = fasta.combine(fasta_fai.map { _meta, fai -> fai }).collect()
 
-    PARABRICKS_MUTECTCALLER(
-        ch_input,
-        fasta_with_fai,
-        panel_of_normals,
-        panel_of_normals_tbi,
-    )
+    PARABRICKS_MUTECTCALLER(cram_intervals, fasta_with_fai, panel_of_normals, panel_of_normals_tbi)
 
+    vcf = PARABRICKS_MUTECTCALLER.out.vcf.map { meta, vcf -> [meta + [variantcaller: 'parabricks_mutectcaller'], vcf] }
 
-    TABIX_BGZIPTABIX(PARABRICKS_MUTECTCALLER.out.vcf.map { meta, vcf -> [ meta, vcf, [], [] ] }, 'compress', true, 'vcf')
+    tbi = PARABRICKS_MUTECTCALLER.out.tbi.map { meta, tbi -> [meta + [variantcaller: 'parabricks_mutectcaller'], tbi] }
+
+    stats = PARABRICKS_MUTECTCALLER.out.stats
 
     emit:
-    vcf   = TABIX_BGZIPTABIX.out.output.map { meta, vcf -> [ meta + [ variantcaller: 'parabricks_mutectcaller' ], vcf ] }
-    tbi   = TABIX_BGZIPTABIX.out.index.map  { meta, tbi -> [ meta + [ variantcaller: 'parabricks_mutectcaller' ], tbi ] }
-    stats = PARABRICKS_MUTECTCALLER.out.stats
+    vcf   // channel: [ meta, vcf.gz ]
+    tbi   // channel: [ meta, vcf.gz.tbi ]
+    stats // channel: [ meta, vcf.gz.stats ]
 }

@@ -3,17 +3,17 @@
 // Should be only run on patients without normal sample
 //
 
-include { BAM_VARIANT_CALLING_CNVKIT                  } from '../bam_variant_calling_cnvkit'
-include { BAM_VARIANT_CALLING_FREEBAYES               } from '../bam_variant_calling_freebayes'
-include { BAM_VARIANT_CALLING_MPILEUP                 } from '../bam_variant_calling_mpileup'
-include { BAM_VARIANT_CALLING_SINGLE_TIDDIT           } from '../bam_variant_calling_single_tiddit'
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC } from '../bam_variant_calling_tumor_only_controlfreec'
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA        } from '../bam_variant_calling_tumor_only_manta'
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2      } from '../bam_variant_calling_tumor_only_mutect2'
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ       } from '../bam_variant_calling_tumor_only_lofreq'
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE      } from '../bam_variant_calling_tumor_only_tnscope'
+include { BAM_VARIANT_CALLING_CNVKIT                             } from '../bam_variant_calling_cnvkit'
+include { BAM_VARIANT_CALLING_FREEBAYES                          } from '../bam_variant_calling_freebayes'
+include { BAM_VARIANT_CALLING_MPILEUP                            } from '../bam_variant_calling_mpileup'
+include { BAM_VARIANT_CALLING_SINGLE_TIDDIT                      } from '../bam_variant_calling_single_tiddit'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC            } from '../bam_variant_calling_tumor_only_controlfreec'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA                   } from '../bam_variant_calling_tumor_only_manta'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2                 } from '../bam_variant_calling_tumor_only_mutect2'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ                  } from '../bam_variant_calling_tumor_only_lofreq'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER } from '../bam_variant_calling_tumor_only_parabricks_mutectcaller'
-include { MSISENSOR2_MSI                              } from '../../../modules/nf-core/msisensor2/msi'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE                 } from '../bam_variant_calling_tumor_only_tnscope'
+include { MSISENSOR2_MSI                                         } from '../../../modules/nf-core/msisensor2/msi'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
@@ -53,7 +53,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_mutect2    = channel.empty()
     vcf_tiddit     = channel.empty()
     vcf_tnscope    = channel.empty()
-    vcf_parabricks_mutectcaller = channel.empty()
 
     // Initialize empty TBI channels
     tbi_freebayes  = channel.empty()
@@ -63,7 +62,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     tbi_mutect2    = channel.empty()
     tbi_tiddit     = channel.empty()
     tbi_tnscope    = channel.empty()
-    tbi_parabricks_mutectcaller = channel.empty()
 
     // MPILEUP
     if (tools && tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')) {
@@ -152,19 +150,21 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // PARABRICKS MUTECTCALLER
-    if (tools && tools.split(',').contains('parabricks_mutectcaller')) {
-        BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER(
-            cram,
-            fasta,
-            fasta_fai,
-            panel_of_normals,
-            panel_of_normals_tbi,
-            intervals_bed_combined,
-        )
-
-        vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER.out.vcf
-        tbi_parabricks_mutectcaller = BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER.out.tbi
+    cram_parabricks_mutectcaller = cram.filter { _meta, _cram, _crai ->
+        tools && tools.split(',').contains('parabricks_mutectcaller')
     }
+
+    BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER(
+        cram_parabricks_mutectcaller,
+        fasta,
+        fasta_fai,
+        panel_of_normals,
+        panel_of_normals_tbi,
+        intervals_bed_combined,
+    )
+
+    vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER.out.vcf
+    tbi_parabricks_mutectcaller = BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER.out.tbi
 
     //LOFREQ
     if (tools && tools.split(',').contains('lofreq')) {
@@ -230,9 +230,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             vcf_manta,
             vcf_mutect2,
             vcf_mpileup,
+            vcf_parabricks_mutectcaller,
             vcf_tiddit,
             vcf_tnscope,
-            vcf_parabricks_mutectcaller,
         )
 
     tbi_all = channel.empty()
@@ -242,9 +242,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             tbi_manta,
             tbi_mutect2,
             tbi_mpileup,
+            tbi_parabricks_mutectcaller,
             tbi_tiddit,
             tbi_tnscope,
-            tbi_parabricks_mutectcaller,
         )
 
     emit:
@@ -256,15 +256,15 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_manta
     vcf_mpileup
     vcf_mutect2
+    vcf_parabricks_mutectcaller
     vcf_tiddit
     vcf_tnscope
-    vcf_parabricks_mutectcaller
     tbi_freebayes
     tbi_lofreq
     tbi_manta
     tbi_mpileup
     tbi_mutect2
+    tbi_parabricks_mutectcaller
     tbi_tiddit
     tbi_tnscope
-    tbi_parabricks_mutectcaller
 }

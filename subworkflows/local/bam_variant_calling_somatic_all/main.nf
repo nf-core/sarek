@@ -55,24 +55,22 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     // channels are often remapped to match module/subworkflow
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    out_indexcov                 = channel.empty()
-    out_msisensorpro             = channel.empty()
-    vcf_freebayes                = channel.empty()
-    vcf_manta                    = channel.empty()
-    vcf_muse                     = channel.empty()
-    vcf_mutect2                  = channel.empty()
-    vcf_parabricks_mutectcaller  = channel.empty()
-    vcf_strelka                  = channel.empty()
-    vcf_tiddit                   = channel.empty()
-    vcf_tnscope                  = channel.empty()
-    tbi_freebayes                = channel.empty()
-    tbi_manta                    = channel.empty()
-    tbi_muse                     = channel.empty()
-    tbi_mutect2                  = channel.empty()
-    tbi_parabricks_mutectcaller  = channel.empty()
-    tbi_strelka                  = channel.empty()
-    tbi_tiddit                   = channel.empty()
-    tbi_tnscope                  = channel.empty()
+    out_indexcov     = channel.empty()
+    out_msisensorpro = channel.empty()
+    vcf_freebayes    = channel.empty()
+    vcf_manta        = channel.empty()
+    vcf_muse         = channel.empty()
+    vcf_mutect2      = channel.empty()
+    vcf_strelka      = channel.empty()
+    vcf_tiddit       = channel.empty()
+    vcf_tnscope      = channel.empty()
+    tbi_freebayes    = channel.empty()
+    tbi_manta        = channel.empty()
+    tbi_muse         = channel.empty()
+    tbi_mutect2      = channel.empty()
+    tbi_strelka      = channel.empty()
+    tbi_tiddit       = channel.empty()
+    tbi_tnscope      = channel.empty()
 
     if (tools && tools.split(',').contains('ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
@@ -272,19 +270,21 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     tbi_parabricks_deepsomatic = BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC.out.tbi
 
     // PARABRICKS MUTECTCALLER
-    if (tools && tools.split(',').contains('parabricks_mutectcaller')) {
-        BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER(
-            cram,
-            fasta,
-            fasta_fai,
-            panel_of_normals,
-            panel_of_normals_tbi,
-            intervals_bed_combined,
-        )
-
-        vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER.out.vcf
-        tbi_parabricks_mutectcaller = BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER.out.tbi
+    cram_parabricks_mutectcaller = cram.filter { _meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai ->
+        tools && tools.split(',').contains('parabricks_mutectcaller')
     }
+
+    BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER(
+        cram_parabricks_mutectcaller,
+        fasta,
+        fasta_fai,
+        panel_of_normals,
+        panel_of_normals_tbi,
+        intervals_bed_combined,
+    )
+
+    vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER.out.vcf
+    tbi_parabricks_mutectcaller = BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER.out.tbi
 
     // TNSCOPE
     if (tools && tools.split(',').contains('sentieon_tnscope')) {

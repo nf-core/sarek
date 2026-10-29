@@ -1,68 +1,78 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
 name: "bam_variant_calling_tumor_only_parabricks_mutectcaller"
 description: |
-  Perform tumor-only somatic variant calling using the Parabricks GPU-accelerated
-  mutectcaller. No matched normal sample is used.
+  Perform tumor-only somatic variant calling using the Parabricks GPU-accelerated mutectcaller
+  (a GPU port of GATK Mutect2), run as a single job per sample on the combined intervals
+  (no scatter/gather), optionally with a panel of normals. No matched normal sample is used.
+  The raw (unfiltered) calls are emitted with the index Parabricks writes.
+  Contamination estimation and filtermutectcalls are not run by this subworkflow.
+  f1r2 / read-orientation filtering (learnreadorientationmodel) and the germline resource prior
+  during calling are not wired up, because the nf-core parabricks/mutectcaller module does not
+  expose them yet.
 keywords:
   - parabricks
   - mutectcaller
   - mutect2
-  - tumor_only
+  - somatic
   - variant_calling
+  - tumor_only
   - gpu
 components:
   - parabricks/mutectcaller
-  - htslib/bgziptabix
-
 input:
-  - reads:
+  - cram:
       type: list
       description: |
-        Structure: [ val(meta), path(tumor_reads), path(tumor_index) ]
-      pattern: "*.{bam,cram}"
+        Tumor BAM/CRAM file with its index.
+        Structure: [ val(meta), path(tumour_cram), path(tumour_crai) ]
+      pattern: "*.{bam,bai,cram,crai}"
   - fasta:
       type: file
       description: |
-        The reference FASTA file as a ref_meta tuple (used by the Parabricks module).
-        Structure: [ val(ref_meta), path(fasta) ]
+        Reference FASTA file.
+        Structure: [ val(meta), path(fasta) ]
       pattern: "*.{fa,fasta}"
   - fasta_fai:
       type: file
       description: |
-        Index of the reference FASTA file, required for CRAM input.
-        Structure: [ val(ref_meta), path(fasta_fai) ]
+        Index of the reference FASTA file.
+        Structure: [ val(meta), path(fasta_fai) ]
       pattern: "*.fai"
   - panel_of_normals:
       type: file
-      description: VCF file to be used as a panel of normals by the Parabricks mutectcaller.
+      description: |
+        Panel of normals VCF used by the Parabricks mutectcaller.
+        Structure: [ path(panel_of_normals) ] or []
       pattern: "*.vcf.gz"
   - panel_of_normals_tbi:
       type: file
-      description: Index for the panel of normals VCF.
+      description: |
+        Index of the panel of normals VCF.
+        Structure: [ path(panel_of_normals_tbi) ] or []
       pattern: "*.vcf.gz.tbi"
   - intervals_bed_combined:
       type: file
       description: |
-        Channel containing interval file(s) for scatter/gather, or [] if no intervals.
-      pattern: "*.{bed,interval_list,list}"
+        Single combined BED file of target regions, or [] when running without intervals.
+        Structure: [ path(intervals) ] or []
+      pattern: "*.bed"
 output:
   - vcf:
       type: file
       description: |
-        Compressed VCF of tumor-only somatic variant calls. Contains variantcaller
-        metadata in the meta map.
+        Raw (unfiltered) somatic variant calls, with variantcaller: 'parabricks_mutectcaller' added to meta.
         Structure: [ val(meta), path(vcf) ]
-      pattern: "*.vcf.gz"
+      pattern: "*.parabricks_mutectcaller.vcf.gz"
   - tbi:
       type: file
       description: |
-        Index for the output VCF file.
+        Index of the raw VCF, with variantcaller: 'parabricks_mutectcaller' added to meta.
         Structure: [ val(meta), path(tbi) ]
-      pattern: "*.vcf.gz.tbi"
+      pattern: "*.parabricks_mutectcaller.vcf.gz.tbi"
   - stats:
       type: file
       description: |
-        Statistics file produced by the Parabricks mutectcaller.
+        Mutect stats produced by the Parabricks mutectcaller (input for filtermutectcalls).
         Structure: [ val(meta), path(stats) ]
       pattern: "*.vcf.gz.stats"
 authors:

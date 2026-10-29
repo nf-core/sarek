@@ -148,8 +148,8 @@ nextflow_pipeline {
             name: "-profile test --tools parabricks_mutectcaller with pon",
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
-                pon: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz',
-                pon_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz.tbi',
+                pon: modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz',
+                pon_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz.tbi',
                 tools: 'parabricks_mutectcaller',
                 wes: true
             ],
@@ -160,8 +160,8 @@ nextflow_pipeline {
             name: "-profile test --tools parabricks_mutectcaller with pon -stub",
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
-                pon: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz',
-                pon_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz.tbi',
+                pon: modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz',
+                pon_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz.tbi',
                 tools: 'parabricks_mutectcaller',
                 wes: true
             ],
