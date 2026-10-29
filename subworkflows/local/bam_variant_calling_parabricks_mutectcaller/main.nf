@@ -1,5 +1,5 @@
 //
-// PARABRICKS MUTECTCALLER: GPU-accelerated tumour-normal somatic variant calling, filtered with GATK on CPU
+// PARABRICKS MUTECTCALLER: GPU-accelerated tumour-normal or tumour-only somatic variant calling, filtered with GATK on CPU
 //
 
 include { GATK4_CALCULATECONTAMINATION as MUTECTCALLER_CALCULATECONTAMINATION } from '../../../modules/nf-core/gatk4/calculatecontamination'
@@ -8,9 +8,9 @@ include { GATK4_GETPILEUPSUMMARIES as MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL  } 
 include { GATK4_GETPILEUPSUMMARIES as MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR   } from '../../../modules/nf-core/gatk4/getpileupsummaries'
 include { PARABRICKS_MUTECTCALLER                                             } from '../../../modules/nf-core/parabricks/mutectcaller'
 
-workflow BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER {
+workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
     take:
-    cram                   // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ]
+    cram                   // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ], normal_cram and normal_crai are [] for tumour-only
     fasta                  // channel: [mandatory] [ meta, fasta ]
     fasta_fai              // channel: [mandatory] [ meta, fasta_fai ]
     dict                   // channel: [mandatory] [ meta, dict ]
@@ -39,23 +39,31 @@ workflow BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER {
 
     // contamination is a tumour value; dropping it lets a normal shared by several tumours be summarised once
     pileup = cram_intervals.multiMap { meta, tumor_cram, tumor_crai, normal_cram, normal_crai, interval ->
-        tumor: [meta + [id: meta.tumor_id], tumor_cram, tumor_crai, interval]
+        tumor: [meta + [id: meta.tumor_id ?: meta.id], tumor_cram, tumor_crai, interval]
         normal: [meta - meta.subMap('tumor_id', 'contamination') + [id: meta.normal_id], normal_cram, normal_crai, interval]
     }
 
-    MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL(pileup.normal.unique(), fasta, fasta_fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
+    pileup_normal = pileup.normal.filter { meta, _normal_cram, _normal_crai, _interval -> meta.normal_id }.unique()
+
+    MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL(pileup_normal, fasta, fasta_fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
     MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR(pileup.tumor, fasta, fasta_fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
 
-    pileup_tumor_by_normal = MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR.out.table.map { meta, table ->
-        [[meta.patient, meta.normal_id], meta + [id: "${meta.tumor_id}_vs_${meta.normal_id}".toString()], table]
+    pileup_table_tumor_branch = MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR.out.table.branch { meta, _table ->
+        paired: meta.normal_id
+        tumor_only: true
     }
+
     pileup_normal_by_normal = MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL.out.table.map { meta, table ->
         [[meta.patient, meta.normal_id], table]
     }
 
-    calculatecontamination_in = pileup_tumor_by_normal
+    calculatecontamination_in = pileup_table_tumor_branch.paired
+        .map { meta, table ->
+            [[meta.patient, meta.normal_id], meta + [id: "${meta.tumor_id}_vs_${meta.normal_id}".toString()], table]
+        }
         .combine(pileup_normal_by_normal, by: 0)
         .map { _key, meta, tumor_table, normal_table -> [meta, tumor_table, normal_table] }
+        .mix(pileup_table_tumor_branch.tumor_only.map { meta, table -> [meta, table, []] })
 
     MUTECTCALLER_CALCULATECONTAMINATION(calculatecontamination_in)
 

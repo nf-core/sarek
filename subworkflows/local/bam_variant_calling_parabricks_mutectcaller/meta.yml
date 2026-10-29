@@ -1,12 +1,13 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
-name: "bam_variant_calling_somatic_parabricks_mutectcaller"
+name: "bam_variant_calling_parabricks_mutectcaller"
 description: |
-  Perform somatic variant calling on paired tumour-normal samples with the Parabricks
-  GPU-accelerated mutectcaller, run as a single job per pair on the combined intervals,
-  optionally with a panel of normals. The calls are filtered on CPU with GATK filtermutectcalls,
-  using contamination and segmentation tables from getpileupsummaries and calculatecontamination
-  when a germline resource is provided. Read-orientation filtering and the germline prior during
-  calling are not available, as the parabricks/mutectcaller module does not expose them.
+  Perform somatic variant calling on paired tumour-normal or tumour-only samples with the
+  Parabricks GPU-accelerated mutectcaller, run as a single job per pair or sample on the combined
+  intervals, optionally with a panel of normals. The calls are filtered on CPU with GATK
+  filtermutectcalls, using contamination and segmentation tables from getpileupsummaries and
+  calculatecontamination when a germline resource is provided. Read-orientation filtering and the
+  germline prior during calling are not available, as the parabricks/mutectcaller module does not
+  expose them.
 keywords:
   - parabricks
   - mutectcaller
@@ -14,6 +15,7 @@ keywords:
   - somatic
   - variant_calling
   - tumor_normal
+  - tumor_only
   - getpileupsummaries
   - calculatecontamination
   - filtermutectcalls
@@ -28,7 +30,7 @@ input:
   - cram:
       type: list
       description: |
-        Normal and tumour BAM/CRAM files with their indexes.
+        Normal and tumour BAM/CRAM files with their indexes. The normal file and index are [] for tumour-only.
         Structure: [ val(meta), path(normal_cram), path(normal_crai), path(tumour_cram), path(tumour_crai) ]
       pattern: "*.{bam,bai,cram,crai}"
   - fasta:
@@ -120,7 +122,7 @@ output:
   - pileup_table_normal:
       type: file
       description: |
-        Pileup summary table of the normal sample (empty channel without germline resource).
+        Pileup summary table of the normal sample (empty channel without germline resource or in tumour-only mode).
         Structure: [ val(meta), path(table) ]
       pattern: "*.pileups.table"
   - pileup_table_tumor:
