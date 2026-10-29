@@ -617,29 +617,29 @@ Files created:
 
 #### Parabricks MutectCaller
 
-[Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html) is a GPU-accelerated implementation of GATK Mutect2 for calling somatic SNVs and indels in tumor-only and tumor/normal paired samples. Enable with `--tools parabricks_mutectcaller --profile <docker/singularity>,gpu`; a GPU is required.
+[Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html) is a GPU-accelerated implementation of GATK Mutect2 for calling somatic SNVs and indels in tumour-only and tumour-normal samples. Enable with `--tools parabricks_mutectcaller --profile <docker/singularity>,gpu`; a GPU is required.
 Calling runs as one job per sample or pair. Raw calls are filtered with GATK `FilterMutectCalls`, after contamination estimation when `--germline_resource` is provided. Unlike Mutect2, calls are also filtered without a germline resource, and no read-orientation filtering is applied. A panel of normals (`--pon`) is used via Parabricks PoN annotation (`prepon`/`postpon`).
 
 <details markdown="1">
-<summary>Output files for tumor-only and tumor/normal paired samples</summary>
+<summary>Output files for tumour-only and tumour-normal samples</summary>
 
-**Output directory: `{outdir}/variant_calling/parabricks_mutectcaller/{sample,tumorsample_vs_normalsample}/`**
+**Output directory: `{outdir}/variant_calling/parabricks_mutectcaller/{sample,tumoursample_vs_normalsample}/`**
 
 Files created:
 
-- `{sample,tumorsample_vs_normalsample}.parabricks_mutectcaller.vcf.gz` and `{sample,tumorsample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.tbi`
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.vcf.gz` and `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.tbi`
   - unfiltered (raw) MutectCaller calls VCF with tabix index
-- `{sample,tumorsample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.stats`
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.stats`
   - a stats file generated during calling of raw variants (needed for filtering)
-- `{sample,tumorsample_vs_normalsample}.parabricks_mutectcaller.contamination.table`
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.contamination.table`
   - table calculating the fraction of reads coming from cross-sample contamination (only with `--germline_resource`)
-- `{sample,tumorsample_vs_normalsample}.parabricks_mutectcaller.segmentation.table`
-  - table containing segmentation of the tumor by minor allele fraction (only with `--germline_resource`)
-- `{sample,tumorsample,normalsample}.parabricks_mutectcaller.pileups.table`
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.segmentation.table`
+  - table containing segmentation of the tumour by minor allele fraction (only with `--germline_resource`)
+- `{sample,tumoursample,normalsample}.parabricks_mutectcaller.pileups.table`
   - tabulates pileup metrics for inferring contamination, in a directory per sample (only with `--germline_resource`)
-- `{sample,tumorsample_vs_normalsample}.parabricks_mutectcaller.filtered.vcf.gz` and `{sample,tumorsample_vs_normalsample}.parabricks_mutectcaller.filtered.vcf.gz.tbi`
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.filtered.vcf.gz` and `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.filtered.vcf.gz.tbi`
   - filtered calls VCF with tabix index based on the probability that a variant is somatic
-- `{sample,tumorsample_vs_normalsample}.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv`
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv`
   - a stats file generated during the filtering of called variants
 
 </details>
