@@ -35,6 +35,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Variant Calling](#variant-calling)
   - [SNVs and small indels](#snvs-and-small-indels)
     - [bcftools](#bcftools)
+    - [DeepSomatic](#deepsomatic)
     - [DeepVariant](#deepvariant)
     - [FreeBayes](#freebayes)
     - [GATK HaplotypeCaller](#gatk-haplotypecaller)
@@ -43,6 +44,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [GATK Mutect2](#gatk-mutect2)
     - [Lofreq](#lofreq)
     - [MuSE](#muse)
+    - [Parabricks DeepSomatic](#parabricks-deepsomatic)
     - [Parabricks DeepVariant](#parabricks-deepvariant)
     - [Parabricks HaplotypeCaller](#parabricks-haplotypecaller)
     - [Sentieon DNAscope](#sentieon-dnascope)
@@ -330,12 +332,9 @@ The resulting recalibrated CRAM files are delivered to the user. Recalibrated CR
 
 ### Parabricks FQ2BAM
 
-> [!NOTE]
-> This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
+[Parabricks FQ2BAM](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html) runs as alternative to GATK preprocessing, enabled by `--aligner parabricks --profile <docker/singularity>,gpu`. The module `parabricks/fq2bam` performs alignment, coordinate sorting, duplicate marking and base quality score calculation in one step.
 
-[Parabricks FQ2BAM](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html) runs as alternative to GATK preprocessing, enabled by `--aligner parabricks --profile <docker/singularity>,gpu`. By default fq2bam performs alignment, coordinate sorting, duplicate marking and base quality score calculation (BQSR) in one step, emitting a CRAM.
-
-Per default fq2bam outputs BAM with an intermediate recalibration table, then [Parabricks ApplyBQSR](#parabricks-applybqsr) recalibrates the base qualities on the GPU, and the recalibrated BAM / CRAM is used for downstream variant calling. The known variant sites (`--dbsnp`, `--known_indels`) used to build the recalibration table are provided by the iGenomes reference configuration or can be set via command-line arguments.
+The alignment files (BAM or CRAM) produced by the `fq2bam` are not published by default. CRAM output files will not be saved in the output-folder (`outdir`), unless the flag `--save_mapped` is used. BAM output can be selected by setting the flag `--save_output_as_bam`.
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
@@ -349,7 +348,9 @@ Per default fq2bam outputs BAM with an intermediate recalibration table, then [P
 
 #### Parabricks ApplyBQSR
 
-Unless Unless `baserecalibrator` is listed under `--skip_tools` in the nextflow command, [Parabricks ApplyBQSR](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_applybqsr.html) recalibrates the base qualities of the input reads on the GPU, based on the recalibration table produced by the `parabricks/fq2bam` module.
+Per default `parabricks/fq2bam` outputs an intermediate recalibration table, then [Parabricks ApplyBQSR](#parabricks-applybqsr) recalibrates the base qualities on the GPU, and the recalibrated BAM / CRAM is used for downstream variant calling. The known variant sites (`--dbsnp`, `--known_indels`) used to build the recalibration table are provided by the iGenomes reference configuration or can be set via command-line arguments.
+
+Unless `baserecalibrator` is listed under `--skip_tools` in the nextflow command, [Parabricks ApplyBQSR](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_applybqsr.html) recalibrates the base qualities of the input reads on the GPU, based on the recalibration table produced by the `parabricks/fq2bam` module.
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
@@ -408,6 +409,22 @@ For further reading and documentation see the [bcftools manual](https://samtools
 
 - `<sample>.bcftools.vcf.gz` and `<sample>.bcftools.vcf.gz.tbi`
   - VCF with tabix index
+
+</details>
+
+#### DeepSomatic
+
+[DeepSomatic](https://github.com/google/deepsomatic) is a deep learning-based caller for somatic SNVs and small indels in paired tumour-normal samples.
+
+<details markdown="1">
+<summary>Output files for tumour-normal pairs</summary>
+
+**Output directory: `{outdir}/variant_calling/deepsomatic/<tumoursample_vs_normalsample>/`**
+
+- `<tumoursample_vs_normalsample>.deepsomatic.vcf.gz` and `<tumoursample_vs_normalsample>.deepsomatic.vcf.gz.tbi`
+  - VCF with tabix index
+- `<tumoursample_vs_normalsample>.deepsomatic.g.vcf.gz` and `<tumoursample_vs_normalsample>.deepsomatic.g.vcf.gz.tbi`
+  - Tumour somatic gVCF with tabix index
 
 </details>
 
@@ -552,6 +569,20 @@ Files created:
   - TXT containing position-specific summary statistics.
 - `<tumorsample_vs_normalsample>.muse.vcf.gz`
   - VCF with called variants. Fields are named TUMOR and NORMAL.
+
+</details>
+
+#### Parabricks DeepSomatic
+
+[Parabricks DeepSomatic](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepsomatic.html) is a GPU-accelerated implementation of DeepSomatic for somatic SNVs and small indels in paired tumour-normal samples.
+
+<details markdown="1">
+<summary>Output files for tumour-normal pairs</summary>
+
+**Output directory: `{outdir}/variant_calling/parabricks_deepsomatic/<tumoursample_vs_normalsample>/`**
+
+- `<tumoursample_vs_normalsample>.parabricks_deepsomatic.vcf.gz` and `<tumoursample_vs_normalsample>.parabricks_deepsomatic.vcf.gz.tbi`
+  - VCF with tabix index
 
 </details>
 
@@ -1019,7 +1050,7 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
 
 ## Post Variant Calling
 
-Optional steps to further filter or fine tune variant calling results. There are two branch: `Varlociraptor` or `bcftools` (filtering, normalisation, and concatenation).
+Optional steps to further filter or fine tune variant calling results. There are two branches: `Varlociraptor` or `bcftools` (filtering, normalisation, consensus and concatenation).
 
 ### Varlociraptor
 
