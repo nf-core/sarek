@@ -65,8 +65,14 @@ workflow BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER {
         .join(PARABRICKS_MUTECTCALLER.out.stats, failOnDuplicate: true, failOnMismatch: true)
         .join(MUTECTCALLER_CALCULATECONTAMINATION.out.segmentation, failOnDuplicate: true, remainder: true)
         .join(MUTECTCALLER_CALCULATECONTAMINATION.out.contamination, failOnDuplicate: true, remainder: true)
-        .filter { row -> row[1] != null }
-        .map { meta, vcf, tbi, stats, segmentation, contamination -> [meta, vcf, tbi, stats, [], segmentation ?: [], contamination ?: [], []] }
+        .map { row ->
+            // An unmatched table arrives as [meta, null, tables...], so the row cannot be destructured until checked
+            if (row[1] == null) {
+                error("Parabricks MutectCaller: contamination table for '${row[0].id}' matched no VCF")
+            }
+            def (meta, vcf, tbi, stats, segmentation, contamination) = row
+            [meta, vcf, tbi, stats, [], segmentation ?: [], contamination ?: [], []]
+        }
 
     MUTECTCALLER_FILTERMUTECTCALLS(vcf_to_filter, fasta, fasta_fai, dict)
 
