@@ -1,0 +1,44 @@
+nextflow_process {
+
+    name "Test Mosdepth fast mode configuration"
+    script "../modules/nf-core/mosdepth/main.nf"
+    process "MOSDEPTH"
+    tag "mosdepth"
+    tag "cpu"
+
+    [
+        [name: "WGS default", wes: false, disable: false, fast: true],
+        [name: "WGS without fast mode", wes: false, disable: true, fast: false],
+        [name: "WES default", wes: true, disable: false, fast: false],
+        [name: "WES without fast mode", wes: true, disable: true, fast: false],
+    ].each { scenario ->
+        test(scenario.name) {
+            when {
+                params {
+                    wes = scenario.wes
+                    mosdepth_no_fast_mode = scenario.disable
+                    outdir = "$outputDir"
+                }
+                process {
+                    """
+                    input[0] = [
+                        [id: 'test'],
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                        []
+                    ]
+                    input[1] = [[:], []]
+                    input[2] = []
+                    """
+                }
+            }
+            then {
+                assert process.success
+                String command = path(process.out.summary_txt[0][1]).parent.resolve('.command.sh').text
+                assert command.contains('--fast-mode') == scenario.fast
+                assert command.contains('--by 500') == !scenario.wes
+                assert command.tokenize().contains('-n') == !scenario.wes
+            }
+        }
+    }
+}
