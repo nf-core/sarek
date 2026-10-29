@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- [#2351](https://github.com/nf-core/sarek/pull/2351) - Add `--mosdepth_no_fast_mode` to disable Mosdepth fast mode for coverage calculations with overlapping read pairs.
+- [#2351](https://github.com/nf-core/sarek/pull/2351) - Add `--mosdepth_fast_mode` to control Mosdepth fast mode for whole-genome coverage calculations. Fast mode remains enabled by default.
 
 ### Changed
 
@@ -31,9 +31,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params                    | status |
-| ------------------------- | ------ |
-| `--mosdepth_no_fast_mode` | Added  |
+| Params                 | status |
+| ---------------------- | ------ |
+| `--mosdepth_fast_mode` | Added  |
 
 ### Developer section
 

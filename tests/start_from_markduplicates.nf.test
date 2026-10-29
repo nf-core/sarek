@@ -22,7 +22,7 @@ nextflow_pipeline {
                 input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
                 step: 'markduplicates',
                 tools: null,
-                mosdepth_no_fast_mode: true
+                mosdepth_fast_mode: false
             ]
         ],
         [
