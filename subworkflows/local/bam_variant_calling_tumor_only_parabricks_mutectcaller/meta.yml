@@ -28,7 +28,7 @@ input:
   - cram:
       type: list
       description: |
-        Tumor BAM/CRAM file with its index.
+        Tumour BAM/CRAM file with its index.
         Structure: [ val(meta), path(tumour_cram), path(tumour_crai) ]
       pattern: "*.{bam,bai,cram,crai}"
   - fasta:
@@ -114,13 +114,13 @@ output:
   - segmentation_table:
       type: file
       description: |
-        Tumor segmentation table produced by calculatecontamination (empty channel without germline resource).
+        Tumour segmentation table produced by calculatecontamination (empty channel without germline resource).
         Structure: [ val(meta), path(table) ]
       pattern: "*.segmentation.table"
   - pileup_table:
       type: file
       description: |
-        Pileup summary table of the tumor sample (empty channel without germline resource).
+        Pileup summary table of the tumour sample (empty channel without germline resource).
         Structure: [ val(meta), path(table) ]
       pattern: "*.pileups.table"
 authors:
