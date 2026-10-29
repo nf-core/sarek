@@ -1,7 +1,7 @@
 {
     "-profile test --input fastq_tumor_only.csv --tools parabricks_mutectcaller": {
         "content": [
-            23,
+            20,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -36,15 +36,6 @@
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -223,7 +214,7 @@
                 "reports/bcftools",
                 "reports/bcftools/parabricks_mutectcaller",
                 "reports/bcftools/parabricks_mutectcaller/test2",
-                "reports/bcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.bcftools_stats.txt",
+                "reports/bcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.bcftools_stats.txt",
                 "reports/fastqc",
                 "reports/fastqc/test2-test_L1",
                 "reports/fastqc/test2-test_L1/test2-test_L1_1_fastqc.html",
@@ -256,18 +247,12 @@
                 "reports/vcftools",
                 "reports/vcftools/parabricks_mutectcaller",
                 "reports/vcftools/parabricks_mutectcaller/test2",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.FILTER.summary",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.TsTv.count",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.TsTv.qual",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.FILTER.summary",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.TsTv.count",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.TsTv.qual",
                 "variant_calling",
                 "variant_calling/parabricks_mutectcaller",
                 "variant_calling/parabricks_mutectcaller/test2",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.contamination.table",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.vcf.gz",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.vcf.gz.tbi",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.pileups.table",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.segmentation.table",
                 "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.vcf.gz",
                 "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.vcf.gz.stats",
                 "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.vcf.gz.tbi"
@@ -295,7 +280,7 @@
                 "samtools-stats-dp.txt:md5,c8a75397adcc418d4483c57a021550d4",
                 "samtools_alignment_plot.txt:md5,46e8824724863d243a01cc239a5eff15",
                 "samtools_insert_size.txt:md5,17c44517c58803f9c078f6d9b55aed00",
-                "test2.parabricks_mutectcaller.filtered.bcftools_stats.txt:md5,7c796a5ab44a2393d02ca6fa19799f56",
+                "test2.parabricks_mutectcaller.bcftools_stats.txt:md5,775e440020ad9b10faa2ef5ef0b63c9d",
                 "test2.md.mosdepth.global.dist.txt:md5,f25166c3a0051bb4d8c11a210278de6c",
                 "test2.md.mosdepth.region.dist.txt:md5,f25166c3a0051bb4d8c11a210278de6c",
                 "test2.md.mosdepth.summary.txt:md5,1b216cd5e18765f3b56c407ddfa992d6",
@@ -310,12 +295,8 @@
                 "test2.recal.per-base.bed.gz.csi:md5,651986721bf7e1695fc044e06126df51",
                 "test2.recal.regions.bed.gz:md5,7f23663b3565fb9546dfaa829dd68c61",
                 "test2.recal.regions.bed.gz.csi:md5,6f7ee623716b66db7f62de827cec1324",
-                "test2.parabricks_mutectcaller.filtered.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
-                "test2.parabricks_mutectcaller.filtered.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
-                "test2.parabricks_mutectcaller.contamination.table:md5,9c5a4666d682b84be6bf5ecf4305b15c",
-                "test2.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
-                "test2.parabricks_mutectcaller.pileups.table:md5,a4069de22dd8deaeea222115f2738713",
-                "test2.parabricks_mutectcaller.segmentation.table:md5,abed02f7a49bca992eb4e6f0006df85b",
+                "test2.parabricks_mutectcaller.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
+                "test2.parabricks_mutectcaller.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
                 "test2.parabricks_mutectcaller.vcf.gz.stats:md5,6d2a819228b343c48600023f1054fdf7"
             ],
             "No BAM files",
@@ -324,14 +305,13 @@
                 "test2.recal.cram:md5,f4205ab086600ba2927e1468dc732976"
             ],
             [
-                "test2.parabricks_mutectcaller.filtered.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2.parabricks_mutectcaller.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1"
             ]
         ],
-        "timestamp": "2026-10-29T12:42:26.579068245",
+        "timestamp": "2026-10-29T12:14:16.312972757",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -586,7 +566,7 @@
     },
     "-profile test --step variant_calling --tools parabricks_mutectcaller --no_intervals from cram input -stub": {
         "content": [
-            13,
+            12,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -597,9 +577,6 @@
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -642,7 +619,7 @@
                 "reports/bcftools",
                 "reports/bcftools/parabricks_mutectcaller",
                 "reports/bcftools/parabricks_mutectcaller/sample4_vs_sample3",
-                "reports/bcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.bcftools_stats.txt",
+                "reports/bcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.bcftools_stats.txt",
                 "reports/mosdepth",
                 "reports/mosdepth/sample3",
                 "reports/mosdepth/sample3/sample3.recal.global.dist.txt",
@@ -678,74 +655,71 @@
                 "reports/vcftools",
                 "reports/vcftools/parabricks_mutectcaller",
                 "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.012",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.012.indv",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.012.pos",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.BEAGLE.GL",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.BEAGLE.PL",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.FILTER.summary",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.FORMAT",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.INFO",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.LROH",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.Tajima.D",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.TsTv",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.TsTv.count",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.TsTv.qual",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.TsTv.summary",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.bcf",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.diff.discordance.matrix",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.diff.indv",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.diff.indv_in_files",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.diff.sites",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.diff.sites_in_files",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.diff.switch",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.frq",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.frq.count",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.gdepth",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.geno.chisq",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.geno.ld",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.hap.ld",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.hapcount",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.het",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.hwe",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.idepth",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.ifreqburden",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.imiss",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.impute.hap",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.impute.hap.indv",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.impute.hap.legend",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.indel.hist",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.interchrom.geno.ld",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.interchrom.hap.ld",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.kept.sites",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.ldepth",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.ldepth.mean",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.ldhat.locs",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.ldhat.sites",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.list.geno.ld",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.list.hap.ld",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.lmiss",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.lqual",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.map",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.mendel",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.ped",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.relatedness",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.relatedness2",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.removed.sites",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.singletons",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.sites.pi",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.snpden",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.tfam",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.tped",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.vcf",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.weir.fst",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.windowed.pi",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.012",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.012.indv",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.012.pos",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.BEAGLE.GL",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.BEAGLE.PL",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.FILTER.summary",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.FORMAT",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.INFO",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.LROH",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.Tajima.D",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.TsTv",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.TsTv.count",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.TsTv.qual",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.TsTv.summary",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.bcf",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.diff.discordance.matrix",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.diff.indv",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.diff.indv_in_files",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.diff.sites",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.diff.sites_in_files",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.diff.switch",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.frq",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.frq.count",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.gdepth",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.geno.chisq",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.geno.ld",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.hap.ld",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.hapcount",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.het",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.hwe",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.idepth",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.ifreqburden",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.imiss",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.impute.hap",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.impute.hap.indv",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.impute.hap.legend",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.indel.hist",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.interchrom.geno.ld",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.interchrom.hap.ld",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.kept.sites",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.ldepth",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.ldepth.mean",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.ldhat.locs",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.ldhat.sites",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.list.geno.ld",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.list.hap.ld",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.lmiss",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.lqual",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.map",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.mendel",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.ped",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.relatedness",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.relatedness2",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.removed.sites",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.singletons",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.sites.pi",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.snpden",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.tfam",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.tped",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.vcf",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.weir.fst",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.windowed.pi",
                 "variant_calling",
                 "variant_calling/parabricks_mutectcaller",
                 "variant_calling/parabricks_mutectcaller/sample4_vs_sample3",
-                "variant_calling/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.vcf.gz",
-                "variant_calling/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv",
-                "variant_calling/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.vcf.gz.tbi",
                 "variant_calling/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.vcf.gz",
                 "variant_calling/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.vcf.gz.stats",
                 "variant_calling/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.vcf.gz.tbi"
@@ -754,7 +728,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-29T12:17:57.180736518",
+        "timestamp": "2026-10-29T11:51:09.781720194",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -886,7 +860,7 @@
     },
     "-profile test --aligner parabricks --tools parabricks_mutectcaller": {
         "content": [
-            27,
+            23,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -909,18 +883,6 @@
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_APPLYBQSR": {
                     "parabricks": "4.7.1-1"
@@ -1069,7 +1031,7 @@
                 "reports/bcftools",
                 "reports/bcftools/parabricks_mutectcaller",
                 "reports/bcftools/parabricks_mutectcaller/test2_vs_test",
-                "reports/bcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.bcftools_stats.txt",
+                "reports/bcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.bcftools_stats.txt",
                 "reports/fastqc",
                 "reports/fastqc/test-test_L1",
                 "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.html",
@@ -1106,21 +1068,12 @@
                 "reports/vcftools",
                 "reports/vcftools/parabricks_mutectcaller",
                 "reports/vcftools/parabricks_mutectcaller/test2_vs_test",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.FILTER.summary",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv.qual",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.FILTER.summary",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv.count",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv.qual",
                 "variant_calling",
                 "variant_calling/parabricks_mutectcaller",
-                "variant_calling/parabricks_mutectcaller/test",
-                "variant_calling/parabricks_mutectcaller/test/test.parabricks_mutectcaller.pileups.table",
-                "variant_calling/parabricks_mutectcaller/test2",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.pileups.table",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.contamination.table",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.tbi",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.segmentation.table",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz.stats",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz.tbi"
@@ -1144,7 +1097,7 @@
                 "samtools-stats-dp.txt:md5,ff7a54c5b8a7454367d2779df34182eb",
                 "samtools_alignment_plot.txt:md5,4ade0dce17dde30f39742bb969efcf68",
                 "samtools_insert_size.txt:md5,3cf6a33d6676f31b5433f2cc4bf887e0",
-                "test2_vs_test.parabricks_mutectcaller.filtered.bcftools_stats.txt:md5,aa62b7054c787774811275beaf416e17",
+                "test2_vs_test.parabricks_mutectcaller.bcftools_stats.txt:md5,3b092c553bf22fe994e51da124da94bd",
                 "test.recal.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.recal.mosdepth.region.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.recal.mosdepth.summary.txt:md5,2ea3534987f28b3ed0b64a8e7986b442",
@@ -1159,19 +1112,13 @@
                 "test2.recal.per-base.bed.gz.csi:md5,8f1b503a7653f4637dd83bca4f7dccca",
                 "test2.recal.regions.bed.gz:md5,7f23663b3565fb9546dfaa829dd68c61",
                 "test2.recal.regions.bed.gz.csi:md5,6f7ee623716b66db7f62de827cec1324",
-                "test2_vs_test.parabricks_mutectcaller.filtered.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
-                "test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "test.parabricks_mutectcaller.pileups.table:md5,4a89cfa663f1552aeb80d5c31aa36e3d",
-                "test2.parabricks_mutectcaller.pileups.table:md5,a4069de22dd8deaeea222115f2738713",
-                "test2_vs_test.parabricks_mutectcaller.contamination.table:md5,9c5a4666d682b84be6bf5ecf4305b15c",
-                "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
-                "test2_vs_test.parabricks_mutectcaller.segmentation.table:md5,abed02f7a49bca992eb4e6f0006df85b",
+                "test2_vs_test.parabricks_mutectcaller.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
+                "test2_vs_test.parabricks_mutectcaller.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test2_vs_test.parabricks_mutectcaller.vcf.gz.stats:md5,1d9596da03c39dff4543b15fc792d041"
             ],
             "No BAM files",
             "No CRAM files",
             [
-                "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2_vs_test.parabricks_mutectcaller.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
@@ -1179,7 +1126,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-29T12:20:59.548270398",
+        "timestamp": "2026-10-29T11:53:24.350803516",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1187,7 +1134,7 @@
     },
     "-profile test --input fastq_tumor_only.csv --tools parabricks_mutectcaller -stub": {
         "content": [
-            37,
+            31,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -1222,15 +1169,6 @@
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -1290,7 +1228,7 @@
                 "reports/bcftools",
                 "reports/bcftools/parabricks_mutectcaller",
                 "reports/bcftools/parabricks_mutectcaller/test2",
-                "reports/bcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.bcftools_stats.txt",
+                "reports/bcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.bcftools_stats.txt",
                 "reports/fastqc",
                 "reports/fastqc/test2-test_L1",
                 "reports/fastqc/test2-test_L1/test2-test_L1.html",
@@ -1331,77 +1269,71 @@
                 "reports/vcftools",
                 "reports/vcftools/parabricks_mutectcaller",
                 "reports/vcftools/parabricks_mutectcaller/test2",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.012",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.012.indv",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.012.pos",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.BEAGLE.GL",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.BEAGLE.PL",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.FILTER.summary",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.FORMAT",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.INFO",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.LROH",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.Tajima.D",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.TsTv",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.TsTv.count",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.TsTv.qual",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.TsTv.summary",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.bcf",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.diff.discordance.matrix",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.diff.indv",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.diff.indv_in_files",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.diff.sites",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.diff.sites_in_files",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.diff.switch",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.frq",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.frq.count",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.gdepth",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.geno.chisq",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.geno.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.hap.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.hapcount",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.het",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.hwe",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.idepth",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.ifreqburden",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.imiss",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.impute.hap",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.impute.hap.indv",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.impute.hap.legend",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.indel.hist",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.interchrom.geno.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.interchrom.hap.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.kept.sites",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.ldepth",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.ldepth.mean",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.ldhat.locs",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.ldhat.sites",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.list.geno.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.list.hap.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.lmiss",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.lqual",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.map",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.mendel",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.ped",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.relatedness",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.relatedness2",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.removed.sites",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.singletons",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.sites.pi",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.snpden",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.tfam",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.tped",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.vcf",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.weir.fst",
-                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.windowed.pi",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.012",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.012.indv",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.012.pos",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.BEAGLE.GL",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.BEAGLE.PL",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.FILTER.summary",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.FORMAT",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.INFO",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.LROH",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.Tajima.D",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.TsTv",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.TsTv.count",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.TsTv.qual",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.TsTv.summary",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.bcf",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.diff.discordance.matrix",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.diff.indv",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.diff.indv_in_files",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.diff.sites",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.diff.sites_in_files",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.diff.switch",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.frq",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.frq.count",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.gdepth",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.geno.chisq",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.geno.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.hap.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.hapcount",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.het",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.hwe",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.idepth",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.ifreqburden",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.imiss",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.impute.hap",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.impute.hap.indv",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.impute.hap.legend",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.indel.hist",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.interchrom.geno.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.interchrom.hap.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.kept.sites",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.ldepth",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.ldepth.mean",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.ldhat.locs",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.ldhat.sites",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.list.geno.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.list.hap.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.lmiss",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.lqual",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.map",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.mendel",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.ped",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.relatedness",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.relatedness2",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.removed.sites",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.singletons",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.sites.pi",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.snpden",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.tfam",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.tped",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.vcf",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.weir.fst",
+                "reports/vcftools/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.windowed.pi",
                 "variant_calling",
                 "variant_calling/parabricks_mutectcaller",
                 "variant_calling/parabricks_mutectcaller/test2",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.contamination.table",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.vcf.gz",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.filtered.vcf.gz.tbi",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.pileups.table",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.segmentation.table",
                 "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.vcf.gz",
                 "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.vcf.gz.stats",
                 "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.vcf.gz.tbi"
@@ -1411,7 +1343,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-29T12:44:10.828185131",
+        "timestamp": "2026-10-29T12:15:51.847819731",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1596,7 +1528,7 @@
     },
     "-profile test --aligner parabricks --tools parabricks_mutectcaller -stub": {
         "content": [
-            27,
+            23,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -1619,18 +1551,6 @@
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_APPLYBQSR": {
                     "parabricks": "4.7.1-1"
@@ -1683,7 +1603,7 @@
                 "reports/bcftools",
                 "reports/bcftools/parabricks_mutectcaller",
                 "reports/bcftools/parabricks_mutectcaller/test2_vs_test",
-                "reports/bcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.bcftools_stats.txt",
+                "reports/bcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.bcftools_stats.txt",
                 "reports/fastqc",
                 "reports/fastqc/test-test_L1",
                 "reports/fastqc/test-test_L1/test-test_L1.html",
@@ -1726,80 +1646,71 @@
                 "reports/vcftools",
                 "reports/vcftools/parabricks_mutectcaller",
                 "reports/vcftools/parabricks_mutectcaller/test2_vs_test",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.012",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.012.indv",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.012.pos",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.BEAGLE.GL",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.BEAGLE.PL",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.FILTER.summary",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.FORMAT",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.INFO",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.LROH",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.Tajima.D",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv.qual",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv.summary",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.bcf",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.diff.discordance.matrix",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.diff.indv",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.diff.indv_in_files",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.diff.sites",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.diff.sites_in_files",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.diff.switch",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.frq",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.frq.count",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.gdepth",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.geno.chisq",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.geno.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.hap.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.hapcount",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.het",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.hwe",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.idepth",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.ifreqburden",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.imiss",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.impute.hap",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.impute.hap.indv",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.impute.hap.legend",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.indel.hist",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.interchrom.geno.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.interchrom.hap.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.kept.sites",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.ldepth",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.ldepth.mean",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.ldhat.locs",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.ldhat.sites",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.list.geno.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.list.hap.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.lmiss",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.lqual",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.map",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.mendel",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.ped",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.relatedness",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.relatedness2",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.removed.sites",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.singletons",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.sites.pi",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.snpden",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.tfam",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.tped",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.weir.fst",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.windowed.pi",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.012",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.012.indv",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.012.pos",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.BEAGLE.GL",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.BEAGLE.PL",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.FILTER.summary",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.FORMAT",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.INFO",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.LROH",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.Tajima.D",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv.count",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv.qual",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv.summary",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.bcf",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.diff.discordance.matrix",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.diff.indv",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.diff.indv_in_files",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.diff.sites",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.diff.sites_in_files",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.diff.switch",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.frq",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.frq.count",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.gdepth",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.geno.chisq",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.geno.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.hap.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.hapcount",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.het",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.hwe",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.idepth",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.ifreqburden",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.imiss",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.impute.hap",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.impute.hap.indv",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.impute.hap.legend",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.indel.hist",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.interchrom.geno.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.interchrom.hap.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.kept.sites",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.ldepth",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.ldepth.mean",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.ldhat.locs",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.ldhat.sites",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.list.geno.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.list.hap.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.lmiss",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.lqual",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.map",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.mendel",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.ped",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.relatedness",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.relatedness2",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.removed.sites",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.singletons",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.sites.pi",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.snpden",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.tfam",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.tped",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.weir.fst",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.windowed.pi",
                 "variant_calling",
                 "variant_calling/parabricks_mutectcaller",
-                "variant_calling/parabricks_mutectcaller/test",
-                "variant_calling/parabricks_mutectcaller/test/test.parabricks_mutectcaller.pileups.table",
-                "variant_calling/parabricks_mutectcaller/test2",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.pileups.table",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.contamination.table",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.tbi",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.segmentation.table",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz.stats",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz.tbi"
@@ -1810,7 +1721,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-29T12:22:24.758307235",
+        "timestamp": "2026-10-29T11:55:10.995691868",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -2190,7 +2101,7 @@
     },
     "-profile test --tools parabricks_mutectcaller --no_intervals": {
         "content": [
-            30,
+            26,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -2219,18 +2130,6 @@
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -2416,7 +2315,7 @@
                 "reports/bcftools",
                 "reports/bcftools/parabricks_mutectcaller",
                 "reports/bcftools/parabricks_mutectcaller/test2_vs_test",
-                "reports/bcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.bcftools_stats.txt",
+                "reports/bcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.bcftools_stats.txt",
                 "reports/fastqc",
                 "reports/fastqc/test-test_L1",
                 "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.html",
@@ -2462,21 +2361,12 @@
                 "reports/vcftools",
                 "reports/vcftools/parabricks_mutectcaller",
                 "reports/vcftools/parabricks_mutectcaller/test2_vs_test",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.FILTER.summary",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv.qual",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.FILTER.summary",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv.count",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv.qual",
                 "variant_calling",
                 "variant_calling/parabricks_mutectcaller",
-                "variant_calling/parabricks_mutectcaller/test",
-                "variant_calling/parabricks_mutectcaller/test/test.parabricks_mutectcaller.pileups.table",
-                "variant_calling/parabricks_mutectcaller/test2",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.pileups.table",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.contamination.table",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.tbi",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.segmentation.table",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz.stats",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz.tbi"
@@ -2504,7 +2394,7 @@
                 "samtools-stats-dp.txt:md5,b4eaecbb6a9f2c463337ce06f8e2f47c",
                 "samtools_alignment_plot.txt:md5,8e6178a26fe2a4fc4f45fac3175ba6c6",
                 "samtools_insert_size.txt:md5,c4b5c78eeb30a8c926d1bd9506882516",
-                "test2_vs_test.parabricks_mutectcaller.filtered.bcftools_stats.txt:md5,aa62b7054c787774811275beaf416e17",
+                "test2_vs_test.parabricks_mutectcaller.bcftools_stats.txt:md5,3b092c553bf22fe994e51da124da94bd",
                 "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.md.mosdepth.summary.txt:md5,0010c2396a3173c7cf4983abe2eb6a4c",
                 "test.md.per-base.bed.gz:md5,34dfe443c0a0767562dd65272e3310ef",
@@ -2521,13 +2411,8 @@
                 "test2.recal.mosdepth.summary.txt:md5,d5e4084de2ea2a0a7b60b2d71c804d4b",
                 "test2.recal.per-base.bed.gz:md5,e1c6d60621d8f64aaf28fa1c1ddda921",
                 "test2.recal.per-base.bed.gz.csi:md5,651986721bf7e1695fc044e06126df51",
-                "test2_vs_test.parabricks_mutectcaller.filtered.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
-                "test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "test.parabricks_mutectcaller.pileups.table:md5,4a89cfa663f1552aeb80d5c31aa36e3d",
-                "test2.parabricks_mutectcaller.pileups.table:md5,a4069de22dd8deaeea222115f2738713",
-                "test2_vs_test.parabricks_mutectcaller.contamination.table:md5,9c5a4666d682b84be6bf5ecf4305b15c",
-                "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
-                "test2_vs_test.parabricks_mutectcaller.segmentation.table:md5,abed02f7a49bca992eb4e6f0006df85b",
+                "test2_vs_test.parabricks_mutectcaller.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
+                "test2_vs_test.parabricks_mutectcaller.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test2_vs_test.parabricks_mutectcaller.vcf.gz.stats:md5,1d9596da03c39dff4543b15fc792d041"
             ],
             "No BAM files",
@@ -2538,7 +2423,6 @@
                 "test2.recal.cram:md5,bac87cf9290577fd9a4def63e046031f"
             ],
             [
-                "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2_vs_test.parabricks_mutectcaller.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
@@ -2546,7 +2430,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-29T12:34:06.2256794",
+        "timestamp": "2026-10-29T12:06:01.262466483",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -2554,7 +2438,7 @@
     },
     "-profile test --aligner parabricks --tools parabricks_mutectcaller --no_intervals -stub": {
         "content": [
-            24,
+            20,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -2571,18 +2455,6 @@
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_APPLYBQSR": {
                     "parabricks": "4.7.1-1"
@@ -2634,7 +2506,7 @@
                 "reports/bcftools",
                 "reports/bcftools/parabricks_mutectcaller",
                 "reports/bcftools/parabricks_mutectcaller/test2_vs_test",
-                "reports/bcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.bcftools_stats.txt",
+                "reports/bcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.bcftools_stats.txt",
                 "reports/fastqc",
                 "reports/fastqc/test-test_L1",
                 "reports/fastqc/test-test_L1/test-test_L1.html",
@@ -2677,80 +2549,71 @@
                 "reports/vcftools",
                 "reports/vcftools/parabricks_mutectcaller",
                 "reports/vcftools/parabricks_mutectcaller/test2_vs_test",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.012",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.012.indv",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.012.pos",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.BEAGLE.GL",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.BEAGLE.PL",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.FILTER.summary",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.FORMAT",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.INFO",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.LROH",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.Tajima.D",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv.qual",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv.summary",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.bcf",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.diff.discordance.matrix",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.diff.indv",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.diff.indv_in_files",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.diff.sites",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.diff.sites_in_files",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.diff.switch",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.frq",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.frq.count",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.gdepth",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.geno.chisq",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.geno.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.hap.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.hapcount",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.het",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.hwe",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.idepth",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.ifreqburden",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.imiss",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.impute.hap",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.impute.hap.indv",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.impute.hap.legend",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.indel.hist",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.interchrom.geno.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.interchrom.hap.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.kept.sites",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.ldepth",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.ldepth.mean",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.ldhat.locs",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.ldhat.sites",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.list.geno.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.list.hap.ld",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.lmiss",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.lqual",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.map",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.mendel",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.ped",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.relatedness",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.relatedness2",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.removed.sites",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.singletons",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.sites.pi",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.snpden",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.tfam",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.tped",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.weir.fst",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.windowed.pi",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.012",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.012.indv",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.012.pos",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.BEAGLE.GL",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.BEAGLE.PL",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.FILTER.summary",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.FORMAT",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.INFO",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.LROH",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.Tajima.D",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv.count",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv.qual",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv.summary",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.bcf",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.diff.discordance.matrix",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.diff.indv",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.diff.indv_in_files",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.diff.sites",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.diff.sites_in_files",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.diff.switch",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.frq",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.frq.count",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.gdepth",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.geno.chisq",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.geno.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.hap.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.hapcount",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.het",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.hwe",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.idepth",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.ifreqburden",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.imiss",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.impute.hap",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.impute.hap.indv",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.impute.hap.legend",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.indel.hist",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.interchrom.geno.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.interchrom.hap.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.kept.sites",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.ldepth",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.ldepth.mean",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.ldhat.locs",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.ldhat.sites",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.list.geno.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.list.hap.ld",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.lmiss",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.lqual",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.map",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.mendel",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.ped",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.relatedness",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.relatedness2",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.removed.sites",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.singletons",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.sites.pi",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.snpden",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.tfam",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.tped",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.weir.fst",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.windowed.pi",
                 "variant_calling",
                 "variant_calling/parabricks_mutectcaller",
-                "variant_calling/parabricks_mutectcaller/test",
-                "variant_calling/parabricks_mutectcaller/test/test.parabricks_mutectcaller.pileups.table",
-                "variant_calling/parabricks_mutectcaller/test2",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.pileups.table",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.contamination.table",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.tbi",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.segmentation.table",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz.stats",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz.tbi"
@@ -2761,7 +2624,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-29T12:26:43.280717675",
+        "timestamp": "2026-10-29T11:58:36.735061169",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -3070,7 +2933,7 @@
     },
     "-profile test --step variant_calling --tools parabricks_mutectcaller from cram input -stub": {
         "content": [
-            15,
+            14,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -3084,9 +2947,6 @@
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -3130,7 +2990,7 @@
                 "reports/bcftools",
                 "reports/bcftools/parabricks_mutectcaller",
                 "reports/bcftools/parabricks_mutectcaller/sample4_vs_sample3",
-                "reports/bcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.bcftools_stats.txt",
+                "reports/bcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.bcftools_stats.txt",
                 "reports/mosdepth",
                 "reports/mosdepth/sample3",
                 "reports/mosdepth/sample3/sample3.recal.global.dist.txt",
@@ -3166,74 +3026,71 @@
                 "reports/vcftools",
                 "reports/vcftools/parabricks_mutectcaller",
                 "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.012",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.012.indv",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.012.pos",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.BEAGLE.GL",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.BEAGLE.PL",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.FILTER.summary",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.FORMAT",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.INFO",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.LROH",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.Tajima.D",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.TsTv",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.TsTv.count",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.TsTv.qual",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.TsTv.summary",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.bcf",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.diff.discordance.matrix",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.diff.indv",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.diff.indv_in_files",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.diff.sites",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.diff.sites_in_files",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.diff.switch",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.frq",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.frq.count",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.gdepth",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.geno.chisq",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.geno.ld",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.hap.ld",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.hapcount",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.het",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.hwe",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.idepth",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.ifreqburden",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.imiss",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.impute.hap",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.impute.hap.indv",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.impute.hap.legend",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.indel.hist",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.interchrom.geno.ld",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.interchrom.hap.ld",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.kept.sites",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.ldepth",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.ldepth.mean",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.ldhat.locs",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.ldhat.sites",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.list.geno.ld",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.list.hap.ld",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.lmiss",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.lqual",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.map",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.mendel",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.ped",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.relatedness",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.relatedness2",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.removed.sites",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.singletons",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.sites.pi",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.snpden",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.tfam",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.tped",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.vcf",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.weir.fst",
-                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.windowed.pi",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.012",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.012.indv",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.012.pos",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.BEAGLE.GL",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.BEAGLE.PL",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.FILTER.summary",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.FORMAT",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.INFO",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.LROH",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.Tajima.D",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.TsTv",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.TsTv.count",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.TsTv.qual",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.TsTv.summary",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.bcf",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.diff.discordance.matrix",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.diff.indv",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.diff.indv_in_files",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.diff.sites",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.diff.sites_in_files",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.diff.switch",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.frq",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.frq.count",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.gdepth",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.geno.chisq",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.geno.ld",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.hap.ld",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.hapcount",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.het",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.hwe",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.idepth",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.ifreqburden",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.imiss",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.impute.hap",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.impute.hap.indv",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.impute.hap.legend",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.indel.hist",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.interchrom.geno.ld",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.interchrom.hap.ld",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.kept.sites",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.ldepth",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.ldepth.mean",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.ldhat.locs",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.ldhat.sites",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.list.geno.ld",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.list.hap.ld",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.lmiss",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.lqual",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.map",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.mendel",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.ped",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.relatedness",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.relatedness2",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.removed.sites",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.singletons",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.sites.pi",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.snpden",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.tfam",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.tped",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.vcf",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.weir.fst",
+                "reports/vcftools/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.windowed.pi",
                 "variant_calling",
                 "variant_calling/parabricks_mutectcaller",
                 "variant_calling/parabricks_mutectcaller/sample4_vs_sample3",
-                "variant_calling/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.vcf.gz",
-                "variant_calling/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv",
-                "variant_calling/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.filtered.vcf.gz.tbi",
                 "variant_calling/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.vcf.gz",
                 "variant_calling/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.vcf.gz.stats",
                 "variant_calling/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.vcf.gz.tbi"
@@ -3242,7 +3099,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-29T12:16:58.848291748",
+        "timestamp": "2026-10-29T11:50:12.006593461",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -3250,7 +3107,7 @@
     },
     "-profile test --tools parabricks_mutectcaller with pon": {
         "content": [
-            33,
+            29,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -3285,18 +3142,6 @@
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -3483,7 +3328,7 @@
                 "reports/bcftools",
                 "reports/bcftools/parabricks_mutectcaller",
                 "reports/bcftools/parabricks_mutectcaller/test2_vs_test",
-                "reports/bcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.bcftools_stats.txt",
+                "reports/bcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.bcftools_stats.txt",
                 "reports/fastqc",
                 "reports/fastqc/test-test_L1",
                 "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.html",
@@ -3541,21 +3386,12 @@
                 "reports/vcftools",
                 "reports/vcftools/parabricks_mutectcaller",
                 "reports/vcftools/parabricks_mutectcaller/test2_vs_test",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.FILTER.summary",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv.qual",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.FILTER.summary",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv.count",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv.qual",
                 "variant_calling",
                 "variant_calling/parabricks_mutectcaller",
-                "variant_calling/parabricks_mutectcaller/test",
-                "variant_calling/parabricks_mutectcaller/test/test.parabricks_mutectcaller.pileups.table",
-                "variant_calling/parabricks_mutectcaller/test2",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.pileups.table",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.contamination.table",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.tbi",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.segmentation.table",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz.stats",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz.tbi"
@@ -3583,7 +3419,7 @@
                 "samtools-stats-dp.txt:md5,8b8f48d0b1d134cfe3636e8577265751",
                 "samtools_alignment_plot.txt:md5,44149e0c5cc4bfa58242824b300219a2",
                 "samtools_insert_size.txt:md5,c4b5c78eeb30a8c926d1bd9506882516",
-                "test2_vs_test.parabricks_mutectcaller.filtered.bcftools_stats.txt:md5,aa62b7054c787774811275beaf416e17",
+                "test2_vs_test.parabricks_mutectcaller.bcftools_stats.txt:md5,3b092c553bf22fe994e51da124da94bd",
                 "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.md.mosdepth.region.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.md.mosdepth.summary.txt:md5,a7c0e7f16b32bca32b5893c8e6c97ccf",
@@ -3612,13 +3448,8 @@
                 "test2.recal.per-base.bed.gz.csi:md5,651986721bf7e1695fc044e06126df51",
                 "test2.recal.regions.bed.gz:md5,7f23663b3565fb9546dfaa829dd68c61",
                 "test2.recal.regions.bed.gz.csi:md5,6f7ee623716b66db7f62de827cec1324",
-                "test2_vs_test.parabricks_mutectcaller.filtered.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
-                "test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "test.parabricks_mutectcaller.pileups.table:md5,4a89cfa663f1552aeb80d5c31aa36e3d",
-                "test2.parabricks_mutectcaller.pileups.table:md5,a4069de22dd8deaeea222115f2738713",
-                "test2_vs_test.parabricks_mutectcaller.contamination.table:md5,9c5a4666d682b84be6bf5ecf4305b15c",
-                "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
-                "test2_vs_test.parabricks_mutectcaller.segmentation.table:md5,abed02f7a49bca992eb4e6f0006df85b",
+                "test2_vs_test.parabricks_mutectcaller.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
+                "test2_vs_test.parabricks_mutectcaller.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test2_vs_test.parabricks_mutectcaller.vcf.gz.stats:md5,1d9596da03c39dff4543b15fc792d041"
             ],
             "No BAM files",
@@ -3629,7 +3460,6 @@
                 "test2.recal.cram:md5,f4205ab086600ba2927e1468dc732976"
             ],
             [
-                "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2_vs_test.parabricks_mutectcaller.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
@@ -3637,7 +3467,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-29T12:38:11.361887862",
+        "timestamp": "2026-10-29T12:10:57.037256088",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -4021,7 +3851,7 @@
     },
     "-profile test --tools parabricks_mutectcaller": {
         "content": [
-            33,
+            29,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -4056,18 +3886,6 @@
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -4254,7 +4072,7 @@
                 "reports/bcftools",
                 "reports/bcftools/parabricks_mutectcaller",
                 "reports/bcftools/parabricks_mutectcaller/test2_vs_test",
-                "reports/bcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.bcftools_stats.txt",
+                "reports/bcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.bcftools_stats.txt",
                 "reports/fastqc",
                 "reports/fastqc/test-test_L1",
                 "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.html",
@@ -4312,21 +4130,12 @@
                 "reports/vcftools",
                 "reports/vcftools/parabricks_mutectcaller",
                 "reports/vcftools/parabricks_mutectcaller/test2_vs_test",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.FILTER.summary",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv.qual",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.FILTER.summary",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv.count",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv.qual",
                 "variant_calling",
                 "variant_calling/parabricks_mutectcaller",
-                "variant_calling/parabricks_mutectcaller/test",
-                "variant_calling/parabricks_mutectcaller/test/test.parabricks_mutectcaller.pileups.table",
-                "variant_calling/parabricks_mutectcaller/test2",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.pileups.table",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.contamination.table",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.tbi",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.segmentation.table",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz.stats",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz.tbi"
@@ -4354,7 +4163,7 @@
                 "samtools-stats-dp.txt:md5,8b8f48d0b1d134cfe3636e8577265751",
                 "samtools_alignment_plot.txt:md5,44149e0c5cc4bfa58242824b300219a2",
                 "samtools_insert_size.txt:md5,c4b5c78eeb30a8c926d1bd9506882516",
-                "test2_vs_test.parabricks_mutectcaller.filtered.bcftools_stats.txt:md5,aa62b7054c787774811275beaf416e17",
+                "test2_vs_test.parabricks_mutectcaller.bcftools_stats.txt:md5,3b092c553bf22fe994e51da124da94bd",
                 "test.md.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.md.mosdepth.region.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.md.mosdepth.summary.txt:md5,a7c0e7f16b32bca32b5893c8e6c97ccf",
@@ -4383,13 +4192,8 @@
                 "test2.recal.per-base.bed.gz.csi:md5,651986721bf7e1695fc044e06126df51",
                 "test2.recal.regions.bed.gz:md5,7f23663b3565fb9546dfaa829dd68c61",
                 "test2.recal.regions.bed.gz.csi:md5,6f7ee623716b66db7f62de827cec1324",
-                "test2_vs_test.parabricks_mutectcaller.filtered.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
-                "test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "test.parabricks_mutectcaller.pileups.table:md5,4a89cfa663f1552aeb80d5c31aa36e3d",
-                "test2.parabricks_mutectcaller.pileups.table:md5,a4069de22dd8deaeea222115f2738713",
-                "test2_vs_test.parabricks_mutectcaller.contamination.table:md5,9c5a4666d682b84be6bf5ecf4305b15c",
-                "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
-                "test2_vs_test.parabricks_mutectcaller.segmentation.table:md5,abed02f7a49bca992eb4e6f0006df85b",
+                "test2_vs_test.parabricks_mutectcaller.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
+                "test2_vs_test.parabricks_mutectcaller.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test2_vs_test.parabricks_mutectcaller.vcf.gz.stats:md5,1d9596da03c39dff4543b15fc792d041"
             ],
             "No BAM files",
@@ -4400,7 +4204,6 @@
                 "test2.recal.cram:md5,f4205ab086600ba2927e1468dc732976"
             ],
             [
-                "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2_vs_test.parabricks_mutectcaller.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
@@ -4408,7 +4211,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-29T12:29:52.541558195",
+        "timestamp": "2026-10-29T12:01:32.828189469",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -4416,7 +4219,7 @@
     },
     "-profile test --aligner parabricks --tools parabricks_mutectcaller --no_intervals": {
         "content": [
-            24,
+            20,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -4433,18 +4236,6 @@
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_APPLYBQSR": {
                     "parabricks": "4.7.1-1"
@@ -4592,7 +4383,7 @@
                 "reports/bcftools",
                 "reports/bcftools/parabricks_mutectcaller",
                 "reports/bcftools/parabricks_mutectcaller/test2_vs_test",
-                "reports/bcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.bcftools_stats.txt",
+                "reports/bcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.bcftools_stats.txt",
                 "reports/fastqc",
                 "reports/fastqc/test-test_L1",
                 "reports/fastqc/test-test_L1/test-test_L1_1_fastqc.html",
@@ -4623,21 +4414,12 @@
                 "reports/vcftools",
                 "reports/vcftools/parabricks_mutectcaller",
                 "reports/vcftools/parabricks_mutectcaller/test2_vs_test",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.FILTER.summary",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count",
-                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.TsTv.qual",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.FILTER.summary",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv.count",
+                "reports/vcftools/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.TsTv.qual",
                 "variant_calling",
                 "variant_calling/parabricks_mutectcaller",
-                "variant_calling/parabricks_mutectcaller/test",
-                "variant_calling/parabricks_mutectcaller/test/test.parabricks_mutectcaller.pileups.table",
-                "variant_calling/parabricks_mutectcaller/test2",
-                "variant_calling/parabricks_mutectcaller/test2/test2.parabricks_mutectcaller.pileups.table",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.contamination.table",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.tbi",
-                "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.segmentation.table",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz.stats",
                 "variant_calling/parabricks_mutectcaller/test2_vs_test/test2_vs_test.parabricks_mutectcaller.vcf.gz.tbi"
@@ -4661,7 +4443,7 @@
                 "samtools-stats-dp.txt:md5,af97f6426bc8c6b9d812cc97e880743f",
                 "samtools_alignment_plot.txt:md5,94d6398ce03eefb42aa6f106c8d36e89",
                 "samtools_insert_size.txt:md5,3cf6a33d6676f31b5433f2cc4bf887e0",
-                "test2_vs_test.parabricks_mutectcaller.filtered.bcftools_stats.txt:md5,aa62b7054c787774811275beaf416e17",
+                "test2_vs_test.parabricks_mutectcaller.bcftools_stats.txt:md5,3b092c553bf22fe994e51da124da94bd",
                 "test.recal.mosdepth.global.dist.txt:md5,5a0679057c530e5945c9c5a3a17312dc",
                 "test.recal.mosdepth.summary.txt:md5,86623f2ffb229ef8827a62f4600bc309",
                 "test.recal.per-base.bed.gz:md5,e04122db11a66ad6ef7c851511b1b505",
@@ -4670,19 +4452,13 @@
                 "test2.recal.mosdepth.summary.txt:md5,0cbb621512d89d11db3b1c64fe5212f5",
                 "test2.recal.per-base.bed.gz:md5,027f5d98da0e283df866f2d9ac8255db",
                 "test2.recal.per-base.bed.gz.csi:md5,8f1b503a7653f4637dd83bca4f7dccca",
-                "test2_vs_test.parabricks_mutectcaller.filtered.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
-                "test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "test.parabricks_mutectcaller.pileups.table:md5,4a89cfa663f1552aeb80d5c31aa36e3d",
-                "test2.parabricks_mutectcaller.pileups.table:md5,a4069de22dd8deaeea222115f2738713",
-                "test2_vs_test.parabricks_mutectcaller.contamination.table:md5,9c5a4666d682b84be6bf5ecf4305b15c",
-                "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
-                "test2_vs_test.parabricks_mutectcaller.segmentation.table:md5,abed02f7a49bca992eb4e6f0006df85b",
+                "test2_vs_test.parabricks_mutectcaller.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
+                "test2_vs_test.parabricks_mutectcaller.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test2_vs_test.parabricks_mutectcaller.vcf.gz.stats:md5,1d9596da03c39dff4543b15fc792d041"
             ],
             "No BAM files",
             "No CRAM files",
             [
-                "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "test2_vs_test.parabricks_mutectcaller.vcf.gz:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
@@ -4690,7 +4466,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-29T12:25:25.392982935",
+        "timestamp": "2026-10-29T11:57:32.367145367",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
