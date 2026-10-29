@@ -1,6 +1,7 @@
 name: "create_intervals_bed"
 description: Split an interval file (BED, GATK interval_list, or picard-style `chr:start-end`
-  list) into runtime-balanced BED chunks for parallelization
+  list) into runtime-balanced BED chunks for parallelization. BED rows are sorted in reference
+  order first, so each chunk covers one contiguous range
 keywords:
   - intervals
   - bed
@@ -17,6 +18,11 @@ input:
         description: Interval file, either BED, GATK `.interval_list`, or a picard-style
           `chr:start-end` list
         pattern: "*.{bed,interval_list}"
+    - fasta_fai:
+        type: file
+        description: Index of the reference FASTA file, used to sort BED rows in reference
+          order before chunking
+        pattern: "*.fai"
     - nucleotides_per_second:
         type: integer
         description: Estimated nucleotides processed per second, used to balance runtime
@@ -28,6 +34,12 @@ output:
         description: One or more BED files, each a runtime-balanced chunk of the input
           intervals
         pattern: "*.bed"
+  sorted_bed:
+    - "sorted/*.bed":
+        type: file
+        description: The whole BED input sorted in reference order, under its original
+          name. Only emitted for BED input
+        pattern: "sorted/*.bed"
   versions_gawk:
     - - "${task.process}":
           type: string

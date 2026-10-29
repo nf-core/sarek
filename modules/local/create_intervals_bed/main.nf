@@ -9,10 +9,12 @@ process CREATE_INTERVALS_BED {
 
     input:
     path intervals
+    path fasta_fai
     val nucleotides_per_second
 
     output:
-    path ("*.bed"),      emit: bed
+    path ("*.bed"),        emit: bed
+    path ("sorted/*.bed"), emit: sorted_bed, optional: true
     tuple val("${task.process}"), val('gawk'), eval("awk --version | head -n1 | sed 's/GNU Awk //; s/, .*//'"), emit: versions_gawk, topic: versions
 
     when:
@@ -22,25 +24,54 @@ process CREATE_INTERVALS_BED {
     // If intervals file is in BED format,
     // Fifth column is interpreted to contain runtime estimates
     // Which is then used to combine short-running jobs
+    // Rows are first sorted in reference order: tabix rejects unsorted positions, and
+    // GatherPileupSummaries orders chunks by their first row only (nf-core/sarek#2281)
     if (intervals.toString().toLowerCase().endsWith("bed")) {
         """
-        awk -vFS="\t" '{
-            t = \$5  # runtime estimate
-            if (t == "") {
-                # no runtime estimate in this row, assume default value
-                t = (\$3 - \$2) / ${nucleotides_per_second}
+        mkdir sorted
+        awk -vFS="\t" '
+        NR == FNR {
+            rank[\$1] = FNR
+            n_ranked = FNR
+            next
+        }
+        /^(#|track|browser)/ {
+            header[++n_header] = \$0
+            next
+        }
+        {
+            # contigs missing from the fasta index go last, in order of appearance
+            if (!(\$1 in rank))
+                rank[\$1] = ++n_ranked
+            row[++n_rows] = \$0
+            key[n_rows] = sprintf("%012d %012d %012d", rank[\$1], \$2, n_rows)
+        }
+        END {
+            for (i = 1; i <= n_header; i++)
+                sorted[++n_sorted] = header[i]
+            PROCINFO["sorted_in"] = "@val_str_asc"
+            for (i in key)
+                sorted[++n_sorted] = row[i]
+            for (i = 1; i <= n_sorted; i++) {
+                print sorted[i] > "sorted/${intervals.name}"
+                split(sorted[i], field, "\t")
+                t = field[5]  # runtime estimate
+                if (t == "") {
+                    # no runtime estimate in this row, assume default value
+                    t = (field[3] - field[2]) / ${nucleotides_per_second}
+                }
+                if (name == "" || (chunk > 600 && (chunk + t) > longest * 1.05)) {
+                    # start a new chunk
+                    name = sprintf("%s_%d-%d.bed", field[1], field[2]+1, field[3])
+                    chunk = 0
+                    longest = 0
+                }
+                if (t > longest)
+                    longest = t
+                chunk += t
+                print sorted[i] > name
             }
-            if (name == "" || (chunk > 600 && (chunk + t) > longest * 1.05)) {
-                # start a new chunk
-                name = sprintf("%s_%d-%d.bed", \$1, \$2+1, \$3)
-                chunk = 0
-                longest = 0
-            }
-            if (t > longest)
-                longest = t
-            chunk += t
-            print \$0 > name
-        }' ${intervals}
+        }' ${fasta_fai} ${intervals}
         """
     }
     else if (intervals.toString().toLowerCase().endsWith("interval_list")) {
@@ -62,7 +93,9 @@ process CREATE_INTERVALS_BED {
 
     stub:
     def prefix = task.ext.prefix ?: "${intervals.baseName}"
+    def sorted = intervals.toString().toLowerCase().endsWith("bed") ? "mkdir sorted && touch sorted/${intervals.name}" : ""
     """
     touch ${prefix}.stub.bed
+    ${sorted}
     """
 }

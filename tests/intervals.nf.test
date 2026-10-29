@@ -1,3 +1,4 @@
+def projectDir = new File('.').absolutePath
 def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
 
 nextflow_pipeline {
@@ -11,6 +12,17 @@ nextflow_pipeline {
             params: [
                 intervals: modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.multi_intervals.bed",
                 nucleotides_per_second: 20,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null,
+                wes: true
+            ]
+        ],
+        [
+            // Rows out of reference order, with runtime estimates that would interleave two chunks if left unsorted
+            name: "-profile test --intervals unsorted_intervals.bed --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
+            params: [
+                intervals: "${projectDir}/tests/config/unsorted_intervals.bed",
+                save_reference: true,
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: null,
                 wes: true

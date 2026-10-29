@@ -41,15 +41,19 @@ workflow PREPARE_INTERVALS {
 
             intervals_combined = BUILD_INTERVALS.out.output
 
-            CREATE_INTERVALS_BED(intervals_combined.map{ _meta, path -> path }, nucleotides_per_second)
+            CREATE_INTERVALS_BED(intervals_combined.map{ _meta, path -> path }, fasta_fai.map{ _meta, fai -> fai }, nucleotides_per_second)
 
             intervals_bed = CREATE_INTERVALS_BED.out.bed
 
         } else {
             intervals_combined = channel.fromPath(file(intervals)).map{bed -> [ [ id:bed.baseName ], bed ] }
-            CREATE_INTERVALS_BED(file(intervals), nucleotides_per_second)
+            CREATE_INTERVALS_BED(file(intervals), fasta_fai.map{ _meta, fai -> fai }, nucleotides_per_second)
 
             intervals_bed = CREATE_INTERVALS_BED.out.bed
+
+            if (intervals.toLowerCase().endsWith(".bed")) {
+                intervals_combined = CREATE_INTERVALS_BED.out.sorted_bed.map{ bed -> [ [ id:bed.baseName ], bed ] }
+            }
 
             // If interval file is not provided as .bed, but e.g. as .interval_list then convert to BED format
             if (intervals.endsWith(".interval_list")) {
