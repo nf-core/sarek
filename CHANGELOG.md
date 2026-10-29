@@ -5,6 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev - unreleased
+
+### Added
+
+- [#2180](https://github.com/nf-core/sarek/pull/2180) - Add Parabricks MutectCaller (`--tools parabricks_mutectcaller`) as GPU-accelerated somatic variant caller for tumor-only and tumor/normal samples (raw, unfiltered calls)
+- [#2351](https://github.com/nf-core/sarek/pull/2351) - Add `--mosdepth_fast_mode` to control Mosdepth fast mode for whole-genome coverage calculations. Fast mode remains enabled by default.
+
+### Changed
+
+### Fixed
+
+- [#2277](https://github.com/nf-core/sarek/pull/2277) - fix(markduplicates): avoid duplicate alignment emission under -stub
+- [#2347](https://github.com/nf-core/sarek/pull/2347) - Fix DeepSomatic VCF merge failing with `sample entries that don't match the other files` when an interval yields no records (e.g. `*_alt` contigs): pass tumour and normal sample names explicitly, including to `postprocess_variants`, which otherwise writes `default`
+
+### Removed
+
+### Dependencies - modules
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Dependencies - plugins
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
+| Params                 | status |
+| ---------------------- | ------ |
+| `--mosdepth_fast_mode` | Added  |
+
+### Developer section
+
+#### Added
+
+#### Changed
+
+- [#2346](https://github.com/nf-core/sarek/pull/2346) - Back to dev (3.11.1dev)
+
+#### Fixed
+
+#### Removed
+
 ## [3.11.0](https://github.com/nf-core/sarek/releases/tag/3.11.0) - Guhkesvákkjåhkå
 
 Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bridge.
@@ -35,6 +79,8 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 - [#2230](https://github.com/nf-core/sarek/pull/2230) - Varlociraptor: fix custom scenario file parsing
 - [#2335](https://github.com/nf-core/sarek/pull/2335) - Fix: pass `markduplicates_pixel_distance` to `GATK4SPARK_MARKDUPLICATES` ([#2334](https://github.com/nf-core/sarek/issues/2334)).
 - [#2338](https://github.com/nf-core/sarek/pull/2338) - Fix undefined `intervals` reference in the BCFtools mpileup output prefix ([#2294](https://github.com/nf-core/sarek/issues/2294)).
+- [#2343](https://github.com/nf-core/sarek/pull/2343) - `--tools parabricks_deepvariant` and `parabricks_haplotypecaller` now stop with the "expect at least one normal-sample" error on a tumor-only samplesheet, instead of finishing without variant calls.
+- [#2344](https://github.com/nf-core/sarek/pull/2344) - Fix DeepSomatic colour in the subway map (green dot)
 
 ### Removed
 
@@ -71,7 +117,7 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 
 #### Fixed
 
-- [#2268](https://github.com/nf-core/sarek/pull/2268) - Resolve filetype output for parabricks/fq2bam
+- [#2268](https://github.com/nf-core/sarek/pull/2268),[#2342](https://github.com/nf-core/sarek/pull/2342) - Resolve filetype output for parabricks/fq2bam
 - [#2312](https://github.com/nf-core/sarek/pull/2312) - Fix parabricks/applybqsr input channel logic
 - [#2314](https://github.com/nf-core/sarek/pull/2314) - Improve docs on nonhuman genome
 - [#2316](https://github.com/nf-core/sarek/pull/2316) - Load `nf-schema` in the AWS full-size test `nextflow_config`, so that the `nf-slack` plugin block does not drop it
