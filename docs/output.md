@@ -618,7 +618,7 @@ Files created:
 #### Parabricks MutectCaller
 
 [Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html) is a GPU-accelerated implementation of GATK Mutect2 for calling somatic SNVs and indels in tumour-only and tumour-normal samples. Enable with `--tools parabricks_mutectcaller --profile <docker/singularity>,gpu`; a GPU is required.
-Calling runs as one job per sample or pair. Raw calls are filtered with GATK `FilterMutectCalls`, after contamination estimation when `--germline_resource` is provided. Unlike Mutect2, calls are also filtered without a germline resource, and no read-orientation filtering is applied. A panel of normals (`--pon`) is used via Parabricks PoN annotation (`prepon`/`postpon`).
+Calling runs as one job per sample or pair. Raw calls are filtered with GATK `FilterMutectCalls`, after contamination estimation when `--germline_resource` is provided. Read-orientation artefacts are modelled with GATK `LearnReadOrientationModel`. Unlike Mutect2, calls are also filtered without a germline resource. A panel of normals (`--pon`) is used via Parabricks PoN annotation (`prepon`/`postpon`).
 
 <details markdown="1">
 <summary>Output files for tumour-only and tumour-normal samples</summary>
@@ -635,6 +635,8 @@ Files created:
   - table calculating the fraction of reads coming from cross-sample contamination (only with `--germline_resource`)
 - `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.segmentation.table`
   - table containing segmentation of the tumour by minor allele fraction (only with `--germline_resource`)
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.artifactprior.tar.gz`
+  - prior probabilities for read orientation artifacts
 - `{sample,tumoursample,normalsample}.parabricks_mutectcaller.pileups.table`
   - tabulates pileup metrics for inferring contamination, in a directory per sample (only with `--germline_resource`)
 - `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.filtered.vcf.gz` and `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.filtered.vcf.gz.tbi`

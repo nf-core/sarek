@@ -2,11 +2,12 @@
 // PARABRICKS MUTECTCALLER: GPU-accelerated tumour-normal or tumour-only somatic variant calling, filtered with GATK on CPU
 //
 
-include { GATK4_CALCULATECONTAMINATION as MUTECTCALLER_CALCULATECONTAMINATION } from '../../../modules/nf-core/gatk4/calculatecontamination'
-include { GATK4_FILTERMUTECTCALLS as MUTECTCALLER_FILTERMUTECTCALLS           } from '../../../modules/nf-core/gatk4/filtermutectcalls'
-include { GATK4_GETPILEUPSUMMARIES as MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL  } from '../../../modules/nf-core/gatk4/getpileupsummaries'
-include { GATK4_GETPILEUPSUMMARIES as MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR   } from '../../../modules/nf-core/gatk4/getpileupsummaries'
-include { PARABRICKS_MUTECTCALLER                                             } from '../../../modules/nf-core/parabricks/mutectcaller'
+include { GATK4_CALCULATECONTAMINATION as MUTECTCALLER_CALCULATECONTAMINATION       } from '../../../modules/nf-core/gatk4/calculatecontamination'
+include { GATK4_FILTERMUTECTCALLS as MUTECTCALLER_FILTERMUTECTCALLS                 } from '../../../modules/nf-core/gatk4/filtermutectcalls'
+include { GATK4_GETPILEUPSUMMARIES as MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL        } from '../../../modules/nf-core/gatk4/getpileupsummaries'
+include { GATK4_GETPILEUPSUMMARIES as MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR         } from '../../../modules/nf-core/gatk4/getpileupsummaries'
+include { GATK4_LEARNREADORIENTATIONMODEL as MUTECTCALLER_LEARNREADORIENTATIONMODEL } from '../../../modules/nf-core/gatk4/learnreadorientationmodel'
+include { PARABRICKS_MUTECTCALLER                                                   } from '../../../modules/nf-core/parabricks/mutectcaller'
 
 workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
     take:
@@ -31,7 +32,9 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
 
     fasta_with_fai = fasta.combine(fasta_fai.map { _meta, fai -> fai }).collect()
 
-    PARABRICKS_MUTECTCALLER(cram_intervals, fasta_with_fai, panel_of_normals, panel_of_normals_tbi)
+    PARABRICKS_MUTECTCALLER(cram_intervals, fasta_with_fai, panel_of_normals, panel_of_normals_tbi, germline_resource, germline_resource_tbi)
+
+    MUTECTCALLER_LEARNREADORIENTATIONMODEL(PARABRICKS_MUTECTCALLER.out.f1r2)
 
     // Without a germline resource the pileup and contamination steps are skipped
     germline_resource_pileup     = germline_resource.filter { resource -> resource != [] }
@@ -67,10 +70,11 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
 
     MUTECTCALLER_CALCULATECONTAMINATION(calculatecontamination_in)
 
-    // Contamination and segmentation tables only exist with a germline resource; no orientation priors are available
+    // Contamination and segmentation tables only exist with a germline resource
     vcf_to_filter = PARABRICKS_MUTECTCALLER.out.vcf
         .join(PARABRICKS_MUTECTCALLER.out.tbi, failOnDuplicate: true, failOnMismatch: true)
         .join(PARABRICKS_MUTECTCALLER.out.stats, failOnDuplicate: true, failOnMismatch: true)
+        .join(MUTECTCALLER_LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
         .join(MUTECTCALLER_CALCULATECONTAMINATION.out.segmentation, failOnDuplicate: true, remainder: true)
         .join(MUTECTCALLER_CALCULATECONTAMINATION.out.contamination, failOnDuplicate: true, remainder: true)
         .map { row ->
@@ -78,8 +82,8 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
             if (row[1] == null) {
                 error("Parabricks MutectCaller: contamination table for '${row[0].id}' matched no VCF")
             }
-            def (meta, vcf, tbi, stats, segmentation, contamination) = row
-            [meta, vcf, tbi, stats, [], segmentation ?: [], contamination ?: [], []]
+            def (meta, vcf, tbi, stats, artifactprior, segmentation, contamination) = row
+            [meta, vcf, tbi, stats, artifactprior, segmentation ?: [], contamination ?: [], []]
         }
 
     MUTECTCALLER_FILTERMUTECTCALLS(vcf_to_filter, fasta, fasta_fai, dict)
@@ -90,6 +94,7 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
 
     stats               = PARABRICKS_MUTECTCALLER.out.stats
     stats_filtered      = MUTECTCALLER_FILTERMUTECTCALLS.out.stats
+    artifact_priors     = MUTECTCALLER_LEARNREADORIENTATIONMODEL.out.artifactprior
     contamination_table = MUTECTCALLER_CALCULATECONTAMINATION.out.contamination
     segmentation_table  = MUTECTCALLER_CALCULATECONTAMINATION.out.segmentation
     pileup_table_normal = MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL.out.table
@@ -100,6 +105,7 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
     tbi                 // channel: [ meta, vcf.gz.tbi ]
     stats               // channel: [ meta, vcf.gz.stats ]
     stats_filtered      // channel: [ meta, filteringStats.tsv ]
+    artifact_priors     // channel: [ meta, artifactprior.tar.gz ]
     contamination_table // channel: [ meta, contamination.table ]
     segmentation_table  // channel: [ meta, segmentation.table ]
     pileup_table_normal // channel: [ meta, pileups.table ]

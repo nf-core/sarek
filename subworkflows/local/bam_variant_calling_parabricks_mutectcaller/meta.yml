@@ -3,11 +3,10 @@ name: "bam_variant_calling_parabricks_mutectcaller"
 description: |
   Perform somatic variant calling on paired tumour-normal or tumour-only samples with the
   Parabricks GPU-accelerated mutectcaller, run as a single job per pair or sample on the combined
-  intervals, optionally with a panel of normals. The calls are filtered on CPU with GATK
-  filtermutectcalls, using contamination and segmentation tables from getpileupsummaries and
-  calculatecontamination when a germline resource is provided. Read-orientation filtering and the
-  germline prior during calling are not available, as the parabricks/mutectcaller module does not
-  expose them.
+  intervals, optionally with a panel of normals and a germline resource. The calls are filtered on
+  CPU with GATK filtermutectcalls, using read-orientation priors from learnreadorientationmodel and,
+  when a germline resource is provided, contamination and segmentation tables from
+  getpileupsummaries and calculatecontamination.
 keywords:
   - parabricks
   - mutectcaller
@@ -18,6 +17,7 @@ keywords:
   - tumor_only
   - getpileupsummaries
   - calculatecontamination
+  - learnreadorientationmodel
   - filtermutectcalls
   - filtered_vcf
   - gpu
@@ -25,6 +25,7 @@ components:
   - parabricks/mutectcaller
   - gatk4/getpileupsummaries
   - gatk4/calculatecontamination
+  - gatk4/learnreadorientationmodel
   - gatk4/filtermutectcalls
 input:
   - cram:
@@ -54,8 +55,8 @@ input:
   - germline_resource:
       type: file
       description: |
-        Population VCF of germline sequencing containing allele fractions, used by getpileupsummaries.
-        Pass [] to skip getpileupsummaries and calculatecontamination.
+        Population VCF of germline sequencing containing allele fractions, used by the Parabricks
+        mutectcaller and getpileupsummaries. Pass [] to skip getpileupsummaries and calculatecontamination.
         Structure: [ path(germline_resource) ] or []
       pattern: "*.vcf.gz"
   - germline_resource_tbi:
@@ -107,6 +108,12 @@ output:
         Filtering statistics produced by filtermutectcalls.
         Structure: [ val(meta), path(stats) ]
       pattern: "*.filteringStats.tsv"
+  - artifact_priors:
+      type: file
+      description: |
+        Read-orientation artefact priors produced by learnreadorientationmodel.
+        Structure: [ val(meta), path(artifactprior) ]
+      pattern: "*.artifactprior.tar.gz"
   - contamination_table:
       type: file
       description: |

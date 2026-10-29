@@ -444,7 +444,8 @@
                     "parabricks/mutectcaller": {
                         "branch": "master",
                         "git_sha": "810182dd17d4b2bba8ec29ad825aef0084689f5a",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/parabricks/mutectcaller/parabricks-mutectcaller.diff"
                     },
                     "rbt/vcfsplit": {
                         "branch": "master",
