@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#2180](https://github.com/nf-core/sarek/pull/2180) - Add Parabricks MutectCaller (`--tools parabricks_mutectcaller`) as GPU-accelerated somatic variant caller for tumor-only and tumor/normal samples
-- [#TBD](https://github.com/nf-core/sarek/pull/TBD) - Add GATK filtering after Parabricks MutectCaller: `FilterMutectCalls`, with contamination estimation (`GetPileupSummaries`, `CalculateContamination`) when `--germline_resource` is provided
+- [#2349](https://github.com/nf-core/sarek/pull/2349) - Add GATK filtering after Parabricks MutectCaller: `FilterMutectCalls`, with contamination estimation (`GetPileupSummaries`, `CalculateContamination`) when `--germline_resource` is provided
 
 ### Changed
 
