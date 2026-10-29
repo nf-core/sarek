@@ -11,7 +11,7 @@ include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC            } from '../bam_
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA                   } from '../bam_variant_calling_tumor_only_manta'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2                 } from '../bam_variant_calling_tumor_only_mutect2'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ                  } from '../bam_variant_calling_tumor_only_lofreq'
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER } from '../bam_variant_calling_tumor_only_parabricks_mutectcaller'
+include { BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER            } from '../bam_variant_calling_parabricks_mutectcaller'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE                 } from '../bam_variant_calling_tumor_only_tnscope'
 include { MSISENSOR2_MSI                                         } from '../../../modules/nf-core/msisensor2/msi'
 
@@ -150,11 +150,13 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // PARABRICKS MUTECTCALLER
-    cram_parabricks_mutectcaller = cram.filter { _meta, _cram, _crai ->
-        tools && tools.split(',').contains('parabricks_mutectcaller')
-    }
+    cram_parabricks_mutectcaller = cram
+        .filter { _meta, _cram, _crai ->
+            tools && tools.split(',').contains('parabricks_mutectcaller')
+        }
+        .map { meta, tumor_cram, tumor_crai -> [meta, [], [], tumor_cram, tumor_crai] }
 
-    BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER(
+    BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER(
         cram_parabricks_mutectcaller,
         fasta,
         fasta_fai,
@@ -163,8 +165,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         intervals_bed_combined,
     )
 
-    vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER.out.vcf
-    tbi_parabricks_mutectcaller = BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER.out.tbi
+    vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER.out.vcf
+    tbi_parabricks_mutectcaller = BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER.out.tbi
 
     //LOFREQ
     if (tools && tools.split(',').contains('lofreq')) {

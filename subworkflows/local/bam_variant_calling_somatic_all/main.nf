@@ -14,7 +14,7 @@ include { BAM_VARIANT_CALLING_SOMATIC_MANTA                   } from '../bam_var
 include { BAM_VARIANT_CALLING_SOMATIC_MUSE                    } from '../bam_variant_calling_somatic_muse'
 include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2                 } from '../bam_variant_calling_somatic_mutect2'
 include { BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC  } from '../bam_variant_calling_somatic_parabricks_deepsomatic'
-include { BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER } from '../bam_variant_calling_somatic_parabricks_mutectcaller'
+include { BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER         } from '../bam_variant_calling_parabricks_mutectcaller'
 include { BAM_VARIANT_CALLING_SOMATIC_STRELKA                 } from '../bam_variant_calling_somatic_strelka'
 include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT                  } from '../bam_variant_calling_somatic_tiddit'
 include { BAM_VARIANT_CALLING_SOMATIC_TNSCOPE                 } from '../bam_variant_calling_somatic_tnscope'
@@ -274,7 +274,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         tools && tools.split(',').contains('parabricks_mutectcaller')
     }
 
-    BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER(
+    BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER(
         cram_parabricks_mutectcaller,
         fasta,
         fasta_fai,
@@ -283,8 +283,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         intervals_bed_combined,
     )
 
-    vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER.out.vcf
-    tbi_parabricks_mutectcaller = BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER.out.tbi
+    vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER.out.vcf
+    tbi_parabricks_mutectcaller = BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER.out.tbi
 
     // TNSCOPE
     if (tools && tools.split(',').contains('sentieon_tnscope')) {

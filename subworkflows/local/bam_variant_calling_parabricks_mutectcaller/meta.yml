@@ -1,9 +1,9 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
-name: "bam_variant_calling_somatic_parabricks_mutectcaller"
+name: "bam_variant_calling_parabricks_mutectcaller"
 description: |
-  Perform somatic variant calling on paired tumor-normal samples using the Parabricks
-  GPU-accelerated mutectcaller (a GPU port of GATK Mutect2), run as a single job per pair on
-  the combined intervals (no scatter/gather), optionally with a panel of normals.
+  Perform somatic variant calling on paired tumor-normal or tumor-only samples using the
+  Parabricks GPU-accelerated mutectcaller (a GPU port of GATK Mutect2), run as a single job per
+  pair or sample on the combined intervals (no scatter/gather), optionally with a panel of normals.
   The raw (unfiltered) calls are emitted with the index Parabricks writes.
   Contamination estimation and filtermutectcalls are not run by this subworkflow.
   f1r2 / read-orientation filtering (learnreadorientationmodel) and the germline resource prior
@@ -16,6 +16,7 @@ keywords:
   - somatic
   - variant_calling
   - tumor_normal
+  - tumor_only
   - gpu
 components:
   - parabricks/mutectcaller
@@ -23,7 +24,7 @@ input:
   - cram:
       type: list
       description: |
-        Normal and tumor BAM/CRAM files with their indexes.
+        Normal and tumor BAM/CRAM files with their indexes. The normal file and index are [] for tumor-only.
         Structure: [ val(meta), path(normal_cram), path(normal_crai), path(tumour_cram), path(tumour_crai) ]
       pattern: "*.{bam,bai,cram,crai}"
   - fasta:

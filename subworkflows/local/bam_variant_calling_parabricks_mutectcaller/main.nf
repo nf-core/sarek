@@ -1,12 +1,12 @@
 //
-// PARABRICKS MUTECTCALLER: GPU-accelerated tumour-normal somatic variant calling
+// PARABRICKS MUTECTCALLER: GPU-accelerated tumour-normal or tumour-only somatic variant calling
 //
 
 include { PARABRICKS_MUTECTCALLER } from '../../../modules/nf-core/parabricks/mutectcaller'
 
-workflow BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_MUTECTCALLER {
+workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
     take:
-    cram                   // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ]
+    cram                   // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ], normal_cram and normal_crai are [] for tumour-only
     fasta                  // channel: [mandatory] [ meta, fasta ]
     fasta_fai              // channel: [mandatory] [ meta, fasta_fai ]
     panel_of_normals       // channel: [optional] [ panel_of_normals ] or []
