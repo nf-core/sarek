@@ -29,49 +29,47 @@ process CREATE_INTERVALS_BED {
     if (intervals.toString().toLowerCase().endsWith("bed")) {
         """
         mkdir sorted
+
+        # Sort rows by fasta index order, then by start, keeping header lines on top
         awk -vFS="\t" '
         NR == FNR {
             rank[\$1] = FNR
-            n_ranked = FNR
             next
         }
         /^(#|track|browser)/ {
-            header[++n_header] = \$0
+            print
             next
         }
         {
             # contigs missing from the fasta index go last, in order of appearance
             if (!(\$1 in rank))
-                rank[\$1] = ++n_ranked
-            row[++n_rows] = \$0
-            key[n_rows] = sprintf("%012d %012d %012d", rank[\$1], \$2, n_rows)
+                rank[\$1] = length(rank) + 1
+            # zero-padded so that string order equals numeric order, FNR keeps the sort stable
+            row[sprintf("%012d %012d %012d", rank[\$1], \$2, FNR)] = \$0
         }
         END {
-            for (i = 1; i <= n_header; i++)
-                sorted[++n_sorted] = header[i]
-            PROCINFO["sorted_in"] = "@val_str_asc"
-            for (i in key)
-                sorted[++n_sorted] = row[i]
-            for (i = 1; i <= n_sorted; i++) {
-                print sorted[i] > "sorted/${intervals.name}"
-                split(sorted[i], field, "\t")
-                t = field[5]  # runtime estimate
-                if (t == "") {
-                    # no runtime estimate in this row, assume default value
-                    t = (field[3] - field[2]) / ${nucleotides_per_second}
-                }
-                if (name == "" || (chunk > 600 && (chunk + t) > longest * 1.05)) {
-                    # start a new chunk
-                    name = sprintf("%s_%d-%d.bed", field[1], field[2]+1, field[3])
-                    chunk = 0
-                    longest = 0
-                }
-                if (t > longest)
-                    longest = t
-                chunk += t
-                print sorted[i] > name
+            PROCINFO["sorted_in"] = "@ind_str_asc"
+            for (key in row)
+                print row[key]
+        }' ${fasta_fai} ${intervals} > sorted/${intervals.name}
+
+        awk -vFS="\t" '{
+            t = \$5  # runtime estimate
+            if (t == "") {
+                # no runtime estimate in this row, assume default value
+                t = (\$3 - \$2) / ${nucleotides_per_second}
             }
-        }' ${fasta_fai} ${intervals}
+            if (name == "" || (chunk > 600 && (chunk + t) > longest * 1.05)) {
+                # start a new chunk
+                name = sprintf("%s_%d-%d.bed", \$1, \$2+1, \$3)
+                chunk = 0
+                longest = 0
+            }
+            if (t > longest)
+                longest = t
+            chunk += t
+            print \$0 > name
+        }' sorted/${intervals.name}
         """
     }
     else if (intervals.toString().toLowerCase().endsWith("interval_list")) {
