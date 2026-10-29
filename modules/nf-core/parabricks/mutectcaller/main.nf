@@ -1,3 +1,6 @@
+// Copyright (c) the nf-core community under an open-source MIT license.
+// See https://github.com/nf-core/modules for full license, file patching instructions and upstream contributing.
+
 process PARABRICKS_MUTECTCALLER {
     tag "${meta.id}"
     label 'process_high'
@@ -5,7 +8,7 @@ process PARABRICKS_MUTECTCALLER {
     // needed by the module to work properly can be removed when fixed upstream - see: https://github.com/nf-core/modules/issues/7226
     stageInMode 'copy'
 
-    container "nvcr.io/nvidia/clara/clara-parabricks:4.7.1-1"
+    container "nvcr.io/nvidia/clara/clara-parabricks:4.8.0-1"
 
     input:
     tuple val(meta), path(tumor_bam), path(tumor_bam_index), path(normal_bam), path(normal_bam_index), path(intervals)
@@ -14,9 +17,10 @@ process PARABRICKS_MUTECTCALLER {
     path panel_of_normals_index
 
     output:
-    tuple val(meta), path("*.vcf.gz"),       emit: vcf
-    tuple val(meta), path("*.vcf.gz.stats"), emit: stats
-    path "compatible_versions.yml",          emit: compatible_versions, optional: true
+    tuple val(meta), path("${prefix}.vcf.gz"),       emit: vcf
+    tuple val(meta), path("${prefix}.vcf.gz.tbi"),   emit: tbi
+    tuple val(meta), path("${prefix}.vcf.gz.stats"), emit: stats
+    path "compatible_versions.yml",                  emit: compatible_versions, optional: true
     tuple val("${task.process}"), val('parabricks'), eval("pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'"), topic: versions, emit: versions_parabricks
 
     when:
@@ -29,10 +33,13 @@ process PARABRICKS_MUTECTCALLER {
     }
 
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     def intervals_command  = intervals     ? (intervals instanceof List ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : "--interval-file ${intervals}") : ""
-    def prepon_command = panel_of_normals ? "cp -L ${panel_of_normals_index} `readlink -f ${panel_of_normals}`.tbi && pbrun prepon --in-pon-file ${panel_of_normals}" : ""
+    // prepon and postpon expect the index at <pon>.tbi
+    def pon_index_command = panel_of_normals && panel_of_normals_index.name != "${panel_of_normals.name}.tbi" ? "cp -L ${panel_of_normals_index} ${panel_of_normals}.tbi" : ""
+    def prepon_command = panel_of_normals ? "pbrun prepon --in-pon-file ${panel_of_normals}" : ""
+    def pon_command    = panel_of_normals ? "--pon ${panel_of_normals}" : ""
     // pbrun postpon requires uncompressed .vcf input; output uncompressed when PON is provided
     def mutect_out     = panel_of_normals ? "${prefix}.vcf"    : "${prefix}.vcf.gz"
     def stats_rename   = panel_of_normals ? "mv ${prefix}.vcf.stats ${prefix}.vcf.gz.stats" : ""
@@ -41,7 +48,8 @@ process PARABRICKS_MUTECTCALLER {
     def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ""
     def normal_bam_flag = normal_bam ? "--in-normal-bam ${normal_bam}" : ""
     """
-    # if panel of normals specified, run prepon
+    # if panel of normals specified, place its index at <pon>.tbi and run prepon
+    ${pon_index_command}
     ${prepon_command}
 
     pbrun \\
@@ -49,6 +57,7 @@ process PARABRICKS_MUTECTCALLER {
         --ref ${fasta} \\
         --in-tumor-bam ${tumor_bam} \\
         ${normal_bam_flag} \\
+        ${pon_command} \\
         --out-vcf ${mutect_out} \\
         ${intervals_command} \\
         ${num_gpus} \\
@@ -60,9 +69,10 @@ process PARABRICKS_MUTECTCALLER {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     """
     echo "" | gzip > ${prefix}.vcf.gz
+    touch ${prefix}.vcf.gz.tbi
     touch ${prefix}.vcf.gz.stats
 
     # Capture the full version output once and store it in a variable
