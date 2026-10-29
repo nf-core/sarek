@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#2180](https://github.com/nf-core/sarek/pull/2180) - Add Parabricks MutectCaller (`--tools parabricks_mutectcaller`) as GPU-accelerated somatic variant caller for tumor-only and tumor/normal samples (raw, unfiltered calls)
-- [#2261](https://github.com/nf-core/sarek/issues/2261) - Add joint germline calling (`--joint_germline`), CNNScoreVariants/FilterVariantTranches filtering (skip with `--skip_tools parabricks_haplotypecaller_filter`), dbSNP annotation and `--gatk_pcr_indel_model` support to Parabricks HaplotypeCaller
+- [#2353](https://github.com/nf-core/sarek/pull/2353) - Add joint germline calling (`--joint_germline`), CNNScoreVariants/FilterVariantTranches filtering (skip with `--skip_tools parabricks_haplotypecaller_filter`), dbSNP annotation and `--gatk_pcr_indel_model` support to Parabricks HaplotypeCaller
 
 ### Changed
 
