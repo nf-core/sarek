@@ -138,7 +138,7 @@ Aktse is a mountain hut on the northern shore of Laitaure, on the Kungsleden tra
 | mosdepth      | 0.3.10      | 0.3.14      |
 | cnvkit        | 0.9.11      | 0.9.12      |
 | xz            | -           | 5.8.3       |
-| parabricks    | 4.6.0-1     | 4.8.0-1     |
+| parabricks    | 4.7.1-1     | 4.8.0-1     |
 | snpsift       | 5.4.0a      | 5.4.0c      |
 
 ### Dependencies - plugins
