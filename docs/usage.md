@@ -63,13 +63,6 @@ genome: 'GATK.GRCh38'
 
 You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
 
-## Mosdepth coverage calculation
-
-Mosdepth uses `--fast-mode` for whole-genome sequencing by default.
-This mode skips internal CIGAR operations and does not correct overlapping mates.
-Use `--mosdepth_no_fast_mode` to disable it when calculating coverage for libraries with overlapping read pairs.
-Whole-exome and targeted sequencing runs with `--wes` already disable fast mode.
-
 ## Input: Sample sheet configurations
 
 You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use the parameter `--input` to specify its location. It has to be a comma-separated file with at least 3 columns, and a header row as shown in the examples below.
