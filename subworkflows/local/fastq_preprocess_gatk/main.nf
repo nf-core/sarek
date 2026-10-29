@@ -321,6 +321,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing,
+                save_output_as_bam,
             )
 
             cram_markduplicates_no_spark = BAM_MARKDUPLICATES.out.alignment
