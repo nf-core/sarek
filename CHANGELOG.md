@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- [#XXXX](https://github.com/nf-core/sarek/pull/XXXX) - Add `--mosdepth_no_fast_mode` to disable Mosdepth fast mode for coverage calculations with overlapping read pairs.
+- [#2351](https://github.com/nf-core/sarek/pull/2351) - Add `--mosdepth_no_fast_mode` to disable Mosdepth fast mode for coverage calculations with overlapping read pairs.
 
 ### Changed
 
