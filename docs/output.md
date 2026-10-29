@@ -47,6 +47,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [Parabricks DeepSomatic](#parabricks-deepsomatic)
     - [Parabricks DeepVariant](#parabricks-deepvariant)
     - [Parabricks HaplotypeCaller](#parabricks-haplotypecaller)
+    - [Parabricks MutectCaller](#parabricks-mutectcaller)
     - [Sentieon DNAscope](#sentieon-dnascope)
       - [Sentieon DNAscope joint germline variant calling](#sentieon-dnascope-joint-germline-variant-calling)
     - [Sentieon Haplotyper](#sentieon-haplotyper)
@@ -611,6 +612,22 @@ Files created:
 
 - `<sample>.parabricks_haplotypecaller.vcf.gz` and `<sample>.parabricks_haplotypecaller.vcf.gz.tbi`
   - VCF with tabix index
+
+</details>
+
+#### Parabricks MutectCaller
+
+[Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html) is a GPU-accelerated implementation of GATK Mutect2 for somatic SNVs and small indels in tumour-only and tumour-normal samples. Calls are not filtered.
+
+<details markdown="1">
+<summary>Output files for tumour-only and tumour-normal samples</summary>
+
+**Output directory: `{outdir}/variant_calling/parabricks_mutectcaller/{sample,tumoursample_vs_normalsample}/`**
+
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.vcf.gz` and `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.tbi`
+  - VCF with tabix index
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.stats`
+  - stats file from calling
 
 </details>
 
