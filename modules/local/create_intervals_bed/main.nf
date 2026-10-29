@@ -9,7 +9,7 @@ process CREATE_INTERVALS_BED {
 
     input:
     path intervals
-    path fasta_fai
+    tuple val(meta2), path(fasta_fai)
     val nucleotides_per_second
 
     output:
