@@ -4,8 +4,7 @@ description: |
   Perform tumor-only somatic variant calling using the Parabricks GPU-accelerated mutectcaller
   (a GPU port of GATK Mutect2), run as a single job per sample on the combined intervals
   (no scatter/gather), optionally with a panel of normals. No matched normal sample is used.
-  The bgzip-compressed output VCF is linked under its final name and indexed (not
-  re-compressed) with htslib/bgziptabix. The raw (unfiltered) calls are emitted.
+  The raw (unfiltered) calls are emitted with the index Parabricks writes.
   Contamination estimation and filtermutectcalls are not run by this subworkflow.
   f1r2 / read-orientation filtering (learnreadorientationmodel) and the germline resource prior
   during calling are not wired up, because the nf-core parabricks/mutectcaller module does not
@@ -20,7 +19,6 @@ keywords:
   - gpu
 components:
   - parabricks/mutectcaller
-  - htslib/bgziptabix
 input:
   - cram:
       type: list

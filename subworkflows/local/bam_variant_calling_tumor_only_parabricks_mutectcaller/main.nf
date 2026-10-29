@@ -2,8 +2,7 @@
 // PARABRICKS MUTECTCALLER: GPU-accelerated tumour-only somatic variant calling
 //
 
-include { HTSLIB_BGZIPTABIX as TABIX_PARABRICKS_MUTECTCALLER } from '../../../modules/nf-core/htslib/bgziptabix'
-include { PARABRICKS_MUTECTCALLER                            } from '../../../modules/nf-core/parabricks/mutectcaller'
+include { PARABRICKS_MUTECTCALLER } from '../../../modules/nf-core/parabricks/mutectcaller'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER {
     take:
@@ -27,16 +26,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_PARABRICKS_MUTECTCALLER {
 
     PARABRICKS_MUTECTCALLER(cram_intervals, fasta_with_fai, panel_of_normals, panel_of_normals_tbi)
 
-    TABIX_PARABRICKS_MUTECTCALLER(
-        PARABRICKS_MUTECTCALLER.out.vcf.map { meta, vcf -> [meta, vcf, [], []] },
-        'compress',
-        true,
-        'vcf',
-    )
+    vcf = PARABRICKS_MUTECTCALLER.out.vcf.map { meta, vcf -> [meta + [variantcaller: 'parabricks_mutectcaller'], vcf] }
 
-    vcf = TABIX_PARABRICKS_MUTECTCALLER.out.output.map { meta, vcf -> [meta + [variantcaller: 'parabricks_mutectcaller'], vcf] }
-
-    tbi = TABIX_PARABRICKS_MUTECTCALLER.out.index.map { meta, tbi -> [meta + [variantcaller: 'parabricks_mutectcaller'], tbi] }
+    tbi = PARABRICKS_MUTECTCALLER.out.tbi.map { meta, tbi -> [meta + [variantcaller: 'parabricks_mutectcaller'], tbi] }
 
     stats = PARABRICKS_MUTECTCALLER.out.stats
 
