@@ -1,9 +1,6 @@
 //
 // DEEPVARIANT germline calling
 //
-// For all modules here:
-// A when clause condition is defined in the conf/modules.config to determine if the module should be run
-
 include { DEEPVARIANT_RUNDEEPVARIANT                } from '../../../modules/nf-core/deepvariant/rundeepvariant/main'
 include { GATK4_MERGEVCFS as MERGE_DEEPVARIANT_GVCF } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { GATK4_MERGEVCFS as MERGE_DEEPVARIANT_VCF  } from '../../../modules/nf-core/gatk4/mergevcfs/main'
@@ -20,7 +17,9 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
     main:
 
     // Combine cram and intervals for spread and gather strategy
-    cram_intervals = cram.combine(intervals)
+    cram_intervals = cram
+        .filter { _meta, _cram, _crai -> (params.tools ?: '').tokenize(',').contains('deepvariant') }
+        .combine(intervals)
         // Move num_intervals to meta map
         .map{ meta, cram_, crai, intervals_, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram_, crai, intervals_ ]}
 

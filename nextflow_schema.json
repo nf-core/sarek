@@ -515,6 +515,13 @@
                     "type": "string",
                     "default": "CONSERVATIVE",
                     "help_text": "Option for selecting the PCR indel model used by GATK HaplotypeCaller."
+                },
+                "deepvariant_use_original_quality_scores": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Use original base qualities from OQ tags for DeepVariant input alignments.",
+                    "help_text": "Enable for externally recalibrated BAM or CRAM files, including variant-calling restarts, only when all relevant reads contain valid OQ tags. Sarek automatically preserves and uses original qualities when GATK recalibration and CPU DeepVariant run together. This option does not apply to Parabricks DeepVariant.",
+                    "fa_icon": "fas fa-dna"
                 }
             }
         },
