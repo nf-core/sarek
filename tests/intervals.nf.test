@@ -1,5 +1,5 @@
 def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
-def sarek3_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/sarek3/data/'
+def pipelines_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/sarek3/data/'
 
 nextflow_pipeline {
 
