@@ -48,6 +48,8 @@ process PARABRICKS_MUTECTCALLER {
     def stats_rename   = panel_of_normals ? "mv ${prefix}.vcf.stats ${prefix}.vcf.gz.stats" : ""
     def postpon_command = panel_of_normals ? "pbrun postpon --in-vcf ${prefix}.vcf --in-pon-file ${panel_of_normals} --out-vcf ${prefix}.vcf.gz" : ""
 
+    // mutectcaller expects the germline resource index at <germline_resource>.tbi
+    def germline_index_command = germline_resource && germline_resource_index.name != "${germline_resource.name}.tbi" ? "cp -L ${germline_resource_index} ${germline_resource}.tbi" : ""
     def germline_command = germline_resource ? "--mutect-germline-resource ${germline_resource}" : ""
 
     def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ""
@@ -56,6 +58,9 @@ process PARABRICKS_MUTECTCALLER {
     # if panel of normals specified, place its index at <pon>.tbi and run prepon
     ${pon_index_command}
     ${prepon_command}
+
+    # if germline resource specified, place its index at <germline_resource>.tbi
+    ${germline_index_command}
 
     pbrun \\
         mutectcaller \\

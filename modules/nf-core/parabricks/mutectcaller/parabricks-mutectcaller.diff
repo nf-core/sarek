@@ -17,16 +17,27 @@ Changes in 'parabricks/mutectcaller/main.nf':
      path "compatible_versions.yml",                  emit: compatible_versions, optional: true
      tuple val("${task.process}"), val('parabricks'), eval("pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'"), topic: versions, emit: versions_parabricks
  
-@@ -45,6 +48,8 @@
+@@ -45,6 +48,10 @@
      def stats_rename   = panel_of_normals ? "mv ${prefix}.vcf.stats ${prefix}.vcf.gz.stats" : ""
      def postpon_command = panel_of_normals ? "pbrun postpon --in-vcf ${prefix}.vcf --in-pon-file ${panel_of_normals} --out-vcf ${prefix}.vcf.gz" : ""
  
++    // mutectcaller expects the germline resource index at <germline_resource>.tbi
++    def germline_index_command = germline_resource && germline_resource_index.name != "${germline_resource.name}.tbi" ? "cp -L ${germline_resource_index} ${germline_resource}.tbi" : ""
 +    def germline_command = germline_resource ? "--mutect-germline-resource ${germline_resource}" : ""
 +
      def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ""
      def normal_bam_flag = normal_bam ? "--in-normal-bam ${normal_bam}" : ""
      """
-@@ -58,6 +63,7 @@
+@@ -52,12 +59,16 @@
+     ${pon_index_command}
+     ${prepon_command}
+ 
++    # if germline resource specified, place its index at <germline_resource>.tbi
++    ${germline_index_command}
++
+     pbrun \\
+         mutectcaller \\
+         --ref ${fasta} \\
          --in-tumor-bam ${tumor_bam} \\
          ${normal_bam_flag} \\
          ${pon_command} \\
@@ -34,7 +45,7 @@ Changes in 'parabricks/mutectcaller/main.nf':
          --out-vcf ${mutect_out} \\
          ${intervals_command} \\
          ${num_gpus} \\
-@@ -74,6 +80,7 @@
+@@ -74,6 +85,7 @@
      echo "" | gzip > ${prefix}.vcf.gz
      touch ${prefix}.vcf.gz.tbi
      touch ${prefix}.vcf.gz.stats
@@ -46,7 +57,7 @@ Changes in 'parabricks/mutectcaller/main.nf':
 Changes in 'parabricks/mutectcaller/meta.yml':
 --- modules/nf-core/parabricks/mutectcaller/meta.yml
 +++ modules/nf-core/parabricks/mutectcaller/meta.yml
-@@ -82,6 +82,19 @@
+@@ -82,6 +82,20 @@
        description: (Optional) tbi index corresponding to panel of normals file.
        pattern: "*.tbi"
        ontologies: []
@@ -61,12 +72,13 @@ Changes in 'parabricks/mutectcaller/meta.yml':
 +  - germline_resource_index:
 +      type: file
 +      description: (Optional) tbi index corresponding to the germline resource file.
++        Copied to <germline_resource>.tbi if named differently.
 +      pattern: "*.tbi"
 +      ontologies: []
  output:
    vcf:
      - - meta:
-@@ -119,6 +132,20 @@
+@@ -119,6 +133,20 @@
            description: Variant statistics.
            pattern: "*.vcf.gz.stats"
            ontologies: []

@@ -93,6 +93,7 @@ input:
   - germline_resource_index:
       type: file
       description: (Optional) tbi index corresponding to the germline resource file.
+        Copied to <germline_resource>.tbi if named differently.
       pattern: "*.tbi"
       ontologies: []
 output:
