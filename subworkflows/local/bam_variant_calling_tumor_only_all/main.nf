@@ -166,6 +166,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         panel_of_normals,
         panel_of_normals_tbi,
         intervals_bed_combined,
+        params.germline_resource as boolean,
     )
 
     vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER.out.vcf

@@ -83,6 +83,12 @@ input:
         Single combined BED file of target regions, or [] when running without intervals.
         Structure: [ path(intervals) ] or []
       pattern: "*.bed"
+  - germline_resource_provided:
+      type: boolean
+      description: |
+        Whether a germline resource was provided. When true, every VCF must be matched by a
+        contamination and segmentation table before filtermutectcalls; when false, filtermutectcalls
+        runs without them as soon as each VCF is ready.
 output:
   - vcf:
       type: file

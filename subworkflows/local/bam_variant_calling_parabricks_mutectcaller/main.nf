@@ -11,15 +11,16 @@ include { PARABRICKS_MUTECTCALLER                                               
 
 workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
     take:
-    cram                   // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ], normal_cram and normal_crai are [] for tumour-only
-    fasta                  // channel: [mandatory] [ meta, fasta ]
-    fasta_fai              // channel: [mandatory] [ meta, fasta_fai ]
-    dict                   // channel: [mandatory] [ meta, dict ]
-    germline_resource      // channel: [optional] [ germline_resource ] or []
-    germline_resource_tbi  // channel: [optional] [ germline_resource_tbi ] or []
-    panel_of_normals       // channel: [optional] [ panel_of_normals ] or []
-    panel_of_normals_tbi   // channel: [optional] [ panel_of_normals_tbi ] or []
-    intervals_bed_combined // channel: [optional] [] or [ intervals.bed ]
+    cram                       // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ], normal_cram and normal_crai are [] for tumour-only
+    fasta                      // channel: [mandatory] [ meta, fasta ]
+    fasta_fai                  // channel: [mandatory] [ meta, fasta_fai ]
+    dict                       // channel: [mandatory] [ meta, dict ]
+    germline_resource          // channel: [optional] [ germline_resource ] or []
+    germline_resource_tbi      // channel: [optional] [ germline_resource_tbi ] or []
+    panel_of_normals           // channel: [optional] [ panel_of_normals ] or []
+    panel_of_normals_tbi       // channel: [optional] [ panel_of_normals_tbi ] or []
+    intervals_bed_combined     // channel: [optional] [] or [ intervals.bed ]
+    germline_resource_provided // boolean: [mandatory] whether a germline resource was provided, so contamination tables are expected
 
     main:
     intervals_bed = intervals_bed_combined.map { bed -> [bed ? bed[0] : []] }
@@ -40,7 +41,7 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
     germline_resource_pileup     = germline_resource.filter { resource -> resource != [] }
     germline_resource_pileup_tbi = germline_resource_tbi.filter { resource_tbi -> resource_tbi != [] }
 
-    // contamination is a tumour value; dropping it lets a normal shared by several tumours be summarised once
+    // dropping the tumour-specific keys (tumor_id, contamination) lets a normal shared by several tumours be summarised once
     pileup = cram_intervals.multiMap { meta, tumor_cram, tumor_crai, normal_cram, normal_crai, interval ->
         tumor: [meta + [id: meta.tumor_id ?: meta.id], tumor_cram, tumor_crai, interval]
         normal: [meta - meta.subMap('tumor_id', 'contamination') + [id: meta.normal_id], normal_cram, normal_crai, interval]
@@ -70,21 +71,26 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
 
     MUTECTCALLER_CALCULATECONTAMINATION(calculatecontamination_in)
 
-    // Contamination and segmentation tables only exist with a germline resource
-    vcf_to_filter = PARABRICKS_MUTECTCALLER.out.vcf
+    vcf_with_priors = PARABRICKS_MUTECTCALLER.out.vcf
         .join(PARABRICKS_MUTECTCALLER.out.tbi, failOnDuplicate: true, failOnMismatch: true)
         .join(PARABRICKS_MUTECTCALLER.out.stats, failOnDuplicate: true, failOnMismatch: true)
         .join(MUTECTCALLER_LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
-        .join(MUTECTCALLER_CALCULATECONTAMINATION.out.segmentation, failOnDuplicate: true, remainder: true)
-        .join(MUTECTCALLER_CALCULATECONTAMINATION.out.contamination, failOnDuplicate: true, remainder: true)
-        .map { row ->
-            // An unmatched table arrives as [meta, null, tables...], so the row cannot be destructured until checked
-            if (row[1] == null) {
-                error("Parabricks MutectCaller: contamination table for '${row[0].id}' matched no VCF")
+
+    // Contamination and segmentation tables only exist with a germline resource; branching on the
+    // boolean avoids a remainder join, which would hold every sample until the slowest caller finishes
+    if (germline_resource_provided) {
+        vcf_to_filter = vcf_with_priors
+            .join(MUTECTCALLER_CALCULATECONTAMINATION.out.segmentation, failOnDuplicate: true, failOnMismatch: true)
+            .join(MUTECTCALLER_CALCULATECONTAMINATION.out.contamination, failOnDuplicate: true, failOnMismatch: true)
+            .map { meta, vcf, tbi, stats, artifactprior, segmentation, contamination ->
+                [meta, vcf, tbi, stats, artifactprior, segmentation, contamination, []]
             }
-            def (meta, vcf, tbi, stats, artifactprior, segmentation, contamination) = row
-            [meta, vcf, tbi, stats, artifactprior, segmentation ?: [], contamination ?: [], []]
+    }
+    else {
+        vcf_to_filter = vcf_with_priors.map { meta, vcf, tbi, stats, artifactprior ->
+            [meta, vcf, tbi, stats, artifactprior, [], [], []]
         }
+    }
 
     MUTECTCALLER_FILTERMUTECTCALLS(vcf_to_filter, fasta, fasta_fai, dict)
 
