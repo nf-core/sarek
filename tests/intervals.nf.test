@@ -21,7 +21,7 @@ nextflow_pipeline {
             // Rows out of reference order, with runtime estimates that would interleave two chunks if left unsorted
             name: "-profile test --intervals unsorted_intervals.bed --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
             params: [
-                intervals: sarek3_testdata_base_path + 'genomics/homo_sapiens/genome/unsorted_intervals.bed',
+                intervals: pipelines_testdata_base_path + 'genomics/homo_sapiens/genome/unsorted_intervals.bed',
                 save_reference: true,
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: null,
@@ -31,7 +31,7 @@ nextflow_pipeline {
         [
             name: "Fails with profile test --intervals intervals_wrong_contig.bed",
             params: [
-                intervals: sarek3_testdata_base_path + 'genomics/homo_sapiens/genome/intervals_wrong_contig.bed',
+                intervals: pipelines_testdata_base_path + 'genomics/homo_sapiens/genome/intervals_wrong_contig.bed',
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: null,
                 wes: true
@@ -43,7 +43,7 @@ nextflow_pipeline {
         [
             name: "Fails with profile test --intervals intervals_past_end.bed",
             params: [
-                intervals: sarek3_testdata_base_path + 'genomics/homo_sapiens/genome/intervals_past_end.bed',
+                intervals: pipelines_testdata_base_path + 'genomics/homo_sapiens/genome/intervals_past_end.bed',
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: null,
                 wes: true
