@@ -40,6 +40,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
     joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
     wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
+    germline_resource_provided    // boolean: [mandatory] whether a germline resource was provided
 
     main:
     // Channels are often remapped to match module/subworkflow
@@ -142,7 +143,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             panel_of_normals_tbi,
             intervals,
             joint_mutect2,
-            params.germline_resource as boolean,
+            germline_resource_provided,
         )
 
         vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.vcf
@@ -167,7 +168,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         panel_of_normals_tbi,
         intervals_bed_combined,
         intervals,
-        params.germline_resource as boolean,
+        germline_resource_provided,
     )
 
     vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER.out.vcf
