@@ -1,0 +1,9 @@
+[tools]
+"aqua:ast-grep/ast-grep" = "0.44.1"
+
+[tasks.check]
+description = "Test structural rules and scan first-party Nextflow code"
+run = [
+    "ast-grep test -c sgconfig.yml",
+    "ast-grep scan -c sgconfig.yml ../main.nf ../workflows ../subworkflows/local ../modules/local",
+]
