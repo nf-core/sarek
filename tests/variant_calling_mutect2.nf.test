@@ -55,6 +55,7 @@ nextflow_pipeline {
                 germline_resource: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz',
                 germline_resource_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz.tbi',
                 input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
                 step: "variant_calling",
                 tools: 'mutect2',
                 wes: true

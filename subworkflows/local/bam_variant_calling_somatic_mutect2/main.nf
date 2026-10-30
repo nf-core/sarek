@@ -1,5 +1,5 @@
 //
-// MUTECT2: tumor-normal mode variantcalling, filtering in BAM_VCF_FILTER_MUTECT_CALLS_GATK
+// MUTECT2: tumour-normal mode variant calling, filtering in BAM_VCF_FILTER_MUTECT_CALLS_GATK
 //
 
 include { BAM_VCF_FILTER_MUTECT_CALLS_GATK           } from '../bam_vcf_filter_mutect_calls_gatk/main'
@@ -118,7 +118,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         .join(f1r2, failOnDuplicate: true, failOnMismatch: true)
         .map { meta, vcf_, tbi_, stats_, f1r2_ -> [meta + [variantcaller: 'mutect2'], vcf_, tbi_, stats_, f1r2_] }
 
-    // One row per tumor/normal pair, also in joint mode
+    // One row per tumour/normal pair, also in joint mode
     cram = input.map { meta, input_list, input_index_list -> [meta + [variantcaller: 'mutect2'], input_list[0], input_index_list[0], input_list[1], input_index_list[1]] }
 
     BAM_VCF_FILTER_MUTECT_CALLS_GATK(

@@ -15,14 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [#XXXX](https://github.com/nf-core/sarek/pull/XXXX) - Mutect2 and Parabricks MutectCaller share one GATK filtering subworkflow
+- [#XXXX](https://github.com/nf-core/sarek/pull/XXXX) - Mutect2 and Parabricks MutectCaller share one GATK filtering subworkflow; Parabricks MutectCaller pileups are now scattered over the intervals like Mutect2's
 
 ### Fixed
 
 - [#2277](https://github.com/nf-core/sarek/pull/2277) - fix(markduplicates): avoid duplicate alignment emission under -stub
 - [#2347](https://github.com/nf-core/sarek/pull/2347) - Fix DeepSomatic VCF merge failing with `sample entries that don't match the other files` when an interval yields no records (e.g. `*_alt` contigs): pass tumour and normal sample names explicitly, including to `postprocess_variants`, which otherwise writes `default`
 - [#2352](https://github.com/nf-core/sarek/pull/2352) - Sort the `--intervals` BED in reference order with `bedtools sort` before splitting it, fixing out-of-order pileup tables that made `CalculateContamination` fail with `Invalid interval` ([#899](https://github.com/nf-core/sarek/issues/899), [#2281](https://github.com/nf-core/sarek/issues/2281)). Fail early when the BED has contigs missing from the reference, start > end, or intervals past the contig end ([#97](https://github.com/nf-core/sarek/issues/97), [#934](https://github.com/nf-core/sarek/issues/934)). CNVKit target and antitarget BED names now carry the `.sorted` suffix of the sorted intervals file
-- [#XXXX](https://github.com/nf-core/sarek/pull/XXXX) - Filter Mutect2 calls with `FilterMutectCalls` also without `--germline_resource` ([#1546](https://github.com/nf-core/sarek/issues/1546)). Scatter Parabricks MutectCaller pileups over the intervals like Mutect2's
+- [#XXXX](https://github.com/nf-core/sarek/pull/XXXX) - Filter Mutect2 calls with `FilterMutectCalls` also without `--germline_resource` ([#1546](https://github.com/nf-core/sarek/issues/1546)). For runs without a germline resource, downstream files are now named after `*.mutect2.filtered.vcf.gz`
 
 ### Removed
 

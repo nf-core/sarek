@@ -11,12 +11,13 @@ keywords:
   - calculatecontamination
   - filtermutectcalls
   - variant_calling
-  - tumor_only
+  - tumor_normal
   - filtered_vcf
 modules:
   - gatk4/mutect2
   - gatk4/mergevcfs
   - gatk4/mergemutectstats
+  - bam_vcf_filter_mutect_calls_gatk
 input:
   - meta:
       type: map
@@ -74,57 +75,53 @@ input:
       type: boolean
       description: Whether a germline resource was provided, which enables contamination estimation before filtering.
 output:
-  - versions:
+  - vcf:
       type: file
-      description: File containing software versions
-      pattern: "versions.yml"
-  - mutect2_vcf:
+      description: |
+        Filtered VCF
+        Structure: [ val(meta), path(file) ]
+      pattern: "*.filtered.vcf.gz"
+  - tbi:
       type: file
-      description: Compressed vcf file to be used for variant_calling.
-      pattern: "[ *.vcf.gz ]"
-  - mutect2_tbi:
+      description: |
+        Index of the filtered VCF
+        Structure: [ val(meta), path(file) ]
+      pattern: "*.filtered.vcf.gz.tbi"
+  - stats_filtered:
       type: file
-      description: Indexes of the mutect2_vcf file
-      pattern: "[ *vcf.gz.tbi ]"
-  - mutect2_stats:
-      type: file
-      description: Stats files for the mutect2 vcf
-      pattern: "[ *vcf.gz.stats ]"
-  - mutect2_f1r2:
-      type: file
-      description: file containing information to be passed to LearnReadOrientationModel.
-      pattern: "*.f1r2.tar.gz"
+      description: |
+        FilterMutectCalls statistics
+        Structure: [ val(meta), path(file) ]
+      pattern: "*.filteringStats.tsv"
   - artifact_priors:
       type: file
-      description: file containing artifact-priors to be used by filtermutectcalls.
-      pattern: "*.tar.gz"
-  - pileup_table_tumor:
-      type: file
-      description: File containing the tumor pileup summary table, kept separate as calculatecontamination needs them individually specified.
-      pattern: "*_tumor.pileups.table"
+      description: |
+        Read-orientation artefact priors
+        Structure: [ val(meta), path(file) ]
+      pattern: "*.artifactprior.tar.gz"
   - pileup_table_normal:
       type: file
-      description: File containing the normal pileup summary table, kept separate as calculatecontamination needs them individually specified.
-      pattern: "*_normal.pileups.table"
+      description: |
+        Pileup summary table of the normal (only with a germline resource)
+        Structure: [ val(meta), path(file) ]
+      pattern: "*.pileups.table"
+  - pileup_table_tumor:
+      type: file
+      description: |
+        Pileup summary table of the tumour (only with a germline resource)
+        Structure: [ val(meta), path(file) ]
+      pattern: "*.pileups.table"
   - contamination_table:
       type: file
-      description: File containing the contamination table.
+      description: |
+        Contamination table (only with a germline resource)
+        Structure: [ val(meta), path(file) ]
       pattern: "*.contamination.table"
   - segmentation_table:
       type: file
-      description: Output table containing segmentation of tumor minor allele fractions.
+      description: |
+        Tumour segmentation table (only with a germline resource)
+        Structure: [ val(meta), path(file) ]
       pattern: "*.segmentation.table"
-  - filtered_vcf:
-      type: file
-      description: file containing filtered mutect2 calls.
-      pattern: "*.vcf.gz"
-  - filtered_tbi:
-      type: file
-      description: tbi file that pairs with filtered vcf.
-      pattern: "*.vcf.gz.tbi"
-  - filtered_stats:
-      type: file
-      description: file containing statistics of the filtermutectcalls run.
-      pattern: "*.filteringStats.tsv"
 authors:
   - "@GCJMackenzie"

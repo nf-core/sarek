@@ -1,5 +1,5 @@
 //
-// GATK MUTECT2 in tumor only mode, filtering in BAM_VCF_FILTER_MUTECT_CALLS_GATK
+// GATK MUTECT2 in tumour-only mode, filtering in BAM_VCF_FILTER_MUTECT_CALLS_GATK
 //
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
@@ -94,7 +94,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
         .join(f1r2, failOnDuplicate: true, failOnMismatch: true)
         .map { meta, vcf_, tbi_, stats_, f1r2_ -> [meta + [variantcaller: 'mutect2'], vcf_, tbi_, stats_, f1r2_] }
 
-    // One row per tumor sample, also in joint mode
+    // One row per tumour sample, also in joint mode
     cram = input.map { meta, cram_, crai_ -> [meta + [variantcaller: 'mutect2'], [], [], cram_, crai_] }
 
     BAM_VCF_FILTER_MUTECT_CALLS_GATK(
