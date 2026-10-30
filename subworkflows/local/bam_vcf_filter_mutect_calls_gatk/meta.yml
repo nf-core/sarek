@@ -1,0 +1,152 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "bam_vcf_filter_mutect_calls_gatk"
+description: |
+  Filter somatic calls from GATK Mutect2 or Parabricks mutectcaller with GATK filtermutectcalls, using
+  read-orientation priors from learnreadorientationmodel and, when a germline resource is provided,
+  contamination and segmentation tables from getpileupsummaries (scattered over the intervals and
+  gathered) and calculatecontamination. Supports tumour-normal pairs, tumour-only samples and joint
+  calling per patient. The normal pileup is computed once per normal sample, even when it is shared by
+  several tumours.
+keywords:
+  - mutect2
+  - mutectcaller
+  - somatic
+  - variant_calling
+  - tumor_normal
+  - tumor_only
+  - getpileupsummaries
+  - gatherpileupsummaries
+  - calculatecontamination
+  - learnreadorientationmodel
+  - filtermutectcalls
+  - filtered_vcf
+components:
+  - gatk4/calculatecontamination
+  - gatk4/filtermutectcalls
+  - gatk4/gatherpileupsummaries
+  - gatk4/getpileupsummaries
+  - gatk4/learnreadorientationmodel
+input:
+  - calls:
+      type: list
+      description: |
+        Somatic calls merged across intervals, one row per tumour-normal pair, tumour-only sample, or
+        patient in joint mode. f1r2 is a file or a list of files. meta must contain variantcaller and,
+        when a germline resource is provided, match the meta rebuilt for the contamination tables
+        (the pair or sample meta, or the patient meta without normal_id, sample and tumor_id in joint mode).
+        Structure: [ val(meta), path(vcf), path(tbi), path(stats), path(f1r2) ]
+      pattern: "*.{vcf.gz,vcf.gz.tbi,stats,tar.gz}"
+  - cram:
+      type: list
+      description: |
+        Normal and tumour BAM/CRAM files with their indexes, one row per tumour-normal pair or
+        tumour-only sample (not grouped by patient, also in joint mode). The normal file and index are []
+        for tumour-only. meta must contain variantcaller, and patient, normal_id and tumor_id for pairs
+        or sample for tumour-only.
+        Structure: [ val(meta), path(normal_cram), path(normal_crai), path(tumour_cram), path(tumour_crai) ]
+      pattern: "*.{bam,bai,cram,crai}"
+  - intervals:
+      type: file
+      description: |
+        Scattered interval files with their count, used to scatter getpileupsummaries,
+        or [ [], 0 ] when running without intervals.
+        Structure: [ path(intervals), val(num_intervals) ]
+      pattern: "*.bed"
+  - fasta:
+      type: file
+      description: |
+        Reference FASTA file.
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.{fa,fasta}"
+  - fai:
+      type: file
+      description: |
+        Index of the reference FASTA file.
+        Structure: [ val(meta), path(fai) ]
+      pattern: "*.fai"
+  - dict:
+      type: file
+      description: |
+        GATK sequence dictionary of the reference FASTA file.
+        Structure: [ val(meta), path(dict) ]
+      pattern: "*.dict"
+  - germline_resource:
+      type: file
+      description: |
+        Population VCF of germline sequencing containing allele fractions, used by getpileupsummaries.
+        Structure: [ path(germline_resource) ] or []
+      pattern: "*.vcf.gz"
+  - germline_resource_tbi:
+      type: file
+      description: |
+        Index of the germline resource VCF.
+        Structure: [ path(germline_resource_tbi) ] or []
+      pattern: "*.vcf.gz.tbi"
+  - germline_resource_provided:
+      type: boolean
+      description: |
+        Whether a germline resource was provided. When true, every VCF must be matched by a
+        contamination and segmentation table before filtermutectcalls; when false, the pileup and
+        contamination steps are skipped and filtermutectcalls runs as soon as each VCF is ready.
+  - joint:
+      type: boolean
+      description: |
+        Whether the calls come from joint calling, with one VCF per patient. The contamination and
+        segmentation tables are then grouped by patient.
+output:
+  - vcf:
+      type: file
+      description: |
+        Somatic calls filtered by filtermutectcalls, with the calls meta.
+        Structure: [ val(meta), path(vcf) ]
+      pattern: "*.filtered.vcf.gz"
+  - tbi:
+      type: file
+      description: |
+        Index of the filtered VCF, with the calls meta.
+        Structure: [ val(meta), path(tbi) ]
+      pattern: "*.filtered.vcf.gz.tbi"
+  - stats_filtered:
+      type: file
+      description: |
+        Filtering statistics produced by filtermutectcalls.
+        Structure: [ val(meta), path(stats) ]
+      pattern: "*.filteringStats.tsv"
+  - artifact_priors:
+      type: file
+      description: |
+        Read-orientation artefact priors produced by learnreadorientationmodel.
+        Structure: [ val(meta), path(artifactprior) ]
+      pattern: "*.artifactprior.tar.gz"
+  - contamination_table:
+      type: file
+      description: |
+        Contamination tables produced by calculatecontamination, one per pair or tumour-only sample,
+        or a list per patient in joint mode (empty channel without germline resource).
+        Structure: [ val(meta), path(table) ]
+      pattern: "*.contamination.table"
+  - segmentation_table:
+      type: file
+      description: |
+        Tumour segmentation tables produced by calculatecontamination, one per pair or tumour-only
+        sample, or a list per patient in joint mode (empty channel without germline resource).
+        Structure: [ val(meta), path(table) ]
+      pattern: "*.segmentation.table"
+  - pileup_table_normal:
+      type: file
+      description: |
+        Pileup summary table of each normal sample, gathered across intervals (empty channel without
+        germline resource or in tumour-only mode).
+        Structure: [ val(meta), path(table) ]
+      pattern: "*.pileups.table"
+  - pileup_table_tumor:
+      type: file
+      description: |
+        Pileup summary table of each tumour sample, gathered across intervals (empty channel without
+        germline resource).
+        Structure: [ val(meta), path(table) ]
+      pattern: "*.pileups.table"
+authors:
+  - "@FriederikeHanssen"
+maintainers:
+  - "@FriederikeHanssen"

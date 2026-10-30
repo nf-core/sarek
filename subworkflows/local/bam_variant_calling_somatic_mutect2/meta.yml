@@ -1,9 +1,8 @@
 name: gatk_tumor_normal_somatic_variant_calling
 description: |
-  Perform variant calling on a paired tumor normal set of samples using mutect2 tumor normal mode.
-  f1r2 output of mutect2 is run through learnreadorientationmodel to get the artifact priors.
-  Run the input bam files through getpileupsummarries and then calculatecontamination to get the contamination and segmentation tables.
-  Filter the mutect2 output vcf using filtermutectcalls, artifact priors and the contamination & segmentation tables for additional filtering.
+  Perform variant calling on a paired tumor normal set of samples using mutect2 tumor normal mode, scattered over intervals.
+  Calls, stats and f1r2 files are merged across intervals and filtered with BAM_VCF_FILTER_MUTECT_CALLS_GATK
+  (learnreadorientationmodel, getpileupsummaries and calculatecontamination when a germline resource is provided, filtermutectcalls).
 keywords:
   - gatk4
   - mutect2
@@ -16,10 +15,8 @@ keywords:
   - filtered_vcf
 modules:
   - gatk4/mutect2
-  - gatk4/learnreadorientationmodel
-  - gatk4/getpileupsummaries
-  - gatk4/calculatecontamination
-  - gatk4/filtermutectcalls
+  - gatk4/mergevcfs
+  - gatk4/mergemutectstats
 input:
   - meta:
       type: map
@@ -28,11 +25,11 @@ input:
         e.g. [ id:'test' ]
   - input:
       type: list
-      description: list containing the tumor and normal BAM files, in that order, also able to take CRAM as an input
+      description: list containing the normal and tumor BAM files, in that order, also able to take CRAM as an input
       pattern: "[ *.{bam/cram} ]"
   - input_index:
       type: list
-      description: list containing the tumor and normal BAM file indexes, in that order, also able to take CRAM index as an input
+      description: list containing the normal and tumor BAM file indexes, in that order, also able to take CRAM index as an input
       pattern: "[ *.{bam.bai/cram.crai} ]"
   - which_norm:
       type: list
@@ -70,6 +67,12 @@ input:
       type: file
       description: File containing intervals.
       pattern: "*.interval_list"
+  - joint_mutect2:
+      type: boolean
+      description: Run mutect2 in joint mode, calling all samples of a patient together.
+  - germline_resource_provided:
+      type: boolean
+      description: Whether a germline resource was provided, which enables contamination estimation before filtering.
 output:
   - versions:
       type: file

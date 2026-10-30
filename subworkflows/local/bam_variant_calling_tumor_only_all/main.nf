@@ -142,9 +142,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             panel_of_normals_tbi,
             intervals,
             joint_mutect2,
+            params.germline_resource as boolean,
         )
 
-        // vcf_mutect2 and tbi_mutect2 always contain usable output (filtered if available, otherwise unfiltered)
         vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.vcf
         tbi_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.tbi
     }
@@ -166,6 +166,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         panel_of_normals,
         panel_of_normals_tbi,
         intervals_bed_combined,
+        intervals,
         params.germline_resource as boolean,
     )
 

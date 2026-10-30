@@ -4,9 +4,9 @@ description: |
   Perform somatic variant calling on paired tumour-normal or tumour-only samples with the
   Parabricks GPU-accelerated mutectcaller, run as a single job per pair or sample on the combined
   intervals, optionally with a panel of normals and a germline resource. The calls are filtered on
-  CPU with GATK filtermutectcalls, using read-orientation priors from learnreadorientationmodel and,
-  when a germline resource is provided, contamination and segmentation tables from
-  getpileupsummaries and calculatecontamination.
+  CPU by the bam_vcf_filter_mutect_calls_gatk subworkflow (GATK filtermutectcalls with
+  read-orientation priors and, when a germline resource is provided, contamination and segmentation
+  tables), shared with the GATK Mutect2 subworkflows.
 keywords:
   - parabricks
   - mutectcaller
@@ -23,10 +23,7 @@ keywords:
   - gpu
 components:
   - parabricks/mutectcaller
-  - gatk4/getpileupsummaries
-  - gatk4/calculatecontamination
-  - gatk4/learnreadorientationmodel
-  - gatk4/filtermutectcalls
+  - bam_vcf_filter_mutect_calls_gatk
 input:
   - cram:
       type: list
@@ -82,6 +79,13 @@ input:
       description: |
         Single combined BED file of target regions, or [] when running without intervals.
         Structure: [ path(intervals) ] or []
+      pattern: "*.bed"
+  - intervals:
+      type: file
+      description: |
+        Scattered interval files with their count, used to scatter getpileupsummaries,
+        or [ [], 0 ] when running without intervals.
+        Structure: [ path(intervals), val(num_intervals) ]
       pattern: "*.bed"
   - germline_resource_provided:
       type: boolean

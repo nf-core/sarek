@@ -2,12 +2,8 @@
 // PARABRICKS MUTECTCALLER: GPU-accelerated tumour-normal or tumour-only somatic variant calling, filtered with GATK on CPU
 //
 
-include { GATK4_CALCULATECONTAMINATION as MUTECTCALLER_CALCULATECONTAMINATION       } from '../../../modules/nf-core/gatk4/calculatecontamination'
-include { GATK4_FILTERMUTECTCALLS as MUTECTCALLER_FILTERMUTECTCALLS                 } from '../../../modules/nf-core/gatk4/filtermutectcalls'
-include { GATK4_GETPILEUPSUMMARIES as MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL        } from '../../../modules/nf-core/gatk4/getpileupsummaries'
-include { GATK4_GETPILEUPSUMMARIES as MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR         } from '../../../modules/nf-core/gatk4/getpileupsummaries'
-include { GATK4_LEARNREADORIENTATIONMODEL as MUTECTCALLER_LEARNREADORIENTATIONMODEL } from '../../../modules/nf-core/gatk4/learnreadorientationmodel'
-include { PARABRICKS_MUTECTCALLER                                                   } from '../../../modules/nf-core/parabricks/mutectcaller'
+include { BAM_VCF_FILTER_MUTECT_CALLS_GATK } from '../bam_vcf_filter_mutect_calls_gatk/main'
+include { PARABRICKS_MUTECTCALLER          } from '../../../modules/nf-core/parabricks/mutectcaller'
 
 workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
     take:
@@ -20,6 +16,7 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
     panel_of_normals           // channel: [optional] [ panel_of_normals ] or []
     panel_of_normals_tbi       // channel: [optional] [ panel_of_normals_tbi ] or []
     intervals_bed_combined     // channel: [optional] [] or [ intervals.bed ]
+    intervals                  // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals, scatter for getpileupsummaries
     germline_resource_provided // boolean: [mandatory] whether a germline resource was provided, so contamination tables are expected
 
     main:
@@ -35,76 +32,38 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
 
     PARABRICKS_MUTECTCALLER(cram_intervals, fasta_with_fai, panel_of_normals, panel_of_normals_tbi, germline_resource, germline_resource_tbi)
 
-    MUTECTCALLER_LEARNREADORIENTATIONMODEL(PARABRICKS_MUTECTCALLER.out.f1r2)
-
-    // Without a germline resource the pileup and contamination steps are skipped
-    germline_resource_pileup     = germline_resource.filter { resource -> resource != [] }
-    germline_resource_pileup_tbi = germline_resource_tbi.filter { resource_tbi -> resource_tbi != [] }
-
-    // dropping the tumour-specific keys (tumor_id, contamination) lets a normal shared by several tumours be summarised once
-    pileup = cram_intervals.multiMap { meta, tumor_cram, tumor_crai, normal_cram, normal_crai, interval ->
-        tumor: [meta + [id: meta.tumor_id ?: meta.id], tumor_cram, tumor_crai, interval]
-        normal: [meta - meta.subMap('tumor_id', 'contamination') + [id: meta.normal_id], normal_cram, normal_crai, interval]
-    }
-
-    pileup_normal = pileup.normal.filter { meta, _normal_cram, _normal_crai, _interval -> meta.normal_id }.unique()
-
-    MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL(pileup_normal, fasta, fasta_fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
-    MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR(pileup.tumor, fasta, fasta_fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
-
-    pileup_table_tumor_branch = MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR.out.table.branch { meta, _table ->
-        paired: meta.normal_id
-        tumor_only: true
-    }
-
-    pileup_normal_by_normal = MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL.out.table.map { meta, table ->
-        [[meta.patient, meta.normal_id], table]
-    }
-
-    calculatecontamination_in = pileup_table_tumor_branch.paired
-        .map { meta, table ->
-            [[meta.patient, meta.normal_id], meta + [id: "${meta.tumor_id}_vs_${meta.normal_id}".toString()], table]
-        }
-        .combine(pileup_normal_by_normal, by: 0)
-        .map { _key, meta, tumor_table, normal_table -> [meta, tumor_table, normal_table] }
-        .mix(pileup_table_tumor_branch.tumor_only.map { meta, table -> [meta, table, []] })
-
-    MUTECTCALLER_CALCULATECONTAMINATION(calculatecontamination_in)
-
-    vcf_with_priors = PARABRICKS_MUTECTCALLER.out.vcf
+    calls = PARABRICKS_MUTECTCALLER.out.vcf
         .join(PARABRICKS_MUTECTCALLER.out.tbi, failOnDuplicate: true, failOnMismatch: true)
         .join(PARABRICKS_MUTECTCALLER.out.stats, failOnDuplicate: true, failOnMismatch: true)
-        .join(MUTECTCALLER_LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
+        .join(PARABRICKS_MUTECTCALLER.out.f1r2, failOnDuplicate: true, failOnMismatch: true)
+        .map { meta, vcf_, tbi_, stats_, f1r2 -> [meta + [variantcaller: 'parabricks_mutectcaller'], vcf_, tbi_, stats_, f1r2] }
 
-    // Contamination and segmentation tables only exist with a germline resource; branching on the
-    // boolean avoids a remainder join, which would hold every sample until the slowest caller finishes
-    if (germline_resource_provided) {
-        vcf_to_filter = vcf_with_priors
-            .join(MUTECTCALLER_CALCULATECONTAMINATION.out.segmentation, failOnDuplicate: true, failOnMismatch: true)
-            .join(MUTECTCALLER_CALCULATECONTAMINATION.out.contamination, failOnDuplicate: true, failOnMismatch: true)
-            .map { meta, vcf, tbi, stats, artifactprior, segmentation, contamination ->
-                [meta, vcf, tbi, stats, artifactprior, segmentation, contamination, []]
-            }
-    }
-    else {
-        vcf_to_filter = vcf_with_priors.map { meta, vcf, tbi, stats, artifactprior ->
-            [meta, vcf, tbi, stats, artifactprior, [], [], []]
-        }
+    cram_filter = cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
+        [meta + [variantcaller: 'parabricks_mutectcaller'], normal_cram, normal_crai, tumor_cram, tumor_crai]
     }
 
-    MUTECTCALLER_FILTERMUTECTCALLS(vcf_to_filter, fasta, fasta_fai, dict)
+    BAM_VCF_FILTER_MUTECT_CALLS_GATK(
+        calls,
+        cram_filter,
+        intervals,
+        fasta,
+        fasta_fai,
+        dict,
+        germline_resource,
+        germline_resource_tbi,
+        germline_resource_provided,
+        false,
+    )
 
-    vcf = MUTECTCALLER_FILTERMUTECTCALLS.out.vcf.map { meta, vcf -> [meta + [variantcaller: 'parabricks_mutectcaller'], vcf] }
-
-    tbi = MUTECTCALLER_FILTERMUTECTCALLS.out.tbi.map { meta, tbi -> [meta + [variantcaller: 'parabricks_mutectcaller'], tbi] }
-
+    vcf                 = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.vcf
+    tbi                 = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.tbi
     stats               = PARABRICKS_MUTECTCALLER.out.stats
-    stats_filtered      = MUTECTCALLER_FILTERMUTECTCALLS.out.stats
-    artifact_priors     = MUTECTCALLER_LEARNREADORIENTATIONMODEL.out.artifactprior
-    contamination_table = MUTECTCALLER_CALCULATECONTAMINATION.out.contamination
-    segmentation_table  = MUTECTCALLER_CALCULATECONTAMINATION.out.segmentation
-    pileup_table_normal = MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL.out.table
-    pileup_table_tumor  = MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR.out.table
+    stats_filtered      = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.stats_filtered
+    artifact_priors     = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.artifact_priors
+    contamination_table = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.contamination_table
+    segmentation_table  = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.segmentation_table
+    pileup_table_normal = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.pileup_table_normal
+    pileup_table_tumor  = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.pileup_table_tumor
 
     emit:
     vcf                 // channel: [ meta, vcf.gz ]
