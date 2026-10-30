@@ -55,7 +55,7 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_HAPLOTYPECALLER": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -446,7 +446,7 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_HAPLOTYPECALLER": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"

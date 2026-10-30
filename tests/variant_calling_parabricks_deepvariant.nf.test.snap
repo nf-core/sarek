@@ -17,7 +17,7 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_DEEPVARIANT": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -190,10 +190,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-08-21T07:53:09.357736016",
+        "timestamp": "2026-10-22T12:05:09.626680295",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools parabricks_deepvariant --input mapped_single_bam.csv": {
@@ -214,7 +214,7 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_DEEPVARIANT": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -383,10 +383,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-08-21T07:49:55.652479675",
+        "timestamp": "2026-10-22T12:02:27.330915375",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools parabricks_deepvariant --input mapped_single_bam.csv --no_intervals": {
@@ -401,7 +401,7 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_DEEPVARIANT": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -569,10 +569,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-08-21T07:50:56.517182069",
+        "timestamp": "2026-10-22T12:03:47.120424765",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.6"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools parabricks_deepvariant --input mapped_single_bam.csv --no_intervals -stub": {
