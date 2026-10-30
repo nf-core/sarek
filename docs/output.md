@@ -320,6 +320,8 @@ Specify `--use_gatk_spark baserecalibrator` to use [GATK ApplyBQSRSpark](https:/
 
 The resulting recalibrated CRAM files are delivered to the user. Recalibrated CRAM files are usually 2-3 times larger than the duplicate-marked CRAM files.
 
+When `--tools` includes `deepvariant`, both GATK ApplyBQSR implementations preserve the original base qualities in `OQ` tags. The `QUAL` values contain the recalibrated qualities. DeepVariant uses the `OQ` tags automatically during the same run; other callers use `QUAL`.
+
 <details markdown="1">
 <summary>Output files for all samples</summary>
 
@@ -432,6 +434,8 @@ For further reading and documentation see the [bcftools manual](https://samtools
 #### DeepVariant
 
 [DeepVariant](https://github.com/google/deepvariant) is a deep learning-based variant caller that takes aligned reads, produces pileup image tensors from them, classifies each tensor using a convolutional neural network and finally reports the results in a standard VCF or gVCF file. For further documentation take a look [here](https://github.com/google/deepvariant/tree/r1.4/docs).
+
+Variant calls use original base qualities from `OQ` tags when GATK recalibrates the reads in the same run. Runs with skipped recalibration or direct `--step variant_calling` inputs use regular `QUAL` values by default. For restart inputs with preserved `OQ` tags, enable `--deepvariant_use_original_quality_scores` as described in the [usage guide](usage.md#deepvariant-original-base-qualities). This setting applies only to CPU DeepVariant.
 
 <details markdown="1">
 <summary>Output files for normal samples</summary>

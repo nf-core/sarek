@@ -16,8 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- [1733](https://github.com/nf-core/sarek/pull/1733) - Use original quality values if DeepVariant is run on recalibrated data
-
+- [#1733](https://github.com/nf-core/sarek/pull/1733) - Preserve original base qualities during GATK recalibration when DeepVariant is selected and use them for CPU DeepVariant calling. Add `--deepvariant_use_original_quality_scores` for restart inputs with preserved `OQ` tags.
 - [#2277](https://github.com/nf-core/sarek/pull/2277) - fix(markduplicates): avoid duplicate alignment emission under -stub
 - [#2347](https://github.com/nf-core/sarek/pull/2347) - Fix DeepSomatic VCF merge failing with `sample entries that don't match the other files` when an interval yields no records (e.g. `*_alt` contigs): pass tumour and normal sample names explicitly, including to `postprocess_variants`, which otherwise writes `default`
 
@@ -35,9 +34,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params                 | status |
-| ---------------------- | ------ |
-| `--mosdepth_fast_mode` | Added  |
+| Params                                      | status |
+| ------------------------------------------- | ------ |
+| `--mosdepth_fast_mode`                      | Added  |
+| `--deepvariant_use_original_quality_scores` | Added  |
 
 ### Developer section
 

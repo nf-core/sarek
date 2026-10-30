@@ -373,6 +373,21 @@ patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
 patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
 ```
 
+#### DeepVariant original base qualities
+
+When `--tools` includes `deepvariant`, GATK ApplyBQSR and ApplyBQSRSpark preserve original base qualities in the `OQ` tags of recalibrated BAM or CRAM files. DeepVariant uses these original qualities automatically during the same pipeline run. Other callers continue to use the recalibrated qualities. When recalibration is skipped, DeepVariant uses the regular `QUAL` values.
+
+With `--step variant_calling`, DeepVariant uses regular `QUAL` values by default. Set `--deepvariant_use_original_quality_scores` to use preserved original qualities from externally recalibrated files or a previous pipeline run:
+
+```bash
+nextflow run nf-core/sarek -r <VERSION> -profile <PROFILE> \
+    --input ./results/csv/recalibrated.csv --step variant_calling \
+    --genome GATK.GRCh38 --tools deepvariant \
+    --deepvariant_use_original_quality_scores --outdir ./deepvariant_results
+```
+
+All relevant input reads must have valid `OQ` tags, for example from GATK recalibration with `--emit-original-quals`. Files recalibrated without preserving `OQ` tags cannot recover their original qualities. Rerun recalibration from the original reads while preserving `OQ`, or supply the original reads. This parameter defaults to `false` and applies only to CPU DeepVariant, not Parabricks DeepVariant or Sentieon callers.
+
 ### Start with annotation (`--step annotate`)
 
 For starting from the annotation step, the CSV file must contain at least the columns `patient`, `sample`, `vcf`.
