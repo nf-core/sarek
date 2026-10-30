@@ -182,7 +182,7 @@ workflow PREPARE_GENOME {
     pon = pon_in ? channel.fromPath(pon_in).collect() : channel.value([])
     pon_tbi = pon_tbi_in ? channel.fromPath(pon_tbi_in).collect() : channel.value([])
 
-    if (!pon_tbi_in && pon_in && tools.split(',').contains('mutect2')) {
+    if (!pon_tbi_in && pon_in && (tools.split(',').contains('mutect2') || tools.split(',').contains('parabricks_mutectcaller'))) {
         TABIX_PON(pon.flatten().map { vcf -> [[id: vcf.baseName], vcf, [], []] }, 'compress', true, '')
         pon_tbi = TABIX_PON.out.index.map { _meta, tbi -> [tbi] }.collect()
     }

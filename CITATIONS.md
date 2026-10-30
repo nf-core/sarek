@@ -54,6 +54,10 @@
 
   > Liu X, et al.: dbNSFP v4: a comprehensive database of transcript-specific functional predictions and annotations for human nonsynonymous and splice-site SNVs. Genome Med. 2020 Dec 2;12(1):103. doi: 10.1186/s13073-020-00803-9. PubMed PMID: 33261662; PubMed Central PMCID: PMC7709417.
 
+- [DeepSomatic](https://www.nature.com/articles/s41587-025-02839-x)
+
+  > Park J, Cook DE, Chang P-C, et al. Accurate somatic small variant discovery for multiple sequencing technologies with DeepSomatic. Nat Biotechnol 44, 1569-1578 (2026). doi: 10.1038/s41587-025-02839-x.
+
 - [DeepVariant](https://www.nature.com/articles/nbt.4235)
 
   > Poplin, R., Chang, PC., Alexander, D. et al. A universal SNP and small-indel variant caller using deep neural networks. Nat Biotechnol 36, 983–987 (2018). doi: 10.1038/nbt.4235.

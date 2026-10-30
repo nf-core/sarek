@@ -1,14 +1,12 @@
 name: "varlociraptor_callvariants"
-description: Call variants for a given scenario specified with the varlociraptor calling
-  grammar, preprocessed by varlociraptor preprocessing
+description: Call variants for a given scenario specified with the varlociraptor calling grammar, preprocessed by varlociraptor preprocessing
 keywords:
   - observations
   - variants
   - calling
 tools:
   - "varlociraptor":
-      description: "Flexible, uncertainty-aware variant calling with parameter free
-        filtration via FDR control."
+      description: "Flexible, uncertainty-aware variant calling with parameter free filtration via FDR control."
       homepage: "https://varlociraptor.github.io/docs/estimating/"
       documentation: "https://varlociraptor.github.io/docs/calling/"
       tool_dev_url: "https://github.com/varlociraptor/varlociraptor"
@@ -23,8 +21,7 @@ input:
           e.g. [ id:'test', single_end:false ]
     - vcfs:
         type: file
-        description: Sorted VCF/BCF file containing sample observations, Can also be
-          a list of files
+        description: Sorted VCF/BCF file containing sample observations, Can also be a list of files
         pattern: "*.{vcf,bcf,vcf.gz}"
         ontologies:
           - edam: http://edamontology.org/format_3016 # VCF
@@ -77,3 +74,27 @@ authors:
 maintainers:
   - "@FriederikeHanssen"
   - "@famosab"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/varlociraptor:8.12.0--294eead5eab5a1dc
+      build_id: bd-294eead5eab5a1dc_1
+      scan_id: sc-7e86e05f12e2c111_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/varlociraptor:8.12.0--288aca82cb6265d8
+      build_id: bd-288aca82cb6265d8_1
+      scan_id: sc-b61a73528429c9b1_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/varlociraptor:8.12.0--57ad53e0804ab448
+      build_id: bd-57ad53e0804ab448_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/47/4788613cdc4faf20c5ebb24da24575ec3d80a8a52a0daf1c986b742444fe6c99/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/varlociraptor:8.12.0--930d1d7e9b4b72e7
+      build_id: bd-930d1d7e9b4b72e7_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/28/284e81d2ded3677fd4f02a73a7d57cb74a5c25530435f0d58f6545bbc01bd955/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/varlociraptor/callvariants/.conda-lock/linux_amd64-bd-294eead5eab5a1dc_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/varlociraptor/callvariants/.conda-lock/linux_arm64-bd-288aca82cb6265d8_1.txt

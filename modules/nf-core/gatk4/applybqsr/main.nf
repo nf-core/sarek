@@ -4,28 +4,39 @@ process GATK4_APPLYBQSR {
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/ce/ce8f4142326abbb74e28b97633a200b09439c54480803343b1cf13dc19e51ae5/data'
-        : 'community.wave.seqera.io/library/gatk4-lite:4.7.0.0--79918b8b2632f4b1'}"
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/3b/3b33544fcc9268dad01801b928e566f1beaacd078b1d58d7904d7c6aa68eba9a/data'
+        : 'community.wave.seqera.io/library/gatk4-lite_samtools:9b6806e26dd32afe'}"
 
     input:
     tuple val(meta), path(input), path(input_index), path(bqsr_table), path(intervals)
     tuple val(meta2), path(fasta), path(fai), path(dict)
-    val output_suffix
+    val output_format
 
     output:
-    tuple val(meta), path("${prefix}.bam"), emit: bam, optional: true
-    tuple val(meta), path("${prefix}*bai"), emit: bai, optional: true
-    tuple val(meta), path("${prefix}.cram"), emit: cram, optional: true
+    tuple val(meta), path("*.{bam,cram}"), emit: reads
+    tuple val(meta), path("*.{bai,csi,crai}"), emit: index
     tuple val("${task.process}"), val('gatk4'), eval("gatk --version | sed -n '/GATK.*v/s/.*v//p'"), topic: versions, emit: versions_gatk4
+    tuple val("${task.process}"), val('samtools'), eval("samtools version | sed '1!d;s/.* //'"), topic: versions, emit: versions_samtools
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
+    def args2 = task.ext.args2 ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
-    // suffix can only be bam or cram, cram being the sensible default
-    def suffix = output_suffix == "bam" ? "bam" : "cram"
+    // default to cram output with crai index
+    def file_type = output_format ? output_format[0] : 'cram'
+    def index_format = output_format ? output_format[1] : 'crai'
+
+    if ((file_type == 'bam' && index_format == 'crai') || (file_type == 'cram' && ['bai', 'csi'].contains(index_format))) {
+        error("GATK4_APPLYBQSR: invalid index format '${index_format}' for '${file_type}' output.")
+    }
+
+    // GATK/htsjdk writes CRAM 3.1 by default (or 3.0), and only htsjdk 4.1+/5 can read those files back,
+    // so GATK streams BAM to stdout and samtools does the cram conversion and indexing
+    def samtools_view_args = file_type == 'cram' ? "--reference ${fasta} -C" : "-b"
+    def output_file = "${prefix}.${file_type}##idx##${prefix}.${file_type}.${index_format}"
 
     def interval_command = intervals ? "--intervals ${intervals}" : ""
 
@@ -40,24 +51,27 @@ process GATK4_APPLYBQSR {
     gatk --java-options "-Xmx${avail_mem}M -XX:-UsePerfData" \\
         ApplyBQSR \\
         --input ${input} \\
-        --output ${prefix}.${suffix} \\
+        --output /dev/stdout \\
         --reference ${fasta} \\
         --bqsr-recal-file ${bqsr_table} \\
         ${interval_command} \\
+        -OBI false \\
         --tmp-dir . \\
-        ${args}
+        ${args} | samtools view --write-index ${samtools_view_args} -o ${output_file} ${args2} -
     """
 
     stub:
     prefix = task.ext.prefix ?: "${meta.id}"
-    def suffix = output_suffix == "bam" ? "bam" : "cram"
+    // default to cram output with crai index
+    def file_type = output_format ? output_format[0] : 'cram'
+    def index_format = output_format ? output_format[1] : 'crai'
+
+    if ((file_type == 'bam' && index_format == 'crai') || (file_type == 'cram' && ['bai', 'csi'].contains(index_format))) {
+        error("GATK4_APPLYBQSR: invalid index format '${index_format}' for '${file_type}' output.")
+    }
 
     """
-    touch ${prefix}.${suffix}
-    if [[ ${suffix} == cram ]]; then
-        touch ${prefix}.cram.bai
-    else
-        touch ${prefix}.bai
-    fi
+    touch ${prefix}.${file_type}
+    touch ${prefix}.${file_type}.${index_format}
     """
 }

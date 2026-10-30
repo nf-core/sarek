@@ -56,7 +56,7 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
         }
 
     // Merge across runs/lanes for the same sample
-    MERGE_CONSENSUS(bams_to_merge.multiple.map { meta, bams -> [ meta, bams, [] ] }, [[], [], [], []])
+    MERGE_CONSENSUS(bams_to_merge.multiple.map { meta, bams -> [ meta, bams, [] ] }, [[], [], [], []], '')
 
     bams_all = MERGE_CONSENSUS.out.bam.mix(bams_to_merge.single)
 

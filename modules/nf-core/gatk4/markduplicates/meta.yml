@@ -1,7 +1,5 @@
 name: gatk4_markduplicates
-description: This tool locates and tags duplicate reads in a BAM or SAM file,
-  where duplicate reads are defined as originating from a single fragment of
-  DNA.
+description: This tool locates and tags duplicate reads in a BAM or SAM file, where duplicate reads are defined as originating from a single fragment of DNA.
 keywords:
   - bam
   - gatk4
@@ -9,11 +7,7 @@ keywords:
   - sort
 tools:
   - gatk4:
-      description: Developed in the Data Sciences Platform at the Broad Institute,
-        the toolkit offers a wide variety of tools with a primary focus on variant
-        discovery and genotyping. Its powerful processing engine and
-        high-performance computing features make it capable of taking on projects
-        of any size.
+      description: Developed in the Data Sciences Platform at the Broad Institute, the toolkit offers a wide variety of tools with a primary focus on variant discovery and genotyping. Its powerful processing engine and high-performance computing features make it capable of taking on projects of any size.
       homepage: https://gatk.broadinstitute.org/hc/en-us
       documentation: https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-
       tool_dev_url: https://github.com/broadinstitute/gatk
@@ -147,3 +141,17 @@ maintainers:
   - "@ajodeh-juma"
   - "@FriederikeHanssen"
   - "@maxulysse"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/gatk4-lite_samtools:9b6806e26dd32afe
+      build_id: bd-9b6806e26dd32afe_1
+      scan_id: sc-bacce8dec6a6b034_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/gatk4-lite_samtools:3f27e1efa58a508c
+      build_id: bd-3f27e1efa58a508c_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/3b/3b33544fcc9268dad01801b928e566f1beaacd078b1d58d7904d7c6aa68eba9a/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/gatk4/markduplicates/.conda-lock/linux_amd64-bd-9b6806e26dd32afe_1.txt

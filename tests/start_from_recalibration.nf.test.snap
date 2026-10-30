@@ -1,22 +1,17 @@
 {
     "-profile test --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null": {
         "content": [
-            10,
+            8,
             {
-                "BAM_TO_CRAM_RECAL": {
-                    "samtools": "1.24"
-                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.7.0.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.7.0.0"
-                },
-                "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -124,10 +119,10 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-10-01T21:30:15.099757",
+        "timestamp": "2026-10-14T11:23:41.566097232",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
@@ -400,22 +395,17 @@
     },
     "-profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null": {
         "content": [
-            10,
+            8,
             {
-                "BAM_TO_CRAM_RECAL": {
-                    "samtools": "1.24"
-                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "GATK4_APPLYBQSR": {
-                    "gatk4": "4.7.0.0"
+                    "gatk4": "4.7.0.0",
+                    "samtools": "1.24"
                 },
                 "GATK4_INTERVALLISTTOBED": {
                     "gatk4": "4.7.0.0"
-                },
-                "INDEX_MERGE_BAM": {
-                    "samtools": "1.24"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
@@ -523,10 +513,10 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-10-01T21:03:31.735709103",
+        "timestamp": "2026-10-14T11:20:02.371979688",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     }
 }

@@ -1,6 +1,5 @@
 name: ensemblvep_vep
-description: Ensembl Variant Effect Predictor (VEP). The output-file-format is
-  controlled through `task.ext.args`.
+description: Ensembl Variant Effect Predictor (VEP). The output-file-format is controlled through `task.ext.args`.
 keywords:
   - annotation
   - vcf
@@ -71,6 +70,19 @@ input:
       description: |
         path to file(s) needed for plugins  (optional)
       ontologies: []
+  - - gtf:
+        type: file
+        description: |
+          sorted, bgzipped GTF file to annotate with instead of a cache (optional).
+          Mutually exclusive with `cache`.
+        pattern: "*.gtf.gz"
+        ontologies: []
+    - gtf_tbi:
+        type: file
+        description: |
+          tabix index of the GTF file (optional)
+        pattern: "*.gtf.gz.tbi"
+        ontologies: []
 output:
   vcf:
     - - meta:
@@ -218,3 +230,27 @@ maintainers:
   - "@maxulysse"
   - "@matthdsm"
   - "@nvnieuwk"
+containers:
+  docker:
+    linux/arm64:
+      name: community.wave.seqera.io/library/ensembl-vep_perl-math-cdf_htslib_gzip_tar:e6eb32f698e90ff9
+      build_id: bd-e6eb32f698e90ff9_1
+      scan_id: sc-2e6cc46c3b6850e4_1
+    linux/amd64:
+      name: community.wave.seqera.io/library/ensembl-vep_perl-math-cdf_htslib_gzip_tar:43f77a48cc79bf38
+      build_id: bd-43f77a48cc79bf38_1
+      scan_id: sc-3a8bc9e8b7a23fbd_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/ensembl-vep_perl-math-cdf_htslib_gzip_tar:6e6c3d4e072709c6
+      build_id: bd-6e6c3d4e072709c6_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/6f/6febf703e6df28e6259f8b382a75e16cd7039be1da722a8ee716004479b82458/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/ensembl-vep_perl-math-cdf_htslib_gzip_tar:15d73ac87d7001f6
+      build_id: bd-15d73ac87d7001f6_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/9e/9ea41e8eb295f3fc4aa793b9ac9a8124b019bbb74b5a80622791b1eab5a983d2/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/ensemblvep/vep/.conda-lock/linux_amd64-bd-43f77a48cc79bf38_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/ensemblvep/vep/.conda-lock/linux_arm64-bd-e6eb32f698e90ff9_1.txt
