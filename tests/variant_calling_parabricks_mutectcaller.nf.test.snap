@@ -9,36 +9,36 @@
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
                 },
+                "CALCULATECONTAMINATION": {
+                    "gatk4": "4.7.0.0"
+                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
                 },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.7.0.0"
+                },
                 "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GETPILEUPSUMMARIES_NORMAL": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GETPILEUPSUMMARIES_TUMOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": "1.24"
                 },
+                "LEARNREADORIENTATIONMODEL": {
+                    "gatk4": "4.7.0.0"
+                },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_APPLYBQSR": {
                     "parabricks": "4.7.1-1"
@@ -335,13 +335,13 @@
                 "test3_vs_test.parabricks_mutectcaller.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test.parabricks_mutectcaller.pileups.table:md5,4a89cfa663f1552aeb80d5c31aa36e3d",
                 "test2.parabricks_mutectcaller.pileups.table:md5,a4069de22dd8deaeea222115f2738713",
-                "test2_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,309253173e8f3917eeff847dad61246b",
+                "test2_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,c9f4072d8703dff99d50af77c8d100d0",
                 "test2_vs_test.parabricks_mutectcaller.contamination.table:md5,9c5a4666d682b84be6bf5ecf4305b15c",
                 "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
                 "test2_vs_test.parabricks_mutectcaller.segmentation.table:md5,abed02f7a49bca992eb4e6f0006df85b",
                 "test2_vs_test.parabricks_mutectcaller.vcf.gz.stats:md5,1d9596da03c39dff4543b15fc792d041",
                 "test3.parabricks_mutectcaller.pileups.table:md5,3704e8f73868fff1818390711e1201e8",
-                "test3_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,3ea773092f88fa7ea21907901ac96156",
+                "test3_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,4adb11268b55f6a9d131ab4a5112d31a",
                 "test3_vs_test.parabricks_mutectcaller.contamination.table:md5,c574d059768ee2febcd962312c1b99d1",
                 "test3_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
                 "test3_vs_test.parabricks_mutectcaller.segmentation.table:md5,6081b1f769d0460ebdc70496137ee634",
@@ -362,7 +362,7 @@
                 "WARN: No Panel-of-normal was specified for Parabricks MutectCaller."
             ]
         ],
-        "timestamp": "2026-10-30T15:56:09.636598114",
+        "timestamp": "2026-10-30T17:01:43.080242769",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -382,11 +382,17 @@
                     "bwa": "0.7.19-r1273",
                     "samtools": "1.22.1"
                 },
+                "CALCULATECONTAMINATION": {
+                    "gatk4": "4.7.0.0"
+                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
+                },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.7.0.0",
@@ -402,21 +408,15 @@
                     "gatk4": "4.7.0.0",
                     "samtools": "1.24"
                 },
+                "GETPILEUPSUMMARIES_TUMOR": {
+                    "gatk4": "4.7.0.0"
+                },
+                "LEARNREADORIENTATIONMODEL": {
+                    "gatk4": "4.7.0.0"
+                },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -685,7 +685,7 @@
                 "test2.recal.regions.bed.gz.csi:md5,6f7ee623716b66db7f62de827cec1324",
                 "test2.parabricks_mutectcaller.filtered.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test2.parabricks_mutectcaller.filtered.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
-                "test2.parabricks_mutectcaller.artifactprior.tar.gz:md5,71998a47241587d3adb544d92a958830",
+                "test2.parabricks_mutectcaller.artifactprior.tar.gz:md5,3aba81a52db06d19ac01c9c2ab143431",
                 "test2.parabricks_mutectcaller.contamination.table:md5,9c5a4666d682b84be6bf5ecf4305b15c",
                 "test2.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
                 "test2.parabricks_mutectcaller.pileups.table:md5,a4069de22dd8deaeea222115f2738713",
@@ -706,7 +706,7 @@
                 "WARN: No Panel-of-normal was specified for Parabricks MutectCaller."
             ]
         ],
-        "timestamp": "2026-10-30T16:19:20.870161227",
+        "timestamp": "2026-10-30T17:36:30.369396711",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -719,18 +719,18 @@
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
                 },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.7.0.0"
+                },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.7.0.0"
+                },
+                "LEARNREADORIENTATIONMODEL": {
                     "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -888,7 +888,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-30T15:50:36.514794786",
+        "timestamp": "2026-10-30T16:56:32.148333237",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -908,8 +908,14 @@
                     "bwa": "0.7.19-r1273",
                     "samtools": "1.22.1"
                 },
+                "CALCULATECONTAMINATION": {
+                    "gatk4": "4.7.0.0"
+                },
                 "FASTQC": {
                     "fastqc": "0.12.1"
+                },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.7.0.0",
@@ -922,24 +928,18 @@
                     "gatk4": "4.7.0.0",
                     "samtools": "1.24"
                 },
+                "GETPILEUPSUMMARIES_NORMAL": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GETPILEUPSUMMARIES_TUMOR": {
+                    "gatk4": "4.7.0.0"
+                },
+                "LEARNREADORIENTATIONMODEL": {
+                    "gatk4": "4.7.0.0"
+                },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -1168,7 +1168,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-30T16:11:51.485073199",
+        "timestamp": "2026-10-30T17:25:18.055170527",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1188,11 +1188,17 @@
                     "bwa": "0.7.19-r1273",
                     "samtools": "1.22.1"
                 },
+                "CALCULATECONTAMINATION": {
+                    "gatk4": "4.7.0.0"
+                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
+                },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.7.0.0",
@@ -1208,21 +1214,15 @@
                     "gatk4": "4.7.0.0",
                     "samtools": "1.24"
                 },
+                "GETPILEUPSUMMARIES_TUMOR": {
+                    "gatk4": "4.7.0.0"
+                },
+                "LEARNREADORIENTATIONMODEL": {
+                    "gatk4": "4.7.0.0"
+                },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -1405,7 +1405,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-30T16:20:51.505004324",
+        "timestamp": "2026-10-30T17:38:22.535300783",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1431,6 +1431,9 @@
                 "FASTQC": {
                     "fastqc": "0.12.1"
                 },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.7.0.0"
+                },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.7.0.0",
                     "samtools": "1.24"
@@ -1445,15 +1448,12 @@
                     "gatk4": "4.7.0.0",
                     "samtools": "1.24"
                 },
+                "LEARNREADORIENTATIONMODEL": {
+                    "gatk4": "4.7.0.0"
+                },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -1677,7 +1677,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-30T16:16:33.585215002",
+        "timestamp": "2026-10-30T17:31:59.837897818",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -1697,8 +1697,14 @@
                     "bwa": "0.7.19-r1273",
                     "samtools": "1.22.1"
                 },
+                "CALCULATECONTAMINATION": {
+                    "gatk4": "4.7.0.0"
+                },
                 "FASTQC": {
                     "fastqc": "0.12.1"
+                },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.7.0.0",
@@ -1711,24 +1717,18 @@
                     "gatk4": "4.7.0.0",
                     "samtools": "1.24"
                 },
+                "GETPILEUPSUMMARIES_NORMAL": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GETPILEUPSUMMARIES_TUMOR": {
+                    "gatk4": "4.7.0.0"
+                },
+                "LEARNREADORIENTATIONMODEL": {
+                    "gatk4": "4.7.0.0"
+                },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -2024,7 +2024,7 @@
                 "test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test.parabricks_mutectcaller.pileups.table:md5,4a89cfa663f1552aeb80d5c31aa36e3d",
                 "test2.parabricks_mutectcaller.pileups.table:md5,a4069de22dd8deaeea222115f2738713",
-                "test2_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,c3c73d5dea3c42e0e1837ecc644f171f",
+                "test2_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,3b62e306349d69e3c30c51206d890b9d",
                 "test2_vs_test.parabricks_mutectcaller.contamination.table:md5,9c5a4666d682b84be6bf5ecf4305b15c",
                 "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
                 "test2_vs_test.parabricks_mutectcaller.segmentation.table:md5,abed02f7a49bca992eb4e6f0006df85b",
@@ -2047,7 +2047,7 @@
                 "WARN: No Panel-of-normal was specified for Parabricks MutectCaller."
             ]
         ],
-        "timestamp": "2026-10-30T16:10:24.305135129",
+        "timestamp": "2026-10-30T17:22:07.370485549",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -2063,30 +2063,30 @@
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
                 },
+                "CALCULATECONTAMINATION": {
+                    "gatk4": "4.7.0.0"
+                },
                 "FASTQC": {
                     "fastqc": "0.12.1"
+                },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GETPILEUPSUMMARIES_NORMAL": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GETPILEUPSUMMARIES_TUMOR": {
+                    "gatk4": "4.7.0.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": "1.24"
                 },
+                "LEARNREADORIENTATIONMODEL": {
+                    "gatk4": "4.7.0.0"
+                },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_APPLYBQSR": {
                     "parabricks": "4.7.1-1"
@@ -2267,7 +2267,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-30T16:01:56.05249195",
+        "timestamp": "2026-10-30T17:10:51.805342839",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -2286,18 +2286,18 @@
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.7.0.0"
+                },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.7.0.0"
+                },
+                "LEARNREADORIENTATIONMODEL": {
                     "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -2456,7 +2456,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-30T15:49:27.416460724",
+        "timestamp": "2026-10-30T16:54:54.940384572",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -2472,36 +2472,36 @@
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
                 },
+                "CALCULATECONTAMINATION": {
+                    "gatk4": "4.7.0.0"
+                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
                 },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.7.0.0"
+                },
                 "GATK4_INTERVALLISTTOBED": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GETPILEUPSUMMARIES_NORMAL": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GETPILEUPSUMMARIES_TUMOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": "1.24"
                 },
+                "LEARNREADORIENTATIONMODEL": {
+                    "gatk4": "4.7.0.0"
+                },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_APPLYBQSR": {
                     "parabricks": "4.7.1-1"
@@ -2780,7 +2780,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-30T15:57:39.25506352",
+        "timestamp": "2026-10-30T17:04:45.01466706",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -2806,6 +2806,9 @@
                 "FASTQC": {
                     "fastqc": "0.12.1"
                 },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.7.0.0"
+                },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.7.0.0",
                     "samtools": "1.24"
@@ -2820,15 +2823,12 @@
                     "gatk4": "4.7.0.0",
                     "samtools": "1.24"
                 },
+                "LEARNREADORIENTATIONMODEL": {
+                    "gatk4": "4.7.0.0"
+                },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -3141,7 +3141,7 @@
                 "test2.recal.regions.bed.gz.csi:md5,6f7ee623716b66db7f62de827cec1324",
                 "test2_vs_test.parabricks_mutectcaller.filtered.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "test2_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,5274ca6f54fe467de92a8120eb462b28",
+                "test2_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,69be979339485d96de0429f3905a939b",
                 "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
                 "test2_vs_test.parabricks_mutectcaller.vcf.gz.stats:md5,1d9596da03c39dff4543b15fc792d041"
             ],
@@ -3162,7 +3162,7 @@
                 "WARN: If Parabricks MutectCaller is specified without a germline resource, calls are filtered without contamination estimation and calling runs without the germline prior."
             ]
         ],
-        "timestamp": "2026-10-30T16:15:06.841317265",
+        "timestamp": "2026-10-30T17:29:50.797385907",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -3182,11 +3182,17 @@
                     "bwa": "0.7.19-r1273",
                     "samtools": "1.22.1"
                 },
+                "CALCULATECONTAMINATION": {
+                    "gatk4": "4.7.0.0"
+                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
+                },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.7.0.0",
@@ -3202,24 +3208,18 @@
                     "gatk4": "4.7.0.0",
                     "samtools": "1.24"
                 },
+                "GETPILEUPSUMMARIES_NORMAL": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GETPILEUPSUMMARIES_TUMOR": {
+                    "gatk4": "4.7.0.0"
+                },
+                "LEARNREADORIENTATIONMODEL": {
+                    "gatk4": "4.7.0.0"
+                },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -3540,7 +3540,7 @@
                 "test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test.parabricks_mutectcaller.pileups.table:md5,4a89cfa663f1552aeb80d5c31aa36e3d",
                 "test2.parabricks_mutectcaller.pileups.table:md5,a4069de22dd8deaeea222115f2738713",
-                "test2_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,9da1d3c9732fcbc3d87aff5026396d3a",
+                "test2_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,39b8df82d130a4b223d5e3422049efdd",
                 "test2_vs_test.parabricks_mutectcaller.contamination.table:md5,9c5a4666d682b84be6bf5ecf4305b15c",
                 "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
                 "test2_vs_test.parabricks_mutectcaller.segmentation.table:md5,abed02f7a49bca992eb4e6f0006df85b",
@@ -3563,7 +3563,7 @@
                 "WARN: No Panel-of-normal was specified for Parabricks MutectCaller."
             ]
         ],
-        "timestamp": "2026-10-30T16:05:21.378957836",
+        "timestamp": "2026-10-30T17:15:16.941991766",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -3583,11 +3583,17 @@
                     "bwa": "0.7.19-r1273",
                     "samtools": "1.22.1"
                 },
+                "CALCULATECONTAMINATION": {
+                    "gatk4": "4.7.0.0"
+                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
                 "FASTQC": {
                     "fastqc": "0.12.1"
+                },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.7.0.0"
                 },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.7.0.0",
@@ -3603,24 +3609,18 @@
                     "gatk4": "4.7.0.0",
                     "samtools": "1.24"
                 },
+                "GETPILEUPSUMMARIES_NORMAL": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GETPILEUPSUMMARIES_TUMOR": {
+                    "gatk4": "4.7.0.0"
+                },
+                "LEARNREADORIENTATIONMODEL": {
+                    "gatk4": "4.7.0.0"
+                },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -3850,7 +3850,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-30T16:06:49.518336148",
+        "timestamp": "2026-10-30T17:17:21.907588986",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -3866,30 +3866,30 @@
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
                 },
+                "CALCULATECONTAMINATION": {
+                    "gatk4": "4.7.0.0"
+                },
                 "FASTQC": {
                     "fastqc": "0.12.1"
+                },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GETPILEUPSUMMARIES_NORMAL": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GETPILEUPSUMMARIES_TUMOR": {
+                    "gatk4": "4.7.0.0"
                 },
                 "INDEX_CRAM": {
                     "samtools": "1.24"
                 },
+                "LEARNREADORIENTATIONMODEL": {
+                    "gatk4": "4.7.0.0"
+                },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
-                },
-                "MUTECTCALLER_CALCULATECONTAMINATION": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_FILTERMUTECTCALLS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_NORMAL": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_GETPILEUPSUMMARIES_TUMOR": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MUTECTCALLER_LEARNREADORIENTATIONMODEL": {
-                    "gatk4": "4.7.0.0"
                 },
                 "PARABRICKS_APPLYBQSR": {
                     "parabricks": "4.7.1-1"
@@ -4120,7 +4120,7 @@
                 "test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test.parabricks_mutectcaller.pileups.table:md5,4a89cfa663f1552aeb80d5c31aa36e3d",
                 "test2.parabricks_mutectcaller.pileups.table:md5,a4069de22dd8deaeea222115f2738713",
-                "test2_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,877cde7302027248cceb187fbfec1c5d",
+                "test2_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,a5d2c6426b7147c4c03f6892ef88c8aa",
                 "test2_vs_test.parabricks_mutectcaller.contamination.table:md5,9c5a4666d682b84be6bf5ecf4305b15c",
                 "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
                 "test2_vs_test.parabricks_mutectcaller.segmentation.table:md5,abed02f7a49bca992eb4e6f0006df85b",
@@ -4138,7 +4138,7 @@
                 "WARN: No Panel-of-normal was specified for Parabricks MutectCaller."
             ]
         ],
-        "timestamp": "2026-10-30T16:00:42.521359355",
+        "timestamp": "2026-10-30T17:08:26.71894186",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
