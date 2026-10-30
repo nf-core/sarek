@@ -4,7 +4,6 @@
 process PARABRICKS_DBSNP {
     tag "${meta.id}"
     label 'process_high'
-    label 'process_gpu'
     // needed by the module to work properly can be removed when fixed upstream - see: https://github.com/nf-core/modules/issues/7226
     stageInMode 'copy'
 
@@ -28,14 +27,12 @@ process PARABRICKS_DBSNP {
     }
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
     """
     pbrun \\
         dbsnp \\
         --in-vcf ${vcf_file} \\
         --in-dbsnp-file ${dbsnp_file} \\
         --out-vcf ${prefix}.vcf \\
-        ${num_gpus} \\
         ${args}
     """
 

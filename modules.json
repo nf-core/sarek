@@ -424,7 +424,8 @@
                     "parabricks/dbsnp": {
                         "branch": "master",
                         "git_sha": "7b3452a23773f687ededb4befd037920e5a51341",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/parabricks/dbsnp/parabricks-dbsnp.diff"
                     },
                     "parabricks/deepsomatic": {
                         "branch": "master",
