@@ -61,9 +61,15 @@ workflow SAMPLESHEET_TO_CHANNEL {
 
     ch_from_samplesheet
         .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _contamination, _vcf, _variantcaller ->
-            // Create a unique key for patient-sample-status-lane combination
-            def combination_key = "${meta.patient}-${meta.sample}-${meta.status}-${meta.lane}"
-            [combination_key, [meta.patient, meta.sample, meta.status, meta.lane]]
+            // Create a unique key for patient-sample-status-lane-variantcaller-vcf combination
+            // For step 'annotate', uniqueness must be based on patient-sample-status-lane-variantcaller-vcf
+            // because the variantcalled.csv from --step variant_calling contains multiple VCFs per sample.
+            // For other steps, uniqueness is based on patient-sample-status-lane (variantcaller/vcf are empty).
+            def base_key = "${meta.patient}-${meta.sample}-${meta.status}-${meta.lane}"
+            def combination_key = (step == 'annotate')
+                ? "${base_key}-${_variantcaller}-${_vcf}"
+                : base_key
+            [combination_key, [meta.patient, meta.sample, meta.status, meta.lane, _variantcaller, _vcf]]
         }
         .groupTuple()
         .map { _combination_key, combination_list ->
@@ -72,8 +78,16 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 def sample = combination_list[0][1]
                 def status = combination_list[0][2]
                 def lane = combination_list[0][3]
-                System.err.println("Duplicate patient-sample-status-lane combination found: Patient '${patient}', Sample '${sample}', Status '${status}', Lane '${lane}' appears ${combination_list.size()} times. Please ensure each combination is unique.")
-                error("Execution halted due to duplicate patient-sample-status-lane combination.")
+                if (step == 'annotate') {
+                    def variantcaller = combination_list[0][4]
+                    def vcf = combination_list[0][5]
+                    System.err.println("Duplicate patient-sample-status-variantcaller-vcf combination found: Patient '${patient}', Sample '${sample}', Status '${status}', Variantcaller '${variantcaller}', VCF '${vcf}' appears ${combination_list.size()} times. Please ensure each combination is unique.")
+                    error("Execution halted due to duplicate patient-sample-status-lane-variantcaller-vcf combination.")
+                }
+                else {
+                    System.err.println("Duplicate patient-sample-status-lane combination found: Patient '${patient}', Sample '${sample}', Status '${status}', Lane '${lane}' appears ${combination_list.size()} times. Please ensure each combination is unique.")
+                    error("Execution halted due to duplicate patient-sample-status-lane combination.")
+                }
             }
         }
 
