@@ -1,13 +1,16 @@
 {
     "-profile test,tools_tumoronly --tools freebayes --input recalibrated_tumoronly.csv": {
         "content": [
-            19,
+            20,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -212,7 +215,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-01T22:01:43.497131099",
+        "timestamp": "2026-10-30T10:46:52.140225282",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -632,13 +635,16 @@
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20": {
         "content": [
-            32,
+            33,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -999,10 +1005,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-14T15:21:35.438347715",
+        "timestamp": "2026-10-30T10:34:57.706292739",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.0"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools freebayes --no_intervals": {
@@ -1575,13 +1581,16 @@
     },
     "-profile test --tools freebayes --wes --nucleotides_per_second 20 --input fastq_pair.csv": {
         "content": [
-            54,
+            55,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -2006,10 +2015,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-14T15:24:36.348428646",
+        "timestamp": "2026-10-30T10:41:17.980738528",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.0"
+            "nextflow": "25.10.4"
         }
     }
 }

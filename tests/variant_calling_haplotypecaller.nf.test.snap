@@ -185,10 +185,13 @@
     },
     "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20 --skip_tools haplotypecaller_filter": {
         "content": [
-            14,
+            15,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -374,7 +377,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-01T22:03:24.755594959",
+        "timestamp": "2026-10-30T10:57:32.974216552",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -575,10 +578,13 @@
     },
     "-profile test --input mapped_single_bam.csv --tools haplotypecaller --step variant_calling --wes --nucleotides_per_second 20": {
         "content": [
-            16,
+            17,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CNNSCOREVARIANTS": {
                     "gatk4": "4.5.0.0"
@@ -773,7 +779,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-01T21:15:24.04482982",
+        "timestamp": "2026-10-30T10:51:55.940392616",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
