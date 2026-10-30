@@ -335,13 +335,11 @@
                 "test3_vs_test.parabricks_mutectcaller.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test.parabricks_mutectcaller.pileups.table:md5,4a89cfa663f1552aeb80d5c31aa36e3d",
                 "test2.parabricks_mutectcaller.pileups.table:md5,a4069de22dd8deaeea222115f2738713",
-                "test2_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,c9f4072d8703dff99d50af77c8d100d0",
                 "test2_vs_test.parabricks_mutectcaller.contamination.table:md5,9c5a4666d682b84be6bf5ecf4305b15c",
                 "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
                 "test2_vs_test.parabricks_mutectcaller.segmentation.table:md5,abed02f7a49bca992eb4e6f0006df85b",
                 "test2_vs_test.parabricks_mutectcaller.vcf.gz.stats:md5,1d9596da03c39dff4543b15fc792d041",
                 "test3.parabricks_mutectcaller.pileups.table:md5,3704e8f73868fff1818390711e1201e8",
-                "test3_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,4adb11268b55f6a9d131ab4a5112d31a",
                 "test3_vs_test.parabricks_mutectcaller.contamination.table:md5,c574d059768ee2febcd962312c1b99d1",
                 "test3_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
                 "test3_vs_test.parabricks_mutectcaller.segmentation.table:md5,6081b1f769d0460ebdc70496137ee634",
@@ -362,7 +360,7 @@
                 "WARN: No Panel-of-normal was specified for Parabricks MutectCaller."
             ]
         ],
-        "timestamp": "2026-10-30T17:01:43.080242769",
+        "timestamp": "2026-10-30T19:26:12.103252844",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -685,7 +683,6 @@
                 "test2.recal.regions.bed.gz.csi:md5,6f7ee623716b66db7f62de827cec1324",
                 "test2.parabricks_mutectcaller.filtered.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test2.parabricks_mutectcaller.filtered.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
-                "test2.parabricks_mutectcaller.artifactprior.tar.gz:md5,3aba81a52db06d19ac01c9c2ab143431",
                 "test2.parabricks_mutectcaller.contamination.table:md5,9c5a4666d682b84be6bf5ecf4305b15c",
                 "test2.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
                 "test2.parabricks_mutectcaller.pileups.table:md5,a4069de22dd8deaeea222115f2738713",
@@ -706,7 +703,7 @@
                 "WARN: No Panel-of-normal was specified for Parabricks MutectCaller."
             ]
         ],
-        "timestamp": "2026-10-30T17:36:30.369396711",
+        "timestamp": "2026-10-30T19:50:46.642861543",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -2024,7 +2021,6 @@
                 "test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test.parabricks_mutectcaller.pileups.table:md5,4a89cfa663f1552aeb80d5c31aa36e3d",
                 "test2.parabricks_mutectcaller.pileups.table:md5,a4069de22dd8deaeea222115f2738713",
-                "test2_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,3b62e306349d69e3c30c51206d890b9d",
                 "test2_vs_test.parabricks_mutectcaller.contamination.table:md5,9c5a4666d682b84be6bf5ecf4305b15c",
                 "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
                 "test2_vs_test.parabricks_mutectcaller.segmentation.table:md5,abed02f7a49bca992eb4e6f0006df85b",
@@ -2047,7 +2043,7 @@
                 "WARN: No Panel-of-normal was specified for Parabricks MutectCaller."
             ]
         ],
-        "timestamp": "2026-10-30T17:22:07.370485549",
+        "timestamp": "2026-10-30T19:41:24.83353174",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -3141,7 +3137,6 @@
                 "test2.recal.regions.bed.gz.csi:md5,6f7ee623716b66db7f62de827cec1324",
                 "test2_vs_test.parabricks_mutectcaller.filtered.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "test2_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,69be979339485d96de0429f3905a939b",
                 "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
                 "test2_vs_test.parabricks_mutectcaller.vcf.gz.stats:md5,1d9596da03c39dff4543b15fc792d041"
             ],
@@ -3162,7 +3157,7 @@
                 "WARN: If Parabricks MutectCaller is specified without a germline resource, calls are filtered without contamination estimation and calling runs without the germline prior."
             ]
         ],
-        "timestamp": "2026-10-30T17:29:50.797385907",
+        "timestamp": "2026-10-30T19:46:15.010941865",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -3540,7 +3535,6 @@
                 "test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test.parabricks_mutectcaller.pileups.table:md5,4a89cfa663f1552aeb80d5c31aa36e3d",
                 "test2.parabricks_mutectcaller.pileups.table:md5,a4069de22dd8deaeea222115f2738713",
-                "test2_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,39b8df82d130a4b223d5e3422049efdd",
                 "test2_vs_test.parabricks_mutectcaller.contamination.table:md5,9c5a4666d682b84be6bf5ecf4305b15c",
                 "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
                 "test2_vs_test.parabricks_mutectcaller.segmentation.table:md5,abed02f7a49bca992eb4e6f0006df85b",
@@ -3563,7 +3557,7 @@
                 "WARN: No Panel-of-normal was specified for Parabricks MutectCaller."
             ]
         ],
-        "timestamp": "2026-10-30T17:15:16.941991766",
+        "timestamp": "2026-10-30T19:36:07.104622703",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -4120,7 +4114,6 @@
                 "test2_vs_test.parabricks_mutectcaller.filtered.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
                 "test.parabricks_mutectcaller.pileups.table:md5,4a89cfa663f1552aeb80d5c31aa36e3d",
                 "test2.parabricks_mutectcaller.pileups.table:md5,a4069de22dd8deaeea222115f2738713",
-                "test2_vs_test.parabricks_mutectcaller.artifactprior.tar.gz:md5,a5d2c6426b7147c4c03f6892ef88c8aa",
                 "test2_vs_test.parabricks_mutectcaller.contamination.table:md5,9c5a4666d682b84be6bf5ecf4305b15c",
                 "test2_vs_test.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv:md5,98e1b87a52999eb8f429ef4a7877eb3f",
                 "test2_vs_test.parabricks_mutectcaller.segmentation.table:md5,abed02f7a49bca992eb4e6f0006df85b",
@@ -4138,7 +4131,7 @@
                 "WARN: No Panel-of-normal was specified for Parabricks MutectCaller."
             ]
         ],
-        "timestamp": "2026-10-30T17:08:26.71894186",
+        "timestamp": "2026-10-30T19:31:06.747714766",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
