@@ -172,7 +172,7 @@ patient1,XX,1,relapse_sample,lane_1,test3_L001.bam
 > [!NOTE]
 > This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
 
-To use the GPU based `parabricks/fq2bam` as an alternative to the CPU bsed GATK implementation add `--aligner parabricks --profile <docker/singularity>,gpu` to your run command. The parabricks implementation does not support the use of this pipeline with `--profile conda`.
+To use the GPU based `parabricks/fq2bam` as an alternative to the CPU bsed GATK implementation add `--aligner parabricks -profile <docker/singularity>,gpu` to your run command. The parabricks implementation does not support the use of this pipeline with `-profile conda`.
 
 At the moment the implementation supports running the complete fq2bam module which does bwa-mem based alignment, coordinate sorting, duplicate marking and base quality score recalibration. We are working on making these individual components skippable (comparable to the GATK implementation) see [Issue #1853](https://github.com/nf-core/sarek/issues/1853) for more details on the ongoing work.
 
@@ -218,12 +218,12 @@ process {
 
 Sarek supports the following GPU-accelerated variant callers from [NVIDIA Parabricks](https://docs.nvidia.com/clara/parabricks/latest/) as an alternative to CPU based implementations:
 
-| Tool                                                                                                                          | `--tools` value              | Equivalent to        | Command                                                                                            |
-| ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | -------------------- | -------------------------------------------------------------------------------------------------- |
-| [Parabricks DeepSomatic](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepsomatic.html)         | `parabricks_deepsomatic`     | Google DeepSomatic   | `nextflow run nf-core/sarek --tools parabricks_deepsomatic --profile <docker/singularity>,gpu`     |
-| [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html)         | `parabricks_deepvariant`     | Google DeepVariant   | `nextflow run nf-core/sarek --tools parabricks_deepvariant --profile <docker/singularity>,gpu`     |
-| [Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) | `parabricks_haplotypecaller` | GATK HaplotypeCaller | `nextflow run nf-core/sarek --tools parabricks_haplotypecaller --profile <docker/singularity>,gpu` |
-| [Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html)       | `parabricks_mutectcaller`    | GATK Mutect2         | `nextflow run nf-core/sarek --tools parabricks_mutectcaller --profile <docker/singularity>,gpu`    |
+| Tool                                                                                                                          | `--tools` value              | Equivalent to        | Command                                                                                           |
+| ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | -------------------- | ------------------------------------------------------------------------------------------------- |
+| [Parabricks DeepSomatic](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepsomatic.html)         | `parabricks_deepsomatic`     | Google DeepSomatic   | `nextflow run nf-core/sarek --tools parabricks_deepsomatic -profile <docker/singularity>,gpu`     |
+| [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html)         | `parabricks_deepvariant`     | Google DeepVariant   | `nextflow run nf-core/sarek --tools parabricks_deepvariant -profile <docker/singularity>,gpu`     |
+| [Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) | `parabricks_haplotypecaller` | GATK HaplotypeCaller | `nextflow run nf-core/sarek --tools parabricks_haplotypecaller -profile <docker/singularity>,gpu` |
+| [Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html)       | `parabricks_mutectcaller`    | GATK Mutect2         | `nextflow run nf-core/sarek --tools parabricks_mutectcaller -profile <docker/singularity>,gpu`    |
 
 There are a few differences to note about the Parabricks versions of these tools:
 
@@ -237,7 +237,7 @@ nextflow run nf-core/sarek \
   --joint_germline
 ```
 
-- Parabricks does not support the use of this pipeline with `--profile conda`.
+- Parabricks does not support the use of this pipeline with `-profile conda`.
 
 ### Start with duplicate marking (`--step markduplicates`)
 

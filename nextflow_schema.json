@@ -1032,7 +1032,7 @@
                     "format": "file-path",
                     "pattern": "\\S+\\.vcf\\.gz$",
                     "mimetype": "text/plain",
-                    "description": "Path to GATK Mutect2 Germline Resource File.",
+                    "description": "Path to GATK Mutect2 and Parabricks MutectCaller Germline Resource File.",
                     "help_text": "The germline resource VCF file (bgzipped and tabixed) needed by GATK4 Mutect2 is a collection of calls that are likely present in the sample, with allele frequencies.\nThe AF info field must be present.\nYou can find a smaller, stripped gnomAD VCF file (most of the annotation is removed and only calls signed by PASS are stored) in the AWS iGenomes Annotation/GermlineResource folder.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "germline_resource_tbi": {
@@ -1041,7 +1041,7 @@
                     "pattern": "\\S+\\.vcf\\.gz\\.tbi$",
                     "format": "file-path",
                     "mimetype": "text/plain",
-                    "description": "Path to GATK Mutect2 Germline Resource Index.",
+                    "description": "Path to GATK Mutect2 and Parabricks MutectCaller Germline Resource Index.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the Germline Resource file, if provided. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "known_indels": {
