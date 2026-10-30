@@ -9,12 +9,10 @@ process CREATE_INTERVALS_BED {
 
     input:
     path intervals
-    tuple val(meta2), path(fasta_fai)
     val nucleotides_per_second
 
     output:
-    path ("*.bed"),        emit: bed
-    path ("sorted/*.bed"), emit: sorted_bed, optional: true
+    path ("*.bed"),      emit: bed
     tuple val("${task.process}"), val('gawk'), eval("awk --version | head -n1 | sed 's/GNU Awk //; s/, .*//'"), emit: versions_gawk, topic: versions
 
     when:
@@ -24,35 +22,8 @@ process CREATE_INTERVALS_BED {
     // If intervals file is in BED format,
     // Fifth column is interpreted to contain runtime estimates
     // Which is then used to combine short-running jobs
-    // Rows are first sorted in reference order: tabix rejects unsorted positions, and
-    // GatherPileupSummaries orders chunks by their first row only (nf-core/sarek#2281)
     if (intervals.toString().toLowerCase().endsWith("bed")) {
         """
-        mkdir sorted
-
-        # Sort rows by fasta index order, then by start, keeping header lines on top
-        awk -vFS="\t" '
-        NR == FNR {
-            rank[\$1] = FNR
-            next
-        }
-        /^(#|track|browser)/ {
-            print
-            next
-        }
-        {
-            # contigs missing from the fasta index go last, in order of appearance
-            if (!(\$1 in rank))
-                rank[\$1] = length(rank) + 1
-            # zero-padded so that string order equals numeric order, FNR keeps the sort stable
-            row[sprintf("%012d %012d %012d", rank[\$1], \$2, FNR)] = \$0
-        }
-        END {
-            PROCINFO["sorted_in"] = "@ind_str_asc"
-            for (key in row)
-                print row[key]
-        }' ${fasta_fai} ${intervals} > sorted/${intervals.name}
-
         awk -vFS="\t" '{
             t = \$5  # runtime estimate
             if (t == "") {
@@ -69,7 +40,7 @@ process CREATE_INTERVALS_BED {
                 longest = t
             chunk += t
             print \$0 > name
-        }' sorted/${intervals.name}
+        }' ${intervals}
         """
     }
     else if (intervals.toString().toLowerCase().endsWith("interval_list")) {
@@ -91,9 +62,7 @@ process CREATE_INTERVALS_BED {
 
     stub:
     def prefix = task.ext.prefix ?: "${intervals.baseName}"
-    def sorted = intervals.toString().toLowerCase().endsWith("bed") ? "mkdir sorted && touch sorted/${intervals.name}" : ""
     """
     touch ${prefix}.stub.bed
-    ${sorted}
     """
 }

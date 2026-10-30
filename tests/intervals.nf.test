@@ -29,6 +29,30 @@ nextflow_pipeline {
             ]
         ],
         [
+            name: "Fails with profile test --intervals intervals_wrong_contig.bed",
+            params: [
+                intervals: "${projectDir}/tests/config/intervals_wrong_contig.bed",
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null,
+                wes: true
+            ],
+            failure: true,
+            snapshot: 'stdout',
+            snapshot_include: 'undefined in',
+        ],
+        [
+            name: "Fails with profile test --intervals intervals_past_end.bed",
+            params: [
+                intervals: "${projectDir}/tests/config/intervals_past_end.bed",
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null,
+                wes: true
+            ],
+            failure: true,
+            snapshot: 'stdout',
+            snapshot_include: 'past their contig',
+        ],
+        [
             name: "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
             params: [
                 no_intervals: true,

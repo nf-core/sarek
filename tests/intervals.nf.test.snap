@@ -1,4 +1,32 @@
 {
+    "Fails with profile test --intervals intervals_past_end.bed": {
+        "content": [
+            [
+                "csv",
+                "multiqc",
+                "multiqc/index.json",
+                "pipeline_info"
+            ],
+            "No stable content",
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files",
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
+                "WARN: Failed to render execution report -- see the log file for details",
+                "WARN: Failed to render execution timeline -- see the log file for details",
+                "WARN: Killing running tasks (1)"
+            ],
+            [
+                "--intervals: 1 interval(s) end past their contig in the reference (genome.fasta.fai), for example:"
+            ]
+        ],
+        "timestamp": "2026-10-30T08:37:25.0988151",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
     "-profile test --intervals null --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
         "content": [
             10,
@@ -85,10 +113,13 @@
     },
     "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
         "content": [
-            10,
+            11,
             {
                 "BAM_TO_CRAM_MAPPING": {
                     "samtools": "1.24"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -139,7 +170,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-07-28T14:27:26.457705565",
+        "timestamp": "2026-10-30T08:34:53.287009369",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -258,10 +289,13 @@
     },
     "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub": {
         "content": [
-            9,
+            10,
             {
                 "BAM_TO_CRAM_MAPPING": {
                     "samtools": "1.24"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -307,18 +341,47 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2025-12-15T19:54:48.88067349",
+        "timestamp": "2026-10-30T08:40:30.825256951",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "Fails with profile test --intervals intervals_wrong_contig.bed": {
+        "content": [
+            [
+                "csv",
+                "multiqc",
+                "multiqc/index.json",
+                "pipeline_info",
+                "reference"
+            ],
+            "No stable content",
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files",
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ],
+            [
+                "  Chromosome \"1\" undefined in genome.fasta.fai"
+            ]
+        ],
+        "timestamp": "2026-10-30T08:36:42.880747927",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --intervals unsorted_intervals.bed --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools": {
         "content": [
-            10,
+            11,
             {
                 "BAM_TO_CRAM_MAPPING": {
                     "samtools": "1.24"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -392,7 +455,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-29T16:17:51.395643013",
+        "timestamp": "2026-10-30T08:36:02.039976894",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
