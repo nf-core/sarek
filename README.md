@@ -5,23 +5,19 @@
   </picture>
 </h1>
 
-[![GitHub Actions CI Status](https://github.com/nf-core/sarek/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-core/sarek/actions/workflows/ci.yml)
-[![GitHub Actions Linting Status](https://github.com/nf-core/sarek/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/sarek/actions/workflows/linting.yml)
-[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/sarek/results)
-[![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
-[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3476425-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3476425)
+[![Open in GitHub Codespaces](https://img.shields.io/badge/Open_In_GitHub_Codespaces-black?labelColor=grey&logo=github)](https://github.com/codespaces/new/nf-core/sarek)
+[![GitHub Actions CI Status](https://github.com/nf-core/sarek/actions/workflows/nf-test.yml/badge.svg)](https://github.com/nf-core/sarek/actions/workflows/nf-test.yml)
+[![GitHub Actions Linting Status](https://github.com/nf-core/sarek/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/sarek/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/sarek/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3476425-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3476425)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A524.04.2-23aa62.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
+[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.1.0-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.1.0)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 [![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/sarek)
 
-[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23sarek-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/sarek)
-[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)
-[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)
-[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
+[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23sarek-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/sarek)[![Follow on Bluesky](https://img.shields.io/badge/bluesky-%40nf__core-1185fe?labelColor=000000&logo=bluesky)](https://bsky.app/profile/nf-co.re)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
 
 ## Introduction
 
@@ -43,35 +39,48 @@ Depending on the options and samples provided, the pipeline can currently perfor
 
 - Form consensus reads from UMI sequences (`fgbio`)
 - Sequencing quality control and trimming (enabled by `--trim_fastq`) (`FastQC`, `fastp`)
+- Contamination removal (`BBSplit`, enabled by `--tools bbsplit`)
 - Map Reads to Reference (`BWA-mem`, `BWA-mem2`, `dragmap` or `Sentieon BWA-mem`)
 - Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator` and `GATK ApplyBQSR` or `Sentieon LocusCollector` and `Sentieon Dedup`)
+- _Experimental Feature_: Use GPU-accelerated parabricks implementation as alternative to "Map Reads to Reference" + "Process BAM file" (`--aligner parabricks`)
 - Summarise alignment statistics (`samtools stats`, `mosdepth`)
 - Variant calling (enabled by `--tools`, see [compatibility](https://nf-co.re/sarek/latest/docs/usage#which-variant-calling-tool-is-implemented-for-which-data-type)):
   - `ASCAT`
   - `CNVkit`
   - `Control-FREEC`
+  - `DeepSomatic`
   - `DeepVariant`
   - `freebayes`
   - `GATK HaplotypeCaller`
+  - `GATK Mutect2`
+  - `Parabricks DeepSomatic` (GPU-accelerated)
+  - `Parabricks HaplotypeCaller` (Experimental Feature)
+  - `Parabricks MutectCaller` (Experimental Feature)
+  - `Parabricks Deepvariant` (Experimental Feature)
+  - `indexcov`
+  - `Lofreq`
   - `Manta`
   - `mpileup`
+  - `MSIsensor2`
   - `MSIsensor-pro`
-  - `Mutect2`
+  - `MuSE`
   - `Sentieon Haplotyper`
-  - `Strelka2`
+  - `Strelka`
   - `TIDDIT`
-  - `Lofreq`
-- Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`)
+- Post-variant calling options, one of:
+  - Filtering (`bcftools view` (default: filter by `PASS,.`)), normalisation (`bcftools norm`) and consensus calling (`bcftools isec`, default: called by at least 2 tools `-n+2`) on all vcfs and/or `bcftools concat` for germline vcfs
+  - `Varlociraptor` for all vcfs
+- Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`, `SnpSift`)
 - Summarise and represent QC (`MultiQC`)
 
 <p align="center">
-    <img title="Sarek Workflow" src="docs/images/sarek_subway.png" width=60%>
+    <img title="Sarek Workflow" src="docs/images/sarek_subway_animated.svg" width=60%>
 </p>
 
 ## Usage
 
 > [!NOTE]
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/get_started/environment_setup/overview) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/get_started/run-your-first-pipeline) with `-profile test` before running the workflow on actual data.
 
 First, prepare a samplesheet with your input data that looks as follows:
 
@@ -94,7 +103,7 @@ nextflow run nf-core/sarek \
 ```
 
 > [!WARNING]
-> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
+> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/running/run-pipelines#using-parameter-files).
 
 For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/sarek/usage) and the [parameter documentation](https://nf-co.re/sarek/parameters).
 
@@ -119,7 +128,7 @@ Friederike Hanssen and Gisela Gabernet at [QBiC](https://www.qbic.uni-tuebingen.
 
 The Nextflow DSL2 conversion of the pipeline was lead by Friederike Hanssen and Maxime U Garcia.
 
-Maintenance is now lead by Friederike Hanssen and Maxime U Garcia (now at [Seqera Labs](https://seqera/io))
+Maintenance is now lead by Friederike Hanssen (now at [Seqera](https://seqera.io)) and Maxime U Garcia.
 
 Main developers:
 
@@ -155,11 +164,13 @@ We thank the following people for their extensive assistance in the development 
 - [James A. Fellows Yates](https://github.com/jfy133)
 - [Jesper Eisfeldt](https://github.com/J35P312)
 - [Johannes Alneberg](https://github.com/alneberg)
+- [Jonas Kjellin](https://github.com/kjellinjonas)
 - [José Fernández Navarro](https://github.com/jfnavarro)
 - [Júlia Mir Pedrol](https://github.com/mirpedrol)
 - [Ken Brewer](https://github.com/kenibrewer)
 - [Lasse Westergaard Folkersen](https://github.com/lassefolkersen)
 - [Lucia Conde](https://github.com/lconde-ucl)
+- [Louis Le Nézet](https://github.com/LouisLeNezet)
 - [Malin Larsson](https://github.com/malinlarsson)
 - [Marcel Martin](https://github.com/marcelm)
 - [Nick Smith](https://github.com/nickhsmith)
@@ -170,7 +181,9 @@ We thank the following people for their extensive assistance in the development 
 - [Oskar Wacker](https://github.com/WackerO)
 - [pallolason](https://github.com/pallolason)
 - [Paul Cantalupo](https://github.com/pcantalupo)
+- [Peter Zoescher](https://github.com/petanska)
 - [Phil Ewels](https://github.com/ewels)
+- [Pierre Lindenbaum](https://github.com/lindenb)
 - [Sabrina Krakau](https://github.com/skrakau)
 - [Sam Minot](https://github.com/sminot)
 - [Sebastian-D](https://github.com/Sebastian-D)
@@ -181,6 +194,7 @@ We thank the following people for their extensive assistance in the development 
 - [Szilveszter Juhos](https://github.com/szilvajuhos)
 - [Tobias Koch](https://github.com/KochTobi)
 - [Winni Kretzschmar](https://github.com/winni2k)
+- [Patricie Skaláková](https://github.com/Patricie34)
 
 ## Acknowledgements
 
@@ -192,9 +206,9 @@ We thank the following people for their extensive assistance in the development 
 
 ## Contributions & Support
 
-If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
+If you would like to contribute to this pipeline, please see the [contributing guidelines](docs/CONTRIBUTING.md).
 
-For further information or help, don't hesitate to get in touch on the [Slack `#sarek` channel](https://nfcore.slack.com/channels/sarek) (you can join with [this invite](https://nf-co.re/join/slack)), or contact us: [Maxime U Garcia](mailto:maxime.garcia@seqera.io?subject=[GitHub]%20nf-core/sarek), [Friederike Hanssen](mailto:friederike.hanssen@qbic.uni-tuebingen.de?subject=[GitHub]%20nf-core/sarek)
+For further information or help, don't hesitate to get in touch on the [Slack `#sarek` channel](https://nfcore.slack.com/channels/sarek), or contact the dev team on the [Slack `#sarek_dev` channel](https://nfcore.slack.com/channels/sarek_dev). (you can join with [this invite](https://nf-co.re/join/slack)).
 
 ## Citations
 

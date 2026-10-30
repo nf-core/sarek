@@ -1,4 +1,4 @@
-Changes in module 'nf-core/controlfreec/assesssignificance'
+Changes in component 'nf-core/controlfreec/assesssignificance'
 Changes in 'controlfreec/assesssignificance/main.nf':
 --- modules/nf-core/controlfreec/assesssignificance/main.nf
 +++ modules/nf-core/controlfreec/assesssignificance/main.nf
@@ -36,7 +36,7 @@ Changes in 'controlfreec/assesssignificance/main.nf':
 Changes in 'controlfreec/assesssignificance/environment.yml':
 --- modules/nf-core/controlfreec/assesssignificance/environment.yml
 +++ modules/nf-core/controlfreec/assesssignificance/environment.yml
-@@ -2,4 +2,4 @@
+@@ -4,4 +4,4 @@
    - conda-forge
    - bioconda
  dependencies:
@@ -46,5 +46,4 @@ Changes in 'controlfreec/assesssignificance/environment.yml':
 'modules/nf-core/controlfreec/assesssignificance/tests/main.nf.test.snap' is unchanged
 'modules/nf-core/controlfreec/assesssignificance/tests/nextflow.config' is unchanged
 'modules/nf-core/controlfreec/assesssignificance/tests/main.nf.test' is unchanged
-'modules/nf-core/controlfreec/assesssignificance/tests/tags.yml' is unchanged
 ************************************************************

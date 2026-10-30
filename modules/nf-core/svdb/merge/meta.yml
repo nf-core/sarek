@@ -1,5 +1,6 @@
 name: svdb_merge
-description: The merge module merges structural variants within one or more vcf files.
+description: The merge module merges structural variants within one or more vcf
+  files.
 keywords:
   - structural variants
   - vcf
@@ -23,20 +24,20 @@ input:
           One or more VCF files. The order and number of files should correspond to
           the order and number of tags in the `priority` input channel.
         pattern: "*.{vcf,vcf.gz}"
-  - - input_priority:
-        type: list
-        description: |
-          Prioritize the input VCF files according to this list,
-          e.g ['tiddit','cnvnator']. The order and number of tags should correspond to
-          the order and number of VCFs in the `vcfs` input channel.
-  - - sort_inputs:
-        type: boolean
-        description: |
-          Should the input files be sorted by name. The priority tag will be sorted
-          together with it's corresponding VCF file.
+  - input_priority:
+      type: list
+      description: |
+        Prioritize the input VCF files according to this list,
+        e.g ['tiddit','cnvnator']. The order and number of tags should correspond to
+        the order and number of VCFs in the `vcfs` input channel.
+  - sort_inputs:
+      type: boolean
+      description: |
+        Should the input files be sorted by name. The priority tag will be sorted
+        together with it's corresponding VCF file.
 output:
-  - vcf:
-      - meta:
+  vcf:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -45,8 +46,9 @@ output:
           type: file
           description: VCF output file
           pattern: "*.{vcf,vcf.gz,bcf,bcf.gz}"
-  - tbi:
-      - meta:
+          ontologies: []
+  tbi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -55,8 +57,9 @@ output:
           type: file
           description: Alternative VCF file index
           pattern: "*.tbi"
-  - csi:
-      - meta:
+          ontologies: []
+  csi:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -65,11 +68,47 @@ output:
           type: file
           description: Default VCF file index
           pattern: "*.csi"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions_svdb:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - svdb:
+          type: string
+          description: The name of the tool
+      - svdb | sed -nE 's/.*SVDB-([0-9.]+).*/\1/p':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_bcftools:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bcftools:
+          type: string
+          description: The tool name
+      - bcftools --version | sed '1!d; s/^.*bcftools //':
+          type: eval
+          description: The command used to generate the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - svdb:
+          type: string
+          description: The name of the tool
+      - svdb | sed -nE 's/.*SVDB-([0-9.]+).*/\1/p':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bcftools:
+          type: string
+          description: The tool name
+      - bcftools --version | sed '1!d; s/^.*bcftools //':
+          type: eval
+          description: The command used to generate the version of the tool
 authors:
   - "@ramprasadn"
 maintainers:

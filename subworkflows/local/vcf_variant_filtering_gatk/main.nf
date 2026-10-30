@@ -14,10 +14,9 @@ workflow VCF_VARIANT_FILTERING_GATK {
 
     main:
 
-    versions = Channel.empty()
 
     // Don't scatter/gather by intervals, because especially for small regions (targeted or WGS), it easily fails with 0 SNPS in region
-    cnn_in = vcf.combine(intervals_bed_combined).map{ meta, vcf, tbi, intervals -> [ meta, vcf, tbi, [], intervals ] }
+    cnn_in = vcf.combine(intervals_bed_combined).map{ meta, vcf_, tbi, intervals -> [ meta, vcf_, tbi, [], intervals ] }
 
     CNNSCOREVARIANTS(cnn_in, fasta, fasta_fai, dict, [], [])
 
@@ -25,13 +24,15 @@ workflow VCF_VARIANT_FILTERING_GATK {
 
     filtered_vcf = FILTERVARIANTTRANCHES.out.vcf
         // remove no longer necessary field: num_intervals
-        .map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ] }
+        .map{ meta, vcf_ -> [ meta - meta.subMap('num_intervals'), vcf_ ] }
 
-    versions = versions.mix(CNNSCOREVARIANTS.out.versions)
-    versions = versions.mix(FILTERVARIANTTRANCHES.out.versions)
+    filtered_tbi = FILTERVARIANTTRANCHES.out.tbi
+        // remove no longer necessary field: num_intervals
+        .map{ meta, tbi -> [ meta - meta.subMap('num_intervals'), tbi ] }
+
 
     emit:
     filtered_vcf
+    filtered_tbi
 
-    versions
 }

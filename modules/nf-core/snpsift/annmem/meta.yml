@@ -1,0 +1,109 @@
+name: "snpsift_annmem"
+description: |
+  Annotate VCF files using pre-built SnpSift annMem databases.
+  Enriches input VCF records by querying memory-optimized indexed dataframes for high-performance annotation.
+keywords:
+  - vcf
+  - annotation
+  - snpsift
+  - variant
+  - database
+tools:
+  - snpsift:
+      description: "Genetic variant annotations and functional effect prediction toolbox"
+      homepage: "https://pcingola.github.io/SnpEff/snpsift/annotate_mem/"
+      documentation: "https://pcingola.github.io/SnpEff/snpsift/annotate_mem/"
+      tool_dev_url: "https://github.com/pcingola/SnpSift"
+      doi: "10.3389/fgene.2012.00035"
+      licence:
+        - "MIT"
+      identifier: biotools:snpsift
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'test' ]`
+    - vcf:
+        type: file
+        description: VCF file to annotate
+        pattern: "*.{vcf,vcf.gz}"
+        ontologies: []
+    - vcf_tbi:
+        type: file
+        description: Tabix index for input VCF (optional)
+        pattern: "*.tbi"
+        ontologies: []
+  - - db_vcf:
+        type: file
+        description: |
+          VCF database file(s) for annotation.
+          Can provide multiple databases for multi-database annotation.
+        pattern: "*.{vcf,vcf.gz}"
+        ontologies: []
+    - db_vcf_tbi:
+        type: file
+        description: Tabix index for database VCF file(s)
+        pattern: "*.tbi"
+        ontologies: []
+    - db_vardb:
+        type: directory
+        description: Pre-built .snpsift.vardb directory (used instead of db_vcf if provided)
+        pattern: "*.snpsift.vardb"
+    - db_fields:
+        type: list
+        description: |
+          INFO field names to annotate with.
+          Can be a list or a single string.
+    - db_prefixes:
+        type: string
+        description: Prefix to add to annotated field names
+output:
+  vcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test' ]`
+      - "*.vcf.gz":
+          type: file
+          description: Annotated VCF file
+          pattern: "*.vcf.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989
+  tbi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test' ]`
+      - "*.vcf.gz.tbi":
+          type: file
+          description: Tabix index for annotated VCF
+          pattern: "*.vcf.gz.tbi"
+          ontologies: []
+  versions_snpsift:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - snpsift:
+          type: string
+          description: The name of the tool
+      - SnpSift -version 2>&1 | grep -oE '[0-9]+\.[0-9]+[a-z]?':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - snpsift:
+          type: string
+          description: The tool name
+      - SnpSift -version 2>&1 | grep -oE '[0-9]+\.[0-9]+[a-z]?':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@friederike-hanssen"
+maintainers:
+  - "@friederike-hanssen"

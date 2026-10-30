@@ -1,0 +1,110 @@
+name: bcftools_merge
+description: Merge VCF files
+keywords:
+  - variant calling
+  - merge
+  - VCF
+tools:
+  - merge:
+      description: |
+        Merge VCF files.
+      homepage: http://samtools.github.io/bcftools/bcftools.html
+      documentation: http://www.htslib.org/doc/bcftools.html
+      doi: 10.1093/bioinformatics/btp352
+      licence:
+        - "MIT"
+      identifier: biotools:bcftools
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - vcfs:
+        type: file
+        description: |
+          List containing 2 or more vcf files
+          e.g. [ 'file1.vcf', 'file2.vcf' ]
+        ontologies: []
+    - tbis:
+        type: file
+        description: |
+          List containing the tbi index files corresponding to the vcfs input files
+          e.g. [ 'file1.vcf.tbi', 'file2.vcf.tbi' ]
+        ontologies: []
+    - bed:
+        type: file
+        description: "(Optional) The bed regions to merge on"
+        pattern: "*.bed"
+        ontologies: []
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - fasta:
+        type: file
+        description: "(Optional) The fasta reference file (only necessary for the `--gvcf
+          FILE` parameter)"
+        pattern: "*.{fasta,fa}"
+        ontologies: []
+    - fai:
+        type: file
+        description: "(Optional) The fasta reference file index (only necessary for
+          the `--gvcf FILE` parameter)"
+        pattern: "*.fai"
+        ontologies: []
+output:
+  vcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.{bcf,vcf}{,.gz}":
+          type: file
+          description: merged output file
+          pattern: "*.{vcf,vcf.gz,bcf,bcf.gz}"
+          ontologies: []
+  index:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.{csi,tbi}":
+          type: file
+          description: index of merged output
+          pattern: "*.{csi,tbi}"
+          ontologies: []
+  versions_bcftools:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - bcftools:
+          type: string
+          description: The tool name
+      - "bcftools --version | sed '1!d; s/^.*bcftools //'":
+          type: eval
+          description: The command used to generate the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - bcftools:
+          type: string
+          description: The tool name
+      - "bcftools --version | sed '1!d; s/^.*bcftools //'":
+          type: eval
+          description: The command used to generate the version of the tool
+authors:
+  - "@joseespinosa"
+  - "@drpatelh"
+  - "@nvnieuwk"
+  - "@ramprasadn"
+maintainers:
+  - "@joseespinosa"
+  - "@drpatelh"
+  - "@nvnieuwk"
+  - "@ramprasadn"

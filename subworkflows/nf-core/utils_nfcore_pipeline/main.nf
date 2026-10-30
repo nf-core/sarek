@@ -17,7 +17,7 @@ workflow UTILS_NFCORE_PIPELINE {
     checkProfileProvided(nextflow_cli_args)
 
     emit:
-    valid_config
+    valid_config = valid_config
 }
 
 /*
@@ -54,21 +54,6 @@ def checkProfileProvided(nextflow_cli_args) {
             "nf-core pipelines do not accept positional arguments. The positional argument `${nextflow_cli_args[0]}` has been detected.\n" + "HINT: A common mistake is to provide multiple values separated by spaces e.g. `-profile test, docker`.\n"
         )
     }
-}
-
-//
-// Citation string for pipeline
-//
-def workflowCitation() {
-    def temp_doi_ref = ""
-    def manifest_doi = workflow.manifest.doi.tokenize(",")
-    // Handling multiple DOIs
-    // Removing `https://doi.org/` to handle pipelines using DOIs vs DOI resolvers
-    // Removing ` ` since the manifest.doi is a string and not a proper list
-    manifest_doi.each { doi_ref ->
-        temp_doi_ref += "  https://doi.org/${doi_ref.replace('https://doi.org/', '').replace(' ', '')}\n"
-    }
-    return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" + "* The pipeline\n" + temp_doi_ref + "\n" + "* The nf-core framework\n" + "  https://doi.org/10.1038/s41587-020-0439-x\n\n" + "* Software dependencies\n" + "  https://github.com/${workflow.manifest.name}/blob/master/CITATIONS.md"
 }
 
 //
@@ -113,7 +98,7 @@ def workflowVersionToYAML() {
 // Get channel of software versions used in pipeline in YAML format
 //
 def softwareVersionsToYAML(ch_versions) {
-    return ch_versions.unique().map { version -> processVersionsFromYAML(version) }.unique().mix(Channel.of(workflowVersionToYAML()))
+    return ch_versions.unique().map { version -> processVersionsFromYAML(version) }.unique().mix(channel.of(workflowVersionToYAML()))
 }
 
 //
@@ -148,33 +133,6 @@ def paramsSummaryMultiqc(summary_params) {
     yaml_file_text     += "${summary_section}"
 
     return yaml_file_text
-}
-
-//
-// nf-core logo
-//
-def nfCoreLogo(monochrome_logs=true) {
-    def colors = logColours(monochrome_logs) as Map
-    String.format(
-        """\n
-        ${dashedLine(monochrome_logs)}
-                                                ${colors.green},--.${colors.black}/${colors.green},-.${colors.reset}
-        ${colors.blue}        ___     __   __   __   ___     ${colors.green}/,-._.--~\'${colors.reset}
-        ${colors.blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${colors.yellow}}  {${colors.reset}
-        ${colors.blue}  | \\| |       \\__, \\__/ |  \\ |___     ${colors.green}\\`-._,-`-,${colors.reset}
-                                                ${colors.green}`._,._,\'${colors.reset}
-        ${colors.purple}  ${workflow.manifest.name} ${getWorkflowVersion()}${colors.reset}
-        ${dashedLine(monochrome_logs)}
-        """.stripIndent()
-    )
-}
-
-//
-// Return dashed line
-//
-def dashedLine(monochrome_logs=true) {
-    def colors = logColours(monochrome_logs) as Map
-    return "-${colors.dim}----------------------------------------------------${colors.reset}-"
 }
 
 //
@@ -245,28 +203,24 @@ def logColours(monochrome_logs=true) {
     return colorcodes
 }
 
+// Return a single report from an object that may be a Path or List
 //
-// Attach the multiqc report to email
-//
-def attachMultiqcReport(multiqc_report) {
-    def mqc_report = null
-    try {
-        if (workflow.success) {
-            mqc_report = multiqc_report.getVal()
-            if (mqc_report.getClass() == ArrayList && mqc_report.size() >= 1) {
-                if (mqc_report.size() > 1) {
-                    log.warn("[${workflow.manifest.name}] Found multiple reports from process 'MULTIQC', will use only one")
-                }
-                mqc_report = mqc_report[0]
-            }
+def getSingleReport(multiqc_reports) {
+    if (multiqc_reports instanceof Path) {
+        return multiqc_reports
+    } else if (multiqc_reports instanceof List) {
+        if (multiqc_reports.size() == 0) {
+            log.warn("[${workflow.manifest.name}] No reports found from process 'MULTIQC'")
+            return null
+        } else if (multiqc_reports.size() == 1) {
+            return multiqc_reports.first()
+        } else {
+            log.warn("[${workflow.manifest.name}] Found multiple reports from process 'MULTIQC', will use only one")
+            return multiqc_reports.first()
         }
+    } else {
+        return null
     }
-    catch (Exception all) {
-        if (multiqc_report) {
-            log.warn("[${workflow.manifest.name}] Could not attach MultiQC report to summary email")
-        }
-    }
-    return mqc_report
 }
 
 //
@@ -320,7 +274,7 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
     email_fields['summary']      = summary << misc_fields
 
     // On success try attach the multiqc report
-    def mqc_report = attachMultiqcReport(multiqc_report)
+    def mqc_report = getSingleReport(multiqc_report)
 
     // Check if we are only sending emails on failure
     def email_address = email
@@ -340,7 +294,7 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
     def email_html    = html_template.toString()
 
     // Render the sendmail template
-    def max_multiqc_email_size = (params.containsKey('max_multiqc_email_size') ? params.max_multiqc_email_size : 0) as nextflow.util.MemoryUnit
+    def max_multiqc_email_size = (params.containsKey('max_multiqc_email_size') ? params.max_multiqc_email_size : 0) as MemoryUnit
     def smail_fields           = [email: email_address, subject: subject, email_txt: email_txt, email_html: email_html, projectDir: "${workflow.projectDir}", mqcFile: mqc_report, mqcMaxSize: max_multiqc_email_size.toBytes()]
     def sf                     = new File("${workflow.projectDir}/assets/sendmail_template.txt")
     def sendmail_template      = engine.createTemplate(sf).make(smail_fields)
@@ -351,14 +305,17 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
     if (email_address) {
         try {
             if (plaintext_email) {
-new org.codehaus.groovy.GroovyException('Send plaintext e-mail, not HTML')            }
+                new org.codehaus.groovy.GroovyException('Send plaintext e-mail, not HTML')
+            }
             // Try to send HTML e-mail using sendmail
             def sendmail_tf = new File(workflow.launchDir.toString(), ".sendmail_tmp.html")
             sendmail_tf.withWriter { w -> w << sendmail_html }
             ['sendmail', '-t'].execute() << sendmail_html
             log.info("-${colors.purple}[${workflow.manifest.name}]${colors.green} Sent summary e-mail to ${email_address} (sendmail)-")
         }
-        catch (Exception all) {
+        catch (Exception msg) {
+            log.debug(msg.toString())
+            log.debug("Trying with mail instead of sendmail")
             // Catch failures and try with plaintext
             def mail_cmd = ['mail', '-s', subject, '--content-type=text/html', email_address]
             mail_cmd.execute() << email_html
@@ -394,69 +351,5 @@ def completionSummary(monochrome_logs=true) {
     }
     else {
         log.info("-${colors.purple}[${workflow.manifest.name}]${colors.red} Pipeline completed with errors${colors.reset}-")
-    }
-}
-
-//
-// Construct and send a notification to a web server as JSON e.g. Microsoft Teams and Slack
-//
-def imNotification(summary_params, hook_url) {
-    def summary = [:]
-    summary_params
-        .keySet()
-        .sort()
-        .each { group ->
-            summary << summary_params[group]
-        }
-
-    def misc_fields = [:]
-    misc_fields['start']          = workflow.start
-    misc_fields['complete']       = workflow.complete
-    misc_fields['scriptfile']     = workflow.scriptFile
-    misc_fields['scriptid']       = workflow.scriptId
-    if (workflow.repository) {
-        misc_fields['repository'] = workflow.repository
-    }
-    if (workflow.commitId) {
-        misc_fields['commitid']   = workflow.commitId
-    }
-    if (workflow.revision) {
-        misc_fields['revision']   = workflow.revision
-    }
-    misc_fields['nxf_version']    = workflow.nextflow.version
-    misc_fields['nxf_build']      = workflow.nextflow.build
-    misc_fields['nxf_timestamp']  = workflow.nextflow.timestamp
-
-    def msg_fields = [:]
-    msg_fields['version']      = getWorkflowVersion()
-    msg_fields['runName']      = workflow.runName
-    msg_fields['success']      = workflow.success
-    msg_fields['dateComplete'] = workflow.complete
-    msg_fields['duration']     = workflow.duration
-    msg_fields['exitStatus']   = workflow.exitStatus
-    msg_fields['errorMessage'] = (workflow.errorMessage ?: 'None')
-    msg_fields['errorReport']  = (workflow.errorReport ?: 'None')
-    msg_fields['commandLine']  = workflow.commandLine.replaceFirst(/ +--hook_url +[^ ]+/, "")
-    msg_fields['projectDir']   = workflow.projectDir
-    msg_fields['summary']      = summary << misc_fields
-
-    // Render the JSON template
-    def engine       = new groovy.text.GStringTemplateEngine()
-    // Different JSON depending on the service provider
-    // Defaults to "Adaptive Cards" (https://adaptivecards.io), except Slack which has its own format
-    def json_path     = hook_url.contains("hooks.slack.com") ? "slackreport.json" : "adaptivecard.json"
-    def hf            = new File("${workflow.projectDir}/assets/${json_path}")
-    def json_template = engine.createTemplate(hf).make(msg_fields)
-    def json_message  = json_template.toString()
-
-    // POST
-    def post = new URL(hook_url).openConnection()
-    post.setRequestMethod("POST")
-    post.setDoOutput(true)
-    post.setRequestProperty("Content-Type", "application/json")
-    post.getOutputStream().write(json_message.getBytes("UTF-8"))
-    def postRC = post.getResponseCode()
-    if (!postRC.equals(200)) {
-        log.warn(post.getErrorStream().getText())
     }
 }

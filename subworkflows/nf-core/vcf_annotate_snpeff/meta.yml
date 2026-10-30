@@ -8,7 +8,7 @@ keywords:
 components:
   - snpeff
   - snpeff/snpeff
-  - tabix/bgziptabix
+  - htslib/bgziptabix
 input:
   - ch_vcf:
       description: |
@@ -30,6 +30,14 @@ output:
       description: |
         html reports
         Structure: [ path(html) ]
+  - summary:
+      description: |
+        html reports
+        Structure: [ path(csv) ]
+  - genes_txt:
+      description: |
+        html reports
+        Structure: [ path(txt) ]
   - versions:
       description: |
         Files containing software versions

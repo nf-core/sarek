@@ -1,2 +1,0 @@
-deepvariant/rundeepvariant:
-  - modules/nf-core/deepvariant/rundeepvariant/**

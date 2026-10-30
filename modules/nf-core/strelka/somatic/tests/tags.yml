@@ -1,2 +1,0 @@
-strelka/somatic:
-  - "modules/nf-core/strelka/somatic/**"

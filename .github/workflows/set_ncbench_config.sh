@@ -44,4 +44,3 @@ for READS in 75 200; do
             '  ncbench-workflow/config/config.yaml
     done
 done
-

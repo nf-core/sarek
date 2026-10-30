@@ -1,21 +1,21 @@
 process GATK4_ESTIMATELIBRARYCOMPLEXITY {
-    tag "$meta.id"
-    label 'process_medium'
+    tag "${meta.id}"
+    label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gatk4:4.5.0.0--py36hdfd78af_0':
-        'biocontainers/gatk4:4.5.0.0--py36hdfd78af_0' }"
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/ce/ce8f4142326abbb74e28b97633a200b09439c54480803343b1cf13dc19e51ae5/data'
+        : 'community.wave.seqera.io/library/gatk4-lite:4.7.0.0--79918b8b2632f4b1'}"
 
     input:
     tuple val(meta), path(input)
-    path  fasta
-    path  fai
-    path  dict
+    path fasta
+    path fai
+    path dict
 
     output:
     tuple val(meta), path('*.metrics'), emit: metrics
-    path "versions.yml"               , emit: versions
+    tuple val("${task.process}"), val('gatk4'), eval("gatk --version | sed -n '/GATK.*v/s/.*v//p'"), topic: versions, emit: versions_gatk4
 
     when:
     task.ext.when == null || task.ext.when
@@ -23,27 +23,30 @@ process GATK4_ESTIMATELIBRARYCOMPLEXITY {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def input_list = input.collect(){"--INPUT $it"}.join(" ")
+    def input_list = input.collect { bam -> "--INPUT ${bam}" }.join(" ")
     def reference = fasta ? "--REFERENCE_SEQUENCE ${fasta}" : ""
 
     def avail_mem = 3072
     if (!task.memory) {
-        log.info '[GATK EstimateLibraryComplexity] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
-    } else {
-        avail_mem = (task.memory.mega*0.8).intValue()
+        log.info('[GATK EstimateLibraryComplexity] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.')
+    }
+    else {
+        avail_mem = (task.memory.mega * 0.8).intValue()
     }
     """
     gatk --java-options "-Xmx${avail_mem}M -XX:-UsePerfData" \\
         EstimateLibraryComplexity \\
-        $input_list \\
+        ${input_list} \\
         --OUTPUT ${prefix}.metrics \\
-        $reference \\
+        ${reference} \\
         --TMP_DIR . \\
-        $args
+        ${args}
+    """
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
-    END_VERSIONS
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+
+    """
+    touch ${prefix}.metrics
     """
 }

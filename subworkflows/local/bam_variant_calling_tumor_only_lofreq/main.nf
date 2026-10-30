@@ -10,27 +10,26 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ {
     dict      // channel: /path/to/reference/fasta/dictionary
 
     main:
-    versions = Channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
     input_intervals = input.combine(intervals)
         // Move num_intervals to meta map
-        .map {meta, tumor_cram, tumor_crai, intervals, num_intervals -> [meta + [ num_intervals:num_intervals ], tumor_cram, tumor_crai, intervals]}
+        .map {meta, tumor_cram, tumor_crai, intervals_, num_intervals -> [meta + [ num_intervals:num_intervals ], tumor_cram, tumor_crai, intervals_]}
 
     LOFREQ(input_intervals, fasta, fai) // Call variants with LoFreq
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    vcf_branch = LOFREQ.out.vcf.branch{
+    vcf_branch = LOFREQ.out.vcf.branch{ meta, _vcf ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_branch = LOFREQ.out.tbi.branch{
+    tbi_branch = LOFREQ.out.tbi.branch{ meta, _tbi ->
         // Use meta.num_intervals to asses number of intervals
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+        intervals:    meta.num_intervals > 1
+        no_intervals: meta.num_intervals <= 1
     }
 
     // Only when using intervals
@@ -40,12 +39,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ {
 
     // Mix intervals and no_intervals channels together
     // Remove unnecessary metadata
-    vcf   = Channel.empty().mix(MERGE_LOFREQ.out.vcf, vcf_branch.no_intervals).map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'lofreq' ], vcf ] }
-
-    versions = versions.mix(MERGE_LOFREQ.out.versions)
-    versions = versions.mix(LOFREQ.out.versions)
+    vcf = channel.empty().mix(MERGE_LOFREQ.out.vcf, vcf_branch.no_intervals).map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'lofreq' ], vcf ] }
+    tbi = channel.empty().mix(MERGE_LOFREQ.out.tbi, tbi_branch.no_intervals).map{ meta, tbi -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'lofreq' ], tbi ] }
 
     emit:
     vcf
-    versions
+    tbi
 }

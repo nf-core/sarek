@@ -4,9 +4,9 @@ process MANTA_SOMATIC {
     label 'error_retry'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/manta:1.6.0--h9ee0642_1' :
-        'biocontainers/manta:1.6.0--h9ee0642_1' }"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/f6/f696c93e6209e33ac0d15f1ecfa799bc67329eec07b0569e065ea8b220b53953/data' :
+        'community.wave.seqera.io/library/manta_python:0eb71149179b3920' }"
 
     input:
     tuple val(meta), path(input_normal), path(input_index_normal), path(input_tumor), path(input_index_tumor), path(target_bed), path(target_bed_tbi)
@@ -23,7 +23,7 @@ process MANTA_SOMATIC {
     tuple val(meta), path("*.diploid_sv.vcf.gz.tbi")             , emit: diploid_sv_vcf_tbi
     tuple val(meta), path("*.somatic_sv.vcf.gz")                 , emit: somatic_sv_vcf
     tuple val(meta), path("*.somatic_sv.vcf.gz.tbi")             , emit: somatic_sv_vcf_tbi
-    path "versions.yml"                                          , emit: versions
+    tuple val("${task.process}"), val("manta"), eval("configManta.py --version"), topic: versions, emit: versions_manta
 
     when:
     task.ext.when == null || task.ext.when
@@ -61,11 +61,6 @@ process MANTA_SOMATIC {
         ${prefix}.somatic_sv.vcf.gz
     mv manta/results/variants/somaticSV.vcf.gz.tbi \\
         ${prefix}.somatic_sv.vcf.gz.tbi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        manta: \$( configManta.py --version )
-    END_VERSIONS
     """
 
     stub:
@@ -79,10 +74,5 @@ process MANTA_SOMATIC {
     touch ${prefix}.diploid_sv.vcf.gz.tbi
     echo "" | gzip > ${prefix}.somatic_sv.vcf.gz
     touch ${prefix}.somatic_sv.vcf.gz.tbi
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        manta: \$( configManta.py --version )
-    END_VERSIONS
     """
 }

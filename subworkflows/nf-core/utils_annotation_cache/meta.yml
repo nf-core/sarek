@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: utils_annotation_cache
+description: Check the path to the annotation cache depending if local or on the cloud, or using annotation-cache itself
+keywords:
+  - snpeff
+  - ensemblvep
+  - annotation-cache
+  - annotation
+  - cache
+  - verification
+components: []
+input:
+  - ensemblvep_cache:
+      description: |
+        Path to root cache
+        Structure: [ path(cache) ]
+  - ensemblvep_cache_version:
+      description: |
+        cache_version to use
+        Structure: [ val(cache_version) ]
+  - ensemblvep_custom_args:
+      description: |
+        custom args, to check if refseq or merged is needed
+        Structure: [ val(custom args) ]
+  - ensemblvep_genome:
+      description: |
+        genome to use
+        Structure: [ val(genome) ]
+  - ensemblvep_species:
+      description: |
+        species to use
+        Structure: [ val(species) ]
+  - ensemblvep_enabled:
+      description: |
+        Boolean to enable ensemblvep
+        Structure: [ Boolean ]
+  - snpeff_cache:
+      description: |
+        Path to root cache
+        Structure: [ path(cache) ]
+  - snpeff_db:
+      description: |
+        db to use
+        Structure: [ val(db) ]
+  - snpeff_enabled:
+      description: |
+        Boolean to enable snpeff
+        Structure: [ Boolean ]
+  - help_message:
+      description: |
+        Extra help message to display when error
+        Structure: [ val(species) ]
+output:
+  - ensemblvep_cache:
+      description: |
+        Path to ensemblvep cache
+        Structure: [ val(meta), path(cache) ]
+  - snpeff_cache:
+      description: |
+        Path to snpeff cache
+        Structure: [ val(meta), path(cache) ]
+authors:
+  - "@maxulysse"
+maintainers:
+  - "@maxulysse"

@@ -1,0 +1,74 @@
+def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    profile "test,gpu"
+
+    def test_scenario = [
+        [
+            name: "-profile test,gpu --tools parabricks_haplotypecaller",
+            params: [
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
+                tools: "parabricks_haplotypecaller",
+                step: "variant_calling"
+            ],
+            gpu: true,
+            no_conda: true
+        ],
+        [
+            name: "-profile test --tools parabricks_haplotypecaller --no_intervals -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
+                tools: "parabricks_haplotypecaller",
+                step: "variant_calling",
+                no_intervals: true
+            ],
+            stub: true,
+            no_conda: true
+        ],
+        [
+            // Parabricks HaplotypeCaller alone can't satisfy --joint_germline (see the failure
+            // scenario below), but combining it with a joint-capable caller is fine: it emits its
+            // own per-sample gVCF (via tests/nextflow.config's `params.joint_germline ? "--gvcf" : ""`
+            // for PARABRICKS_HAPLOTYPECALLER) while GATK HaplotypeCaller drives the actual joint call.
+            name: "-profile test,gpu --tools parabricks_haplotypecaller,haplotypecaller --joint_germline",
+            params: [
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
+                tools: "parabricks_haplotypecaller,haplotypecaller",
+                step: "variant_calling",
+                joint_germline: true,
+                dbsnp_vqsr: null,
+                known_snps_vqsr: null,
+                known_indels_vqsr: null,
+                wes: true,
+                nucleotides_per_second: 20
+            ],
+            gpu: true,
+            no_conda: true
+        ],
+        [
+            name: "Fails with --joint_germline and no joint-capable caller",
+            params: [
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
+                tools: "parabricks_haplotypecaller",
+                step: "variant_calling",
+                joint_germline: true
+            ],
+            failure: true,
+            snapshot: 'stdout',
+            snapshot_include: 'should be specified as one of the tools',
+            no_conda: true
+        ]
+    ]
+
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}
