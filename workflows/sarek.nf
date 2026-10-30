@@ -107,6 +107,7 @@ workflow SAREK {
     pon
     pon_tbi
     sentieon_dnascope_model
+    varnet_resources
     varlociraptor_chunk_size
     varlociraptor_events_germline
     varlociraptor_events_somatic
@@ -454,6 +455,7 @@ workflow SAREK {
             msisensor2_models,
             pon,
             pon_tbi,
+            varnet_resources,
             params.joint_mutect2,
             params.wes,
         )

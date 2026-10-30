@@ -280,7 +280,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             bam,
             fasta,
             fasta_fai,
-            intervals_bed_combined.map { _intervals -> _intervals ? [[id: _intervals[0].baseName], _intervals] : [[id: 'no_intervals'], []] },
+            intervals_bed_combined,
+            channel.value([]),
         )
 
         vcf_varnet = BAM_VARIANT_CALLING_SOMATIC_VARNET.out.vcf

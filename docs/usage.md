@@ -684,16 +684,25 @@ Sarek can be started at different points in the analysis by setting the paramete
 | [Strelka](https://github.com/Illumina/strelka)                                                                                      |  x  |  x  |   -   |    -     |     -      |           x            |
 | [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                                                      |  x  |  x  |   x   |    x     |     x      |           x            |
 | [Varlociraptor](https://varlociraptor.github.io/landing/)                                                                           |  x  |  x  |   x   |    x     |     x      |           x            |
-| [VarNet](https://github.com/skandlab/VarNet)                                                                                        |  x  |  x  |   x   |    -     |     -      |           x            |
+| [VarNet](https://github.com/skandlab/VarNet)                                                                                        |  x  |  x  |   x   |    -     |     x      |           x            |
 
-## What are the limitations of VarNet?
+## How to run VarNet on tumor-only samples?
 
-VarNet runs on tumor-normal pairs only. Tumor-only mode needs dbSNP and gnomAD resource files that are not distributed with the VarNet package. To call tumor-only samples with VarNet, use the [VarNet Docker image](https://github.com/skandlab/VarNet) directly.
+VarNet needs germline filtering resources to call tumor-only samples. Tumor-normal pairs do not use them. The resources take 3.9 GB and are available for GRCh38 only. Download them from [figshare](https://doi.org/10.6084/m9.figshare.34420128) or with `varnet-download-resources`, then pass the folder with `--varnet_resources`:
 
-VarNet has the following additional constraints:
+```bash
+nextflow run nf-core/sarek --tools varnet --varnet_resources /path/to/varnet_resources <other options>
+```
 
-- VarNet VCF files are excluded from `--normalize_vcfs`, `--filter_vcfs` and `--snv_consensus_calling`, because their headers do not declare contigs or all INFO fields.
-- VarNet is distributed under the [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0/), which does not permit commercial use.
+The folder must contain these files:
+
+- `GrCh38-dbSNP-build-156-common-variants-0-indexed-CHROMPOS.npz`
+- `combined_gnomAD_v4.1_genomes_exomes_dict.hg38.chunks.npz`
+- `1000g_pon.hg38.vcf.gz`
+
+VarNet fails on tumor-only samples when `--varnet_resources` is not set.
+
+VarNet is distributed under the [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0/), which does not permit commercial use.
 
 ## How to run ASCAT with whole-exome sequencing data?
 

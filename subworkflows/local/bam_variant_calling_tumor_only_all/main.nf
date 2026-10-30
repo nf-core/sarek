@@ -7,6 +7,7 @@ include { BAM_VARIANT_CALLING_CNVKIT                  } from '../bam_variant_cal
 include { BAM_VARIANT_CALLING_FREEBAYES               } from '../bam_variant_calling_freebayes'
 include { BAM_VARIANT_CALLING_MPILEUP                 } from '../bam_variant_calling_mpileup'
 include { BAM_VARIANT_CALLING_SINGLE_TIDDIT           } from '../bam_variant_calling_single_tiddit'
+include { BAM_VARIANT_CALLING_SOMATIC_VARNET          } from '../bam_variant_calling_somatic_varnet'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC } from '../bam_variant_calling_tumor_only_controlfreec'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA        } from '../bam_variant_calling_tumor_only_manta'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2      } from '../bam_variant_calling_tumor_only_mutect2'
@@ -37,6 +38,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     msisensor2_models
     panel_of_normals              // channel: [optional]  panel_of_normals
     panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
+    varnet_resources              // channel: [optional]  folder with the VarNet germline resources
     joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
     wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
 
@@ -52,6 +54,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_mutect2    = channel.empty()
     vcf_tiddit     = channel.empty()
     vcf_tnscope    = channel.empty()
+    vcf_varnet     = channel.empty()
 
     // Initialize empty TBI channels
     tbi_freebayes  = channel.empty()
@@ -61,6 +64,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     tbi_mutect2    = channel.empty()
     tbi_tiddit     = channel.empty()
     tbi_tnscope    = channel.empty()
+    tbi_varnet     = channel.empty()
 
     // MPILEUP
     if (tools && tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')) {
@@ -205,6 +209,20 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         tbi_tnscope = BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE.out.tbi
     }
 
+    // VARNET
+    if (tools && tools.split(',').contains('varnet')) {
+        BAM_VARIANT_CALLING_SOMATIC_VARNET(
+            bam.map { meta_, bam_, bai -> [meta_, [], [], bam_, bai] },
+            fasta,
+            fasta_fai,
+            intervals_bed_combined,
+            varnet_resources,
+        )
+
+        vcf_varnet = BAM_VARIANT_CALLING_SOMATIC_VARNET.out.vcf
+        tbi_varnet = BAM_VARIANT_CALLING_SOMATIC_VARNET.out.tbi
+    }
+
     vcf_all = channel.empty()
         .mix(
             vcf_freebayes,
@@ -214,6 +232,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             vcf_mpileup,
             vcf_tiddit,
             vcf_tnscope,
+            vcf_varnet,
         )
 
     tbi_all = channel.empty()
@@ -225,6 +244,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             tbi_mpileup,
             tbi_tiddit,
             tbi_tnscope,
+            tbi_varnet,
         )
 
     emit:
@@ -238,6 +258,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_mutect2
     vcf_tiddit
     vcf_tnscope
+    vcf_varnet
     tbi_freebayes
     tbi_lofreq
     tbi_manta
@@ -245,4 +266,5 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     tbi_mutect2
     tbi_tiddit
     tbi_tnscope
+    tbi_varnet
 }
