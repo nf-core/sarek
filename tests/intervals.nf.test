@@ -39,6 +39,8 @@ nextflow_pipeline {
             failure: true,
             snapshot: 'stdout',
             snapshot_include: 'undefined in',
+            // Whether a running task gets killed when the run fails depends on timing
+            snapshot_ignore: 'Killing running tasks',
         ],
         [
             name: "Fails with profile test --intervals intervals_past_end.bed",
@@ -51,6 +53,8 @@ nextflow_pipeline {
             failure: true,
             snapshot: 'stdout',
             snapshot_include: 'past their contig',
+            // Whether a running task gets killed when the run fails depends on timing
+            snapshot_ignore: 'Killing running tasks',
         ],
         [
             name: "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
