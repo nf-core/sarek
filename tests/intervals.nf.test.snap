@@ -5,7 +5,8 @@
                 "csv",
                 "multiqc",
                 "multiqc/index.json",
-                "pipeline_info"
+                "pipeline_info",
+                "reference"
             ],
             "No stable content",
             "No BAM files",
@@ -14,14 +15,13 @@
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
                 "WARN: Failed to render execution report -- see the log file for details",
-                "WARN: Failed to render execution timeline -- see the log file for details",
-                "WARN: Killing running tasks (1)"
+                "WARN: Failed to render execution timeline -- see the log file for details"
             ],
             [
-                "--intervals: 1 interval(s) end past their contig in the reference (genome.fasta.fai), for example:"
+                "--intervals: 1 interval(s) end past their contig in the reference (genome.fasta.fai), for example: chr22:30000-50000 (chr22 is 40001 bp)"
             ]
         ],
-        "timestamp": "2026-10-30T08:37:25.0988151",
+        "timestamp": "2026-10-30T12:40:17.790715484",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -432,7 +432,8 @@
                 "reference/intervals/chr22_2-5000.bed.gz",
                 "reference/intervals/chr22_30001-35000.bed",
                 "reference/intervals/chr22_30001-35000.bed.gz",
-                "reference/intervals/unsorted_intervals.bed.gz"
+                "reference/intervals/unsorted_intervals.bed.gz",
+                "reference/intervals/unsorted_intervals.sorted.bed"
             ],
             [
                 "genome.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
@@ -444,7 +445,8 @@
                 "chr22_2-5000.bed.gz:md5,db157147f800c8451d27760fa1265ab7",
                 "chr22_30001-35000.bed:md5,dd5db466b74b7dc2fd5f772a86b88282",
                 "chr22_30001-35000.bed.gz:md5,dd5db466b74b7dc2fd5f772a86b88282",
-                "unsorted_intervals.bed.gz:md5,79be51ef508879df728be2c03ca0418c"
+                "unsorted_intervals.bed.gz:md5,79be51ef508879df728be2c03ca0418c",
+                "unsorted_intervals.sorted.bed:md5,79be51ef508879df728be2c03ca0418c"
             ],
             "No BAM files",
             [
@@ -455,7 +457,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-30T08:36:02.039976894",
+        "timestamp": "2026-10-30T12:37:46.201650161",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
