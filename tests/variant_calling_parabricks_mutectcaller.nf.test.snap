@@ -885,10 +885,10 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_APPLYBQSR": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -4238,10 +4238,10 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_APPLYBQSR": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
