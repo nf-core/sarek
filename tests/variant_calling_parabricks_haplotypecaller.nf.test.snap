@@ -1,5 +1,5 @@
 {
-    "Fails with --joint_germline and no joint-capable caller": {
+    "Fails with --no_intervals and --joint_germline for parabricks_haplotypecaller": {
         "content": [
             [
                 "pipeline_info"
@@ -10,18 +10,467 @@
             "No VCF files",
             "No warnings",
             [
-                "The GATK's Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper should be specified as one of the tools when doing joint germline variant calling.) "
+                "Joint germline variant calling with GATK's or Parabricks' HaplotypeCaller requires intervals because GenomicsDB cannot be used without them. Please provide intervals or remove `--no_intervals`."
             ]
         ],
-        "timestamp": "2026-08-07T19:00:47.323906",
+        "timestamp": "2026-10-29T16:56:55.749611898",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
     },
-    "-profile test,gpu --tools parabricks_haplotypecaller,haplotypecaller --joint_germline": {
+    "-profile test --tools parabricks_haplotypecaller --skip_tools parabricks_haplotypecaller_filter -stub": {
         "content": [
-            30,
+            13,
+            {
+                "BCFTOOLS_STATS": {
+                    "bcftools": "1.23.1"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "MOSDEPTH": {
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
+                },
+                "PARABRICKS_DBSNP": {
+                    "parabricks": "4.8.0-1"
+                },
+                "PARABRICKS_HAPLOTYPECALLER": {
+                    "parabricks": "4.8.0-1"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": "1.24"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_BGZIPTABIX_VCF": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
+                }
+            },
+            [
+                "csv",
+                "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/index.json",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/.stub",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/.stub",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/bcftools",
+                "reports/bcftools/parabricks_haplotypecaller",
+                "reports/bcftools/parabricks_haplotypecaller/test",
+                "reports/bcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.bcftools_stats.txt",
+                "reports/mosdepth",
+                "reports/mosdepth/test",
+                "reports/mosdepth/test/test.recal.global.dist.txt",
+                "reports/mosdepth/test/test.recal.per-base.bed.gz",
+                "reports/mosdepth/test/test.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/test/test.recal.per-base.d4",
+                "reports/mosdepth/test/test.recal.quantized.bed.gz",
+                "reports/mosdepth/test/test.recal.quantized.bed.gz.csi",
+                "reports/mosdepth/test/test.recal.region.dist.txt",
+                "reports/mosdepth/test/test.recal.regions.bed.gz",
+                "reports/mosdepth/test/test.recal.regions.bed.gz.csi",
+                "reports/mosdepth/test/test.recal.summary.txt",
+                "reports/mosdepth/test/test.recal.thresholds.bed.gz",
+                "reports/mosdepth/test/test.recal.thresholds.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/test",
+                "reports/samtools/test/test.recal.cram.stats",
+                "reports/vcftools",
+                "reports/vcftools/parabricks_haplotypecaller",
+                "reports/vcftools/parabricks_haplotypecaller/test",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.012",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.012.indv",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.012.pos",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.BEAGLE.GL",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.BEAGLE.PL",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.FILTER.summary",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.FORMAT",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.INFO",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.LROH",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.Tajima.D",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.TsTv",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.TsTv.count",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.TsTv.qual",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.TsTv.summary",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.bcf",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.diff.discordance.matrix",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.diff.indv",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.diff.indv_in_files",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.diff.sites",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.diff.sites_in_files",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.diff.switch",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.frq",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.frq.count",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.gdepth",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.geno.chisq",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.geno.ld",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.hap.ld",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.hapcount",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.het",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.hwe",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.idepth",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.ifreqburden",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.imiss",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.impute.hap",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.impute.hap.indv",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.impute.hap.legend",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.indel.hist",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.interchrom.geno.ld",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.interchrom.hap.ld",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.kept.sites",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.ldepth",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.ldepth.mean",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.ldhat.locs",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.ldhat.sites",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.list.geno.ld",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.list.hap.ld",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.lmiss",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.lqual",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.map",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.mendel",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.ped",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.relatedness",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.relatedness2",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.removed.sites",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.singletons",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.sites.pi",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.snpden",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.tfam",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.tped",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.vcf",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.weir.fst",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.windowed.pi",
+                "variant_calling",
+                "variant_calling/parabricks_haplotypecaller",
+                "variant_calling/parabricks_haplotypecaller/test",
+                "variant_calling/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.vcf.gz",
+                "variant_calling/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.vcf.gz.tbi"
+            ],
+            [
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
+        ],
+        "timestamp": "2026-10-29T16:50:53.862921722",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "-profile test --tools parabricks_haplotypecaller,haplotypecaller --joint_germline -stub": {
+        "content": [
+            38,
+            {
+                "BCFTOOLS_SORT": {
+                    "bcftools": "1.23.1"
+                },
+                "BCFTOOLS_STATS": {
+                    "bcftools": "1.23.1"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "GATK4_APPLYVQSR_INDEL": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GATK4_APPLYVQSR_SNP": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GATK4_GENOMICSDBIMPORT": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GATK4_GENOTYPEGVCFS": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GATK4_HAPLOTYPECALLER": {
+                    "gatk4": "4.7.0.0"
+                },
+                "MERGE_GENOTYPEGVCFS": {
+                    "gatk4": "4.7.0.0"
+                },
+                "MOSDEPTH": {
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
+                },
+                "PARABRICKS_HAPLOTYPECALLER": {
+                    "parabricks": "4.8.0-1"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": "1.24"
+                },
+                "TABIX_BGZIPTABIX_GVCF": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "VARIANTRECALIBRATOR_INDEL": {
+                    "gatk4": "4.7.0.0"
+                },
+                "VARIANTRECALIBRATOR_SNP": {
+                    "gatk4": "4.7.0.0"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
+                }
+            },
+            [
+                "csv",
+                "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/index.json",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/.stub",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/.stub",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/bcftools",
+                "reports/bcftools/haplotypecaller",
+                "reports/bcftools/haplotypecaller/joint_variant_calling",
+                "reports/bcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.bcftools_stats.txt",
+                "reports/bcftools/parabricks_haplotypecaller",
+                "reports/bcftools/parabricks_haplotypecaller/joint_variant_calling",
+                "reports/bcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.bcftools_stats.txt",
+                "reports/mosdepth",
+                "reports/mosdepth/testN",
+                "reports/mosdepth/testN/testN.recal.global.dist.txt",
+                "reports/mosdepth/testN/testN.recal.per-base.bed.gz",
+                "reports/mosdepth/testN/testN.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/testN/testN.recal.per-base.d4",
+                "reports/mosdepth/testN/testN.recal.quantized.bed.gz",
+                "reports/mosdepth/testN/testN.recal.quantized.bed.gz.csi",
+                "reports/mosdepth/testN/testN.recal.region.dist.txt",
+                "reports/mosdepth/testN/testN.recal.regions.bed.gz",
+                "reports/mosdepth/testN/testN.recal.regions.bed.gz.csi",
+                "reports/mosdepth/testN/testN.recal.summary.txt",
+                "reports/mosdepth/testN/testN.recal.thresholds.bed.gz",
+                "reports/mosdepth/testN/testN.recal.thresholds.bed.gz.csi",
+                "reports/mosdepth/testT",
+                "reports/mosdepth/testT/testT.recal.global.dist.txt",
+                "reports/mosdepth/testT/testT.recal.per-base.bed.gz",
+                "reports/mosdepth/testT/testT.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/testT/testT.recal.per-base.d4",
+                "reports/mosdepth/testT/testT.recal.quantized.bed.gz",
+                "reports/mosdepth/testT/testT.recal.quantized.bed.gz.csi",
+                "reports/mosdepth/testT/testT.recal.region.dist.txt",
+                "reports/mosdepth/testT/testT.recal.regions.bed.gz",
+                "reports/mosdepth/testT/testT.recal.regions.bed.gz.csi",
+                "reports/mosdepth/testT/testT.recal.summary.txt",
+                "reports/mosdepth/testT/testT.recal.thresholds.bed.gz",
+                "reports/mosdepth/testT/testT.recal.thresholds.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/testN",
+                "reports/samtools/testN/testN.recal.cram.stats",
+                "reports/samtools/testT",
+                "reports/samtools/testT/testT.recal.cram.stats",
+                "reports/vcftools",
+                "reports/vcftools/haplotypecaller",
+                "reports/vcftools/haplotypecaller/joint_variant_calling",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.012",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.012.indv",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.012.pos",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.BEAGLE.GL",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.BEAGLE.PL",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.FILTER.summary",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.FORMAT",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.INFO",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.LROH",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.Tajima.D",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.TsTv",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.TsTv.count",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.TsTv.qual",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.TsTv.summary",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.bcf",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.diff.discordance.matrix",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.diff.indv",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.diff.indv_in_files",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.diff.sites",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.diff.sites_in_files",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.diff.switch",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.frq",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.frq.count",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.gdepth",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.geno.chisq",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.geno.ld",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.hap.ld",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.hapcount",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.het",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.hwe",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.idepth",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.ifreqburden",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.imiss",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.impute.hap",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.impute.hap.indv",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.impute.hap.legend",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.indel.hist",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.interchrom.geno.ld",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.interchrom.hap.ld",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.kept.sites",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.ldepth",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.ldepth.mean",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.ldhat.locs",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.ldhat.sites",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.list.geno.ld",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.list.hap.ld",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.lmiss",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.lqual",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.map",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.mendel",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.ped",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.relatedness",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.relatedness2",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.removed.sites",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.singletons",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.sites.pi",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.snpden",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.tfam",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.tped",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.vcf",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.weir.fst",
+                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.windowed.pi",
+                "reports/vcftools/parabricks_haplotypecaller",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.012",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.012.indv",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.012.pos",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.BEAGLE.GL",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.BEAGLE.PL",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.FILTER.summary",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.FORMAT",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.INFO",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.LROH",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.Tajima.D",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.TsTv",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.TsTv.count",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.TsTv.qual",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.TsTv.summary",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.bcf",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.diff.discordance.matrix",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.diff.indv",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.diff.indv_in_files",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.diff.sites",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.diff.sites_in_files",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.diff.switch",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.frq",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.frq.count",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.gdepth",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.geno.chisq",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.geno.ld",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.hap.ld",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.hapcount",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.het",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.hwe",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.idepth",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.ifreqburden",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.imiss",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.impute.hap",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.impute.hap.indv",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.impute.hap.legend",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.indel.hist",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.interchrom.geno.ld",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.interchrom.hap.ld",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.kept.sites",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.ldepth",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.ldepth.mean",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.ldhat.locs",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.ldhat.sites",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.list.geno.ld",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.list.hap.ld",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.lmiss",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.lqual",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.map",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.mendel",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.ped",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.relatedness",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.relatedness2",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.removed.sites",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.singletons",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.sites.pi",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.snpden",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.tfam",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.tped",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.vcf",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.weir.fst",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.windowed.pi",
+                "variant_calling",
+                "variant_calling/haplotypecaller",
+                "variant_calling/haplotypecaller/joint_variant_calling",
+                "variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz",
+                "variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz.tbi",
+                "variant_calling/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.vcf.gz",
+                "variant_calling/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.vcf.gz.tbi",
+                "variant_calling/haplotypecaller/testN",
+                "variant_calling/haplotypecaller/testN/testN.haplotypecaller.g.vcf.gz",
+                "variant_calling/haplotypecaller/testN/testN.haplotypecaller.g.vcf.gz.tbi",
+                "variant_calling/haplotypecaller/testT",
+                "variant_calling/haplotypecaller/testT/testT.haplotypecaller.g.vcf.gz",
+                "variant_calling/haplotypecaller/testT/testT.haplotypecaller.g.vcf.gz.tbi",
+                "variant_calling/parabricks_haplotypecaller",
+                "variant_calling/parabricks_haplotypecaller/joint_variant_calling",
+                "variant_calling/parabricks_haplotypecaller/joint_variant_calling/joint_germline.vcf.gz",
+                "variant_calling/parabricks_haplotypecaller/joint_variant_calling/joint_germline.vcf.gz.tbi",
+                "variant_calling/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.vcf.gz",
+                "variant_calling/parabricks_haplotypecaller/joint_variant_calling/joint_germline_recalibrated.vcf.gz.tbi",
+                "variant_calling/parabricks_haplotypecaller/testN",
+                "variant_calling/parabricks_haplotypecaller/testN/testN.parabricks_haplotypecaller.g.vcf.gz",
+                "variant_calling/parabricks_haplotypecaller/testN/testN.parabricks_haplotypecaller.g.vcf.gz.tbi",
+                "variant_calling/parabricks_haplotypecaller/testT",
+                "variant_calling/parabricks_haplotypecaller/testT/testT.parabricks_haplotypecaller.g.vcf.gz",
+                "variant_calling/parabricks_haplotypecaller/testT/testT.parabricks_haplotypecaller.g.vcf.gz.tbi"
+            ],
+            [
+                "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.",
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
+        ],
+        "timestamp": "2026-10-29T16:56:04.91160919",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "-profile test,gpu --tools parabricks_haplotypecaller --joint_germline": {
+        "content": [
+            24,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": "1.23.1"
@@ -38,13 +487,7 @@
                 "GATK4_GENOTYPEGVCFS": {
                     "gatk4": "4.7.0.0"
                 },
-                "GATK4_HAPLOTYPECALLER": {
-                    "gatk4": "4.7.0.0"
-                },
                 "MERGE_GENOTYPEGVCFS": {
-                    "gatk4": "4.7.0.0"
-                },
-                "MERGE_HAPLOTYPECALLER": {
                     "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
@@ -52,7 +495,7 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_HAPLOTYPECALLER": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -176,9 +619,9 @@
                 "reference",
                 "reports",
                 "reports/bcftools",
-                "reports/bcftools/haplotypecaller",
-                "reports/bcftools/haplotypecaller/joint_variant_calling",
-                "reports/bcftools/haplotypecaller/joint_variant_calling/joint_germline.bcftools_stats.txt",
+                "reports/bcftools/parabricks_haplotypecaller",
+                "reports/bcftools/parabricks_haplotypecaller/joint_variant_calling",
+                "reports/bcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline.bcftools_stats.txt",
                 "reports/mosdepth",
                 "reports/mosdepth/testN",
                 "reports/mosdepth/testN/testN.recal.mosdepth.global.dist.txt",
@@ -202,23 +645,16 @@
                 "reports/samtools/testT",
                 "reports/samtools/testT/testT.recal.cram.stats",
                 "reports/vcftools",
-                "reports/vcftools/haplotypecaller",
-                "reports/vcftools/haplotypecaller/joint_variant_calling",
-                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.FILTER.summary",
-                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.TsTv.count",
-                "reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.TsTv.qual",
+                "reports/vcftools/parabricks_haplotypecaller",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline.FILTER.summary",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline.TsTv.count",
+                "reports/vcftools/parabricks_haplotypecaller/joint_variant_calling/joint_germline.TsTv.qual",
                 "variant_calling",
-                "variant_calling/haplotypecaller",
-                "variant_calling/haplotypecaller/joint_variant_calling",
-                "variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz",
-                "variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz.tbi",
-                "variant_calling/haplotypecaller/testN",
-                "variant_calling/haplotypecaller/testN/testN.haplotypecaller.g.vcf.gz",
-                "variant_calling/haplotypecaller/testN/testN.haplotypecaller.g.vcf.gz.tbi",
-                "variant_calling/haplotypecaller/testT",
-                "variant_calling/haplotypecaller/testT/testT.haplotypecaller.g.vcf.gz",
-                "variant_calling/haplotypecaller/testT/testT.haplotypecaller.g.vcf.gz.tbi",
                 "variant_calling/parabricks_haplotypecaller",
+                "variant_calling/parabricks_haplotypecaller/joint_variant_calling",
+                "variant_calling/parabricks_haplotypecaller/joint_variant_calling/joint_germline.vcf.gz",
+                "variant_calling/parabricks_haplotypecaller/joint_variant_calling/joint_germline.vcf.gz.tbi",
                 "variant_calling/parabricks_haplotypecaller/testN",
                 "variant_calling/parabricks_haplotypecaller/testN/testN.parabricks_haplotypecaller.g.vcf.gz",
                 "variant_calling/parabricks_haplotypecaller/testN/testN.parabricks_haplotypecaller.g.vcf.gz.tbi",
@@ -256,8 +692,6 @@
             "No CRAM files",
             [
                 "joint_germline.vcf.gz:md5,3551d1de0abc899d2bbd0cbe1336f832",
-                "testN.haplotypecaller.g.vcf.gz:md5,44590f25a9ed621929879cefc601f95a",
-                "testT.haplotypecaller.g.vcf.gz:md5,e37d210dda0bfe2716502353328b1103",
                 "testN.parabricks_haplotypecaller.g.vcf.gz:md5,54bf32a1bc083d30e664cd5df332d928",
                 "testT.parabricks_haplotypecaller.g.vcf.gz:md5,47d78e8c17e2e9d24528fa81541d35cc"
             ],
@@ -265,7 +699,7 @@
                 "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
             ]
         ],
-        "timestamp": "2026-10-01T23:52:01.019316312",
+        "timestamp": "2026-10-29T16:52:49.336740525",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -273,17 +707,26 @@
     },
     "-profile test --tools parabricks_haplotypecaller --no_intervals -stub": {
         "content": [
-            10,
+            13,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "CNNSCOREVARIANTS": {
+                    "gatk4": "4.5.0.0"
+                },
+                "FILTERVARIANTTRANCHES": {
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
                 },
+                "PARABRICKS_DBSNP": {
+                    "parabricks": "4.8.0-1"
+                },
                 "PARABRICKS_HAPLOTYPECALLER": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -419,7 +862,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-08-31T07:36:11.548103451",
+        "timestamp": "2026-10-29T16:49:12.89651309",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -427,20 +870,29 @@
     },
     "-profile test,gpu --tools parabricks_haplotypecaller": {
         "content": [
-            12,
+            15,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
                 },
+                "CNNSCOREVARIANTS": {
+                    "gatk4": "4.5.0.0"
+                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
+                },
+                "FILTERVARIANTTRANCHES": {
+                    "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
                 },
+                "PARABRICKS_DBSNP": {
+                    "parabricks": "4.8.0-1"
+                },
                 "PARABRICKS_HAPLOTYPECALLER": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -566,7 +1018,7 @@
                 "reports/bcftools",
                 "reports/bcftools/parabricks_haplotypecaller",
                 "reports/bcftools/parabricks_haplotypecaller/test",
-                "reports/bcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.bcftools_stats.txt",
+                "reports/bcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.filtered.bcftools_stats.txt",
                 "reports/mosdepth",
                 "reports/mosdepth/test",
                 "reports/mosdepth/test/test.recal.mosdepth.global.dist.txt",
@@ -580,12 +1032,14 @@
                 "reports/vcftools",
                 "reports/vcftools/parabricks_haplotypecaller",
                 "reports/vcftools/parabricks_haplotypecaller/test",
-                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.FILTER.summary",
-                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.TsTv.count",
-                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.TsTv.qual",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.filtered.FILTER.summary",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.filtered.TsTv.count",
+                "reports/vcftools/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.filtered.TsTv.qual",
                 "variant_calling",
                 "variant_calling/parabricks_haplotypecaller",
                 "variant_calling/parabricks_haplotypecaller/test",
+                "variant_calling/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.filtered.vcf.gz",
+                "variant_calling/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.filtered.vcf.gz.tbi",
                 "variant_calling/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.vcf.gz",
                 "variant_calling/parabricks_haplotypecaller/test/test.parabricks_haplotypecaller.vcf.gz.tbi"
             ],
@@ -597,23 +1051,24 @@
                 "samtools-stats-dp.txt:md5,53338147cfd6cffd24eef5c07518fe4c",
                 "samtools_alignment_plot.txt:md5,3622ecb71829cc1c581157e403048fd1",
                 "samtools_insert_size.txt:md5,108caa8155bf293b835c81ae10cc25f4",
-                "test.parabricks_haplotypecaller.bcftools_stats.txt:md5,b4f8cb62900cbf17e8ecda9d66efee58",
+                "test.parabricks_haplotypecaller.filtered.bcftools_stats.txt:md5,eaf403f337dcb584df8ff8b94daeca44",
                 "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
                 "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
                 "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
                 "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
                 "test.recal.regions.bed.gz.csi:md5,c984bfd7ccac964973c6c1566992b21d",
-                "test.parabricks_haplotypecaller.FILTER.summary:md5,87a84b5f8ac3d3cbeeef7d60afcdbfe7",
-                "test.parabricks_haplotypecaller.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
+                "test.parabricks_haplotypecaller.filtered.FILTER.summary:md5,4e2ceea7f3ff998004691fd71192d9ee",
+                "test.parabricks_haplotypecaller.filtered.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663"
             ],
             "No BAM files",
             "No CRAM files",
             [
-                "test.parabricks_haplotypecaller.vcf.gz:md5,aadd1bbde5bfb0b1af58ad9cf8f1c2f7"
+                "test.parabricks_haplotypecaller.filtered.vcf.gz:md5,df2040bf1bee0252581824d11d5d87d1",
+                "test.parabricks_haplotypecaller.vcf.gz:md5,9d9d103327d59d17e778b663b56136fb"
             ],
             "No warnings"
         ],
-        "timestamp": "2026-08-31T07:35:20.687196333",
+        "timestamp": "2026-10-29T17:00:51.90777775",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

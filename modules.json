@@ -421,6 +421,12 @@
                         "git_sha": "541af7c6735edaae882567b910071b563e9b1317",
                         "installed_by": ["modules"]
                     },
+                    "parabricks/dbsnp": {
+                        "branch": "master",
+                        "git_sha": "7b3452a23773f687ededb4befd037920e5a51341",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/parabricks/dbsnp/parabricks-dbsnp.diff"
+                    },
                     "parabricks/deepsomatic": {
                         "branch": "master",
                         "git_sha": "3ccf6cbb9868aa36cf77b9490af7b47595eaab17",
@@ -438,7 +444,7 @@
                     },
                     "parabricks/haplotypecaller": {
                         "branch": "master",
-                        "git_sha": "3e0ec6464725c64d81abe928e15a6750d5fdd272",
+                        "git_sha": "7b3452a23773f687ededb4befd037920e5a51341",
                         "installed_by": ["modules"]
                     },
                     "parabricks/mutectcaller": {
