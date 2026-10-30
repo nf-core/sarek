@@ -21,6 +21,7 @@
                 "multiqc/multiqc_data",
                 "multiqc/multiqc_data/.stub",
                 "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/.stub",
                 "multiqc/multiqc_report.html",
                 "no_intervals.bed",
                 "no_intervals.bed.gz",
@@ -39,16 +40,19 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-10-30T11:12:34.44367879",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
-        },
-        "timestamp": "2026-02-09T10:01:55.42261324"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools msisensorpro somatic": {
         "content": [
-            11,
+            12,
             {
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
+                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
@@ -189,7 +193,7 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-10-01T21:12:27.67941852",
+        "timestamp": "2026-10-30T11:10:36.151951775",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

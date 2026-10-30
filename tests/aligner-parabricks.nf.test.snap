@@ -1020,8 +1020,11 @@
     },
     "-profile test --aligner parabricks --wes --intervals": {
         "content": [
-            15,
+            16,
             {
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
+                },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
                 },
@@ -1172,6 +1175,7 @@
                 "reference/intervals/chr22_2-15000.bed",
                 "reference/intervals/chr22_2-15000.bed.gz",
                 "reference/intervals/genome.multi_intervals.bed.gz",
+                "reference/intervals/genome.multi_intervals.sorted.bed",
                 "reports",
                 "reports/fastqc",
                 "reports/fastqc/test-test_L1",
@@ -1224,6 +1228,7 @@
                 "chr22_2-15000.bed:md5,3cb9e9a26427faaa23b59b2ebcf55f4d",
                 "chr22_2-15000.bed.gz:md5,3cb9e9a26427faaa23b59b2ebcf55f4d",
                 "genome.multi_intervals.bed.gz:md5,3cb9e9a26427faaa23b59b2ebcf55f4d",
+                "genome.multi_intervals.sorted.bed:md5,3cb9e9a26427faaa23b59b2ebcf55f4d",
                 "test.recal.mosdepth.global.dist.txt:md5,f520c0b61e191a81bc6fa186412a2b80",
                 "test.recal.mosdepth.region.dist.txt:md5,a9e42dc9d21073821858d40ffce5bcde",
                 "test.recal.mosdepth.summary.txt:md5,e52e51bf905aa93cee74c09de7d06ce2",
