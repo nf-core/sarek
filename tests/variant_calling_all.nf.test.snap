@@ -1212,7 +1212,7 @@
                     "gatk4": "4.7.0.0",
                     "samtools": "1.24"
                 },
-                "GETPILEUPSUMMARIES": {
+                "GETPILEUPSUMMARIES_TUMOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "LEARNREADORIENTATIONMODEL": {
@@ -1610,10 +1610,10 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-10-14T15:13:55.473264204",
+        "timestamp": "2026-10-30T18:10:21.840437728",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.0"
+            "nextflow": "25.10.4"
         }
     }
 }

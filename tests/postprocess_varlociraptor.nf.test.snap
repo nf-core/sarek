@@ -359,13 +359,13 @@
                 "FILTERMUTECTCALLS": {
                     "gatk4": "4.7.0.0"
                 },
-                "GATHERPILEUPSUMMARIES": {
+                "GATHERPILEUPSUMMARIES_TUMOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.7.0.0"
                 },
-                "GETPILEUPSUMMARIES": {
+                "GETPILEUPSUMMARIES_TUMOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "LEARNREADORIENTATIONMODEL": {
@@ -598,7 +598,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-30T10:14:19.934835339",
+        "timestamp": "2026-10-30T18:17:18.635549543",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

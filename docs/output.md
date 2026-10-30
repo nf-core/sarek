@@ -513,6 +513,7 @@ If the haplotype-called VCF files are not filtered, then Sarek should be run wit
 #### GATK Mutect2
 
 [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2) calls somatic SNVs and indels via local assembly of haplotypes.
+Raw calls are filtered with GATK `FilterMutectCalls`, after contamination estimation when `--germline_resource` is provided. Read-orientation artefacts are modelled with GATK `LearnReadOrientationModel`.
 When `--joint_mutect2` is used, Mutect2 subworkflow outputs will be saved in a subfolder named with the patient ID and `{patient}.mutect2.vcf.gz` file will contain variant calls from all of the normal and tumor samples of the patient.
 For further reading and documentation see the [Mutect2 manual](https://gatk.broadinstitute.org/hc/en-us/articles/360035531132).
 It is not required, but recommended to have a [panel of normals (PON)](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON) using at least 40 normal samples to get filtered somatic calls. When using `--genome GATK.GRCh38`, a panel-of-normals file is available. However, it is _highly_ recommended to create one matching your tumor samples. Creating your own panel-of-normals is currently not natively supported by the pipeline. See [here](https://gatk.broadinstitute.org/hc/en-us/articles/360035531132) for how to create one manually.
@@ -529,13 +530,13 @@ Files created:
 - `{sample,tumorsample_vs_normalsample,patient}.mutect2.vcf.gz.stats`
   - a stats file generated during calling of raw variants (needed for filtering)
 - `{sample,tumorsample_vs_normalsample}.mutect2.contamination.table`
-  - table calculating the fraction of reads coming from cross-sample contamination
+  - table calculating the fraction of reads coming from cross-sample contamination (only with `--germline_resource`)
 - `{sample,tumorsample_vs_normalsample}.mutect2.segmentation.table`
-  - table containing segmentation of the tumor by minor allele fraction
+  - table containing segmentation of the tumor by minor allele fraction (only with `--germline_resource`)
 - `{sample,tumorsample_vs_normalsample,patient}.mutect2.artifactprior.tar.gz`
   - prior probabilities for read orientation artifacts
 - `{sample,tumorsample,normalsample}.mutect2.pileups.table`
-  - tabulates pileup metrics for inferring contamination
+  - tabulates pileup metrics for inferring contamination, in a directory per sample (only with `--germline_resource`)
 - `{sample,tumorsample_vs_normalsample,patient}.mutect2.filtered.vcf.gz` and `{sample,tumorsample_vs_normalsample,patient}.mutect2.filtered.vcf.gz.tbi`
   - filtered Mutect2 calls VCF with tabix index based on the probability that a variant is somatic
 - `{sample,tumorsample_vs_normalsample,patient}.mutect2.filtered.vcf.gz.filteringStats.tsv`
@@ -617,17 +618,31 @@ Files created:
 
 #### Parabricks MutectCaller
 
-[Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html) is a GPU-accelerated implementation of GATK Mutect2 for somatic SNVs and small indels in tumour-only and tumour-normal samples. Calls are not filtered.
+[Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html) is a GPU-accelerated implementation of GATK Mutect2 for calling somatic SNVs and indels in tumour-only and tumour-normal samples. Calling runs as one job per sample or pair. The germline resource, if provided, is also passed to the caller as the germline prior. Raw calls are filtered with GATK `FilterMutectCalls`, after contamination estimation when `--germline_resource` is provided. Read-orientation artefacts are modelled with GATK `LearnReadOrientationModel`. A panel of normals (`--pon`) is used via Parabricks PoN annotation (`prepon`/`postpon`).
 
 <details markdown="1">
 <summary>Output files for tumour-only and tumour-normal samples</summary>
 
 **Output directory: `{outdir}/variant_calling/parabricks_mutectcaller/{sample,tumoursample_vs_normalsample}/`**
 
+Files created:
+
 - `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.vcf.gz` and `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.tbi`
-  - VCF with tabix index
+  - unfiltered (raw) MutectCaller calls VCF with tabix index
 - `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.stats`
-  - stats file from calling
+  - a stats file generated during calling of raw variants (needed for filtering)
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.contamination.table`
+  - table calculating the fraction of reads coming from cross-sample contamination (only with `--germline_resource`)
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.segmentation.table`
+  - table containing segmentation of the tumour by minor allele fraction (only with `--germline_resource`)
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.artifactprior.tar.gz`
+  - prior probabilities for read orientation artefacts
+- `{sample,tumoursample,normalsample}.parabricks_mutectcaller.pileups.table`
+  - tabulates pileup metrics for inferring contamination, in a directory per sample (only with `--germline_resource`)
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.filtered.vcf.gz` and `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.filtered.vcf.gz.tbi`
+  - filtered calls VCF with tabix index based on the probability that a variant is somatic
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv`
+  - a stats file generated during the filtering of called variants
 
 </details>
 

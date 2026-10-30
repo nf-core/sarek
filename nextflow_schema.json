@@ -476,7 +476,7 @@
                     "pattern": "^\\S+\\.vcf\\.gz$",
                     "exists": true,
                     "description": "Panel-of-normals VCF (bgzipped) for GATK Mutect2",
-                    "help_text": "Without PON, there will be no calls with PASS in the INFO field, only an unfiltered VCF is written.\nIt is highly recommended to make your own PON, as it depends on sequencer and library preparation.\n\nThe pipeline is shipped with a panel-of-normals for `--genome GATK.GRCh38` provided by [GATK](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-). \n\nSee [PON documentation](https://gatk.broadinstitute.org/hc/en-us/articles/360042479112-CreateSomaticPanelOfNormals-BETA)\n> **NB** PON file should be bgzipped."
+                    "help_text": "Without PON, calls are still filtered with FilterMutectCalls, but sites recurrent in normals are not flagged.\nIt is highly recommended to make your own PON, as it depends on sequencer and library preparation.\n\nThe pipeline is shipped with a panel-of-normals for `--genome GATK.GRCh38` provided by [GATK](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-). \n\nSee [PON documentation](https://gatk.broadinstitute.org/hc/en-us/articles/360042479112-CreateSomaticPanelOfNormals-BETA)\n> **NB** PON file should be bgzipped."
                 },
                 "pon_tbi": {
                     "type": "string",
@@ -1032,7 +1032,7 @@
                     "format": "file-path",
                     "pattern": "\\S+\\.vcf\\.gz$",
                     "mimetype": "text/plain",
-                    "description": "Path to GATK Mutect2 Germline Resource File.",
+                    "description": "Path to GATK Mutect2 and Parabricks MutectCaller Germline Resource File.",
                     "help_text": "The germline resource VCF file (bgzipped and tabixed) needed by GATK4 Mutect2 is a collection of calls that are likely present in the sample, with allele frequencies.\nThe AF info field must be present.\nYou can find a smaller, stripped gnomAD VCF file (most of the annotation is removed and only calls signed by PASS are stored) in the AWS iGenomes Annotation/GermlineResource folder.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "germline_resource_tbi": {
@@ -1041,7 +1041,7 @@
                     "pattern": "\\S+\\.vcf\\.gz\\.tbi$",
                     "format": "file-path",
                     "mimetype": "text/plain",
-                    "description": "Path to GATK Mutect2 Germline Resource Index.",
+                    "description": "Path to GATK Mutect2 and Parabricks MutectCaller Germline Resource Index.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the Germline Resource file, if provided. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "known_indels": {

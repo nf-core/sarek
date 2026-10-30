@@ -1,7 +1,7 @@
 {
-    "-profile test --input tests/csv/3.0/recalibrated_somatic_joint.csv --tools mutect2 --joint_mutect2": {
+    "-profile test --input tests/csv/3.0/recalibrated_somatic_joint.csv --tools mutect2 --joint_mutect2 --germline_resource": {
         "content": [
-            18,
+            24,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -9,10 +9,22 @@
                 "BEDTOOLS_SORT": {
                     "bedtools": "2.31.1"
                 },
+                "CALCULATECONTAMINATION": {
+                    "gatk4": "4.7.0.0"
+                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.7.0.0"
+                },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GETPILEUPSUMMARIES_NORMAL": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GETPILEUPSUMMARIES_TUMOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "LEARNREADORIENTATIONMODEL": {
@@ -143,7 +155,7 @@
                 "reports/bcftools",
                 "reports/bcftools/mutect2",
                 "reports/bcftools/mutect2/test",
-                "reports/bcftools/mutect2/test/test.mutect2.bcftools_stats.txt",
+                "reports/bcftools/mutect2/test/test.mutect2.filtered.bcftools_stats.txt",
                 "reports/mosdepth",
                 "reports/mosdepth/sample1",
                 "reports/mosdepth/sample1/sample1.recal.mosdepth.global.dist.txt",
@@ -179,13 +191,26 @@
                 "reports/vcftools",
                 "reports/vcftools/mutect2",
                 "reports/vcftools/mutect2/test",
-                "reports/vcftools/mutect2/test/test.mutect2.FILTER.summary",
-                "reports/vcftools/mutect2/test/test.mutect2.TsTv.count",
-                "reports/vcftools/mutect2/test/test.mutect2.TsTv.qual",
+                "reports/vcftools/mutect2/test/test.mutect2.filtered.FILTER.summary",
+                "reports/vcftools/mutect2/test/test.mutect2.filtered.TsTv.count",
+                "reports/vcftools/mutect2/test/test.mutect2.filtered.TsTv.qual",
                 "variant_calling",
                 "variant_calling/mutect2",
+                "variant_calling/mutect2/sample1",
+                "variant_calling/mutect2/sample1/sample1.mutect2.pileups.table",
+                "variant_calling/mutect2/sample2",
+                "variant_calling/mutect2/sample2/sample2.mutect2.pileups.table",
+                "variant_calling/mutect2/sample3",
+                "variant_calling/mutect2/sample3/sample3.mutect2.pileups.table",
                 "variant_calling/mutect2/test",
+                "variant_calling/mutect2/test/sample2_vs_sample1.mutect2.contamination.table",
+                "variant_calling/mutect2/test/sample2_vs_sample1.mutect2.segmentation.table",
+                "variant_calling/mutect2/test/sample3_vs_sample1.mutect2.contamination.table",
+                "variant_calling/mutect2/test/sample3_vs_sample1.mutect2.segmentation.table",
                 "variant_calling/mutect2/test/test.mutect2.artifactprior.tar.gz",
+                "variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz",
+                "variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz.filteringStats.tsv",
+                "variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz.tbi",
                 "variant_calling/mutect2/test/test.mutect2.vcf.gz",
                 "variant_calling/mutect2/test/test.mutect2.vcf.gz.stats",
                 "variant_calling/mutect2/test/test.mutect2.vcf.gz.tbi"
@@ -198,7 +223,7 @@
                 "samtools-stats-dp.txt:md5,801a1756a694e97039aae8500a5477f6",
                 "samtools_alignment_plot.txt:md5,82d6fb277fbbbd221a92ebda4567d9d9",
                 "samtools_insert_size.txt:md5,00660bb059693565c1189ce98356e414",
-                "test.mutect2.bcftools_stats.txt:md5,2de4f9f8da53b202e9d784b4e95c3245",
+                "test.mutect2.filtered.bcftools_stats.txt:md5,3de1f40b924bf92693e0e0981488c3fa",
                 "sample1.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
                 "sample1.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
                 "sample1.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
@@ -220,29 +245,37 @@
                 "sample3.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample3.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
                 "sample3.recal.regions.bed.gz.csi:md5,2c9ca91a9535113038c59b6e408e0818",
-                "test.mutect2.FILTER.summary:md5,19fd44ff1fbdfe422473bf1f5dc9cdb3",
-                "test.mutect2.TsTv.count:md5,aa51bde6080c015c6aa6c8254977dd11",
+                "test.mutect2.filtered.FILTER.summary:md5,d6677c2cd398ecd911a73652ff063cc2",
+                "test.mutect2.filtered.TsTv.count:md5,aa51bde6080c015c6aa6c8254977dd11",
+                "sample1.mutect2.pileups.table:md5,29388a37ebae6c6c5f868bdb7b341d26",
+                "sample2.mutect2.pileups.table:md5,df85ceff89be6f9a13707d9cda29dd6e",
+                "sample3.mutect2.pileups.table:md5,25bd3d56355c72c6d9aacb380599f220",
+                "sample2_vs_sample1.mutect2.contamination.table:md5,46c708c943b453da89a3da08acfdb2a7",
+                "sample2_vs_sample1.mutect2.segmentation.table:md5,f4643d9319bde4efbfbe516d6fb13052",
+                "sample3_vs_sample1.mutect2.contamination.table:md5,11440fe64b5b953d7efb9cf47e330364",
+                "sample3_vs_sample1.mutect2.segmentation.table:md5,38f83e2f98b206640644dd93d5e96f4e",
+                "test.mutect2.filtered.vcf.gz.filteringStats.tsv:md5,974e7b357a6e55c2e330604a08dd8918",
                 "test.mutect2.vcf.gz.stats:md5,6340205d9cc91fc3c2d243fc151c210b"
             ],
             "No BAM files",
             "No CRAM files",
             [
-                "test.mutect2.vcf.gz:md5,593f6a3b49d8a4e44b1e2696883116c0"
+                "test.mutect2.filtered.vcf.gz:md5,1578c7d049ae2b512889fb468fc95b5d",
+                "test.mutect2.vcf.gz:md5,825af113ab10d426b0462ee89129fba4"
             ],
             [
-                "WARN: If Mutect2 is specified without a germline resource, no filtering will be done.",
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-10-30T10:54:42.193178103",
+        "timestamp": "2026-10-30T17:26:43.944099152",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
     },
-    "-profile test --input tests/csv/3.0/recalibrated_tumoronly_joint.csv --tools mutect2 --joint_mutect2": {
+    "-profile test --input tests/csv/3.0/recalibrated_tumoronly_joint.csv --tools mutect2 --joint_mutect2 --germline_resource": {
         "content": [
-            16,
+            21,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -250,10 +283,19 @@
                 "BUILD_INTERVALS": {
                     "gawk": "5.3.1"
                 },
+                "CALCULATECONTAMINATION": {
+                    "gatk4": "4.7.0.0"
+                },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
                 },
+                "FILTERMUTECTCALLS": {
+                    "gatk4": "4.7.0.0"
+                },
                 "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.7.0.0"
+                },
+                "GETPILEUPSUMMARIES_TUMOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "LEARNREADORIENTATIONMODEL": {
@@ -384,7 +426,7 @@
                 "reports/bcftools",
                 "reports/bcftools/mutect2",
                 "reports/bcftools/mutect2/test",
-                "reports/bcftools/mutect2/test/test.mutect2.bcftools_stats.txt",
+                "reports/bcftools/mutect2/test/test.mutect2.filtered.bcftools_stats.txt",
                 "reports/mosdepth",
                 "reports/mosdepth/sample2",
                 "reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt",
@@ -410,13 +452,24 @@
                 "reports/vcftools",
                 "reports/vcftools/mutect2",
                 "reports/vcftools/mutect2/test",
-                "reports/vcftools/mutect2/test/test.mutect2.FILTER.summary",
-                "reports/vcftools/mutect2/test/test.mutect2.TsTv.count",
-                "reports/vcftools/mutect2/test/test.mutect2.TsTv.qual",
+                "reports/vcftools/mutect2/test/test.mutect2.filtered.FILTER.summary",
+                "reports/vcftools/mutect2/test/test.mutect2.filtered.TsTv.count",
+                "reports/vcftools/mutect2/test/test.mutect2.filtered.TsTv.qual",
                 "variant_calling",
                 "variant_calling/mutect2",
+                "variant_calling/mutect2/sample2",
+                "variant_calling/mutect2/sample2/sample2.mutect2.pileups.table",
+                "variant_calling/mutect2/sample3",
+                "variant_calling/mutect2/sample3/sample3.mutect2.pileups.table",
                 "variant_calling/mutect2/test",
+                "variant_calling/mutect2/test/sample2.mutect2.contamination.table",
+                "variant_calling/mutect2/test/sample2.mutect2.segmentation.table",
+                "variant_calling/mutect2/test/sample3.mutect2.contamination.table",
+                "variant_calling/mutect2/test/sample3.mutect2.segmentation.table",
                 "variant_calling/mutect2/test/test.mutect2.artifactprior.tar.gz",
+                "variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz",
+                "variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz.filteringStats.tsv",
+                "variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz.tbi",
                 "variant_calling/mutect2/test/test.mutect2.vcf.gz",
                 "variant_calling/mutect2/test/test.mutect2.vcf.gz.stats",
                 "variant_calling/mutect2/test/test.mutect2.vcf.gz.tbi"
@@ -429,7 +482,7 @@
                 "samtools-stats-dp.txt:md5,32150435d1e8f1c6f47ba618a71f1e86",
                 "samtools_alignment_plot.txt:md5,cb01fb538637d281195e46e557031c7a",
                 "samtools_insert_size.txt:md5,97989575c42dadc81f347d661faa09cb",
-                "test.mutect2.bcftools_stats.txt:md5,3079129e89fdaf04a3403d888a99fd81",
+                "test.mutect2.filtered.bcftools_stats.txt:md5,e1bf58fe7725891f45cfe4ac2b80ac8a",
                 "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.region.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
                 "sample2.recal.mosdepth.summary.txt:md5,b0b47739dcafeeb1a9e6218b8abca1e0",
@@ -444,21 +497,28 @@
                 "sample3.recal.per-base.bed.gz.csi:md5,8964f1acc52b73fe72deffcd39e98d78",
                 "sample3.recal.regions.bed.gz:md5,fb0efeba20ea272b7b709cf65246689e",
                 "sample3.recal.regions.bed.gz.csi:md5,e95efa0e55e9f9699b48e6a661d5e1e4",
-                "test.mutect2.FILTER.summary:md5,b55562501b24e3cec53c22ffe0ce346f",
-                "test.mutect2.TsTv.count:md5,d06a480e205f2f894db2bb51846b4c39",
-                "test.mutect2.vcf.gz.stats:md5,bd9ff0f343dd60fdd2860fdeff617a51"
+                "test.mutect2.filtered.FILTER.summary:md5,265bda6416b3cb5f9962798b8fce0ee0",
+                "test.mutect2.filtered.TsTv.count:md5,0daf50785eea2f2c983f472c3e9dfcc4",
+                "sample2.mutect2.pileups.table:md5,98a2f619ed4fb515e33c38394bd7a14f",
+                "sample3.mutect2.pileups.table:md5,689e26428e214cc26e06cbe29530f526",
+                "sample2.mutect2.contamination.table:md5,46c708c943b453da89a3da08acfdb2a7",
+                "sample2.mutect2.segmentation.table:md5,f4643d9319bde4efbfbe516d6fb13052",
+                "sample3.mutect2.contamination.table:md5,11440fe64b5b953d7efb9cf47e330364",
+                "sample3.mutect2.segmentation.table:md5,38f83e2f98b206640644dd93d5e96f4e",
+                "test.mutect2.filtered.vcf.gz.filteringStats.tsv:md5,f8ae5f7b5948d96623f2432e86b0f97f",
+                "test.mutect2.vcf.gz.stats:md5,b06f734e54427567de62a804d8b2c5a2"
             ],
             "No BAM files",
             "No CRAM files",
             [
-                "test.mutect2.vcf.gz:md5,e064ce0953bb07416f3bc8a60c761238"
+                "test.mutect2.filtered.vcf.gz:md5,f3b8806f45279441ef5e496bd828b9f3",
+                "test.mutect2.vcf.gz:md5,bfab24ed71a92b0cc1f35ef7356339d6"
             ],
             [
-                "WARN: If Mutect2 is specified without a germline resource, no filtering will be done.",
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-10-01T21:15:42.63077788",
+        "timestamp": "2026-10-30T18:05:31.884329931",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

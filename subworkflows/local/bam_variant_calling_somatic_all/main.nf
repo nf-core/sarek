@@ -50,6 +50,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     rt_file                       // channel: [optional]  ascat rt file
     joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
     wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
+    germline_resource_provided    // boolean: [mandatory] whether a germline resource was provided
 
     main:
     // channels are often remapped to match module/subworkflow
@@ -179,7 +180,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // INDEXCOV
     //   WGS only
-    if (params.wes == false && tools.split(',').contains('indexcov')) {
+    if (wes == false && tools.split(',').contains('indexcov')) {
         BAM_VARIANT_CALLING_INDEXCOV(
             cram,
             fasta,
@@ -248,9 +249,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             panel_of_normals_tbi,
             intervals,
             joint_mutect2,
+            germline_resource_provided,
         )
 
-        // vcf_mutect2 and tbi_mutect2 always contain usable output (filtered if available, otherwise unfiltered)
         vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.vcf
         tbi_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.tbi
     }
@@ -278,9 +279,14 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         cram_parabricks_mutectcaller,
         fasta,
         fasta_fai,
+        dict,
+        germline_resource,
+        germline_resource_tbi,
         panel_of_normals,
         panel_of_normals_tbi,
         intervals_bed_combined,
+        intervals,
+        germline_resource_provided,
     )
 
     vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER.out.vcf

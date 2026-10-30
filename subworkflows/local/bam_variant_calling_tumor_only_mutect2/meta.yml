@@ -1,8 +1,8 @@
 name: gatk_tumor_only_somatic_variant_calling
 description: |
-  Perform variant calling on a single tumor sample using mutect2 tumor only mode.
-  Run the input bam file through getpileupsummarries and then calculatecontaminationto get the contamination and segmentation tables.
-  Filter the mutect2 output vcf using filtermutectcalls and the contamination & segmentation tables for additional filtering.
+  Perform variant calling on a single tumor sample using mutect2 tumor only mode, scattered over intervals.
+  Calls, stats and f1r2 files are merged across intervals and filtered with BAM_VCF_FILTER_MUTECT_CALLS_GATK
+  (learnreadorientationmodel, getpileupsummaries and calculatecontamination when a germline resource is provided, filtermutectcalls).
 keywords:
   - gatk4
   - mutect2
@@ -14,9 +14,9 @@ keywords:
   - filtered_vcf
 modules:
   - gatk4/mutect2
-  - gatk4/getpileupsummaries
-  - gatk4/calculatecontamination
-  - gatk4/filtermutectcalls
+  - gatk4/mergevcfs
+  - gatk4/mergemutectstats
+  - bam_vcf_filter_mutect_calls_gatk
 input:
   - meta:
       type: map
@@ -63,46 +63,54 @@ input:
       type: file
       description: File containing intervals.
       pattern: "*.interval_list"
+  - joint_mutect2:
+      type: boolean
+      description: Run mutect2 in joint mode, calling all samples of a patient together.
+  - germline_resource_provided:
+      type: boolean
+      description: Whether a germline resource was provided, which enables contamination estimation before filtering.
 output:
-  - versions:
+  - vcf:
       type: file
-      description: File containing software versions
-      pattern: "versions.yml"
-  - mutect2_vcf:
+      description: |
+        Filtered VCF
+        Structure: [ val(meta), path(file) ]
+      pattern: "*.filtered.vcf.gz"
+  - tbi:
       type: file
-      description: Compressed vcf file to be used for variant_calling.
-      pattern: "[ *.vcf.gz ]"
-  - mutect2_tbi:
+      description: |
+        Index of the filtered VCF
+        Structure: [ val(meta), path(file) ]
+      pattern: "*.filtered.vcf.gz.tbi"
+  - stats_filtered:
       type: file
-      description: Indexes of the mutect2_vcf file
-      pattern: "[ *vcf.gz.tbi ]"
-  - mutect2_stats:
+      description: |
+        FilterMutectCalls statistics
+        Structure: [ val(meta), path(file) ]
+      pattern: "*.filteringStats.tsv"
+  - artifact_priors:
       type: file
-      description: Stats files for the mutect2 vcf
-      pattern: "[ *vcf.gz.stats ]"
+      description: |
+        Read-orientation artefact priors
+        Structure: [ val(meta), path(file) ]
+      pattern: "*.artifactprior.tar.gz"
   - pileup_table:
       type: file
-      description: File containing the pileup summary table.
+      description: |
+        Pileup summary table of the tumour (only with a germline resource)
+        Structure: [ val(meta), path(file) ]
       pattern: "*.pileups.table"
   - contamination_table:
       type: file
-      description: File containing the contamination table.
+      description: |
+        Contamination table (only with a germline resource)
+        Structure: [ val(meta), path(file) ]
       pattern: "*.contamination.table"
   - segmentation_table:
       type: file
-      description: Output table containing segmentation of tumor minor allele fractions.
+      description: |
+        Tumour segmentation table (only with a germline resource)
+        Structure: [ val(meta), path(file) ]
       pattern: "*.segmentation.table"
-  - filtered_vcf:
-      type: file
-      description: file containing filtered mutect2 calls.
-      pattern: "*.vcf.gz"
-  - filtered_tbi:
-      type: file
-      description: tbi file that pairs with filtered vcf.
-      pattern: "*.vcf.gz.tbi"
-  - filtered_stats:
-      type: file
-      description: file containing statistics of the filtermutectcalls run.
-      pattern: "*.filteringStats.tsv"
 authors:
   - "@GCJMackenzie"
