@@ -97,13 +97,14 @@ workflow BAM_VCF_FILTER_MUTECT_CALLS_GATK {
         CALCULATECONTAMINATION(calculatecontamination_in)
 
         if (joint) {
-            // Joint calls are per patient: drop the per-sample keys as the caller does and group the tables by patient
-            contamination_table = CALCULATECONTAMINATION.out.contamination
-                .map { meta, table -> [meta - meta.subMap('normal_id', 'sample', 'tumor_id') + [id: meta.patient], table] }
+            // One table per input row, so each patient's group is released as soon as its own tables are done
+            tables_per_patient = cram
+                .map { meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai -> [meta.patient, meta] }
                 .groupTuple()
-            segmentation_table = CALCULATECONTAMINATION.out.segmentation
-                .map { meta, table -> [meta - meta.subMap('normal_id', 'sample', 'tumor_id') + [id: meta.patient], table] }
-                .groupTuple()
+                .map { patient, metas -> [patient, metas.size()] }
+
+            contamination_table = groupTablesByPatient(CALCULATECONTAMINATION.out.contamination, tables_per_patient)
+            segmentation_table = groupTablesByPatient(CALCULATECONTAMINATION.out.segmentation, tables_per_patient)
         }
         else {
             contamination_table = CALCULATECONTAMINATION.out.contamination
@@ -135,4 +136,14 @@ workflow BAM_VCF_FILTER_MUTECT_CALLS_GATK {
     segmentation_table                                                  // channel: [ meta, segmentation ]
     pileup_table_normal                                                 // channel: [ meta, table ]
     pileup_table_tumor                                                  // channel: [ meta, table ]
+}
+
+// Joint calls are per patient: drop the per-sample keys as the caller does and group the tables by patient
+def groupTablesByPatient(tables, tables_per_patient) {
+    return tables
+        .map { meta, table -> [meta.patient, meta - meta.subMap('normal_id', 'sample', 'tumor_id') + [id: meta.patient], table] }
+        .combine(tables_per_patient, by: 0)
+        .map { _patient, meta, table, n -> [groupKey(meta, n), table] }
+        .groupTuple()
+        .map { key, grouped_tables -> [key.getGroupTarget(), grouped_tables] }
 }
