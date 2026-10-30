@@ -37,7 +37,7 @@ input:
           - edam: http://edamontology.org/format_3327 # BAI
     - input_normal:
         type: file
-        description: BAM file from matched normal sample (required; tumor-only mode is not supported)
+        description: BAM file from matched normal sample (optional; omit for tumor-only mode)
         pattern: "*.bam"
         ontologies:
           - edam: http://edamontology.org/format_2572 # BAM
@@ -71,6 +71,19 @@ input:
         pattern: "*.fai"
         ontologies:
           - edam: http://edamontology.org/format_3475 # TSV
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing resource information
+    - pon:
+        type: file
+        description: Panel of normals used by VarNet-T (GRCh38), 1000g_pon.hg38.vcf.gz
+          from https://doi.org/10.6084/m9.figshare.34420128 (the GATK best-practices
+          1000 Genomes panel of normals). Required when no normal BAM is given, otherwise
+          optional.
+        pattern: "*.vcf.gz"
+        ontologies:
+          - edam: http://edamontology.org/format_3016 # VCF
 output:
   vcf:
     - - meta:
@@ -104,8 +117,8 @@ output:
       - varnet:
           type: string
           description: The name of the tool
-      - "1.5.3":
-          type: string
+      - "varnet-predict --version | sed 's/VarNet //'":
+          type: eval
           description: The expression to obtain the version of the tool
 topics:
   versions:
@@ -115,8 +128,8 @@ topics:
       - varnet:
           type: string
           description: The name of the tool
-      - "1.5.3":
-          type: string
+      - "varnet-predict --version | sed 's/VarNet //'":
+          type: eval
           description: The expression to obtain the version of the tool
 authors:
   - "@kiranchari"

@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::varnet=1.5.3
+  - bioconda::varnet=1.5.4

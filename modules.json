@@ -603,12 +603,12 @@
                     },
                     "varnet/filter": {
                         "branch": "master",
-                        "git_sha": "45778ac3f84844e33a7afd9282a3a26409c277b2",
+                        "git_sha": "8bc51f2971a284eba5629c9e7c53474933a339aa",
                         "installed_by": ["modules"]
                     },
                     "varnet/predict": {
                         "branch": "master",
-                        "git_sha": "45778ac3f84844e33a7afd9282a3a26409c277b2",
+                        "git_sha": "8bc51f2971a284eba5629c9e7c53474933a339aa",
                         "installed_by": ["modules"]
                     },
                     "vcflib/vcffilter": {
