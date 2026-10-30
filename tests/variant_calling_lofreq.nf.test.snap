@@ -1,10 +1,13 @@
 {
     "-profile test --tools lofreq tumoronly": {
         "content": [
-            11,
+            12,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -185,7 +188,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-01T21:11:25.926435796",
+        "timestamp": "2026-10-30T11:02:39.393994303",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
