@@ -262,10 +262,50 @@
                     "description": "Path to directory or tar.gz archive for pre-built BBSplit index.",
                     "help_text": "The BBSplit index will have to be built at least once with this pipeline (see `--save_reference` to save index). It can then be provided via `--bbsplit_index` for future runs."
                 },
+                "xengsort_index": {
+                    "type": "string",
+                    "format": "path",
+                    "exists": true,
+                    "fa_icon": "fas fa-bezier-curve",
+                    "description": "Path to directory for a pre-built Xengsort index.",
+                    "help_text": "Provide a previously generated Xengsort index directory to reuse it instead of rebuilding it in PREPARE_GENOME."
+                },
+                "xengsort_host_fasta": {
+                    "type": "string",
+                    "format": "path",
+                    "fa_icon": "fas fa-dna",
+                    "description": "Path or glob pattern for host FASTA files used to build a Xengsort index.",
+                    "help_text": "Required when `--tools` contains `xengsort` and `--xengsort_index` is not supplied. The main `--fasta` is used as the graft reference."
+                },
+                "xengsort_nobjects": {
+                    "type": "integer",
+                    "fa_icon": "fas fa-calculator",
+                    "description": "Value passed to Xengsort index `--nobjects`.",
+                    "help_text": "No default is set. Provide a value appropriate for your graft/host reference sizes when building a Xengsort index (https://gitlab.com/genomeinformatics/xengsort)."
+                },
+                "xengsort_kmersize": {
+                    "type": "integer",
+                    "fa_icon": "fas fa-ruler-horizontal",
+                    "description": "Value passed to Xengsort index `--kmersize`.",
+                    "help_text": "No default is set. Provide this together with `--xengsort_nobjects` when building a Xengsort index (https://gitlab.com/genomeinformatics/xengsort)."
+                },
+                "xengsort_mode": {
+                    "type": "string",
+                    "default": "count",
+                    "enum": ["count", "coverage", "quick"],
+                    "fa_icon": "fas fa-cog",
+                    "description": "Classification mode used by Xengsort.",
+                    "help_text": "Choose `count` to classify by the number of host/graft k-mers, `coverage` to classify by the proportion of covered bases, or `quick` to classify using a reduced set of k-mers."
+                },
                 "save_bbsplit_reads": {
                     "type": "boolean",
                     "fa_icon": "fas fa-save",
                     "description": "If this option is specified, FastQ files split by reference will be saved in the results directory."
+                },
+                "save_xengsort_reads": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-save",
+                    "description": "If this option is specified, Xengsort-classified FastQ files will be saved in the results directory."
                 }
             }
         },

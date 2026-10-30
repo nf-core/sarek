@@ -631,6 +631,16 @@
                         "git_sha": "094186cc8b196ebdded57d596d741611ff571cf3",
                         "installed_by": ["modules"]
                     },
+                    "xengsort/classify": {
+                        "branch": "master",
+                        "git_sha": "972faf6f783fe9685267220965a91690741465f9",
+                        "installed_by": ["modules"]
+                    },
+                    "xengsort/index": {
+                        "branch": "master",
+                        "git_sha": "5d88656885bc9461927d42e4694ba8d20886be7f",
+                        "installed_by": ["modules"]
+                    },
                     "yte": {
                         "branch": "master",
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
