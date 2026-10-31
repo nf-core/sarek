@@ -605,12 +605,14 @@
                 "variant_calling/varnet/sample2/sample2.varnet.vcf.gz",
                 "variant_calling/varnet/sample2/sample2.varnet.vcf.gz.tbi"
             ],
-            "No warnings"
+            [
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
         ],
-        "timestamp": "2026-10-30T17:25:12.701207166",
+        "timestamp": "2026-10-31T14:51:40.742718291",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools varnet --input recalibrated_somatic.csv -stub": {
@@ -786,12 +788,14 @@
                 "variant_calling/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.vcf.gz",
                 "variant_calling/varnet/sample4_vs_sample3/sample4_vs_sample3.varnet.vcf.gz.tbi"
             ],
-            "No warnings"
+            [
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
         ],
-        "timestamp": "2026-10-30T17:25:47.830961959",
+        "timestamp": "2026-10-31T14:52:23.582108782",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "25.10.4"
         }
     }
 }
