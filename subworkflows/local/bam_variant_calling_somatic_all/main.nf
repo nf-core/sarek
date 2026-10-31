@@ -2,23 +2,24 @@
 // PAIRED VARIANT CALLING
 //
 
-include { BAM_VARIANT_CALLING_CNVKIT                         } from '../bam_variant_calling_cnvkit'
-include { BAM_VARIANT_CALLING_FREEBAYES                      } from '../bam_variant_calling_freebayes'
-include { BAM_VARIANT_CALLING_INDEXCOV                       } from '../bam_variant_calling_indexcov'
-include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_NORMAL      } from '../bam_variant_calling_mpileup'
-include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_TUMOR       } from '../bam_variant_calling_mpileup'
-include { BAM_VARIANT_CALLING_SOMATIC_ASCAT                  } from '../bam_variant_calling_somatic_ascat'
-include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC           } from '../bam_variant_calling_somatic_controlfreec'
-include { BAM_VARIANT_CALLING_SOMATIC_DEEPSOMATIC            } from '../bam_variant_calling_somatic_deepsomatic'
-include { BAM_VARIANT_CALLING_SOMATIC_MANTA                  } from '../bam_variant_calling_somatic_manta'
-include { BAM_VARIANT_CALLING_SOMATIC_MUSE                   } from '../bam_variant_calling_somatic_muse'
-include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2                } from '../bam_variant_calling_somatic_mutect2'
-include { BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC } from '../bam_variant_calling_somatic_parabricks_deepsomatic'
-include { BAM_VARIANT_CALLING_SOMATIC_STRELKA                } from '../bam_variant_calling_somatic_strelka'
-include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT                 } from '../bam_variant_calling_somatic_tiddit'
-include { BAM_VARIANT_CALLING_SOMATIC_TNSCOPE                } from '../bam_variant_calling_somatic_tnscope'
-include { MSISENSOR2_MSI                                     } from '../../../modules/nf-core/msisensor2/msi'
-include { MSISENSORPRO_MSISOMATIC                            } from '../../../modules/nf-core/msisensorpro/msisomatic'
+include { BAM_VARIANT_CALLING_CNVKIT                          } from '../bam_variant_calling_cnvkit'
+include { BAM_VARIANT_CALLING_FREEBAYES                       } from '../bam_variant_calling_freebayes'
+include { BAM_VARIANT_CALLING_INDEXCOV                        } from '../bam_variant_calling_indexcov'
+include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_NORMAL       } from '../bam_variant_calling_mpileup'
+include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_TUMOR        } from '../bam_variant_calling_mpileup'
+include { BAM_VARIANT_CALLING_SOMATIC_ASCAT                   } from '../bam_variant_calling_somatic_ascat'
+include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC            } from '../bam_variant_calling_somatic_controlfreec'
+include { BAM_VARIANT_CALLING_SOMATIC_DEEPSOMATIC             } from '../bam_variant_calling_somatic_deepsomatic'
+include { BAM_VARIANT_CALLING_SOMATIC_MANTA                   } from '../bam_variant_calling_somatic_manta'
+include { BAM_VARIANT_CALLING_SOMATIC_MUSE                    } from '../bam_variant_calling_somatic_muse'
+include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2                 } from '../bam_variant_calling_somatic_mutect2'
+include { BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC  } from '../bam_variant_calling_somatic_parabricks_deepsomatic'
+include { BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER         } from '../bam_variant_calling_parabricks_mutectcaller'
+include { BAM_VARIANT_CALLING_SOMATIC_STRELKA                 } from '../bam_variant_calling_somatic_strelka'
+include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT                  } from '../bam_variant_calling_somatic_tiddit'
+include { BAM_VARIANT_CALLING_SOMATIC_TNSCOPE                 } from '../bam_variant_calling_somatic_tnscope'
+include { MSISENSOR2_MSI                                      } from '../../../modules/nf-core/msisensor2/msi'
+include { MSISENSORPRO_MSISOMATIC                             } from '../../../modules/nf-core/msisensorpro/msisomatic'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     take:
@@ -270,6 +271,23 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_parabricks_deepsomatic = BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC.out.vcf
     tbi_parabricks_deepsomatic = BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC.out.tbi
 
+    // PARABRICKS MUTECTCALLER
+    cram_parabricks_mutectcaller = cram.filter { _meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai ->
+        tools && tools.split(',').contains('parabricks_mutectcaller')
+    }
+
+    BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER(
+        cram_parabricks_mutectcaller,
+        fasta,
+        fasta_fai,
+        panel_of_normals,
+        panel_of_normals_tbi,
+        intervals_bed_combined,
+    )
+
+    vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER.out.vcf
+    tbi_parabricks_mutectcaller = BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER.out.tbi
+
     // TNSCOPE
     if (tools && tools.split(',').contains('sentieon_tnscope')) {
 
@@ -313,6 +331,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             vcf_muse,
             vcf_mutect2,
             vcf_parabricks_deepsomatic,
+            vcf_parabricks_mutectcaller,
             vcf_strelka,
             vcf_tiddit,
             vcf_tnscope,
@@ -326,6 +345,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             tbi_muse,
             tbi_mutect2,
             tbi_parabricks_deepsomatic,
+            tbi_parabricks_mutectcaller,
             tbi_strelka,
             tbi_tiddit,
             tbi_tnscope,
@@ -341,6 +361,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_muse
     vcf_mutect2
     vcf_parabricks_deepsomatic
+    vcf_parabricks_mutectcaller
     vcf_strelka
     vcf_tiddit
     vcf_tnscope
@@ -351,6 +372,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     tbi_muse
     tbi_mutect2
     tbi_parabricks_deepsomatic
+    tbi_parabricks_mutectcaller
     tbi_strelka
     tbi_tiddit
     tbi_tnscope

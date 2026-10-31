@@ -1,10 +1,13 @@
 {
     "-profile test --tools strelka somatic": {
         "content": [
-            22,
+            23,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -225,7 +228,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:30:09.214764374",
+        "timestamp": "2026-10-30T11:37:54.56921123",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -233,10 +236,13 @@
     },
     "-profile test --tools strelka germline": {
         "content": [
-            11,
+            12,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -414,7 +420,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:33:17.232108325",
+        "timestamp": "2026-10-30T11:33:41.206289026",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -422,10 +428,13 @@
     },
     "-profile test --tools strelka --only_paired_variant_calling": {
         "content": [
-            26,
+            27,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -672,7 +681,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-28T11:15:18.903995357",
+        "timestamp": "2026-10-30T11:31:41.76581551",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

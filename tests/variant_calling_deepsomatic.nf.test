@@ -9,15 +9,15 @@ nextflow_pipeline {
 
     def test_scenario = [
         [
-            name: "-profile test --tools deepsomatic somatic scatter/gather",
+            // chrExtra is not in the BAM headers, so its interval has no records and must still get the same sample name for the merge
+            name: "-profile test --tools deepsomatic somatic scatter/gather with empty interval",
             tag: 'deepsomatic_scatter',
             params: [
                 genome: null,
                 igenomes_ignore: true,
-                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta',
-                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome_extra_contig.fasta',
                 input: "${projectDir}/tests/csv/3.0/mapped_somatic_parabricks_deepsomatic.csv",
-                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome_extra_contig.multi_intervals.bed',
                 nucleotides_per_second: 1,
                 step: "variant_calling",
                 tools: 'deepsomatic'

@@ -213,6 +213,7 @@ FUNCTIONS
 def validateInputParameters() {
     genomeExistsError()
     sparkAndBam()
+    parabricksMutectcallerIgnoredParams()
 }
 
 // Reference params resolved from --references, a genome datasheet, or params.genomes
@@ -279,6 +280,18 @@ def sparkAndBam() {
         def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  --use_gatk_spark with 'markduplicates' is not compatible with --save_mapped.\n" + "  Spark markduplicates requires name-sorted input, so the saved mapped\n" + "  alignment (BAM or CRAM) would be name-sorted and cannot be indexed.\n" + "  Either drop --save_mapped, or switch to the non-Spark markduplicates path.\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         System.err.println(error_string)
         error(error_string)
+    }
+}
+
+// Warn about options that the Parabricks mutectcaller path cannot honour
+def parabricksMutectcallerIgnoredParams() {
+    if (params.tools && params.tools.split(',').contains('parabricks_mutectcaller')) {
+        if (params.joint_mutect2) {
+            log.warn("`--joint_mutect2` is not supported by Parabricks mutectcaller and is ignored for `parabricks_mutectcaller`: samples are called per tumor-normal pair or per tumor-only sample.")
+        }
+        if (params.ignore_soft_clipped_bases) {
+            log.warn("`--ignore_soft_clipped_bases` is not supported by Parabricks mutectcaller and is ignored for `parabricks_mutectcaller`: soft-clipped bases are used during calling.")
+        }
     }
 }
 

@@ -5,6 +5,52 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev - unreleased
+
+### Added
+
+- [#2180](https://github.com/nf-core/sarek/pull/2180) - Add Parabricks MutectCaller (`--tools parabricks_mutectcaller`) as GPU-accelerated somatic variant caller for tumor-only and tumor/normal samples (raw, unfiltered calls)
+- [#2351](https://github.com/nf-core/sarek/pull/2351) - Add `--mosdepth_fast_mode` to control Mosdepth fast mode for whole-genome coverage calculations. Fast mode remains enabled by default.
+
+### Changed
+
+### Fixed
+
+- [#2277](https://github.com/nf-core/sarek/pull/2277) - fix(markduplicates): avoid duplicate alignment emission under -stub
+- [#2347](https://github.com/nf-core/sarek/pull/2347) - Fix DeepSomatic VCF merge failing with `sample entries that don't match the other files` when an interval yields no records (e.g. `*_alt` contigs): pass tumour and normal sample names explicitly, including to `postprocess_variants`, which otherwise writes `default`
+- [#2352](https://github.com/nf-core/sarek/pull/2352) - Sort the `--intervals` BED in reference order with `bedtools sort` before splitting it, fixing out-of-order pileup tables that made `CalculateContamination` fail with `Invalid interval` ([#899](https://github.com/nf-core/sarek/issues/899), [#2281](https://github.com/nf-core/sarek/issues/2281)). Fail early when the BED has contigs missing from the reference, start > end, or intervals past the contig end ([#97](https://github.com/nf-core/sarek/issues/97), [#934](https://github.com/nf-core/sarek/issues/934)). CNVKit target and antitarget BED names now carry the `.sorted` suffix of the sorted intervals file
+
+### Removed
+
+### Dependencies - modules
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| bedtools   | -           | 2.31.1      |
+
+### Dependencies - plugins
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
+| Params                 | status |
+| ---------------------- | ------ |
+| `--mosdepth_fast_mode` | Added  |
+
+### Developer section
+
+#### Added
+
+#### Changed
+
+- [#2346](https://github.com/nf-core/sarek/pull/2346) - Back to dev (3.11.1dev)
+
+#### Fixed
+
+#### Removed
+
 ## [3.11.0](https://github.com/nf-core/sarek/releases/tag/3.11.0) - Guhkesvákkjåhkå
 
 Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bridge.
