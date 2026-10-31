@@ -855,6 +855,31 @@
             "description": "General options to interact with reference genomes.",
             "default": "",
             "properties": {
+                "references": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "pattern": "^\\S+\\.(yaml|yml)$",
+                    "description": "Path to a references-datasheets YAML supplying reference files and metadata. Do not combine with --genome.",
+                    "help_text": "Provides reference files and metadata (fasta, dbsnp, known indels, VQSR labels) from a single datasheet. Explicit reference flags such as `--fasta` win over the datasheet. Do not combine with `--genome`. See [usage docs](https://nf-co.re/sarek/docs/usage).",
+                    "fa_icon": "fas fa-file-alt",
+                    "schema": "assets/schema_references.json"
+                },
+                "references_datasheets_path": {
+                    "type": "string",
+                    "description": "Base URL or path for references-datasheets files loaded via --genome with --igenomes_ignore.",
+                    "default": "https://raw.githubusercontent.com/nf-core/references-datasheets/latest/igenomes",
+                    "fa_icon": "fas fa-database",
+                    "hidden": true
+                },
+                "references_base_path": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "description": "Base path substituted for ${params.references_base_path} placeholders in datasheet paths.",
+                    "help_text": "Datasheet paths may carry a ${params.references_base_path} placeholder instead of a hardcoded root. The placeholder is replaced by this parameter when the datasheet loads, so one datasheet works against any mirror of the reference files. The default is s3://ngi-igenomes/igenomes, the root that published datasheets are written against. The placeholder carries the leading slash, so the value must not end with one. This parameter only rewrites paths inside the datasheet; the location of the datasheet itself is set with --references_datasheets_path.",
+                    "default": "s3://ngi-igenomes/igenomes",
+                    "fa_icon": "fas fa-ban"
+                },
                 "igenomes_base": {
                     "type": "string",
                     "description": "The base path to the igenomes reference files",
@@ -896,10 +921,10 @@
             "properties": {
                 "genome": {
                     "type": "string",
-                    "description": "Name of iGenomes reference.",
+                    "description": "Reference genome name: an iGenomes catalogue key, or a references-datasheets path when igenomes_ignore is set. Do not combine with --references.",
                     "default": "GATK.GRCh38",
                     "fa_icon": "fas fa-book",
-                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`.\n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
+                    "help_text": "iGenomes: key in conf/igenomes.config (e.g. GATK.GRCh38). With --igenomes_ignore: path under --references_datasheets_path (e.g. GATK/GRCh38, file igenomes/GATK/GRCh38.yml). Explicit reference flags outrank this. Do not combine with --references.\n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
                 },
                 "ascat_genome": {
                     "type": "string",
@@ -911,7 +936,6 @@
                     "type": "string",
                     "format": "file-path",
                     "pattern": "^\\S+\\.zip$",
-                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to ASCAT allele zip file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
@@ -920,7 +944,6 @@
                     "type": "string",
                     "format": "file-path",
                     "pattern": "^\\S+\\.zip$",
-                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to ASCAT loci zip file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
@@ -930,7 +953,6 @@
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
                     "pattern": "^\\S+\\.zip$",
-                    "exists": true,
                     "description": "Path to ASCAT GC content correction file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
@@ -939,14 +961,12 @@
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
                     "pattern": "^\\S+\\.zip$",
-                    "exists": true,
                     "description": "Path to ASCAT RT (replictiming) correction file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "bwa": {
                     "type": "string",
                     "format": "directory-path",
-                    "exists": true,
                     "fa_icon": "fas fa-copy",
                     "description": "Path to BWA mem indices.",
                     "help_text": "If you wish to recompute indices available on igenomes, set `--bwa false`.\n\n> **NB** If none provided, will be generated automatically from the FASTA reference. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -954,7 +974,6 @@
                 "bwamem2": {
                     "type": "string",
                     "format": "directory-path",
-                    "exists": true,
                     "fa_icon": "fas fa-copy",
                     "description": "Path to bwa-mem2 mem indices.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\n\nIf you wish to recompute indices available on igenomes, set `--bwamem2 false`.\n\n> **NB** If none provided, will be generated automatically from the FASTA reference, if `--aligner bwa-mem2` is specified. Combine with `--save_reference` to save for future runs."
@@ -962,7 +981,6 @@
                 "chr_dir": {
                     "type": "string",
                     "format": "path",
-                    "exists": true,
                     "fa_icon": "fas fa-folder-open",
                     "description": "Path to chromosomes folder used with ControLFREEC.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
@@ -971,7 +989,6 @@
                     "type": "string",
                     "format": "file-path",
                     "pattern": "^\\S+\\.vcf\\.gz$",
-                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to dbsnp file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
@@ -980,7 +997,6 @@
                     "type": "string",
                     "format": "file-path",
                     "pattern": "^\\S+\\.vcf\\.gz\\.tbi$",
-                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to dbsnp index.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the dbsnp file. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -994,7 +1010,6 @@
                     "type": "string",
                     "format": "file-path",
                     "pattern": "^\\S+\\.dict$",
-                    "exists": true,
                     "fa_icon": "fas fa-file",
                     "description": "Path to FASTA dictionary file.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -1002,7 +1017,6 @@
                 "dragmap": {
                     "type": "string",
                     "format": "directory-path",
-                    "exists": true,
                     "fa_icon": "fas fa-copy",
                     "description": "Path to dragmap indices.",
                     "help_text": "If you wish to recompute indices available on igenomes, set `--dragmap false`.\n\n> **NB** If none provided, will be generated automatically from the FASTA reference, if `--aligner dragmap` is specified. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
@@ -1010,7 +1024,6 @@
                 "fasta": {
                     "type": "string",
                     "format": "file-path",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA genome file.",
@@ -1021,7 +1034,6 @@
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
-                    "exists": true,
                     "mimetype": "text/plain",
                     "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately.",
                     "description": "Path to FASTA reference index."
@@ -1045,21 +1057,31 @@
                     "help_text": "> **NB** If none provided, will be generated automatically from the Germline Resource file, if provided. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "known_indels": {
-                    "type": "string",
+                    "type": ["string", "array"],
                     "fa_icon": "fas fa-copy",
                     "format": "file-path-pattern",
-                    "exists": true,
+                    "items": {
+                        "type": "string",
+                        "format": "file-path",
+                        "exists": true,
+                        "mimetype": "text/plain"
+                    },
                     "mimetype": "text/plain",
-                    "description": "Path to known indels file.",
+                    "description": "Path to known indels file, or list of paths.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "known_indels_tbi": {
-                    "type": "string",
+                    "type": ["string", "array"],
                     "fa_icon": "fas fa-copy",
                     "format": "file-path-pattern",
-                    "exists": true,
+                    "items": {
+                        "type": "string",
+                        "format": "file-path",
+                        "exists": true,
+                        "mimetype": "text/plain"
+                    },
                     "mimetype": "text/plain",
-                    "description": "Path to known indels file index.",
+                    "description": "Path to known indels file index, or list of paths.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the known index file, if provided. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "known_indels_vqsr": {
@@ -1068,23 +1090,35 @@
                     "description": "Label string for VariantRecalibration (haplotypecaller joint variant calling). If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "known_snps": {
-                    "type": "string",
+                    "type": ["string", "array"],
                     "fa_icon": "fas fa-copy",
-                    "format": "file-path",
+                    "format": "file-path-pattern",
+                    "items": {
+                        "type": "string",
+                        "format": "file-path",
+                        "exists": true,
+                        "pattern": "^\\S+\\.vcf\\.gz$",
+                        "mimetype": "text/plain"
+                    },
                     "pattern": "^\\S+\\.vcf\\.gz$",
-                    "exists": true,
                     "mimetype": "text/plain",
-                    "description": "Path to known snps file.",
+                    "description": "Path to known snps file, or list of paths.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "known_snps_tbi": {
-                    "type": "string",
+                    "type": ["string", "array"],
                     "fa_icon": "fas fa-copy",
-                    "format": "file-path",
+                    "format": "file-path-pattern",
+                    "items": {
+                        "type": "string",
+                        "format": "file-path",
+                        "exists": true,
+                        "pattern": "^\\S+\\.vcf\\.gz\\.tbi$",
+                        "mimetype": "text/plain"
+                    },
                     "pattern": "^\\S+\\.vcf\\.gz\\.tbi$",
-                    "exists": true,
                     "mimetype": "text/plain",
-                    "description": "Path to known snps file snps.",
+                    "description": "Path to known snps file snps, or list of paths.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the known index file, if provided. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "known_snps_vqsr": {
@@ -1104,7 +1138,6 @@
                 "msisensor2_models": {
                     "type": "string",
                     "format": "path",
-                    "exists": true,
                     "fa_icon": "fas fa-folder-open",
                     "description": "Path to models folder used with MSIsensor2.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
@@ -1112,7 +1145,6 @@
                 "msisensorpro_scan": {
                     "type": "string",
                     "format": "path",
-                    "exists": true,
                     "fa_icon": "fas fa-folder-open",
                     "description": "Path to scan file used with MSIsensorPro.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."

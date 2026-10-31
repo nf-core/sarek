@@ -567,13 +567,13 @@
         {
             "@id": "https://orcid.org/0000-0003-1424-7840",
             "@type": "Person",
-            "name": "Adrian Lärkeryd",
+            "name": "Adrian L\u00e4rkeryd",
             "url": "https://github.com/adrlar"
         },
         {
             "@id": "#8767cbfe-f915-49c9-8589-51c6d4b9f58f",
             "@type": "Person",
-            "name": "Àitor Olivares",
+            "name": "\u00c0itor Olivares",
             "url": "https://github.com/AitorPeseta"
         },
         {
@@ -613,13 +613,13 @@
             "@id": "https://orcid.org/0000-0001-5475-0892",
             "@type": "Person",
             "email": "bekire@gmail.com",
-            "name": "Bekir Ergüner",
+            "name": "Bekir Erg\u00fcner",
             "url": "https://github.com/berguner"
         },
         {
             "@id": "#e553a2d4-415c-471b-8d96-77e822be373c",
             "@type": "Person",
-            "name": "Björn Nystedt",
+            "name": "Bj\u00f6rn Nystedt",
             "url": "https://github.com/bjornnystedt"
         },
         {
@@ -653,9 +653,9 @@
         {
             "@id": "https://orcid.org/0000-0003-1387-0251",
             "@type": "Person",
-            "affiliation": "Quantitative Biology Center (QBiC) Tübingen, University of Tübingen, Germany",
+            "affiliation": "Quantitative Biology Center (QBiC) T\u00fcbingen, University of T\u00fcbingen, Germany",
             "email": "45968370+famosab@users.noreply.github.com",
-            "name": "Famke Bäuerle",
+            "name": "Famke B\u00e4uerle",
             "url": "https://github.com/famosab"
         },
         {
@@ -669,7 +669,7 @@
             "@id": "#74dfcd8f-6f97-4efe-9c08-7024a08fc3b7",
             "@type": "Person",
             "email": "f.martinezpico@gmail.com",
-            "name": "Francisco Martínez",
+            "name": "Francisco Mart\u00ednez",
             "url": "https://github.com/nevinwu"
         },
         {
@@ -695,7 +695,7 @@
         {
             "@id": "https://orcid.org/0000-0001-6813-3051",
             "@type": "Person",
-            "name": "Max Käller",
+            "name": "Max K\u00e4ller",
             "url": "https://github.com/gulfshores"
         },
         {
@@ -744,14 +744,14 @@
             "@id": "#c2dd79ab-74f5-49e8-bc1b-1d14b13c28b2",
             "@type": "Person",
             "email": "jc.fernandez.navarro@gmail.com",
-            "name": "José Fernández Navarro",
+            "name": "Jos\u00e9 Fern\u00e1ndez Navarro",
             "url": "https://github.com/jfnavarro"
         },
         {
             "@id": "https://orcid.org/0000-0001-6104-9260",
             "@type": "Person",
             "email": "mirp.julia@gmail.com",
-            "name": "Júlia Mir Pedrol",
+            "name": "J\u00falia Mir Pedrol",
             "url": "https://github.com/mirpedrol"
         },
         {
@@ -778,7 +778,7 @@
         {
             "@id": "https://orcid.org/0009-0000-0202-2703",
             "@type": "Person",
-            "name": "Louis Le Nézet",
+            "name": "Louis Le N\u00e9zet",
             "url": "https://github.com/LouisLeNezet"
         },
         {
@@ -929,7 +929,7 @@
             "@id": "https://orcid.org/0009-0009-0647-7639",
             "@type": "Person",
             "email": "158295213+Patricie34@users.noreply.github.com",
-            "name": "Patricie Skaláková",
+            "name": "Patricie Skal\u00e1kov\u00e1",
             "url": "https://github.com/Patricie34"
         }
     ]

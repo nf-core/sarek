@@ -2,123 +2,95 @@
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    nf-core/sarek
+nf-core/sarek
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Started March 2016.
-    Ported to nf-core May 2019.
-    Ported to DSL 2 July 2020.
+Started March 2016.
+Ported to nf-core May 2019.
+Ported to DSL 2 July 2020.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    nf-core/sarek:
-        An open-source analysis pipeline to detect germline or somatic variants
-        from whole genome or targeted sequencing
+nf-core/sarek:
+An open-source analysis pipeline to detect germline or somatic variants
+from whole genome or targeted sequencing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/nf-core/sarek
-    Website: https://nf-co.re/sarek
-    Docs   : https://nf-co.re/sarek/usage
-    Slack  : https://nfcore.slack.com/channels/sarek
+Github : https://github.com/nf-core/sarek
+Website: https://nf-co.re/sarek
+Docs   : https://nf-co.re/sarek/usage
+Slack  : https://nfcore.slack.com/channels/sarek
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    GENOME PARAMETER VALUES
+IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-params.ascat_alleles           = getGenomeAttribute('ascat_alleles')
-params.ascat_genome            = getGenomeAttribute('ascat_genome')
-params.ascat_loci              = getGenomeAttribute('ascat_loci')
-params.ascat_loci_gc           = getGenomeAttribute('ascat_loci_gc')
-params.ascat_loci_rt           = getGenomeAttribute('ascat_loci_rt')
-params.bwa                     = getGenomeAttribute('bwa')
-params.bwamem2                 = getGenomeAttribute('bwamem2')
-params.cf_chrom_len            = getGenomeAttribute('cf_chrom_len')
-params.chr_dir                 = getGenomeAttribute('chr_dir')
-params.dbsnp                   = getGenomeAttribute('dbsnp')
-params.dbsnp_tbi               = getGenomeAttribute('dbsnp_tbi')
-params.dbsnp_vqsr              = getGenomeAttribute('dbsnp_vqsr')
-params.dict                    = getGenomeAttribute('dict')
-params.dragmap                 = getGenomeAttribute('dragmap')
-params.fasta                   = getGenomeAttribute('fasta')
-params.fasta_fai               = getGenomeAttribute('fasta_fai')
-params.germline_resource       = getGenomeAttribute('germline_resource')
-params.germline_resource_tbi   = getGenomeAttribute('germline_resource_tbi')
-params.intervals               = getGenomeAttribute('intervals')
-params.known_indels            = getGenomeAttribute('known_indels')
-params.known_indels_tbi        = getGenomeAttribute('known_indels_tbi')
-params.known_indels_vqsr       = getGenomeAttribute('known_indels_vqsr')
-params.known_snps              = getGenomeAttribute('known_snps')
-params.known_snps_tbi          = getGenomeAttribute('known_snps_tbi')
-params.known_snps_vqsr         = getGenomeAttribute('known_snps_vqsr')
-params.mappability             = getGenomeAttribute('mappability')
-params.msisensor2_models       = getGenomeAttribute('msisensor2_models')
-params.msisensorpro_scan       = getGenomeAttribute('msisensorpro_scan')
-params.ngscheckmate_bed        = getGenomeAttribute('ngscheckmate_bed')
-params.pon                     = getGenomeAttribute('pon')
-params.pon_tbi                 = getGenomeAttribute('pon_tbi')
-params.sentieon_dnascope_model = getGenomeAttribute('sentieon_dnascope_model')
-params.snpeff_db               = getGenomeAttribute('snpeff_db')
-params.vep_cache_version       = getGenomeAttribute('vep_cache_version')
-params.vep_genome              = getGenomeAttribute('vep_genome')
-params.vep_species             = getGenomeAttribute('vep_species')
+ */
+
+include { samplesheetToList } from 'plugin/nf-schema'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
+GENOME PARAMETER VALUES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
-include { SAREK                            } from './workflows/sarek'
-include { PIPELINE_COMPLETION              } from './subworkflows/local/utils_nfcore_sarek_pipeline'
-include { PIPELINE_INITIALISATION          } from './subworkflows/local/utils_nfcore_sarek_pipeline'
-include { PREPARE_GENOME                   } from './subworkflows/local/prepare_genome'
-include { PREPARE_INTERVALS                } from './subworkflows/local/prepare_intervals'
-include { PREPARE_REFERENCE_CNVKIT         } from './subworkflows/local/prepare_reference_cnvkit'
-include { PREPARE_SNPSIFT_DATABASES        } from './subworkflows/local/prepare_snpsift_databases'
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+IMPORT MODULES / SUBWORKFLOWS / WORKFLOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+
+include { SAREK } from './workflows/sarek'
+include { PIPELINE_COMPLETION } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { PREPARE_GENOME } from './subworkflows/local/prepare_genome'
+include { PREPARE_INTERVALS } from './subworkflows/local/prepare_intervals'
+include { PREPARE_REFERENCE_CNVKIT } from './subworkflows/local/prepare_reference_cnvkit'
+include { PREPARE_SNPSIFT_DATABASES } from './subworkflows/local/prepare_snpsift_databases'
 include { CACHE_DOWNLOAD_ENSEMBLVEP_SNPEFF } from './subworkflows/nf-core/cache_download_ensemblvep_snpeff'
-include { UTILS_ANNOTATION_CACHE           } from './subworkflows/nf-core/utils_annotation_cache'
-include { samplesheetToList                } from 'plugin/nf-schema'
+include { UTILS_ANNOTATION_CACHE } from './subworkflows/nf-core/utils_annotation_cache'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    NAMED WORKFLOW FOR PIPELINE
+NAMED WORKFLOW FOR PIPELINE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 // WORKFLOW: Run main nf-core/sarek analysis pipeline
 workflow NFCORE_SAREK {
     take:
     samplesheet
+    references
 
     main:
     // build indexes if needed
     PREPARE_GENOME(
-        params.ascat_alleles,
-        params.ascat_loci,
-        params.ascat_loci_gc,
-        params.ascat_loci_rt,
+        references.ascat_alleles,
+        references.ascat_loci,
+        references.ascat_loci_gc,
+        references.ascat_loci_rt,
         params.bbsplit_fasta_list,
         params.bbsplit_index,
         params.bcftools_annotations,
         params.bcftools_annotations_tbi,
-        params.bwa,
-        params.bwamem2,
-        params.chr_dir,
-        params.dbsnp,
-        params.dbsnp_tbi,
-        params.dict,
-        params.dragmap,
-        params.fasta,
-        params.fasta_fai,
-        params.germline_resource,
-        params.germline_resource_tbi,
-        params.known_indels,
-        params.known_indels_tbi,
-        params.known_snps,
-        params.known_snps_tbi,
-        params.msisensor2_models,
-        params.msisensorpro_scan,
-        params.pon,
-        params.pon_tbi,
+        references.bwa,
+        references.bwamem2,
+        references.chr_dir,
+        references.dbsnp,
+        references.dbsnp_tbi,
+        references.dict,
+        references.dragmap,
+        references.fasta,
+        references.fasta_fai,
+        references.germline_resource,
+        references.germline_resource_tbi,
+        references.known_indels,
+        references.known_indels_tbi,
+        references.known_snps,
+        references.known_snps_tbi,
+        references.msisensor2_models,
+        references.msisensorpro_scan,
+        references.pon,
+        references.pon_tbi,
         params.aligner,
         params.step,
         params.tools ?: 'no_tools',
@@ -126,7 +98,7 @@ workflow NFCORE_SAREK {
     )
 
     // Build intervals if needed
-    PREPARE_INTERVALS(PREPARE_GENOME.out.fasta_fai, params.intervals, params.no_intervals, params.nucleotides_per_second, params.outdir, params.step)
+    PREPARE_INTERVALS(PREPARE_GENOME.out.fasta_fai, references.intervals, params.no_intervals, params.nucleotides_per_second, params.outdir, params.step)
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     // [interval.bed] all intervals in one file
@@ -173,8 +145,8 @@ workflow NFCORE_SAREK {
     // Download cache
     if (params.download_cache) {
         // Assuming that even if the cache is provided, if the user specify download_cache, sarek will download the cache
-        ensemblvep_info = channel.of([[id: "${params.vep_cache_version}_${params.vep_genome}"], params.vep_genome, params.vep_species, params.vep_cache_version])
-        snpeff_info = channel.of([[id: "${params.snpeff_db}"], params.snpeff_db])
+        ensemblvep_info = channel.of([[id: "${references.vep_cache_version}_${references.vep_genome}"], references.vep_genome, references.vep_species, references.vep_cache_version])
+        snpeff_info = channel.of([[id: "${references.snpeff_db}"], references.snpeff_db])
         CACHE_DOWNLOAD_ENSEMBLVEP_SNPEFF(ensemblvep_info, snpeff_info, params.vep_cache_preflight_check)
         snpeff_cache = CACHE_DOWNLOAD_ENSEMBLVEP_SNPEFF.out.snpeff_cache
         vep_cache = CACHE_DOWNLOAD_ENSEMBLVEP_SNPEFF.out.ensemblvep_cache
@@ -183,13 +155,13 @@ workflow NFCORE_SAREK {
         // Looks for cache information either locally or on the cloud
         UTILS_ANNOTATION_CACHE(
             params.vep_cache,
-            params.vep_cache_version,
+            references.vep_cache_version,
             params.vep_custom_args,
-            params.vep_genome,
-            params.vep_species,
+            references.vep_genome,
+            references.vep_species,
             (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))),
             params.snpeff_cache,
-            params.snpeff_db,
+            references.snpeff_db,
             (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
             "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.",
         )
@@ -280,20 +252,22 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.ascat_loci,
         PREPARE_GENOME.out.ascat_loci_gc,
         PREPARE_GENOME.out.ascat_loci_rt,
+        references.ascat_genome,
         PREPARE_GENOME.out.bbsplit_index,
         PREPARE_GENOME.out.bcftools_annotations,
         PREPARE_GENOME.out.bcftools_annotations_tbi,
         params.bcftools_columns ? channel.fromPath(params.bcftools_columns).collect() : channel.value([[]]),
         params.bcftools_header_lines ? channel.fromPath(params.bcftools_header_lines).collect() : channel.empty(),
-        params.cf_chrom_len ? channel.fromPath(params.cf_chrom_len).collect() : [],
+        references.cf_chrom_len ? channel.fromPath(references.cf_chrom_len).collect() : [],
         PREPARE_GENOME.out.chr_dir,
         cnvkit_reference,
         PREPARE_GENOME.out.dbsnp,
         PREPARE_GENOME.out.dbsnp_tbi,
-        params.dbsnp_vqsr ? channel.value(params.dbsnp_vqsr) : channel.empty(),
+        references.dbsnp_vqsr ? channel.value(references.dbsnp_vqsr) : channel.empty(),
         PREPARE_GENOME.out.dict,
         PREPARE_GENOME.out.fasta,
         PREPARE_GENOME.out.fasta_fai,
+        references.fasta,
         PREPARE_GENOME.out.germline_resource,
         PREPARE_GENOME.out.germline_resource_tbi,
         PREPARE_GENOME.out.index_alignment,
@@ -303,19 +277,19 @@ workflow NFCORE_SAREK {
         intervals_bed_gz_tbi_and_num_intervals,
         intervals_bed_gz_tbi_combined,
         intervals_for_preprocessing,
-        params.known_indels_vqsr ? channel.value(params.known_indels_vqsr) : channel.empty(),
+        references.known_indels_vqsr ? channel.value(references.known_indels_vqsr) : channel.empty(),
         PREPARE_GENOME.out.known_sites_indels,
         PREPARE_GENOME.out.known_sites_indels_tbi,
         PREPARE_GENOME.out.known_sites_snps,
         PREPARE_GENOME.out.known_sites_snps_tbi,
-        params.known_snps_vqsr ? channel.value(params.known_snps_vqsr) : channel.empty(),
-        params.mappability ? channel.fromPath(params.mappability).collect() : channel.value([]),
+        references.known_snps_vqsr ? channel.value(references.known_snps_vqsr) : channel.empty(),
+        references.mappability ? channel.fromPath(references.mappability).collect() : channel.value([]),
         PREPARE_GENOME.out.msisensor2_models,
         PREPARE_GENOME.out.msisensorpro_scan,
-        params.ngscheckmate_bed ? channel.value(params.ngscheckmate_bed) : channel.empty(),
+        references.ngscheckmate_bed ? channel.value(references.ngscheckmate_bed) : channel.empty(),
         PREPARE_GENOME.out.pon,
         PREPARE_GENOME.out.pon_tbi,
-        params.sentieon_dnascope_model ? channel.fromPath(params.sentieon_dnascope_model).collect() : channel.value([]),
+        references.sentieon_dnascope_model ? channel.fromPath(references.sentieon_dnascope_model).collect() : channel.value([]),
         params.varlociraptor_chunk_size,
         params.varlociraptor_events_germline,
         params.varlociraptor_events_somatic,
@@ -325,25 +299,25 @@ workflow NFCORE_SAREK {
         params.varlociraptor_scenario_somatic ? channel.fromPath(params.varlociraptor_scenario_somatic).collect() : channel.fromPath("${projectDir}/assets/varlociraptor_somatic.yte.yaml").collect(),
         params.varlociraptor_scenario_tumor_only ? channel.fromPath(params.varlociraptor_scenario_tumor_only).collect() : channel.fromPath("${projectDir}/assets/varlociraptor_tumor_only.yte.yaml").collect(),
         snpeff_cache,
-        params.snpeff_db,
+        references.snpeff_db,
         vep_cache,
-        params.vep_cache_version,
+        references.vep_cache_version,
         vep_extra_files,
         PREPARE_GENOME.out.vep_fasta,
-        params.vep_genome,
-        params.vep_species,
+        references.vep_genome,
+        references.vep_species,
         ch_snpsift_db,
     )
 
     emit:
     multiqc_publish = SAREK.out.multiqc_publish
-    multiqc_report  = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
+    multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN MAIN WORKFLOW
+RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 workflow {
 
@@ -366,7 +340,7 @@ workflow {
     //
     // WORKFLOW: Run main workflow
     //
-    NFCORE_SAREK(PIPELINE_INITIALISATION.out.samplesheet)
+    NFCORE_SAREK(PIPELINE_INITIALISATION.out.samplesheet, PIPELINE_INITIALISATION.out.references.getVal())
 
     //
     // SUBWORKFLOW: Run completion tasks
@@ -396,19 +370,6 @@ output {
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    FUNCTIONS
+FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-//
-// Get attribute from genome config file e.g. fasta
-//
-
-def getGenomeAttribute(attribute) {
-    if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
-        if (params.genomes[params.genome].containsKey(attribute)) {
-            return params.genomes[params.genome][attribute]
-        }
-    }
-    return null
-}
+ */
