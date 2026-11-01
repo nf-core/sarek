@@ -75,6 +75,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [snpEff](#snpeff)
   - [VEP](#vep)
   - [BCFtools annotate](#bcftools-annotate)
+- [Tumour mutational burden (TMB)](#tumour-mutational-burden-tmb)
+  - [pyTMB](#pytmb)
 - [Quality control and reporting](#quality-control-and-reporting)
   - [Quality control](#quality-control)
     - [FastQC](#fastqc)
@@ -1243,6 +1245,25 @@ plus any additional fields selected via the plugins: [Condel](https://www.ensemb
 
 - `{sample,tumorsample_vs_normalsample}.<variantcaller>_bcf.ann.vcf.gz` and `{sample,tumorsample_vs_normalsample}.<variantcaller>_bcf.ann.vcf.gz.tbi`
   - VCF with tabix index
+
+</details>
+
+## Tumour mutational burden (TMB)
+
+### pyTMB
+
+[pyTMB](https://github.com/bioinfo-pf-curie/TMB) calculates a tumour mutational burden (TMB) score from an annotated VCF: the number of variants that pass its filters, divided by the effective genome size in Mb.
+Sarek runs it on Mutect2 calls annotated with snpEff (`--tools mutect2,snpeff,tmb`). The default filters and the effective genome size are described in the usage documentation, in "How to calculate tumour mutational burden (TMB)".
+
+<details markdown="1">
+<summary>Output files for tumor-only and tumor/normal paired samples</summary>
+
+**Output directory: `{outdir}/variant_calling/tmb/{tumorsample,tumorsample_vs_normalsample}/`**
+
+- `{tumorsample,tumorsample_vs_normalsample}.mutect2.tmb.log`
+  - Report with the filters used, the number of variants before and after filtering, the effective genome size, and the TMB score with its 95% confidence interval
+- `{tumorsample,tumorsample_vs_normalsample}.mutect2.tmb_export.vcf.gz`
+  - VCF with the variants used for the TMB calculation
 
 </details>
 

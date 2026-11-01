@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2180](https://github.com/nf-core/sarek/pull/2180) - Add Parabricks MutectCaller (`--tools parabricks_mutectcaller`) as GPU-accelerated somatic variant caller for tumor-only and tumor/normal samples (raw, unfiltered calls)
 - [#2351](https://github.com/nf-core/sarek/pull/2351) - Add `--mosdepth_fast_mode` to control Mosdepth fast mode for whole-genome coverage calculations. Fast mode remains enabled by default.
+- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Add tumour mutational burden (TMB) calculation with pyTMB (`--tools tmb`) for Mutect2 calls annotated with snpEff, off by default
 
 ### Changed
 
@@ -27,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
 | bedtools   | -           | 2.31.1      |
+| tmb        | -           | 1.6.0       |
 
 ### Dependencies - plugins
 
@@ -35,9 +37,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params                 | status |
-| ---------------------- | ------ |
-| `--mosdepth_fast_mode` | Added  |
+| Params                  | status |
+| ----------------------- | ------ |
+| `--mosdepth_fast_mode`  | Added  |
+| `--tmb_eff_genome_size` | Added  |
 
 ### Developer section
 

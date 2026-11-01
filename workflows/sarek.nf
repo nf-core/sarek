@@ -51,6 +51,9 @@ include { VCF_QC_BCFTOOLS_VCFTOOLS                          } from '../subworkfl
 // Annotation
 include { VCF_ANNOTATE_ALL                                  } from '../subworkflows/local/vcf_annotate_all'
 
+// Tumour mutational burden
+include { TMB_PYTMB                                         } from '../modules/nf-core/tmb/pytmb'
+
 // MULTIQC
 include { MULTIQC                                           } from '../modules/nf-core/multiqc'
 
@@ -566,6 +569,21 @@ workflow SAREK {
                 bcftools_header_lines,
                 snpsift_db,
             )
+
+            // TMB
+            if (tools.split(',').contains('tmb')) {
+                tmb_var_config = file("${projectDir}/assets/tmb/mutect2.yml", checkIfExists: true)
+                tmb_db_config = file("${projectDir}/assets/tmb/snpeff.yml", checkIfExists: true)
+
+                vcf_for_tmb = VCF_ANNOTATE_ALL.out.vcf_ann_snpeff.filter { meta, _vcf, _tbi -> meta.variantcaller == 'mutect2' }
+
+                // Without --tmb_eff_genome_size, pyTMB takes the effective genome size from the intervals BED
+                tmb_input = params.tmb_eff_genome_size
+                    ? vcf_for_tmb.map { meta, vcf, _tbi -> [meta, vcf, [], params.tmb_eff_genome_size, tmb_var_config, tmb_db_config] }
+                    : vcf_for_tmb.combine(intervals_bed_combined).map { meta, vcf, _tbi, bed -> [meta, vcf, bed, [], tmb_var_config, tmb_db_config] }
+
+                TMB_PYTMB(tmb_input)
+            }
         }
     }
 
