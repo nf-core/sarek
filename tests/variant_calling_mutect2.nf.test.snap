@@ -195,10 +195,13 @@
     },
     "-profile test --tools mutect2 somatic": {
         "content": [
-            15,
+            16,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -408,7 +411,7 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-10-01T21:25:24.899473598",
+        "timestamp": "2026-10-30T11:19:31.938841699",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

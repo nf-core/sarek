@@ -144,18 +144,21 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-07-27T10:37:16.056899008",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-07-27T10:37:16.056899008"
+        }
     },
     "-profile test --tools controlfreec somatic": {
         "content": [
-            16,
+            17,
             {
                 "ASSESS_SIGNIFICANCE": {
                     "controlfreec": "11.6b"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -324,11 +327,11 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-10-30T09:17:17.147978323",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-07-27T10:29:23.11767132"
+        }
     },
     "-profile test --tools controlfreec --no_intervals somatic -stub": {
         "content": [
@@ -350,7 +353,8 @@
                     "controlfreec": "11.6b"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_MPILEUP": {
                     "samtools": "1.24"
@@ -436,18 +440,21 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-10-30T09:22:47.835007833",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
-        },
-        "timestamp": "2026-05-28T15:30:21.092617766"
+            "nextflow": "25.10.4"
+        }
     },
     "-profile test --tools controlfreec somatic --nucleotides_per_second 20": {
         "content": [
-            21,
+            22,
             {
                 "ASSESS_SIGNIFICANCE": {
                     "controlfreec": "11.6b"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CAT_MPILEUP": {
                     "coreutils": "9.4",
@@ -621,18 +628,21 @@
             "No VCF files",
             "No warnings"
         ],
+        "timestamp": "2026-10-30T09:20:19.837692652",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
-        },
-        "timestamp": "2026-08-12T07:55:38.49440388"
+        }
     },
     "-profile test --tools controlfreec tumoronly -stub": {
         "content": [
-            13,
+            14,
             {
                 "ASSESS_SIGNIFICANCE": {
                     "controlfreec": "11.6b"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -650,7 +660,8 @@
                     "controlfreec": "11.6b"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "SAMTOOLS_MPILEUP": {
                     "samtools": "1.24"
@@ -722,10 +733,10 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2026-10-30T09:23:58.743302297",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.2"
-        },
-        "timestamp": "2026-05-28T15:31:24.029091171"
+            "nextflow": "25.10.4"
+        }
     }
 }

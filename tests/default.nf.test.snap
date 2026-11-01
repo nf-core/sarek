@@ -333,10 +333,13 @@
     },
     "-profile test --intervals genome.multi_intervals.bed --nucleotides_per_second 20 --skip_tools fastqc,mosdepth,multiqc,samtools": {
         "content": [
-            22,
+            23,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -455,15 +458,15 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-14T14:02:58.834433716",
+        "timestamp": "2026-10-30T11:46:44.508786353",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.0"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test -stub": {
         "content": [
-            33,
+            22,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -676,10 +679,10 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-14T14:01:45.501059358",
+        "timestamp": "2026-10-30T11:44:46.10819598",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.0"
+            "nextflow": "25.10.4"
         }
     }
 }
