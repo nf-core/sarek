@@ -456,6 +456,7 @@ workflow SAREK {
             pon_tbi,
             params.joint_mutect2,
             params.wes,
+            params.germline_resource as boolean,
         )
 
         // PAIR VARIANT CALLING
@@ -491,6 +492,7 @@ workflow SAREK {
             ascat_loci_rt,
             params.joint_mutect2,
             params.wes,
+            params.germline_resource as boolean,
         )
 
         // QC on raw variant calls

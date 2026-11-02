@@ -55,7 +55,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `GATK Mutect2`
   - `Parabricks DeepSomatic` (GPU-accelerated)
   - `Parabricks HaplotypeCaller` (Experimental Feature)
-  - `Parabricks MutectCaller` (Experimental Feature)
+  - `Parabricks MutectCaller`
   - `Parabricks Deepvariant` (Experimental Feature)
   - `indexcov`
   - `Lofreq`

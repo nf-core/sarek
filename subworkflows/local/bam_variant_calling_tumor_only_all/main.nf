@@ -9,7 +9,7 @@ include { BAM_VARIANT_CALLING_MPILEUP                            } from '../bam_
 include { BAM_VARIANT_CALLING_SINGLE_TIDDIT                      } from '../bam_variant_calling_single_tiddit'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC            } from '../bam_variant_calling_tumor_only_controlfreec'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA                   } from '../bam_variant_calling_tumor_only_manta'
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2                 } from '../bam_variant_calling_tumor_only_mutect2'
+include { BAM_VARIANT_CALLING_MUTECT2                            } from '../bam_variant_calling_mutect2'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ                  } from '../bam_variant_calling_tumor_only_lofreq'
 include { BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER            } from '../bam_variant_calling_parabricks_mutectcaller'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE                 } from '../bam_variant_calling_tumor_only_tnscope'
@@ -40,6 +40,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
     joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
     wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
+    germline_resource_provided    // boolean: [mandatory] whether a germline resource was provided
 
     main:
     // Channels are often remapped to match module/subworkflow
@@ -127,12 +128,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
     // MUTECT2
     if (tools && tools.split(',').contains('mutect2')) {
-        BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
-            cram.map { meta_, cram_, crai_ ->
-                joint_mutect2
-                    ? [meta_ - meta_.subMap('data_type') + [id: meta_.patient], cram_, crai_]
-                    : [meta_ - meta_.subMap('data_type'), cram_, crai_]
-            },
+        BAM_VARIANT_CALLING_MUTECT2(
+            cram.map { meta_, cram_, crai_ -> [meta_ - meta_.subMap('data_type'), [], [], cram_, crai_] },
             fasta,
             fasta_fai,
             dict,
@@ -142,11 +139,11 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             panel_of_normals_tbi,
             intervals,
             joint_mutect2,
+            germline_resource_provided,
         )
 
-        // vcf_mutect2 and tbi_mutect2 always contain usable output (filtered if available, otherwise unfiltered)
-        vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.vcf
-        tbi_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.tbi
+        vcf_mutect2 = BAM_VARIANT_CALLING_MUTECT2.out.vcf
+        tbi_mutect2 = BAM_VARIANT_CALLING_MUTECT2.out.tbi
     }
 
     // PARABRICKS MUTECTCALLER
@@ -160,9 +157,14 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         cram_parabricks_mutectcaller,
         fasta,
         fasta_fai,
+        dict,
+        germline_resource,
+        germline_resource_tbi,
         panel_of_normals,
         panel_of_normals_tbi,
         intervals_bed_combined,
+        intervals,
+        germline_resource_provided,
     )
 
     vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER.out.vcf

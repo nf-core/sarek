@@ -448,7 +448,7 @@
                     },
                     "parabricks/mutectcaller": {
                         "branch": "master",
-                        "git_sha": "810182dd17d4b2bba8ec29ad825aef0084689f5a",
+                        "git_sha": "69ce2b3089e843f5978420a88b7e0fdc93efe029",
                         "installed_by": ["modules"]
                     },
                     "rbt/vcfsplit": {
