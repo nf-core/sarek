@@ -568,12 +568,10 @@ To learn how to provide additional arguments to a particular tool of the pipelin
 
 #### Keep the default arguments when overriding `ext.args`
 
-Setting `ext.args` for a process in a custom config replaces the arguments that Sarek sets for that process.
-Some of these defaults are required for the pipeline to work.
-The defaults for each process are defined in the files in [`conf/modules/`](../conf/modules/) of the pipeline version you run.
-Copy the default `ext.args` into your custom config and append your additional arguments to it.
+Sarek defines the default `ext.args` of each process in the files in [`conf/modules/`](../conf/modules/), not in a single `conf/modules.config`.
+Copy the defaults from the file of the pipeline version you run before [adding arguments](https://nf-co.re/docs/running/configuration/nextflow-for-your-system#customise-tool-arguments).
 
-For example, GATK Mutect2 needs `--f1r2-tar-gz` to produce the input for `LearnReadOrientationModel`, and `--normal-sample` to identify the normal sample in tumour/normal pairs.
+GATK Mutect2 needs `--f1r2-tar-gz` to produce the input for `LearnReadOrientationModel`, and `--normal-sample` to identify the normal sample in tumour/normal pairs.
 Without `--f1r2-tar-gz`, the pipeline stops with a `Join mismatch` error.
 Without `--normal-sample`, Mutect2 treats the normal sample as a second tumour sample.
 The following config adds `--genotype-germline-sites` and `--genotype-pon-sites` and keeps the defaults:
@@ -594,9 +592,8 @@ process {
 }
 ```
 
-Process names can change between pipeline versions.
-For example, Sarek 3.11.0 and earlier set the Mutect2 arguments for tumour/normal pairs on `MUTECT2_PAIRED`, while this pipeline version sets them on `GATK4_MUTECT2`.
-A `withName` selector that matches no process is ignored without a warning, so check the process names in the `conf/modules/` files of the version you run.
+Sarek 3.11.0 and earlier set the Mutect2 arguments for tumour/normal pairs on `MUTECT2_PAIRED`.
+This pipeline version sets them on `GATK4_MUTECT2`, so custom configs that target `MUTECT2_PAIRED` no longer apply.
 
 ## nf-core/configs
 
