@@ -1,13 +1,16 @@
 {
     "-profile test --tools varnet --input recalibrated_somatic.csv --normalize_vcfs": {
         "content": [
-            23,
+            24,
             {
                 "ADD_INFO_TO_VCF": {
                     "gawk": "5.3.0"
                 },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -226,18 +229,21 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-30T17:24:45.086477724",
+        "timestamp": "2026-11-01T17:32:33.49085294",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools varnet --input recalibrated_somatic.csv": {
         "content": [
-            19,
+            20,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -441,18 +447,21 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-30T17:22:30.556849552",
+        "timestamp": "2026-11-01T17:30:20.093469416",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.3"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools varnet --input recalibrated_tumoronly.csv --varnet_resources -stub": {
         "content": [
-            15,
+            16,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -609,7 +618,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-31T14:51:40.742718291",
+        "timestamp": "2026-11-01T17:33:09.111072404",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -617,10 +626,13 @@
     },
     "-profile test --tools varnet --input recalibrated_somatic.csv -stub": {
         "content": [
-            18,
+            19,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -792,7 +804,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-31T14:52:23.582108782",
+        "timestamp": "2026-11-01T17:33:52.001825565",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
