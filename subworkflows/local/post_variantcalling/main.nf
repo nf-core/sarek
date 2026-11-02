@@ -39,6 +39,8 @@ workflow POST_VARIANTCALLING {
     main:
     vcfs = channel.empty()
     tbis = channel.empty()
+    // Subdirectory of variant_calling/ each VCF is published to; keep in sync with publishDir paths in conf/modules
+    vcfs_publish_dir = channel.empty()
 
     //
     // VARLOCIRAPTOR
@@ -61,6 +63,8 @@ workflow POST_VARIANTCALLING {
 
         vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.vcf)
         tbis = tbis.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.tbi)
+
+        vcfs_publish_dir = vcfs.map{ meta, vcf -> [meta, vcf, 'varlociraptor'] }
 
     } else if (filter_vcfs || normalize_vcfs || concatenate_vcfs ) {
 
@@ -104,6 +108,7 @@ workflow POST_VARIANTCALLING {
         // Due to strelka having multiple outputs, we are adding the file name (vcf.gz) for both here to make sure the right files are joined below
         small_variant_vcfs = all_vcfs.small.map{ meta, vcfs_ -> [meta + [filename: vcfs_.name], vcfs_]}
         small_variant_tbis = all_tbis.small.map{ meta, tbis_ -> [meta + [filename: tbis_.baseName], tbis_]}
+        def small_variant_publish_dir = null
 
         // 1. Filter by PASS and custom fields
         // 2. Normalize
@@ -115,6 +120,7 @@ workflow POST_VARIANTCALLING {
 
             small_variant_vcfs = FILTER_VCFS.out.vcf
             small_variant_tbis = FILTER_VCFS.out.index
+            small_variant_publish_dir = 'filtered'
         }
 
         if (normalize_vcfs) {
@@ -123,6 +129,7 @@ workflow POST_VARIANTCALLING {
 
             small_variant_vcfs = NORMALIZE_VCFS.out.vcfs // [meta, vcf]
             small_variant_tbis = NORMALIZE_VCFS.out.tbis // [meta, tbi]
+            small_variant_publish_dir = 'normalized'
         }
 
         if (normalize_vcfs && snv_consensus_calling){
@@ -149,20 +156,28 @@ workflow POST_VARIANTCALLING {
         vcfs = small_variant_vcfs.mix(all_vcfs.other)
         tbis = small_variant_tbis.mix(all_tbis.other)
 
+        vcfs_publish_dir = small_variant_vcfs
+                            .map{ meta, vcf -> [meta, vcf, meta.variantcaller == 'consensus' ? 'consensus' : (small_variant_publish_dir ?: meta.variantcaller)] }
+                            .mix(all_vcfs.other.map{ meta, vcf -> [meta, vcf, meta.variantcaller] })
+
         if (concatenate_vcfs) {
             CONCATENATE_GERMLINE_VCFS(germline_vcfs)
 
             vcfs = vcfs.mix(CONCATENATE_GERMLINE_VCFS.out.vcfs)
             tbis = tbis.mix(CONCATENATE_GERMLINE_VCFS.out.tbis)
+
+            vcfs_publish_dir = vcfs_publish_dir.mix(CONCATENATE_GERMLINE_VCFS.out.vcfs.map{ meta, vcf -> [meta, vcf, 'concat'] })
         }
 
 
     } else {
         // No post-processing requested, pass through original VCFs
         vcfs = vcfs.mix(germline_vcfs,tumor_only_vcfs, somatic_vcfs)
+        vcfs_publish_dir = vcfs.map{ meta, vcf -> [meta, vcf, meta.variantcaller] }
     }
 
     emit:
     vcfs     // post processed vcfs [meta, vcf]
     tbis     // post processed tbis [meta, tbi]
+    vcfs_publish_dir // post processed vcfs with their publish subdirectory [meta, vcf, publish_dir]
 }

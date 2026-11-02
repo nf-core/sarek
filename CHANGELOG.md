@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2352](https://github.com/nf-core/sarek/pull/2352) - Sort the `--intervals` BED in reference order with `bedtools sort` before splitting it, fixing out-of-order pileup tables that made `CalculateContamination` fail with `Invalid interval` ([#899](https://github.com/nf-core/sarek/issues/899), [#2281](https://github.com/nf-core/sarek/issues/2281)). Fail early when the BED has contigs missing from the reference, start > end, or intervals past the contig end ([#97](https://github.com/nf-core/sarek/issues/97), [#934](https://github.com/nf-core/sarek/issues/934)). CNVKit target and antitarget BED names now carry the `.sorted` suffix of the sorted intervals file
 - [#2358](https://github.com/nf-core/sarek/pull/2358) - Pass the Mutect2 and Parabricks MutectCaller stats file to `FilterMutectCalls` with `--stats` ([#2191](https://github.com/nf-core/sarek/issues/2191))
 - [#2357](https://github.com/nf-core/sarek/pull/2357) - Clarify annotation cache and software version selection, and correct the SnpEff cache directory documentation
+- [#2204](https://github.com/nf-core/sarek/issues/2204) - Point `csv/variantcalled.csv` at the published filtered, normalised, concatenated and Varlociraptor VCFs instead of the `variant_calling/<variantcaller>/` directory
 
 ### Removed
 
