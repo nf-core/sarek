@@ -15,15 +15,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [#2349](https://github.com/nf-core/sarek/pull/2349) - Mutect2 and Parabricks MutectCaller share one GATK filtering subworkflow; Parabricks MutectCaller pileups are now scattered over the intervals like Mutect2's
-- [#2349](https://github.com/nf-core/sarek/pull/2349) - Merge the paired and tumour-only Mutect2 calling subworkflows into `bam_variant_calling_mutect2` (process `MUTECT2_PAIRED` is now `MUTECT2`) and rename `vcf_variant_filtering_gatk` to `vcf_variant_filtering_haplotypecaller`
+- [#2349](https://github.com/nf-core/sarek/pull/2349) - Mutect2 and Parabricks MutectCaller share one GATK filtering subworkflow (`vcf_variant_filtering_mutect2`), with Parabricks MutectCaller pileups now scattered over the intervals; paired and tumour-only Mutect2 calling merged into `bam_variant_calling_mutect2` (process `MUTECT2_PAIRED` is now `MUTECT2`); `vcf_variant_filtering_gatk` renamed to `vcf_variant_filtering_haplotypecaller`
 
 ### Fixed
 
 - [#2277](https://github.com/nf-core/sarek/pull/2277) - fix(markduplicates): avoid duplicate alignment emission under -stub
 - [#2347](https://github.com/nf-core/sarek/pull/2347) - Fix DeepSomatic VCF merge failing with `sample entries that don't match the other files` when an interval yields no records (e.g. `*_alt` contigs): pass tumour and normal sample names explicitly, including to `postprocess_variants`, which otherwise writes `default`
-- [#2349](https://github.com/nf-core/sarek/pull/2349) - Filter Mutect2 calls with `FilterMutectCalls` also without `--germline_resource` ([#1546](https://github.com/nf-core/sarek/issues/1546)). For runs without a germline resource, downstream files are now named after `*.mutect2.filtered.vcf.gz`
-- [#2349](https://github.com/nf-core/sarek/pull/2349) - With `--joint_mutect2`, tumours of one patient with different samplesheet `contamination` values no longer split the patient into several joint calls
+- [#2349](https://github.com/nf-core/sarek/pull/2349) - Filter Mutect2 calls with `FilterMutectCalls` also without `--germline_resource` ([#1546](https://github.com/nf-core/sarek/issues/1546)), so downstream files of such runs are now named after `*.mutect2.filtered.vcf.gz`; with `--joint_mutect2`, tumours of one patient with different samplesheet `contamination` values no longer split the patient into several joint calls
 - [#2352](https://github.com/nf-core/sarek/pull/2352) - Sort the `--intervals` BED in reference order with `bedtools sort` before splitting it, fixing out-of-order pileup tables that made `CalculateContamination` fail with `Invalid interval` ([#899](https://github.com/nf-core/sarek/issues/899), [#2281](https://github.com/nf-core/sarek/issues/2281)). Fail early when the BED has contigs missing from the reference, start > end, or intervals past the contig end ([#97](https://github.com/nf-core/sarek/issues/97), [#934](https://github.com/nf-core/sarek/issues/934)). CNVKit target and antitarget BED names now carry the `.sorted` suffix of the sorted intervals file
 
 ### Removed
