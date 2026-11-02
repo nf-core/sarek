@@ -286,7 +286,7 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_HAPLOTYPECALLER": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -422,7 +422,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-08-31T07:36:11.548103451",
+        "timestamp": "2026-11-02T14:16:52.05124197",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

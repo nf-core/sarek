@@ -2091,10 +2091,10 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_APPLYBQSR": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -2269,7 +2269,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-30T17:10:51.805342839",
+        "timestamp": "2026-11-02T14:21:32.163578898",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -2506,10 +2506,10 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_APPLYBQSR": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -2782,7 +2782,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-30T17:04:45.01466706",
+        "timestamp": "2026-11-02T14:18:17.194336702",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
