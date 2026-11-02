@@ -141,7 +141,7 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
 // Joint calls are per patient: drop the per-sample keys as the caller does and group the tables by patient
 def groupTablesByPatient(tables, tables_per_patient) {
     return tables
-        .map { meta, table -> [meta.patient, meta - meta.subMap('normal_id', 'sample', 'tumor_id') + [id: meta.patient], table] }
+        .map { meta, table -> [meta.patient, meta - meta.subMap('normal_id', 'tumor_id', 'sample', 'contamination') + [id: meta.patient], table] }
         .combine(tables_per_patient, by: 0)
         .map { _patient, meta, table, n -> [groupKey(meta, n), table] }
         .groupTuple()

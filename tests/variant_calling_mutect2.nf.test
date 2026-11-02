@@ -76,6 +76,25 @@ nextflow_pipeline {
                 tools: 'mutect2',
                 wes: true
             ]
+        ],
+        [
+            name: "-profile test --tools mutect2 --germline_resource shared normal, scattered intervals",
+            params: [
+                genome: null,
+                igenomes_ignore: true,
+                dbsnp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+                dbsnp_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                germline_resource: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz',
+                germline_resource_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz.tbi',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic_joint.csv",
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                // estimated runtimes above the 600 s chunk threshold, so the test BED is split into two chunks
+                nucleotides_per_second: 1000,
+                step: "variant_calling",
+                tools: 'mutect2'
+            ]
         ]
     ]
 

@@ -1,15 +1,17 @@
-name: gatk_tumor_only_somatic_variant_calling
+name: bam_variant_calling_mutect2
 description: |
-  Perform variant calling on a single tumor sample using mutect2 tumor only mode, scattered over intervals.
+  Perform variant calling with mutect2 on tumour-normal pairs or tumour-only samples, scattered over intervals.
   Calls, stats and f1r2 files are merged across intervals and filtered with VCF_VARIANT_FILTERING_MUTECT2
   (learnreadorientationmodel, getpileupsummaries and calculatecontamination when a germline resource is provided, filtermutectcalls).
 keywords:
   - gatk4
   - mutect2
+  - learnreadorientationmodel
   - getpileupsummaries
   - calculatecontamination
   - filtermutectcalls
   - variant_calling
+  - tumor_normal
   - tumor_only
   - filtered_vcf
 modules:
@@ -18,19 +20,11 @@ modules:
   - gatk4/mergemutectstats
   - vcf_variant_filtering_mutect2
 input:
-  - meta:
-      type: map
+  - cram:
+      type: list
       description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test' ]
-  - input:
-      type: list
-      description: list containing one BAM file, also able to take CRAM as an input
-      pattern: "[ *.{bam/cram} ]"
-  - input_index:
-      type: list
-      description: list containing one BAM file indexe, also able to take CRAM index as an input
-      pattern: "[ *.{bam.bai/cram.crai} ]"
+        One row per tumour-normal pair or tumour-only sample, the normal is [] for tumour-only
+        Structure: [ val(meta), path(normal_cram), path(normal_crai), path(tumor_cram), path(tumor_crai) ]
   - fasta:
       type: file
       description: The reference fasta file
@@ -94,7 +88,13 @@ output:
         Read-orientation artefact priors
         Structure: [ val(meta), path(file) ]
       pattern: "*.artifactprior.tar.gz"
-  - pileup_table:
+  - pileup_table_normal:
+      type: file
+      description: |
+        Pileup summary table of the normal (only with a germline resource)
+        Structure: [ val(meta), path(file) ]
+      pattern: "*.pileups.table"
+  - pileup_table_tumor:
       type: file
       description: |
         Pileup summary table of the tumour (only with a germline resource)

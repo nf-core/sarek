@@ -12,7 +12,7 @@ include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC            } from '../bam_var
 include { BAM_VARIANT_CALLING_SOMATIC_DEEPSOMATIC             } from '../bam_variant_calling_somatic_deepsomatic'
 include { BAM_VARIANT_CALLING_SOMATIC_MANTA                   } from '../bam_variant_calling_somatic_manta'
 include { BAM_VARIANT_CALLING_SOMATIC_MUSE                    } from '../bam_variant_calling_somatic_muse'
-include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2                 } from '../bam_variant_calling_somatic_mutect2'
+include { BAM_VARIANT_CALLING_MUTECT2                         } from '../bam_variant_calling_mutect2'
 include { BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC  } from '../bam_variant_calling_somatic_parabricks_deepsomatic'
 include { BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER         } from '../bam_variant_calling_parabricks_mutectcaller'
 include { BAM_VARIANT_CALLING_SOMATIC_STRELKA                 } from '../bam_variant_calling_somatic_strelka'
@@ -232,14 +232,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // MUTECT2
     if (tools && tools.split(',').contains('mutect2')) {
-        // joint_mutect2 mode needs different meta.map than regular mode
-        //   we need to keep all fields and then remove on a per-tool-basis to ensure proper joining at the filtering step
-        BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
-            cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
-                joint_mutect2
-                    ? [meta + [id: meta.patient], [normal_cram, tumor_cram], [normal_crai, tumor_crai]]
-                    : [meta, [normal_cram, tumor_cram], [normal_crai, tumor_crai]]
-            },
+        BAM_VARIANT_CALLING_MUTECT2(
+            cram,
             fasta,
             fasta_fai,
             dict,
@@ -252,8 +246,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             germline_resource_provided,
         )
 
-        vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.vcf
-        tbi_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.tbi
+        vcf_mutect2 = BAM_VARIANT_CALLING_MUTECT2.out.vcf
+        tbi_mutect2 = BAM_VARIANT_CALLING_MUTECT2.out.tbi
     }
 
     // PARABRICKS DEEPSOMATIC
