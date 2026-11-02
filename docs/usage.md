@@ -1113,7 +1113,7 @@ To use these, supply the parameters `--vep_cache` and/or `--snpeff_cache` with t
 ### Specify the cache location
 
 Params `--snpeff_cache` and `--vep_cache` are used to specify the locations to the root of the annotation cache folder.
-The cache will be located within a subfolder with the path `${snpeff_species}.${snpeff_version}` for SnpEff and `${vep_species}/${vep_cache_version}_${vep_genome}` for VEP.
+The cache will be located within a subfolder with the path `${snpeff_db}` for SnpEff and `${vep_species}/${vep_cache_version}_${vep_genome}` for VEP.
 If this directory is missing, Sarek will raise an error.
 
 For example this is a typical folder structure for `GRCh38` and `WBCel235`, with SNPeff cache version 99 and VEP cache version 110:
@@ -1134,6 +1134,12 @@ For this example, the parameters `--snpeff_cache /data/snpeff_cache` and `--vep_
 Both SnpEff and VEP will figure out internally the path towards the specific cache version / species the annotation should be performed given the parameters specified to Sarek.
 
 ### Change cache version and species
+
+Cache parameters select annotation data and do not change the software version.
+Use `--snpeff_db` to select the SnpEff database and `--vep_cache_version` to select the VEP cache release.
+To change the SnpEff or VEP software version, [override the process container](#custom-containers) in a custom configuration.
+The `--vep_version` parameter only sets the VEP installation path used by LOFTEE; it does not select the container.
+Ensure that the selected cache is compatible with the software version.
 
 By default all is specified in the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file.
 Explanation can be found for all params in the documentation:
