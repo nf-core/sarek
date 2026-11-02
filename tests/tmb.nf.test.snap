@@ -21,7 +21,7 @@
                 "GATK4_CREATESEQUENCEDICTIONARY": {
                     "gatk4": "4.7.0.0"
                 },
-                "GETPILEUPSUMMARIES": {
+                "GETPILEUPSUMMARIES_TUMOR": {
                     "gatk4": "4.7.0.0"
                 },
                 "HTSLIB_BGZIPTABIX": {
@@ -156,7 +156,7 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-11-01T06:36:43.581318",
+        "timestamp": "2026-11-02T18:21:09.97225",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -207,7 +207,7 @@
                 "LEARNREADORIENTATIONMODEL": {
                     "gatk4": "4.7.0.0"
                 },
-                "MUTECT2_PAIRED": {
+                "MUTECT2": {
                     "gatk4": "4.7.0.0"
                 },
                 "SNPEFF_SNPEFF": {
@@ -323,7 +323,7 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-11-01T06:38:31.166324",
+        "timestamp": "2026-11-02T18:22:58.072791",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
