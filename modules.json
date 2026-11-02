@@ -253,7 +253,7 @@
                     },
                     "gatk4/filtermutectcalls": {
                         "branch": "master",
-                        "git_sha": "b2bcd8312599aacd849e69721e20ac8138018f83",
+                        "git_sha": "eaad1989fddb5690f97bc612db4932055466e4a9",
                         "installed_by": ["modules"]
                     },
                     "gatk4/filtervarianttranches": {
@@ -448,7 +448,7 @@
                     },
                     "parabricks/mutectcaller": {
                         "branch": "master",
-                        "git_sha": "810182dd17d4b2bba8ec29ad825aef0084689f5a",
+                        "git_sha": "69ce2b3089e843f5978420a88b7e0fdc93efe029",
                         "installed_by": ["modules"]
                     },
                     "rbt/vcfsplit": {
