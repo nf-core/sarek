@@ -44,7 +44,7 @@
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
                 },
-                "MUTECT2_PAIRED": {
+                "MUTECT2": {
                     "gatk4": "4.7.0.0"
                 },
                 "SAMTOOLS_STATS": {
@@ -380,7 +380,7 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-10-30T17:50:46.682122898",
+        "timestamp": "2026-11-02T10:57:37.070407271",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -769,7 +769,7 @@
                     "gzip": "1.14",
                     "mosdepth": "0.3.14"
                 },
-                "MUTECT2_PAIRED": {
+                "MUTECT2": {
                     "gatk4": "4.7.0.0"
                 },
                 "SAMTOOLS_STATS": {
@@ -1147,7 +1147,7 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-10-30T08:52:15.061681858",
+        "timestamp": "2026-11-02T10:50:46.511507595",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

@@ -46,7 +46,7 @@ nextflow_pipeline {
             ]
         ],
         [
-            name: "-profile test --input tests/csv/3.0/recalibrated_somatic_joint.csv --tools mutect2 --joint_mutect2 scattered intervals",
+            name: "-profile test --input tests/csv/3.0/recalibrated_somatic_joint.csv --tools mutect2 --joint_mutect2 without --germline_resource, scattered intervals",
             params: [
                 genome: null,
                 igenomes_ignore: true,
@@ -64,7 +64,7 @@ nextflow_pipeline {
             ]
         ],
         [
-            name: "-profile test --input tests/csv/3.0/recalibrated_tumoronly_joint.csv --tools mutect2 --joint_mutect2",
+            name: "-profile test --input tests/csv/3.0/recalibrated_tumoronly_joint.csv --tools mutect2 --joint_mutect2 without --germline_resource",
             params: [
                 genome: null,
                 igenomes_ignore: true,

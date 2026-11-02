@@ -59,7 +59,6 @@ process PARABRICKS_MUTECTCALLER {
     ${pon_index_command}
     ${prepon_command}
 
-    # if germline resource specified, place its index at <germline_resource>.tbi
     ${germline_index_command}
 
     pbrun \\
