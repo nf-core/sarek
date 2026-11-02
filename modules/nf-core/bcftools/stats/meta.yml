@@ -1,0 +1,130 @@
+name: bcftools_stats
+description: Generates stats from VCF files
+keywords:
+  - variant calling
+  - stats
+  - VCF
+tools:
+  - stats:
+      description: |
+        Parses VCF or BCF and produces text file stats which is suitable for
+        machine processing and can be plotted using plot-vcfstats.
+      homepage: http://samtools.github.io/bcftools/bcftools.html
+      documentation: http://www.htslib.org/doc/bcftools.html
+      doi: 10.1093/bioinformatics/btp352
+      licence:
+        - "MIT"
+      identifier: biotools:bcftools
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - vcf:
+        type: file
+        description: VCF input file
+        pattern: "*.{vcf}"
+        ontologies: []
+    - tbi:
+        type: file
+        description: |
+          The tab index for the VCF file to be inspected. Optional: only required when parameter regions is chosen.
+        pattern: "*.tbi"
+        ontologies: []
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - regions:
+        type: file
+        description: |
+          Optionally, restrict the operation to regions listed in this file. (VCF, BED or tab-delimited)
+        ontologies: []
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - targets:
+        type: file
+        description: |
+          Optionally, restrict the operation to regions listed in this file (doesn't rely upon tbi index files)
+        ontologies: []
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - samples:
+        type: file
+        description: |
+          Optional, file of sample names to be included or excluded.
+          e.g. 'file.tsv'
+        ontologies: []
+  - - meta5:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - exons:
+        type: file
+        description: |
+          Tab-delimited file with exons for indel frameshifts (chr,beg,end; 1-based, inclusive, optionally bgzip compressed).
+          e.g. 'exons.tsv.gz'
+        ontologies: []
+  - - meta6:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - fasta:
+        type: file
+        description: |
+          Faidx indexed reference sequence file to determine INDEL context.
+          e.g. 'reference.fa'
+        ontologies: []
+output:
+  stats:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*stats.txt":
+          type: file
+          description: Text output file containing stats
+          pattern: "*_{stats.txt}"
+          ontologies: []
+  versions_bcftools:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - bcftools:
+          type: string
+          description: The tool name
+      - "bcftools --version | sed '1!d; s/^.*bcftools //'":
+          type: eval
+          description: The command used to generate the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - bcftools:
+          type: string
+          description: The tool name
+      - "bcftools --version | sed '1!d; s/^.*bcftools //'":
+          type: eval
+          description: The command used to generate the version of the tool
+authors:
+  - "@joseespinosa"
+  - "@drpatelh"
+  - "@SusiJo"
+  - "@TCLamnidis"
+maintainers:
+  - "@joseespinosa"
+  - "@drpatelh"
+  - "@SusiJo"
+  - "@TCLamnidis"

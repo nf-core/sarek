@@ -1,0 +1,84 @@
+name: bcftools_concat
+description: Concatenate VCF files
+keywords:
+  - variant calling
+  - concat
+  - bcftools
+  - VCF
+tools:
+  - concat:
+      description: |
+        Concatenate VCF files.
+      homepage: http://samtools.github.io/bcftools/bcftools.html
+      documentation: http://www.htslib.org/doc/bcftools.html
+      doi: 10.1093/bioinformatics/btp352
+      licence:
+        - "MIT"
+      identifier: biotools:bcftools
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - vcfs:
+        type: list
+        description: |
+          List containing 2 or more vcf files
+          e.g. [ 'file1.vcf', 'file2.vcf' ]
+    - tbi:
+        type: list
+        description: |
+          List containing 2 or more index files (optional)
+          e.g. [ 'file1.tbi', 'file2.tbi' ]
+output:
+  vcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.${extension}:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*.{vcf,vcf.gz,bcf,bcf.gz}"
+  index:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "${prefix}.${extension}.{tbi,csi}":
+          type: file
+          description: VCF file index
+          pattern: "*.{tbi,csi}"
+          ontologies: []
+  versions_bcftools:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - bcftools:
+          type: string
+          description: The tool name
+      - bcftools --version | sed '1!d; s/^.*bcftools //':
+          type: eval
+          description: The command used to generate the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - bcftools:
+          type: string
+          description: The tool name
+      - bcftools --version | sed '1!d; s/^.*bcftools //':
+          type: eval
+          description: The command used to generate the version of the tool
+authors:
+  - "@abhi18av"
+  - "@nvnieuwk"
+maintainers:
+  - "@abhi18av"
+  - "@nvnieuwk"

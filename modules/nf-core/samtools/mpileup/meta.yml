@@ -1,0 +1,97 @@
+name: samtools_mpileup
+description: Generate text pileup output for one or multiple BAM files. Each
+  input file produces a separate group of pileup columns in the output.
+keywords:
+  - mpileup
+  - bam
+  - sam
+  - cram
+tools:
+  - samtools:
+      description: |
+        SAMtools is a set of utilities for interacting with and post-processing
+        short DNA sequence read alignments in the SAM, BAM and CRAM formats, written by Heng Li.
+        These files are generated as output by short read aligners like BWA.
+      homepage: http://www.htslib.org/
+      documentation: http://www.htslib.org/doc/samtools.html
+      doi: 10.1093/bioinformatics/btp352
+      licence: ["MIT"]
+      identifier: biotools:samtools
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test' ]
+    - input:
+        type: file
+        description: BAM/CRAM/SAM file
+        pattern: "*.{bam,cram,sam}"
+        ontologies: []
+    - index:
+        type: file
+        description: CSI/BAI/CRAI file. Optional. Only required when using the
+          '-r' parameter.
+        pattern: "*.{bai,crai,csi}"
+        ontologies: []
+    - intervals:
+        type: file
+        description: Interval FILE. Optional.
+        pattern: "*.bed"
+        ontologies: []
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test' ]
+    - fasta:
+        type: file
+        description: FASTA reference file. Optional.
+        pattern: "*.{fasta,fa,fna}"
+        ontologies: []
+    - fai:
+        type: file
+        description: FAI file. Optional. Only required (recommended) when using the
+          '-f' parameter.
+        pattern: "*.{fai}"
+        ontologies: []
+output:
+  mpileup:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.mpileup.gz":
+          type: file
+          description: mpileup file
+          pattern: "*.{mpileup}"
+          ontologies: []
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - samtools:
+          type: string
+          description: The tool name
+      - "samtools version | sed '1!d;s/.* //'":
+          type: string
+          description: The command used to generate the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - samtools:
+          type: string
+          description: The tool name
+      - "samtools version | sed '1!d;s/.* //'":
+          type: string
+          description: The command used to generate the version of the tool
+authors:
+  - "@drpatelh"
+  - "@joseespinosa"
+maintainers:
+  - "@joseespinosa"
+  - "@krannich479"
+  - "@matthdsm"

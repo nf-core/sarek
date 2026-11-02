@@ -10,6 +10,11 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      update_snapshots:
+        description: "Regenerate snapshots (--update-snapshot) over all tagged tests and upload them as artifacts"
+        type: boolean
+        default: false
 
 # Cancel if a newer run is started
 concurrency:
@@ -18,7 +23,7 @@ concurrency:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  NFT_VER: "0.9.4"
+  NFT_VER: "0.9.5"
   NFT_WORKDIR: "~"
   NXF_ANSI_LOG: false
   NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
@@ -50,7 +55,9 @@ jobs:
         env:
           NFT_VER: ${{ env.NFT_VER }}
         with:
-          max_shards: 7
+          tags: "cpu,cpu_conda"
+          max_shards: 15
+          all_tests: ${{ github.event.inputs.update_snapshots || 'false' }}
 
       - name: debug
         run: |
@@ -64,6 +71,7 @@ jobs:
     runs-on: # use self-hosted runners
       - runs-on=${{ github.run_id }}-nf-test
       - runner=4cpu-linux-x64
+      - volume=80gb
     strategy:
       fail-fast: false
       matrix:
@@ -100,6 +108,8 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
+          tags: ${{ matrix.profile == 'conda' && 'cpu_conda' || 'cpu,cpu_conda' }}
+          update_snapshots: ${{ github.event.inputs.update_snapshots || 'false' }}
 
       - name: Report test status
         if: ${{ always() }}

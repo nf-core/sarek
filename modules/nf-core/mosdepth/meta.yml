@@ -1,0 +1,237 @@
+name: mosdepth
+description: Calculates genome-wide sequencing coverage.
+keywords:
+  - mosdepth
+  - bam
+  - cram
+  - coverage
+tools:
+  - mosdepth:
+      description: |
+        Fast BAM/CRAM depth calculation for WGS, exome, or targeted sequencing.
+      documentation: https://github.com/brentp/mosdepth
+      doi: 10.1093/bioinformatics/btx699
+      licence:
+        - "MIT"
+      identifier: biotools:mosdepth
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - bam:
+        type: file
+        description: Input BAM/CRAM file
+        pattern: "*.{bam,cram}"
+        ontologies: []
+    - bai:
+        type: file
+        description: Index for BAM/CRAM file
+        pattern: "*.{bai,crai}"
+        ontologies: []
+    - bed:
+        type: file
+        description: BED file with intersected intervals
+        pattern: "*.{bed}"
+        ontologies: []
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing bed information
+          e.g. [ id:'test' ]
+    - fasta:
+        type: file
+        description: Reference genome FASTA file
+        pattern: "*.{fa,fasta}"
+        ontologies: []
+  - quantize_labels:
+      type: list
+      description: |
+        List of labels for quantized coverage bins, e.g. [ "NO_COVERAGE", "LOW_COVERAGE", "MEDIUM_COVERAGE", "HIGH_COVERAGE" ]
+        The first value will be assigned to the `MOSDEPTH_Q0` environment variable, the second to `MOSDEPTH_Q1`, and so on.
+        These can then be used in the `--quantize` option of mosdepth to assign labels to quantized coverage bins.
+output:
+  global_txt:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.global.dist.txt":
+          type: file
+          description: Text file with global cumulative coverage distribution
+          pattern: "*.{global.dist.txt}"
+          ontologies: []
+  summary_txt:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.summary.txt":
+          type: file
+          description: Text file with summary mean depths per chromosome and
+            regions
+          pattern: "*.{summary.txt}"
+          ontologies: []
+  regions_txt:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.region.dist.txt":
+          type: file
+          description: Text file with region cumulative coverage distribution
+          pattern: "*.{region.dist.txt}"
+          ontologies: []
+  per_base_d4:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.per-base.d4":
+          type: file
+          description: D4 file with per-base coverage
+          pattern: "*.{per-base.d4}"
+          ontologies: []
+  per_base_bed:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.per-base.bed.gz":
+          type: file
+          description: BED file with per-base coverage
+          pattern: "*.{per-base.bed.gz}"
+          ontologies: []
+  per_base_csi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.per-base.bed.gz.csi":
+          type: file
+          description: Index file for BED file with per-base coverage
+          pattern: "*.{per-base.bed.gz.csi}"
+          ontologies: []
+  regions_bed:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.regions.bed.gz":
+          type: file
+          description: BED file with per-region coverage
+          pattern: "*.{regions.bed.gz}"
+          ontologies: []
+  regions_csi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.regions.bed.gz.csi":
+          type: file
+          description: Index file for BED file with per-region coverage
+          pattern: "*.{regions.bed.gz.csi}"
+          ontologies: []
+  quantized_bed:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.quantized.bed.gz":
+          type: file
+          description: BED file with binned coverage
+          pattern: "*.{quantized.bed.gz}"
+          ontologies: []
+  quantized_csi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.quantized.bed.gz.csi":
+          type: file
+          description: Index file for BED file with binned coverage
+          pattern: "*.{quantized.bed.gz.csi}"
+          ontologies: []
+  thresholds_bed:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.thresholds.bed.gz":
+          type: file
+          description: BED file with the number of bases in each region that are
+            covered at or above each threshold
+          pattern: "*.{thresholds.bed.gz}"
+          ontologies: []
+  thresholds_csi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.thresholds.bed.gz.csi":
+          type: file
+          description: Index file for BED file with threshold coverage
+          pattern: "*.{thresholds.bed.gz.csi}"
+          ontologies: []
+  versions_mosdepth:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - mosdepth:
+          type: string
+          description: The tool name
+      - mosdepth --version | sed 's/mosdepth //g':
+          type: eval
+          description: The command used to generate the version of the tool
+  versions_gzip:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - gzip:
+          type: string
+          description: The name of the tool
+      - gzip -V 2>&1 | sed 's/gzip \([0-9.]*\).*/\1/;q':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - mosdepth:
+          type: string
+          description: The tool name
+      - mosdepth --version | sed 's/mosdepth //g':
+          type: eval
+          description: The command used to generate the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - gzip:
+          type: string
+          description: The name of the tool
+      - gzip -V 2>&1 | sed 's/gzip \([0-9.]*\).*/\1/;q':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@joseespinosa"
+  - "@drpatelh"
+  - "@ramprasadn"
+  - "@matthdsm"
+maintainers:
+  - "@joseespinosa"
+  - "@ramprasadn"
+  - "@matthdsm"

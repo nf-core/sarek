@@ -1,0 +1,112 @@
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+def pipelines_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/sarek3/data/'
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+
+    def test_scenario = [
+        [
+            name: "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
+            params: [
+                intervals: modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.multi_intervals.bed",
+                nucleotides_per_second: 20,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null,
+                wes: true
+            ]
+        ],
+        [
+            // Rows out of reference order, with runtime estimates that would interleave two chunks if left unsorted
+            name: "-profile test --intervals unsorted_intervals.bed --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
+            params: [
+                intervals: pipelines_testdata_base_path + 'genomics/homo_sapiens/genome/unsorted_intervals.bed',
+                save_reference: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null,
+                wes: true
+            ]
+        ],
+        [
+            name: "Fails with profile test --intervals intervals_wrong_contig.bed",
+            params: [
+                intervals: pipelines_testdata_base_path + 'genomics/homo_sapiens/genome/intervals_wrong_contig.bed',
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null,
+                wes: true
+            ],
+            failure: true,
+            snapshot: 'stdout',
+            snapshot_include: 'undefined in',
+            // Whether a running task gets killed when the run fails depends on timing
+            snapshot_ignore: 'Killing running tasks',
+        ],
+        [
+            name: "Fails with profile test --intervals intervals_past_end.bed",
+            params: [
+                intervals: pipelines_testdata_base_path + 'genomics/homo_sapiens/genome/intervals_past_end.bed',
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null,
+                wes: true
+            ],
+            failure: true,
+            snapshot: 'stdout',
+            snapshot_include: 'past their contig',
+            // Whether a running task gets killed when the run fails depends on timing
+            snapshot_ignore: 'Killing running tasks',
+        ],
+        [
+            name: "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
+            params: [
+                no_intervals: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null
+            ]
+        ],
+        [
+            name: "-profile test --intervals null --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
+            params: [
+                intervals: null,
+                save_reference: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null
+            ]
+        ],
+        [
+            name: "-profile test --intervals genome.multi_intervals.bed --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
+            params: [
+                intervals: modules_testdata_base_path + "/genomics/homo_sapiens/genome/genome.multi_intervals.bed",
+                nucleotides_per_second: 20,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null,
+                wes: true
+            ],
+            stub: true
+        ],
+        [
+            name: "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
+            params: [
+                no_intervals: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null
+            ],
+            stub: true
+        ],
+        [
+            name: "-profile test --intervals null --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
+            params: [
+                intervals: null,
+                save_reference: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null
+            ],
+            stub: true
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}

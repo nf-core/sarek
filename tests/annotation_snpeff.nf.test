@@ -1,0 +1,29 @@
+def projectDir = new File('.').absolutePath
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+
+    def test_scenario = [
+        [
+            name: "Fails with profile test --tools snpeff --snpeff_db na --build_only_index",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
+                step: 'annotate',
+                snpeff_db: "na",
+                input: null,
+                build_only_index: true,
+                tools: 'snpeff'
+            ],
+            failure: true,
+            snapshot: 'stdout',
+            snapshot_include: 'annotation-cache'
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}
