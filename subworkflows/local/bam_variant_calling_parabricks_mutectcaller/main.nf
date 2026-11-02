@@ -2,8 +2,8 @@
 // PARABRICKS MUTECTCALLER: GPU-accelerated tumour-normal or tumour-only somatic variant calling, filtered with GATK on CPU
 //
 
-include { VCF_VARIANT_FILTERING_MUTECT2 } from '../vcf_variant_filtering_mutect2/main'
-include { PARABRICKS_MUTECTCALLER          } from '../../../modules/nf-core/parabricks/mutectcaller'
+include { VCF_VARIANT_FILTERING_MUTECT2 } from '../vcf_variant_filtering_mutect2'
+include { PARABRICKS_MUTECTCALLER       } from '../../../modules/nf-core/parabricks/mutectcaller'
 
 workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
     take:

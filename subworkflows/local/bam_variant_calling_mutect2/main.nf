@@ -2,7 +2,7 @@
 // MUTECT2: tumour-normal and tumour-only variant calling, filtering in VCF_VARIANT_FILTERING_MUTECT2
 //
 
-include { VCF_VARIANT_FILTERING_MUTECT2              } from '../vcf_variant_filtering_mutect2/main'
+include { VCF_VARIANT_FILTERING_MUTECT2              } from '../vcf_variant_filtering_mutect2'
 include { GATK4_MERGEMUTECTSTATS as MERGEMUTECTSTATS } from '../../../modules/nf-core/gatk4/mergemutectstats'
 include { GATK4_MERGEVCFS as MERGE_MUTECT2           } from '../../../modules/nf-core/gatk4/mergevcfs'
 include { GATK4_MUTECT2 as MUTECT2                   } from '../../../modules/nf-core/gatk4/mutect2'
