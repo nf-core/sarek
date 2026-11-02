@@ -1,7 +1,7 @@
 name: gatk_tumor_only_somatic_variant_calling
 description: |
   Perform variant calling on a single tumor sample using mutect2 tumor only mode, scattered over intervals.
-  Calls, stats and f1r2 files are merged across intervals and filtered with BAM_VCF_FILTER_MUTECT_CALLS_GATK
+  Calls, stats and f1r2 files are merged across intervals and filtered with VCF_VARIANT_FILTERING_MUTECT2
   (learnreadorientationmodel, getpileupsummaries and calculatecontamination when a germline resource is provided, filtermutectcalls).
 keywords:
   - gatk4
@@ -16,7 +16,7 @@ modules:
   - gatk4/mutect2
   - gatk4/mergevcfs
   - gatk4/mergemutectstats
-  - bam_vcf_filter_mutect_calls_gatk
+  - vcf_variant_filtering_mutect2
 input:
   - meta:
       type: map

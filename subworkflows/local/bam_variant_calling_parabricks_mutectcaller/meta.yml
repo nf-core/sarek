@@ -4,7 +4,7 @@ description: |
   Perform somatic variant calling on paired tumour-normal or tumour-only samples with the
   Parabricks GPU-accelerated mutectcaller, run as a single job per pair or sample on the combined
   intervals, optionally with a panel of normals and a germline resource. The calls are filtered on
-  CPU by the bam_vcf_filter_mutect_calls_gatk subworkflow (GATK filtermutectcalls with
+  CPU by the vcf_variant_filtering_mutect2 subworkflow (GATK filtermutectcalls with
   read-orientation priors and, when a germline resource is provided, contamination and segmentation
   tables), shared with the GATK Mutect2 subworkflows.
 keywords:
@@ -23,7 +23,7 @@ keywords:
   - gpu
 components:
   - parabricks/mutectcaller
-  - bam_vcf_filter_mutect_calls_gatk
+  - vcf_variant_filtering_mutect2
 input:
   - cram:
       type: list

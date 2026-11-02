@@ -2,7 +2,7 @@
 // PARABRICKS MUTECTCALLER: GPU-accelerated tumour-normal or tumour-only somatic variant calling, filtered with GATK on CPU
 //
 
-include { BAM_VCF_FILTER_MUTECT_CALLS_GATK } from '../bam_vcf_filter_mutect_calls_gatk/main'
+include { VCF_VARIANT_FILTERING_MUTECT2 } from '../vcf_variant_filtering_mutect2/main'
 include { PARABRICKS_MUTECTCALLER          } from '../../../modules/nf-core/parabricks/mutectcaller'
 
 workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
@@ -42,7 +42,7 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
         [meta + [variantcaller: 'parabricks_mutectcaller'], normal_cram, normal_crai, tumor_cram, tumor_crai]
     }
 
-    BAM_VCF_FILTER_MUTECT_CALLS_GATK(
+    VCF_VARIANT_FILTERING_MUTECT2(
         calls,
         cram_filter,
         intervals,
@@ -55,15 +55,15 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
         false,
     )
 
-    vcf                 = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.vcf
-    tbi                 = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.tbi
+    vcf                 = VCF_VARIANT_FILTERING_MUTECT2.out.vcf
+    tbi                 = VCF_VARIANT_FILTERING_MUTECT2.out.tbi
     stats               = PARABRICKS_MUTECTCALLER.out.stats
-    stats_filtered      = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.stats_filtered
-    artifact_priors     = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.artifact_priors
-    contamination_table = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.contamination_table
-    segmentation_table  = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.segmentation_table
-    pileup_table_normal = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.pileup_table_normal
-    pileup_table_tumor  = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.pileup_table_tumor
+    stats_filtered      = VCF_VARIANT_FILTERING_MUTECT2.out.stats_filtered
+    artifact_priors     = VCF_VARIANT_FILTERING_MUTECT2.out.artifact_priors
+    contamination_table = VCF_VARIANT_FILTERING_MUTECT2.out.contamination_table
+    segmentation_table  = VCF_VARIANT_FILTERING_MUTECT2.out.segmentation_table
+    pileup_table_normal = VCF_VARIANT_FILTERING_MUTECT2.out.pileup_table_normal
+    pileup_table_tumor  = VCF_VARIANT_FILTERING_MUTECT2.out.pileup_table_tumor
 
     emit:
     vcf                 // channel: [ meta, vcf.gz ]

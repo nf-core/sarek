@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
-name: "bam_vcf_filter_mutect_calls_gatk"
+name: "vcf_variant_filtering_mutect2"
 description: |
   Filter somatic calls from GATK Mutect2 or Parabricks mutectcaller with GATK filtermutectcalls, using
   read-orientation priors from learnreadorientationmodel and, when a germline resource is provided,

@@ -18,8 +18,8 @@ include { BAM_VARIANT_CALLING_MPILEUP                                           
 include { BAM_VARIANT_CALLING_SINGLE_STRELKA                                           } from '../bam_variant_calling_single_strelka/main'
 include { BAM_VARIANT_CALLING_SINGLE_TIDDIT                                            } from '../bam_variant_calling_single_tiddit/main'
 include { SENTIEON_DNAMODELAPPLY                                                       } from '../../../modules/nf-core/sentieon/dnamodelapply/main'
-include { VCF_VARIANT_FILTERING_GATK                                                   } from '../vcf_variant_filtering_gatk/main'
-include { VCF_VARIANT_FILTERING_GATK as SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK } from '../vcf_variant_filtering_gatk/main'
+include { VCF_VARIANT_FILTERING_HAPLOTYPECALLER                                                   } from '../vcf_variant_filtering_haplotypecaller/main'
+include { VCF_VARIANT_FILTERING_HAPLOTYPECALLER as SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_HAPLOTYPECALLER } from '../vcf_variant_filtering_haplotypecaller/main'
 
 workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
@@ -195,7 +195,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             // If single sample track, check if filtering should be done
             if (!skip_haplotypecaller_filter) {
 
-                VCF_VARIANT_FILTERING_GATK(
+                VCF_VARIANT_FILTERING_HAPLOTYPECALLER(
                     vcf_haplotypecaller.join(tbi_haplotypecaller, failOnDuplicate: true, failOnMismatch: true),
                     fasta.map{ _meta, fasta_ -> [ fasta_ ] },
                     fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] },
@@ -204,8 +204,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                     known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
                     known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
 
-                vcf_haplotypecaller = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
-                tbi_haplotypecaller = VCF_VARIANT_FILTERING_GATK.out.filtered_tbi
+                vcf_haplotypecaller = VCF_VARIANT_FILTERING_HAPLOTYPECALLER.out.filtered_vcf
+                tbi_haplotypecaller = VCF_VARIANT_FILTERING_HAPLOTYPECALLER.out.filtered_tbi
 
             }
         }
@@ -347,7 +347,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             // If single sample track, check if filtering should be done
             if (!skip_tools_list.contains('haplotyper_filter')) {
 
-                SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK(
+                SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_HAPLOTYPECALLER(
                     vcf_sentieon_haplotyper.join(tbi_sentieon_haplotyper, failOnDuplicate: true, failOnMismatch: true),
                     fasta.map{ _meta, fasta_ -> [ fasta_ ] },
                     fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] },
@@ -356,8 +356,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                     known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
                     known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
 
-                vcf_sentieon_haplotyper = SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
-                tbi_sentieon_haplotyper = SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK.out.filtered_tbi
+                vcf_sentieon_haplotyper = SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_HAPLOTYPECALLER.out.filtered_vcf
+                tbi_sentieon_haplotyper = SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_HAPLOTYPECALLER.out.filtered_tbi
             }
         }
     }

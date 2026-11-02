@@ -11,7 +11,7 @@ include { GATK4_GETPILEUPSUMMARIES as GETPILEUPSUMMARIES_NORMAL        } from '.
 include { GATK4_GETPILEUPSUMMARIES as GETPILEUPSUMMARIES_TUMOR         } from '../../../modules/nf-core/gatk4/getpileupsummaries'
 include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL } from '../../../modules/nf-core/gatk4/learnreadorientationmodel'
 
-workflow BAM_VCF_FILTER_MUTECT_CALLS_GATK {
+workflow VCF_VARIANT_FILTERING_MUTECT2 {
     take:
     calls                      // channel: [mandatory] [ meta, vcf, tbi, stats, f1r2 ] one row per pair, tumour-only sample or patient (joint), meta.variantcaller set
     cram                       // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ] one row per pair or tumour-only sample ([] for the normal)

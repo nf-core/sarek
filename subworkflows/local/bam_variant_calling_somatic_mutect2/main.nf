@@ -1,8 +1,8 @@
 //
-// MUTECT2: tumour-normal mode variant calling, filtering in BAM_VCF_FILTER_MUTECT_CALLS_GATK
+// MUTECT2: tumour-normal mode variant calling, filtering in VCF_VARIANT_FILTERING_MUTECT2
 //
 
-include { BAM_VCF_FILTER_MUTECT_CALLS_GATK           } from '../bam_vcf_filter_mutect_calls_gatk/main'
+include { VCF_VARIANT_FILTERING_MUTECT2           } from '../vcf_variant_filtering_mutect2/main'
 include { GATK4_MERGEMUTECTSTATS as MERGEMUTECTSTATS } from '../../../modules/nf-core/gatk4/mergemutectstats'
 include { GATK4_MERGEVCFS as MERGE_MUTECT2           } from '../../../modules/nf-core/gatk4/mergevcfs'
 include { GATK4_MUTECT2 as MUTECT2_PAIRED            } from '../../../modules/nf-core/gatk4/mutect2'
@@ -121,7 +121,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     // One row per tumour/normal pair, also in joint mode
     cram = input.map { meta, input_list, input_index_list -> [meta + [variantcaller: 'mutect2'], input_list[0], input_index_list[0], input_list[1], input_index_list[1]] }
 
-    BAM_VCF_FILTER_MUTECT_CALLS_GATK(
+    VCF_VARIANT_FILTERING_MUTECT2(
         calls,
         cram,
         intervals,
@@ -135,12 +135,12 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     )
 
     emit:
-    vcf                 = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.vcf                 // channel: [ meta, vcf ]
-    tbi                 = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.tbi                 // channel: [ meta, tbi ]
-    stats_filtered      = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.stats_filtered      // channel: [ meta, stats ]
-    artifact_priors     = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.artifact_priors     // channel: [ meta, artifactprior ]
-    pileup_table_normal = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.pileup_table_normal // channel: [ meta, table_normal ]
-    pileup_table_tumor  = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.pileup_table_tumor  // channel: [ meta, table_tumor ]
-    contamination_table = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.contamination_table // channel: [ meta, contamination ]
-    segmentation_table  = BAM_VCF_FILTER_MUTECT_CALLS_GATK.out.segmentation_table  // channel: [ meta, segmentation ]
+    vcf                 = VCF_VARIANT_FILTERING_MUTECT2.out.vcf                 // channel: [ meta, vcf ]
+    tbi                 = VCF_VARIANT_FILTERING_MUTECT2.out.tbi                 // channel: [ meta, tbi ]
+    stats_filtered      = VCF_VARIANT_FILTERING_MUTECT2.out.stats_filtered      // channel: [ meta, stats ]
+    artifact_priors     = VCF_VARIANT_FILTERING_MUTECT2.out.artifact_priors     // channel: [ meta, artifactprior ]
+    pileup_table_normal = VCF_VARIANT_FILTERING_MUTECT2.out.pileup_table_normal // channel: [ meta, table_normal ]
+    pileup_table_tumor  = VCF_VARIANT_FILTERING_MUTECT2.out.pileup_table_tumor  // channel: [ meta, table_tumor ]
+    contamination_table = VCF_VARIANT_FILTERING_MUTECT2.out.contamination_table // channel: [ meta, contamination ]
+    segmentation_table  = VCF_VARIANT_FILTERING_MUTECT2.out.segmentation_table  // channel: [ meta, segmentation ]
 }
