@@ -60,6 +60,11 @@
                         "git_sha": "feef37435aea56816adf4b3bde1fc76aac327a8d",
                         "installed_by": ["modules"]
                     },
+                    "bedtools/sort": {
+                        "branch": "master",
+                        "git_sha": "7b3452a23773f687ededb4befd037920e5a51341",
+                        "installed_by": ["modules"]
+                    },
                     "bwa/index": {
                         "branch": "master",
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
@@ -439,6 +444,11 @@
                     "parabricks/haplotypecaller": {
                         "branch": "master",
                         "git_sha": "3e0ec6464725c64d81abe928e15a6750d5fdd272",
+                        "installed_by": ["modules"]
+                    },
+                    "parabricks/mutectcaller": {
+                        "branch": "master",
+                        "git_sha": "810182dd17d4b2bba8ec29ad825aef0084689f5a",
                         "installed_by": ["modules"]
                     },
                     "rbt/vcfsplit": {

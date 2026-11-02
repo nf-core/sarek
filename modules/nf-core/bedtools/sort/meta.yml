@@ -1,0 +1,105 @@
+name: bedtools_sort
+description: Sorts a feature file by chromosome and other criteria.
+keywords:
+  - bed
+  - sort
+  - bedtools
+  - chromosome
+tools:
+  - bedtools:
+      description: |
+        A set of tools for genomic analysis tasks, specifically enabling genome arithmetic (merge, count, complement) on various file types.
+      documentation: https://bedtools.readthedocs.io/en/latest/content/tools/sort.html
+      licence: ["MIT"]
+      identifier: biotools:bedtools
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - intervals:
+        type: file
+        description: BED/BEDGRAPH
+        pattern: "*.{bed|bedGraph}"
+        ontologies: []
+  - genome_file:
+      type: file
+      description: |
+        Optional reference genome 2 column file that defines the expected chromosome order.
+      pattern: "*.{fai,txt,chromsizes}"
+      ontologies: []
+  - suffix:
+      type: string
+      description: |
+        Extension of the output file (e.g. "bed", "bam", "txt"), which depends on the arguments used.
+        If empty, the extension of intervals1 is used.
+output:
+  sorted:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.${extension}":
+          type: file
+          description: Sorted output file
+          pattern: "*.${extension}"
+          ontologies: []
+  versions_bedtools:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bedtools:
+          type: string
+          description: The name of the tool
+      - "bedtools --version | sed -e 's/bedtools v//g'":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bedtools:
+          type: string
+          description: The name of the tool
+      - "bedtools --version | sed -e 's/bedtools v//g'":
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@edmundmiller"
+  - "@sruthipsuresh"
+  - "@drpatelh"
+  - "@chris-cheshire"
+  - "@adamrtalbot"
+maintainers:
+  - "@edmundmiller"
+  - "@sruthipsuresh"
+  - "@drpatelh"
+  - "@chris-cheshire"
+  - "@adamrtalbot"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/bedtools:2.31.1--897920cd303d6413
+      build_id: bd-897920cd303d6413_1
+      scan_id: sc-ed353a7cc83a1aab_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/bedtools:2.31.1--e9d146a89f91ce35
+      build_id: bd-e9d146a89f91ce35_1
+      scan_id: sc-e32f8457f7f89e28_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/bedtools:2.31.1--eb67454a3b6acef1
+      build_id: bd-eb67454a3b6acef1_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/52/52d3fbb86c48b8c39a989733ca97bfd84cf665a9ab279be7cfbbb36f5a53c46a/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/bedtools:2.31.1--5d006abf1fe7e822
+      build_id: bd-5d006abf1fe7e822_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/1d/1d2a87c036cbd9e3859150045d4a83692b28c6d15a09997d8910f2fdc3f31bdd/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/bedtools/sort/.conda-lock/linux_amd64-bd-897920cd303d6413_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/bedtools/sort/.conda-lock/linux_arm64-bd-e9d146a89f91ce35_1.txt

@@ -1,7 +1,7 @@
 {
     "-profile test --tools strelka,varlociraptor --input recalibrated_somatic.csv": {
         "content": [
-            153,
+            154,
             {
                 "ALIGNMENTPROPERTIES_NORMAL": {
                     "varlociraptor": "8.12.0"
@@ -11,6 +11,9 @@
                 },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CONCAT_CALLED_CHUNKS": {
                     "bcftools": "1.23.1"
@@ -325,7 +328,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-01T21:15:02.911055372",
+        "timestamp": "2026-10-30T10:08:22.34096631",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -333,10 +336,13 @@
     },
     "-profile test --tools mutect2,varlociraptor --input recalibrated_tumoronly.csv": {
         "content": [
-            73,
+            74,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CALCULATECONTAMINATION": {
                     "gatk4": "4.7.0.0"
@@ -592,7 +598,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-01T21:14:32.801328307",
+        "timestamp": "2026-10-30T10:14:19.934835339",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -600,10 +606,13 @@
     },
     "-profile test --tools strelka,varlociraptor --input recalibrated_germline.csv": {
         "content": [
-            68,
+            69,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CONCAT_CALLED_CHUNKS": {
                     "bcftools": "1.23.1"
@@ -836,7 +845,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-01T21:05:09.548903346",
+        "timestamp": "2026-10-30T10:00:53.816252874",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

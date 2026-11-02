@@ -1,10 +1,13 @@
 {
     "-profile test --input tests/csv/3.0/recalibrated_somatic_joint.csv --tools mutect2 --joint_mutect2": {
         "content": [
-            17,
+            18,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -231,7 +234,7 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-10-01T21:10:44.024669112",
+        "timestamp": "2026-10-30T10:54:42.193178103",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

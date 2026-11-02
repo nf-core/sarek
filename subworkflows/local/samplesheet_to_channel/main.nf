@@ -245,7 +245,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
             .ifEmpty {
                 // In this case, the sample-sheet contains no tumor-samples
                 if (!build_only_index) {
-                    def tools_tumor = ['ascat', 'controlfreec', 'deepsomatic', 'mutect2', 'msisensorpro', 'parabricks_deepsomatic']
+                    def tools_tumor = ['ascat', 'controlfreec', 'deepsomatic', 'mutect2', 'msisensorpro', 'parabricks_deepsomatic', 'parabricks_mutectcaller']
                     def tools_tumor_asked = []
                     tools_tumor.each { tool ->
                         if (tools && tools.split(',').contains(tool)) {

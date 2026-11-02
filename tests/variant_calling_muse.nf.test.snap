@@ -1,10 +1,13 @@
 {
     "-profile test --tools muse --input recalibrated_somatic.csv -stub": {
         "content": [
-            17,
+            18,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -16,7 +19,8 @@
                     "gatk4": "4.7.0.0"
                 },
                 "MOSDEPTH": {
-                    "mosdepth": "0.3.10"
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
                 },
                 "MUSE_CALL": {
                     "muse": "2.1.2"
@@ -173,18 +177,21 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-05-19T18:52:55.12908408",
+        "timestamp": "2026-10-30T11:29:18.149614839",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.1"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --tools muse --input recalibrated_somatic.csv": {
         "content": [
-            18,
+            19,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CRAM_TO_BAM": {
                     "samtools": "1.24"
@@ -369,7 +376,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-01T21:22:06.917352843",
+        "timestamp": "2026-10-30T11:27:30.025623612",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
