@@ -63,6 +63,47 @@ genome: 'GATK.GRCh38'
 
 You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
 
+## Optional contamination removal with xengsort
+
+`nf-core/sarek` supports host/graft read disambiguation with [xengsort](https://gitlab.com/genomeinformatics/xengsort).
+Enable it by adding `xengsort` to `--tools`.
+
+When building an index during the run, provide:
+
+- `--xengsort_host_fasta`: host FASTA (path or glob)
+- `--xengsort_nobjects`: value for `xengsort index --nobjects`
+- `--xengsort_kmersize`: value for `xengsort index --kmersize`
+
+Alternatively, reuse an existing index with `--xengsort_index`.
+For details about the appropriate nobjects and kmersize to use,
+see https://gitlab.com/genomeinformatics/xengsort.
+The classification algorithm can be selected with `--xengsort_mode`; supported
+values are `count`, `coverage`, and `quick`. The default is `count`. See the
+[Xengsort usage guide](https://gitlab.com/genomeinformatics/xengsort/-/tree/master#how-to-classify)
+for details about each mode.
+
+For patient-derived xenograft (PDX) samples generated using NOD scid gamma (NSG) mice,
+consider using a [host-matched NSG-adapted mouse reference genome](https://www.nature.com/articles/s41467-024-47547-3)
+as `--xengsort_host_fasta`. This can improve the removal of mouse-derived reads and may reduce recurrent false-positive variants.
+
+When Sarek builds a xengsort index, it is only published to `outdir/reference/xengsort_index` if
+`--save_reference` or `--build_only_index` is enabled.
+
+Example:
+
+```bash
+nextflow run nf-core/sarek \
+  -profile docker \
+  --input samplesheet.csv \
+  --outdir results \
+  --tools xengsort,strelka \
+  --xengsort_host_fasta /path/to/host_reference.fasta \
+  --xengsort_nobjects 400000 \
+  --xengsort_kmersize 25
+```
+
+Set `--save_xengsort_reads` to publish xengsort-classified FASTQ files.
+
 ## Input: Sample sheet configurations
 
 You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use the parameter `--input` to specify its location. It has to be a comma-separated file with at least 3 columns, and a header row as shown in the examples below.
