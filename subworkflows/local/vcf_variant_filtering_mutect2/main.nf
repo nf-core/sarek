@@ -50,6 +50,7 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
             normal: [meta - meta.subMap('tumor_id', 'contamination') + [id: meta.normal_id], normal_cram, normal_crai, intervals_]
         }
 
+        // Tumour-only rows have no normal to summarise
         pileup_normal = pileup.normal.filter { meta, _cram, _crai, _intervals -> meta.normal_id }.unique()
 
         GETPILEUPSUMMARIES_NORMAL(pileup_normal, fasta, fai, dict, germline_resource, germline_resource_tbi)
