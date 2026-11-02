@@ -41,10 +41,10 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_APPLYBQSR": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "PARABRICKS_FQ2BAM": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "PARABRICKS_MUTECTCALLER": {
                     "parabricks": "4.8.0-1"
@@ -360,7 +360,7 @@
                 "WARN: No Panel-of-normal was specified for Parabricks MutectCaller."
             ]
         ],
-        "timestamp": "2026-10-30T19:26:12.103252844",
+        "timestamp": "2026-11-02T14:08:50.964092029",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
