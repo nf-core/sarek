@@ -270,6 +270,7 @@ workflow NFCORE_SAREK {
         references.fasta,
         PREPARE_GENOME.out.germline_resource,
         PREPARE_GENOME.out.germline_resource_tbi,
+        references.germline_resource as boolean,
         PREPARE_GENOME.out.index_alignment,
         intervals_and_num_intervals,
         intervals_bed_combined,

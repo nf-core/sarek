@@ -89,6 +89,7 @@ workflow SAREK {
     fasta_path
     germline_resource
     germline_resource_tbi
+    germline_resource_provided
     index_alignment
     intervals_and_num_intervals
     intervals_bed_combined
@@ -458,7 +459,7 @@ workflow SAREK {
             pon_tbi,
             params.joint_mutect2,
             params.wes,
-            params.germline_resource as boolean,
+            germline_resource_provided,
         )
 
         // PAIR VARIANT CALLING
@@ -495,7 +496,7 @@ workflow SAREK {
             ascat_genome,
             params.joint_mutect2,
             params.wes,
-            params.germline_resource as boolean,
+            germline_resource_provided,
         )
 
         // QC on raw variant calls
