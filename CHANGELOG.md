@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - [#2349](https://github.com/nf-core/sarek/pull/2349) - Mutect2 and Parabricks MutectCaller share one GATK filtering subworkflow (`vcf_variant_filtering_mutect2`), with Parabricks MutectCaller pileups now scattered over the intervals; paired and tumour-only Mutect2 calling merged into `bam_variant_calling_mutect2` (process `MUTECT2_PAIRED` is now `MUTECT2`); `vcf_variant_filtering_gatk` renamed to `vcf_variant_filtering_haplotypecaller`
+- [#2345](https://github.com/nf-core/sarek/pull/2345) - Template update for nf-core/tools v4.2.1
 
 ### Fixed
 
@@ -33,11 +34,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
 | bedtools   | -           | 2.31.1      |
+| fastqc     | 0.12.1      | 0.13.0      |
 
 ### Dependencies - plugins
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+| nft-utils  | 1.0.0       | 1.2.1       |
 
 ### Parameters
 
