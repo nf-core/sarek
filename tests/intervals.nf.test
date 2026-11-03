@@ -57,6 +57,18 @@ nextflow_pipeline {
             snapshot_ignore: 'Killing running tasks',
         ],
         [
+            name: "Fails with profile test --intervals genome.multi_intervals.bed --no_intervals",
+            params: [
+                intervals: modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.multi_intervals.bed",
+                no_intervals: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null
+            ],
+            failure: true,
+            snapshot: 'stdout',
+            snapshot_include: 'cannot be used together',
+        ],
+        [
             name: "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
             params: [
                 no_intervals: true,

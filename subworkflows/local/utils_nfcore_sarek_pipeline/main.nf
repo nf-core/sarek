@@ -253,13 +253,13 @@ def validateInputParameters() {
     noIntervalsWarnings()
 }
 
-// Warn when --no_intervals discards user input or risks running out of memory
+// Fail when --no_intervals would discard user input, warn when it risks running out of memory
 def noIntervalsWarnings() {
     if (params.no_intervals) {
         // params.intervals is filled from the genome config by default
         def genome_intervals = params.genomes && params.genome ? params.genomes[params.genome]?.intervals : null
-        if (params.intervals && params.intervals != genome_intervals) {
-            log.warn("Both `--intervals` and `--no_intervals` are set: `--no_intervals` takes precedence and `${params.intervals}` will not be used.")
+        if (params.intervals && !(params.intervals in [false, 'false']) && params.intervals != genome_intervals) {
+            error("`--intervals ${params.intervals}` and `--no_intervals` cannot be used together: `--no_intervals` would ignore the intervals file. Remove one of them.")
         }
 
         // Without intervals, GetPileupSummaries queries every site of the germline resource

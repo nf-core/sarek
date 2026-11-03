@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2357](https://github.com/nf-core/sarek/pull/2357) - Clarify annotation cache and software version selection, and correct the SnpEff cache directory documentation
 - [#2358](https://github.com/nf-core/sarek/pull/2358) - Pass the Mutect2 and Parabricks MutectCaller stats file to `FilterMutectCalls` with `--stats` ([#2191](https://github.com/nf-core/sarek/issues/2191))
 - [#2359](https://github.com/nf-core/sarek/pull/2359) - Document the `<patient>_<sample>` read group sample name required for BAM/CRAM input to somatic callers ([#1655](https://github.com/nf-core/sarek/issues/1655)) and how to keep the default `ext.args` when adding Mutect2 arguments ([#1455](https://github.com/nf-core/sarek/issues/1455))
-- [#2363](https://github.com/nf-core/sarek/pull/2363) - Warn when `--no_intervals` overrides a user-provided `--intervals` file, and when `--no_intervals` with `--germline_resource` makes Mutect2 or Parabricks MutectCaller run GetPileupSummaries over every site of the germline resource, which can run out of memory ([#2131](https://github.com/nf-core/sarek/issues/2131))
+- [#2363](https://github.com/nf-core/sarek/pull/2363) - Fail when `--no_intervals` is combined with a user-provided `--intervals` file, which it would ignore, and warn when `--no_intervals` with `--germline_resource` makes Mutect2 or Parabricks MutectCaller run GetPileupSummaries over every site of the germline resource, which can run out of memory ([#2131](https://github.com/nf-core/sarek/issues/2131))
 
 ### Removed
 
