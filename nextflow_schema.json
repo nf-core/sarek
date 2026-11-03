@@ -475,8 +475,8 @@
                     "format": "file-path",
                     "pattern": "^\\S+\\.vcf\\.gz$",
                     "exists": true,
-                    "description": "VCF (bgzipped) of alleles to force-call with GATK Mutect2.",
-                    "help_text": "Passed to Mutect2 with `--alleles`. Mutect2 force-calls all alleles in this VCF in addition to the variants it discovers, and emits them regardless of evidence. Force-called sites still go through `FilterMutectCalls`, so alleles without support carry a filter tag instead of `PASS`."
+                    "description": "VCF (bgzipped) of alleles to force-call with GATK Mutect2 and Parabricks MutectCaller.",
+                    "help_text": "Passed to Mutect2 with `--alleles` and to Parabricks MutectCaller with `--mutect-alleles`. The caller force-calls all alleles in this VCF in addition to the variants it discovers, and emits them regardless of evidence. Force-called sites still go through `FilterMutectCalls`, so alleles without support carry a filter tag instead of `PASS`. Parabricks MutectCaller requires `##contig` header lines with lengths matching the reference."
                 },
                 "mutect2_force_call_tbi": {
                     "type": "string",

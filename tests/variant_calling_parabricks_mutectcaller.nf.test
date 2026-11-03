@@ -178,6 +178,31 @@ nextflow_pipeline {
             stub: true
         ],
         [
+            name: "-profile test --tools parabricks_mutectcaller --mutect2_force_call, index generated",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                mutect2_force_call: modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz',
+                save_reference: true,
+                tools: 'parabricks_mutectcaller',
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true
+        ],
+        [
+            name: "-profile test --tools parabricks_mutectcaller --mutect2_force_call -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                mutect2_force_call: modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz',
+                mutect2_force_call_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz.tbi',
+                tools: 'parabricks_mutectcaller',
+                wes: true
+            ],
+            gpu: true,
+            no_conda: true,
+            stub: true
+        ],
+        [
             name: "-profile test --input fastq_tumor_only.csv --tools parabricks_mutectcaller",
             params: [
                 input: "${projectDir}/tests/csv/3.0/fastq_tumor_only.csv",

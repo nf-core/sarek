@@ -185,7 +185,7 @@ workflow PREPARE_GENOME {
     mutect2_force_call = mutect2_force_call_in ? channel.fromPath(mutect2_force_call_in).collect() : channel.value([])
     mutect2_force_call_tbi = mutect2_force_call_tbi_in ? channel.fromPath(mutect2_force_call_tbi_in).collect() : channel.value([])
 
-    if (!mutect2_force_call_tbi_in && mutect2_force_call_in && tools.split(',').contains('mutect2')) {
+    if (!mutect2_force_call_tbi_in && mutect2_force_call_in && (tools.split(',').contains('mutect2') || tools.split(',').contains('parabricks_mutectcaller'))) {
         TABIX_MUTECT2_FORCE_CALL(mutect2_force_call.flatten().map { vcf -> [[id: vcf.baseName], vcf, [], []] }, 'compress', true, '')
         mutect2_force_call_tbi = TABIX_MUTECT2_FORCE_CALL.out.index.map { _meta, tbi -> [tbi] }.collect()
     }

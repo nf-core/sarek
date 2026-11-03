@@ -619,7 +619,7 @@ Files created:
 
 #### Parabricks MutectCaller
 
-[Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html) is a GPU-accelerated implementation of GATK Mutect2 for calling somatic SNVs and indels in tumour-only and tumour-normal samples. The germline resource, if provided, is also passed to the caller as the germline prior. Raw calls are always filtered with GATK `FilterMutectCalls`. When `--germline_resource` is provided, the filter also uses contamination estimates from GATK `GetPileupSummaries` and `CalculateContamination`. Read-orientation artefacts are modelled with GATK `LearnReadOrientationModel`. A panel of normals (`--pon`) is used via Parabricks PoN annotation (`prepon`/`postpon`).
+[Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html) is a GPU-accelerated implementation of GATK Mutect2 for calling somatic SNVs and indels in tumour-only and tumour-normal samples. The germline resource, if provided, is also passed to the caller as the germline prior. Raw calls are always filtered with GATK `FilterMutectCalls`. When `--germline_resource` is provided, the filter also uses contamination estimates from GATK `GetPileupSummaries` and `CalculateContamination`. Read-orientation artefacts are modelled with GATK `LearnReadOrientationModel`. A panel of normals (`--pon`) is used via Parabricks PoN annotation (`prepon`/`postpon`). With `--mutect2_force_call`, the alleles in the supplied VCF are force-called as for GATK Mutect2.
 
 <details markdown="1">
 <summary>Output files for tumour-only and tumour-normal samples</summary>

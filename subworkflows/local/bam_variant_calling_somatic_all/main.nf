@@ -278,6 +278,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         fasta,
         fasta_fai,
         dict,
+        mutect2_force_call,
+        mutect2_force_call_tbi,
         germline_resource,
         germline_resource_tbi,
         panel_of_normals,
