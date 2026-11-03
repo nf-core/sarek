@@ -240,20 +240,44 @@ workflow SAMPLESHEET_TO_CHANNEL {
         // Two checks for ensuring that the pipeline stops with a meaningful error message if
         // 1. the sample-sheet only contains normal-samples, but some of the requested tools require tumor-samples, and
         // 2. the sample-sheet only contains tumor-samples, but some of the requested tools require normal-samples.
+        // Collect the statuses first and validate once. The `if (statuses)` guard means that when the
+        // channel emits nothing - e.g. the run is aborting for an unrelated reason such as an invalid
+        // snpeff_cache/vep_cache path - we skip the check instead of firing spurious "only contains
+        // tumor/normal-samples" errors from the operators' afterStop teardown.
         input_sample
-            .filter { sample -> sample[0].status == 1 }
-            .ifEmpty {
-                // In this case, the sample-sheet contains no tumor-samples
-                if (!build_only_index) {
-                    def tools_tumor = ['ascat', 'controlfreec', 'deepsomatic', 'mutect2', 'msisensorpro', 'parabricks_deepsomatic', 'parabricks_mutectcaller']
-                    def tools_tumor_asked = []
-                    tools_tumor.each { tool ->
-                        if (tools && tools.split(',').contains(tool)) {
-                            tools_tumor_asked.add(tool)
+            .map { sample -> sample[0].status }
+            .toList()
+            .subscribe { statuses ->
+                if (statuses) {
+                    def has_normal = statuses.contains(0)
+                    def has_tumor  = statuses.contains(1)
+
+                    // 1. the sample-sheet contains no tumor-samples
+                    if (!has_tumor) {
+                        def tools_tumor = ['ascat', 'controlfreec', 'deepsomatic', 'mutect2', 'msisensorpro', 'parabricks_deepsomatic', 'parabricks_mutectcaller']
+                        def tools_tumor_asked = []
+                        tools_tumor.each { tool ->
+                            if (tools && tools.split(',').contains(tool)) {
+                                tools_tumor_asked.add(tool)
+                            }
+                        }
+                        if (!tools_tumor_asked.isEmpty()) {
+                            error('The sample-sheet only contains normal-samples, but the following tools, which were requested with "--tools", expect at least one tumor-sample : ' + tools_tumor_asked.join(", "))
                         }
                     }
-                    if (!tools_tumor_asked.isEmpty()) {
-                        error('The sample-sheet only contains normal-samples, but the following tools, which were requested with "--tools", expect at least one tumor-sample : ' + tools_tumor_asked.join(", "))
+
+                    // 2. the sample-sheet contains no normal/germline-samples
+                    if (!has_normal) {
+                        def tools_requiring_normal_samples = ['ascat', 'deepsomatic', 'deepvariant', 'haplotypecaller', 'msisensorpro', 'parabricks_deepsomatic', 'parabricks_deepvariant', 'parabricks_haplotypecaller']
+                        def requested_tools_requiring_normal_samples = []
+                        tools_requiring_normal_samples.each { tool_requiring_normal_samples ->
+                            if (tools && tools.split(',').contains(tool_requiring_normal_samples)) {
+                                requested_tools_requiring_normal_samples.add(tool_requiring_normal_samples)
+                            }
+                        }
+                        if (!requested_tools_requiring_normal_samples.isEmpty()) {
+                            error('The sample-sheet only contains tumor-samples, but the following tools, which were requested by the option "tools", expect at least one normal-sample : ' + requested_tools_requiring_normal_samples.join(", "))
+                        }
                     }
                 }
             }
