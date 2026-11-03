@@ -2046,11 +2046,10 @@
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
-                "WARN: No Panel-of-normal was specified for Parabricks MutectCaller.",
-                "WARN: `--no_intervals` is set together with `--germline_resource`: GetPileupSummaries will use every site of the germline resource as an interval, which can run out of memory with large resources such as af-only-gnomAD, especially on CRAM input. Provide `--intervals` instead."
+                "WARN: No Panel-of-normal was specified for Parabricks MutectCaller."
             ]
         ],
-        "timestamp": "2026-11-03T17:14:25.091714474",
+        "timestamp": "2026-11-03T08:49:47.794865916",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -4135,11 +4134,10 @@
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
-                "WARN: No Panel-of-normal was specified for Parabricks MutectCaller.",
-                "WARN: `--no_intervals` is set together with `--germline_resource`: GetPileupSummaries will use every site of the germline resource as an interval, which can run out of memory with large resources such as af-only-gnomAD, especially on CRAM input. Provide `--intervals` instead."
+                "WARN: No Panel-of-normal was specified for Parabricks MutectCaller."
             ]
         ],
-        "timestamp": "2026-11-03T17:10:54.25902138",
+        "timestamp": "2026-11-03T08:45:38.780106856",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
