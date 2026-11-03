@@ -476,7 +476,7 @@
                     "pattern": "^\\S+\\.vcf\\.gz$",
                     "exists": true,
                     "description": "VCF (bgzipped) of alleles to force-call with GATK Mutect2.",
-                    "help_text": "Passed to Mutect2 with `--alleles`. Mutect2 force-calls all alleles in this VCF in addition to the variants it discovers, and emits them regardless of evidence."
+                    "help_text": "Passed to Mutect2 with `--alleles`. Mutect2 force-calls all alleles in this VCF in addition to the variants it discovers, and emits them regardless of evidence. Force-called sites still go through `FilterMutectCalls`, so alleles without support carry a filter tag instead of `PASS`."
                 },
                 "mutect2_force_call_tbi": {
                     "type": "string",

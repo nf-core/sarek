@@ -999,19 +999,6 @@ The default value is `200000`, increasing this value will _reduce_ the number of
 Generally, smaller numbers of groups (each group has more regions), the slower the processing, and less storage space is consumed.
 In particular, in cloud computing setting it is often advisable to reduce the number of groups to be run in parallel to reduce data staging steps.
 
-## How to force-call alleles with Mutect2
-
-Use `--mutect2_force_call` to pass a bgzipped VCF of known alleles to GATK Mutect2 with `--alleles`.
-Mutect2 force-calls every allele in this VCF and emits it regardless of evidence, in addition to the variants it discovers.
-This applies to tumour-only, tumour/normal and `--joint_mutect2` calling.
-
-```bash
-nextflow run nf-core/sarek --tools mutect2 --mutect2_force_call alleles.vcf.gz --mutect2_force_call_tbi alleles.vcf.gz.tbi ...
-```
-
-The pipeline generates the index with Tabix when `--mutect2_force_call_tbi` is not provided.
-The force-called sites still pass through `FilterMutectCalls`, so sites without support carry a filter tag in `*.mutect2.filtered.vcf.gz`.
-
 ## How to create a panel-of-normals for Mutect2
 
 For a detailed tutorial on how to create a panel-of-normals, see [here](https://gatk.broadinstitute.org/hc/en-us/articles/360035531132).
