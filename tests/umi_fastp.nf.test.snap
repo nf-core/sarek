@@ -17,7 +17,7 @@
                     "fastp": "1.1.0"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FGBIO_COPYUMIFROMREADNAME": {
                     "fgbio": "3.1.2"
@@ -304,7 +304,7 @@
                 "fastp_filtered_reads_plot.txt:md5,32d24a0b0a2040651fab375645eb6260",
                 "fastqc-status-check-heatmap.txt:md5,92fcedba625d8394492d1ef6e2eb64f0",
                 "fastqc_adapter_content_plot.txt:md5,2a569bfd358aced71c1abf9f6c98e077",
-                "fastqc_overrepresented_sequences_plot.txt:md5,df45a06e934f25d5c81b8de3af859955",
+                "fastqc_overrepresented_sequences_plot.txt:md5,ee1e648aed35097a72aaf09938328b07",
                 "fastqc_per_base_n_content_plot.txt:md5,9beb9c220bb0314bd5365912584958c5",
                 "fastqc_per_base_sequence_quality_plot.txt:md5,69ca0488c8687d38e5db551c49fd9dce",
                 "fastqc_per_sequence_gc_content_plot_Counts.txt:md5,823b5a69dfbae061cd2eabba777cdbbf",
@@ -318,7 +318,7 @@
                 "mosdepth_perchrom.txt:md5,45bca136491a7675ebba87def2534f26",
                 "multiqc_citations.txt:md5,0e2971e7a873c92592112775fa99fb02",
                 "multiqc_fastp.txt:md5,542e41a81f66bd647eff0e741a377b04",
-                "multiqc_fastqc.txt:md5,0ca2cba4204d9076a1eb17596379d10c",
+                "multiqc_fastqc.txt:md5,9ca94cf52c7aaa72754c3421b995e431",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -348,10 +348,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_umi_cleanname_1.fastq.gz): Cannot extract flowcell ID from @922332"
             ]
         ],
-        "timestamp": "2026-10-14T15:08:42.69420559",
+        "timestamp": "2026-11-03T08:09:14.800197403",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.0"
+            "nextflow": "25.10.4"
         }
     }
 }
