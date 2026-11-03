@@ -5,7 +5,7 @@ process PARABRICKS_DEEPSOMATIC {
     // needed by the module to work properly can be removed when fixed upstream - see: https://github.com/nf-core/modules/issues/7226
     stageInMode 'copy'
 
-    container "nvcr.io/nvidia/clara/clara-parabricks:4.7.1-1"
+    container "nvcr.io/nvidia/clara/clara-parabricks:4.8.0-1"
 
     input:
     tuple val(meta), path(input_tumor), path(index_tumor), path(input_normal), path(index_normal), path(intervals)

@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - [#2349](https://github.com/nf-core/sarek/pull/2349) - Mutect2 and Parabricks MutectCaller share one GATK filtering subworkflow (`vcf_variant_filtering_mutect2`), with Parabricks MutectCaller pileups now scattered over the intervals; paired and tumour-only Mutect2 calling merged into `bam_variant_calling_mutect2` (process `MUTECT2_PAIRED` is now `MUTECT2`); `vcf_variant_filtering_gatk` renamed to `vcf_variant_filtering_haplotypecaller`
+- [#2345](https://github.com/nf-core/sarek/pull/2345) - Template update for nf-core/tools v4.2.1
 
 ### Fixed
 
@@ -23,9 +24,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2347](https://github.com/nf-core/sarek/pull/2347) - Fix DeepSomatic VCF merge failing with `sample entries that don't match the other files` when an interval yields no records (e.g. `*_alt` contigs): pass tumour and normal sample names explicitly, including to `postprocess_variants`, which otherwise writes `default`
 - [#2349](https://github.com/nf-core/sarek/pull/2349) - Filter Mutect2 calls with `FilterMutectCalls` also without `--germline_resource` ([#1546](https://github.com/nf-core/sarek/issues/1546)), so downstream files of such runs are now named after `*.mutect2.filtered.vcf.gz`; with `--joint_mutect2`, tumours of one patient with different samplesheet `contamination` values no longer split the patient into several joint calls
 - [#2352](https://github.com/nf-core/sarek/pull/2352) - Sort the `--intervals` BED in reference order with `bedtools sort` before splitting it, fixing out-of-order pileup tables that made `CalculateContamination` fail with `Invalid interval` ([#899](https://github.com/nf-core/sarek/issues/899), [#2281](https://github.com/nf-core/sarek/issues/2281)). Fail early when the BED has contigs missing from the reference, start > end, or intervals past the contig end ([#97](https://github.com/nf-core/sarek/issues/97), [#934](https://github.com/nf-core/sarek/issues/934)). CNVKit target and antitarget BED names now carry the `.sorted` suffix of the sorted intervals file
-- [#2358](https://github.com/nf-core/sarek/pull/2358) - Pass the Mutect2 and Parabricks MutectCaller stats file to `FilterMutectCalls` with `--stats` ([#2191](https://github.com/nf-core/sarek/issues/2191))
 - [#2357](https://github.com/nf-core/sarek/pull/2357) - Clarify annotation cache and software version selection, and correct the SnpEff cache directory documentation
+- [#2358](https://github.com/nf-core/sarek/pull/2358) - Pass the Mutect2 and Parabricks MutectCaller stats file to `FilterMutectCalls` with `--stats` ([#2191](https://github.com/nf-core/sarek/issues/2191))
+- [#2359](https://github.com/nf-core/sarek/pull/2359) - Document the `<patient>_<sample>` read group sample name required for BAM/CRAM input to somatic callers ([#1655](https://github.com/nf-core/sarek/issues/1655)) and how to keep the default `ext.args` when adding Mutect2 arguments ([#1455](https://github.com/nf-core/sarek/issues/1455))
 - [#2360](https://github.com/nf-core/sarek/pull/2360) - Point `csv/variantcalled.csv` at the published filtered, normalised, concatenated and Varlociraptor VCFs instead of the `variant_calling/<variantcaller>/` directory ([#2204](https://github.com/nf-core/sarek/issues/2204))
+- [#2364](https://github.com/nf-core/sarek/pull/2364) - Restore `--intervals false` to ignore the intervals from `--genome` and generate them from the FASTA reference, which stopped working with nf-schema 2.7.2 and Nextflow 26 passing CLI values as strings
 
 ### Removed
 
@@ -34,11 +37,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
 | bedtools   | -           | 2.31.1      |
+| fastqc     | 0.12.1      | 0.13.0      |
 
 ### Dependencies - plugins
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+| nft-utils  | 1.0.0       | 1.2.1       |
 
 ### Parameters
 
@@ -77,6 +82,7 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 - [#2318](https://github.com/nf-core/sarek/pull/2318) - Use the nf-core `bam_applybqsr` subworkflow for recalibration. GATK streams BAM and samtools writes the CRAM, pinned to 3.0 so legacy htslib tools can still read it. CRAI indexes are published alongside recalibrated CRAMs.
 - [#2321](https://github.com/nf-core/sarek/pull/2321) - Migrate AWS test workflows to `seqeralabs/action-seqera-launch@v1.0.0-rc.2`
 - [#2329](https://github.com/nf-core/sarek/pull/2329) - Update ensemblvep modules to ensembl-vep 116.3, pin htslib to 1.21 to fix conda solving ([nf-core/modules#13299](https://github.com/nf-core/modules/pull/13299))
+- [#2339](https://github.com/nf-core/sarek/pull/XXXX) - Update `parabricks/applybqsr`, `parabricks/deepvariant`, `parabricks/fq2bam` `parabricks/deepsomatic` and `parabricks/haplotypecaller` modules to Parabricks 4.8.0.
 
 ### Fixed
 
@@ -192,7 +198,7 @@ Aktse is a mountain hut on the northern shore of Laitaure, on the Kungsleden tra
 | mosdepth      | 0.3.10      | 0.3.14      |
 | cnvkit        | 0.9.11      | 0.9.12      |
 | xz            | -           | 5.8.3       |
-| parabricks    | 4.6.0-1     | 4.7.1-1     |
+| parabricks    | 4.7.1-1     | 4.8.0-1     |
 | snpsift       | 5.4.0a      | 5.4.0c      |
 
 ### Dependencies - plugins

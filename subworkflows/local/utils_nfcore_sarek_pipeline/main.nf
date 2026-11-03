@@ -172,7 +172,7 @@ workflow PIPELINE_INITIALISATION {
         params.dbsnp,
         params.fasta,
         params.germline_resource,
-        params.intervals,
+        intervalsParam(),
         params.joint_germline,
         params.joint_mutect2,
         params.known_indels,
@@ -228,7 +228,7 @@ workflow PIPELINE_COMPLETION {
                 plaintext_email,
                 outdir,
                 monochrome_logs,
-                multiqc_reports.getVal(),
+                multiqc_reports.isBound() ? multiqc_reports.getVal() : [],
             )
         }
 
@@ -250,6 +250,11 @@ def validateInputParameters() {
     genomeExistsError()
     sparkAndBam()
     parabricksMutectcallerIgnoredParams()
+}
+
+// `--intervals false` skips the genome intervals; Nextflow 26 passes it from the CLI as a string
+def intervalsParam() {
+    return params.intervals in [false, 'false'] ? null : params.intervals
 }
 
 // Exit pipeline if incorrect --genome key provided
