@@ -99,6 +99,35 @@ Output from Variant Calling and/or Annotation will be in a specific directory fo
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
+### Sample names in BAM and CRAM read groups
+
+During mapping, Sarek sets the sample name (`SM` tag) of every read group to `<patient>_<sample>`, using the `patient` and `sample` columns of the samplesheet.
+The following somatic variant callers select the tumour and normal sample by this name:
+
+- GATK Mutect2 (`--normal-sample`)
+- DeepSomatic
+- Parabricks MutectCaller
+- Sentieon TNscope
+
+When you start from BAM or CRAM files (any `--step` after `mapping`), the `SM` tag in each file must equal `<patient>_<sample>` as written in your samplesheet.
+Files created by Sarek and listed in the CSV files under `results/csv/` already fulfil this, as long as the `patient` and `sample` values stay unchanged.
+Files mapped outside of Sarek, or samplesheets with renamed patients or samples, usually do not.
+Mutect2 then fails with an error such as:
+
+```console
+A USER ERROR has occurred: Bad input: Sample patient1_normal_sample is not in BAM header: [normal_sample, tumor_sample]
+```
+
+The first name in this message is the one Sarek expects, and the list contains the names found in the read groups.
+Inspect the read groups of a file with:
+
+```bash
+samtools view -H normal_sample.cram | grep '^@RG'
+```
+
+To resolve a mismatch, set the `patient` and `sample` columns so that `<patient>_<sample>` matches the existing `SM` tag.
+Otherwise, rewrite the `SM` tag in the file headers to `<patient>_<sample>`, for example with [`samtools reheader`](https://www.htslib.org/doc/samtools-reheader.html), and index the files again.
+
 ### Start with mapping (`--step mapping` [default])
 
 This step can be started either from FastQ files (gzip-compressed or gzip+spring-compressed) or (u)BAMs. The CSV must contain at least the columns `patient`, `sample`, `lane`, and `fastq_1/fastq_2`, `spring_1`, `spring_1/spring_2` or `bam`.
@@ -536,6 +565,35 @@ To use a different container from the default container or conda environment spe
 A pipeline might not always support every possible argument or option of a particular tool used in pipeline. Fortunately, nf-core pipelines provide some freedom to users to insert additional parameters that the pipeline does not include by default.
 
 To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/usage/configuration#customising-tool-arguments) section of the nf-core website.
+
+#### Keep the default arguments when overriding `ext.args`
+
+Sarek defines the default `ext.args` of each process in the files in [`conf/modules/`](../conf/modules/), not in a single `conf/modules.config`.
+Copy the defaults from the file of the pipeline version you run before [adding arguments](https://nf-co.re/docs/running/configuration/nextflow-for-your-system#customise-tool-arguments).
+
+GATK Mutect2 needs `--f1r2-tar-gz` to produce the input for `LearnReadOrientationModel`, and `--normal-sample` to identify the normal sample in tumour/normal pairs.
+Without `--f1r2-tar-gz`, the pipeline stops with a `Join mismatch` error.
+Without `--normal-sample`, Mutect2 treats the normal sample as a second tumour sample.
+The following config adds `--genotype-germline-sites` and `--genotype-pon-sites` and keeps the defaults:
+
+```groovy title="custom-mutect2.config"
+process {
+    withName: 'GATK4_MUTECT2' {
+        ext.args = { [
+            // Sarek defaults, keep these
+            params.ignore_soft_clipped_bases ? "--dont-use-soft-clipped-bases true" : "",
+            "--f1r2-tar-gz ${task.ext.prefix}.f1r2.tar.gz",
+            meta.normal_id ? "--normal-sample ${meta.patient}_${meta.normal_id}" : "",
+            // Additional arguments
+            "--genotype-germline-sites true",
+            "--genotype-pon-sites true",
+        ].findAll().join(' ') }
+    }
+}
+```
+
+Sarek 3.11.0 and earlier set the Mutect2 arguments for tumour/normal pairs on `MUTECT2_PAIRED`.
+This pipeline version sets them on `GATK4_MUTECT2`, so custom configs that target `MUTECT2_PAIRED` no longer apply.
 
 ## nf-core/configs
 
