@@ -10,7 +10,7 @@ include { HTSLIB_BGZIPTABIX as TABIX_DBSNP                } from '../../../modul
 include { HTSLIB_BGZIPTABIX as TABIX_GERMLINE_RESOURCE    } from '../../../modules/nf-core/htslib/bgziptabix'
 include { HTSLIB_BGZIPTABIX as TABIX_KNOWN_INDELS         } from '../../../modules/nf-core/htslib/bgziptabix'
 include { HTSLIB_BGZIPTABIX as TABIX_KNOWN_SNPS           } from '../../../modules/nf-core/htslib/bgziptabix'
-include { HTSLIB_BGZIPTABIX as TABIX_MUTECT2_FORCE_CALL   } from '../../../modules/nf-core/htslib/bgziptabix'
+include { HTSLIB_BGZIPTABIX as TABIX_FORCE_CALL_ALLELES   } from '../../../modules/nf-core/htslib/bgziptabix'
 include { HTSLIB_BGZIPTABIX as TABIX_PON                  } from '../../../modules/nf-core/htslib/bgziptabix'
 include { UNTAR as UNTAR_BBSPLIT_INDEX              } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_CHR_DIR                    } from '../../../modules/nf-core/untar'
@@ -39,6 +39,8 @@ workflow PREPARE_GENOME {
     dragmap_in                  // params.dragmap
     fasta_in                    // params.fasta
     fasta_fai_in                // params.fasta_fai
+    force_call_alleles_in       // params.force_call_alleles
+    force_call_alleles_tbi_in   // params.force_call_alleles_tbi
     germline_resource_in        // params.germline_resource
     germline_resource_tbi_in    // params.germline_resource_tbi
     known_indels_in             // params.known_indels
@@ -47,8 +49,6 @@ workflow PREPARE_GENOME {
     known_snps_tbi_in           // params.known_snps_tbi
     msisensor2_models_in        // channel: [optional]  msisensor2_models
     msisensorpro_scan_in        // channel: [optional]  msisensorpro_scan
-    mutect2_force_call_in       // params.mutect2_force_call
-    mutect2_force_call_tbi_in   // params.mutect2_force_call_tbi
     pon_in                      // params.pon
     pon_tbi_in                  // params.pon_tbi
     aligner                     // params.aligner
@@ -182,12 +182,12 @@ workflow PREPARE_GENOME {
         known_snps_tbi = TABIX_KNOWN_SNPS.out.index.map { _meta, tbi -> [tbi] }.collect()
     }
 
-    mutect2_force_call = mutect2_force_call_in ? channel.fromPath(mutect2_force_call_in).collect() : channel.value([])
-    mutect2_force_call_tbi = mutect2_force_call_tbi_in ? channel.fromPath(mutect2_force_call_tbi_in).collect() : channel.value([])
+    force_call_alleles = force_call_alleles_in ? channel.fromPath(force_call_alleles_in).collect() : channel.value([])
+    force_call_alleles_tbi = force_call_alleles_tbi_in ? channel.fromPath(force_call_alleles_tbi_in).collect() : channel.value([])
 
-    if (!mutect2_force_call_tbi_in && mutect2_force_call_in && (tools.split(',').contains('mutect2') || tools.split(',').contains('parabricks_mutectcaller'))) {
-        TABIX_MUTECT2_FORCE_CALL(mutect2_force_call.flatten().map { vcf -> [[id: vcf.baseName], vcf, [], []] }, 'compress', true, '')
-        mutect2_force_call_tbi = TABIX_MUTECT2_FORCE_CALL.out.index.map { _meta, tbi -> [tbi] }.collect()
+    if (!force_call_alleles_tbi_in && force_call_alleles_in && (tools.split(',').contains('mutect2') || tools.split(',').contains('parabricks_mutectcaller'))) {
+        TABIX_FORCE_CALL_ALLELES(force_call_alleles.flatten().map { vcf -> [[id: vcf.baseName], vcf, [], []] }, 'compress', true, '')
+        force_call_alleles_tbi = TABIX_FORCE_CALL_ALLELES.out.index.map { _meta, tbi -> [tbi] }.collect()
     }
 
     pon = pon_in ? channel.fromPath(pon_in).collect() : channel.value([])
@@ -298,6 +298,8 @@ workflow PREPARE_GENOME {
     dict                     // Channel: [meta, dict]
     fasta                    // Channel: [meta, fasta]
     fasta_fai                // Channel: [meta, fasta_fai]
+    force_call_alleles       // Channel: [force_call_alleles]
+    force_call_alleles_tbi   // Channel: [force_call_alleles_tbi]
     germline_resource        // Channel: [germline_resource]
     germline_resource_tbi    // Channel: [germline_resource_tbi]
     index_alignment          // Channel: [meta, index_alignment/] either bwa/, bwamem2/ or dragmap/
@@ -311,8 +313,6 @@ workflow PREPARE_GENOME {
     known_snps_tbi           // Channel: [known_snps_tbi]
     msisensor2_models        // Channel: [models/]
     msisensorpro_scan        // Channel: [genome_msi.list]
-    mutect2_force_call       // Channel: [mutect2_force_call]
-    mutect2_force_call_tbi   // Channel: [mutect2_force_call_tbi]
     pon                      // Channel: [pon]
     pon_tbi                  // Channel: [pon_tbi]
     vep_fasta                // Channel: [meta, vep_fasta]

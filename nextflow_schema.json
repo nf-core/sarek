@@ -469,7 +469,7 @@
                     "description": "Do not analyze soft clipped bases in the reads for GATK Mutect2.",
                     "help_text": "use the `--dont-use-soft-clipped-bases` params with GATK Mutect2."
                 },
-                "mutect2_force_call": {
+                "force_call_alleles": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
@@ -478,7 +478,7 @@
                     "description": "VCF (bgzipped) of alleles to force-call with GATK Mutect2 and Parabricks MutectCaller.",
                     "help_text": "Passed to Mutect2 with `--alleles` and to Parabricks MutectCaller with `--mutect-alleles`. The caller force-calls all alleles in this VCF in addition to the variants it discovers, and emits them regardless of evidence. Force-called sites still go through `FilterMutectCalls`, so alleles without support carry a filter tag instead of `PASS`. Parabricks MutectCaller requires `##contig` header lines with lengths matching the reference."
                 },
-                "mutect2_force_call_tbi": {
+                "force_call_alleles_tbi": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "format": "file-path",
