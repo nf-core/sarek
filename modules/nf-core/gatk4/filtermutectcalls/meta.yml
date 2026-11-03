@@ -36,7 +36,7 @@ input:
         ontologies: []
     - stats:
         type: file
-        description: Stats file that pairs with output vcf file
+        description: Stats file that pairs with the input vcf file (Mutect2 or MergeMutectStats output). Passed to FilterMutectCalls via --stats. If not provided, GATK looks for <vcf>.stats next to the input vcf.
         pattern: "*vcf.gz.stats"
         ontologies: []
     - orientationbias:
@@ -47,20 +47,17 @@ input:
           - edam: http://edamontology.org/format_3989 # GZIP format
     - segmentation:
         type: file
-        description: tables containing segmentation information for input vcf. Optional
-          input.
+        description: tables containing segmentation information for input vcf. Optional input.
         pattern: "*.segmentation.table"
         ontologies: []
     - table:
         type: file
-        description: table(s) containing contamination data for input vcf. Optional
-          input, takes priority over estimate.
+        description: table(s) containing contamination data for input vcf. Optional input, takes priority over estimate.
         pattern: "*.contamination.table"
         ontologies: []
     - estimate:
         type: float
-        description: estimation of contamination value as a double. Optional input,
-          will only be used if table is not specified.
+        description: estimation of contamination value as a double. Optional input, will only be used if table is not specified.
   - - meta2:
         type: map
         description: |
@@ -71,21 +68,11 @@ input:
         description: The reference fasta file
         pattern: "*.fasta"
         ontologies: []
-  - - meta3:
-        type: map
-        description: |
-          Groovy Map containing reference information
-          e.g. [ id:'genome' ]
     - fai:
         type: file
         description: Index of reference fasta file
         pattern: "*.fasta.fai"
         ontologies: []
-  - - meta4:
-        type: map
-        description: |
-          Groovy Map containing reference information
-          e.g. [ id:'genome' ]
     - dict:
         type: file
         description: GATK sequence dictionary
@@ -159,3 +146,17 @@ maintainers:
   - "@GCJMackenzie"
   - "@maxulysse"
   - "@ramprasadn"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/gatk4-lite:4.7.0.0--79918b8b2632f4b1
+      build_id: bd-79918b8b2632f4b1_1
+      scan_id: sc-3494a4d719069a23_2
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/gatk4-lite:4.7.0.0--f28eb03ad3b2bcd5
+      build_id: bd-f28eb03ad3b2bcd5_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/ce/ce8f4142326abbb74e28b97633a200b09439c54480803343b1cf13dc19e51ae5/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/gatk4/filtermutectcalls/.conda-lock/linux_amd64-bd-79918b8b2632f4b1_1.txt

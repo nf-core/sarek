@@ -126,7 +126,13 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
         }
     }
 
-    FILTERMUTECTCALLS(vcf_to_filter, fasta, fai, dict)
+    fasta_fai_dict = fasta
+        .combine(fai)
+        .combine(dict)
+        .map { meta, fasta_, _meta_fai, fai_, _meta_dict, dict_ -> [meta, fasta_, fai_, dict_] }
+        .collect()
+
+    FILTERMUTECTCALLS(vcf_to_filter, fasta_fai_dict)
 
     emit:
     vcf                 = FILTERMUTECTCALLS.out.vcf                     // channel: [ meta, vcf ]
