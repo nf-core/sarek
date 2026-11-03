@@ -1,10 +1,13 @@
 {
     "-profile test --references genomes/Homo_sapiens/GATK/GRCh38_chr22.yml --genome null": {
         "content": [
-            20,
+            21,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.19-r1273",
@@ -315,9 +318,11 @@
                 "test.strelka.genome.vcf.gz:md5,16437a040679d88b7d84a9276f793d6c",
                 "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565"
             ],
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ]
         ],
-        "timestamp": "2026-10-24T17:56:07.081824493",
+        "timestamp": "2026-11-03T10:53:02.822592708",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"
@@ -325,10 +330,13 @@
     },
     "-profile test --references tests/assets/references.yml --genome null with references_base_path substitution": {
         "content": [
-            20,
+            21,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.19-r1273",
@@ -639,9 +647,11 @@
                 "test.strelka.genome.vcf.gz:md5,16437a040679d88b7d84a9276f793d6c",
                 "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565"
             ],
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ]
         ],
-        "timestamp": "2026-10-24T17:59:07.37406767",
+        "timestamp": "2026-11-03T10:55:24.598252317",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"
@@ -669,10 +679,13 @@
     },
     "-profile test --igenomes_ignore --genome GRCh38_chr22 --references_datasheets_path genomes/Homo_sapiens/GATK": {
         "content": [
-            20,
+            21,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "BWAMEM1_MEM": {
                     "bwa": "0.7.19-r1273",
@@ -983,9 +996,11 @@
                 "test.strelka.genome.vcf.gz:md5,16437a040679d88b7d84a9276f793d6c",
                 "test.strelka.variants.vcf.gz:md5,666f835fdaf4952a179cdedd40c9d565"
             ],
-            "No warnings"
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ]
         ],
-        "timestamp": "2026-10-24T17:57:33.983554408",
+        "timestamp": "2026-11-03T10:54:16.212543251",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.0"

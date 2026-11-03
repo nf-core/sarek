@@ -116,9 +116,9 @@ workflow PIPELINE_INITIALISATION {
 
     // Resolve each reference once: an explicit param wins, then the datasheet, then params.genomes.
     // Passed on as a value, not written back to params: included files and config closures never see params set inside a workflow.
+    // An explicit null (e.g. --intervals null) is kept, so users can drop a genome default.
     def resolvedReferences = referenceParamNames().collectEntries { name ->
-        def explicit = params.containsKey(name) ? params.get(name) : null
-        [name, explicit ?: getReferenceAttribute(param: name, datasheet: referenceSheet, genomeMap: params.genomes, genomeKey: params.genome)]
+        [name, params.containsKey(name) ? params.get(name) : getReferenceAttribute(param: name, datasheet: referenceSheet, genomeMap: params.genomes, genomeKey: params.genome)]
     }
 
     SAMPLESHEET_TO_CHANNEL(
