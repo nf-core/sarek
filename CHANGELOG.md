@@ -40,7 +40,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
-| nf-schema  | 2.7.2       | 2.7.3       |
 | nft-utils  | 1.0.0       | 1.2.1       |
 
 ### Parameters
