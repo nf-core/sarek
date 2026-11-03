@@ -172,7 +172,7 @@ workflow PIPELINE_INITIALISATION {
         params.dbsnp,
         params.fasta,
         params.germline_resource,
-        params.intervals,
+        intervalsParam(),
         params.joint_germline,
         params.joint_mutect2,
         params.known_indels,
@@ -269,6 +269,11 @@ def noIntervalsWarnings() {
             log.warn("`--no_intervals` is set together with `--germline_resource`: GetPileupSummaries will use every site of the germline resource as an interval, which can run out of memory with large resources such as af-only-gnomAD, especially on CRAM input. Provide `--intervals` instead.")
         }
     }
+}
+
+// `--intervals false` skips the genome intervals; Nextflow 26 passes it from the CLI as a string
+def intervalsParam() {
+    return params.intervals in [false, 'false'] ? null : params.intervals
 }
 
 // Exit pipeline if incorrect --genome key provided

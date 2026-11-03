@@ -991,6 +991,9 @@ For this, a bed file containing genomic regions of interest is used, it's the in
 By default, the intervals file for WGS used is the one provided by GATK (details [here](https://gatk.broadinstitute.org/hc/en-us/articles/360035889551-When-should-I-restrict-my-analysis-to-specific-intervals-)).
 When running targeted analysis, it is recommended to use the bed file containing the targeted regions.
 
+To ignore the intervals file from `--genome` and generate intervals from the FASTA reference instead, set `--intervals false`.
+To run without any intervals, set `--no_intervals`.
+
 The amount of scatter/gathering can be customized by adjusting the parameter `--nucleotides_per_second`.
 
 > **NB:** The _same_ intervals are processed regardless of the number of groups. The number of groups however determines over how many compute nodes the analysis is scattered on.
