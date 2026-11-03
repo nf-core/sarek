@@ -281,22 +281,6 @@ workflow SAMPLESHEET_TO_CHANNEL {
                     }
                 }
             }
-
-        input_sample
-            .filter { sample -> sample[0].status == 0 }
-            .ifEmpty {
-                // In this case, the sample-sheet contains no normal/germline-samples
-                def tools_requiring_normal_samples = ['ascat', 'deepsomatic', 'deepvariant', 'haplotypecaller', 'msisensorpro', 'parabricks_deepsomatic', 'parabricks_deepvariant', 'parabricks_haplotypecaller']
-                def requested_tools_requiring_normal_samples = []
-                tools_requiring_normal_samples.each { tool_requiring_normal_samples ->
-                    if (tools && tools.split(',').contains(tool_requiring_normal_samples)) {
-                        requested_tools_requiring_normal_samples.add(tool_requiring_normal_samples)
-                    }
-                }
-                if (!requested_tools_requiring_normal_samples.isEmpty()) {
-                    error('The sample-sheet only contains tumor-samples, but the following tools, which were requested by the option "tools", expect at least one normal-sample : ' + requested_tools_requiring_normal_samples.join(", "))
-                }
-            }
     }
 
     // Fails when wrong extension for intervals file
