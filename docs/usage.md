@@ -1004,24 +1004,9 @@ In particular, in cloud computing setting it is often advisable to reduce the nu
 
 ## How to provide a contamination resource for Mutect2
 
-GATK `GetPileupSummaries` and `CalculateContamination` estimate cross-sample contamination before `FilterMutectCalls` runs on the Mutect2 or Parabricks MutectCaller calls.
-`GetPileupSummaries` needs a VCF of common biallelic SNPs with population allele frequencies in the `AF` info field.
-It loads every site of that VCF within each interval into memory, so a full population resource such as af-only gnomAD makes the step slow and can cause Java out-of-memory errors, in particular with `--no_intervals`.
-
-Provide a small set of common sites with `--contamination_resource`, for example `small_exac_common_3.hg38.vcf.gz` from the GATK somatic resource bundle (`gs://gatk-best-practices/somatic-hg38/`):
-
-```bash
-nextflow run nf-core/sarek \
-  --tools mutect2 \
-  --germline_resource af-only-gnomad.hg38.vcf.gz \
-  --contamination_resource small_exac_common_3.hg38.vcf.gz \
-  ...
-```
-
-The file must be bgzipped.
-Its index is generated if `--contamination_resource_tbi` is not provided.
-Without `--contamination_resource`, `GetPileupSummaries` uses `--germline_resource`.
-Without either, contamination estimation is skipped and the calls are filtered without it.
+GATK `GetPileupSummaries` loads every site of its VCF within each interval into memory, so using a full population resource such as af-only gnomAD is slow and can run out of memory.
+Set `--contamination_resource` to a small set of common biallelic SNPs, for example `small_exac_common_3.hg38.vcf.gz` from the [GATK somatic resource bundle](https://console.cloud.google.com/storage/browser/gatk-best-practices/somatic-hg38).
+Without it, `GetPileupSummaries` uses `--germline_resource`.
 
 ## How to create a panel-of-normals for Mutect2
 
