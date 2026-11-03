@@ -469,6 +469,24 @@
                     "description": "Do not analyze soft clipped bases in the reads for GATK Mutect2.",
                     "help_text": "use the `--dont-use-soft-clipped-bases` params with GATK Mutect2."
                 },
+                "mutect2_force_call": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.vcf\\.gz$",
+                    "exists": true,
+                    "description": "VCF (bgzipped) of alleles to force-call with GATK Mutect2.",
+                    "help_text": "Passed to Mutect2 with `--alleles`. Mutect2 force-calls all alleles in this VCF in addition to the variants it discovers, and emits them regardless of evidence."
+                },
+                "mutect2_force_call_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "format": "file-path",
+                    "pattern": "^\\S+\\.vcf\\.gz\\.tbi$",
+                    "exists": true,
+                    "description": "Index of the GATK Mutect2 force-call alleles VCF.",
+                    "help_text": "If none provided, will be generated automatically from the force-call alleles bgzipped VCF file."
+                },
                 "pon": {
                     "type": "string",
                     "fa_icon": "fas fa-file",

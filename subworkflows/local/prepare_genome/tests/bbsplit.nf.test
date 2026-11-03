@@ -44,12 +44,14 @@ nextflow_workflow {
                 input[22] = channel.empty()                                                                                                                            // known_snps_tbi
                 input[23] = null                                                                                                                                       // msisensor2_models
                 input[24] = null                                                                                                                                       // msisensorpro_scan
-                input[25] = channel.empty()                                                                                                                            // pon
-                input[26] = channel.empty()                                                                                                                            // pon_tbi
-                input[27] = 'bwa-mem'                                                                                                                                  // aligner
-                input[28] = 'mapping'                                                                                                                                  // step
-                input[29] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
-                input[30] = false                                                                                                                                      // vep_include_fasta
+                input[25] = null                                                                                                                                       // mutect2_force_call
+                input[26] = null                                                                                                                                       // mutect2_force_call_tbi
+                input[27] = channel.empty()                                                                                                                            // pon
+                input[28] = channel.empty()                                                                                                                            // pon_tbi
+                input[29] = 'bwa-mem'                                                                                                                                  // aligner
+                input[30] = 'mapping'                                                                                                                                  // step
+                input[31] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
+                input[32] = false                                                                                                                                      // vep_include_fasta
                 """
             }
         }
@@ -99,12 +101,14 @@ nextflow_workflow {
                 input[22] = channel.empty()                                                                                                                            // known_snps_tbi
                 input[23] = null                                                                                                                                       // msisensor2_models
                 input[24] = null                                                                                                                                       // msisensorpro_scan
-                input[25] = channel.empty()                                                                                                                            // pon
-                input[26] = channel.empty()                                                                                                                            // pon_tbi
-                input[27] = 'bwa-mem'                                                                                                                                  // aligner
-                input[28] = 'mapping'                                                                                                                                  // step
-                input[29] = "no_tools"                                                                                                                                 // tools - bbsplit not enabled
-                input[30] = false                                                                                                                                      // vep_include_fasta
+                input[25] = null                                                                                                                                       // mutect2_force_call
+                input[26] = null                                                                                                                                       // mutect2_force_call_tbi
+                input[27] = channel.empty()                                                                                                                            // pon
+                input[28] = channel.empty()                                                                                                                            // pon_tbi
+                input[29] = 'bwa-mem'                                                                                                                                  // aligner
+                input[30] = 'mapping'                                                                                                                                  // step
+                input[31] = "no_tools"                                                                                                                                 // tools - bbsplit not enabled
+                input[32] = false                                                                                                                                      // vep_include_fasta
                 """
             }
         }
@@ -156,12 +160,14 @@ nextflow_workflow {
                 input[22] = channel.empty()                                                                                                                            // known_snps_tbi
                 input[23] = null                                                                                                                                       // msisensor2_models
                 input[24] = null                                                                                                                                       // msisensorpro_scan
-                input[25] = channel.empty()                                                                                                                            // pon
-                input[26] = channel.empty()                                                                                                                            // pon_tbi
-                input[27] = 'bwa-mem'                                                                                                                                  // aligner
-                input[28] = 'mapping'                                                                                                                                  // step
-                input[29] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
-                input[30] = false                                                                                                                                      // vep_include_fasta
+                input[25] = null                                                                                                                                       // mutect2_force_call
+                input[26] = null                                                                                                                                       // mutect2_force_call_tbi
+                input[27] = channel.empty()                                                                                                                            // pon
+                input[28] = channel.empty()                                                                                                                            // pon_tbi
+                input[29] = 'bwa-mem'                                                                                                                                  // aligner
+                input[30] = 'mapping'                                                                                                                                  // step
+                input[31] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
+                input[32] = false                                                                                                                                      // vep_include_fasta
                 """
             }
         }
@@ -214,12 +220,14 @@ nextflow_workflow {
                 input[22] = channel.empty()                                                                                                                            // known_snps_tbi
                 input[23] = null                                                                                                                                       // msisensor2_models
                 input[24] = null                                                                                                                                       // msisensorpro_scan
-                input[25] = channel.empty()                                                                                                                            // pon
-                input[26] = channel.empty()                                                                                                                            // pon_tbi
-                input[27] = 'bwa-mem'                                                                                                                                  // aligner
-                input[28] = 'mapping'                                                                                                                                  // step
-                input[29] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
-                input[30] = false                                                                                                                                      // vep_include_fasta
+                input[25] = null                                                                                                                                       // mutect2_force_call
+                input[26] = null                                                                                                                                       // mutect2_force_call_tbi
+                input[27] = channel.empty()                                                                                                                            // pon
+                input[28] = channel.empty()                                                                                                                            // pon_tbi
+                input[29] = 'bwa-mem'                                                                                                                                  // aligner
+                input[30] = 'mapping'                                                                                                                                  // step
+                input[31] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
+                input[32] = false                                                                                                                                      // vep_include_fasta
                 """
             }
         }
@@ -275,12 +283,14 @@ nextflow_workflow {
                 input[22] = channel.empty()                                                                                                                            // known_snps_tbi
                 input[23] = null                                                                                                                                       // msisensor2_models
                 input[24] = null                                                                                                                                       // msisensorpro_scan
-                input[25] = channel.empty()                                                                                                                            // pon
-                input[26] = channel.empty()                                                                                                                            // pon_tbi
-                input[27] = 'bwa-mem'                                                                                                                                  // aligner
-                input[28] = 'mapping'                                                                                                                                  // step
-                input[29] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
-                input[30] = false                                                                                                                                      // vep_include_fasta
+                input[25] = null                                                                                                                                       // mutect2_force_call
+                input[26] = null                                                                                                                                       // mutect2_force_call_tbi
+                input[27] = channel.empty()                                                                                                                            // pon
+                input[28] = channel.empty()                                                                                                                            // pon_tbi
+                input[29] = 'bwa-mem'                                                                                                                                  // aligner
+                input[30] = 'mapping'                                                                                                                                  // step
+                input[31] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
+                input[32] = false                                                                                                                                      // vep_include_fasta
                 """
             }
         }

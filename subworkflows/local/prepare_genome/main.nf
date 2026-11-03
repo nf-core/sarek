@@ -10,6 +10,7 @@ include { HTSLIB_BGZIPTABIX as TABIX_DBSNP                } from '../../../modul
 include { HTSLIB_BGZIPTABIX as TABIX_GERMLINE_RESOURCE    } from '../../../modules/nf-core/htslib/bgziptabix'
 include { HTSLIB_BGZIPTABIX as TABIX_KNOWN_INDELS         } from '../../../modules/nf-core/htslib/bgziptabix'
 include { HTSLIB_BGZIPTABIX as TABIX_KNOWN_SNPS           } from '../../../modules/nf-core/htslib/bgziptabix'
+include { HTSLIB_BGZIPTABIX as TABIX_MUTECT2_FORCE_CALL   } from '../../../modules/nf-core/htslib/bgziptabix'
 include { HTSLIB_BGZIPTABIX as TABIX_PON                  } from '../../../modules/nf-core/htslib/bgziptabix'
 include { UNTAR as UNTAR_BBSPLIT_INDEX              } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_CHR_DIR                    } from '../../../modules/nf-core/untar'
@@ -46,6 +47,8 @@ workflow PREPARE_GENOME {
     known_snps_tbi_in           // params.known_snps_tbi
     msisensor2_models_in        // channel: [optional]  msisensor2_models
     msisensorpro_scan_in        // channel: [optional]  msisensorpro_scan
+    mutect2_force_call_in       // params.mutect2_force_call
+    mutect2_force_call_tbi_in   // params.mutect2_force_call_tbi
     pon_in                      // params.pon
     pon_tbi_in                  // params.pon_tbi
     aligner                     // params.aligner
@@ -179,6 +182,14 @@ workflow PREPARE_GENOME {
         known_snps_tbi = TABIX_KNOWN_SNPS.out.index.map { _meta, tbi -> [tbi] }.collect()
     }
 
+    mutect2_force_call = mutect2_force_call_in ? channel.fromPath(mutect2_force_call_in).collect() : channel.value([])
+    mutect2_force_call_tbi = mutect2_force_call_tbi_in ? channel.fromPath(mutect2_force_call_tbi_in).collect() : channel.value([])
+
+    if (!mutect2_force_call_tbi_in && mutect2_force_call_in && tools.split(',').contains('mutect2')) {
+        TABIX_MUTECT2_FORCE_CALL(mutect2_force_call.flatten().map { vcf -> [[id: vcf.baseName], vcf, [], []] }, 'compress', true, '')
+        mutect2_force_call_tbi = TABIX_MUTECT2_FORCE_CALL.out.index.map { _meta, tbi -> [tbi] }.collect()
+    }
+
     pon = pon_in ? channel.fromPath(pon_in).collect() : channel.value([])
     pon_tbi = pon_tbi_in ? channel.fromPath(pon_tbi_in).collect() : channel.value([])
 
@@ -300,6 +311,8 @@ workflow PREPARE_GENOME {
     known_snps_tbi           // Channel: [known_snps_tbi]
     msisensor2_models        // Channel: [models/]
     msisensorpro_scan        // Channel: [genome_msi.list]
+    mutect2_force_call       // Channel: [mutect2_force_call]
+    mutect2_force_call_tbi   // Channel: [mutect2_force_call_tbi]
     pon                      // Channel: [pon]
     pon_tbi                  // Channel: [pon_tbi]
     vep_fasta                // Channel: [meta, vep_fasta]
