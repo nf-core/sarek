@@ -13,16 +13,16 @@ include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL } from '.
 
 workflow VCF_VARIANT_FILTERING_MUTECT2 {
     take:
-    calls                      // channel: [mandatory] [ meta, vcf, tbi, stats, f1r2 ] one row per pair, tumour-only sample or patient (joint), meta.variantcaller set
-    cram                       // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ] one row per pair or tumour-only sample ([] for the normal)
-    intervals                  // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
-    fasta                      // channel: [mandatory] [ meta, fasta ]
-    fai                        // channel: [mandatory] [ meta, fai ]
-    dict                       // channel: [mandatory] [ meta, dict ]
-    germline_resource          // channel: [optional]  [ germline_resource ] or []
-    germline_resource_tbi      // channel: [optional]  [ germline_resource_tbi ] or []
-    germline_resource_provided // boolean: [mandatory] whether a germline resource was provided, so contamination tables are expected
-    joint                      // boolean: [mandatory] joint calling, calls are per patient
+    calls                           // channel: [mandatory] [ meta, vcf, tbi, stats, f1r2 ] one row per pair, tumour-only sample or patient (joint), meta.variantcaller set
+    cram                            // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ] one row per pair or tumour-only sample ([] for the normal)
+    intervals                       // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
+    fasta                           // channel: [mandatory] [ meta, fasta ]
+    fai                             // channel: [mandatory] [ meta, fai ]
+    dict                            // channel: [mandatory] [ meta, dict ]
+    contamination_resource          // channel: [optional]  [ contamination_resource ] or [], common biallelic SNPs for getpileupsummaries
+    contamination_resource_tbi      // channel: [optional]  [ contamination_resource_tbi ] or []
+    contamination_resource_provided // boolean: [mandatory] whether a contamination resource was provided, so contamination tables are expected
+    joint                           // boolean: [mandatory] joint calling, calls are per patient
 
     main:
     LEARNREADORIENTATIONMODEL(calls.map { meta, _vcf, _tbi, _stats, f1r2 -> [meta, f1r2] })
@@ -36,7 +36,7 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
     contamination_table = channel.empty()
     segmentation_table  = channel.empty()
 
-    if (germline_resource_provided) {
+    if (contamination_resource_provided) {
         cram_intervals = cram
             .combine(intervals)
             .map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals_, num_intervals ->
@@ -53,8 +53,8 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
         // Tumour-only rows have no normal to summarise
         pileup_normal = pileup.normal.filter { meta, _cram, _crai, _intervals -> meta.normal_id }.unique()
 
-        GETPILEUPSUMMARIES_NORMAL(pileup_normal, fasta, fai, dict, germline_resource, germline_resource_tbi)
-        GETPILEUPSUMMARIES_TUMOR(pileup.tumor, fasta, fai, dict, germline_resource, germline_resource_tbi)
+        GETPILEUPSUMMARIES_NORMAL(pileup_normal, fasta, fai, dict, contamination_resource, contamination_resource_tbi)
+        GETPILEUPSUMMARIES_TUMOR(pileup.tumor, fasta, fai, dict, contamination_resource, contamination_resource_tbi)
 
         // Figuring out if there is one or more table(s) from the same sample
         pileup_table_normal_branch = GETPILEUPSUMMARIES_NORMAL.out.table.branch { meta, _table ->

@@ -1041,7 +1041,7 @@
                     "pattern": "\\S+\\.vcf\\.gz$",
                     "mimetype": "text/plain",
                     "description": "Path to GATK Mutect2 and Parabricks MutectCaller Germline Resource File.",
-                    "help_text": "The germline resource VCF file (bgzipped and tabixed) needed by GATK4 Mutect2 is a collection of calls that are likely present in the sample, with allele frequencies.\nThe AF info field must be present.\nYou can find a smaller, stripped gnomAD VCF file (most of the annotation is removed and only calls signed by PASS are stored) in the AWS iGenomes Annotation/GermlineResource folder.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
+                    "help_text": "The germline resource VCF file (bgzipped and tabixed) needed by GATK4 Mutect2 is a collection of calls that are likely present in the sample, with allele frequencies.\nThe AF info field must be present.\nIt is also used by GATK GetPileupSummaries for contamination estimation, unless `--contamination_resource` is provided.\nYou can find a smaller, stripped gnomAD VCF file (most of the annotation is removed and only calls signed by PASS are stored) in the AWS iGenomes Annotation/GermlineResource folder.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "germline_resource_tbi": {
                     "type": "string",
@@ -1051,6 +1051,26 @@
                     "mimetype": "text/plain",
                     "description": "Path to GATK Mutect2 and Parabricks MutectCaller Germline Resource Index.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the Germline Resource file, if provided. Combine with `--save_reference` to save for future runs.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "contamination_resource": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "format": "file-path",
+                    "exists": true,
+                    "pattern": "\\S+\\.vcf\\.gz$",
+                    "mimetype": "text/plain",
+                    "description": "Path to the common germline variant sites VCF used by GATK GetPileupSummaries for contamination estimation.",
+                    "help_text": "Bgzipped VCF of common biallelic SNPs with population allele frequencies in the AF info field, such as `small_exac_common_3.hg38.vcf.gz` from the GATK somatic resource bundle. GetPileupSummaries loads every site of this file within each interval into memory, so a small set of common sites is much faster and lighter than a full af-only gnomAD file.\n\nUsed for contamination estimation after GATK Mutect2 and Parabricks MutectCaller. If not provided, `--germline_resource` is used instead."
+                },
+                "contamination_resource_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "format": "file-path",
+                    "exists": true,
+                    "pattern": "\\S+\\.vcf\\.gz\\.tbi$",
+                    "mimetype": "text/plain",
+                    "description": "Path to the index of the contamination resource VCF.",
+                    "help_text": "> **NB** If none provided, will be generated automatically from the contamination resource file, if provided. Combine with `--save_reference` to save for future runs."
                 },
                 "known_indels": {
                     "type": "string",

@@ -45,6 +45,14 @@ input:
       type: file
       description: Index file for the germline resource.
       pattern: "*.vcf.gz.tbi"
+  - contamination_resource:
+      type: file
+      description: VCF of common biallelic germline SNPs with population allele frequencies, used by getpileupsummaries.
+      pattern: "*.vcf.gz"
+  - contamination_resource_tbi:
+      type: file
+      description: Index file for the contamination resource.
+      pattern: "*.vcf.gz.tbi"
   - panel_of_normals:
       type: file
       description: vcf file to be used as a panel of normals.
@@ -60,9 +68,9 @@ input:
   - joint_mutect2:
       type: boolean
       description: Run mutect2 in joint mode, calling all samples of a patient together.
-  - germline_resource_provided:
+  - contamination_resource_provided:
       type: boolean
-      description: Whether a germline resource was provided, which enables contamination estimation before filtering.
+      description: Whether a contamination resource was provided, which enables contamination estimation before filtering.
 output:
   - vcf:
       type: file

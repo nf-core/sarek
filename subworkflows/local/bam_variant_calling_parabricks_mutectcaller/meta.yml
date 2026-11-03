@@ -53,7 +53,7 @@ input:
       type: file
       description: |
         Population VCF of germline sequencing containing allele fractions, used by the Parabricks
-        mutectcaller and getpileupsummaries. Pass [] to skip getpileupsummaries and calculatecontamination.
+        mutectcaller as the germline prior.
         Structure: [ path(germline_resource) ] or []
       pattern: "*.vcf.gz"
   - germline_resource_tbi:
@@ -61,6 +61,19 @@ input:
       description: |
         Index of the germline resource VCF.
         Structure: [ path(germline_resource_tbi) ] or []
+      pattern: "*.vcf.gz.tbi"
+  - contamination_resource:
+      type: file
+      description: |
+        VCF of common biallelic germline SNPs with population allele frequencies, used by
+        getpileupsummaries. Pass [] to skip getpileupsummaries and calculatecontamination.
+        Structure: [ path(contamination_resource) ] or []
+      pattern: "*.vcf.gz"
+  - contamination_resource_tbi:
+      type: file
+      description: |
+        Index of the contamination resource VCF.
+        Structure: [ path(contamination_resource_tbi) ] or []
       pattern: "*.vcf.gz.tbi"
   - panel_of_normals:
       type: file
@@ -87,10 +100,10 @@ input:
         or [ [], 0 ] when running without intervals.
         Structure: [ path(intervals), val(num_intervals) ]
       pattern: "*.bed"
-  - germline_resource_provided:
+  - contamination_resource_provided:
       type: boolean
       description: |
-        Whether a germline resource was provided. When true, every VCF must be matched by a
+        Whether a contamination resource was provided. When true, every VCF must be matched by a
         contamination and segmentation table before filtermutectcalls; when false, filtermutectcalls
         runs without them as soon as each VCF is ready.
 output:
