@@ -293,7 +293,7 @@
                     "gawk": "5.3.0"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FGBIO_COPYUMIFROMREADNAME": {
                     "fgbio": "3.1.2"
@@ -585,7 +585,7 @@
             [
                 "fastqc-status-check-heatmap.txt:md5,360c48a151504d816500299220311e35",
                 "fastqc_adapter_content_plot.txt:md5,b9f10f9b81f8f5fe094f5414bd2b4ec5",
-                "fastqc_overrepresented_sequences_plot.txt:md5,b708b395ebd0771517854b354a6cea66",
+                "fastqc_overrepresented_sequences_plot.txt:md5,aad128fa9c9e5bbc4179578cb7c581c2",
                 "fastqc_per_base_n_content_plot.txt:md5,49080e84997e76dcf2f053e7de863a26",
                 "fastqc_per_base_sequence_quality_plot.txt:md5,94b27da4812230421c3d6792144fc1c1",
                 "fastqc_per_sequence_gc_content_plot_Counts.txt:md5,3f18d62eaea5e919a8df0f6bedfe6bc9",
@@ -598,7 +598,7 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,c6f6f5a148679687fbf8e8a480ef4c0d",
                 "mosdepth_perchrom.txt:md5,e2db64a56c2ffea1e9741e1919d656c3",
                 "multiqc_citations.txt:md5,ace4ca89138a5f1e2be289c157c00bd9",
-                "multiqc_fastqc.txt:md5,96c4b1777e0faee9b1deeb15393b3ba3",
+                "multiqc_fastqc.txt:md5,11e875ce119aca7f16b11a36e18ce472",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -631,10 +631,10 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-14T15:10:12.798555553",
+        "timestamp": "2026-11-03T08:19:32.946178796",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.0"
+            "nextflow": "25.10.4"
         }
     }
 }

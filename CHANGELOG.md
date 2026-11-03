@@ -9,16 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- [#2180](https://github.com/nf-core/sarek/pull/2180) - Add Parabricks MutectCaller (`--tools parabricks_mutectcaller`) as GPU-accelerated somatic variant caller for tumor-only and tumor/normal samples (raw, unfiltered calls)
+- [#2180](https://github.com/nf-core/sarek/pull/2180) - Add Parabricks MutectCaller (`--tools parabricks_mutectcaller`) as GPU-accelerated somatic variant caller for tumor-only and tumor/normal samples
+- [#2349](https://github.com/nf-core/sarek/pull/2349) - Add GATK filtering after Parabricks MutectCaller: `FilterMutectCalls` with read-orientation priors (`LearnReadOrientationModel`), and with contamination estimation (`GetPileupSummaries`, `CalculateContamination`) and the germline resource passed to the caller when `--germline_resource` is provided
 - [#2351](https://github.com/nf-core/sarek/pull/2351) - Add `--mosdepth_fast_mode` to control Mosdepth fast mode for whole-genome coverage calculations. Fast mode remains enabled by default.
 
 ### Changed
+
+- [#2349](https://github.com/nf-core/sarek/pull/2349) - Mutect2 and Parabricks MutectCaller share one GATK filtering subworkflow (`vcf_variant_filtering_mutect2`), with Parabricks MutectCaller pileups now scattered over the intervals; paired and tumour-only Mutect2 calling merged into `bam_variant_calling_mutect2` (process `MUTECT2_PAIRED` is now `MUTECT2`); `vcf_variant_filtering_gatk` renamed to `vcf_variant_filtering_haplotypecaller`
+- [#2345](https://github.com/nf-core/sarek/pull/2345) - Template update for nf-core/tools v4.2.1
 
 ### Fixed
 
 - [#2277](https://github.com/nf-core/sarek/pull/2277) - fix(markduplicates): avoid duplicate alignment emission under -stub
 - [#2347](https://github.com/nf-core/sarek/pull/2347) - Fix DeepSomatic VCF merge failing with `sample entries that don't match the other files` when an interval yields no records (e.g. `*_alt` contigs): pass tumour and normal sample names explicitly, including to `postprocess_variants`, which otherwise writes `default`
+- [#2349](https://github.com/nf-core/sarek/pull/2349) - Filter Mutect2 calls with `FilterMutectCalls` also without `--germline_resource` ([#1546](https://github.com/nf-core/sarek/issues/1546)), so downstream files of such runs are now named after `*.mutect2.filtered.vcf.gz`; with `--joint_mutect2`, tumours of one patient with different samplesheet `contamination` values no longer split the patient into several joint calls
 - [#2352](https://github.com/nf-core/sarek/pull/2352) - Sort the `--intervals` BED in reference order with `bedtools sort` before splitting it, fixing out-of-order pileup tables that made `CalculateContamination` fail with `Invalid interval` ([#899](https://github.com/nf-core/sarek/issues/899), [#2281](https://github.com/nf-core/sarek/issues/2281)). Fail early when the BED has contigs missing from the reference, start > end, or intervals past the contig end ([#97](https://github.com/nf-core/sarek/issues/97), [#934](https://github.com/nf-core/sarek/issues/934)). CNVKit target and antitarget BED names now carry the `.sorted` suffix of the sorted intervals file
+- [#2357](https://github.com/nf-core/sarek/pull/2357) - Clarify annotation cache and software version selection, and correct the SnpEff cache directory documentation
+- [#2358](https://github.com/nf-core/sarek/pull/2358) - Pass the Mutect2 and Parabricks MutectCaller stats file to `FilterMutectCalls` with `--stats` ([#2191](https://github.com/nf-core/sarek/issues/2191))
+- [#2359](https://github.com/nf-core/sarek/pull/2359) - Document the `<patient>_<sample>` read group sample name required for BAM/CRAM input to somatic callers ([#1655](https://github.com/nf-core/sarek/issues/1655)) and how to keep the default `ext.args` when adding Mutect2 arguments ([#1455](https://github.com/nf-core/sarek/issues/1455))
 
 ### Removed
 
@@ -27,11 +35,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
 | bedtools   | -           | 2.31.1      |
+| fastqc     | 0.12.1      | 0.13.0      |
 
 ### Dependencies - plugins
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+| nft-utils  | 1.0.0       | 1.2.1       |
 
 ### Parameters
 

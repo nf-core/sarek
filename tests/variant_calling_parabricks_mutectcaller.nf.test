@@ -14,9 +14,13 @@ nextflow_pipeline {
     // --tumor-name/--normal-name to exactly match the CRAM's SM: tag, so a real run against
     // these fixtures always fails with "Invalid tumor/normal sample name" regardless of how
     // ext.args builds the name. Real (non-stub) GPU coverage instead comes from the
-    // fastq_pair.csv-based scenarios below, where sarek's own alignment step writes the RG SM
+    // fastq-based scenarios below, where sarek's own alignment step writes the RG SM
     // tag itself and it naturally matches. sentieon_tnscope (conf/modules/sentieon_tnscope.config),
     // which has the same exact-match requirement, follows the same pattern.
+    // For the same reason a normal shared by two tumours is covered with fastq_triple_two_tumor.csv
+    // rather than recalibrated_somatic_joint.csv, whose CRAMs carry the same fixed SM: tags.
+    // The test genome provides a germline resource, so the "without germline resource" scenarios
+    // set it to null to cover filtering without pileups/contamination.
     def test_scenario = [
         [
             name: "-profile test --step variant_calling --tools parabricks_mutectcaller from cram input -stub",
@@ -53,9 +57,9 @@ nextflow_pipeline {
             stub: true
         ],
         [
-            name: "-profile test --aligner parabricks --tools parabricks_mutectcaller",
+            name: "-profile test --input fastq_triple_two_tumor.csv --aligner parabricks --tools parabricks_mutectcaller",
             params: [
-                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                input: "${projectDir}/tests/csv/3.0/fastq_triple_two_tumor.csv",
                 aligner: 'parabricks',
                 tools: 'parabricks_mutectcaller',
                 wes: true
@@ -64,9 +68,9 @@ nextflow_pipeline {
             no_conda: true
         ],
         [
-            name: "-profile test --aligner parabricks --tools parabricks_mutectcaller -stub",
+            name: "-profile test --input fastq_triple_two_tumor.csv --aligner parabricks --tools parabricks_mutectcaller -stub",
             params: [
-                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                input: "${projectDir}/tests/csv/3.0/fastq_triple_two_tumor.csv",
                 aligner: 'parabricks',
                 tools: 'parabricks_mutectcaller',
                 wes: true
@@ -145,8 +149,10 @@ nextflow_pipeline {
             stub: true
         ],
         [
-            name: "-profile test --tools parabricks_mutectcaller with pon",
+            name: "-profile test --tools parabricks_mutectcaller with pon without germline resource",
             params: [
+                germline_resource: null,
+                germline_resource_tbi: null,
                 input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 pon: modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz',
                 pon_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz.tbi',
@@ -157,8 +163,10 @@ nextflow_pipeline {
             no_conda: true
         ],
         [
-            name: "-profile test --tools parabricks_mutectcaller with pon -stub",
+            name: "-profile test --tools parabricks_mutectcaller with pon without germline resource -stub",
             params: [
+                germline_resource: null,
+                germline_resource_tbi: null,
                 input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 pon: modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz',
                 pon_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz.tbi',
