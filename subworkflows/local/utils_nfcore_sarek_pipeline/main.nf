@@ -250,6 +250,25 @@ def validateInputParameters() {
     genomeExistsError()
     sparkAndBam()
     parabricksMutectcallerIgnoredParams()
+    noIntervalsWarnings()
+}
+
+// Warn when --no_intervals discards user input or risks running out of memory
+def noIntervalsWarnings() {
+    if (params.no_intervals) {
+        // params.intervals is filled from the genome config by default
+        def genome_intervals = params.genomes && params.genome ? params.genomes[params.genome]?.intervals : null
+        if (params.intervals && params.intervals != genome_intervals) {
+            log.warn("Both `--intervals` and `--no_intervals` are set: `--no_intervals` takes precedence and `${params.intervals}` will not be used.")
+        }
+
+        // Without intervals, GetPileupSummaries queries every site of the germline resource
+        def pileup_tools = ['mutect2', 'parabricks_mutectcaller']
+        def tools = params.tools ? params.tools.split(',') : []
+        if (params.germline_resource && tools.any { tool -> tool in pileup_tools }) {
+            log.warn("`--no_intervals` is set together with `--germline_resource`: GetPileupSummaries will use every site of the germline resource as an interval, which can run out of memory with large resources such as af-only-gnomAD, especially on CRAM input. Provide `--intervals` instead.")
+        }
+    }
 }
 
 // Exit pipeline if incorrect --genome key provided
