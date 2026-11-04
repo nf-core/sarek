@@ -124,6 +124,8 @@ workflow PIPELINE_INITIALISATION {
         params.dragmap,
         params.fasta,
         params.fasta_fai,
+        params.force_call_alleles,
+        params.force_call_alleles_tbi,
         params.germline_resource,
         params.germline_resource_tbi,
         params.input,
@@ -252,6 +254,16 @@ def validateInputParameters() {
     genomeExistsError()
     sparkAndBam()
     parabricksMutectcallerIgnoredParams()
+    noIntervalsWithIntervals()
+}
+
+// Exit if --no_intervals would ignore a user-provided --intervals file
+def noIntervalsWithIntervals() {
+    // params.intervals is filled from the genome config by default
+    def genome_intervals = params.genomes && params.genome ? params.genomes[params.genome]?.intervals : null
+    if (params.no_intervals && intervalsParam() && params.intervals != genome_intervals) {
+        error("`--intervals ${params.intervals}` and `--no_intervals` cannot be used together: `--no_intervals` would ignore the intervals file. Remove one of them.")
+    }
 }
 
 // `--intervals false` skips the genome intervals; Nextflow 26 passes it from the CLI as a string

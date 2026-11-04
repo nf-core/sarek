@@ -29,6 +29,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     dict                          // channel: [mandatory] dict
     fasta                         // channel: [mandatory] fasta
     fasta_fai                     // channel: [mandatory] fasta_fai
+    force_call_alleles            // channel: [optional]  force_call_alleles
+    force_call_alleles_tbi        // channel: [optional]  force_call_alleles_tbi
     germline_resource             // channel: [optional]  germline_resource
     germline_resource_tbi         // channel: [optional]  germline_resource_tbi
     contamination_resource        // channel: [optional]  contamination_resource
@@ -135,6 +137,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             fasta,
             fasta_fai,
             dict,
+            force_call_alleles,
+            force_call_alleles_tbi,
             germline_resource,
             germline_resource_tbi,
             contamination_resource,
@@ -162,6 +166,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         fasta,
         fasta_fai,
         dict,
+        force_call_alleles,
+        force_call_alleles_tbi,
         germline_resource,
         germline_resource_tbi,
         contamination_resource,

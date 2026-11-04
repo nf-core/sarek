@@ -37,6 +37,14 @@ input:
       type: file
       description: GATK sequence dictionary
       pattern: "*.dict"
+  - force_call_alleles:
+      type: file
+      description: VCF of alleles that Mutect2 force-calls in addition to the variants it discovers (--alleles).
+      pattern: "*.vcf.gz"
+  - force_call_alleles_tbi:
+      type: file
+      description: Index file for the force-call alleles VCF.
+      pattern: "*.vcf.gz.tbi"
   - germline_resource:
       type: file
       description: Population vcf of germline sequencing, containing allele fractions.

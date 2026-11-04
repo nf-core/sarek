@@ -11,6 +11,8 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
     fasta                           // channel: [mandatory] [ meta, fasta ]
     fasta_fai                       // channel: [mandatory] [ meta, fasta_fai ]
     dict                            // channel: [mandatory] [ meta, dict ]
+    force_call_alleles              // channel: [optional] [ force_call_alleles ] or []
+    force_call_alleles_tbi          // channel: [optional] [ force_call_alleles_tbi ] or []
     germline_resource               // channel: [optional] [ germline_resource ] or []
     germline_resource_tbi           // channel: [optional] [ germline_resource_tbi ] or []
     contamination_resource          // channel: [optional] [ contamination_resource ] or [], common biallelic SNPs for getpileupsummaries
@@ -32,7 +34,7 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
 
     fasta_with_fai = fasta.combine(fasta_fai.map { _meta, fai -> fai }).collect()
 
-    PARABRICKS_MUTECTCALLER(cram_intervals, fasta_with_fai, panel_of_normals, panel_of_normals_tbi, germline_resource, germline_resource_tbi)
+    PARABRICKS_MUTECTCALLER(cram_intervals, fasta_with_fai, panel_of_normals, panel_of_normals_tbi, germline_resource, germline_resource_tbi, force_call_alleles, force_call_alleles_tbi)
 
     calls = PARABRICKS_MUTECTCALLER.out.vcf
         .join(PARABRICKS_MUTECTCALLER.out.tbi, failOnDuplicate: true, failOnMismatch: true)

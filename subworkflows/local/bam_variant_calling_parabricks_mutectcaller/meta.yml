@@ -49,6 +49,18 @@ input:
         GATK sequence dictionary of the reference FASTA file (used by the GATK4 modules).
         Structure: [ val(meta), path(dict) ]
       pattern: "*.dict"
+  - force_call_alleles:
+      type: file
+      description: |
+        VCF of alleles that the Parabricks mutectcaller force-calls in addition to the variants it discovers (--mutect-alleles).
+        Structure: [ path(force_call_alleles) ] or []
+      pattern: "*.vcf.gz"
+  - force_call_alleles_tbi:
+      type: file
+      description: |
+        Index of the force-call alleles VCF.
+        Structure: [ path(force_call_alleles_tbi) ] or []
+      pattern: "*.vcf.gz.tbi"
   - germline_resource:
       type: file
       description: |

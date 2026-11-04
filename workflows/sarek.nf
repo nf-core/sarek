@@ -85,6 +85,8 @@ workflow SAREK {
     dict
     fasta
     fasta_fai
+    force_call_alleles
+    force_call_alleles_tbi
     germline_resource
     germline_resource_tbi
     contamination_resource
@@ -447,6 +449,8 @@ workflow SAREK {
             dict,
             fasta,
             fasta_fai,
+            force_call_alleles,
+            force_call_alleles_tbi,
             germline_resource,
             germline_resource_tbi,
             contamination_resource,
@@ -480,6 +484,8 @@ workflow SAREK {
             dict,
             fasta,
             fasta_fai,
+            force_call_alleles,
+            force_call_alleles_tbi,
             germline_resource,
             germline_resource_tbi,
             contamination_resource,

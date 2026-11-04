@@ -11,6 +11,7 @@ include { HTSLIB_BGZIPTABIX as TABIX_DBSNP                } from '../../../modul
 include { HTSLIB_BGZIPTABIX as TABIX_GERMLINE_RESOURCE    } from '../../../modules/nf-core/htslib/bgziptabix'
 include { HTSLIB_BGZIPTABIX as TABIX_KNOWN_INDELS         } from '../../../modules/nf-core/htslib/bgziptabix'
 include { HTSLIB_BGZIPTABIX as TABIX_KNOWN_SNPS           } from '../../../modules/nf-core/htslib/bgziptabix'
+include { HTSLIB_BGZIPTABIX as TABIX_FORCE_CALL_ALLELES   } from '../../../modules/nf-core/htslib/bgziptabix'
 include { HTSLIB_BGZIPTABIX as TABIX_PON                  } from '../../../modules/nf-core/htslib/bgziptabix'
 include { UNTAR as UNTAR_BBSPLIT_INDEX              } from '../../../modules/nf-core/untar'
 include { UNTAR as UNTAR_CHR_DIR                    } from '../../../modules/nf-core/untar'
@@ -41,6 +42,8 @@ workflow PREPARE_GENOME {
     dragmap_in                    // params.dragmap
     fasta_in                      // params.fasta
     fasta_fai_in                  // params.fasta_fai
+    force_call_alleles_in         // params.force_call_alleles
+    force_call_alleles_tbi_in     // params.force_call_alleles_tbi
     germline_resource_in          // params.germline_resource
     germline_resource_tbi_in      // params.germline_resource_tbi
     known_indels_in               // params.known_indels
@@ -191,6 +194,14 @@ workflow PREPARE_GENOME {
         known_snps_tbi = TABIX_KNOWN_SNPS.out.index.map { _meta, tbi -> [tbi] }.collect()
     }
 
+    force_call_alleles = force_call_alleles_in ? channel.fromPath(force_call_alleles_in).collect() : channel.value([])
+    force_call_alleles_tbi = force_call_alleles_tbi_in ? channel.fromPath(force_call_alleles_tbi_in).collect() : channel.value([])
+
+    if (!force_call_alleles_tbi_in && force_call_alleles_in && (tools.split(',').contains('mutect2') || tools.split(',').contains('parabricks_mutectcaller'))) {
+        TABIX_FORCE_CALL_ALLELES(force_call_alleles.flatten().map { vcf -> [[id: vcf.baseName], vcf, [], []] }, 'compress', true, '')
+        force_call_alleles_tbi = TABIX_FORCE_CALL_ALLELES.out.index.map { _meta, tbi -> [tbi] }.collect()
+    }
+
     pon = pon_in ? channel.fromPath(pon_in).collect() : channel.value([])
     pon_tbi = pon_tbi_in ? channel.fromPath(pon_tbi_in).collect() : channel.value([])
 
@@ -301,6 +312,8 @@ workflow PREPARE_GENOME {
     dict                       // Channel: [meta, dict]
     fasta                      // Channel: [meta, fasta]
     fasta_fai                  // Channel: [meta, fasta_fai]
+    force_call_alleles         // Channel: [force_call_alleles]
+    force_call_alleles_tbi     // Channel: [force_call_alleles_tbi]
     germline_resource          // Channel: [germline_resource]
     germline_resource_tbi      // Channel: [germline_resource_tbi]
     index_alignment            // Channel: [meta, index_alignment/] either bwa/, bwamem2/ or dragmap/
