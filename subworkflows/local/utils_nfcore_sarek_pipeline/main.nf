@@ -126,6 +126,10 @@ workflow PIPELINE_INITIALISATION {
     def resolvedReferences = referenceParamNames().collectEntries { name ->
         [name, explicit_references.containsKey(name) ? explicit_references[name] : getReferenceAttribute(param: name, datasheet: referenceSheet, genomeMap: genomes, genomeKey: genome)]
     }
+    // `--intervals false` skips the genome intervals; Nextflow 26 passes it from the CLI as a string
+    if (resolvedReferences.intervals in [false, 'false']) {
+        resolvedReferences.intervals = null
+    }
 
     SAMPLESHEET_TO_CHANNEL(
         ch_from_samplesheet,
