@@ -42,6 +42,7 @@ IMPORT MODULES / SUBWORKFLOWS / WORKFLOWS
 include { SAREK } from './workflows/sarek'
 include { PIPELINE_COMPLETION } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { referenceParamNames } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { PREPARE_GENOME } from './subworkflows/local/prepare_genome'
 include { PREPARE_INTERVALS } from './subworkflows/local/prepare_intervals'
 include { PREPARE_REFERENCE_CNVKIT } from './subworkflows/local/prepare_reference_cnvkit'
@@ -336,6 +337,12 @@ workflow {
         params.help,
         params.help_full,
         params.show_hidden,
+        params.genome,
+        params.genomes,
+        params.igenomes_ignore,
+        params.references,
+        params.references_datasheets_path,
+        params.subMap(referenceParamNames()),
     )
 
     //

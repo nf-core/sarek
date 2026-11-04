@@ -36,6 +36,12 @@ workflow PIPELINE_INITIALISATION {
     help // boolean: Display help message and exit
     help_full // boolean: Show the full help message
     show_hidden // boolean: Show hidden parameters in the help message
+    genome // string: iGenomes key, or datasheet path with igenomes_ignore
+    genomes // map: iGenomes catalogue
+    igenomes_ignore // boolean: Read --genome as a datasheet path
+    references_datasheet // string: Path to a references datasheet
+    references_datasheets_path // string: Location of the datasheets used with igenomes_ignore
+    explicit_references // map: Reference parameters set by the user, even to null
 
     main:
 
@@ -100,7 +106,7 @@ workflow PIPELINE_INITIALISATION {
     UTILS_NFCORE_PIPELINE(nextflow_cli_args)
 
     // Custom validation for pipeline parameters
-    validateInputParameters()
+    validateInputParameters(genome, genomes, references_datasheet)
 
     params.input_restart = retrieveInput((!params.build_only_index && !input), params.step, params.outdir)
 
@@ -111,14 +117,14 @@ workflow PIPELINE_INITIALISATION {
             : channel.fromList(samplesheetToList(params.input_restart, "${projectDir}/assets/schema_input.json"))
 
     // Load and resolve references from datasheet
-    def referencePath = getReferencePath(references: params.references, genome: params.genome, igenomesIgnore: params.igenomes_ignore, datasheetPath: params.references_datasheets_path)
+    def referencePath = getReferencePath(references: references_datasheet, genome: genome, igenomesIgnore: igenomes_ignore, datasheetPath: references_datasheets_path)
     def referenceSheet = referencePath ? getReferenceMetadata(rows: samplesheetToList(referencePath, "${projectDir}/assets/schema_references.json")) : null
 
     // Resolve each reference once: an explicit param wins, then the datasheet, then params.genomes.
     // Passed on as a value, not written back to params: included files and config closures never see params set inside a workflow.
     // An explicit null (e.g. --intervals null) is kept, so users can drop a genome default.
     def resolvedReferences = referenceParamNames().collectEntries { name ->
-        [name, params.containsKey(name) ? params.get(name) : getReferenceAttribute(param: name, datasheet: referenceSheet, genomeMap: params.genomes, genomeKey: params.genome)]
+        [name, explicit_references.containsKey(name) ? explicit_references[name] : getReferenceAttribute(param: name, datasheet: referenceSheet, genomeMap: genomes, genomeKey: genome)]
     }
 
     SAMPLESHEET_TO_CHANNEL(
@@ -210,8 +216,8 @@ FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 // Check and validate pipeline parameters
-def validateInputParameters() {
-    genomeExistsError()
+def validateInputParameters(genome, genomes, references_datasheet) {
+    genomeExistsError(genome, genomes, references_datasheet)
     sparkAndBam()
     parabricksMutectcallerIgnoredParams()
 }
@@ -259,14 +265,14 @@ def referenceParamNames() {
 }
 
 // Exit pipeline if incorrect --genome key provided
-def genomeExistsError() {
+def genomeExistsError(genome, genomes, references_datasheet) {
     // Skip with --references: --genome must be unset there, and the documented
     // "--genome null" idiom is a truthy string the key check would reject
-    if (params.references) {
+    if (references_datasheet) {
         return null
     }
-    if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" + "  Currently, the available genome keys are:\n" + "  ${params.genomes.keySet().join(", ")}\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    if (genomes && genome && !genomes.containsKey(genome)) {
+        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  Genome '${genome}' not found in any config files provided to the pipeline.\n" + "  Currently, the available genome keys are:\n" + "  ${genomes.keySet().join(", ")}\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         error(error_string)
     }
 }
