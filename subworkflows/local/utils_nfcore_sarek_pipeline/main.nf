@@ -315,7 +315,7 @@ def tmbRequirements() {
         if (params.joint_mutect2) {
             error("`--tools tmb` does not support `--joint_mutect2` yet: pyTMB scores one tumour sample per VCF.")
         }
-        if (!params.tmb_eff_genome_size && (!params.wes || params.no_intervals || !params.intervals)) {
+        if (!params.tmb_eff_genome_size && (!params.wes || params.no_intervals || !intervalsParam())) {
             error("`--tools tmb` needs an effective genome size: set `--tmb_eff_genome_size`, or use `--wes` with `--intervals`.")
         }
     }
