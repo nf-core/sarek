@@ -1,4 +1,24 @@
 {
+    "Fails with profile test --intervals genome.multi_intervals.bed --no_intervals": {
+        "content": [
+            [
+                "pipeline_info"
+            ],
+            "No stable content",
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files",
+            "No warnings",
+            [
+                "`--intervals https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.multi_intervals.bed` and `--no_intervals` cannot be used together: `--no_intervals` would ignore the intervals file. Remove one of them."
+            ]
+        ],
+        "timestamp": "2026-11-03T12:06:56.498736065",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
     "Fails with profile test --intervals intervals_past_end.bed": {
         "content": [
             [

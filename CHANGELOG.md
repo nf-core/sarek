@@ -15,8 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [#2349](https://github.com/nf-core/sarek/pull/2349) - Mutect2 and Parabricks MutectCaller share one GATK filtering subworkflow (`vcf_variant_filtering_mutect2`), with Parabricks MutectCaller pileups now scattered over the intervals; paired and tumour-only Mutect2 calling merged into `bam_variant_calling_mutect2` (process `MUTECT2_PAIRED` is now `MUTECT2`); `vcf_variant_filtering_gatk` renamed to `vcf_variant_filtering_haplotypecaller`
 - [#2345](https://github.com/nf-core/sarek/pull/2345) - Template update for nf-core/tools v4.2.1
+- [#2349](https://github.com/nf-core/sarek/pull/2349) - Mutect2 and Parabricks MutectCaller share one GATK filtering subworkflow (`vcf_variant_filtering_mutect2`), with Parabricks MutectCaller pileups now scattered over the intervals; paired and tumour-only Mutect2 calling merged into `bam_variant_calling_mutect2` (process `MUTECT2_PAIRED` is now `MUTECT2`); `vcf_variant_filtering_gatk` renamed to `vcf_variant_filtering_haplotypecaller`
 
 ### Fixed
 
@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2357](https://github.com/nf-core/sarek/pull/2357) - Clarify annotation cache and software version selection, and correct the SnpEff cache directory documentation
 - [#2358](https://github.com/nf-core/sarek/pull/2358) - Pass the Mutect2 and Parabricks MutectCaller stats file to `FilterMutectCalls` with `--stats` ([#2191](https://github.com/nf-core/sarek/issues/2191))
 - [#2359](https://github.com/nf-core/sarek/pull/2359) - Document the `<patient>_<sample>` read group sample name required for BAM/CRAM input to somatic callers ([#1655](https://github.com/nf-core/sarek/issues/1655)) and how to keep the default `ext.args` when adding Mutect2 arguments ([#1455](https://github.com/nf-core/sarek/issues/1455))
+- [#2363](https://github.com/nf-core/sarek/pull/2363) - Fail when `--no_intervals` is combined with a user-provided `--intervals` file, which it would ignore ([#2131](https://github.com/nf-core/sarek/issues/2131))
 - [#2364](https://github.com/nf-core/sarek/pull/2364) - Restore `--intervals false` to ignore the intervals from `--genome` and generate them from the FASTA reference, which stopped working with nf-schema 2.7.2 and Nextflow 26 passing CLI values as strings
 
 ### Removed
