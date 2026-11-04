@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2349](https://github.com/nf-core/sarek/pull/2349) - Add GATK filtering after Parabricks MutectCaller: `FilterMutectCalls` with read-orientation priors (`LearnReadOrientationModel`), and with contamination estimation (`GetPileupSummaries`, `CalculateContamination`) and the germline resource passed to the caller when `--germline_resource` is provided
 - [#2351](https://github.com/nf-core/sarek/pull/2351) - Add `--mosdepth_fast_mode` to control Mosdepth fast mode for whole-genome coverage calculations. Fast mode remains enabled by default.
 - [#2365](https://github.com/nf-core/sarek/pull/2365) - Add `--force_call_alleles` and `--force_call_alleles_tbi` to force-call alleles from a VCF with GATK Mutect2 `--alleles` and Parabricks MutectCaller `--mutect-alleles` ([#1883](https://github.com/nf-core/sarek/issues/1883)), based on [#1952](https://github.com/nf-core/sarek/pull/1952) by [@jchchiu](https://github.com/jchchiu)
+- [#2367](https://github.com/nf-core/sarek/pull/2367) - Add `--contamination_resource` and `--contamination_resource_tbi` to give GATK `GetPileupSummaries` a set of common biallelic SNPs instead of `--germline_resource` ([#959](https://github.com/nf-core/sarek/issues/959))
 
 ### Changed
 
