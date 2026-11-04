@@ -18,7 +18,6 @@ include { BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER         } from '../bam_var
 include { BAM_VARIANT_CALLING_SOMATIC_STRELKA                 } from '../bam_variant_calling_somatic_strelka'
 include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT                  } from '../bam_variant_calling_somatic_tiddit'
 include { BAM_VARIANT_CALLING_SOMATIC_TNSCOPE                 } from '../bam_variant_calling_somatic_tnscope'
-include { MSISENSOR2_MSI                                      } from '../../../modules/nf-core/msisensor2/msi'
 include { MSISENSORPRO_MSISOMATIC                             } from '../../../modules/nf-core/msisensorpro/msisomatic'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
