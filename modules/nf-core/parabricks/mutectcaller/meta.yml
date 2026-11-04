@@ -96,6 +96,20 @@ input:
         Copied to <germline_resource>.tbi if named differently.
       pattern: "*.tbi"
       ontologies: []
+  - alleles:
+      type: file
+      description: |
+        (Optional) bgzipped VCF of alleles to force-call regardless of evidence,
+        passed to mutectcaller via --mutect-alleles.
+      pattern: "*.vcf.gz"
+      ontologies:
+        - edam: http://edamontology.org/format_3989 # GZIP format
+  - alleles_index:
+      type: file
+      description: (Optional) tbi index corresponding to the alleles file. Copied
+        to <alleles>.tbi if named differently.
+      pattern: "*.tbi"
+      ontologies: []
 output:
   vcf:
     - - meta:
