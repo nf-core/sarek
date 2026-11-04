@@ -69,7 +69,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
             def combination_key = (step == 'annotate')
                 ? "${base_key}-${_variantcaller}-${_vcf}"
                 : "${base_key}-${meta.lane}"
-            [combination_key, [meta.patient, meta.sample, meta.status, meta.lane, meta.variantcaller, meta.vcf]]
+            [combination_key, [meta.patient, meta.sample, meta.status, meta.lane, _variantcaller, _vcf]]
         }
         .groupTuple()
         .map { _combination_key, combination_list ->
