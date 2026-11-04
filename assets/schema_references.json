@@ -238,7 +238,9 @@
                 "meta": ["readme"],
                 "type": "string",
                 "pattern": "^\\S+\\.(md|txt)$"
-            }
+            },
+            "contig_ploidy_priors_tsv": {},
+            "exclude_bed": {}
         },
         "required": ["genome"]
     }
