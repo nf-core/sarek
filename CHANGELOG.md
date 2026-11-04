@@ -71,6 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Fixed
 
 - [#2277](https://github.com/nf-core/sarek/pull/2277) - Fix `BAM_MARKDUPLICATES` emitting each alignment twice under `-stub`, which failed the tumour-normal pairing join ([#2280](https://github.com/nf-core/sarek/issues/2280))
+- [#2371](https://github.com/nf-core/sarek/pull/2371) - Correct the dev CHANGELOG: move refactoring entries to the developer section, move #2339 out of 3.11.0, and complete the dependency and parameter tables
 
 #### Removed
 
