@@ -18,6 +18,7 @@ include { BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER         } from '../bam_var
 include { BAM_VARIANT_CALLING_SOMATIC_STRELKA                 } from '../bam_variant_calling_somatic_strelka'
 include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT                  } from '../bam_variant_calling_somatic_tiddit'
 include { BAM_VARIANT_CALLING_SOMATIC_TNSCOPE                 } from '../bam_variant_calling_somatic_tnscope'
+include { BAM_VARIANT_CALLING_SOMATIC_VARNET                  } from '../bam_variant_calling_somatic_varnet'
 include { MSISENSOR2_MSI                                      } from '../../../modules/nf-core/msisensor2/msi'
 include { MSISENSORPRO_MSISOMATIC                             } from '../../../modules/nf-core/msisensorpro/msisomatic'
 
@@ -65,6 +66,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_strelka      = channel.empty()
     vcf_tiddit       = channel.empty()
     vcf_tnscope      = channel.empty()
+    vcf_varnet       = channel.empty()
     tbi_freebayes    = channel.empty()
     tbi_manta        = channel.empty()
     tbi_muse         = channel.empty()
@@ -72,6 +74,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     tbi_strelka      = channel.empty()
     tbi_tiddit       = channel.empty()
     tbi_tnscope      = channel.empty()
+    tbi_varnet       = channel.empty()
 
     if (tools && tools.split(',').contains('ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
@@ -321,6 +324,20 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         tbi_tiddit = BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.tbi
     }
 
+    // VARNET
+    if (tools && tools.split(',').contains('varnet')) {
+        BAM_VARIANT_CALLING_SOMATIC_VARNET(
+            bam,
+            fasta,
+            fasta_fai,
+            intervals_bed_combined,
+            channel.value([]),
+        )
+
+        vcf_varnet = BAM_VARIANT_CALLING_SOMATIC_VARNET.out.vcf
+        tbi_varnet = BAM_VARIANT_CALLING_SOMATIC_VARNET.out.tbi
+    }
+
     vcf_all = channel.empty()
         .mix(
             vcf_freebayes,
@@ -333,6 +350,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             vcf_strelka,
             vcf_tiddit,
             vcf_tnscope,
+            vcf_varnet,
         )
 
     tbi_all = channel.empty()
@@ -347,6 +365,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             tbi_strelka,
             tbi_tiddit,
             tbi_tnscope,
+            tbi_varnet,
         )
 
     emit:
@@ -363,6 +382,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_strelka
     vcf_tiddit
     vcf_tnscope
+    vcf_varnet
     tbi_all
     tbi_freebayes
     tbi_deepsomatic
@@ -374,4 +394,5 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     tbi_strelka
     tbi_tiddit
     tbi_tnscope
+    tbi_varnet
 }
