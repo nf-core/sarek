@@ -122,6 +122,8 @@ workflow PIPELINE_INITIALISATION {
         params.dragmap,
         params.fasta,
         params.fasta_fai,
+        params.force_call_alleles,
+        params.force_call_alleles_tbi,
         params.germline_resource,
         params.germline_resource_tbi,
         params.input,
