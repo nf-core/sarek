@@ -546,7 +546,7 @@ workflow SAREK {
         // POST_VARIANTCALLING always outputs VCFs - either processed or pass-through originals
         vcf_to_annotate = POST_VARIANTCALLING.out.vcfs
 
-        CHANNEL_VARIANT_CALLING_CREATE_CSV(POST_VARIANTCALLING.out.vcfs_publish_dir, params.outdir)
+        CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate, params.outdir)
 
         // ANNOTATE
         if (step == 'annotate') {
