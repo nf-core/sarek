@@ -253,6 +253,7 @@ def validateInputParameters() {
     sparkAndBam()
     parabricksMutectcallerIgnoredParams()
     noIntervalsWithIntervals()
+    tmbRequirements()
 }
 
 // Exit if --no_intervals would ignore a user-provided --intervals file
@@ -297,6 +298,25 @@ def parabricksMutectcallerIgnoredParams() {
         }
         if (params.ignore_soft_clipped_bases) {
             log.warn("`--ignore_soft_clipped_bases` is not supported by Parabricks mutectcaller and is ignored for `parabricks_mutectcaller`: soft-clipped bases are used during calling.")
+        }
+    }
+}
+
+// Exit if TMB is requested without what it needs
+def tmbRequirements() {
+    if (params.tools && params.tools.split(',').contains('tmb')) {
+        List<String> tools = params.tools.split(',') as List<String>
+        if (params.step == 'annotate') {
+            error("`--tools tmb` is not supported with `--step annotate`: start from `--step variant_calling` or earlier.")
+        }
+        if (!tools.contains('mutect2') || !(tools.contains('snpeff') || tools.contains('merge'))) {
+            error("`--tools tmb` needs `mutect2` and `snpeff` (or `merge`) in `--tools`: TMB is computed on Mutect2 calls annotated with snpEff.")
+        }
+        if (params.joint_mutect2) {
+            error("`--tools tmb` does not support `--joint_mutect2` yet: pyTMB scores one tumour sample per VCF.")
+        }
+        if (!params.tmb_eff_genome_size && (!params.wes || params.no_intervals || !intervalsParam())) {
+            error("`--tools tmb` needs an effective genome size: set `--tmb_eff_genome_size`, or use `--wes` with `--intervals`.")
         }
     }
 }

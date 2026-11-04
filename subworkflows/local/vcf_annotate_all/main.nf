@@ -28,6 +28,7 @@ workflow VCF_ANNOTATE_ALL {
 
     main:
     vcf_ann = channel.empty()
+    vcf_ann_snpeff = channel.empty()
     tab_ann = channel.empty()
     json_ann = channel.empty()
 
@@ -43,6 +44,7 @@ workflow VCF_ANNOTATE_ALL {
         VCF_ANNOTATE_SNPEFF(vcf, snpeff_db, snpeff_cache)
 
         vcf_ann = vcf_ann.mix(VCF_ANNOTATE_SNPEFF.out.vcf_tbi)
+        vcf_ann_snpeff = VCF_ANNOTATE_SNPEFF.out.vcf_tbi
     }
 
     if (tools.split(',').contains('merge')) {
@@ -74,7 +76,8 @@ workflow VCF_ANNOTATE_ALL {
     }
 
     emit:
-    vcf_ann  // channel: [ val(meta), vcf.gz, vcf.gz.tbi ]
+    vcf_ann         // channel: [ val(meta), vcf.gz, vcf.gz.tbi ]
+    vcf_ann_snpeff  // channel: [ val(meta), vcf.gz, vcf.gz.tbi ]
     tab_ann
     json_ann
 }

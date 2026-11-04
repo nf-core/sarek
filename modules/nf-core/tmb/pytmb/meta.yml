@@ -1,0 +1,143 @@
+name: "tmb_pytmb"
+description: "This module calculates Tumor Mutational Burden (TMB) scores from VCF files using the pyTMB tool."
+keywords:
+  - tumor
+  - mutation
+  - burden
+  - score
+tools:
+  - "tmb":
+      description: "This tool was designed to calculate a Tumor Mutational Burden (TMB) score from a VCF file."
+      homepage: "https://github.com/bioinfo-pf-curie/TMB/blob/v1.5.0/README.md"
+      documentation: "https://github.com/bioinfo-pf-curie/TMB/blob/v1.5.0/README.md"
+      tool_dev_url: "https://github.com/bioinfo-pf-curie/TMB"
+      doi: "10.1186/s12915-024-01839-8"
+      licence: ["CeCILL FREE SOFTWARE LICENSE AGREEMENT"]
+      identifier: biotools:TMB
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+    - vcf:
+        type: file
+        description: |
+          Annotated VCF file.
+        pattern: "*.vcf"
+        ontologies:
+          - edam: http://edamontology.org/format_3016 # VCF
+    - bed:
+        type: file
+        description: |
+          BED file defining the target regions. Required if `eff_genome_size` is not provided.
+        pattern: "*.bed"
+        ontologies:
+          - edam: http://edamontology.org/format_3003 # BED
+    - eff_genome_size:
+        type: string
+        description: |
+          Effective genome size (in bases). Required if `bed` is not provided.
+    - var_config:
+        type: file
+        description: |
+          YAML file defining variant annotation parsing rules. See [example here](modules/nf-core/tmb/pytmb/tests/snpeff.yml).
+        pattern: "*.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+    - db_config:
+        type: file
+        description: |
+          YAML file defining the database configuration for variant annotations. See [example here](modules/nf-core/tmb/pytmb/tests/haplotc.yml).
+        pattern: "*.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+output:
+  tmb_log:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "*.log":
+          type: file
+          description: |
+            Log file containing TMB calculation details
+  export_vcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "*_export.vcf.gz":
+          type: file
+          description: |
+            Export VCF file containing TMB annotations
+          pattern: "*_export.vcf.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3016 # VCF
+  debug_vcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
+      - "*_debug.vcf.gz":
+          type: file
+          description: |
+            Debug VCF file containing detailed TMB calculation information
+          pattern: "*_debug.vcf.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3016 # VCF
+  versions_tmb:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - tmb:
+          type: string
+          description: The name of the tool
+      - "pyTMB --version | awk '{print \\$2}' | tr -d '()'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - tmb:
+          type: string
+          description: The name of the tool
+      - "pyTMB --version | awk '{print \\$2}' | tr -d '()'":
+          type: eval
+          description: The expression to obtain the version of the tool
+
+authors:
+  - "@georgiakes"
+maintainers:
+  - "@georgiakes"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/tmb:1.6.0--1565c74af4a6a012
+      build_id: bd-1565c74af4a6a012_1
+      scan_id: sc-dc540dec232ea771_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/tmb:1.6.0--7e5e767f3c8b2d54
+      build_id: bd-7e5e767f3c8b2d54_1
+      scan_id: sc-46ea13f8aabe7500_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/tmb:1.6.0--44abee6975a63674
+      build_id: bd-44abee6975a63674_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/fb/fb8cfebbaf26d58af3128fcf154d6221f3aeab0d1ad0df96f5e967d60ef4f4d9/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/tmb:1.6.0--767d7aef10af2669
+      build_id: bd-767d7aef10af2669_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b8/b8e9dc290c8325622210e2a5e3203ac646508a28affeb07830a54046e147fb48/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/tmb/pytmb/.conda-lock/linux_amd64-bd-1565c74af4a6a012_1.txt
+    linux/arm64:
+      lock_file: modules/nf-core/tmb/pytmb/.conda-lock/linux_arm64-bd-7e5e767f3c8b2d54_1.txt

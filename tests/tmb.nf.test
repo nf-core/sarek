@@ -1,0 +1,68 @@
+def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+
+    def test_scenario = [
+        [
+            // MultiQC is skipped so the snapshot does not depend on static plot export
+            name: "-profile test --tools mutect2,snpeff,tmb tumoronly",
+            params: [
+                genome: null,
+                igenomes_ignore: true,
+                dbsnp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+                dbsnp_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                germline_resource: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz',
+                germline_resource_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz.tbi',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                skip_tools: 'multiqc',
+                snpeff_db: 'WBcel235.99',
+                step: 'variant_calling',
+                tools: 'mutect2,snpeff,tmb',
+                wes: true
+            ]
+        ],
+        [
+            name: "-profile test --tools mutect2,snpeff,tmb --tmb_eff_genome_size 1000000 --input fastq_pair.csv",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tmb_eff_genome_size: 1000000,
+                tools: 'mutect2,snpeff,tmb'
+            ]
+        ],
+        [
+            name: "Fails with --tools mutect2,tmb (no snpEff annotation)",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
+                step: 'variant_calling',
+                tools: 'mutect2,tmb'
+            ],
+            failure: true,
+            snapshot: 'stderr,stdout',
+            snapshot_include: '--tools tmb'
+        ],
+        [
+            name: "Fails with --step annotate",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
+                step: 'annotate',
+                tools: 'mutect2,snpeff,tmb'
+            ],
+            failure: true,
+            snapshot: 'stderr,stdout',
+            snapshot_include: '--tools tmb'
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}

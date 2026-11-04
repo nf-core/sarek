@@ -1451,6 +1451,51 @@ The following parameters are optional:
 
 - `--bcftools_columns`, path to vcf annotation columns file
 
+## How to calculate tumour mutational burden (TMB)
+
+Sarek can calculate a tumour mutational burden (TMB) score with [pyTMB](https://github.com/bioinfo-pf-curie/TMB). TMB is off by default. It is computed on Mutect2 calls (tumour-only samples and tumour/normal pairs) after snpEff annotation, so add `tmb` together with `mutect2` and `snpeff` (or `merge`) to `--tools`:
+
+```bash
+nextflow run nf-core/sarek -profile <PROFILE> --input samplesheet.csv --outdir results --wes --intervals capture.bed --tools mutect2,snpeff,tmb
+```
+
+TMB is the number of variants that pass the filters, divided by the effective genome size in Mb:
+
+- The effective genome size defaults to the total size of the intervals BED, which needs `--wes` with `--intervals`. pyTMB sums the interval lengths, so overlapping intervals are counted twice.
+- Set `--tmb_eff_genome_size` (in bp) to use another size, for example the size of the coding region covered by your assay. It is required for WGS.
+
+By default, pyTMB keeps variants with `PASS` in the `FILTER` column, a variant allele frequency of at least 0.05, a depth of at least 20 and at least 2 reads supporting the alternative allele, and removes non-coding and synonymous variants.
+These are the settings recommended in the pyTMB documentation for WES with Mutect2 and snpEff, without the polymorphism filter, as snpEff alone does not add population frequencies.
+To change them, override `ext.args` for `TMB_PYTMB` in a custom config. Keep `--sample` for tumour/normal pairs, as their VCFs hold both samples:
+
+```groovy
+process {
+    withName: 'TMB_PYTMB' {
+        ext.args = { [
+            meta.tumor_id ? "--sample ${meta.patient}_${meta.tumor_id}" : '',
+            '--vaf 0.1',
+            '--minDepth 50',
+            '--minAltDepth 2',
+            '--filterLowQual',
+            '--filterNonCoding',
+            '--filterSyn'
+        ].join(' ').trim() }
+    }
+}
+```
+
+The pyTMB configuration files for Mutect2 and snpEff are in `assets/tmb/`.
+
+> **NB** Mutect2 calls are only filtered when a germline resource is provided (`--germline_resource`). Without it, the `FILTER` column is empty and pyTMB counts the unfiltered calls, which inflates TMB.
+
+> **NB** pyTMB recommends normalised VCFs, in particular for multiallelic sites, see `--normalize_vcfs`.
+
+> **NB** TMB is not calculated with `--joint_mutect2` yet.
+
+> **NB** TMB is not calculated with `--step annotate`: the samplesheet for this step does not carry the tumour sample name of paired VCFs, and no intervals BED is prepared. Start from `--step variant_calling` or earlier.
+
+> **NB** pyTMB stops with `No Annotation detected` on a VCF without any variant, which fails the run. This happens when Mutect2 makes no call at all, for example on a small panel.
+
 ## MultiQC related issues
 
 ### Plots for SnpEff are missing

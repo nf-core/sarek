@@ -138,6 +138,10 @@
 
 - [P7Zip](http://p7zip.sourceforge.net/)
 
+- [pyTMB](https://doi.org/10.1186/s12915-024-01839-8)
+
+  > Dupain C, Gutman T, Girard E, et al.: Tumor mutational burden assessment and standardized bioinformatics approach using custom NGS panels in clinical routine. BMC Biol. 2024;22:43. doi: 10.1186/s12915-024-01839-8.
+
 - [SAMtools](https://pubmed.ncbi.nlm.nih.gov/19505943/)
 
   > Li H, Handsaker B, Wysoker A, Fennell T, Ruan J, Homer N, Marth G, Abecasis G, Durbin R; 1000 Genome Project Data Processing Subgroup. The Sequence Alignment/Map format and SAMtools. Bioinformatics. 2009 Aug 15;25(16):2078-9. doi: 10.1093/bioinformatics/btp352. Epub 2009 Jun 8. PubMed PMID: 19505943; PubMed Central PMCID: PMC2723002.
