@@ -21,12 +21,12 @@ nextflow_pipeline {
             ],
         ],
         [
-            name: "-profile test --igenomes_ignore --genome GRCh38_chr22 --references_datasheets_path genomes/Homo_sapiens/GATK",
+            name: "-profile test --igenomes_ignore --genome GATK/GRCh38_chr22 --references_datasheets_path genomes/Homo_sapiens",
             params: [
-                genome: 'GRCh38_chr22',
+                genome: 'GATK/GRCh38_chr22',
                 igenomes_ignore: true,
                 references_base_path: 's3://nf-core-references',
-                references_datasheets_path: references_datasheets_path,
+                references_datasheets_path: 'https://raw.githubusercontent.com/nf-core/references-datasheets/latest/genomes/Homo_sapiens',
                 snpeff_db: 'WBcel235.99',
                 vep_cache_version: '114',
                 vep_genome: 'WBcel235',

@@ -677,7 +677,7 @@
             "nextflow": "26.10.0"
         }
     },
-    "-profile test --igenomes_ignore --genome GRCh38_chr22 --references_datasheets_path genomes/Homo_sapiens/GATK": {
+    "-profile test --igenomes_ignore --genome GATK/GRCh38_chr22 --references_datasheets_path genomes/Homo_sapiens": {
         "content": [
             21,
             {

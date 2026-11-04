@@ -436,11 +436,13 @@ Reference attributes (`--fasta`, `--dbsnp`, `--known_indels`, and the other refe
 2. A references datasheet, passed with `--references`, or located from `--references_datasheets_path` with `--genome` and `--igenomes_ignore`.
 3. An iGenomes catalogue entry for `--genome`.
 
-`--references` and `--genome` are mutually exclusive: passing both is an error. Sarek defaults `--genome` to `GATK.GRCh38`, so runs that pass `--references` must unset it with `--genome ''`.
+`--references` and `--genome` are mutually exclusive: passing both is an error. Sarek defaults `--genome` to `GATK.GRCh38`, so runs that pass `--references` must unset it with `--genome null`.
+
+With `--igenomes_ignore`, `--genome` is a path under `--references_datasheets_path`, without `.yml`, e.g. `--genome GATK/GRCh38`.
+
+Datasheet paths may carry `${params.references_base_path}` placeholders, resolved when the datasheet loads. The default fits the `igenomes/` datasheets; set `--references_base_path s3://nf-core-references` for the `genomes/` datasheets. The resolution order and the datasheet format are documented in the [nf-core/references usage documentation](https://nf-co.re/references/usage).
 
 A datasheet can also supply annotation attributes (`snpeff_db`, `vep_cache_version`, `vep_genome`, `vep_species`); explicit flags still outrank it.
-
-Datasheet paths may carry `${params.references_base_path}` placeholders, resolved against this pipeline's `references_base_path` when the datasheet loads. The shared resolution order and the datasheet format behind it are documented in the [nf-core/references usage documentation](https://nf-co.re/references/usage).
 
 ## Updating the pipeline
 

@@ -116,49 +116,54 @@ workflow PIPELINE_INITIALISATION {
             ? channel.fromList(samplesheetToList(input, "${projectDir}/assets/schema_input.json"))
             : channel.fromList(samplesheetToList(params.input_restart, "${projectDir}/assets/schema_input.json"))
 
-    // Load and resolve references from datasheet
-    def referencePath = getReferencePath(references: references_datasheet, genome: genome, igenomesIgnore: igenomes_ignore, datasheetPath: references_datasheets_path)
-    def referenceSheet = referencePath ? getReferenceMetadata(rows: samplesheetToList(referencePath, "${projectDir}/assets/schema_references.json")) : null
-
-    // Resolve each reference once: an explicit param wins, then the datasheet, then params.genomes.
-    // Passed on as a value, not written back to params: included files and config closures never see params set inside a workflow.
-    // An explicit null (e.g. --intervals null) is kept, so users can drop a genome default.
-    def resolvedReferences = referenceParamNames().collectEntries { name ->
-        [name, explicit_references.containsKey(name) ? explicit_references[name] : getReferenceAttribute(param: name, datasheet: referenceSheet, genomeMap: genomes, genomeKey: genome)]
+    //
+    // References come from --genome (iGenomes) or from a references datasheet; an explicit parameter, even null, wins
+    //
+    def reference_path = getReferencePath(
+        references: references_datasheet,
+        genome: genome,
+        igenomesIgnore: igenomes_ignore,
+        datasheetPath: references_datasheets_path,
+    )
+    def datasheet = reference_path
+        ? getReferenceMetadata(rows: samplesheetToList(reference_path, "${projectDir}/assets/schema_references.json"))
+        : null
+    def resolved_references = referenceParams().collectEntries { name ->
+        [name, explicit_references.containsKey(name) ? explicit_references[name] : getReferenceAttribute(param: name, datasheet: datasheet, genomeMap: genomes, genomeKey: genome)]
     }
     // `--intervals false` skips the genome intervals; Nextflow 26 passes it from the CLI as a string
-    if (resolvedReferences.intervals in [false, 'false']) {
-        resolvedReferences.intervals = null
+    if (resolved_references.intervals in [false, 'false']) {
+        resolved_references.intervals = null
     }
 
     SAMPLESHEET_TO_CHANNEL(
         ch_from_samplesheet,
         params.aligner,
-        resolvedReferences.ascat_alleles,
-        resolvedReferences.ascat_loci,
-        resolvedReferences.ascat_loci_gc,
-        resolvedReferences.ascat_loci_rt,
+        resolved_references.ascat_alleles,
+        resolved_references.ascat_loci,
+        resolved_references.ascat_loci_gc,
+        resolved_references.ascat_loci_rt,
         params.bcftools_annotations,
         params.bcftools_annotations_tbi,
         params.bcftools_header_lines,
         params.build_only_index,
-        resolvedReferences.dbsnp,
-        resolvedReferences.fasta,
-        resolvedReferences.germline_resource,
-        resolvedReferences.intervals,
+        resolved_references.dbsnp,
+        resolved_references.fasta,
+        resolved_references.germline_resource,
+        resolved_references.intervals,
         params.joint_germline,
         params.joint_mutect2,
-        resolvedReferences.known_indels,
-        resolvedReferences.known_snps,
+        resolved_references.known_indels,
+        resolved_references.known_snps,
         params.no_intervals,
-        resolvedReferences.pon,
+        resolved_references.pon,
         params.sentieon_dnascope_emit_mode,
         params.sentieon_haplotyper_emit_mode,
         params.seq_center,
         params.seq_platform,
         params.skip_tools,
         params.snpeff_cache,
-        resolvedReferences.snpeff_db,
+        resolved_references.snpeff_db,
         params.step,
         params.tools,
         params.umi_length,
@@ -169,7 +174,7 @@ workflow PIPELINE_INITIALISATION {
     )
 
     emit:
-    references = resolvedReferences
+    references = resolved_references
     samplesheet = SAMPLESHEET_TO_CHANNEL.out.input_sample
 }
 
@@ -227,7 +232,7 @@ def validateInputParameters(genome, genomes, references_datasheet) {
 }
 
 // Reference params resolved from --references, a genome datasheet, or params.genomes
-def referenceParamNames() {
+def referenceParams() {
     return [
         'ascat_alleles',
         'ascat_genome',
@@ -270,8 +275,7 @@ def referenceParamNames() {
 
 // Exit pipeline if incorrect --genome key provided
 def genomeExistsError(genome, genomes, references_datasheet) {
-    // Skip with --references: --genome must be unset there, and the documented
-    // "--genome null" idiom is a truthy string the key check would reject
+    // Skip with --references: --genome must be unset there, and "--genome null" is a truthy string the key check would reject
     if (references_datasheet) {
         return null
     }
