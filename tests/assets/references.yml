@@ -1,0 +1,32 @@
+# Test fixture: same record as the published chr22 datasheet, with the
+# test-data root carried by ${params.references_base_path} placeholders so a
+# run proves substitution resolves them to the literal paths.
+---
+- genome: GRCh38_chr22
+  reference_source: nf-core
+  species: Homo_sapiens
+  fasta: ${params.references_base_path}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Sequence/WholeGenomeFasta/genome.fasta
+  fasta_fai: ${params.references_base_path}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Sequence/WholeGenomeFasta/genome.fasta.fai
+  fasta_dict: ${params.references_base_path}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Sequence/WholeGenomeFasta/genome.dict
+  bwamem1_index: ${params.references_base_path}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Sequence/BWAIndex/version0.7.18/
+  bwamem2_index: ${params.references_base_path}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Sequence/BWAmem2Index/version2.2.1/
+  dragmap_hashtable: ${params.references_base_path}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Sequence/dragmap/version1.2.1/
+  intervals_bed: ${params.references_base_path}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Annotation/intervals/testdata.GRCh38_chr22.bed
+  ngscheckmate_bed: ${params.references_base_path}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Annotation/NGSCheckMate/SNP_GRCh38_hg38_wChr.bed
+  snpeff_db: "WBcel235.105"
+  vep_cache_version: "113"
+  vep_genome: "WBcel235"
+  vep_species: "caenorhabditis_elegans"
+  vcf_dbsnp_vcf: ${params.references_base_path}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Annotation/GATK_BUNDLE/dbsnp_146.hg38.vcf.gz
+  vcf_dbsnp_vcf_tbi: ${params.references_base_path}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Annotation/GATK_BUNDLE/dbsnp_146.hg38.vcf.gz.tbi
+  vcf_dbsnp_vcf_vqsr: "--resource:dbsnp,known=false,training=true,truth=false,prior=2.0 dbsnp_146.hg38.vcf.gz"
+  vcf_dbsnp_vcf_source: GATK_BUNDLE
+  vcf_germline_resource_vcf: ${params.references_base_path}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Annotation/GATK_BUNDLE/gnomAD.r2.1.1.vcf.gz
+  vcf_germline_resource_vcf_tbi: ${params.references_base_path}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Annotation/GATK_BUNDLE/gnomAD.r2.1.1.vcf.gz.tbi
+  vcf_germline_resource_vcf_source: GATK_BUNDLE
+  vcf_known_indels_vcf:
+    - ${params.references_base_path}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Annotation/GATK_BUNDLE/mills_and_1000G.indels.vcf.gz
+  vcf_known_indels_vcf_tbi:
+    - ${params.references_base_path}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Annotation/GATK_BUNDLE/mills_and_1000G.indels.vcf.gz.tbi
+  vcf_known_indels_vcf_vqsr: "--resource:mills,known=false,training=true,truth=true,prior=10.0 mills_and_1000G.indels.vcf.gz"
+  vcf_known_indels_vcf_source: GATK_BUNDLE
