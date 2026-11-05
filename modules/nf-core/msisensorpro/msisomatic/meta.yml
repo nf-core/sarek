@@ -87,25 +87,27 @@ output:
           type: file
           description: File containing distribution results
           ontologies: []
-  output_germline:
+  output_all:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - ${prefix}_germline:
+      - ${prefix}_all:
           type: file
-          description: File containing germline results
+          description: File containing the per-site test results (difference,
+            P value, FDR) for all evaluated microsatellites
           ontologies: []
-  output_somatic:
+  output_unstable:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - ${prefix}_somatic:
+      - ${prefix}_unstable:
           type: file
-          description: File containing somatic results
+          description: File containing the unstable (somatic MSI) sites; only
+            the header line if no site is unstable
           ontologies: []
   versions_msisensorpro:
     - - ${task.process}:

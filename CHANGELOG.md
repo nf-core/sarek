@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2360](https://github.com/nf-core/sarek/pull/2360) - Point `csv/variantcalled.csv` at the published filtered, normalised, concatenated and Varlociraptor VCFs instead of the `variant_calling/<variantcaller>/` directory ([#2204](https://github.com/nf-core/sarek/issues/2204))
 - [#2363](https://github.com/nf-core/sarek/pull/2363) - Fail when `--no_intervals` is combined with a user-provided `--intervals` file, which it would ignore ([#2131](https://github.com/nf-core/sarek/issues/2131))
 - [#2364](https://github.com/nf-core/sarek/pull/2364) - Restore `--intervals false` to ignore the intervals from `--genome` and generate them from the FASTA reference, which stopped working with nf-schema 2.7.2 and Nextflow 26 passing CLI values as strings
-- [#2373](https://github.com/nf-core/sarek/pull/2373) - Fix consensus VCFs intermittently listed under `variant_calling/normalized/` instead of `variant_calling/consensus/` in `csv/variantcalled.csv`: consensus calls no longer set `variantcaller` on a meta map shared across channels
+- [#2370](https://github.com/nf-core/sarek/pull/2370) - Run MSIsensorPro on every tumor/normal pair when `--msisensorpro_scan` is provided, for example by `--genome`; previously only the first pair was analysed. Publish the MSIsensorPro `_all` and `_unstable` outputs, which the `msisensorpro/msisomatic` module did not capture (module updated with [nf-core/modules#13613](https://github.com/nf-core/modules/pull/13613)) ([#2192](https://github.com/nf-core/sarek/issues/2192)). Correct the MSI documentation: MSIsensor2 runs on tumor-only samples, the MSIsensorPro output directory is `variant_calling/msisensorpro/`, and the reference scan and models are published to `reference/msisensorpro/` and `reference/msisensor2/`
 
 ### Removed
 
@@ -76,6 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2277](https://github.com/nf-core/sarek/pull/2277) - Fix `BAM_MARKDUPLICATES` emitting each alignment twice under `-stub`, which failed the tumour-normal pairing join ([#2280](https://github.com/nf-core/sarek/issues/2280))
 - [#2371](https://github.com/nf-core/sarek/pull/2371) - Correct the dev CHANGELOG: move refactoring entries to the developer section, move #2339 out of 3.11.0, and complete the dependency and parameter tables
 - [#2372](https://github.com/nf-core/sarek/pull/2372) - Follow up #2333: move its CHANGELOG entry to dev, pass the aligner to `FASTQ_CREATE_UMI_CONSENSUS_FGBIO` as an input, and update the bwa-mem2 UMI snapshots to FastQC 0.13.0
+- [#2373](https://github.com/nf-core/sarek/pull/2373) - Fix consensus VCFs intermittently listed under `variant_calling/normalized/` instead of `variant_calling/consensus/` in `csv/variantcalled.csv`: consensus calls no longer set `variantcaller` on a meta map shared across channels
 
 #### Removed
 
