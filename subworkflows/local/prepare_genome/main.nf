@@ -230,7 +230,7 @@ workflow PREPARE_GENOME {
     }
 
     if (msisensorpro_scan_in) {
-        msisensorpro_scan = channel.fromPath(msisensorpro_scan_in)
+        msisensorpro_scan = channel.fromPath(msisensorpro_scan_in).collect()
     }
     else if (tools.split(',').contains('msisensorpro')) {
         MSISENSORPRO_SCAN(fasta)
