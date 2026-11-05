@@ -1,13 +1,16 @@
 {
     "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr null --known_snps_vqsr null --known_indels_vqsr null --nucleotides_per_second 100": {
         "content": [
-            18,
+            19,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -226,7 +229,7 @@
                 "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
             ]
         ],
-        "timestamp": "2026-10-01T21:01:07.670183823",
+        "timestamp": "2026-11-05T07:37:18.849644881",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -234,13 +237,16 @@
     },
     "-profile test --input tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline --dbsnp_vqsr null --known_snps_vqsr null --known_indels_vqsr null --nucleotides_per_second 20": {
         "content": [
-            26,
+            27,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -462,7 +468,7 @@
                 "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
             ]
         ],
-        "timestamp": "2026-10-01T22:12:09.417725843",
+        "timestamp": "2026-11-05T07:35:49.533842873",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
