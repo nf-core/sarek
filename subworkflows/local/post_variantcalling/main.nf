@@ -62,6 +62,10 @@ workflow POST_VARIANTCALLING {
         vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.vcf)
         tbis = tbis.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.tbi)
 
+        // meta.publish_dir is the variant_calling/ subdirectory written to csv/variantcalled.csv; keep in sync with publishDir in conf/modules
+        vcfs = vcfs.map{ meta, vcf -> [meta + [publish_dir: 'varlociraptor'], vcf] }
+        tbis = tbis.map{ meta, tbi -> [meta + [publish_dir: 'varlociraptor'], tbi] }
+
     } else if (filter_vcfs || normalize_vcfs || concatenate_vcfs ) {
 
         // IMPORTANT: When adding new SNV variant callers to Sarek, add them to this list!
@@ -77,7 +81,7 @@ workflow POST_VARIANTCALLING {
         // - samtools mpileup produces pileup format for ControlFREEC, not consensus-ready VCFs
         def small_variantcallers = ['bcftools', 'deepsomatic', 'deepvariant', 'freebayes', 'haplotypecaller',
                                     'lofreq', 'muse', 'mutect2', 'parabricks_deepsomatic', 'parabricks_deepvariant', 'parabricks_haplotypecaller',
-                                    'sentieon_dnascope', 'sentieon_haplotyper', 'sentieon_tnscope', 'strelka' ]
+                                    'parabricks_mutectcaller', 'sentieon_dnascope', 'sentieon_haplotyper', 'sentieon_tnscope', 'strelka' ]
 
         def excluded_variantcallers = ['manta', 'tiddit', 'samtools']
 
@@ -104,6 +108,7 @@ workflow POST_VARIANTCALLING {
         // Due to strelka having multiple outputs, we are adding the file name (vcf.gz) for both here to make sure the right files are joined below
         small_variant_vcfs = all_vcfs.small.map{ meta, vcfs_ -> [meta + [filename: vcfs_.name], vcfs_]}
         small_variant_tbis = all_tbis.small.map{ meta, tbis_ -> [meta + [filename: tbis_.baseName], tbis_]}
+        def small_variant_publish_dir = null
 
         // 1. Filter by PASS and custom fields
         // 2. Normalize
@@ -115,6 +120,7 @@ workflow POST_VARIANTCALLING {
 
             small_variant_vcfs = FILTER_VCFS.out.vcf
             small_variant_tbis = FILTER_VCFS.out.index
+            small_variant_publish_dir = 'filtered'
         }
 
         if (normalize_vcfs) {
@@ -123,6 +129,7 @@ workflow POST_VARIANTCALLING {
 
             small_variant_vcfs = NORMALIZE_VCFS.out.vcfs // [meta, vcf]
             small_variant_tbis = NORMALIZE_VCFS.out.tbis // [meta, tbi]
+            small_variant_publish_dir = 'normalized'
         }
 
         if (normalize_vcfs && snv_consensus_calling){
@@ -146,14 +153,15 @@ workflow POST_VARIANTCALLING {
             small_variant_tbis = consensus_tbis.mix(individual_caller_tbis)
         }
 
-        vcfs = small_variant_vcfs.mix(all_vcfs.other)
-        tbis = small_variant_tbis.mix(all_tbis.other)
+        // Set after CONSENSUS, which groups on meta; unset means variant_calling/<variantcaller>/
+        vcfs = small_variant_vcfs.map{ meta, vcf -> [meta + [publish_dir: meta.variantcaller == 'consensus' ? 'consensus' : small_variant_publish_dir], vcf] }.mix(all_vcfs.other)
+        tbis = small_variant_tbis.map{ meta, tbi -> [meta + [publish_dir: meta.variantcaller == 'consensus' ? 'consensus' : small_variant_publish_dir], tbi] }.mix(all_tbis.other)
 
         if (concatenate_vcfs) {
             CONCATENATE_GERMLINE_VCFS(germline_vcfs)
 
-            vcfs = vcfs.mix(CONCATENATE_GERMLINE_VCFS.out.vcfs)
-            tbis = tbis.mix(CONCATENATE_GERMLINE_VCFS.out.tbis)
+            vcfs = vcfs.mix(CONCATENATE_GERMLINE_VCFS.out.vcfs.map{ meta, vcf -> [meta + [publish_dir: 'concat'], vcf] })
+            tbis = tbis.mix(CONCATENATE_GERMLINE_VCFS.out.tbis.map{ meta, tbi -> [meta + [publish_dir: 'concat'], tbi] })
         }
 
 
@@ -163,6 +171,6 @@ workflow POST_VARIANTCALLING {
     }
 
     emit:
-    vcfs     // post processed vcfs [meta, vcf]
+    vcfs     // post processed vcfs [meta, vcf], meta.publish_dir set if not published to variant_calling/<variantcaller>/
     tbis     // post processed tbis [meta, tbi]
 }

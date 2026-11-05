@@ -114,6 +114,8 @@ workflow PIPELINE_INITIALISATION {
         params.cf_chrom_len,
         params.chr_dir,
         params.cnvkit_reference,
+        params.contamination_resource,
+        params.contamination_resource_tbi,
         params.dbnsfp,
         params.dbnsfp_tbi,
         params.dbsnp,
@@ -122,6 +124,8 @@ workflow PIPELINE_INITIALISATION {
         params.dragmap,
         params.fasta,
         params.fasta_fai,
+        params.force_call_alleles,
+        params.force_call_alleles_tbi,
         params.germline_resource,
         params.germline_resource_tbi,
         params.input,
@@ -172,7 +176,7 @@ workflow PIPELINE_INITIALISATION {
         params.dbsnp,
         params.fasta,
         params.germline_resource,
-        params.intervals,
+        intervalsParam(),
         params.joint_germline,
         params.joint_mutect2,
         params.known_indels,
@@ -228,7 +232,7 @@ workflow PIPELINE_COMPLETION {
                 plaintext_email,
                 outdir,
                 monochrome_logs,
-                multiqc_reports.getVal(),
+                multiqc_reports.isBound() ? multiqc_reports.getVal() : [],
             )
         }
 
@@ -249,6 +253,22 @@ workflow PIPELINE_COMPLETION {
 def validateInputParameters() {
     genomeExistsError()
     sparkAndBam()
+    parabricksMutectcallerIgnoredParams()
+    noIntervalsWithIntervals()
+}
+
+// Exit if --no_intervals would ignore a user-provided --intervals file
+def noIntervalsWithIntervals() {
+    // params.intervals is filled from the genome config by default
+    def genome_intervals = params.genomes && params.genome ? params.genomes[params.genome]?.intervals : null
+    if (params.no_intervals && intervalsParam() && params.intervals != genome_intervals) {
+        error("`--intervals ${params.intervals}` and `--no_intervals` cannot be used together: `--no_intervals` would ignore the intervals file. Remove one of them.")
+    }
+}
+
+// `--intervals false` skips the genome intervals; Nextflow 26 passes it from the CLI as a string
+def intervalsParam() {
+    return params.intervals in [false, 'false'] ? null : params.intervals
 }
 
 // Exit pipeline if incorrect --genome key provided
@@ -268,6 +288,18 @@ def sparkAndBam() {
         def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  --use_gatk_spark with 'markduplicates' is not compatible with --save_mapped.\n" + "  Spark markduplicates requires name-sorted input, so the saved mapped\n" + "  alignment (BAM or CRAM) would be name-sorted and cannot be indexed.\n" + "  Either drop --save_mapped, or switch to the non-Spark markduplicates path.\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         System.err.println(error_string)
         error(error_string)
+    }
+}
+
+// Warn about options that the Parabricks mutectcaller path cannot honour
+def parabricksMutectcallerIgnoredParams() {
+    if (params.tools && params.tools.split(',').contains('parabricks_mutectcaller')) {
+        if (params.joint_mutect2) {
+            log.warn("`--joint_mutect2` is not supported by Parabricks mutectcaller and is ignored for `parabricks_mutectcaller`: samples are called per tumor-normal pair or per tumor-only sample.")
+        }
+        if (params.ignore_soft_clipped_bases) {
+            log.warn("`--ignore_soft_clipped_bases` is not supported by Parabricks mutectcaller and is ignored for `parabricks_mutectcaller`: soft-clipped bases are used during calling.")
+        }
     }
 }
 

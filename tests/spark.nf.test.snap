@@ -14,7 +14,7 @@
                     "gawk": "5.3.0"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "GATK4SPARK_APPLYBQSR": {
                     "gatk4": "4.6.2.0"
@@ -218,7 +218,7 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,2f16aae68ba6e7c486f6fd9ae8c46c80",
                 "mosdepth_perchrom.txt:md5,3a7533e81978d33159d27b18cd337565",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
-                "multiqc_fastqc.txt:md5,d54614f8b2de16511949dbbde8f38a5d",
+                "multiqc_fastqc.txt:md5,bcc08e4dc6b445a36ddcbf16230678c8",
                 "samtools-stats-dp.txt:md5,6e3695fb7582152c9de1b527e3578d25",
                 "samtools_alignment_plot.txt:md5,46e8824724863d243a01cc239a5eff15",
                 "samtools_insert_size.txt:md5,17c44517c58803f9c078f6d9b55aed00",
@@ -243,7 +243,7 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1"
             ]
         ],
-        "timestamp": "2026-10-01T21:07:19.070022701",
+        "timestamp": "2026-11-03T08:07:33.02475616",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

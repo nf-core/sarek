@@ -17,7 +17,7 @@
                     "fastp": "1.1.0"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.7.0.0",
@@ -320,7 +320,7 @@
                 "mosdepth_perchrom.txt:md5,29af8f8744a88e2ec0486292d541559f",
                 "multiqc_citations.txt:md5,0e2971e7a873c92592112775fa99fb02",
                 "multiqc_fastp.txt:md5,39b27871814457c42ea33aa131b8ecfc",
-                "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
+                "multiqc_fastqc.txt:md5,c3bf8ebe06bc1076e7e899775edbf3ed",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -355,10 +355,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-14T14:58:05.783285732",
+        "timestamp": "2026-11-03T08:02:09.296000598",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.0"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --split_fastq 150000": {
@@ -379,7 +379,7 @@
                     "fastp": "1.1.0"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.7.0.0",
@@ -694,7 +694,7 @@
                 "mosdepth_perchrom.txt:md5,b9304bb6dee33d25255e19693c0a4dd8",
                 "multiqc_citations.txt:md5,0e2971e7a873c92592112775fa99fb02",
                 "multiqc_fastp.txt:md5,e5a4f17bb627d529e829f11fda3bddc3",
-                "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
+                "multiqc_fastqc.txt:md5,c3bf8ebe06bc1076e7e899775edbf3ed",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -741,10 +741,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-14T15:01:13.327477317",
+        "timestamp": "2026-11-03T08:00:58.62461287",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.0"
+            "nextflow": "25.10.4"
         }
     },
     "-profile test --trim_fastq (no save)": {
@@ -765,7 +765,7 @@
                     "fastp": "1.1.0"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.7.0.0",
@@ -1062,7 +1062,7 @@
                 "mosdepth_perchrom.txt:md5,a0990e98cdd2cd5540d07f504f516ccf",
                 "multiqc_citations.txt:md5,0e2971e7a873c92592112775fa99fb02",
                 "multiqc_fastp.txt:md5,8c270b44aaec9ee1bd7bf19d2150a51e",
-                "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
+                "multiqc_fastqc.txt:md5,c3bf8ebe06bc1076e7e899775edbf3ed",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -1093,10 +1093,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-14T14:59:35.034365352",
+        "timestamp": "2026-11-03T08:01:02.829331453",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.0"
+            "nextflow": "25.10.4"
         }
     }
 }

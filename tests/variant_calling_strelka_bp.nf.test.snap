@@ -274,10 +274,13 @@
     },
     "-profile test --tools manta,strelka somatic": {
         "content": [
-            36,
+            37,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -543,7 +546,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:35:43.999417751",
+        "timestamp": "2026-10-30T11:37:53.71730685",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

@@ -1,13 +1,16 @@
 {
     "-profile test --tools mpileup --input recalibrated_tumoronly.csv": {
         "content": [
-            11,
+            12,
             {
                 "BCFTOOLS_MPILEUP": {
                     "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -183,7 +186,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:33:46.74937531",
+        "timestamp": "2026-10-30T09:29:56.686011274",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -563,13 +566,16 @@
     },
     "-profile test --tools mpileup --input recalibrated_germline.csv --nucleotides_per_second 20": {
         "content": [
-            15,
+            16,
             {
                 "BCFTOOLS_MPILEUP": {
                     "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -752,7 +758,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-10-23T06:26:55.541500902",
+        "timestamp": "2026-10-30T09:26:57.683981628",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -760,13 +766,16 @@
     },
     "-profile test --tools mpileup --input recalibrated_germline.csv": {
         "content": [
-            11,
+            12,
             {
                 "BCFTOOLS_MPILEUP": {
                     "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -942,7 +951,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:29:53.620097595",
+        "timestamp": "2026-10-30T09:25:32.72709669",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

@@ -47,6 +47,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [Parabricks DeepSomatic](#parabricks-deepsomatic)
     - [Parabricks DeepVariant](#parabricks-deepvariant)
     - [Parabricks HaplotypeCaller](#parabricks-haplotypecaller)
+    - [Parabricks MutectCaller](#parabricks-mutectcaller)
     - [Sentieon DNAscope](#sentieon-dnascope)
       - [Sentieon DNAscope joint germline variant calling](#sentieon-dnascope-joint-germline-variant-calling)
     - [Sentieon Haplotyper](#sentieon-haplotyper)
@@ -512,9 +513,11 @@ If the haplotype-called VCF files are not filtered, then Sarek should be run wit
 #### GATK Mutect2
 
 [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2) calls somatic SNVs and indels via local assembly of haplotypes.
+Raw calls are always filtered with GATK `FilterMutectCalls`. When `--contamination_resource` or `--germline_resource` is provided, the filter also uses contamination estimates from GATK `GetPileupSummaries` and `CalculateContamination`. Read-orientation artefacts are modelled with GATK `LearnReadOrientationModel`.
 When `--joint_mutect2` is used, Mutect2 subworkflow outputs will be saved in a subfolder named with the patient ID and `{patient}.mutect2.vcf.gz` file will contain variant calls from all of the normal and tumor samples of the patient.
 For further reading and documentation see the [Mutect2 manual](https://gatk.broadinstitute.org/hc/en-us/articles/360035531132).
 It is not required, but recommended to have a [panel of normals (PON)](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON) using at least 40 normal samples to get filtered somatic calls. When using `--genome GATK.GRCh38`, a panel-of-normals file is available. However, it is _highly_ recommended to create one matching your tumor samples. Creating your own panel-of-normals is currently not natively supported by the pipeline. See [here](https://gatk.broadinstitute.org/hc/en-us/articles/360035531132) for how to create one manually.
+When `--force_call_alleles` is used, Mutect2 force-calls all alleles in the supplied VCF in addition to the variants it discovers, and emits them in the output VCF regardless of their evidence. For further reading see the [Mutect2 tool index](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2).
 
 <details markdown="1">
 <summary>Output files for tumor-only and tumor/normal paired samples</summary>
@@ -528,13 +531,13 @@ Files created:
 - `{sample,tumorsample_vs_normalsample,patient}.mutect2.vcf.gz.stats`
   - a stats file generated during calling of raw variants (needed for filtering)
 - `{sample,tumorsample_vs_normalsample}.mutect2.contamination.table`
-  - table calculating the fraction of reads coming from cross-sample contamination
+  - table calculating the fraction of reads coming from cross-sample contamination (only with `--contamination_resource` or `--germline_resource`)
 - `{sample,tumorsample_vs_normalsample}.mutect2.segmentation.table`
-  - table containing segmentation of the tumor by minor allele fraction
+  - table containing segmentation of the tumor by minor allele fraction (only with `--contamination_resource` or `--germline_resource`)
 - `{sample,tumorsample_vs_normalsample,patient}.mutect2.artifactprior.tar.gz`
   - prior probabilities for read orientation artifacts
 - `{sample,tumorsample,normalsample}.mutect2.pileups.table`
-  - tabulates pileup metrics for inferring contamination
+  - tabulates pileup metrics for inferring contamination, in a directory per sample (only with `--contamination_resource` or `--germline_resource`)
 - `{sample,tumorsample_vs_normalsample,patient}.mutect2.filtered.vcf.gz` and `{sample,tumorsample_vs_normalsample,patient}.mutect2.filtered.vcf.gz.tbi`
   - filtered Mutect2 calls VCF with tabix index based on the probability that a variant is somatic
 - `{sample,tumorsample_vs_normalsample,patient}.mutect2.filtered.vcf.gz.filteringStats.tsv`
@@ -611,6 +614,36 @@ Files created:
 
 - `<sample>.parabricks_haplotypecaller.vcf.gz` and `<sample>.parabricks_haplotypecaller.vcf.gz.tbi`
   - VCF with tabix index
+
+</details>
+
+#### Parabricks MutectCaller
+
+[Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html) is a GPU-accelerated implementation of GATK Mutect2 for calling somatic SNVs and indels in tumour-only and tumour-normal samples. The germline resource, if provided, is also passed to the caller as the germline prior. Raw calls are always filtered with GATK `FilterMutectCalls`. When `--contamination_resource` or `--germline_resource` is provided, the filter also uses contamination estimates from GATK `GetPileupSummaries` and `CalculateContamination`. Read-orientation artefacts are modelled with GATK `LearnReadOrientationModel`. A panel of normals (`--pon`) is used via Parabricks PoN annotation (`prepon`/`postpon`). With `--force_call_alleles`, the alleles in the supplied VCF are force-called as for GATK Mutect2.
+
+<details markdown="1">
+<summary>Output files for tumour-only and tumour-normal samples</summary>
+
+**Output directory: `{outdir}/variant_calling/parabricks_mutectcaller/{sample,tumoursample_vs_normalsample}/`**
+
+Files created:
+
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.vcf.gz` and `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.tbi`
+  - unfiltered (raw) MutectCaller calls VCF with tabix index
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.vcf.gz.stats`
+  - a stats file generated during calling of raw variants (needed for filtering)
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.contamination.table`
+  - table calculating the fraction of reads coming from cross-sample contamination (only with `--contamination_resource` or `--germline_resource`)
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.segmentation.table`
+  - table containing segmentation of the tumour by minor allele fraction (only with `--contamination_resource` or `--germline_resource`)
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.artifactprior.tar.gz`
+  - prior probabilities for read orientation artefacts
+- `{sample,tumoursample,normalsample}.parabricks_mutectcaller.pileups.table`
+  - tabulates pileup metrics for inferring contamination, in a directory per sample (only with `--contamination_resource` or `--germline_resource`)
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.filtered.vcf.gz` and `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.filtered.vcf.gz.tbi`
+  - filtered calls VCF with tabix index based on the probability that a variant is somatic
+- `{sample,tumoursample_vs_normalsample}.parabricks_mutectcaller.filtered.vcf.gz.filteringStats.tsv`
+  - a stats file generated during the filtering of called variants
 
 </details>
 
@@ -1513,6 +1546,8 @@ Contains reference folders generated by the pipeline. These files are only publi
   - Reference files generated by [CNVKit](https://cnvkit.readthedocs.io/en/stable/)
 - `dragmap/`
   - Index corresponding to the [DragMap](https://github.com/Illumina/dragmap) aligner
+- `contamination_resource/`
+  - Tabix index generated by [Tabix](http://www.htslib.org/doc/tabix.html) from the given contamination resource file
 - `dbsnp/`
   - Tabix index generated by [Tabix](http://www.htslib.org/doc/tabix.html) from the given dbsnp file
 - `dict/`
@@ -1522,11 +1557,13 @@ Contains reference folders generated by the pipeline. These files are only publi
 - `germline_resource/`
   - Tabix index generated by [Tabix](http://www.htslib.org/doc/tabix.html) from the given gernline resource file
 - `intervals/`
-  - Bed files in various stages: .bed, .bed.gz, .bed per chromosome, .bed.gz per chromsome
+  - Bed files in various stages: .bed, .bed.gz, .bed per chromosome, .bed.gz per chromsome, and a provided `--intervals` BED sorted in reference order (`.sorted.bed`)
 - `known_indels/`
   - Tabix index generated by [Tabix](http://www.htslib.org/doc/tabix.html) from the given known indels file
 - `msi/`
   - [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro) scan of the reference genome to get microsatellites information
+- `force_call_alleles/`
+  - Tabix index generated by [Tabix](http://www.htslib.org/doc/tabix.html) from the given force-call alleles file
 - `pon/`
   - Tabix index generated by [Tabix](http://www.htslib.org/doc/tabix.html) from the given panel-of-normals file
   </details>
