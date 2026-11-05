@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2360](https://github.com/nf-core/sarek/pull/2360) - Point `csv/variantcalled.csv` at the published filtered, normalised, concatenated and Varlociraptor VCFs instead of the `variant_calling/<variantcaller>/` directory ([#2204](https://github.com/nf-core/sarek/issues/2204))
 - [#2363](https://github.com/nf-core/sarek/pull/2363) - Fail when `--no_intervals` is combined with a user-provided `--intervals` file, which it would ignore ([#2131](https://github.com/nf-core/sarek/issues/2131))
 - [#2364](https://github.com/nf-core/sarek/pull/2364) - Restore `--intervals false` to ignore the intervals from `--genome` and generate them from the FASTA reference, which stopped working with nf-schema 2.7.2 and Nextflow 26 passing CLI values as strings
+- [#2373](https://github.com/nf-core/sarek/pull/2373) - Fix consensus VCFs intermittently listed under `variant_calling/normalized/` instead of `variant_calling/consensus/` in `csv/variantcalled.csv`: consensus calls no longer set `variantcaller` on a meta map shared across channels
 
 ### Removed
 
