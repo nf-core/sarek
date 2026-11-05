@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [#2322](https://github.com/nf-core/sarek/pull/2322) - Fix validation for step annotate
 - [#2347](https://github.com/nf-core/sarek/pull/2347) - Fix DeepSomatic VCF merge failing with `sample entries that don't match the other files` when an interval yields no records (e.g. `*_alt` contigs): pass tumour and normal sample names explicitly, including to `postprocess_variants`, which otherwise writes `default`
 - [#2349](https://github.com/nf-core/sarek/pull/2349) - Filter Mutect2 calls with `FilterMutectCalls` also without `--germline_resource` ([#1546](https://github.com/nf-core/sarek/issues/1546)), so downstream files of such runs are now named after `*.mutect2.filtered.vcf.gz`; with `--joint_mutect2`, tumours of one patient with different samplesheet `contamination` values no longer split the patient into several joint calls
 - [#2352](https://github.com/nf-core/sarek/pull/2352) - Sort the `--intervals` BED in reference order with `bedtools sort` before splitting it, fixing out-of-order pileup tables that made `CalculateContamination` fail with `Invalid interval` ([#899](https://github.com/nf-core/sarek/issues/899), [#2281](https://github.com/nf-core/sarek/issues/2281)). Fail early when the BED has contigs missing from the reference, start > end, or intervals past the contig end ([#97](https://github.com/nf-core/sarek/issues/97), [#934](https://github.com/nf-core/sarek/issues/934)). CNVKit target and antitarget BED names now carry the `.sorted` suffix of the sorted intervals file
@@ -72,7 +73,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2277](https://github.com/nf-core/sarek/pull/2277) - Fix `BAM_MARKDUPLICATES` emitting each alignment twice under `-stub`, which failed the tumour-normal pairing join ([#2280](https://github.com/nf-core/sarek/issues/2280))
 - [#2371](https://github.com/nf-core/sarek/pull/2371) - Correct the dev CHANGELOG: move refactoring entries to the developer section, move #2339 out of 3.11.0, and complete the dependency and parameter tables
-- [#2322](https://github.com/nf-core/sarek/pull/2322) - Fix validation for step annotate
 
 #### Removed
 
