@@ -17,6 +17,8 @@ process PARABRICKS_MUTECTCALLER {
     path panel_of_normals_index
     path germline_resource
     path germline_resource_index
+    path alleles
+    path alleles_index
 
     output:
     tuple val(meta), path("${prefix}.vcf.gz"),       emit: vcf
@@ -52,6 +54,10 @@ process PARABRICKS_MUTECTCALLER {
     def germline_index_command = germline_resource && germline_resource_index.name != "${germline_resource.name}.tbi" ? "cp -L ${germline_resource_index} ${germline_resource}.tbi" : ""
     def germline_command = germline_resource ? "--mutect-germline-resource ${germline_resource}" : ""
 
+    // mutectcaller only finds the alleles index at <alleles>.tbi and reads the VCF without it otherwise
+    def alleles_index_command = alleles && alleles_index.name != "${alleles.name}.tbi" ? "cp -L ${alleles_index} ${alleles}.tbi" : ""
+    def alleles_command = alleles ? "--mutect-alleles ${alleles}" : ""
+
     def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ""
     def normal_bam_flag = normal_bam ? "--in-normal-bam ${normal_bam}" : ""
     """
@@ -60,6 +66,7 @@ process PARABRICKS_MUTECTCALLER {
     ${prepon_command}
 
     ${germline_index_command}
+    ${alleles_index_command}
 
     pbrun \\
         mutectcaller \\
@@ -68,6 +75,7 @@ process PARABRICKS_MUTECTCALLER {
         ${normal_bam_flag} \\
         ${pon_command} \\
         ${germline_command} \\
+        ${alleles_command} \\
         --out-vcf ${mutect_out} \\
         ${intervals_command} \\
         ${num_gpus} \\

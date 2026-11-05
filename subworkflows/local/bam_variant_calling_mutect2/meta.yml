@@ -37,6 +37,14 @@ input:
       type: file
       description: GATK sequence dictionary
       pattern: "*.dict"
+  - force_call_alleles:
+      type: file
+      description: VCF of alleles that Mutect2 force-calls in addition to the variants it discovers (--alleles).
+      pattern: "*.vcf.gz"
+  - force_call_alleles_tbi:
+      type: file
+      description: Index file for the force-call alleles VCF.
+      pattern: "*.vcf.gz.tbi"
   - germline_resource:
       type: file
       description: Population vcf of germline sequencing, containing allele fractions.
@@ -44,6 +52,14 @@ input:
   - germline_resource_tbi:
       type: file
       description: Index file for the germline resource.
+      pattern: "*.vcf.gz.tbi"
+  - contamination_resource:
+      type: file
+      description: VCF of common biallelic germline SNPs with population allele frequencies, used by getpileupsummaries.
+      pattern: "*.vcf.gz"
+  - contamination_resource_tbi:
+      type: file
+      description: Index file for the contamination resource.
       pattern: "*.vcf.gz.tbi"
   - panel_of_normals:
       type: file
@@ -60,9 +76,9 @@ input:
   - joint_mutect2:
       type: boolean
       description: Run mutect2 in joint mode, calling all samples of a patient together.
-  - germline_resource_provided:
+  - contamination_resource_provided:
       type: boolean
-      description: Whether a germline resource was provided, which enables contamination estimation before filtering.
+      description: Whether a contamination resource was provided, which enables contamination estimation before filtering.
 output:
   - vcf:
       type: file

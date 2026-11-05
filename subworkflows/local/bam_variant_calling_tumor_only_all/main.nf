@@ -29,18 +29,22 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     dict                          // channel: [mandatory] dict
     fasta                         // channel: [mandatory] fasta
     fasta_fai                     // channel: [mandatory] fasta_fai
+    force_call_alleles            // channel: [optional]  force_call_alleles
+    force_call_alleles_tbi        // channel: [optional]  force_call_alleles_tbi
     germline_resource             // channel: [optional]  germline_resource
     germline_resource_tbi         // channel: [optional]  germline_resource_tbi
+    contamination_resource        // channel: [optional]  contamination_resource
+    contamination_resource_tbi    // channel: [optional]  contamination_resource_tbi
     intervals                     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
     intervals_bed_gz_tbi_combined // channel: [mandatory] intervals/target regions in one file zipped
     mappability
     msisensor2_models
-    panel_of_normals              // channel: [optional]  panel_of_normals
-    panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
-    joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
-    wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
-    germline_resource_provided    // boolean: [mandatory] whether a germline resource was provided
+    panel_of_normals                // channel: [optional]  panel_of_normals
+    panel_of_normals_tbi            // channel: [optional]  panel_of_normals_tbi
+    joint_mutect2                   // boolean: [mandatory] [default: false] run mutect2 in joint mode
+    wes                             // boolean: [mandatory] [default: false] whether targeted data is processed
+    contamination_resource_provided // boolean: [mandatory] whether a contamination resource was provided
 
     main:
     // Channels are often remapped to match module/subworkflow
@@ -133,13 +137,17 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             fasta,
             fasta_fai,
             dict,
+            force_call_alleles,
+            force_call_alleles_tbi,
             germline_resource,
             germline_resource_tbi,
+            contamination_resource,
+            contamination_resource_tbi,
             panel_of_normals,
             panel_of_normals_tbi,
             intervals,
             joint_mutect2,
-            germline_resource_provided,
+            contamination_resource_provided,
         )
 
         vcf_mutect2 = BAM_VARIANT_CALLING_MUTECT2.out.vcf
@@ -158,13 +166,17 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         fasta,
         fasta_fai,
         dict,
+        force_call_alleles,
+        force_call_alleles_tbi,
         germline_resource,
         germline_resource_tbi,
+        contamination_resource,
+        contamination_resource_tbi,
         panel_of_normals,
         panel_of_normals_tbi,
         intervals_bed_combined,
         intervals,
-        germline_resource_provided,
+        contamination_resource_provided,
     )
 
     vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER.out.vcf

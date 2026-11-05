@@ -9,17 +9,21 @@ include { GATK4_MUTECT2 as MUTECT2                   } from '../../../modules/nf
 
 workflow BAM_VARIANT_CALLING_MUTECT2 {
     take:
-    cram                       // channel: [mandatory] [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ] one row per pair or tumour-only sample ([] for the normal)
-    fasta                      // channel: [mandatory] [ meta, fasta ]
-    fai                        // channel: [mandatory] [ meta, fai ]
-    dict                       // channel: [mandatory] [ meta, dict ]
-    germline_resource          // channel: [optional]  [ germline_resource ] or []
-    germline_resource_tbi      // channel: [optional]  [ germline_resource_tbi ] or []
-    panel_of_normals           // channel: [optional]  [ panel_of_normals ] or []
-    panel_of_normals_tbi       // channel: [optional]  [ panel_of_normals_tbi ] or []
-    intervals                  // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
-    joint_mutect2              // boolean: [mandatory] call all samples of a patient together
-    germline_resource_provided // boolean: [mandatory] whether a germline resource was provided, so contamination tables are expected
+    cram                            // channel: [mandatory] [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ] one row per pair or tumour-only sample ([] for the normal)
+    fasta                           // channel: [mandatory] [ meta, fasta ]
+    fai                             // channel: [mandatory] [ meta, fai ]
+    dict                            // channel: [mandatory] [ meta, dict ]
+    force_call_alleles              // channel: [optional]  [ force_call_alleles ] or []
+    force_call_alleles_tbi          // channel: [optional]  [ force_call_alleles_tbi ] or []
+    germline_resource               // channel: [optional]  [ germline_resource ] or []
+    germline_resource_tbi           // channel: [optional]  [ germline_resource_tbi ] or []
+    contamination_resource          // channel: [optional]  [ contamination_resource ] or [], common biallelic SNPs for getpileupsummaries
+    contamination_resource_tbi      // channel: [optional]  [ contamination_resource_tbi ] or []
+    panel_of_normals                // channel: [optional]  [ panel_of_normals ] or []
+    panel_of_normals_tbi            // channel: [optional]  [ panel_of_normals_tbi ] or []
+    intervals                       // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
+    joint_mutect2                   // boolean: [mandatory] call all samples of a patient together
+    contamination_resource_provided // boolean: [mandatory] whether a contamination resource was provided, so contamination tables are expected
 
     main:
     if (joint_mutect2) {
@@ -44,7 +48,7 @@ workflow BAM_VARIANT_CALLING_MUTECT2 {
         .combine(intervals)
         .map { meta, input_list, input_index_list, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], input_list, input_index_list, intervals_] }
 
-    MUTECT2(input_intervals, fasta, fai.map { meta, index -> [ meta, index, [] ] }, dict, [], [], germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
+    MUTECT2(input_intervals, fasta, fai.map { meta, index -> [ meta, index, [] ] }, dict, force_call_alleles, force_call_alleles_tbi, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
 
     // Figuring out if there is one or more vcf(s) from the same sample
     vcf_branch = MUTECT2.out.vcf.branch { meta, _vcf ->
@@ -98,9 +102,9 @@ workflow BAM_VARIANT_CALLING_MUTECT2 {
         fasta,
         fai,
         dict,
-        germline_resource,
-        germline_resource_tbi,
-        germline_resource_provided,
+        contamination_resource,
+        contamination_resource_tbi,
+        contamination_resource_provided,
         joint_mutect2,
     )
 

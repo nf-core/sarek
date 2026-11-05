@@ -13,7 +13,8 @@ workflow CHANNEL_VARIANT_CALLING_CREATE_CSV {
             def patient       = meta.patient
             def sample        = meta.id
             def variantcaller = meta.variantcaller
-            vcf = "${outdir}/variant_calling/${variantcaller}/${meta.id}/${vcf.getName()}"
+            def publish_dir   = meta.publish_dir ?: variantcaller
+            vcf = "${outdir}/variant_calling/${publish_dir}/${meta.id}/${vcf.getName()}"
             ["variantcalled.csv", "patient,sample,variantcaller,vcf\n${patient},${sample},${variantcaller},${vcf}\n"]
         }
 }
