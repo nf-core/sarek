@@ -59,6 +59,7 @@ workflow FASTQ_PREPROCESS_GATK {
     known_sites_indels_tbi
     bbsplit_index
     save_output_as_bam
+    aligner
 
     main:
 
@@ -81,7 +82,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 fasta_fai,
                 index_alignment,
                 params.group_by_umi_strategy,
-                params.aligner,
+                aligner,
             )
 
             bam_converted_from_fastq = FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.consensusbam.map { meta, bam -> [meta, bam, []] }

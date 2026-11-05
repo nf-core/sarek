@@ -245,6 +245,7 @@ workflow SAREK {
                 known_sites_indels_tbi,
                 bbsplit_index,
                 params.save_output_as_bam,
+                aligner,
             )
 
             // Gather preprocessing output
