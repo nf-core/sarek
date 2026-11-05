@@ -140,6 +140,20 @@
                 "meta": ["vep_species"],
                 "type": "string"
             },
+            "vcf_contamination_resource_vcf": {
+                "meta": ["contamination_resource"],
+                "type": "string",
+                "pattern": "^\\S+\\.vcf\\.gz$"
+            },
+            "vcf_contamination_resource_vcf_tbi": {
+                "meta": ["contamination_resource_tbi"],
+                "type": "string",
+                "pattern": "^\\S+\\.vcf\\.gz\\.tbi$"
+            },
+            "vcf_contamination_resource_vcf_source": {
+                "meta": ["vcf_contamination_resource_vcf_source"],
+                "type": "string"
+            },
             "vcf_dbsnp_vcf": {
                 "meta": ["dbsnp"],
                 "type": "string",

@@ -251,6 +251,8 @@ def referenceParams() {
         'bwamem2',
         'cf_chrom_len',
         'chr_dir',
+        'contamination_resource',
+        'contamination_resource_tbi',
         'dbsnp',
         'dbsnp_tbi',
         'dbsnp_vqsr',
