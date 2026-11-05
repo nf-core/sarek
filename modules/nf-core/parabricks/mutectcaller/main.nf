@@ -15,11 +15,16 @@ process PARABRICKS_MUTECTCALLER {
     tuple val(meta2), path(fasta), path(fasta_fai)
     path panel_of_normals
     path panel_of_normals_index
+    path germline_resource
+    path germline_resource_index
+    path alleles
+    path alleles_index
 
     output:
     tuple val(meta), path("${prefix}.vcf.gz"),       emit: vcf
     tuple val(meta), path("${prefix}.vcf.gz.tbi"),   emit: tbi
     tuple val(meta), path("${prefix}.vcf.gz.stats"), emit: stats
+    tuple val(meta), path("${prefix}.f1r2.tar.gz"),  emit: f1r2, optional: true
     path "compatible_versions.yml",                  emit: compatible_versions, optional: true
     tuple val("${task.process}"), val('parabricks'), eval("pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'"), topic: versions, emit: versions_parabricks
 
@@ -45,6 +50,14 @@ process PARABRICKS_MUTECTCALLER {
     def stats_rename   = panel_of_normals ? "mv ${prefix}.vcf.stats ${prefix}.vcf.gz.stats" : ""
     def postpon_command = panel_of_normals ? "pbrun postpon --in-vcf ${prefix}.vcf --in-pon-file ${panel_of_normals} --out-vcf ${prefix}.vcf.gz" : ""
 
+    // mutectcaller expects the germline resource index at <germline_resource>.tbi
+    def germline_index_command = germline_resource && germline_resource_index.name != "${germline_resource.name}.tbi" ? "cp -L ${germline_resource_index} ${germline_resource}.tbi" : ""
+    def germline_command = germline_resource ? "--mutect-germline-resource ${germline_resource}" : ""
+
+    // mutectcaller only finds the alleles index at <alleles>.tbi and reads the VCF without it otherwise
+    def alleles_index_command = alleles && alleles_index.name != "${alleles.name}.tbi" ? "cp -L ${alleles_index} ${alleles}.tbi" : ""
+    def alleles_command = alleles ? "--mutect-alleles ${alleles}" : ""
+
     def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ""
     def normal_bam_flag = normal_bam ? "--in-normal-bam ${normal_bam}" : ""
     """
@@ -52,12 +65,17 @@ process PARABRICKS_MUTECTCALLER {
     ${pon_index_command}
     ${prepon_command}
 
+    ${germline_index_command}
+    ${alleles_index_command}
+
     pbrun \\
         mutectcaller \\
         --ref ${fasta} \\
         --in-tumor-bam ${tumor_bam} \\
         ${normal_bam_flag} \\
         ${pon_command} \\
+        ${germline_command} \\
+        ${alleles_command} \\
         --out-vcf ${mutect_out} \\
         ${intervals_command} \\
         ${num_gpus} \\
@@ -74,6 +92,7 @@ process PARABRICKS_MUTECTCALLER {
     echo "" | gzip > ${prefix}.vcf.gz
     touch ${prefix}.vcf.gz.tbi
     touch ${prefix}.vcf.gz.stats
+    echo "" | gzip > ${prefix}.f1r2.tar.gz
 
     # Capture the full version output once and store it in a variable
     pbrun_version_output=\$(pbrun mutectcaller --version 2>&1)

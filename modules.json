@@ -60,6 +60,11 @@
                         "git_sha": "feef37435aea56816adf4b3bde1fc76aac327a8d",
                         "installed_by": ["modules"]
                     },
+                    "bedtools/sort": {
+                        "branch": "master",
+                        "git_sha": "7b3452a23773f687ededb4befd037920e5a51341",
+                        "installed_by": ["modules"]
+                    },
                     "bwa/index": {
                         "branch": "master",
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
@@ -178,7 +183,7 @@
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
+                        "git_sha": "18eb358065b06f2d3419e37383b002fe7db3da02",
                         "installed_by": ["modules"]
                     },
                     "fgbio/callmolecularconsensusreads": {
@@ -248,7 +253,7 @@
                     },
                     "gatk4/filtermutectcalls": {
                         "branch": "master",
-                        "git_sha": "b2bcd8312599aacd849e69721e20ac8138018f83",
+                        "git_sha": "eaad1989fddb5690f97bc612db4932055466e4a9",
                         "installed_by": ["modules"]
                     },
                     "gatk4/filtervarianttranches": {
@@ -418,7 +423,7 @@
                     },
                     "parabricks/applybqsr": {
                         "branch": "master",
-                        "git_sha": "541af7c6735edaae882567b910071b563e9b1317",
+                        "git_sha": "78522f4889133e32443c76ba9b4703cbdf3ac331",
                         "installed_by": ["modules"]
                     },
                     "parabricks/dbsnp": {
@@ -429,27 +434,27 @@
                     },
                     "parabricks/deepsomatic": {
                         "branch": "master",
-                        "git_sha": "3ccf6cbb9868aa36cf77b9490af7b47595eaab17",
+                        "git_sha": "78522f4889133e32443c76ba9b4703cbdf3ac331",
                         "installed_by": ["modules"]
                     },
                     "parabricks/deepvariant": {
                         "branch": "master",
-                        "git_sha": "3e0ec6464725c64d81abe928e15a6750d5fdd272",
+                        "git_sha": "78522f4889133e32443c76ba9b4703cbdf3ac331",
                         "installed_by": ["modules"]
                     },
                     "parabricks/fq2bam": {
                         "branch": "master",
-                        "git_sha": "4bfaaac6e5818b452040366ed85a42eeddcf46a2",
+                        "git_sha": "78522f4889133e32443c76ba9b4703cbdf3ac331",
                         "installed_by": ["modules"]
                     },
                     "parabricks/haplotypecaller": {
                         "branch": "master",
-                        "git_sha": "7b3452a23773f687ededb4befd037920e5a51341",
+                        "git_sha": "78522f4889133e32443c76ba9b4703cbdf3ac331",
                         "installed_by": ["modules"]
                     },
                     "parabricks/mutectcaller": {
                         "branch": "master",
-                        "git_sha": "810182dd17d4b2bba8ec29ad825aef0084689f5a",
+                        "git_sha": "b7e7de899fa7e63258475cc3d72cd805c537cae5",
                         "installed_by": ["modules"]
                     },
                     "rbt/vcfsplit": {
@@ -668,7 +673,7 @@
                     },
                     "utils_nfcore_pipeline": {
                         "branch": "master",
-                        "git_sha": "a3fb7351b1fdb2b1de282b765816bbea190e86a8",
+                        "git_sha": "6ef220fd9252b42fb3c50348bbdbcb6246730686",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfschema_plugin": {

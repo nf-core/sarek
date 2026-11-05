@@ -12,7 +12,7 @@ include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC            } from '../bam_var
 include { BAM_VARIANT_CALLING_SOMATIC_DEEPSOMATIC             } from '../bam_variant_calling_somatic_deepsomatic'
 include { BAM_VARIANT_CALLING_SOMATIC_MANTA                   } from '../bam_variant_calling_somatic_manta'
 include { BAM_VARIANT_CALLING_SOMATIC_MUSE                    } from '../bam_variant_calling_somatic_muse'
-include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2                 } from '../bam_variant_calling_somatic_mutect2'
+include { BAM_VARIANT_CALLING_MUTECT2                         } from '../bam_variant_calling_mutect2'
 include { BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC  } from '../bam_variant_calling_somatic_parabricks_deepsomatic'
 include { BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER         } from '../bam_variant_calling_parabricks_mutectcaller'
 include { BAM_VARIANT_CALLING_SOMATIC_STRELKA                 } from '../bam_variant_calling_somatic_strelka'
@@ -34,22 +34,27 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     dict                          // channel: [mandatory] dict
     fasta                         // channel: [mandatory] fasta
     fasta_fai                     // channel: [mandatory] fasta_fai
+    force_call_alleles            // channel: [optional]  force_call_alleles
+    force_call_alleles_tbi        // channel: [optional]  force_call_alleles_tbi
     germline_resource             // channel: [optional]  germline_resource
     germline_resource_tbi         // channel: [optional]  germline_resource_tbi
+    contamination_resource        // channel: [optional]  contamination_resource
+    contamination_resource_tbi    // channel: [optional]  contamination_resource_tbi
     intervals                     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
     intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
     intervals_bed_gz_tbi_combined // channel: [mandatory] intervals/target regions in one file zipped
     mappability
-    msisensorpro_scan             // channel: [optional]  msisensorpro_scan
-    panel_of_normals              // channel: [optional]  panel_of_normals
-    panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
-    allele_files                  // channel: [optional]  ascat allele files
-    loci_files                    // channel: [optional]  ascat loci files
-    gc_file                       // channel: [optional]  ascat gc content file
-    rt_file                       // channel: [optional]  ascat rt file
-    joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
-    wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
+    msisensorpro_scan               // channel: [optional]  msisensorpro_scan
+    panel_of_normals                // channel: [optional]  panel_of_normals
+    panel_of_normals_tbi            // channel: [optional]  panel_of_normals_tbi
+    allele_files                    // channel: [optional]  ascat allele files
+    loci_files                      // channel: [optional]  ascat loci files
+    gc_file                         // channel: [optional]  ascat gc content file
+    rt_file                         // channel: [optional]  ascat rt file
+    joint_mutect2                   // boolean: [mandatory] [default: false] run mutect2 in joint mode
+    wes                             // boolean: [mandatory] [default: false] whether targeted data is processed
+    contamination_resource_provided // boolean: [mandatory] whether a contamination resource was provided
 
     main:
     // channels are often remapped to match module/subworkflow
@@ -179,7 +184,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // INDEXCOV
     //   WGS only
-    if (params.wes == false && tools.split(',').contains('indexcov')) {
+    if (wes == false && tools.split(',').contains('indexcov')) {
         BAM_VARIANT_CALLING_INDEXCOV(
             cram,
             fasta,
@@ -231,28 +236,26 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // MUTECT2
     if (tools && tools.split(',').contains('mutect2')) {
-        // joint_mutect2 mode needs different meta.map than regular mode
-        //   we need to keep all fields and then remove on a per-tool-basis to ensure proper joining at the filtering step
-        BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
-            cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
-                joint_mutect2
-                    ? [meta + [id: meta.patient], [normal_cram, tumor_cram], [normal_crai, tumor_crai]]
-                    : [meta, [normal_cram, tumor_cram], [normal_crai, tumor_crai]]
-            },
+        BAM_VARIANT_CALLING_MUTECT2(
+            cram,
             fasta,
             fasta_fai,
             dict,
+            force_call_alleles,
+            force_call_alleles_tbi,
             germline_resource,
             germline_resource_tbi,
+            contamination_resource,
+            contamination_resource_tbi,
             panel_of_normals,
             panel_of_normals_tbi,
             intervals,
             joint_mutect2,
+            contamination_resource_provided,
         )
 
-        // vcf_mutect2 and tbi_mutect2 always contain usable output (filtered if available, otherwise unfiltered)
-        vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.vcf
-        tbi_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.tbi
+        vcf_mutect2 = BAM_VARIANT_CALLING_MUTECT2.out.vcf
+        tbi_mutect2 = BAM_VARIANT_CALLING_MUTECT2.out.tbi
     }
 
     // PARABRICKS DEEPSOMATIC
@@ -278,9 +281,18 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         cram_parabricks_mutectcaller,
         fasta,
         fasta_fai,
+        dict,
+        force_call_alleles,
+        force_call_alleles_tbi,
+        germline_resource,
+        germline_resource_tbi,
+        contamination_resource,
+        contamination_resource_tbi,
         panel_of_normals,
         panel_of_normals_tbi,
         intervals_bed_combined,
+        intervals,
+        contamination_resource_provided,
     )
 
     vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER.out.vcf

@@ -24,42 +24,44 @@
     GENOME PARAMETER VALUES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-params.ascat_alleles           = getGenomeAttribute('ascat_alleles')
-params.ascat_genome            = getGenomeAttribute('ascat_genome')
-params.ascat_loci              = getGenomeAttribute('ascat_loci')
-params.ascat_loci_gc           = getGenomeAttribute('ascat_loci_gc')
-params.ascat_loci_rt           = getGenomeAttribute('ascat_loci_rt')
-params.bwa                     = getGenomeAttribute('bwa')
-params.bwamem2                 = getGenomeAttribute('bwamem2')
-params.cf_chrom_len            = getGenomeAttribute('cf_chrom_len')
-params.chr_dir                 = getGenomeAttribute('chr_dir')
-params.dbsnp                   = getGenomeAttribute('dbsnp')
-params.dbsnp_tbi               = getGenomeAttribute('dbsnp_tbi')
-params.dbsnp_vqsr              = getGenomeAttribute('dbsnp_vqsr')
-params.dict                    = getGenomeAttribute('dict')
-params.dragmap                 = getGenomeAttribute('dragmap')
-params.fasta                   = getGenomeAttribute('fasta')
-params.fasta_fai               = getGenomeAttribute('fasta_fai')
-params.germline_resource       = getGenomeAttribute('germline_resource')
-params.germline_resource_tbi   = getGenomeAttribute('germline_resource_tbi')
-params.intervals               = getGenomeAttribute('intervals')
-params.known_indels            = getGenomeAttribute('known_indels')
-params.known_indels_tbi        = getGenomeAttribute('known_indels_tbi')
-params.known_indels_vqsr       = getGenomeAttribute('known_indels_vqsr')
-params.known_snps              = getGenomeAttribute('known_snps')
-params.known_snps_tbi          = getGenomeAttribute('known_snps_tbi')
-params.known_snps_vqsr         = getGenomeAttribute('known_snps_vqsr')
-params.mappability             = getGenomeAttribute('mappability')
-params.msisensor2_models       = getGenomeAttribute('msisensor2_models')
-params.msisensorpro_scan       = getGenomeAttribute('msisensorpro_scan')
-params.ngscheckmate_bed        = getGenomeAttribute('ngscheckmate_bed')
-params.pon                     = getGenomeAttribute('pon')
-params.pon_tbi                 = getGenomeAttribute('pon_tbi')
-params.sentieon_dnascope_model = getGenomeAttribute('sentieon_dnascope_model')
-params.snpeff_db               = getGenomeAttribute('snpeff_db')
-params.vep_cache_version       = getGenomeAttribute('vep_cache_version')
-params.vep_genome              = getGenomeAttribute('vep_genome')
-params.vep_species             = getGenomeAttribute('vep_species')
+params.ascat_alleles              = getGenomeAttribute('ascat_alleles')
+params.ascat_genome               = getGenomeAttribute('ascat_genome')
+params.ascat_loci                 = getGenomeAttribute('ascat_loci')
+params.ascat_loci_gc              = getGenomeAttribute('ascat_loci_gc')
+params.ascat_loci_rt              = getGenomeAttribute('ascat_loci_rt')
+params.bwa                        = getGenomeAttribute('bwa')
+params.bwamem2                    = getGenomeAttribute('bwamem2')
+params.cf_chrom_len               = getGenomeAttribute('cf_chrom_len')
+params.chr_dir                    = getGenomeAttribute('chr_dir')
+params.contamination_resource     = getGenomeAttribute('contamination_resource')
+params.contamination_resource_tbi = getGenomeAttribute('contamination_resource_tbi')
+params.dbsnp                      = getGenomeAttribute('dbsnp')
+params.dbsnp_tbi                  = getGenomeAttribute('dbsnp_tbi')
+params.dbsnp_vqsr                 = getGenomeAttribute('dbsnp_vqsr')
+params.dict                       = getGenomeAttribute('dict')
+params.dragmap                    = getGenomeAttribute('dragmap')
+params.fasta                      = getGenomeAttribute('fasta')
+params.fasta_fai                  = getGenomeAttribute('fasta_fai')
+params.germline_resource          = getGenomeAttribute('germline_resource')
+params.germline_resource_tbi      = getGenomeAttribute('germline_resource_tbi')
+params.intervals                  = getGenomeAttribute('intervals')
+params.known_indels               = getGenomeAttribute('known_indels')
+params.known_indels_tbi           = getGenomeAttribute('known_indels_tbi')
+params.known_indels_vqsr          = getGenomeAttribute('known_indels_vqsr')
+params.known_snps                 = getGenomeAttribute('known_snps')
+params.known_snps_tbi             = getGenomeAttribute('known_snps_tbi')
+params.known_snps_vqsr            = getGenomeAttribute('known_snps_vqsr')
+params.mappability                = getGenomeAttribute('mappability')
+params.msisensor2_models          = getGenomeAttribute('msisensor2_models')
+params.msisensorpro_scan          = getGenomeAttribute('msisensorpro_scan')
+params.ngscheckmate_bed           = getGenomeAttribute('ngscheckmate_bed')
+params.pon                        = getGenomeAttribute('pon')
+params.pon_tbi                    = getGenomeAttribute('pon_tbi')
+params.sentieon_dnascope_model    = getGenomeAttribute('sentieon_dnascope_model')
+params.snpeff_db                  = getGenomeAttribute('snpeff_db')
+params.vep_cache_version          = getGenomeAttribute('vep_cache_version')
+params.vep_genome                 = getGenomeAttribute('vep_genome')
+params.vep_species                = getGenomeAttribute('vep_species')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -70,6 +72,7 @@ params.vep_species             = getGenomeAttribute('vep_species')
 include { SAREK                            } from './workflows/sarek'
 include { PIPELINE_COMPLETION              } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { PIPELINE_INITIALISATION          } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { intervalsParam                   } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { PREPARE_GENOME                   } from './subworkflows/local/prepare_genome'
 include { PREPARE_INTERVALS                } from './subworkflows/local/prepare_intervals'
 include { PREPARE_REFERENCE_CNVKIT         } from './subworkflows/local/prepare_reference_cnvkit'
@@ -103,12 +106,16 @@ workflow NFCORE_SAREK {
         params.bwa,
         params.bwamem2,
         params.chr_dir,
+        params.contamination_resource,
+        params.contamination_resource_tbi,
         params.dbsnp,
         params.dbsnp_tbi,
         params.dict,
         params.dragmap,
         params.fasta,
         params.fasta_fai,
+        params.force_call_alleles,
+        params.force_call_alleles_tbi,
         params.germline_resource,
         params.germline_resource_tbi,
         params.known_indels,
@@ -126,7 +133,7 @@ workflow NFCORE_SAREK {
     )
 
     // Build intervals if needed
-    PREPARE_INTERVALS(PREPARE_GENOME.out.fasta_fai, params.intervals, params.no_intervals, params.nucleotides_per_second, params.outdir, params.step)
+    PREPARE_INTERVALS(PREPARE_GENOME.out.fasta_fai, intervalsParam(), params.no_intervals, params.nucleotides_per_second, params.outdir, params.step)
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     // [interval.bed] all intervals in one file
@@ -294,8 +301,12 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.dict,
         PREPARE_GENOME.out.fasta,
         PREPARE_GENOME.out.fasta_fai,
+        PREPARE_GENOME.out.force_call_alleles,
+        PREPARE_GENOME.out.force_call_alleles_tbi,
         PREPARE_GENOME.out.germline_resource,
         PREPARE_GENOME.out.germline_resource_tbi,
+        PREPARE_GENOME.out.contamination_resource,
+        PREPARE_GENOME.out.contamination_resource_tbi,
         PREPARE_GENOME.out.index_alignment,
         intervals_and_num_intervals,
         intervals_bed_combined,
