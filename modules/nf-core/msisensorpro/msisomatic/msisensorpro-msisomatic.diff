@@ -1,0 +1,68 @@
+Changes in component 'nf-core/msisensorpro/msisomatic'
+'modules/nf-core/msisensorpro/msisomatic/environment.yml' is unchanged
+Changes in 'msisensorpro/msisomatic/main.nf':
+--- modules/nf-core/msisensorpro/msisomatic/main.nf
++++ modules/nf-core/msisensorpro/msisomatic/main.nf
+@@ -15,8 +15,8 @@
+     output:
+     tuple val(meta), path("${prefix}")         , emit: output_report
+     tuple val(meta), path("${prefix}_dis")     , emit: output_dis
+-    tuple val(meta), path("${prefix}_germline"), emit: output_germline, optional: true
+-    tuple val(meta), path("${prefix}_somatic") , emit: output_somatic,  optional: true
++    tuple val(meta), path("${prefix}_all")     , emit: output_all
++    tuple val(meta), path("${prefix}_unstable"), emit: output_unstable
+     tuple val("${task.process}"), val('msisensor-pro'), eval("msisensor-pro --version 2>&1 | sed -nE 's/Version:\\s*v//p'") , emit: versions_msisensorpro, topic: versions
+ 
+     when:
+@@ -47,7 +47,7 @@
+     """
+     touch ${prefix}
+     touch ${prefix}_dis
+-    touch ${prefix}_germline
+-    touch ${prefix}_somatic
++    touch ${prefix}_all
++    touch ${prefix}_unstable
+     """
+ }
+
+Changes in 'msisensorpro/msisomatic/meta.yml':
+--- modules/nf-core/msisensorpro/msisomatic/meta.yml
++++ modules/nf-core/msisensorpro/msisomatic/meta.yml
+@@ -87,25 +87,27 @@
+           type: file
+           description: File containing distribution results
+           ontologies: []
+-  output_germline:
++  output_all:
+     - - meta:
+           type: map
+           description: |
+             Groovy Map containing sample information
+             e.g. [ id:'test', single_end:false ]
+-      - ${prefix}_germline:
++      - ${prefix}_all:
+           type: file
+-          description: File containing germline results
++          description: File containing the per-site test results (difference,
++            P value, FDR) for all evaluated microsatellites
+           ontologies: []
+-  output_somatic:
++  output_unstable:
+     - - meta:
+           type: map
+           description: |
+             Groovy Map containing sample information
+             e.g. [ id:'test', single_end:false ]
+-      - ${prefix}_somatic:
++      - ${prefix}_unstable:
+           type: file
+-          description: File containing somatic results
++          description: File containing the unstable (somatic MSI) sites; only
++            the header line if no site is unstable
+           ontologies: []
+   versions_msisensorpro:
+     - - ${task.process}:
+
+'modules/nf-core/msisensorpro/msisomatic/tests/main.nf.test' was removed
+'modules/nf-core/msisensorpro/msisomatic/tests/main.nf.test.snap' was removed
+************************************************************

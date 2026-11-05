@@ -1076,10 +1076,10 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
   - MSI score output, with the total number of sites, the number of unstable sites and their percentage.
 - `<tumorsample_vs_normalsample>_dis`
   - The normal and tumor read length distribution for each microsatellite position.
-- `<tumorsample_vs_normalsample>_germline`
-  - Germline sites detected. Optional, MSIsensorPro 1.3.0 does not write this file in tumor/normal mode.
-- `<tumorsample_vs_normalsample>_somatic`
-  - Somatic sites detected. Optional, MSIsensorPro 1.3.0 does not write this file in tumor/normal mode.
+- `<tumorsample_vs_normalsample>_all`
+  - Per-site test results (difference, P value, FDR) for all evaluated microsatellites.
+- `<tumorsample_vs_normalsample>_unstable`
+  - Unstable (somatic MSI) sites. Contains only the header line if no site is unstable.
   </details>
 
 ## Post Variant Calling

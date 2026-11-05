@@ -394,7 +394,8 @@
                     "msisensorpro/msisomatic": {
                         "branch": "master",
                         "git_sha": "8f37155cb42259efed9e9aef24f7d1ba66ea983f",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/msisensorpro/msisomatic/msisensorpro-msisomatic.diff"
                     },
                     "msisensorpro/scan": {
                         "branch": "master",
