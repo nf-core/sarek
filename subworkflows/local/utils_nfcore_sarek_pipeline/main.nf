@@ -106,7 +106,7 @@ workflow PIPELINE_INITIALISATION {
     UTILS_NFCORE_PIPELINE(nextflow_cli_args)
 
     // Custom validation for pipeline parameters
-    validateInputParameters(genome, genomes, references_datasheet)
+    validateInputParameters(genome, genomes, references_datasheet, explicit_references.intervals)
 
     params.input_restart = retrieveInput((!params.build_only_index && !input), params.step, params.outdir)
 
@@ -225,10 +225,18 @@ FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 // Check and validate pipeline parameters
-def validateInputParameters(genome, genomes, references_datasheet) {
+def validateInputParameters(genome, genomes, references_datasheet, intervals) {
     genomeExistsError(genome, genomes, references_datasheet)
     sparkAndBam()
     parabricksMutectcallerIgnoredParams()
+    noIntervalsWithIntervals(intervals)
+}
+
+// Exit if --no_intervals would ignore a user-provided --intervals file
+def noIntervalsWithIntervals(intervals) {
+    if (params.no_intervals && intervals && intervals !in [false, 'false']) {
+        error("`--intervals ${intervals}` and `--no_intervals` cannot be used together: `--no_intervals` would ignore the intervals file. Remove one of them.")
+    }
 }
 
 // Reference params resolved from --references, a genome datasheet, or params.genomes

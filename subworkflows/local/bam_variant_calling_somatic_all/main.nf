@@ -34,6 +34,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     dict                          // channel: [mandatory] dict
     fasta                         // channel: [mandatory] fasta
     fasta_fai                     // channel: [mandatory] fasta_fai
+    force_call_alleles            // channel: [optional]  force_call_alleles
+    force_call_alleles_tbi        // channel: [optional]  force_call_alleles_tbi
     germline_resource             // channel: [optional]  germline_resource
     germline_resource_tbi         // channel: [optional]  germline_resource_tbi
     intervals                     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
@@ -239,6 +241,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             fasta,
             fasta_fai,
             dict,
+            force_call_alleles,
+            force_call_alleles_tbi,
             germline_resource,
             germline_resource_tbi,
             panel_of_normals,
@@ -276,6 +280,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         fasta,
         fasta_fai,
         dict,
+        force_call_alleles,
+        force_call_alleles_tbi,
         germline_resource,
         germline_resource_tbi,
         panel_of_normals,

@@ -13,6 +13,8 @@ workflow BAM_VARIANT_CALLING_MUTECT2 {
     fasta                      // channel: [mandatory] [ meta, fasta ]
     fai                        // channel: [mandatory] [ meta, fai ]
     dict                       // channel: [mandatory] [ meta, dict ]
+    force_call_alleles         // channel: [optional]  [ force_call_alleles ] or []
+    force_call_alleles_tbi     // channel: [optional]  [ force_call_alleles_tbi ] or []
     germline_resource          // channel: [optional]  [ germline_resource ] or []
     germline_resource_tbi      // channel: [optional]  [ germline_resource_tbi ] or []
     panel_of_normals           // channel: [optional]  [ panel_of_normals ] or []
@@ -44,7 +46,7 @@ workflow BAM_VARIANT_CALLING_MUTECT2 {
         .combine(intervals)
         .map { meta, input_list, input_index_list, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], input_list, input_index_list, intervals_] }
 
-    MUTECT2(input_intervals, fasta, fai.map { meta, index -> [ meta, index, [] ] }, dict, [], [], germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
+    MUTECT2(input_intervals, fasta, fai.map { meta, index -> [ meta, index, [] ] }, dict, force_call_alleles, force_call_alleles_tbi, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
 
     // Figuring out if there is one or more vcf(s) from the same sample
     vcf_branch = MUTECT2.out.vcf.branch { meta, _vcf ->
