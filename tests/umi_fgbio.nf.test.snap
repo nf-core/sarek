@@ -365,7 +365,7 @@
                     "gawk": "5.3.0"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FASTQTOBAM": {
                     "fgbio": "3.1.2"
@@ -600,7 +600,7 @@
             [
                 "fastqc-status-check-heatmap.txt:md5,92fcedba625d8394492d1ef6e2eb64f0",
                 "fastqc_adapter_content_plot.txt:md5,2a569bfd358aced71c1abf9f6c98e077",
-                "fastqc_overrepresented_sequences_plot.txt:md5,df45a06e934f25d5c81b8de3af859955",
+                "fastqc_overrepresented_sequences_plot.txt:md5,ee1e648aed35097a72aaf09938328b07",
                 "fastqc_per_base_n_content_plot.txt:md5,9beb9c220bb0314bd5365912584958c5",
                 "fastqc_per_base_sequence_quality_plot.txt:md5,69ca0488c8687d38e5db551c49fd9dce",
                 "fastqc_per_sequence_gc_content_plot_Counts.txt:md5,823b5a69dfbae061cd2eabba777cdbbf",
@@ -613,7 +613,7 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,7985d3196b234be9907f6c417c4fe0df",
                 "mosdepth_perchrom.txt:md5,fc8d90478e230b3cbad16ef68ede3a62",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
-                "multiqc_fastqc.txt:md5,0ca2cba4204d9076a1eb17596379d10c",
+                "multiqc_fastqc.txt:md5,9ca94cf52c7aaa72754c3421b995e431",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -683,7 +683,7 @@
                     "gawk": "5.3.0"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "FASTQTOBAM": {
                     "fgbio": "3.1.2"
@@ -926,7 +926,7 @@
             [
                 "fastqc-status-check-heatmap.txt:md5,55845a742bfbc492a326af8f06aa85d1",
                 "fastqc_adapter_content_plot.txt:md5,2d9a33a6398dbb9f06f4f0c110f813c3",
-                "fastqc_overrepresented_sequences_plot.txt:md5,d41d2f7490fb4a78330e8099e9dc43c2",
+                "fastqc_overrepresented_sequences_plot.txt:md5,82c51dae48156c32924deeb5ff7216b1",
                 "fastqc_per_base_n_content_plot.txt:md5,0593fca5d2eaf87dda3aa034a3585e37",
                 "fastqc_per_base_sequence_quality_plot.txt:md5,0e4c41c979cd6b71ab309283ddc97190",
                 "fastqc_per_sequence_gc_content_plot_Counts.txt:md5,bcff12b8d80aaf19c01b3747ffcc37f7",
@@ -939,7 +939,7 @@
                 "mosdepth-cumcoverage-dist-id.txt:md5,a9960c9a7505d0954093d782fc8c48f9",
                 "mosdepth_perchrom.txt:md5,c801fa68122d10f9a5ea8bdb48a6bc8b",
                 "multiqc_citations.txt:md5,7d0b4b866fa577272c48a1f3ad72e75d",
-                "multiqc_fastqc.txt:md5,b572bd7c557e5a13ba174373a1b9891c",
+                "multiqc_fastqc.txt:md5,b4c8bc1b54b35257232a08f7e02a6a86",
                 "picard_MarkIlluminaAdapters_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_MeanQualityByCycle_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
