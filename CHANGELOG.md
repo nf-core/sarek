@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#2322](https://github.com/nf-core/sarek/pull/2322) - Fix validation for step annotate
+- [#2333](https://github.com/nf-core/sarek/pull/2333) - Run `samtools/fixmate` before fgbio `GroupReadsByUmi` for `bwa-mem2`, which does not write the `MQ` tag, fixing fgbio crashes during UMI consensus
 - [#2347](https://github.com/nf-core/sarek/pull/2347) - Fix DeepSomatic VCF merge failing with `sample entries that don't match the other files` when an interval yields no records (e.g. `*_alt` contigs): pass tumour and normal sample names explicitly, including to `postprocess_variants`, which otherwise writes `default`
 - [#2349](https://github.com/nf-core/sarek/pull/2349) - Filter Mutect2 calls with `FilterMutectCalls` also without `--germline_resource` ([#1546](https://github.com/nf-core/sarek/issues/1546)), so downstream files of such runs are now named after `*.mutect2.filtered.vcf.gz`; with `--joint_mutect2`, tumours of one patient with different samplesheet `contamination` values no longer split the patient into several joint calls
 - [#2352](https://github.com/nf-core/sarek/pull/2352) - Sort the `--intervals` BED in reference order with `bedtools sort` before splitting it, fixing out-of-order pileup tables that made `CalculateContamination` fail with `Invalid interval` ([#899](https://github.com/nf-core/sarek/issues/899), [#2281](https://github.com/nf-core/sarek/issues/2281)). Fail early when the BED has contigs missing from the reference, start > end, or intervals past the contig end ([#97](https://github.com/nf-core/sarek/issues/97), [#934](https://github.com/nf-core/sarek/issues/934)). CNVKit target and antitarget BED names now carry the `.sorted` suffix of the sorted intervals file
@@ -74,6 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2277](https://github.com/nf-core/sarek/pull/2277) - Fix `BAM_MARKDUPLICATES` emitting each alignment twice under `-stub`, which failed the tumour-normal pairing join ([#2280](https://github.com/nf-core/sarek/issues/2280))
 - [#2371](https://github.com/nf-core/sarek/pull/2371) - Correct the dev CHANGELOG: move refactoring entries to the developer section, move #2339 out of 3.11.0, and complete the dependency and parameter tables
+- [#2372](https://github.com/nf-core/sarek/pull/2372) - Follow up #2333: move its CHANGELOG entry to dev, pass the aligner to `FASTQ_CREATE_UMI_CONSENSUS_FGBIO` as an input, and update the bwa-mem2 UMI snapshots to FastQC 0.13.0
 
 #### Removed
 
@@ -101,7 +103,6 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 
 - [#2275](https://github.com/nf-core/sarek/pull/2275) - Fix `--aligner parabricks` completing without producing any alignment when combined with `--no_intervals` ([#2274](https://github.com/nf-core/sarek/issues/2274)), or when no `--dbsnp`/`--known_indels` are provided: `collect()` dropped the empty intervals/known-sites lists instead of emitting them, leaving `PARABRICKS_FQ2BAM` with an input channel that never emitted
 - [#2282](https://github.com/nf-core/sarek/pull/2282) - Implement Parabricks Haplotypecaller gvcf mode for joint calling
-- [#2333](https://github.com/nf-core/sarek/pull/2333) - Run `samtools/fixmate` before fgbio `GroupReadsByUmi` for `bwa-mem2`, which does not write the `MQ` tag, fixing fgbio crashes during UMI consensus
 - [#2287](https://github.com/nf-core/sarek/pull/2287),[2310](https://github.com/nf-core/sarek/pull/#2310) - Fix `PARABRICKS_FQ2BAM` running BQSR without indexed known-sites VCFs ([#2193](https://github.com/nf-core/sarek/issues/2193)): `known_sites_indels_tbi` was never passed to `FASTQ_PREPROCESS_PARABRICKS`, so `pbrun` found no `.tbi` next to the VCFs it was given, fell back to loading them whole into memory, and BQSR could stall or OOM with no progress
 - [#2296](https://github.com/nf-core/sarek/pull/2296) - Preserve CRAM 3.0 after recalibration with the existing Samtools converter so GATK 4.7 output remains compatible with legacy callers.
 - [#2230](https://github.com/nf-core/sarek/pull/2230) - Varlociraptor: fix custom scenario file parsing
