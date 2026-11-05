@@ -139,14 +139,10 @@ workflow POST_VARIANTCALLING {
 
             CONSENSUS(small_variant_vcfs.join(small_variant_tbis, failOnDuplicate: true, failOnMismatch: true))
 
-            consensus_vcfs = CONSENSUS.out.vcfs.map { meta, vcfs_ ->
-                                        meta.variantcaller = 'consensus'
-                                        [meta, vcfs_]
-                                    }
-            consensus_tbis = CONSENSUS.out.tbis.map { meta, tbis_ ->
-                                        meta.variantcaller = 'consensus'
-                                        [meta, tbis_]
-                                    }
+            // Copy meta instead of setting the key in place: vcfs and tbis share one meta
+            // object, and concurrent writes to it can make the publish_dir check below miss it
+            consensus_vcfs = CONSENSUS.out.vcfs.map { meta, vcfs_ -> [meta + [variantcaller: 'consensus'], vcfs_] }
+            consensus_tbis = CONSENSUS.out.tbis.map { meta, tbis_ -> [meta + [variantcaller: 'consensus'], tbis_] }
 
             // Mix consensus VCF with individual caller VCFs for downstream annotation
             small_variant_vcfs = consensus_vcfs.mix(individual_caller_vcfs)
