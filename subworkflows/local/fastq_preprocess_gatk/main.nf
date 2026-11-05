@@ -468,6 +468,9 @@ workflow FASTQ_PREPROCESS_GATK {
                     cram_variant_calling_no_spark,
                     cram_variant_calling_spark,
                 )
+                .map { meta, alignment, index ->
+                    [(params.tools ?: '').tokenize(',').contains('deepvariant') ? meta + [original_quality_scores: true] : meta, alignment, index]
+                }
 
             // Create CSV to restart from this step
             CHANNEL_APPLYBQSR_CREATE_CSV(cram_variant_calling, params.outdir)

@@ -51,4 +51,158 @@ nextflow_pipeline {
     test_scenario.each { scenario ->
         test(scenario.name, UTILS.getTest(scenario))
     }
+
+    def quality_score_scenarios = [
+        [
+            name: 'DeepVariant consumes preserved original qualities after real BQSR',
+            params: [step: 'recalibrate', input: 'prepare_recalibration_single_bam.csv', no_intervals: true, save_output_as_bam: true],
+            applybqsr: 'GATK4_APPLYBQSR',
+            original_qualities: true,
+            provenance: true,
+            integration: true
+        ],
+        [
+            name: 'DeepVariant uses original qualities after scattered BQSR',
+            params: [step: 'recalibrate', input: 'prepare_recalibration_single_cram.csv'],
+            applybqsr: 'GATK4_APPLYBQSR',
+            original_qualities: true,
+            provenance: true
+        ],
+        [
+            name: 'DeepVariant uses original qualities after single-interval BQSR with BAM output',
+            params: [step: 'recalibrate', input: 'prepare_recalibration_single_bam.csv', no_intervals: true, save_output_as_bam: true],
+            applybqsr: 'GATK4_APPLYBQSR',
+            original_qualities: true,
+            provenance: true
+        ],
+        [
+            name: 'DeepVariant uses original qualities after Spark BQSR',
+            params: [step: 'recalibrate', input: 'prepare_recalibration_single_cram.csv', use_gatk_spark: 'baserecalibrator', no_intervals: true],
+            applybqsr: 'GATK4SPARK_APPLYBQSR',
+            original_qualities: true,
+            provenance: true
+        ],
+        [
+            name: 'BQSR leaves original-quality preservation disabled without DeepVariant',
+            params: [step: 'recalibrate', input: 'prepare_recalibration_single_cram.csv', tools: null, no_intervals: true],
+            applybqsr: 'GATK4_APPLYBQSR',
+            deepvariant: false,
+            emit_original_quals: false
+        ],
+        [
+            name: 'DeepVariant uses alignment qualities when BQSR is skipped',
+            params: [step: 'prepare_recalibration', input: 'mapped_single_cram.csv', skip_tools: 'baserecalibrator'],
+            original_qualities: false,
+            provenance: false
+        ],
+        [
+            name: 'DeepVariant restart uses alignment qualities by default',
+            params: [step: 'variant_calling', input: 'mapped_single_cram.csv'],
+            original_qualities: false,
+            provenance: false
+        ],
+        [
+            name: 'DeepVariant restart accepts explicit original qualities',
+            params: [step: 'variant_calling', input: 'mapped_single_cram.csv', deepvariant_use_original_quality_scores: true],
+            original_qualities: true,
+            provenance: false
+        ]
+    ]
+
+    quality_score_scenarios.each { scenario ->
+        test(scenario.name) {
+            tag 'pipeline'
+            tag 'pipeline_sarek'
+            tag "${scenario.integration ? 'cpu' : 'cpu_stub'}"
+            options "${scenario.integration ? '' : '-stub'} -output-dir ${outputDir} -c ${projectDir}/tests/config/deepvariant_original_quals.config"
+
+            when {
+                params {
+                    outdir = "${outputDir}"
+                    tools = 'deepvariant'
+                    scenario.params.each { key, value ->
+                        delegate."$key" = value
+                    }
+                    input = "${projectDir}/tests/csv/3.0/${scenario.params.input}"
+                }
+            }
+
+            then {
+                assert workflow.success
+
+                List<List<String>> task_args = []
+                new File("${workDir}").eachFileRecurse { file ->
+                    if (file.name == 'quality_score_args.txt') {
+                        task_args.add(file.readLines())
+                    }
+                }
+
+                List<List<String>> deepvariant_args = task_args.findAll { lines -> lines[0].endsWith(':DEEPVARIANT_RUNDEEPVARIANT') }
+                if (scenario.deepvariant == false) {
+                    assert deepvariant_args.isEmpty()
+                } else {
+                    assert !deepvariant_args.isEmpty()
+                    assert deepvariant_args.every { lines -> lines[1] == scenario.provenance.toString() }
+                    assert deepvariant_args.every { lines ->
+                        lines.drop(2).join('\n').contains("--make_examples_extra_args 'use_original_quality_scores=true'") == scenario.original_qualities
+                    }
+                }
+
+                List<List<String>> applybqsr_args = task_args.findAll { lines -> lines[0].endsWith('APPLYBQSR') }
+                if (scenario.applybqsr) {
+                    assert !applybqsr_args.isEmpty()
+                    assert applybqsr_args.every { lines -> lines[0].endsWith(":${scenario.applybqsr}") }
+                    assert applybqsr_args.every { lines ->
+                        lines.drop(2).join('\n').contains('--emit-original-quals') == (scenario.emit_original_quals != false)
+                    }
+                } else {
+                    assert applybqsr_args.isEmpty()
+                }
+
+                if (scenario.integration) {
+                    List<File> recalibrated_bams = []
+                    List<File> deepvariant_scripts = []
+                    new File("${workDir}").eachFileRecurse { file ->
+                        if (file.name == 'quality_score_args.txt') {
+                            String process_name = file.readLines()[0]
+                            if (process_name.endsWith(':GATK4_APPLYBQSR')) {
+                                recalibrated_bams.addAll(file.parentFile.listFiles().findAll { output -> output.name.endsWith('.recal.bam') })
+                            }
+                            if (process_name.endsWith(':DEEPVARIANT_RUNDEEPVARIANT')) {
+                                deepvariant_scripts.add(new File(file.parentFile, '.command.sh'))
+                            }
+                        }
+                    }
+                    assert recalibrated_bams.size() == 1
+                    recalibrated_bams.each { recalibrated_bam ->
+                        List<File> input_bams = recalibrated_bam.parentFile.listFiles().findAll { file ->
+                            file.name.endsWith('.bam') && file != recalibrated_bam
+                        }
+                        assert input_bams.size() == 1
+                        Map<String, String> input_qualities = bam(input_bams[0].toString()).samLines.collectEntries { line ->
+                            List<String> fields = line.trim().split('\t') as List
+                            [(fields.take(10).join('\t')): fields[10]]
+                        }
+                        List<List<String>> recalibrated_reads = bam(recalibrated_bam.toString()).samLines
+                            .collect { line -> line.trim().split('\t') as List }
+                            .findAll { fields -> fields[10] != '*' }
+                        assert !recalibrated_reads.isEmpty()
+                        recalibrated_reads.each { fields ->
+                            String original_qualities = fields.drop(11).find { field -> field.startsWith('OQ:Z:') }
+                            assert original_qualities != null
+                            assert original_qualities.substring(5) == input_qualities[fields.take(10).join('\t')]
+                        }
+                    }
+                    assert !deepvariant_scripts.isEmpty()
+                    deepvariant_scripts.each { script ->
+                        assert script.text.contains("--make_examples_extra_args 'use_original_quality_scores=true'")
+                        String stderr = new File(script.parentFile, '.command.err').text.toLowerCase()
+                        assert !stderr.contains('no original quality')
+                        assert !stderr.contains('could not read base quality scores')
+                        assert !(stderr =~ /original quality.*(missing|not found)/)
+                    }
+                }
+            }
+        }
+    }
 }
