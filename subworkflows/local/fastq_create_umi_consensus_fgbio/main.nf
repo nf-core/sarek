@@ -21,6 +21,7 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     fai                       // channel: [optional] /path/to/reference/fasta_fai, needed for Sentieon
     map_index                 // channel: [mandatory] Pre-computed mapping index
     groupreadsbyumi_strategy  // string:  [mandatory] grouping strategy - default: "Adjacency"
+    aligner                   // string:  [mandatory] aligner used to map the reads, e.g. "bwa-mem2"
 
     main:
 
@@ -44,8 +45,8 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     // and is not emitted by bwa-mem2
     bams_to_fixmate = ALIGN_UMI.out.bam
         .branch { meta, bam ->
-            fixmate:      params.aligner == 'bwa-mem2'
-            skip_fixmate: params.aligner != 'bwa-mem2'
+            fixmate:      aligner == 'bwa-mem2'
+            skip_fixmate: true
         }
 
     SAMTOOLS_FIXMATE(bams_to_fixmate.fixmate, [[], [], []])

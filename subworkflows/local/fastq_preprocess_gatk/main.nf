@@ -81,6 +81,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 fasta_fai,
                 index_alignment,
                 params.group_by_umi_strategy,
+                params.aligner,
             )
 
             bam_converted_from_fastq = FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.consensusbam.map { meta, bam -> [meta, bam, []] }
