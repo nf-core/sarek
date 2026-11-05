@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev - unreleased
+## [3.12.0](https://github.com/nf-core/sarek/releases/tag/3.12.0) - Njoatsosvágge
+
+Njoatsosvágge is a long valley crossing the northern part of Sarek National Park.
 
 ### Added
 
@@ -70,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2345](https://github.com/nf-core/sarek/pull/2345) - Template update for nf-core/tools v4.2.1
 - [#2346](https://github.com/nf-core/sarek/pull/2346) - Back to dev (3.11.1dev)
 - [#2349](https://github.com/nf-core/sarek/pull/2349) - Mutect2 and Parabricks MutectCaller share one GATK filtering subworkflow (`vcf_variant_filtering_mutect2`), with Parabricks MutectCaller pileups scattered over the intervals; paired and tumour-only Mutect2 calling merged into `bam_variant_calling_mutect2`; `vcf_variant_filtering_gatk` renamed to `vcf_variant_filtering_haplotypecaller`. Published files are unchanged
+- [#PRNUM](https://github.com/nf-core/sarek/pull/PRNUM) - Prepare release 3.12.0
 
 #### Fixed
 
