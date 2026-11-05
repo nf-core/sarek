@@ -7,19 +7,21 @@ include { PARABRICKS_MUTECTCALLER       } from '../../../modules/nf-core/parabri
 
 workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
     take:
-    cram                       // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ], normal_cram and normal_crai are [] for tumour-only
-    fasta                      // channel: [mandatory] [ meta, fasta ]
-    fasta_fai                  // channel: [mandatory] [ meta, fasta_fai ]
-    dict                       // channel: [mandatory] [ meta, dict ]
-    force_call_alleles         // channel: [optional] [ force_call_alleles ] or []
-    force_call_alleles_tbi     // channel: [optional] [ force_call_alleles_tbi ] or []
-    germline_resource          // channel: [optional] [ germline_resource ] or []
-    germline_resource_tbi      // channel: [optional] [ germline_resource_tbi ] or []
-    panel_of_normals           // channel: [optional] [ panel_of_normals ] or []
-    panel_of_normals_tbi       // channel: [optional] [ panel_of_normals_tbi ] or []
-    intervals_bed_combined     // channel: [optional] [] or [ intervals.bed ]
-    intervals                  // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals, scatter for getpileupsummaries
-    germline_resource_provided // boolean: [mandatory] whether a germline resource was provided, so contamination tables are expected
+    cram                            // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ], normal_cram and normal_crai are [] for tumour-only
+    fasta                           // channel: [mandatory] [ meta, fasta ]
+    fasta_fai                       // channel: [mandatory] [ meta, fasta_fai ]
+    dict                            // channel: [mandatory] [ meta, dict ]
+    force_call_alleles              // channel: [optional] [ force_call_alleles ] or []
+    force_call_alleles_tbi          // channel: [optional] [ force_call_alleles_tbi ] or []
+    germline_resource               // channel: [optional] [ germline_resource ] or []
+    germline_resource_tbi           // channel: [optional] [ germline_resource_tbi ] or []
+    contamination_resource          // channel: [optional] [ contamination_resource ] or [], common biallelic SNPs for getpileupsummaries
+    contamination_resource_tbi      // channel: [optional] [ contamination_resource_tbi ] or []
+    panel_of_normals                // channel: [optional] [ panel_of_normals ] or []
+    panel_of_normals_tbi            // channel: [optional] [ panel_of_normals_tbi ] or []
+    intervals_bed_combined          // channel: [optional] [] or [ intervals.bed ]
+    intervals                       // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals, scatter for getpileupsummaries
+    contamination_resource_provided // boolean: [mandatory] whether a contamination resource was provided, so contamination tables are expected
 
     main:
     intervals_bed = intervals_bed_combined.map { bed -> [bed ? bed[0] : []] }
@@ -51,9 +53,9 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
         fasta,
         fasta_fai,
         dict,
-        germline_resource,
-        germline_resource_tbi,
-        germline_resource_provided,
+        contamination_resource,
+        contamination_resource_tbi,
+        contamination_resource_provided,
         false,
     )
 

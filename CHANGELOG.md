@@ -13,15 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2349](https://github.com/nf-core/sarek/pull/2349) - Add GATK filtering after Parabricks MutectCaller: `FilterMutectCalls` with read-orientation priors (`LearnReadOrientationModel`), and with contamination estimation (`GetPileupSummaries`, `CalculateContamination`) and the germline resource passed to the caller when `--germline_resource` is provided
 - [#2351](https://github.com/nf-core/sarek/pull/2351) - Add `--mosdepth_fast_mode` to control Mosdepth fast mode for whole-genome coverage calculations. Fast mode remains enabled by default.
 - [#2365](https://github.com/nf-core/sarek/pull/2365) - Add `--force_call_alleles` and `--force_call_alleles_tbi` to force-call alleles from a VCF with GATK Mutect2 `--alleles` and Parabricks MutectCaller `--mutect-alleles` ([#1883](https://github.com/nf-core/sarek/issues/1883)), based on [#1952](https://github.com/nf-core/sarek/pull/1952) by [@jchchiu](https://github.com/jchchiu)
+- [#2367](https://github.com/nf-core/sarek/pull/2367) - Add `--contamination_resource` and `--contamination_resource_tbi` to give GATK `GetPileupSummaries` a set of common biallelic SNPs instead of `--germline_resource` ([#959](https://github.com/nf-core/sarek/issues/959))
 
 ### Changed
 
-- [#2345](https://github.com/nf-core/sarek/pull/2345) - Template update for nf-core/tools v4.2.1
-- [#2349](https://github.com/nf-core/sarek/pull/2349) - Mutect2 and Parabricks MutectCaller share one GATK filtering subworkflow (`vcf_variant_filtering_mutect2`), with Parabricks MutectCaller pileups now scattered over the intervals; paired and tumour-only Mutect2 calling merged into `bam_variant_calling_mutect2` (process `MUTECT2_PAIRED` is now `MUTECT2`); `vcf_variant_filtering_gatk` renamed to `vcf_variant_filtering_haplotypecaller`
+- [#2339](https://github.com/nf-core/sarek/pull/2339) - Update `parabricks/applybqsr`, `parabricks/deepsomatic`, `parabricks/deepvariant`, `parabricks/fq2bam` and `parabricks/haplotypecaller` modules to Parabricks 4.8.0
+- [#2349](https://github.com/nf-core/sarek/pull/2349) - Process `MUTECT2_PAIRED` is now `MUTECT2`; custom configs selecting `withName: 'MUTECT2_PAIRED'` need to select `MUTECT2` instead
 
 ### Fixed
 
-- [#2277](https://github.com/nf-core/sarek/pull/2277) - fix(markduplicates): avoid duplicate alignment emission under -stub
+- [#2322](https://github.com/nf-core/sarek/pull/2322) - Fix validation for step annotate
 - [#2347](https://github.com/nf-core/sarek/pull/2347) - Fix DeepSomatic VCF merge failing with `sample entries that don't match the other files` when an interval yields no records (e.g. `*_alt` contigs): pass tumour and normal sample names explicitly, including to `postprocess_variants`, which otherwise writes `default`
 - [#2349](https://github.com/nf-core/sarek/pull/2349) - Filter Mutect2 calls with `FilterMutectCalls` also without `--germline_resource` ([#1546](https://github.com/nf-core/sarek/issues/1546)), so downstream files of such runs are now named after `*.mutect2.filtered.vcf.gz`; with `--joint_mutect2`, tumours of one patient with different samplesheet `contamination` values no longer split the patient into several joint calls
 - [#2352](https://github.com/nf-core/sarek/pull/2352) - Sort the `--intervals` BED in reference order with `bedtools sort` before splitting it, fixing out-of-order pileup tables that made `CalculateContamination` fail with `Invalid interval` ([#899](https://github.com/nf-core/sarek/issues/899), [#2281](https://github.com/nf-core/sarek/issues/2281)). Fail early when the BED has contigs missing from the reference, start > end, or intervals past the contig end ([#97](https://github.com/nf-core/sarek/issues/97), [#934](https://github.com/nf-core/sarek/issues/934)). CNVKit target and antitarget BED names now carry the `.sorted` suffix of the sorted intervals file
@@ -41,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | ---------- | ----------- | ----------- |
 | bedtools   | -           | 2.31.1      |
 | fastqc     | 0.12.1      | 0.13.0      |
+| parabricks | 4.7.1       | 4.8.0       |
 
 ### Dependencies - plugins
 
@@ -50,9 +52,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params                 | status |
-| ---------------------- | ------ |
-| `--mosdepth_fast_mode` | Added  |
+| Params                         | status |
+| ------------------------------ | ------ |
+| `--contamination_resource`     | Added  |
+| `--contamination_resource_tbi` | Added  |
+| `--force_call_alleles`         | Added  |
+| `--force_call_alleles_tbi`     | Added  |
+| `--mosdepth_fast_mode`         | Added  |
 
 ### Developer section
 
@@ -60,9 +66,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Changed
 
+- [#2345](https://github.com/nf-core/sarek/pull/2345) - Template update for nf-core/tools v4.2.1
 - [#2346](https://github.com/nf-core/sarek/pull/2346) - Back to dev (3.11.1dev)
+- [#2349](https://github.com/nf-core/sarek/pull/2349) - Mutect2 and Parabricks MutectCaller share one GATK filtering subworkflow (`vcf_variant_filtering_mutect2`), with Parabricks MutectCaller pileups scattered over the intervals; paired and tumour-only Mutect2 calling merged into `bam_variant_calling_mutect2`; `vcf_variant_filtering_gatk` renamed to `vcf_variant_filtering_haplotypecaller`. Published files are unchanged
 
 #### Fixed
+
+- [#2277](https://github.com/nf-core/sarek/pull/2277) - Fix `BAM_MARKDUPLICATES` emitting each alignment twice under `-stub`, which failed the tumour-normal pairing join ([#2280](https://github.com/nf-core/sarek/issues/2280))
+- [#2371](https://github.com/nf-core/sarek/pull/2371) - Correct the dev CHANGELOG: move refactoring entries to the developer section, move #2339 out of 3.11.0, and complete the dependency and parameter tables
 
 #### Removed
 
@@ -85,12 +96,12 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 - [#2318](https://github.com/nf-core/sarek/pull/2318) - Use the nf-core `bam_applybqsr` subworkflow for recalibration. GATK streams BAM and samtools writes the CRAM, pinned to 3.0 so legacy htslib tools can still read it. CRAI indexes are published alongside recalibrated CRAMs.
 - [#2321](https://github.com/nf-core/sarek/pull/2321) - Migrate AWS test workflows to `seqeralabs/action-seqera-launch@v1.0.0-rc.2`
 - [#2329](https://github.com/nf-core/sarek/pull/2329) - Update ensemblvep modules to ensembl-vep 116.3, pin htslib to 1.21 to fix conda solving ([nf-core/modules#13299](https://github.com/nf-core/modules/pull/13299))
-- [#2339](https://github.com/nf-core/sarek/pull/XXXX) - Update `parabricks/applybqsr`, `parabricks/deepvariant`, `parabricks/fq2bam` `parabricks/deepsomatic` and `parabricks/haplotypecaller` modules to Parabricks 4.8.0.
 
 ### Fixed
 
 - [#2275](https://github.com/nf-core/sarek/pull/2275) - Fix `--aligner parabricks` completing without producing any alignment when combined with `--no_intervals` ([#2274](https://github.com/nf-core/sarek/issues/2274)), or when no `--dbsnp`/`--known_indels` are provided: `collect()` dropped the empty intervals/known-sites lists instead of emitting them, leaving `PARABRICKS_FQ2BAM` with an input channel that never emitted
 - [#2282](https://github.com/nf-core/sarek/pull/2282) - Implement Parabricks Haplotypecaller gvcf mode for joint calling
+- [#2333](https://github.com/nf-core/sarek/pull/2333) - Run `samtools/fixmate` before fgbio `GroupReadsByUmi` for `bwa-mem2`, which does not write the `MQ` tag, fixing fgbio crashes during UMI consensus
 - [#2287](https://github.com/nf-core/sarek/pull/2287),[2310](https://github.com/nf-core/sarek/pull/#2310) - Fix `PARABRICKS_FQ2BAM` running BQSR without indexed known-sites VCFs ([#2193](https://github.com/nf-core/sarek/issues/2193)): `known_sites_indels_tbi` was never passed to `FASTQ_PREPROCESS_PARABRICKS`, so `pbrun` found no `.tbi` next to the VCFs it was given, fell back to loading them whole into memory, and BQSR could stall or OOM with no progress
 - [#2296](https://github.com/nf-core/sarek/pull/2296) - Preserve CRAM 3.0 after recalibration with the existing Samtools converter so GATK 4.7 output remains compatible with legacy callers.
 - [#2230](https://github.com/nf-core/sarek/pull/2230) - Varlociraptor: fix custom scenario file parsing

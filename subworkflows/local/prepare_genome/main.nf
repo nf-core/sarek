@@ -6,6 +6,7 @@ include { GATK4_CREATESEQUENCEDICTIONARY            } from '../../../modules/nf-
 include { MSISENSORPRO_SCAN                         } from '../../../modules/nf-core/msisensorpro/scan'
 include { SAMTOOLS_FAIDX                            } from '../../../modules/nf-core/samtools/faidx'
 include { HTSLIB_BGZIPTABIX as TABIX_BCFTOOLS_ANNOTATIONS } from '../../../modules/nf-core/htslib/bgziptabix'
+include { HTSLIB_BGZIPTABIX as TABIX_CONTAMINATION_RESOURCE } from '../../../modules/nf-core/htslib/bgziptabix'
 include { HTSLIB_BGZIPTABIX as TABIX_DBSNP                } from '../../../modules/nf-core/htslib/bgziptabix'
 include { HTSLIB_BGZIPTABIX as TABIX_GERMLINE_RESOURCE    } from '../../../modules/nf-core/htslib/bgziptabix'
 include { HTSLIB_BGZIPTABIX as TABIX_KNOWN_INDELS         } from '../../../modules/nf-core/htslib/bgziptabix'
@@ -22,39 +23,41 @@ include { UNZIP as UNZIP_RT                         } from '../../../modules/nf-
 
 workflow PREPARE_GENOME {
     take:
-    ascat_alleles_in            // params.ascat_alleles
-    ascat_loci_in               // params.ascat_loci
-    ascat_loci_gc_in            // params.ascat_loci_gc
-    ascat_loci_rt_in            // params.ascat_loci_rt
-    bbsplit_fasta_list_in       // params.bbsplit_fasta_list
-    bbsplit_index_in            // params.bbsplit_index
-    bcftools_annotations_in     // params.bcftools_annotations
-    bcftools_annotations_tbi_in // params.bcftools_annotations
-    bwa_in                      // params.bwa
-    bwamem2_in                  // params.bwamem2
-    chr_dir_in                  // params.chr_dir
-    dbsnp_in                    // params.dbsnp
-    dbsnp_tbi_in                // params.dbsnp_tbi
-    dict_in                     // params.dict
-    dragmap_in                  // params.dragmap
-    fasta_in                    // params.fasta
-    fasta_fai_in                // params.fasta_fai
-    force_call_alleles_in       // params.force_call_alleles
-    force_call_alleles_tbi_in   // params.force_call_alleles_tbi
-    germline_resource_in        // params.germline_resource
-    germline_resource_tbi_in    // params.germline_resource_tbi
-    known_indels_in             // params.known_indels
-    known_indels_tbi_in         // params.known_indels_tbi
-    known_snps_in               // params.known_snps
-    known_snps_tbi_in           // params.known_snps_tbi
-    msisensor2_models_in        // channel: [optional]  msisensor2_models
-    msisensorpro_scan_in        // channel: [optional]  msisensorpro_scan
-    pon_in                      // params.pon
-    pon_tbi_in                  // params.pon_tbi
-    aligner                     // params.aligner
-    step                        // params.step
-    tools                       // params.tools
-    vep_include_fasta           // params.vep_include_fasta
+    ascat_alleles_in              // params.ascat_alleles
+    ascat_loci_in                 // params.ascat_loci
+    ascat_loci_gc_in              // params.ascat_loci_gc
+    ascat_loci_rt_in              // params.ascat_loci_rt
+    bbsplit_fasta_list_in         // params.bbsplit_fasta_list
+    bbsplit_index_in              // params.bbsplit_index
+    bcftools_annotations_in       // params.bcftools_annotations
+    bcftools_annotations_tbi_in   // params.bcftools_annotations
+    bwa_in                        // params.bwa
+    bwamem2_in                    // params.bwamem2
+    chr_dir_in                    // params.chr_dir
+    contamination_resource_in     // params.contamination_resource
+    contamination_resource_tbi_in // params.contamination_resource_tbi
+    dbsnp_in                      // params.dbsnp
+    dbsnp_tbi_in                  // params.dbsnp_tbi
+    dict_in                       // params.dict
+    dragmap_in                    // params.dragmap
+    fasta_in                      // params.fasta
+    fasta_fai_in                  // params.fasta_fai
+    force_call_alleles_in         // params.force_call_alleles
+    force_call_alleles_tbi_in     // params.force_call_alleles_tbi
+    germline_resource_in          // params.germline_resource
+    germline_resource_tbi_in      // params.germline_resource_tbi
+    known_indels_in               // params.known_indels
+    known_indels_tbi_in           // params.known_indels_tbi
+    known_snps_in                 // params.known_snps
+    known_snps_tbi_in             // params.known_snps_tbi
+    msisensor2_models_in          // channel: [optional]  msisensor2_models
+    msisensorpro_scan_in          // channel: [optional]  msisensorpro_scan
+    pon_in                        // params.pon
+    pon_tbi_in                    // params.pon_tbi
+    aligner                       // params.aligner
+    step                          // params.step
+    tools                         // params.tools
+    vep_include_fasta             // params.vep_include_fasta
 
     main:
     // TODO: EXTRACT FASTA FILE?
@@ -164,6 +167,15 @@ workflow PREPARE_GENOME {
     if (!germline_resource_tbi_in && germline_resource_in && (tools.split(',').contains('mutect2') || tools.split(',').contains('parabricks_mutectcaller') || tools.split(',').contains('sentieon_tnscope'))) {
         TABIX_GERMLINE_RESOURCE(germline_resource.flatten().map { vcf -> [[id: vcf.baseName], vcf, [], []] }, 'compress', true, '')
         germline_resource_tbi = TABIX_GERMLINE_RESOURCE.out.index.map { _meta, tbi -> [tbi] }.collect()
+    }
+
+    // GetPileupSummaries falls back to the germline resource, which can be much larger than a set of common SNPs
+    contamination_resource = contamination_resource_in ? channel.fromPath(contamination_resource_in).collect() : germline_resource
+    contamination_resource_tbi = contamination_resource_in ? (contamination_resource_tbi_in ? channel.fromPath(contamination_resource_tbi_in).collect() : channel.value([])) : germline_resource_tbi
+
+    if (contamination_resource_in && !contamination_resource_tbi_in && (tools.split(',').contains('mutect2') || tools.split(',').contains('parabricks_mutectcaller'))) {
+        TABIX_CONTAMINATION_RESOURCE(contamination_resource.flatten().map { vcf -> [[id: vcf.baseName], vcf, [], []] }, 'compress', true, '')
+        contamination_resource_tbi = TABIX_CONTAMINATION_RESOURCE.out.index.map { _meta, tbi -> [tbi] }.collect()
     }
 
     known_indels = known_indels_in ? channel.fromPath(known_indels_in).collect() : channel.value([])
@@ -285,35 +297,37 @@ workflow PREPARE_GENOME {
     }
 
     emit:
-    ascat_alleles            // Channel: [ascat_alleles]
-    ascat_loci               // Channel: [ascat_loci]
-    ascat_loci_gc            // Channel: [ascat_loci_gc]
-    ascat_loci_rt            // Channel: [ascat_loci_rt]
-    bbsplit_index            // Channel: [bbsplit/index/]
-    bcftools_annotations     // Channel: [bcftools_annotations]
-    bcftools_annotations_tbi // Channel: [bcftools_annotations_tbi]
-    chr_dir                  // Channel: [chr_dir/]
-    dbsnp                    // Channel: [dbsnp]
-    dbsnp_tbi                // Channel: [dbsnp_tbi]
-    dict                     // Channel: [meta, dict]
-    fasta                    // Channel: [meta, fasta]
-    fasta_fai                // Channel: [meta, fasta_fai]
-    force_call_alleles       // Channel: [force_call_alleles]
-    force_call_alleles_tbi   // Channel: [force_call_alleles_tbi]
-    germline_resource        // Channel: [germline_resource]
-    germline_resource_tbi    // Channel: [germline_resource_tbi]
-    index_alignment          // Channel: [meta, index_alignment/] either bwa/, bwamem2/ or dragmap/
-    known_indels             // Channel: [known_indels]
-    known_indels_tbi         // Channel: [known_indels_tbi]
-    known_sites_indels       // Channel: [known_sites_indels]
-    known_sites_indels_tbi   // Channel: [known_sites_indels_tbi]
-    known_sites_snps         // Channel: [known_sites_snps]
-    known_sites_snps_tbi     // Channel: [known_sites_snps_tbi]
-    known_snps               // Channel: [known_snps]
-    known_snps_tbi           // Channel: [known_snps_tbi]
-    msisensor2_models        // Channel: [models/]
-    msisensorpro_scan        // Channel: [genome_msi.list]
-    pon                      // Channel: [pon]
-    pon_tbi                  // Channel: [pon_tbi]
-    vep_fasta                // Channel: [meta, vep_fasta]
+    ascat_alleles              // Channel: [ascat_alleles]
+    ascat_loci                 // Channel: [ascat_loci]
+    ascat_loci_gc              // Channel: [ascat_loci_gc]
+    ascat_loci_rt              // Channel: [ascat_loci_rt]
+    bbsplit_index              // Channel: [bbsplit/index/]
+    bcftools_annotations       // Channel: [bcftools_annotations]
+    bcftools_annotations_tbi   // Channel: [bcftools_annotations_tbi]
+    chr_dir                    // Channel: [chr_dir/]
+    contamination_resource     // Channel: [contamination_resource], germline_resource if not provided
+    contamination_resource_tbi // Channel: [contamination_resource_tbi]
+    dbsnp                      // Channel: [dbsnp]
+    dbsnp_tbi                  // Channel: [dbsnp_tbi]
+    dict                       // Channel: [meta, dict]
+    fasta                      // Channel: [meta, fasta]
+    fasta_fai                  // Channel: [meta, fasta_fai]
+    force_call_alleles         // Channel: [force_call_alleles]
+    force_call_alleles_tbi     // Channel: [force_call_alleles_tbi]
+    germline_resource          // Channel: [germline_resource]
+    germline_resource_tbi      // Channel: [germline_resource_tbi]
+    index_alignment            // Channel: [meta, index_alignment/] either bwa/, bwamem2/ or dragmap/
+    known_indels               // Channel: [known_indels]
+    known_indels_tbi           // Channel: [known_indels_tbi]
+    known_sites_indels         // Channel: [known_sites_indels]
+    known_sites_indels_tbi     // Channel: [known_sites_indels_tbi]
+    known_sites_snps           // Channel: [known_sites_snps]
+    known_sites_snps_tbi       // Channel: [known_sites_snps_tbi]
+    known_snps                 // Channel: [known_snps]
+    known_snps_tbi             // Channel: [known_snps_tbi]
+    msisensor2_models          // Channel: [models/]
+    msisensorpro_scan          // Channel: [genome_msi.list]
+    pon                        // Channel: [pon]
+    pon_tbi                    // Channel: [pon_tbi]
+    vep_fasta                  // Channel: [meta, vep_fasta]
 }

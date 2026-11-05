@@ -89,6 +89,8 @@ workflow SAREK {
     force_call_alleles_tbi
     germline_resource
     germline_resource_tbi
+    contamination_resource
+    contamination_resource_tbi
     index_alignment
     intervals_and_num_intervals
     intervals_bed_combined
@@ -451,6 +453,8 @@ workflow SAREK {
             force_call_alleles_tbi,
             germline_resource,
             germline_resource_tbi,
+            contamination_resource,
+            contamination_resource_tbi,
             intervals_and_num_intervals,
             intervals_bed_combined,
             intervals_bed_gz_tbi_combined,
@@ -460,7 +464,7 @@ workflow SAREK {
             pon_tbi,
             params.joint_mutect2,
             params.wes,
-            params.germline_resource as boolean,
+            (params.contamination_resource || params.germline_resource) as boolean,
         )
 
         // PAIR VARIANT CALLING
@@ -484,6 +488,8 @@ workflow SAREK {
             force_call_alleles_tbi,
             germline_resource,
             germline_resource_tbi,
+            contamination_resource,
+            contamination_resource_tbi,
             intervals_and_num_intervals,
             intervals_bed_gz_tbi_and_num_intervals,
             intervals_bed_combined,
@@ -498,7 +504,7 @@ workflow SAREK {
             ascat_loci_rt,
             params.joint_mutect2,
             params.wes,
-            params.germline_resource as boolean,
+            (params.contamination_resource || params.germline_resource) as boolean,
         )
 
         // QC on raw variant calls

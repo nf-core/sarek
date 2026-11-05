@@ -114,6 +114,8 @@ workflow PIPELINE_INITIALISATION {
         params.cf_chrom_len,
         params.chr_dir,
         params.cnvkit_reference,
+        params.contamination_resource,
+        params.contamination_resource_tbi,
         params.dbnsfp,
         params.dbnsfp_tbi,
         params.dbsnp,
