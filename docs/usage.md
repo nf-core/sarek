@@ -202,11 +202,11 @@ patient1,XX,1,relapse_sample,lane_1,test3_L001.bam
 > This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
 
 Add `--aligner parabricks` with `-profile <docker/singularity>,gpu` (see [`-profile`](#-profile)) to replace mapping and BAM processing with [Parabricks fq2bam](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html).
-Fq2bam runs bwa-mem alignment, coordinate sorting, duplicate marking and, when known sites (`--dbsnp`, `--known_indels`) are available, computes the base recalibration table in a single GPU step.
+FQ2BAM runs bwa-mem alignment, coordinate sorting, duplicate marking and, when known sites (`--dbsnp`, `--known_indels`) are available, the base recalibration table in a single GPU step.
 [Parabricks ApplyBQSR](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_applybqsr.html) then applies the table on the GPU, unless `baserecalibrator` is listed in `--skip_tools`.
 Duplicate marking cannot be skipped yet, see [Issue #1853](https://github.com/nf-core/sarek/issues/1853).
 
-Fq2bam requests 4 GPUs by default (`accelerator = 4`, passed to Parabricks as `--num-gpus`). On a machine with fewer GPUs, lower `accelerator` for `PARABRICKS_FQ2BAM` in a custom config, as in the example below.
+FQ2BAM requests 4 GPUs by default (`accelerator = 4`, passed to Parabricks as `--num-gpus`). On a machine with fewer GPUs, lower `accelerator` for `PARABRICKS_FQ2BAM` in a custom config, as in the example below.
 
 The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if `--save_mapped` is set.
 
