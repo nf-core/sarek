@@ -13,8 +13,8 @@ include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL } from '.
 
 workflow VCF_VARIANT_FILTERING_MUTECT2 {
     take:
-    calls_in                        // channel: [mandatory] [ meta, vcf, tbi, stats, f1r2 ] one row per pair, tumour-only sample or patient (joint)
-    cram_in                         // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ] one row per pair or tumour-only sample ([] for the normal)
+    calls_in                        // channel: [mandatory] [ meta, vcf, tbi, stats, f1r2 ] one row per pair, tumor-only sample or patient (joint)
+    cram_in                         // channel: [mandatory] [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ] one row per pair or tumor-only sample ([] for the normal)
     intervals                       // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     fasta                           // channel: [mandatory] [ meta, fasta ]
     fai                             // channel: [mandatory] [ meta, fai ]
@@ -48,13 +48,13 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
             }
 
         // In joint mode meta.id may be the patient, so the pileup ids come from the sample keys.
-        // Dropping the tumour-specific keys (tumor_id, contamination) lets a normal shared by several tumours be summarised once.
+        // Dropping the tumor-specific keys (tumor_id, contamination) lets a normal shared by several tumors be summarized once.
         pileup = cram_intervals.multiMap { meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals_ ->
             tumor: [meta + [id: meta.tumor_id ?: meta.sample], tumor_cram, tumor_crai, intervals_]
             normal: [meta - meta.subMap('tumor_id', 'contamination') + [id: meta.normal_id], normal_cram, normal_crai, intervals_]
         }
 
-        // Tumour-only rows have no normal to summarise
+        // Tumor-only rows have no normal to summarize
         pileup_normal = pileup.normal.filter { meta, _cram, _crai, _intervals -> meta.normal_id }.unique()
 
         GETPILEUPSUMMARIES_NORMAL(pileup_normal, fasta, fai, dict, contamination_resource, contamination_resource_tbi)
@@ -78,7 +78,7 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
             tumor_only: true
         }
 
-        // One normal table per [patient, normal_id] is combined with every tumour of that normal.
+        // One normal table per [patient, normal_id] is combined with every tumor of that normal.
         // The pair meta is the cram meta with the pair id, so it matches the calls meta outside joint mode.
         pileup_table_normal_by_normal = pileup_table_normal.map { meta, table -> [[meta.patient, meta.normal_id], table] }
 
@@ -135,7 +135,7 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
 
 // Patient-level meta of joint calling: the per-sample keys are dropped and the id is the patient.
 // Used for the joint Mutect2 calls and for their contamination tables, which are joined on it.
-// data_type (bam or cram) is per sample in tumour-only meta: samples of one patient may differ.
+// data_type (bam or cram) is per sample in tumor-only meta: samples of one patient may differ.
 def patientMeta(meta) {
     return meta - meta.subMap('normal_id', 'tumor_id', 'sample', 'contamination', 'data_type') + [id: meta.patient]
 }

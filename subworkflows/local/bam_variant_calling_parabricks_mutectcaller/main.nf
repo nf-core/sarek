@@ -1,5 +1,5 @@
 //
-// PARABRICKS MUTECTCALLER: GPU-accelerated tumour-normal or tumour-only somatic variant calling, filtered with GATK on CPU
+// PARABRICKS MUTECTCALLER: GPU-accelerated tumor-normal or tumor-only somatic variant calling, filtered with GATK on CPU
 //
 
 include { VCF_VARIANT_FILTERING_MUTECT2 } from '../vcf_variant_filtering_mutect2'
@@ -7,7 +7,7 @@ include { PARABRICKS_MUTECTCALLER       } from '../../../modules/nf-core/parabri
 
 workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
     take:
-    cram                            // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ], normal_cram and normal_crai are [] for tumour-only
+    cram                            // channel: [mandatory] [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ], normal_cram and normal_crai are [] for tumor-only
     fasta                           // channel: [mandatory] [ meta, fasta ]
     fasta_fai                       // channel: [mandatory] [ meta, fasta_fai ]
     dict                            // channel: [mandatory] [ meta, dict ]

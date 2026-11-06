@@ -1,5 +1,5 @@
 //
-// MUTECT2: tumour-normal and tumour-only variant calling, filtering in VCF_VARIANT_FILTERING_MUTECT2
+// MUTECT2: tumor-normal and tumor-only variant calling, filtering in VCF_VARIANT_FILTERING_MUTECT2
 //
 
 include { VCF_VARIANT_FILTERING_MUTECT2              } from '../vcf_variant_filtering_mutect2'
@@ -11,7 +11,7 @@ include { GATK4_MUTECT2 as MUTECT2                   } from '../../../modules/nf
 
 workflow BAM_VARIANT_CALLING_MUTECT2 {
     take:
-    cram                            // channel: [mandatory] [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ] one row per pair or tumour-only sample ([] for the normal)
+    cram                            // channel: [mandatory] [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ] one row per pair or tumor-only sample ([] for the normal)
     fasta                           // channel: [mandatory] [ meta, fasta ]
     fai                             // channel: [mandatory] [ meta, fai ]
     dict                            // channel: [mandatory] [ meta, dict ]
@@ -29,7 +29,7 @@ workflow BAM_VARIANT_CALLING_MUTECT2 {
 
     main:
     if (joint_mutect2) {
-        // One call per patient; a normal shared by several tumours is passed once.
+        // One call per patient; a normal shared by several tumors is passed once.
         // normal_id is kept for --normal-sample and dropped after calling.
         input = cram
             .flatMap { meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
@@ -71,7 +71,7 @@ workflow BAM_VARIANT_CALLING_MUTECT2 {
     // Mutect2 calls filtered by filtermutectcalls in the shared filtering subworkflow, which sets meta.variantcaller
     // meta joint calling:  [id:patient, patient, sex]
     // meta paired calling: [id:tumor_id_vs_normal_id, normal_id, patient, sex, tumor_id]
-    // meta tumour-only:    [id:sample, data_type, patient, sample, sex, status]
+    // meta tumor-only:    [id:sample, data_type, patient, sample, sex, status]
     calls = MERGE_MUTECT2.out.vcf
         .join(MERGE_MUTECT2.out.tbi, failOnDuplicate: true, failOnMismatch: true)
         .join(MERGEMUTECTSTATS.out.stats, failOnDuplicate: true, failOnMismatch: true)

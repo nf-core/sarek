@@ -1,6 +1,6 @@
 name: bam_variant_calling_mutect2
 description: |
-  Perform variant calling with mutect2 on tumour-normal pairs or tumour-only samples, scattered over intervals.
+  Perform variant calling with mutect2 on tumor-normal pairs or tumor-only samples, scattered over intervals.
   Calls, stats and f1r2 files are merged across intervals and filtered with VCF_VARIANT_FILTERING_MUTECT2
   (learnreadorientationmodel, getpileupsummaries and calculatecontamination when a germline resource is provided, filtermutectcalls).
 keywords:
@@ -23,7 +23,7 @@ input:
   - cram:
       type: list
       description: |
-        One row per tumour-normal pair or tumour-only sample, the normal is [] for tumour-only
+        One row per tumor-normal pair or tumor-only sample, the normal is [] for tumor-only
         Structure: [ val(meta), path(normal_cram), path(normal_crai), path(tumor_cram), path(tumor_crai) ]
   - fasta:
       type: file
@@ -101,7 +101,7 @@ output:
   - artifact_priors:
       type: file
       description: |
-        Read-orientation artefact priors
+        Read-orientation artifact priors
         Structure: [ val(meta), path(file) ]
       pattern: "*.artifactprior.tar.gz"
   - pileup_table_normal:
@@ -113,7 +113,7 @@ output:
   - pileup_table_tumor:
       type: file
       description: |
-        Pileup summary table of the tumour (only with a germline resource)
+        Pileup summary table of the tumor (only with a germline resource)
         Structure: [ val(meta), path(file) ]
       pattern: "*.pileups.table"
   - contamination_table:
@@ -125,7 +125,7 @@ output:
   - segmentation_table:
       type: file
       description: |
-        Tumour segmentation table (only with a germline resource)
+        Tumor segmentation table (only with a germline resource)
         Structure: [ val(meta), path(file) ]
       pattern: "*.segmentation.table"
 authors:
