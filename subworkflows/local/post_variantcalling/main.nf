@@ -37,8 +37,10 @@ workflow POST_VARIANTCALLING {
     varlociraptor_scenario_tumor_only
 
     main:
-    vcfs = channel.empty()
-    tbis = channel.empty()
+    // Post-processed VCFs are carried as [meta, vcf, tbi] and only split into vcfs/tbis at emit
+    vcf_tbi          = channel.empty()
+    // Original VCFs when no post-processing is requested (passed through without their tbis)
+    passthrough_vcfs = channel.empty()
 
     //
     // VARLOCIRAPTOR
@@ -47,24 +49,17 @@ workflow POST_VARIANTCALLING {
         // GERMLINE
         VCF_VARLOCIRAPTOR_GERMLINE(cram_germline, fasta, fai, varlociraptor_scenario_germline, germline_vcfs, varlociraptor_chunk_size, 'normal', varlociraptor_events_germline, varlociraptor_fdr)
 
-        vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.vcf)
-        tbis = tbis.mix(VCF_VARLOCIRAPTOR_GERMLINE.out.tbi)
-
         // SOMATIC
         VCF_VARLOCIRAPTOR_SOMATIC(cram_somatic, fasta, fai, varlociraptor_scenario_somatic, somatic_vcfs, germline_vcfs, varlociraptor_chunk_size, varlociraptor_events_somatic, varlociraptor_fdr)
-
-        vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.vcf)
-        tbis = tbis.mix(VCF_VARLOCIRAPTOR_SOMATIC.out.tbi)
 
         // TUMOR ONLY
         VCF_VARLOCIRAPTOR_TUMOR_ONLY(cram_tumor_only, fasta, fai, varlociraptor_scenario_tumor_only, tumor_only_vcfs, varlociraptor_chunk_size, 'tumor', varlociraptor_events_tumor_only, varlociraptor_fdr)
 
-        vcfs = vcfs.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.vcf)
-        tbis = tbis.mix(VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.tbi)
+        varlociraptor_vcfs = channel.empty().mix(VCF_VARLOCIRAPTOR_GERMLINE.out.vcf, VCF_VARLOCIRAPTOR_SOMATIC.out.vcf, VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.vcf)
+        varlociraptor_tbis = channel.empty().mix(VCF_VARLOCIRAPTOR_GERMLINE.out.tbi, VCF_VARLOCIRAPTOR_SOMATIC.out.tbi, VCF_VARLOCIRAPTOR_TUMOR_ONLY.out.tbi)
 
-        // meta.publish_dir is the variant_calling/ subdirectory written to csv/variantcalled.csv; keep in sync with publishDir in conf/modules
-        vcfs = vcfs.map{ meta, vcf -> [meta + [publish_dir: 'varlociraptor'], vcf] }
-        tbis = tbis.map{ meta, tbi -> [meta + [publish_dir: 'varlociraptor'], tbi] }
+        vcf_tbi = varlociraptor_vcfs.join(varlociraptor_tbis, failOnDuplicate: true, failOnMismatch: true)
+            .map { meta, vcf, tbi -> [meta + [publish_dir: 'varlociraptor'], vcf, tbi] }
 
     } else if (filter_vcfs || normalize_vcfs || concatenate_vcfs ) {
 
@@ -85,29 +80,26 @@ workflow POST_VARIANTCALLING {
 
         def excluded_variantcallers = ['manta', 'tiddit', 'samtools']
 
-        all_vcfs = channel.empty().mix(germline_vcfs, tumor_only_vcfs, somatic_vcfs)
-                                .branch{ meta, _vcf ->
-                                    small: small_variantcallers.contains(meta.variantcaller)
-                                    other: true
-                                }
+        // Pair each VCF with its tbi. Somatic Strelka and Manta emit two VCFs per meta, so the VCF file name is part of the join key
+        all_vcfs = channel.empty().mix(germline_vcfs, tumor_only_vcfs, somatic_vcfs).map { meta, vcf -> [[meta, vcf.name], vcf] }
+        all_tbis = channel.empty().mix(germline_tbis, tumor_only_tbis, somatic_tbis).map { meta, tbi -> [[meta, tbi.baseName], tbi] }
 
-        all_tbis = channel.empty().mix(germline_tbis, tumor_only_tbis, somatic_tbis)
-                                .branch{ meta, _tbi ->
+        all_vcf_tbi = all_vcfs.join(all_tbis, failOnDuplicate: true, failOnMismatch: true)
+                                .map { key, vcf, tbi -> [key[0], vcf, tbi] }
+                                .branch{ meta, _vcf, _tbi ->
                                     small: small_variantcallers.contains(meta.variantcaller)
                                     other: true
                                 }
 
         // Validate that we're not silently excluding unknown variant callers
-        all_vcfs.other.subscribe { meta, _vcf ->
+        all_vcf_tbi.other.subscribe { meta, _vcf, _tbi ->
             if (!excluded_variantcallers.contains(meta.variantcaller)) {
-                error("Variant caller '${meta.variantcaller}' is not in the small_variantcallers list and will be excluded from normalization/filtering/consensus. If this is a new SNV caller, please add it to the list in subworkflows/local/post_variantcalling/main.nf:78-80")
+                error("Variant caller '${meta.variantcaller}' is not in the small_variantcallers list and will be excluded from normalization/filtering/consensus. If this is a new SNV caller, please add it to the list in subworkflows/local/post_variantcalling/main.nf")
             }
         }
 
-        // Needs to be reassigned to enable pass through reassignment below
-        // Due to strelka having multiple outputs, we are adding the file name (vcf.gz) for both here to make sure the right files are joined below
-        small_variant_vcfs = all_vcfs.small.map{ meta, vcfs_ -> [meta + [filename: vcfs_.name], vcfs_]}
-        small_variant_tbis = all_tbis.small.map{ meta, tbis_ -> [meta + [filename: tbis_.baseName], tbis_]}
+        // Due to somatic strelka having two VCFs per meta (SNVs and indels), the file name is added to meta to keep them apart in the joins below
+        small_variant_vcf_tbi = all_vcf_tbi.small.map{ meta, vcf, tbi -> [meta + [filename: vcf.name], vcf, tbi] }
         def small_variant_publish_dir = null
 
         // 1. Filter by PASS and custom fields
@@ -115,56 +107,54 @@ workflow POST_VARIANTCALLING {
         // 3. Aggregate variants (Union, intersection, or n-1)
         if(filter_vcfs) {
 
-            // Join VCFs with their corresponding TBIs before filtering
-            FILTER_VCFS( small_variant_vcfs.join(small_variant_tbis, failOnDuplicate: true, failOnMismatch: true), [], [], [])
+            FILTER_VCFS(small_variant_vcf_tbi, [], [], [])
 
-            small_variant_vcfs = FILTER_VCFS.out.vcf
-            small_variant_tbis = FILTER_VCFS.out.index
+            small_variant_vcf_tbi = FILTER_VCFS.out.vcf.join(FILTER_VCFS.out.index, failOnDuplicate: true, failOnMismatch: true)
             small_variant_publish_dir = 'filtered'
         }
 
         if (normalize_vcfs) {
 
-            NORMALIZE_VCFS(small_variant_vcfs, fasta)
+            NORMALIZE_VCFS(small_variant_vcf_tbi.map { meta, vcf, _tbi -> [meta, vcf] }, fasta)
 
-            small_variant_vcfs = NORMALIZE_VCFS.out.vcfs // [meta, vcf]
-            small_variant_tbis = NORMALIZE_VCFS.out.tbis // [meta, tbi]
+            small_variant_vcf_tbi = NORMALIZE_VCFS.out.vcfs.join(NORMALIZE_VCFS.out.tbis, failOnDuplicate: true, failOnMismatch: true)
             small_variant_publish_dir = 'normalized'
         }
 
+        // Individual caller VCFs are kept next to any consensus VCF for downstream annotation
+        vcf_tbi = small_variant_vcf_tbi
+            .map { meta, vcf, tbi -> [meta + [publish_dir: small_variant_publish_dir], vcf, tbi] }
+            .mix(all_vcf_tbi.other)
+
         if (normalize_vcfs && snv_consensus_calling){
-            // Preserve individual caller VCFs before consensus (for annotation)
-            individual_caller_vcfs = small_variant_vcfs
-            individual_caller_tbis = small_variant_tbis
 
-            CONSENSUS(small_variant_vcfs.join(small_variant_tbis, failOnDuplicate: true, failOnMismatch: true))
+            CONSENSUS(small_variant_vcf_tbi)
 
-            consensus_vcfs = CONSENSUS.out.vcfs.map { meta, vcfs_ -> [meta + [variantcaller: 'consensus'], vcfs_] }
-            consensus_tbis = CONSENSUS.out.tbis.map { meta, tbis_ -> [meta + [variantcaller: 'consensus'], tbis_] }
-
-            // Mix consensus VCF with individual caller VCFs for downstream annotation
-            small_variant_vcfs = consensus_vcfs.mix(individual_caller_vcfs)
-            small_variant_tbis = consensus_tbis.mix(individual_caller_tbis)
+            // variantcaller 'consensus': published to variant_calling/consensus/, so no meta.publish_dir needed
+            vcf_tbi = vcf_tbi.mix(
+                CONSENSUS.out.vcfs.join(CONSENSUS.out.tbis, failOnDuplicate: true, failOnMismatch: true)
+                    .map { meta, vcf, tbi -> [meta + [variantcaller: 'consensus'], vcf, tbi] }
+            )
         }
-
-        // Set after CONSENSUS, which groups on meta; unset means variant_calling/<variantcaller>/
-        vcfs = small_variant_vcfs.map{ meta, vcf -> [meta + [publish_dir: meta.variantcaller == 'consensus' ? 'consensus' : small_variant_publish_dir], vcf] }.mix(all_vcfs.other)
-        tbis = small_variant_tbis.map{ meta, tbi -> [meta + [publish_dir: meta.variantcaller == 'consensus' ? 'consensus' : small_variant_publish_dir], tbi] }.mix(all_tbis.other)
 
         if (concatenate_vcfs) {
             CONCATENATE_GERMLINE_VCFS(germline_vcfs)
 
-            vcfs = vcfs.mix(CONCATENATE_GERMLINE_VCFS.out.vcfs.map{ meta, vcf -> [meta + [publish_dir: 'concat'], vcf] })
-            tbis = tbis.mix(CONCATENATE_GERMLINE_VCFS.out.tbis.map{ meta, tbi -> [meta + [publish_dir: 'concat'], tbi] })
+            vcf_tbi = vcf_tbi.mix(
+                CONCATENATE_GERMLINE_VCFS.out.vcfs.join(CONCATENATE_GERMLINE_VCFS.out.tbis, failOnDuplicate: true, failOnMismatch: true)
+                    .map { meta, vcf, tbi -> [meta + [publish_dir: 'concat'], vcf, tbi] }
+            )
         }
-
 
     } else {
         // No post-processing requested, pass through original VCFs
-        vcfs = vcfs.mix(germline_vcfs,tumor_only_vcfs, somatic_vcfs)
+        passthrough_vcfs = channel.empty().mix(germline_vcfs, tumor_only_vcfs, somatic_vcfs)
     }
 
     emit:
-    vcfs     // post processed vcfs [meta, vcf], meta.publish_dir set if not published to variant_calling/<variantcaller>/
-    tbis     // post processed tbis [meta, tbi]
+    // meta.publish_dir: variant_calling/ subdirectory a post-processed VCF is published to by conf/modules
+    // (post_variant_calling.config, varlociraptor.config); unset means variant_calling/<variantcaller>/.
+    // Only read by CHANNEL_VARIANT_CALLING_CREATE_CSV, to point csv/variantcalled.csv at the published file.
+    vcfs = vcf_tbi.map { meta, vcf, _tbi -> [meta, vcf] }.mix(passthrough_vcfs) // [meta, vcf]
+    tbis = vcf_tbi.map { meta, _vcf, tbi -> [meta, tbi] }                       // [meta, tbi], empty without post-processing
 }
