@@ -1,0 +1,47 @@
+nextflow_workflow {
+    name "CNVkit shared reference"
+    script "../../subworkflows/local/bam_variant_calling_cnvkit/main.nf"
+    workflow "BAM_VARIANT_CALLING_CNVKIT"
+    config "./reference_reuse.config"
+    options "-stub-run"
+    tag "stub"
+    tag "cpu"
+    tag "reference_reuse"
+
+    [1, 3, 0].each { sampleCount ->
+        test("CNVkit reuses its reference for ${sampleCount} paired samples") {
+            when {
+                workflow {
+                    """
+                    def samples = ${sampleCount} ? (1..${sampleCount}).collect { i ->
+                        def id = 'p' + i
+                        def tumour = file(id + '.tumour.bam')
+                        def normal = file(id + '.normal.bam')
+                        tumour.text = 'synthetic'
+                        normal.text = 'synthetic'
+                        [[id: id, patient: id], tumour, normal]
+                    } : []
+                    file('reference.fa').text = '>ref\\nACGT\\n'
+                    file('reference.fa.fai').text = 'ref\\t4\\t5\\t4\\t5\\n'
+                    file('targets.bed').text = 'ref\\t0\\t4\\n'
+                    input[0] = channel.fromList(samples)
+                    input[1] = channel.fromPath('reference.fa').map { fa -> [[id: 'ref'], fa] }.collect()
+                    input[2] = channel.fromPath('reference.fa.fai').map { fai -> [[id: 'ref'], fai] }.collect()
+                    input[3] = channel.value([[id: 'targets'], file('targets.bed')])
+                    input[4] = channel.value([[:], []])
+                    """
+                }
+            }
+            then {
+                assert workflow.success
+                def ids = sampleCount ? (1..sampleCount).collect { i -> 'p' + i } : []
+                assert workflow.out.cnv_calls_raw.collect { row -> row[0].id }.sort() == ids
+                assert workflow.out.cnv_calls_export.collect { row -> row[0].id }.sort() == ids
+                assert workflow.out.cnv_calls_raw.every { row ->
+                    row.size() == 2 && row[0].patient == row[0].id && path(row[1]).fileName.toString() == row[0].id + '.cns'
+                }
+                assert workflow.trace.succeeded().findAll { task -> task.name.contains(':CNVKIT_BATCH') }.size() == sampleCount
+            }
+        }
+    }
+}
