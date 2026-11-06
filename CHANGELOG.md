@@ -21,7 +21,6 @@ Njoatsosvágge is a long valley crossing the northern part of Sarek National Par
 
 - [#2339](https://github.com/nf-core/sarek/pull/2339) - Update `parabricks/applybqsr`, `parabricks/deepsomatic`, `parabricks/deepvariant`, `parabricks/fq2bam` and `parabricks/haplotypecaller` modules to Parabricks 4.8.0
 - [#2349](https://github.com/nf-core/sarek/pull/2349) - Process `MUTECT2_PAIRED` is now `MUTECT2`; custom configs selecting `withName: 'MUTECT2_PAIRED'` need to select `MUTECT2` instead
-- [#2380](https://github.com/nf-core/sarek/pull/2380) - Remove `CLAUDE.md` so Claude Code loads `AGENTS.md` directly
 
 ### Fixed
 
@@ -83,6 +82,8 @@ Njoatsosvágge is a long valley crossing the northern part of Sarek National Par
 - [#2373](https://github.com/nf-core/sarek/pull/2373) - Fix consensus VCFs intermittently listed under `variant_calling/normalized/` instead of `variant_calling/consensus/` in `csv/variantcalled.csv`: consensus calls no longer set `variantcaller` on a meta map shared across channels
 
 #### Removed
+
+- [#2380](https://github.com/nf-core/sarek/pull/2380) - Remove `CLAUDE.md` so Claude Code loads `AGENTS.md` directly
 
 ## [3.11.0](https://github.com/nf-core/sarek/releases/tag/3.11.0) - Guhkesvákkjåhkå
 
