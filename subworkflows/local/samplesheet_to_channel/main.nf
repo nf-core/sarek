@@ -59,35 +59,25 @@ workflow SAMPLESHEET_TO_CHANNEL {
             }
         }
 
+    // variantcalled.csv (step annotate) has one row per VCF and no lane
+    def duplicate_key_fields = step == 'annotate'
+        ? ['Patient', 'Sample', 'Status', 'Variantcaller', 'VCF']
+        : ['Patient', 'Sample', 'Status', 'Lane']
+
     ch_from_samplesheet
-        .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _contamination, _vcf, _variantcaller ->
-            // Create a unique key for patient-sample-status-lane-variantcaller-vcf combination
-            // For step 'annotate', uniqueness must be based on patient-sample-status-variantcaller-vcf
-            // because the variantcalled.csv from --step variant_calling contains multiple VCFs per sample.
-            // For other steps, uniqueness is based on patient-sample-status-lane (variantcaller/vcf are empty).
-            def base_key = "${meta.patient}-${meta.sample}-${meta.status}"
-            def combination_key = (step == 'annotate')
-                ? "${base_key}-${_variantcaller}-${_vcf}"
-                : "${base_key}-${meta.lane}"
-            [combination_key, [meta.patient, meta.sample, meta.status, meta.lane, _variantcaller, _vcf]]
+        .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _contamination, vcf, variantcaller ->
+            def row_fields = [Patient: meta.patient, Sample: meta.sample, Status: meta.status, Lane: meta.lane, Variantcaller: variantcaller, VCF: vcf]
+            def key_fields = row_fields.subMap(duplicate_key_fields)
+            [key_fields.values().join('-'), key_fields]
         }
         .groupTuple()
         .map { _combination_key, combination_list ->
             if (combination_list.size() > 1) {
-                def patient = combination_list[0][0]
-                def sample = combination_list[0][1]
-                def status = combination_list[0][2]
-                if (step == 'annotate') {
-                    def variantcaller = combination_list[0][4]
-                    def vcf = combination_list[0][5]
-                    System.err.println("Duplicate patient-sample-status-variantcaller-vcf combination found: Patient '${patient}', Sample '${sample}', Status '${status}', Variantcaller '${variantcaller}', VCF '${vcf}' appears ${combination_list.size()} times. Please ensure each combination is unique.")
-                    error("Execution halted due to duplicate patient-sample-status-lane-variantcaller-vcf combination.")
-                }
-                else {
-                    def lane = combination_list[0][3]
-                    System.err.println("Duplicate patient-sample-status-lane combination found: Patient '${patient}', Sample '${sample}', Status '${status}', Lane '${lane}' appears ${combination_list.size()} times. Please ensure each combination is unique.")
-                    error("Execution halted due to duplicate patient-sample-status-lane combination.")
-                }
+                def key_fields = combination_list[0]
+                def combination_name = key_fields.keySet().collect { field -> field.toLowerCase() }.join('-')
+                def combination_values = key_fields.collect { field, value -> "${field} '${value}'" }.join(', ')
+                System.err.println("Duplicate ${combination_name} combination found: ${combination_values} appears ${combination_list.size()} times. Please ensure each combination is unique.")
+                error("Execution halted due to duplicate ${combination_name} combination.")
             }
         }
 
