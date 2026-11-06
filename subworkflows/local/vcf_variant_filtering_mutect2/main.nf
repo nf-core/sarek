@@ -60,28 +60,17 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
         GETPILEUPSUMMARIES_NORMAL(pileup_normal, fasta, fai, dict, contamination_resource, contamination_resource_tbi)
         GETPILEUPSUMMARIES_TUMOR(pileup.tumor, fasta, fai, dict, contamination_resource, contamination_resource_tbi)
 
-        // Figuring out if there is one or more table(s) from the same sample
-        pileup_table_normal_branch = GETPILEUPSUMMARIES_NORMAL.out.table.branch { meta, _table ->
-            intervals: meta.num_intervals > 1
-            no_intervals: meta.num_intervals <= 1
-        }
-        pileup_table_tumor_branch = GETPILEUPSUMMARIES_TUMOR.out.table.branch { meta, _table ->
-            intervals: meta.num_intervals > 1
-            no_intervals: meta.num_intervals <= 1
-        }
+        pileup_normal_gather = gatherPileups(GETPILEUPSUMMARIES_NORMAL.out.table)
+        pileup_tumor_gather = gatherPileups(GETPILEUPSUMMARIES_TUMOR.out.table)
 
-        // Only when using intervals
-        pileup_table_normal_to_merge = pileup_table_normal_branch.intervals.map { meta, table -> [groupKey(meta, meta.num_intervals), table] }.groupTuple()
-        pileup_table_tumor_to_merge = pileup_table_tumor_branch.intervals.map { meta, table -> [groupKey(meta, meta.num_intervals), table] }.groupTuple()
-
-        GATHERPILEUPSUMMARIES_NORMAL(pileup_table_normal_to_merge, dict.map { _meta, dict_ -> [dict_] })
-        GATHERPILEUPSUMMARIES_TUMOR(pileup_table_tumor_to_merge, dict.map { _meta, dict_ -> [dict_] })
+        GATHERPILEUPSUMMARIES_NORMAL(pileup_normal_gather.intervals, dict.map { _meta, dict_ -> [dict_] })
+        GATHERPILEUPSUMMARIES_TUMOR(pileup_tumor_gather.intervals, dict.map { _meta, dict_ -> [dict_] })
 
         pileup_table_normal = channel.empty()
-            .mix(GATHERPILEUPSUMMARIES_NORMAL.out.table, pileup_table_normal_branch.no_intervals)
+            .mix(GATHERPILEUPSUMMARIES_NORMAL.out.table, pileup_normal_gather.no_intervals)
             .map { meta, table -> [meta - meta.subMap('num_intervals'), table] }
         pileup_table_tumor = channel.empty()
-            .mix(GATHERPILEUPSUMMARIES_TUMOR.out.table, pileup_table_tumor_branch.no_intervals)
+            .mix(GATHERPILEUPSUMMARIES_TUMOR.out.table, pileup_tumor_gather.no_intervals)
             .map { meta, table -> [meta - meta.subMap('num_intervals'), table] }
 
         pileup_table_tumor_branch_status = pileup_table_tumor.branch { meta, _table ->
@@ -149,4 +138,21 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
 // data_type (bam or cram) is per sample in tumour-only meta: samples of one patient may differ.
 def patientMeta(meta) {
     return meta - meta.subMap('normal_id', 'tumor_id', 'sample', 'contamination', 'data_type') + [id: meta.patient]
+}
+
+// One row per call or sample with the outputs of all its intervals (a single one without intervals, num_intervals 0 or 1).
+// groupKey releases each row as soon as its intervals are done.
+def groupByIntervals(ch) {
+    return ch
+        .map { meta, file -> [groupKey(meta, Math.max(meta.num_intervals, 1)), file] }
+        .groupTuple()
+}
+
+// Scattered pileup tables of a sample are to be gathered, a single table passes through
+def gatherPileups(tables) {
+    return groupByIntervals(tables).branch { meta, tables_ ->
+        intervals: meta.num_intervals > 1
+        no_intervals: true
+            return [meta, tables_[0]]
+    }
 }

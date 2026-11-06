@@ -3,6 +3,7 @@
 //
 
 include { VCF_VARIANT_FILTERING_MUTECT2              } from '../vcf_variant_filtering_mutect2'
+include { groupByIntervals                           } from '../vcf_variant_filtering_mutect2'
 include { patientMeta                                } from '../vcf_variant_filtering_mutect2'
 include { GATK4_MERGEMUTECTSTATS as MERGEMUTECTSTATS } from '../../../modules/nf-core/gatk4/mergemutectstats'
 include { GATK4_MERGEVCFS as MERGE_MUTECT2           } from '../../../modules/nf-core/gatk4/mergevcfs'
@@ -51,47 +52,31 @@ workflow BAM_VARIANT_CALLING_MUTECT2 {
 
     MUTECT2(input_intervals, fasta, fai.map { meta, index -> [ meta, index, [] ] }, dict, force_call_alleles, force_call_alleles_tbi, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
 
-    // Figuring out if there is one or more vcf(s) from the same sample
-    vcf_branch = MUTECT2.out.vcf.branch { meta, _vcf ->
-        intervals: meta.num_intervals > 1
-        no_intervals: meta.num_intervals <= 1
-    }
+    // All outputs of a call, scattered or not, in one row
+    mutect2_out = groupByIntervals(MUTECT2.out.vcf)
+        .join(groupByIntervals(MUTECT2.out.tbi), failOnDuplicate: true, failOnMismatch: true)
+        .join(groupByIntervals(MUTECT2.out.stats), failOnDuplicate: true, failOnMismatch: true)
+        .join(groupByIntervals(MUTECT2.out.f1r2), failOnDuplicate: true, failOnMismatch: true)
+        .branch { meta, vcf, tbi, stats, f1r2 ->
+            // Scattered: vcf and stats are merged (MergeVcfs writes the tbi), all f1r2 go to LearnReadOrientationModel
+            intervals: meta.num_intervals > 1
+                return [meta, vcf, stats, f1r2]
+            no_intervals: true
+                return [meta, vcf[0], tbi[0], stats[0], f1r2[0]]
+        }
 
-    // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_branch = MUTECT2.out.tbi.branch { meta, _tbi ->
-        intervals: meta.num_intervals > 1
-        no_intervals: meta.num_intervals <= 1
-    }
-
-    // Figuring out if there is one or more stats(s) from the same sample
-    stats_branch = MUTECT2.out.stats.branch { meta, _stats ->
-        intervals: meta.num_intervals > 1
-        no_intervals: meta.num_intervals <= 1
-    }
-
-    // Figuring out if there is one or more f1r2(s) from the same sample
-    f1r2_branch = MUTECT2.out.f1r2.branch { meta, _f1r2 ->
-        intervals: meta.num_intervals > 1
-        no_intervals: meta.num_intervals <= 1
-    }
-
-    // Only when using intervals
-    vcf_to_merge = vcf_branch.intervals.map { meta, vcf -> [groupKey(meta, meta.num_intervals), vcf] }.groupTuple()
-    stats_to_merge = stats_branch.intervals.map { meta, stats -> [groupKey(meta, meta.num_intervals), stats] }.groupTuple()
-    f1r2_to_merge = f1r2_branch.intervals.map { meta, f1r2 -> [groupKey(meta, meta.num_intervals), f1r2] }.groupTuple()
-
-    MERGE_MUTECT2(vcf_to_merge, dict)
-    MERGEMUTECTSTATS(stats_to_merge)
+    MERGE_MUTECT2(mutect2_out.intervals.map { meta, vcf, _stats, _f1r2 -> [meta, vcf] }, dict)
+    MERGEMUTECTSTATS(mutect2_out.intervals.map { meta, _vcf, stats, _f1r2 -> [meta, stats] })
 
     // Mutect2 calls filtered by filtermutectcalls in the shared filtering subworkflow, which sets meta.variantcaller
     // meta joint calling:  [id:patient, patient, sex]
     // meta paired calling: [id:tumor_id_vs_normal_id, normal_id, patient, sex, tumor_id]
     // meta tumour-only:    [id:sample, data_type, patient, sample, sex, status]
-    calls = channel.empty()
-        .mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals)
-        .join(channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals), failOnDuplicate: true, failOnMismatch: true)
-        .join(channel.empty().mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals), failOnDuplicate: true, failOnMismatch: true)
-        .join(channel.empty().mix(f1r2_to_merge, f1r2_branch.no_intervals), failOnDuplicate: true, failOnMismatch: true)
+    calls = MERGE_MUTECT2.out.vcf
+        .join(MERGE_MUTECT2.out.tbi, failOnDuplicate: true, failOnMismatch: true)
+        .join(MERGEMUTECTSTATS.out.stats, failOnDuplicate: true, failOnMismatch: true)
+        .join(mutect2_out.intervals.map { meta, _vcf, _stats, f1r2 -> [meta, f1r2] }, failOnDuplicate: true, failOnMismatch: true)
+        .mix(mutect2_out.no_intervals)
         .map { meta, vcf, tbi, stats, f1r2 ->
             [meta - meta.subMap(joint_mutect2 ? ['normal_id', 'num_intervals'] : ['num_intervals']), vcf, tbi, stats, f1r2]
         }
