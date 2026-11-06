@@ -3,6 +3,7 @@
 //
 
 include { VCF_VARIANT_FILTERING_MUTECT2              } from '../vcf_variant_filtering_mutect2'
+include { patientMeta                                } from '../vcf_variant_filtering_mutect2'
 include { GATK4_MERGEMUTECTSTATS as MERGEMUTECTSTATS } from '../../../modules/nf-core/gatk4/mergemutectstats'
 include { GATK4_MERGEVCFS as MERGE_MUTECT2           } from '../../../modules/nf-core/gatk4/mergevcfs'
 include { GATK4_MUTECT2 as MUTECT2                   } from '../../../modules/nf-core/gatk4/mutect2'
@@ -31,7 +32,7 @@ workflow BAM_VARIANT_CALLING_MUTECT2 {
         // normal_id is kept for --normal-sample and dropped after calling.
         input = cram
             .flatMap { meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
-                def patient_meta = meta - meta.subMap('normal_id', 'tumor_id', 'sample', 'contamination') + [id: meta.patient] + (meta.normal_id ? [normal_id: meta.normal_id] : [:])
+                def patient_meta = patientMeta(meta) + (meta.normal_id ? [normal_id: meta.normal_id] : [:])
                 normal_cram ? [[patient_meta, normal_cram, normal_crai], [patient_meta, tumor_cram, tumor_crai]] : [[patient_meta, tumor_cram, tumor_crai]]
             }
             .unique()

@@ -98,14 +98,9 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
         CALCULATECONTAMINATION(calculatecontamination_in)
 
         if (joint) {
-            // One table per input row, so each patient's group is released as soon as its own tables are done
-            tables_per_patient = cram
-                .map { meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai -> [meta.patient, meta] }
-                .groupTuple()
-                .map { patient, metas -> [patient, metas.size()] }
-
-            contamination_table = groupTablesByPatient(CALCULATECONTAMINATION.out.contamination, tables_per_patient)
-            segmentation_table = groupTablesByPatient(CALCULATECONTAMINATION.out.segmentation, tables_per_patient)
+            // Joint calls are per patient, so are their tables. Without a group size, groupTuple waits for the tables of all patients.
+            contamination_table = CALCULATECONTAMINATION.out.contamination.map { meta, table -> [patientMeta(meta), table] }.groupTuple()
+            segmentation_table = CALCULATECONTAMINATION.out.segmentation.map { meta, table -> [patientMeta(meta), table] }.groupTuple()
         }
         else {
             contamination_table = CALCULATECONTAMINATION.out.contamination
@@ -145,12 +140,8 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
     pileup_table_tumor                                                  // channel: [ meta, table ]
 }
 
-// Joint calls are per patient: drop the per-sample keys as the caller does and group the tables by patient
-def groupTablesByPatient(tables, tables_per_patient) {
-    return tables
-        .map { meta, table -> [meta.patient, meta - meta.subMap('normal_id', 'tumor_id', 'sample', 'contamination') + [id: meta.patient], table] }
-        .combine(tables_per_patient, by: 0)
-        .map { _patient, meta, table, n -> [groupKey(meta, n), table] }
-        .groupTuple()
-        .map { key, grouped_tables -> [key.getGroupTarget(), grouped_tables] }
+// Patient-level meta of joint calling: the per-sample keys are dropped and the id is the patient.
+// Used for the joint Mutect2 calls and for their contamination tables, which are joined on it.
+def patientMeta(meta) {
+    return meta - meta.subMap('normal_id', 'tumor_id', 'sample', 'contamination') + [id: meta.patient]
 }
