@@ -58,22 +58,7 @@ workflow PREPARE_INTERVALS {
                 intervals_combined = BEDTOOLS_SORT.out.sorted
                     .combine(fasta_fai)
                     .map{ meta, bed, _meta_fai, fai ->
-                        def contig_length = [:]
-                        fai.eachLine { line ->
-                            def fields = line.split('\t')
-                            contig_length[fields[0]] = fields[1].toLong()
-                        }
-                        def past_end = []
-                        bed.eachLine { line ->
-                            if (line =~ /^(#|track|browser)/) return
-                            def fields = line.split('\t')
-                            if (fields[2].toLong() > contig_length[fields[0]]) {
-                                past_end << "${fields[0]}:${fields[1]}-${fields[2]} (${fields[0]} is ${contig_length[fields[0]]} bp)"
-                            }
-                        }
-                        if (past_end) {
-                            error("--intervals: ${past_end.size()} interval(s) end past their contig in the reference (${fai.name}), for example: " + past_end.take(3).join(', '))
-                        }
+                        checkIntervalsWithinContigs(bed, fai)
                         [ meta, bed ]
                     }
             }
@@ -134,4 +119,24 @@ workflow PREPARE_INTERVALS {
     // All intervals in one file
     intervals_bed_combined        // [ intervals.bed ]
     intervals_bed_gz_tbi_combined // [ intervals.bed.gz, intervals.bed.gz.tbi]
+}
+
+// Fail if any BED interval ends past the end of its contig in the reference FAI
+def checkIntervalsWithinContigs(bed, fai) {
+    def contig_length = [:]
+    fai.eachLine { line ->
+        def fields = line.split('\t')
+        contig_length[fields[0]] = fields[1].toLong()
+    }
+    def past_end = []
+    bed.eachLine { line ->
+        if (line =~ /^(#|track|browser)/) return
+        def fields = line.split('\t')
+        if (fields[2].toLong() > contig_length[fields[0]]) {
+            past_end << "${fields[0]}:${fields[1]}-${fields[2]} (${fields[0]} is ${contig_length[fields[0]]} bp)"
+        }
+    }
+    if (past_end) {
+        error("--intervals: ${past_end.size()} interval(s) end past their contig in the reference (${fai.name}), for example: " + past_end.take(3).join(', '))
+    }
 }
