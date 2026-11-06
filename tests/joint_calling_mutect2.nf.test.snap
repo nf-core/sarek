@@ -221,11 +221,12 @@
                 "test.mutect2.vcf.gz:md5,e064ce0953bb07416f3bc8a60c761238"
             ],
             [
-                "WARN: If Mutect2 is specified without a germline resource, calls are filtered without contamination estimation and calling runs without the germline prior.",
+                "WARN: If Mutect2 is specified without a germline resource or a contamination resource, calls are filtered without contamination estimation.",
+                "WARN: If Mutect2 is specified without a germline resource, calling runs without the germline prior.",
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-11-02T10:41:40.693888083",
+        "timestamp": "2026-11-06T16:05:14.65936108",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -464,11 +465,12 @@
                 "test.mutect2.vcf.gz:md5,593f6a3b49d8a4e44b1e2696883116c0"
             ],
             [
-                "WARN: If Mutect2 is specified without a germline resource, calls are filtered without contamination estimation and calling runs without the germline prior.",
+                "WARN: If Mutect2 is specified without a germline resource or a contamination resource, calls are filtered without contamination estimation.",
+                "WARN: If Mutect2 is specified without a germline resource, calling runs without the germline prior.",
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-11-02T11:50:34.682786422",
+        "timestamp": "2026-11-06T15:40:39.848917034",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
