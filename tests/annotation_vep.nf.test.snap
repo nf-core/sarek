@@ -74,10 +74,10 @@
             "No VCF files",
             "No warnings",
             [
-                "DBNSFP: https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz has been provided with `--dbnsfp`, but no `--dbnsfp_tbi` has been provided."
+                "Execution halted due to dbnsfp inconsistency."
             ]
         ],
-        "timestamp": "2026-11-06T16:07:46.009472307",
+        "timestamp": "2026-10-16T14:51:39.45754633",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

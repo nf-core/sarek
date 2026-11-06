@@ -21,8 +21,7 @@ nextflow_pipeline {
                 step: "variant_calling"
             ],
             failure: true,
-            snapshot: 'stdout',
-            snapshot_include: 'has more than one sample',
+            snapshot: 'stderr',
         ],
         [
             name: "-profile test,spark --input tests/csv/3.0/fastq_single.csv --use_gatk_spark baserecalibrator,markduplicates --save_mapped --save_output_as_bam",
@@ -33,8 +32,7 @@ nextflow_pipeline {
                 save_output_as_bam: true
             ],
             failure: true,
-            snapshot: 'stdout',
-            snapshot_include: 'not compatible with --save_mapped',
+            snapshot: 'stderr',
         ],
         [
             name: "-profile test --input tests/csv/3.0/fastq_multiple_lane_ids.csv",
@@ -42,8 +40,7 @@ nextflow_pipeline {
                 input: "${projectDir}/tests/csv/3.0/fastq_multiple_lane_ids.csv"
             ],
             failure: true,
-            snapshot: 'stdout',
-            snapshot_include: 'Duplicate',
+            snapshot: 'stderr',
         ],
         [
             name: "-profile test --input tests/csv/3.0/fastq_multiple_sample_ids.csv",
@@ -51,8 +48,7 @@ nextflow_pipeline {
                 input: "${projectDir}/tests/csv/3.0/fastq_multiple_sample_ids.csv"
             ],
             failure: true,
-            snapshot: 'stdout',
-            snapshot_include: 'is associated with multiple patient IDs',
+            snapshot: 'stderr',
         ]
     ]
 

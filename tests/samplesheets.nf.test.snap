@@ -112,13 +112,18 @@
             "No VCF files",
             "No warnings",
             [
-                "  --use_gatk_spark with 'markduplicates' is not compatible with --save_mapped."
+                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+                "  --use_gatk_spark with 'markduplicates' is not compatible with --save_mapped.",
+                "  Spark markduplicates requires name-sorted input, so the saved mapped",
+                "  alignment (BAM or CRAM) would be name-sorted and cannot be indexed.",
+                "  Either drop --save_mapped, or switch to the non-Spark markduplicates path.",
+                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             ]
         ],
-        "timestamp": "2026-11-06T16:07:03.981830744",
+        "timestamp": "2025-12-16T12:16:38.014556073",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         }
     }
 }

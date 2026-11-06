@@ -31,7 +31,7 @@ nextflow_pipeline {
             ],
             failure: true,
             snapshot: 'stdout',
-            snapshot_include: 'dbnsfp_tbi',
+            snapshot_include: 'dbnsfp inconsistency',
         ],
         [
             name: "-profile test --tools vep --vep_loftee",
