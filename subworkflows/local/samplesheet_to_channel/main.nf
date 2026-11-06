@@ -391,7 +391,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 log.warn("If ${tool_name} is specified without a germline resource or a contamination resource, calls are filtered without contamination estimation.\nTo estimate contamination, provide `--contamination_resource` or `--germline_resource`: https://nf-co.re/sarek/usage#how-to-provide-a-contamination-resource-for-mutect2")
             }
             if (pon && pon.contains("/Homo_sapiens/GATK/GRCh38/Annotation/GATKBundle/1000g_pon.hg38.vcf.gz")) {
-                log.warn("The default Panel-of-Normals provided by GATK is used for ${tool_name}.\nIt is highly recommended to generate one from normal samples that are technical similar to the tumor ones.\nFor more information: https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-")
+                log.warn("The default Panel-of-Normals provided by GATK is used for ${tool_name}.\nIt is highly recommended to generate one from normal samples that are technically similar to the tumor ones.\nFor more information: https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-")
             }
         }
     }
