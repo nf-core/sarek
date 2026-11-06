@@ -206,6 +206,8 @@ Fq2bam runs bwa-mem alignment, coordinate sorting, duplicate marking and, when k
 [Parabricks ApplyBQSR](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_applybqsr.html) then applies the table on the GPU, unless `baserecalibrator` is listed in `--skip_tools`.
 Duplicate marking cannot be skipped yet, see [Issue #1853](https://github.com/nf-core/sarek/issues/1853).
 
+Fq2bam requests 4 GPUs by default (`accelerator = 4`, passed to Parabricks as `--num-gpus`). On a machine with fewer GPUs, lower `accelerator` for `PARABRICKS_FQ2BAM` in a custom config, as in the example below.
+
 The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if `--save_mapped` is set.
 
 **Adapting fq2bam to your hardware:**
@@ -216,7 +218,7 @@ When overriding `ext.args` in a [custom config](https://nf-co.re/docs/usage/gett
 ```groovy title="custom-parabricks.config"
 process {
     withName: 'PARABRICKS_FQ2BAM' {
-        accelerator = 4
+        accelerator = 2 // number of GPUs, default: 4
         ext.args    = { [
             // Using specific read group tags for mutect compability (keep if using mutect)
             "--read-group-id-prefix ${meta.sample_lane_id}",
@@ -478,7 +480,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 - `gpu`
-  - A generic configuration profile which adds necessary flags to `docker` and `singularity` profiles. Required for the Parabricks tools (`--aligner parabricks`, `--tools parabricks_*`), which also request one GPU per process (`accelerator = 1`); set `accelerator` for `PARABRICKS_*` processes in a custom config to change this. Parabricks does not support `-profile conda`. See the [nf-core GPU documentation](https://nf-co.re/docs/running/configuration/gpu-pipelines) for more information.
+  - A generic configuration profile which adds necessary flags to `docker` and `singularity` profiles. Required for the Parabricks tools (`--aligner parabricks`, `--tools parabricks_*`). Each Parabricks process requests one GPU (`accelerator = 1`), except fq2bam, which requests four; set `accelerator` for `PARABRICKS_*` processes in a custom config to change this. Parabricks does not support `-profile conda`. See the [nf-core GPU documentation](https://nf-co.re/docs/running/configuration/gpu-pipelines) for more information.
 
 ## `-resume`
 
