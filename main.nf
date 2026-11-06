@@ -280,6 +280,7 @@ workflow NFCORE_SAREK {
     SAREK(
         samplesheet,
         params.aligner,
+        params.group_by_umi_strategy,
         params.skip_tools ?: 'no_tools',
         params.step,
         params.tools ?: 'no_tools',

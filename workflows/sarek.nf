@@ -64,6 +64,7 @@ workflow SAREK {
     take:
     input_sample
     aligner
+    group_by_umi_strategy
     skip_tools
     step
     tools
@@ -246,7 +247,7 @@ workflow SAREK {
                 bbsplit_index,
                 params.save_output_as_bam,
                 aligner,
-                params.group_by_umi_strategy,
+                group_by_umi_strategy,
             )
 
             // Gather preprocessing output
