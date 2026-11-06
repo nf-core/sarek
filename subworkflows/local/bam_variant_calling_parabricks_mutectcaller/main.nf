@@ -40,15 +40,10 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
         .join(PARABRICKS_MUTECTCALLER.out.tbi, failOnDuplicate: true, failOnMismatch: true)
         .join(PARABRICKS_MUTECTCALLER.out.stats, failOnDuplicate: true, failOnMismatch: true)
         .join(PARABRICKS_MUTECTCALLER.out.f1r2, failOnDuplicate: true, failOnMismatch: true)
-        .map { meta, vcf_, tbi_, stats_, f1r2 -> [meta + [variantcaller: 'parabricks_mutectcaller'], vcf_, tbi_, stats_, f1r2] }
-
-    cram_filter = cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
-        [meta + [variantcaller: 'parabricks_mutectcaller'], normal_cram, normal_crai, tumor_cram, tumor_crai]
-    }
 
     VCF_VARIANT_FILTERING_MUTECT2(
         calls,
-        cram_filter,
+        cram,
         intervals,
         fasta,
         fasta_fai,
@@ -57,6 +52,7 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER {
         contamination_resource_tbi,
         contamination_resource_provided,
         false,
+        'parabricks_mutectcaller',
     )
 
     vcf                 = VCF_VARIANT_FILTERING_MUTECT2.out.vcf

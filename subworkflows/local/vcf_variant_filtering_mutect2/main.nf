@@ -13,8 +13,8 @@ include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL } from '.
 
 workflow VCF_VARIANT_FILTERING_MUTECT2 {
     take:
-    calls                           // channel: [mandatory] [ meta, vcf, tbi, stats, f1r2 ] one row per pair, tumour-only sample or patient (joint), meta.variantcaller set
-    cram                            // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ] one row per pair or tumour-only sample ([] for the normal)
+    calls_in                        // channel: [mandatory] [ meta, vcf, tbi, stats, f1r2 ] one row per pair, tumour-only sample or patient (joint)
+    cram_in                         // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ] one row per pair or tumour-only sample ([] for the normal)
     intervals                       // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     fasta                           // channel: [mandatory] [ meta, fasta ]
     fai                             // channel: [mandatory] [ meta, fai ]
@@ -23,8 +23,12 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
     contamination_resource_tbi      // channel: [optional]  [ contamination_resource_tbi ] or []
     contamination_resource_provided // boolean: [mandatory] whether a contamination resource was provided, so contamination tables are expected
     joint                           // boolean: [mandatory] joint calling, calls are per patient
+    variantcaller                   // string:  [mandatory] caller of the calls, set as meta.variantcaller on all outputs
 
     main:
+    calls = calls_in.map { meta, vcf, tbi, stats, f1r2 -> [meta + [variantcaller: variantcaller], vcf, tbi, stats, f1r2] }
+    cram = cram_in.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [meta + [variantcaller: variantcaller], normal_cram, normal_crai, tumor_cram, tumor_crai] }
+
     LEARNREADORIENTATIONMODEL(calls.map { meta, _vcf, _tbi, _stats, f1r2 -> [meta, f1r2] })
 
     vcf_with_priors = calls

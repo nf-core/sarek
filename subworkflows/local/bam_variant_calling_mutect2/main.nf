@@ -83,22 +83,22 @@ workflow BAM_VARIANT_CALLING_MUTECT2 {
     MERGE_MUTECT2(vcf_to_merge, dict)
     MERGEMUTECTSTATS(stats_to_merge)
 
-    // Mutect2 calls filtered by filtermutectcalls in the shared filtering subworkflow
-    // meta joint calling:  [id:patient, patient, sex, variantcaller]
-    // meta paired calling: [id:tumor_id_vs_normal_id, normal_id, patient, sex, tumor_id, variantcaller]
-    // meta tumour-only:    [id:sample, patient, sample, sex, status, variantcaller]
+    // Mutect2 calls filtered by filtermutectcalls in the shared filtering subworkflow, which sets meta.variantcaller
+    // meta joint calling:  [id:patient, patient, sex]
+    // meta paired calling: [id:tumor_id_vs_normal_id, normal_id, patient, sex, tumor_id]
+    // meta tumour-only:    [id:sample, patient, sample, sex, status]
     calls = channel.empty()
         .mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals)
         .join(channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals), failOnDuplicate: true, failOnMismatch: true)
         .join(channel.empty().mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals), failOnDuplicate: true, failOnMismatch: true)
         .join(channel.empty().mix(f1r2_to_merge, f1r2_branch.no_intervals), failOnDuplicate: true, failOnMismatch: true)
         .map { meta, vcf, tbi, stats, f1r2 ->
-            [meta - meta.subMap(joint_mutect2 ? ['normal_id', 'num_intervals'] : ['num_intervals']) + [variantcaller: 'mutect2'], vcf, tbi, stats, f1r2]
+            [meta - meta.subMap(joint_mutect2 ? ['normal_id', 'num_intervals'] : ['num_intervals']), vcf, tbi, stats, f1r2]
         }
 
     VCF_VARIANT_FILTERING_MUTECT2(
         calls,
-        cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [meta + [variantcaller: 'mutect2'], normal_cram, normal_crai, tumor_cram, tumor_crai] },
+        cram,
         intervals,
         fasta,
         fai,
@@ -107,6 +107,7 @@ workflow BAM_VARIANT_CALLING_MUTECT2 {
         contamination_resource_tbi,
         contamination_resource_provided,
         joint_mutect2,
+        'mutect2',
     )
 
     emit:
