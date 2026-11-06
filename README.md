@@ -56,7 +56,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `Parabricks DeepSomatic` (GPU-accelerated)
   - `Parabricks HaplotypeCaller` (GPU-accelerated, Experimental Feature)
   - `Parabricks MutectCaller` (GPU-accelerated, Experimental Feature)
-  - `Parabricks DeepVariant` (GPU-accelerated, Experimental Feature)
+  - `Parabricks DeepVariant` (GPU-accelerated)
   - `indexcov`
   - `Lofreq`
   - `Manta`
