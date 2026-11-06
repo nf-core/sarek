@@ -202,7 +202,7 @@ patient1,XX,1,relapse_sample,lane_1,test3_L001.bam
 > This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
 
 Add `--aligner parabricks` with `-profile <docker/singularity>,gpu` (see [`-profile`](#-profile)) to replace mapping and BAM processing with [Parabricks fq2bam](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html).
-fq2bam runs bwa-mem alignment, coordinate sorting, duplicate marking and, when known sites (`--dbsnp`, `--known_indels`) are available, the base recalibration table in a single GPU step.
+Fq2bam runs bwa-mem alignment, coordinate sorting, duplicate marking and, when known sites (`--dbsnp`, `--known_indels`) are available, computes the base recalibration table in a single GPU step.
 [Parabricks ApplyBQSR](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_applybqsr.html) then applies the table on the GPU, unless `baserecalibrator` is listed in `--skip_tools`.
 Duplicate marking cannot be skipped yet, see [Issue #1853](https://github.com/nf-core/sarek/issues/1853).
 
