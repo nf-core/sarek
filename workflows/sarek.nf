@@ -93,6 +93,7 @@ workflow SAREK {
     germline_resource_tbi
     contamination_resource
     contamination_resource_tbi
+    contamination_resource_provided // boolean: contamination (or germline) resource given, so Mutect2 contamination tables are expected
     index_alignment
     intervals_and_num_intervals
     intervals_bed_combined
@@ -469,7 +470,7 @@ workflow SAREK {
             pon_tbi,
             params.joint_mutect2,
             wes,
-            (params.contamination_resource || params.germline_resource) as boolean,
+            contamination_resource_provided,
         )
 
         // PAIR VARIANT CALLING
@@ -509,7 +510,7 @@ workflow SAREK {
             ascat_loci_rt,
             params.joint_mutect2,
             wes,
-            (params.contamination_resource || params.germline_resource) as boolean,
+            contamination_resource_provided,
         )
 
         // QC on raw variant calls
