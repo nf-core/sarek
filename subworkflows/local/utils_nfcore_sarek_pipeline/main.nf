@@ -286,6 +286,7 @@ def genomeExistsError() {
 def sparkAndBam() {
     if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates') && params.save_mapped) {
         def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  --use_gatk_spark with 'markduplicates' is not compatible with --save_mapped.\n" + "  Spark markduplicates requires name-sorted input, so the saved mapped\n" + "  alignment (BAM or CRAM) would be name-sorted and cannot be indexed.\n" + "  Either drop --save_mapped, or switch to the non-Spark markduplicates path.\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        System.err.println(error_string)
         error(error_string)
     }
 }
