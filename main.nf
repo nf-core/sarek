@@ -284,6 +284,7 @@ workflow NFCORE_SAREK {
         params.skip_tools ?: 'no_tools',
         params.step,
         params.tools ?: 'no_tools',
+        params.wes,
         PREPARE_GENOME.out.ascat_alleles,
         PREPARE_GENOME.out.ascat_loci,
         PREPARE_GENOME.out.ascat_loci_gc,

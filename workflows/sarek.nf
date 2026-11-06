@@ -68,6 +68,7 @@ workflow SAREK {
     skip_tools
     step
     tools
+    wes
     ascat_alleles
     ascat_loci
     ascat_loci_gc
@@ -427,6 +428,7 @@ workflow SAREK {
             known_sites_snps_tbi,
             known_snps_vqsr,
             params.joint_germline,
+            wes,
             skip_tools.split(',').contains('haplotypecaller_filter'),
             params.sentieon_haplotyper_emit_mode,
             params.sentieon_dnascope_emit_mode,
@@ -466,7 +468,7 @@ workflow SAREK {
             pon,
             pon_tbi,
             params.joint_mutect2,
-            params.wes,
+            wes,
             (params.contamination_resource || params.germline_resource) as boolean,
         )
 
@@ -506,7 +508,7 @@ workflow SAREK {
             ascat_loci_gc,
             ascat_loci_rt,
             params.joint_mutect2,
-            params.wes,
+            wes,
             (params.contamination_resource || params.germline_resource) as boolean,
         )
 
