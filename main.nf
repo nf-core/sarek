@@ -212,9 +212,7 @@ workflow NFCORE_SAREK {
         vep_extra_files.add(file(params.dbnsfp_tbi, checkIfExists: true))
     }
     else if (params.dbnsfp && !params.dbnsfp_tbi) {
-        System.err.println("DBNSFP: ${params.dbnsfp} has been provided with `--dbnsfp, but no dbnsfp_tbi has")
-        System.err.println("cf: https://nf-co.re/sarek/parameters#dbnsfp")
-        error("Execution halted due to dbnsfp inconsistency.")
+        error("DBNSFP: ${params.dbnsfp} has been provided with `--dbnsfp`, but no `--dbnsfp_tbi` has been provided.\ncf: https://nf-co.re/sarek/parameters#dbnsfp")
     }
 
     if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && params.spliceai_indel_tbi) {

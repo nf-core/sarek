@@ -54,8 +54,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
 
             // Check the condition and exit with an error if met
             if (status1_count == 1 && status0_count > 1) {
-                System.err.println("Patient [${patient}] has more than one sample [${status0_count}] with normal status [0] and one sample with tumor status [1].")
-                error("Execution halted due to sample status inconsistency.")
+                error("Patient [${patient}] has more than one sample [${status0_count}] with normal status [0] and one sample with tumor status [1].")
             }
         }
 
@@ -76,8 +75,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 def key_fields = combination_list[0]
                 def combination_name = key_fields.keySet().collect { field -> field.toLowerCase() }.join('-')
                 def combination_values = key_fields.collect { field, value -> "${field} '${value}'" }.join(', ')
-                System.err.println("Duplicate ${combination_name} combination found: ${combination_values} appears ${combination_list.size()} times. Please ensure each combination is unique.")
-                error("Execution halted due to duplicate ${combination_name} combination.")
+                error("Duplicate ${combination_name} combination found: ${combination_values} appears ${combination_list.size()} times. Please ensure each combination is unique.")
             }
         }
 
@@ -99,8 +97,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
         .map { sample_id, patient_ids ->
             def unique_patients = patient_ids.unique()
             if (unique_patients.size() > 1) {
-                System.err.println("Sample ID '${sample_id}' is associated with multiple patient IDs: ${unique_patients.join(', ')}. Please ensure each sample ID is unique to a single patient.")
-                error("Execution halted due to sample status inconsistency.")
+                error("Sample ID '${sample_id}' is associated with multiple patient IDs: ${unique_patients.join(', ')}. Please ensure each sample ID is unique to a single patient.")
             }
         }
 
@@ -421,8 +418,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
     }
 
     if (tools && tools.split(',').contains('haplotypecaller') && joint_germline && no_intervals) {
-        System.err.println("Joint germline variant calling with GATK's HaplotypeCaller requires intervals because GenomicsDB cannot be used without them. Please provide intervals or remove `--no_intervals`.")
-        error("Execution halted due to missing intervals.")
+        error("Joint germline variant calling with GATK's HaplotypeCaller requires intervals because GenomicsDB cannot be used without them. Please provide intervals or remove `--no_intervals`.")
     }
 
     if (tools && (tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope')) && joint_germline && (!dbsnp || !known_indels || !known_snps)) {
