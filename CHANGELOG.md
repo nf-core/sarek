@@ -78,6 +78,7 @@ Njoatsosvágge is a long valley crossing the northern part of Sarek National Par
 - [#2379](https://github.com/nf-core/sarek/pull/2379) - `POST_VARIANTCALLING` carries `[meta, vcf, tbi]` internally and splits VCFs and indexes only at `emit:`, so each post-processing step exists once. Published files and `csv/variantcalled.csv` are unchanged
 - [#2383](https://github.com/nf-core/sarek/pull/2383) - `PREPARE_GENOME` checks for Mutect2 and Parabricks MutectCaller once instead of repeating the `--tools` check in four conditions
 - [#2385](https://github.com/nf-core/sarek/pull/2385) - `PREPARE_INTERVALS` checks intervals against contig lengths in a `checkIntervalsWithinContigs()` function instead of inline in a `.map`
+- [#2387](https://github.com/nf-core/sarek/pull/2387) - Simplify the Mutect2 subworkflows: one shared `patientMeta()` for joint calling, joint contamination tables grouped with `groupTuple` as on master, `variantcaller` set inside `VCF_VARIANT_FILTERING_MUTECT2`, scattered outputs branched once, and `contamination_resource_provided` computed once in `main.nf`
 
 #### Fixed
 
