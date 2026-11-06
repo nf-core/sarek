@@ -7,7 +7,7 @@ include { BAM_VARIANT_CALLING_CNVKIT                             } from '../bam_
 include { BAM_VARIANT_CALLING_FREEBAYES                          } from '../bam_variant_calling_freebayes'
 include { BAM_VARIANT_CALLING_MPILEUP                            } from '../bam_variant_calling_mpileup'
 include { BAM_VARIANT_CALLING_SINGLE_TIDDIT                      } from '../bam_variant_calling_single_tiddit'
-include { BAM_VARIANT_CALLING_SOMATIC_VARNET                     } from '../bam_variant_calling_somatic_varnet'
+include { BAM_VARIANT_CALLING_VARNET                             } from '../bam_variant_calling_varnet'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC            } from '../bam_variant_calling_tumor_only_controlfreec'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA                   } from '../bam_variant_calling_tumor_only_manta'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2                 } from '../bam_variant_calling_tumor_only_mutect2'
@@ -231,7 +231,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
     // VARNET
     if (tools && tools.split(',').contains('varnet')) {
-        BAM_VARIANT_CALLING_SOMATIC_VARNET(
+        BAM_VARIANT_CALLING_VARNET(
             bam.map { meta_, bam_, bai -> [meta_, [], [], bam_, bai] },
             fasta,
             fasta_fai,
@@ -239,8 +239,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             varnet_resources,
         )
 
-        vcf_varnet = BAM_VARIANT_CALLING_SOMATIC_VARNET.out.vcf
-        tbi_varnet = BAM_VARIANT_CALLING_SOMATIC_VARNET.out.tbi
+        vcf_varnet = BAM_VARIANT_CALLING_VARNET.out.vcf
+        tbi_varnet = BAM_VARIANT_CALLING_VARNET.out.tbi
     }
 
     vcf_all = channel.empty()

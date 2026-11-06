@@ -6,7 +6,7 @@ include { VARNET_FILTER } from '../../../modules/nf-core/varnet/filter'
 include { VARNET_PREDICT } from '../../../modules/nf-core/varnet/predict'
 include { HTSLIB_BGZIPTABIX as TABIX_VARNET } from '../../../modules/nf-core/htslib/bgziptabix'
 
-workflow BAM_VARIANT_CALLING_SOMATIC_VARNET {
+workflow BAM_VARIANT_CALLING_VARNET {
     take:
     bam // channel: [mandatory] [ meta, normal_bam, normal_bai, tumor_bam, tumor_bai ], with [] for the normal in tumor-only mode
     fasta // channel: [mandatory] [ meta, fasta ]

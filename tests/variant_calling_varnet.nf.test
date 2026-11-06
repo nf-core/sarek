@@ -55,6 +55,30 @@ nextflow_pipeline {
             ]
         ],
         [
+            name: "-profile test --tools varnet --input recalibrated_tumoronly.csv --varnet_resources",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
+                genome: null,
+                igenomes_ignore: true,
+                chr_dir: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz',
+                dbsnp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+                dbsnp_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                germline_resource: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz',
+                germline_resource_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz.tbi',
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                pon: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz',
+                pon_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz.tbi',
+                ngscheckmate_bed: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/SNP_GRCh38_hg38_wChr.bed',
+                nucleotides_per_second: 20,
+                step: 'variant_calling',
+                tools: 'varnet',
+                varnet_resources: 'https://raw.githubusercontent.com/nf-core/test-datasets/sarek/reference/varnet_chr21_hg38',
+                wes: true
+            ]
+        ],
+        [
             name: "-profile test --tools varnet --input recalibrated_tumoronly.csv --varnet_resources -stub",
             params: [
                 input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
@@ -74,7 +98,7 @@ nextflow_pipeline {
                 nucleotides_per_second: 20,
                 step: 'variant_calling',
                 tools: 'varnet',
-                varnet_resources: "${projectDir}/tests/config/varnet_resources",
+                varnet_resources: 'https://raw.githubusercontent.com/nf-core/test-datasets/sarek/reference/varnet_chr21_hg38',
                 wes: true
             ],
             stub: true

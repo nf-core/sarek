@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
-name: "bam_variant_calling_somatic_varnet"
+name: "bam_variant_calling_varnet"
 description: Call somatic SNVs and indels in tumor-normal pairs or tumor-only samples with VarNet, then recompress the VCF as BGZF and index it
 keywords:
   - variant calling
