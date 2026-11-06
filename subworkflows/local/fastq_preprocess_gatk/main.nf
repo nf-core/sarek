@@ -60,6 +60,7 @@ workflow FASTQ_PREPROCESS_GATK {
     bbsplit_index
     save_output_as_bam
     aligner
+    group_by_umi_strategy
 
     main:
 
@@ -81,7 +82,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 fasta,
                 fasta_fai,
                 index_alignment,
-                params.group_by_umi_strategy,
+                group_by_umi_strategy,
                 aligner,
             )
 

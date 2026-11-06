@@ -246,6 +246,7 @@ workflow SAREK {
                 bbsplit_index,
                 params.save_output_as_bam,
                 aligner,
+                params.group_by_umi_strategy,
             )
 
             // Gather preprocessing output
