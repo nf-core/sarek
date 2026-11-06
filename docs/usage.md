@@ -257,7 +257,7 @@ Sarek supports the following GPU-accelerated variant callers from [NVIDIA Parabr
 There are a few differences to note about the Parabricks versions of these tools:
 
 - Parabricks DeepVariant only outputs a VCF, no gVCF.
-- Parabricks HaplotypeCaller supports gVCF generation but cannot perform joint calling on its own. Combine Parabricks callers with other variant callers such as GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as follows:
+- Parabricks HaplotypeCaller supports gVCF generation but cannot perform joint calling on its own yet. Combine Parabricks callers with other variant callers such as GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as follows:
 
 ```
 nextflow run nf-core/sarek \
