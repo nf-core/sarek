@@ -83,6 +83,8 @@ Njoatsosvágge is a long valley crossing the northern part of Sarek National Par
 
 #### Removed
 
+- [#2380](https://github.com/nf-core/sarek/pull/2380) - Remove `CLAUDE.md` so Claude Code loads `AGENTS.md` directly
+
 ## [3.11.0](https://github.com/nf-core/sarek/releases/tag/3.11.0) - Guhkesvákkjåhkå
 
 Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bridge.
