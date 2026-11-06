@@ -60,12 +60,12 @@ workflow SAMPLESHEET_TO_CHANNEL {
 
     // variantcalled.csv (step annotate) has one row per VCF and no lane
     def duplicate_key_fields = step == 'annotate'
-        ? ['Patient', 'Sample', 'Status', 'Variantcaller', 'VCF']
-        : ['Patient', 'Sample', 'Status', 'Lane']
+        ? ['patient', 'sample', 'status', 'variantcaller', 'vcf']
+        : ['patient', 'sample', 'status', 'lane']
 
     ch_from_samplesheet
-        .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _contamination, vcf, variantcaller ->
-            def row_fields = [Patient: meta.patient, Sample: meta.sample, Status: meta.status, Lane: meta.lane, Variantcaller: variantcaller, VCF: vcf]
+        .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _contamination, _vcf, _variantcaller ->
+            def row_fields = [patient: meta.patient, sample: meta.sample, status: meta.status, lane: meta.lane, variantcaller: _variantcaller, vcf: _vcf]
             def key_fields = row_fields.subMap(duplicate_key_fields)
             [key_fields.values().join('-'), key_fields]
         }
@@ -73,7 +73,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
         .map { _combination_key, combination_list ->
             if (combination_list.size() > 1) {
                 def key_fields = combination_list[0]
-                def combination_name = key_fields.keySet().collect { field -> field.toLowerCase() }.join('-')
+                def combination_name = key_fields.keySet().join('-')
                 def combination_values = key_fields.collect { field, value -> "${field} '${value}'" }.join(', ')
                 error("Duplicate ${combination_name} combination found: ${combination_values} appears ${combination_list.size()} times. Please ensure each combination is unique.")
             }
