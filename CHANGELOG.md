@@ -76,6 +76,7 @@ Njoatsosvágge is a long valley crossing the northern part of Sarek National Par
 - [#2378](https://github.com/nf-core/sarek/pull/2378) - `SAMPLESHEET_TO_CHANNEL` builds the duplicate-row check from one ordered field list per step instead of two key shapes and two error messages; the `--step annotate` halt message no longer wrongly mentions `lane`. The Mutect2 and Parabricks MutectCaller resource warnings share one loop, and the warning about filtering without contamination estimation is only shown when neither `--contamination_resource` nor `--germline_resource` is provided
 - [#2379](https://github.com/nf-core/sarek/pull/2379) - `POST_VARIANTCALLING` carries `[meta, vcf, tbi]` internally and splits VCFs and indexes only at `emit:`, so each post-processing step exists once. Published files and `csv/variantcalled.csv` are unchanged
 - [#2383](https://github.com/nf-core/sarek/pull/2383) - `PREPARE_GENOME` checks for Mutect2 and Parabricks MutectCaller once instead of repeating the `--tools` check in four conditions
+- [#2385](https://github.com/nf-core/sarek/pull/2385) - `PREPARE_INTERVALS` checks intervals against contig lengths in a `checkIntervalsWithinContigs()` function instead of inline in a `.map`
 
 #### Fixed
 
