@@ -102,7 +102,7 @@ An [example samplesheet](../assets/samplesheet.csv) has been provided with the p
 ### Sample names in BAM and CRAM read groups
 
 During mapping, Sarek sets the sample name (`SM` tag) of every read group to `<patient>_<sample>`, using the `patient` and `sample` columns of the samplesheet.
-The following somatic variant callers select the tumour and normal sample by this name:
+The following somatic variant callers select the tumor and normal sample by this name:
 
 - GATK Mutect2 (`--normal-sample`)
 - DeepSomatic
@@ -211,7 +211,7 @@ The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if `--save
 **Adapting fq2bam to your hardware:**
 
 Performance depends on the GPU type and the CPU RAM available to Parabricks. Lowering `--bwa-nstreams` from 4 (default) to 2, and adding `--gpuwrite` and `--gpusort`, can help with memory issues; see the [fq2bam documentation](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html) for all arguments.
-When overriding `ext.args` in a [custom config](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files), keep the default `--read-group-*` arguments (the sample name must match [the samplesheet](#sample-names-in-bam-and-cram-read-groups)) and the tumour-specific `--bwa-options`:
+When overriding `ext.args` in a [custom config](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files), keep the default `--read-group-*` arguments (the sample name must match [the samplesheet](#sample-names-in-bam-and-cram-read-groups)) and the tumor-specific `--bwa-options`:
 
 ```groovy title="custom-parabricks.config"
 process {
@@ -250,7 +250,7 @@ The following [NVIDIA Parabricks](https://docs.nvidia.com/clara/parabricks/lates
 
 Differences to the CPU equivalents:
 
-- Each Parabricks caller runs once per sample (or tumour/normal pair) on the combined intervals BED, instead of being scattered per [interval group](#intervals-for-base-quality-score-recalibration-and-variantcalling).
+- Each Parabricks caller runs once per sample (or tumor/normal pair) on the combined intervals BED, instead of being scattered per [interval group](#intervals-for-base-quality-score-recalibration-and-variantcalling).
 - Parabricks DeepVariant only outputs a VCF, no gVCF.
 - Parabricks HaplotypeCaller outputs a gVCF with `--joint_germline`, but there is no Parabricks joint genotyping and its gVCFs are not included in any joint call. For a joint-genotyped callset, run a caller that supports joint calling alongside it, e.g. `--tools parabricks_haplotypecaller,haplotypecaller --joint_germline`.
 
@@ -557,9 +557,9 @@ To learn how to provide additional arguments to a particular tool of the pipelin
 Sarek defines the default `ext.args` of each process in the files in [`conf/modules/`](../conf/modules/), not in a single `conf/modules.config`.
 Copy the defaults from the file of the pipeline version you run before [adding arguments](https://nf-co.re/docs/running/configuration/nextflow-for-your-system#customise-tool-arguments).
 
-GATK Mutect2 needs `--f1r2-tar-gz` to produce the input for `LearnReadOrientationModel`, and `--normal-sample` to identify the normal sample in tumour/normal pairs.
+GATK Mutect2 needs `--f1r2-tar-gz` to produce the input for `LearnReadOrientationModel`, and `--normal-sample` to identify the normal sample in tumor/normal pairs.
 Without `--f1r2-tar-gz`, the pipeline stops with a `Join mismatch` error.
-Without `--normal-sample`, Mutect2 treats the normal sample as a second tumour sample.
+Without `--normal-sample`, Mutect2 treats the normal sample as a second tumor sample.
 The following config adds `--genotype-germline-sites` and `--genotype-pon-sites` and keeps the defaults:
 
 ```groovy title="custom-mutect2.config"
@@ -578,7 +578,7 @@ process {
 }
 ```
 
-Sarek 3.11.0 and earlier set the Mutect2 arguments for tumour/normal pairs on `MUTECT2_PAIRED`.
+Sarek 3.11.0 and earlier set the Mutect2 arguments for tumor/normal pairs on `MUTECT2_PAIRED`.
 This pipeline version sets them on `GATK4_MUTECT2`, so custom configs that target `MUTECT2_PAIRED` no longer apply.
 
 ## nf-core/configs
