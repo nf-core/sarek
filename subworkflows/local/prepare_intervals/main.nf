@@ -6,6 +6,7 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
+include { BEDTOOLS_SORT                                          } from '../../../modules/nf-core/bedtools/sort'
 include { CREATE_INTERVALS_BED                                   } from '../../../modules/local/create_intervals_bed'
 include { GATK4_INTERVALLISTTOBED                                } from '../../../modules/nf-core/gatk4/intervallisttobed'
 include { GAWK as BUILD_INTERVALS                                } from '../../../modules/nf-core/gawk'
@@ -47,7 +48,37 @@ workflow PREPARE_INTERVALS {
 
         } else {
             intervals_combined = channel.fromPath(file(intervals)).map{bed -> [ [ id:bed.baseName ], bed ] }
-            CREATE_INTERVALS_BED(file(intervals), nucleotides_per_second)
+
+            // Sort in reference order: chunks must each cover one contiguous range for GatherPileupSummaries.
+            // Fails early on contigs missing from the reference or start > end.
+            if (intervals.toLowerCase().endsWith(".bed")) {
+                BEDTOOLS_SORT(intervals_combined, fasta_fai.map{ _meta, fai -> fai }, [])
+
+                // bedtools sort checks contig names but not coordinates, so fail early on intervals past the contig end
+                intervals_combined = BEDTOOLS_SORT.out.sorted
+                    .combine(fasta_fai)
+                    .map{ meta, bed, _meta_fai, fai ->
+                        def contig_length = [:]
+                        fai.eachLine { line ->
+                            def fields = line.split('\t')
+                            contig_length[fields[0]] = fields[1].toLong()
+                        }
+                        def past_end = []
+                        bed.eachLine { line ->
+                            if (line =~ /^(#|track|browser)/) return
+                            def fields = line.split('\t')
+                            if (fields[2].toLong() > contig_length[fields[0]]) {
+                                past_end << "${fields[0]}:${fields[1]}-${fields[2]} (${fields[0]} is ${contig_length[fields[0]]} bp)"
+                            }
+                        }
+                        if (past_end) {
+                            error("--intervals: ${past_end.size()} interval(s) end past their contig in the reference (${fai.name}), for example: " + past_end.take(3).join(', '))
+                        }
+                        [ meta, bed ]
+                    }
+            }
+
+            CREATE_INTERVALS_BED(intervals_combined.map{ _meta, bed -> bed }, nucleotides_per_second)
 
             intervals_bed = CREATE_INTERVALS_BED.out.bed
 

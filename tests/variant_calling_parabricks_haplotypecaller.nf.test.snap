@@ -21,13 +21,16 @@
     },
     "-profile test,gpu --tools parabricks_haplotypecaller,haplotypecaller --joint_germline": {
         "content": [
-            30,
+            31,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": "1.23.1"
                 },
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -52,7 +55,7 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_HAPLOTYPECALLER": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -265,7 +268,7 @@
                 "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
             ]
         ],
-        "timestamp": "2026-10-01T23:52:01.019316312",
+        "timestamp": "2026-10-30T12:55:52.744806339",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -283,7 +286,7 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_HAPLOTYPECALLER": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -419,7 +422,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-08-31T07:36:11.548103451",
+        "timestamp": "2026-11-02T14:16:52.05124197",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -427,10 +430,13 @@
     },
     "-profile test,gpu --tools parabricks_haplotypecaller": {
         "content": [
-            12,
+            13,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
                 },
                 "CREATE_INTERVALS_BED": {
                     "gawk": "5.3.0"
@@ -440,7 +446,7 @@
                     "mosdepth": "0.3.14"
                 },
                 "PARABRICKS_HAPLOTYPECALLER": {
-                    "parabricks": "4.7.1-1"
+                    "parabricks": "4.8.0-1"
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
@@ -613,7 +619,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-08-31T07:35:20.687196333",
+        "timestamp": "2026-10-30T12:51:42.986147614",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

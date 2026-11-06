@@ -36,20 +36,22 @@ nextflow_workflow {
                 input[14] = null                                                                                                                                       // dragmap
                 input[15] = channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
                 input[16] = null                                                                                                                                       // fasta_fai
-                input[17] = channel.empty()                                                                                                                            // germline_resource
-                input[18] = channel.empty()                                                                                                                            // germline_resource_tbi
-                input[19] = channel.empty()                                                                                                                            // known_indels
-                input[20] = channel.empty()                                                                                                                            // known_indels_tbi
-                input[21] = channel.empty()                                                                                                                            // known_snps
-                input[22] = channel.empty()                                                                                                                            // known_snps_tbi
-                input[23] = null                                                                                                                                       // msisensor2_models
-                input[24] = null                                                                                                                                       // msisensorpro_scan
-                input[25] = channel.empty()                                                                                                                            // pon
-                input[26] = channel.empty()                                                                                                                            // pon_tbi
-                input[27] = 'bwa-mem'                                                                                                                                  // aligner
-                input[28] = 'mapping'                                                                                                                                  // step
-                input[29] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
-                input[30] = false                                                                                                                                      // vep_include_fasta
+                input[17] = null                                                                                                                                       // force_call_alleles
+                input[18] = null                                                                                                                                       // force_call_alleles_tbi
+                input[19] = channel.empty()                                                                                                                            // germline_resource
+                input[20] = channel.empty()                                                                                                                            // germline_resource_tbi
+                input[21] = channel.empty()                                                                                                                            // known_indels
+                input[22] = channel.empty()                                                                                                                            // known_indels_tbi
+                input[23] = channel.empty()                                                                                                                            // known_snps
+                input[24] = channel.empty()                                                                                                                            // known_snps_tbi
+                input[25] = null                                                                                                                                       // msisensor2_models
+                input[26] = null                                                                                                                                       // msisensorpro_scan
+                input[27] = channel.empty()                                                                                                                            // pon
+                input[28] = channel.empty()                                                                                                                            // pon_tbi
+                input[29] = 'bwa-mem'                                                                                                                                  // aligner
+                input[30] = 'mapping'                                                                                                                                  // step
+                input[31] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
+                input[32] = false                                                                                                                                      // vep_include_fasta
                 """
             }
         }
@@ -91,20 +93,22 @@ nextflow_workflow {
                 input[14] = null                                                                                                                                       // dragmap
                 input[15] = channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
                 input[16] = null                                                                                                                                       // fasta_fai
-                input[17] = channel.empty()                                                                                                                            // germline_resource
-                input[18] = channel.empty()                                                                                                                            // germline_resource_tbi
-                input[19] = channel.empty()                                                                                                                            // known_indels
-                input[20] = channel.empty()                                                                                                                            // known_indels_tbi
-                input[21] = channel.empty()                                                                                                                            // known_snps
-                input[22] = channel.empty()                                                                                                                            // known_snps_tbi
-                input[23] = null                                                                                                                                       // msisensor2_models
-                input[24] = null                                                                                                                                       // msisensorpro_scan
-                input[25] = channel.empty()                                                                                                                            // pon
-                input[26] = channel.empty()                                                                                                                            // pon_tbi
-                input[27] = 'bwa-mem'                                                                                                                                  // aligner
-                input[28] = 'mapping'                                                                                                                                  // step
-                input[29] = "no_tools"                                                                                                                                 // tools - bbsplit not enabled
-                input[30] = false                                                                                                                                      // vep_include_fasta
+                input[17] = null                                                                                                                                       // force_call_alleles
+                input[18] = null                                                                                                                                       // force_call_alleles_tbi
+                input[19] = channel.empty()                                                                                                                            // germline_resource
+                input[20] = channel.empty()                                                                                                                            // germline_resource_tbi
+                input[21] = channel.empty()                                                                                                                            // known_indels
+                input[22] = channel.empty()                                                                                                                            // known_indels_tbi
+                input[23] = channel.empty()                                                                                                                            // known_snps
+                input[24] = channel.empty()                                                                                                                            // known_snps_tbi
+                input[25] = null                                                                                                                                       // msisensor2_models
+                input[26] = null                                                                                                                                       // msisensorpro_scan
+                input[27] = channel.empty()                                                                                                                            // pon
+                input[28] = channel.empty()                                                                                                                            // pon_tbi
+                input[29] = 'bwa-mem'                                                                                                                                  // aligner
+                input[30] = 'mapping'                                                                                                                                  // step
+                input[31] = "no_tools"                                                                                                                                 // tools - bbsplit not enabled
+                input[32] = false                                                                                                                                      // vep_include_fasta
                 """
             }
         }
@@ -148,20 +152,22 @@ nextflow_workflow {
                 input[14] = null                                                                                                                                       // dragmap
                 input[15] = channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
                 input[16] = null                                                                                                                                       // fasta_fai
-                input[17] = channel.empty()                                                                                                                            // germline_resource
-                input[18] = channel.empty()                                                                                                                            // germline_resource_tbi
-                input[19] = channel.empty()                                                                                                                            // known_indels
-                input[20] = channel.empty()                                                                                                                            // known_indels_tbi
-                input[21] = channel.empty()                                                                                                                            // known_snps
-                input[22] = channel.empty()                                                                                                                            // known_snps_tbi
-                input[23] = null                                                                                                                                       // msisensor2_models
-                input[24] = null                                                                                                                                       // msisensorpro_scan
-                input[25] = channel.empty()                                                                                                                            // pon
-                input[26] = channel.empty()                                                                                                                            // pon_tbi
-                input[27] = 'bwa-mem'                                                                                                                                  // aligner
-                input[28] = 'mapping'                                                                                                                                  // step
-                input[29] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
-                input[30] = false                                                                                                                                      // vep_include_fasta
+                input[17] = null                                                                                                                                       // force_call_alleles
+                input[18] = null                                                                                                                                       // force_call_alleles_tbi
+                input[19] = channel.empty()                                                                                                                            // germline_resource
+                input[20] = channel.empty()                                                                                                                            // germline_resource_tbi
+                input[21] = channel.empty()                                                                                                                            // known_indels
+                input[22] = channel.empty()                                                                                                                            // known_indels_tbi
+                input[23] = channel.empty()                                                                                                                            // known_snps
+                input[24] = channel.empty()                                                                                                                            // known_snps_tbi
+                input[25] = null                                                                                                                                       // msisensor2_models
+                input[26] = null                                                                                                                                       // msisensorpro_scan
+                input[27] = channel.empty()                                                                                                                            // pon
+                input[28] = channel.empty()                                                                                                                            // pon_tbi
+                input[29] = 'bwa-mem'                                                                                                                                  // aligner
+                input[30] = 'mapping'                                                                                                                                  // step
+                input[31] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
+                input[32] = false                                                                                                                                      // vep_include_fasta
                 """
             }
         }
@@ -206,20 +212,22 @@ nextflow_workflow {
                 input[14] = null                                                                                                                                       // dragmap
                 input[15] = channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
                 input[16] = null                                                                                                                                       // fasta_fai
-                input[17] = channel.empty()                                                                                                                            // germline_resource
-                input[18] = channel.empty()                                                                                                                            // germline_resource_tbi
-                input[19] = channel.empty()                                                                                                                            // known_indels
-                input[20] = channel.empty()                                                                                                                            // known_indels_tbi
-                input[21] = channel.empty()                                                                                                                            // known_snps
-                input[22] = channel.empty()                                                                                                                            // known_snps_tbi
-                input[23] = null                                                                                                                                       // msisensor2_models
-                input[24] = null                                                                                                                                       // msisensorpro_scan
-                input[25] = channel.empty()                                                                                                                            // pon
-                input[26] = channel.empty()                                                                                                                            // pon_tbi
-                input[27] = 'bwa-mem'                                                                                                                                  // aligner
-                input[28] = 'mapping'                                                                                                                                  // step
-                input[29] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
-                input[30] = false                                                                                                                                      // vep_include_fasta
+                input[17] = null                                                                                                                                       // force_call_alleles
+                input[18] = null                                                                                                                                       // force_call_alleles_tbi
+                input[19] = channel.empty()                                                                                                                            // germline_resource
+                input[20] = channel.empty()                                                                                                                            // germline_resource_tbi
+                input[21] = channel.empty()                                                                                                                            // known_indels
+                input[22] = channel.empty()                                                                                                                            // known_indels_tbi
+                input[23] = channel.empty()                                                                                                                            // known_snps
+                input[24] = channel.empty()                                                                                                                            // known_snps_tbi
+                input[25] = null                                                                                                                                       // msisensor2_models
+                input[26] = null                                                                                                                                       // msisensorpro_scan
+                input[27] = channel.empty()                                                                                                                            // pon
+                input[28] = channel.empty()                                                                                                                            // pon_tbi
+                input[29] = 'bwa-mem'                                                                                                                                  // aligner
+                input[30] = 'mapping'                                                                                                                                  // step
+                input[31] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
+                input[32] = false                                                                                                                                      // vep_include_fasta
                 """
             }
         }
@@ -267,20 +275,22 @@ nextflow_workflow {
                 input[14] = null                                                                                                                                       // dragmap
                 input[15] = channel.of([[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)])        // fasta
                 input[16] = null                                                                                                                                       // fasta_fai
-                input[17] = channel.empty()                                                                                                                            // germline_resource
-                input[18] = channel.empty()                                                                                                                            // germline_resource_tbi
-                input[19] = channel.empty()                                                                                                                            // known_indels
-                input[20] = channel.empty()                                                                                                                            // known_indels_tbi
-                input[21] = channel.empty()                                                                                                                            // known_snps
-                input[22] = channel.empty()                                                                                                                            // known_snps_tbi
-                input[23] = null                                                                                                                                       // msisensor2_models
-                input[24] = null                                                                                                                                       // msisensorpro_scan
-                input[25] = channel.empty()                                                                                                                            // pon
-                input[26] = channel.empty()                                                                                                                            // pon_tbi
-                input[27] = 'bwa-mem'                                                                                                                                  // aligner
-                input[28] = 'mapping'                                                                                                                                  // step
-                input[29] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
-                input[30] = false                                                                                                                                      // vep_include_fasta
+                input[17] = null                                                                                                                                       // force_call_alleles
+                input[18] = null                                                                                                                                       // force_call_alleles_tbi
+                input[19] = channel.empty()                                                                                                                            // germline_resource
+                input[20] = channel.empty()                                                                                                                            // germline_resource_tbi
+                input[21] = channel.empty()                                                                                                                            // known_indels
+                input[22] = channel.empty()                                                                                                                            // known_indels_tbi
+                input[23] = channel.empty()                                                                                                                            // known_snps
+                input[24] = channel.empty()                                                                                                                            // known_snps_tbi
+                input[25] = null                                                                                                                                       // msisensor2_models
+                input[26] = null                                                                                                                                       // msisensorpro_scan
+                input[27] = channel.empty()                                                                                                                            // pon
+                input[28] = channel.empty()                                                                                                                            // pon_tbi
+                input[29] = 'bwa-mem'                                                                                                                                  // aligner
+                input[30] = 'mapping'                                                                                                                                  // step
+                input[31] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
+                input[32] = false                                                                                                                                      // vep_include_fasta
                 """
             }
         }

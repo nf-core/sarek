@@ -61,9 +61,15 @@ workflow SAMPLESHEET_TO_CHANNEL {
 
     ch_from_samplesheet
         .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _contamination, _vcf, _variantcaller ->
-            // Create a unique key for patient-sample-status-lane combination
-            def combination_key = "${meta.patient}-${meta.sample}-${meta.status}-${meta.lane}"
-            [combination_key, [meta.patient, meta.sample, meta.status, meta.lane]]
+            // Create a unique key for patient-sample-status-lane-variantcaller-vcf combination
+            // For step 'annotate', uniqueness must be based on patient-sample-status-variantcaller-vcf
+            // because the variantcalled.csv from --step variant_calling contains multiple VCFs per sample.
+            // For other steps, uniqueness is based on patient-sample-status-lane (variantcaller/vcf are empty).
+            def base_key = "${meta.patient}-${meta.sample}-${meta.status}"
+            def combination_key = (step == 'annotate')
+                ? "${base_key}-${_variantcaller}-${_vcf}"
+                : "${base_key}-${meta.lane}"
+            [combination_key, [meta.patient, meta.sample, meta.status, meta.lane, _variantcaller, _vcf]]
         }
         .groupTuple()
         .map { _combination_key, combination_list ->
@@ -71,9 +77,17 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 def patient = combination_list[0][0]
                 def sample = combination_list[0][1]
                 def status = combination_list[0][2]
-                def lane = combination_list[0][3]
-                System.err.println("Duplicate patient-sample-status-lane combination found: Patient '${patient}', Sample '${sample}', Status '${status}', Lane '${lane}' appears ${combination_list.size()} times. Please ensure each combination is unique.")
-                error("Execution halted due to duplicate patient-sample-status-lane combination.")
+                if (step == 'annotate') {
+                    def variantcaller = combination_list[0][4]
+                    def vcf = combination_list[0][5]
+                    System.err.println("Duplicate patient-sample-status-variantcaller-vcf combination found: Patient '${patient}', Sample '${sample}', Status '${status}', Variantcaller '${variantcaller}', VCF '${vcf}' appears ${combination_list.size()} times. Please ensure each combination is unique.")
+                    error("Execution halted due to duplicate patient-sample-status-lane-variantcaller-vcf combination.")
+                }
+                else {
+                    def lane = combination_list[0][3]
+                    System.err.println("Duplicate patient-sample-status-lane combination found: Patient '${patient}', Sample '${sample}', Status '${status}', Lane '${lane}' appears ${combination_list.size()} times. Please ensure each combination is unique.")
+                    error("Execution halted due to duplicate patient-sample-status-lane combination.")
+                }
             }
         }
 
@@ -245,7 +259,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
             .ifEmpty {
                 // In this case, the sample-sheet contains no tumor-samples
                 if (!build_only_index) {
-                    def tools_tumor = ['ascat', 'controlfreec', 'deepsomatic', 'mutect2', 'msisensorpro', 'parabricks_deepsomatic']
+                    def tools_tumor = ['ascat', 'controlfreec', 'deepsomatic', 'mutect2', 'msisensorpro', 'parabricks_deepsomatic', 'parabricks_mutectcaller']
                     def tools_tumor_asked = []
                     tools_tumor.each { tool ->
                         if (tools && tools.split(',').contains(tool)) {
@@ -379,10 +393,23 @@ workflow SAMPLESHEET_TO_CHANNEL {
             log.warn("No Panel-of-normal was specified for Mutect2.\nIt is highly recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2\nFor more information on how to create one: https://gatk.broadinstitute.org/hc/en-us/articles/5358921041947-CreateSomaticPanelOfNormals-BETA-")
         }
         if (!germline_resource) {
-            log.warn("If Mutect2 is specified without a germline resource, no filtering will be done.\nIt is recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2")
+            log.warn("If Mutect2 is specified without a germline resource, calls are filtered without contamination estimation and calling runs without the germline prior.\nIt is recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2")
         }
         if (pon && pon.contains("/Homo_sapiens/GATK/GRCh38/Annotation/GATKBundle/1000g_pon.hg38.vcf.gz")) {
             log.warn("The default Panel-of-Normals provided by GATK is used for Mutect2.\nIt is highly recommended to generate one from normal samples that are technical similar to the tumor ones.\nFor more information: https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-")
+        }
+    }
+
+    // Warns when missing files or params for parabricks_mutectcaller
+    if (tools && tools.split(',').contains('parabricks_mutectcaller')) {
+        if (!pon) {
+            log.warn("No Panel-of-normal was specified for Parabricks MutectCaller.\nIt is highly recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2\nFor more information on how to create one: https://gatk.broadinstitute.org/hc/en-us/articles/5358921041947-CreateSomaticPanelOfNormals-BETA-")
+        }
+        if (!germline_resource) {
+            log.warn("If Parabricks MutectCaller is specified without a germline resource, calls are filtered without contamination estimation and calling runs without the germline prior.\nIt is recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2")
+        }
+        if (pon && pon.contains("/Homo_sapiens/GATK/GRCh38/Annotation/GATKBundle/1000g_pon.hg38.vcf.gz")) {
+            log.warn("The default Panel-of-Normals provided by GATK is used for Parabricks MutectCaller.\nIt is highly recommended to generate one from normal samples that are technically similar to the tumour ones.\nFor more information: https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-")
         }
     }
 

@@ -1,8 +1,11 @@
 {
     "-profile test --tools cnvkit --input recalibrated_somatic.csv": {
         "content": [
-            20,
+            21,
             {
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
+                },
                 "CNVKIT_ANTITARGET": {
                     "cnvkit": "0.9.12"
                 },
@@ -117,8 +120,8 @@
                 "variant_calling",
                 "variant_calling/cnvkit",
                 "variant_calling/cnvkit/sample3",
-                "variant_calling/cnvkit/sample3/multi_intervals.antitarget.bed",
-                "variant_calling/cnvkit/sample3/multi_intervals.target.bed",
+                "variant_calling/cnvkit/sample3/multi_intervals.sorted.antitarget.bed",
+                "variant_calling/cnvkit/sample3/multi_intervals.sorted.target.bed",
                 "variant_calling/cnvkit/sample3/reference.cnn",
                 "variant_calling/cnvkit/sample3/sample3.cnvcall.vcf",
                 "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted-diagram.pdf",
@@ -132,8 +135,8 @@
                 "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.germline.call.cns",
                 "variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn",
                 "variant_calling/cnvkit/sample4_vs_sample3",
-                "variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.antitarget.bed",
-                "variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.target.bed",
+                "variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.sorted.antitarget.bed",
+                "variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.sorted.target.bed",
                 "variant_calling/cnvkit/sample4_vs_sample3/reference.cnn",
                 "variant_calling/cnvkit/sample4_vs_sample3/sample4_vs_sample3.cnvcall.vcf",
                 "variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn",
@@ -167,8 +170,8 @@
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
                 "sample4.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
-                "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "multi_intervals.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
+                "multi_intervals.sorted.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "multi_intervals.sorted.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
                 "reference.cnn:md5,891454915f82d0eeda0be13d71e0d5d7",
                 "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.paired_end.recalibrated.sorted.bintest.cns:md5,8d0301673b584a6a8d88bdaad87ba09d",
@@ -178,8 +181,8 @@
                 "test.paired_end.recalibrated.sorted.genemetrics.tsv:md5,5ec3555520f502f00f551ae7900a3824",
                 "test.paired_end.recalibrated.sorted.germline.call.cns:md5,5bba48aecc2282971b9d4c562bec4591",
                 "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,4153756b30abc934f10717c023bd262f",
-                "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "multi_intervals.target.bed:md5,f9e727147a7cbca46c2b9b2de3ecae91",
+                "multi_intervals.sorted.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "multi_intervals.sorted.target.bed:md5,f9e727147a7cbca46c2b9b2de3ecae91",
                 "reference.cnn:md5,dfc49a037a468bef43a33b5dd4a2bc05",
                 "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,826087b08d380135a271e2774c94084c",
@@ -200,7 +203,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-28T14:42:57.173889218",
+        "timestamp": "2026-10-30T09:06:20.090001051",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -208,8 +211,11 @@
     },
     "-profile test --tools cnvkit --input recalibrated.csv --only_paired_variant_calling": {
         "content": [
-            30,
+            31,
             {
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
+                },
                 "CNVKIT_ANTITARGET": {
                     "cnvkit": "0.9.12"
                 },
@@ -340,8 +346,8 @@
                 "variant_calling",
                 "variant_calling/cnvkit",
                 "variant_calling/cnvkit/sample1",
-                "variant_calling/cnvkit/sample1/multi_intervals.antitarget.bed",
-                "variant_calling/cnvkit/sample1/multi_intervals.target.bed",
+                "variant_calling/cnvkit/sample1/multi_intervals.sorted.antitarget.bed",
+                "variant_calling/cnvkit/sample1/multi_intervals.sorted.target.bed",
                 "variant_calling/cnvkit/sample1/reference.cnn",
                 "variant_calling/cnvkit/sample1/sample1.cnvcall.vcf",
                 "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted-diagram.pdf",
@@ -369,8 +375,8 @@
                 "variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.targetcoverage.cnn",
                 "variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.tumor_only.call.cns",
                 "variant_calling/cnvkit/sample4_vs_sample3",
-                "variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.antitarget.bed",
-                "variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.target.bed",
+                "variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.sorted.antitarget.bed",
+                "variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.sorted.target.bed",
                 "variant_calling/cnvkit/sample4_vs_sample3/reference.cnn",
                 "variant_calling/cnvkit/sample4_vs_sample3/sample4_vs_sample3.cnvcall.vcf",
                 "variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn",
@@ -414,8 +420,8 @@
                 "sample4.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
                 "sample4.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
                 "sample4.recal.regions.bed.gz.csi:md5,569288ccaecad1a91b1310d0e981a497",
-                "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "multi_intervals.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
+                "multi_intervals.sorted.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "multi_intervals.sorted.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
                 "reference.cnn:md5,891454915f82d0eeda0be13d71e0d5d7",
                 "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.paired_end.recalibrated.sorted.bintest.cns:md5,8d0301673b584a6a8d88bdaad87ba09d",
@@ -435,8 +441,8 @@
                 "test2.paired_end.recalibrated.sorted.genemetrics.tsv:md5,5ec3555520f502f00f551ae7900a3824",
                 "test2.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,e6d0190c1c37ce6e41f76ca5b24ccca3",
                 "test2.paired_end.recalibrated.sorted.tumor_only.call.cns:md5,70a308c6db7acf1a5fd623936cac6412",
-                "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "multi_intervals.target.bed:md5,f9e727147a7cbca46c2b9b2de3ecae91",
+                "multi_intervals.sorted.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "multi_intervals.sorted.target.bed:md5,f9e727147a7cbca46c2b9b2de3ecae91",
                 "reference.cnn:md5,dfc49a037a468bef43a33b5dd4a2bc05",
                 "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.paired_end.recalibrated.sorted.targetcoverage.cnn:md5,826087b08d380135a271e2774c94084c",
@@ -458,7 +464,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-28T14:41:59.048184914",
+        "timestamp": "2026-10-30T09:10:08.855815874",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -466,8 +472,11 @@
     },
     "-profile test --tools cnvkit --input recalibrated_germline.csv": {
         "content": [
-            13,
+            14,
             {
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
+                },
                 "CNVKIT_ANTITARGET": {
                     "cnvkit": "0.9.12"
                 },
@@ -574,8 +583,8 @@
                 "variant_calling",
                 "variant_calling/cnvkit",
                 "variant_calling/cnvkit/sample1",
-                "variant_calling/cnvkit/sample1/multi_intervals.antitarget.bed",
-                "variant_calling/cnvkit/sample1/multi_intervals.target.bed",
+                "variant_calling/cnvkit/sample1/multi_intervals.sorted.antitarget.bed",
+                "variant_calling/cnvkit/sample1/multi_intervals.sorted.target.bed",
                 "variant_calling/cnvkit/sample1/reference.cnn",
                 "variant_calling/cnvkit/sample1/sample1.cnvcall.vcf",
                 "variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted-diagram.pdf",
@@ -602,8 +611,8 @@
                 "sample1.recal.mosdepth.summary.txt:md5,d7676e7c1de851b0ee5185d21096123b",
                 "sample1.recal.regions.bed.gz:md5,6edeb8f7041a4403cb73651744b5bc82",
                 "sample1.recal.regions.bed.gz.csi:md5,9fa6b12aa02f0f0a673b1fbe19d6fb75",
-                "multi_intervals.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "multi_intervals.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
+                "multi_intervals.sorted.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "multi_intervals.sorted.target.bed:md5,f7474a0afbf5565c5675916606f2d9bd",
                 "reference.cnn:md5,891454915f82d0eeda0be13d71e0d5d7",
                 "test.paired_end.recalibrated.sorted.antitargetcoverage.cnn:md5,203caf8cef6935bb50b4138097955cb8",
                 "test.paired_end.recalibrated.sorted.bintest.cns:md5,8d0301673b584a6a8d88bdaad87ba09d",
@@ -621,7 +630,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:26:30.003168858",
+        "timestamp": "2026-10-30T09:04:35.778995886",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -629,8 +638,11 @@
     },
     "-profile test --tools cnvkit --input recalibrated_tumoronly.csv": {
         "content": [
-            13,
+            14,
             {
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
+                },
                 "CNVKIT_ANTITARGET": {
                     "cnvkit": "0.9.12"
                 },
@@ -782,7 +794,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-07-27T10:31:08.508007983",
+        "timestamp": "2026-10-30T09:08:00.965933548",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
