@@ -86,7 +86,7 @@ workflow BAM_VARIANT_CALLING_MUTECT2 {
     // Mutect2 calls filtered by filtermutectcalls in the shared filtering subworkflow, which sets meta.variantcaller
     // meta joint calling:  [id:patient, patient, sex]
     // meta paired calling: [id:tumor_id_vs_normal_id, normal_id, patient, sex, tumor_id]
-    // meta tumour-only:    [id:sample, patient, sample, sex, status]
+    // meta tumour-only:    [id:sample, data_type, patient, sample, sex, status]
     calls = channel.empty()
         .mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals)
         .join(channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals), failOnDuplicate: true, failOnMismatch: true)

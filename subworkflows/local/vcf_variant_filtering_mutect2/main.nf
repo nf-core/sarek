@@ -146,6 +146,7 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
 
 // Patient-level meta of joint calling: the per-sample keys are dropped and the id is the patient.
 // Used for the joint Mutect2 calls and for their contamination tables, which are joined on it.
+// data_type (bam or cram) is per sample in tumour-only meta: samples of one patient may differ.
 def patientMeta(meta) {
-    return meta - meta.subMap('normal_id', 'tumor_id', 'sample', 'contamination') + [id: meta.patient]
+    return meta - meta.subMap('normal_id', 'tumor_id', 'sample', 'contamination', 'data_type') + [id: meta.patient]
 }
