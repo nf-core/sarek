@@ -130,10 +130,13 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.somatic)
     }
 
+    // Mutect2 and Parabricks MutectCaller take [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ], with no normal here
+    cram_tumor_only = cram.map { meta, tumor_cram, tumor_crai -> [meta, [], [], tumor_cram, tumor_crai] }
+
     // MUTECT2
     if (tools && tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_MUTECT2(
-            cram.map { meta_, cram_, crai_ -> [meta_ - meta_.subMap('data_type'), [], [], cram_, crai_] },
+            cram_tumor_only,
             fasta,
             fasta_fai,
             dict,
@@ -155,11 +158,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // PARABRICKS MUTECTCALLER
-    cram_parabricks_mutectcaller = cram
-        .filter { _meta, _cram, _crai ->
-            tools && tools.split(',').contains('parabricks_mutectcaller')
-        }
-        .map { meta, tumor_cram, tumor_crai -> [meta, [], [], tumor_cram, tumor_crai] }
+    cram_parabricks_mutectcaller = cram_tumor_only.filter { _meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai ->
+        tools && tools.split(',').contains('parabricks_mutectcaller')
+    }
 
     BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER(
         cram_parabricks_mutectcaller,

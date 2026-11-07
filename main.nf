@@ -309,6 +309,7 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.germline_resource_tbi,
         PREPARE_GENOME.out.contamination_resource,
         PREPARE_GENOME.out.contamination_resource_tbi,
+        (params.contamination_resource || params.germline_resource) as boolean,
         PREPARE_GENOME.out.index_alignment,
         intervals_and_num_intervals,
         intervals_bed_combined,
