@@ -36,6 +36,7 @@ Njoatsosvágge is a long valley crossing the northern part of Sarek National Par
 - [#2363](https://github.com/nf-core/sarek/pull/2363) - Fail when `--no_intervals` is combined with a user-provided `--intervals` file, which it would ignore ([#2131](https://github.com/nf-core/sarek/issues/2131))
 - [#2364](https://github.com/nf-core/sarek/pull/2364) - Restore `--intervals false` to ignore the intervals from `--genome` and generate them from the FASTA reference, which stopped working with nf-schema 2.7.2 and Nextflow 26 passing CLI values as strings
 - [#2370](https://github.com/nf-core/sarek/pull/2370) - Run MSIsensorPro on every tumor/normal pair when `--msisensorpro_scan` is provided, for example by `--genome`; previously only the first pair was analyzed. Publish the MSIsensorPro `_all` and `_unstable` outputs, which the `msisensorpro/msisomatic` module did not capture (module updated with [nf-core/modules#13613](https://github.com/nf-core/modules/pull/13613)) ([#2192](https://github.com/nf-core/sarek/issues/2192)). Correct the MSI documentation: MSIsensor2 runs on tumor-only samples, the MSIsensorPro output directory is `variant_calling/msisensorpro/`, and the reference scan and models are published to `reference/msisensorpro/` and `reference/msisensor2/`
+- [#2386](https://github.com/nf-core/sarek/pull/2386) - Fix `--intervals` BED files with `track`, `browser` or `#` header lines failing the run: `BEDTOOLS_SORT` no longer keeps them with `-header`
 
 ### Removed
 
