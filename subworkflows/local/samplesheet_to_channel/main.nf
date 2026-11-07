@@ -241,6 +241,13 @@ workflow SAMPLESHEET_TO_CHANNEL {
             }
         }
 
+    // Parabricks' HaplotypeCaller is deliberately absent from this list: joint genotyping is not
+    // wired up for it, so it cannot satisfy `--joint_germline` on its own. It always emits
+    // per-sample VCFs and ignores the flag, so combining it with a joint-capable caller is fine.
+    if (joint_germline && (!tools || !(tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope')))) {
+        error("The GATK's Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper should be specified as one of the tools when doing joint germline variant calling.) ")
+    }
+
     if (step != 'annotate' && tools && !build_only_index) {
         // Two checks for ensuring that the pipeline stops with a meaningful error message if
         // 1. the sample-sheet only contains normal-samples, but some of the requested tools require tumor-samples, and
@@ -406,13 +413,6 @@ workflow SAMPLESHEET_TO_CHANNEL {
             log.warn("If GATK's Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-")
         }
     }
-    // Parabricks' HaplotypeCaller is deliberately absent from this list: joint genotyping is not
-    // wired up for it, so it cannot satisfy `--joint_germline` on its own. It always emits
-    // per-sample VCFs and ignores the flag, so combining it with a joint-capable caller is fine.
-    if (joint_germline && (!tools || !(tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope')))) {
-        error("The GATK's Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper should be specified as one of the tools when doing joint germline variant calling.) ")
-    }
-
     if (tools && tools.split(',').contains('haplotypecaller') && joint_germline && no_intervals) {
         System.err.println("Joint germline variant calling with GATK's HaplotypeCaller requires intervals because GenomicsDB cannot be used without them. Please provide intervals or remove `--no_intervals`.")
         error("Execution halted due to missing intervals.")
