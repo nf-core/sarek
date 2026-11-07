@@ -1,0 +1,82 @@
+name: "parabricks_dbsnp"
+description: NVIDIA Clara Parabricks GPU-accelerated variant calls annotation based
+  on dbSNP database
+keywords:
+  - annotation
+  - dbsnp
+  - vcf
+  - germline
+tools:
+  - parabricks:
+      description: "NVIDIA Clara Parabricks GPU-accelerated genomics tools"
+      homepage: https://www.nvidia.com/en-us/clara/genomics/
+      documentation: https://docs.nvidia.com/clara/parabricks/latest/index.html
+      licence: ["custom"]
+      identifier: ""
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'test' ]`
+    - vcf_file:
+        type: file
+        description: VCF file undergoing annotation.
+        pattern: "*.vcf"
+        ontologies: []
+    - dbsnp_file:
+        type: file
+        description: dbSNP file required for annotation.
+        pattern: "*.vcf.gz"
+        ontologies:
+          - edam: http://edamontology.org/format_3989 # GZIP format
+    - tabix_file:
+        type: file
+        description: dbSNP file index.
+        pattern: "*.vcf.gz.tbi"
+        ontologies: []
+output:
+  vcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - "*.vcf":
+          type: file
+          description: VCF file.
+          pattern: "*{.vcf}"
+          ontologies: []
+  compatible_versions:
+    - compatible_versions.yml:
+        type: file
+        description: File containing info on compatible CPU-based software versions.
+        pattern: "compatible_versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+  versions_parabricks:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - parabricks:
+          type: string
+          description: The tool name
+      - "pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'":
+          type: string
+          description: The command used to generate the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - parabricks:
+          type: string
+          description: The tool name
+      - "pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'":
+          type: string
+          description: The command used to generate the version of the tool
+authors:
+  - "@Furentsu"
+maintainers:
+  - "@famosab"

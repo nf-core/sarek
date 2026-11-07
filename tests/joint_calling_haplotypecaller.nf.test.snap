@@ -229,7 +229,7 @@
                 "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
             ]
         ],
-        "timestamp": "2026-10-30T08:45:45.270491576",
+        "timestamp": "2026-11-05T07:37:18.849644881",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -468,7 +468,7 @@
                 "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
             ]
         ],
-        "timestamp": "2026-10-30T08:44:16.591096716",
+        "timestamp": "2026-11-05T07:35:49.533842873",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -485,13 +485,13 @@
             "No VCF files",
             "No warnings",
             [
-                "Joint germline variant calling with GATK's HaplotypeCaller requires intervals because GenomicsDB cannot be used without them. Please provide intervals or remove `--no_intervals`."
+                "Joint germline variant calling with GATK's or Parabricks' HaplotypeCaller requires intervals because GenomicsDB cannot be used without them. Please provide intervals or remove `--no_intervals`."
             ]
         ],
-        "timestamp": "2026-03-06T11:55:26.564281",
+        "timestamp": "2026-10-29T17:30:06.788385808",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
         }
     }
 }
