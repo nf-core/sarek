@@ -1,3 +1,6 @@
+// Copyright (c) the nf-core community under an open-source MIT license.
+// See https://github.com/nf-core/modules for full license, file patching instructions and upstream contributing.
+
 process MSISENSORPRO_MSISOMATIC {
     tag "$meta.id"
     label 'process_low'
@@ -15,8 +18,8 @@ process MSISENSORPRO_MSISOMATIC {
     output:
     tuple val(meta), path("${prefix}")         , emit: output_report
     tuple val(meta), path("${prefix}_dis")     , emit: output_dis
-    tuple val(meta), path("${prefix}_germline"), emit: output_germline, optional: true
-    tuple val(meta), path("${prefix}_somatic") , emit: output_somatic,  optional: true
+    tuple val(meta), path("${prefix}_all")     , emit: output_all
+    tuple val(meta), path("${prefix}_unstable"), emit: output_unstable
     tuple val("${task.process}"), val('msisensor-pro'), eval("msisensor-pro --version 2>&1 | sed -nE 's/Version:\\s*v//p'") , emit: versions_msisensorpro, topic: versions
 
     when:
@@ -47,7 +50,7 @@ process MSISENSORPRO_MSISOMATIC {
     """
     touch ${prefix}
     touch ${prefix}_dis
-    touch ${prefix}_germline
-    touch ${prefix}_somatic
+    touch ${prefix}_all
+    touch ${prefix}_unstable
     """
 }

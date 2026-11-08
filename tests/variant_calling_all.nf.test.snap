@@ -483,7 +483,9 @@
                 "variant_calling/msisensorpro",
                 "variant_calling/msisensorpro/test2_vs_test",
                 "variant_calling/msisensorpro/test2_vs_test/test2_vs_test",
+                "variant_calling/msisensorpro/test2_vs_test/test2_vs_test_all",
                 "variant_calling/msisensorpro/test2_vs_test/test2_vs_test_dis",
+                "variant_calling/msisensorpro/test2_vs_test/test2_vs_test_unstable",
                 "variant_calling/strelka",
                 "variant_calling/strelka/test",
                 "variant_calling/strelka/test/test.strelka.genome.vcf.gz",
@@ -603,7 +605,9 @@
                 "test2.somatic.call.cns:md5,deaaa5fc0ddc44c029aa12d87e0cc4e6",
                 "test2.targetcoverage.cnn:md5,c8029a3886a9e0372ca24a5bc96ce264",
                 "test2_vs_test:md5,8d4908fbe1f6e3bd581c925d72788c54",
-                "test2_vs_test_dis:md5,6c68450054d0dd7a0b17a8cf9ef3337e"
+                "test2_vs_test_all:md5,28823801bc52888c443caad23d2e610b",
+                "test2_vs_test_dis:md5,6c68450054d0dd7a0b17a8cf9ef3337e",
+                "test2_vs_test_unstable:md5,836e617ddded07ec1e39089fd595c3d8"
             ],
             "No BAM files",
             [
