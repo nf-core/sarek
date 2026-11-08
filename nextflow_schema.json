@@ -446,6 +446,12 @@
                     "description": "Overwrite Control-FREEC window size.",
                     "help_text": "Details, see [ControlFREEC manual](http://boevalab.inf.ethz.ch/FREEC/tutorial.html)."
                 },
+                "cf_omit_sex": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-venus-mars",
+                    "description": "Do not pass the sample sex to Control-FREEC.",
+                    "help_text": "Leaves the `sex` line out of the Control-FREEC config. Control-FREEC 11.6b can abort with `std::length_error` on some tumor-only WES samples when `sex` and `minimalSubclonePresence` are both set ([#1376](https://github.com/nf-core/sarek/issues/1376)); omitting `sex` avoids it. The sex in the samplesheet is still used by other tools such as ASCAT."
+                },
                 "cnvkit_reference": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
