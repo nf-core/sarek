@@ -128,7 +128,7 @@ workflow NFCORE_SAREK {
         params.pon_tbi,
         params.aligner,
         params.step,
-        params.tools ?: 'no_tools',
+        params.tools?.toLowerCase() ?: 'no_tools',
         params.vep_include_fasta,
     )
 
@@ -158,7 +158,7 @@ workflow NFCORE_SAREK {
         [num_intervals < 1 ? [] : file[0], num_intervals < 1 ? [] : file[1], num_intervals]
     }
 
-    if (params.tools && params.tools.split(',').contains('cnvkit')) {
+    if (params.tools && params.tools.toLowerCase().split(',').contains('cnvkit')) {
         if (params.cnvkit_reference) {
             cnvkit_reference = channel.fromPath(params.cnvkit_reference).collect()
         }
@@ -194,10 +194,10 @@ workflow NFCORE_SAREK {
             params.vep_custom_args,
             params.vep_genome,
             params.vep_species,
-            (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))),
+            (params.vep_cache && params.tools && (params.tools.toLowerCase().split(',').contains("vep") || params.tools.toLowerCase().split(',').contains('merge'))),
             params.snpeff_cache,
             params.snpeff_db,
-            (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
+            (params.snpeff_cache && params.tools && (params.tools.toLowerCase().split(',').contains("snpeff") || params.tools.toLowerCase().split(',').contains('merge'))),
             "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.",
         )
 
@@ -269,7 +269,7 @@ workflow NFCORE_SAREK {
 
     // Prepare SnpSift databases (build if vardb not provided, returns tuple for SNPSIFT_ANNMEM)
     ch_snpsift_db = channel.value([[], [], [], [], []])
-    if (params.tools && params.tools.split(',').contains('snpsift') && snpsift_db_configs) {
+    if (params.tools && params.tools.toLowerCase().split(',').contains('snpsift') && snpsift_db_configs) {
         PREPARE_SNPSIFT_DATABASES(snpsift_db_configs)
         ch_snpsift_db = PREPARE_SNPSIFT_DATABASES.out.db_tuple
     }
@@ -281,9 +281,9 @@ workflow NFCORE_SAREK {
         samplesheet,
         params.aligner,
         params.group_by_umi_strategy,
-        params.skip_tools ?: 'no_tools',
+        params.skip_tools?.toLowerCase() ?: 'no_tools',
         params.step,
-        params.tools ?: 'no_tools',
+        params.tools?.toLowerCase() ?: 'no_tools',
         params.wes,
         PREPARE_GENOME.out.ascat_alleles,
         PREPARE_GENOME.out.ascat_loci,

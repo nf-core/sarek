@@ -147,10 +147,10 @@ workflow PIPELINE_INITIALISATION {
     ]
 
     // only check if we are using the tools
-    if (params.tools && (params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('merge'))) {
+    if (params.tools && (params.tools.toLowerCase().split(',').contains('snpeff') || params.tools.toLowerCase().split(',').contains('merge'))) {
         checkPathParamList.add(params.snpeff_cache)
     }
-    if (params.tools && (params.tools.split(',').contains('vep') || params.tools.split(',').contains('merge'))) {
+    if (params.tools && (params.tools.toLowerCase().split(',').contains('vep') || params.tools.toLowerCase().split(',').contains('merge'))) {
         checkPathParamList.add(params.vep_cache)
     }
 
@@ -188,11 +188,11 @@ workflow PIPELINE_INITIALISATION {
         params.sentieon_haplotyper_emit_mode,
         params.seq_center,
         params.seq_platform,
-        params.skip_tools,
+        params.skip_tools?.toLowerCase(),
         params.snpeff_cache,
         params.snpeff_db,
         params.step,
-        params.tools,
+        params.tools?.toLowerCase(),
         params.umi_length,
         params.umi_location,
         params.umi_in_read_header,
@@ -294,7 +294,7 @@ def sparkAndBam() {
 
 // Warn about options that the Parabricks mutectcaller path cannot honor
 def parabricksMutectcallerIgnoredParams() {
-    if (params.tools && params.tools.split(',').contains('parabricks_mutectcaller')) {
+    if (params.tools && params.tools.toLowerCase().split(',').contains('parabricks_mutectcaller')) {
         if (params.joint_mutect2) {
             log.warn("`--joint_mutect2` is not supported by Parabricks mutectcaller and is ignored for `parabricks_mutectcaller`: samples are called per tumor-normal pair or per tumor-only sample.")
         }
