@@ -90,4 +90,50 @@ nextflow_pipeline {
     test_scenario.each { scenario ->
         test(scenario.name, UTILS.getTest(scenario))
     }
+
+    // The published config.txt is in tests/.nftignore, so a snapshot cannot show whether `sex` was passed.
+    // These two tests read it directly: the samplesheet sex is written by default and left out with --cf_omit_sex.
+    def sex_params = [
+        chr_dir: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz',
+        dbsnp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+        dbsnp_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
+        fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+        fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+        input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
+        no_intervals: true,
+        step: "variant_calling",
+        tools: 'controlfreec',
+        wes: true
+    ]
+
+    [
+        [name: "-profile test --tools controlfreec --no_intervals tumoronly passes the samplesheet sex to Control-FREEC", omit: false],
+        [name: "-profile test --tools controlfreec --no_intervals tumoronly --cf_omit_sex leaves sex out of the Control-FREEC config", omit: true],
+    ].each { sex_test ->
+        test(sex_test.name) {
+            tag "pipeline"
+            tag "pipeline_sarek"
+            tag "cpu_conda"
+
+            options "-output-dir ${outputDir}"
+
+            when {
+                params {
+                    outdir = "${outputDir}"
+                    sex_params.each { key, value -> delegate."$key" = value }
+                    cf_omit_sex = sex_test.omit
+                }
+            }
+
+            then {
+                assert workflow.success
+                def config = path("${outputDir}/variant_calling/controlfreec/sample2/config.txt").text
+                def has_sex = config.readLines().any { it ==~ /^sex\s*=.*/ }
+                assert has_sex == !sex_test.omit
+                if (!sex_test.omit) {
+                    assert config.contains("sex = XX")
+                }
+            }
+        }
+    }
 }
