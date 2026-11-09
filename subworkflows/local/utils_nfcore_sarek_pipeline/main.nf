@@ -33,6 +33,8 @@ workflow PIPELINE_INITIALISATION {
     help // boolean: Display help message and exit
     help_full // boolean: Show the full help message
     show_hidden // boolean: Show hidden parameters in the help message
+    skip_tools //  string: Comma-separated --skip_tools value, lowercase
+    tools //  string: Comma-separated --tools value, lowercase
 
     main:
 
@@ -97,7 +99,7 @@ workflow PIPELINE_INITIALISATION {
     UTILS_NFCORE_PIPELINE(nextflow_cli_args)
 
     // Custom validation for pipeline parameters
-    validateInputParameters()
+    validateInputParameters(tools)
 
     // Check input path parameters to see if they exist
     def checkPathParamList = [
@@ -147,10 +149,10 @@ workflow PIPELINE_INITIALISATION {
     ]
 
     // only check if we are using the tools
-    if (SarekUtils.hasTool(params.tools, 'snpeff') || SarekUtils.hasTool(params.tools, 'merge')) {
+    if (SarekUtils.hasTool(tools, 'snpeff') || SarekUtils.hasTool(tools, 'merge')) {
         checkPathParamList.add(params.snpeff_cache)
     }
-    if (SarekUtils.hasTool(params.tools, 'vep') || SarekUtils.hasTool(params.tools, 'merge')) {
+    if (SarekUtils.hasTool(tools, 'vep') || SarekUtils.hasTool(tools, 'merge')) {
         checkPathParamList.add(params.vep_cache)
     }
 
@@ -188,11 +190,11 @@ workflow PIPELINE_INITIALISATION {
         params.sentieon_haplotyper_emit_mode,
         params.seq_center,
         params.seq_platform,
-        params.skip_tools?.toLowerCase(),
+        skip_tools,
         params.snpeff_cache,
         params.snpeff_db,
         params.step,
-        params.tools?.toLowerCase(),
+        tools,
         params.umi_length,
         params.umi_location,
         params.umi_in_read_header,
@@ -251,10 +253,10 @@ workflow PIPELINE_COMPLETION {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 // Check and validate pipeline parameters
-def validateInputParameters() {
+def validateInputParameters(tools) {
     genomeExistsError()
     sparkAndBam()
-    parabricksMutectcallerIgnoredParams()
+    parabricksMutectcallerIgnoredParams(tools)
     noIntervalsWithIntervals()
 }
 
@@ -293,8 +295,8 @@ def sparkAndBam() {
 }
 
 // Warn about options that the Parabricks mutectcaller path cannot honor
-def parabricksMutectcallerIgnoredParams() {
-    if (SarekUtils.hasTool(params.tools, 'parabricks_mutectcaller')) {
+def parabricksMutectcallerIgnoredParams(tools) {
+    if (SarekUtils.hasTool(tools, 'parabricks_mutectcaller')) {
         if (params.joint_mutect2) {
             log.warn("`--joint_mutect2` is not supported by Parabricks mutectcaller and is ignored for `parabricks_mutectcaller`: samples are called per tumor-normal pair or per tumor-only sample.")
         }

@@ -375,6 +375,8 @@ workflow {
         params.help,
         params.help_full,
         params.show_hidden,
+        params.skip_tools?.toLowerCase(),
+        params.tools?.toLowerCase(),
     )
 
     //
