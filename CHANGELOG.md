@@ -49,7 +49,6 @@ Njoatsosvágge is a long valley crossing the northern part of Sarek National Par
 | bedtools   | -           | 2.31.1      |
 | fastqc     | 0.12.1      | 0.13.0      |
 | parabricks | 4.7.1-1     | 4.8.0-1     |
-| parabricks/dbsnp | - | 4.8.0-1 |
 
 ### Dependencies - plugins
 

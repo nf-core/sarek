@@ -463,7 +463,7 @@
                 "joint_germline": {
                     "type": "boolean",
                     "fa_icon": "fas fa-toolbox",
-                    "description": "Turn on the joint germline variant calling for GATK haplotypecaller",
+                    "description": "Turn on the joint germline variant calling for GATK or Parabricks haplotypecaller",
                     "help_text": "Uses all normal germline samples (as designated by `status` in the input csv) in the joint germline variant calling process."
                 },
                 "joint_mutect2": {

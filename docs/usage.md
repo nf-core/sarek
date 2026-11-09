@@ -258,7 +258,6 @@ Differences to the CPU equivalents:
 - Without `--joint_germline`, Parabricks HaplotypeCaller VCFs are filtered with GATK's CNNScoreVariants and FilterVariantTranches. Add `--skip_tools parabricks_haplotypecaller_filter` to skip this.
 - `pbrun haplotypecaller` cannot take `--dbsnp`. When `--dbsnp` is set, rsIDs are added to single-sample VCFs with `pbrun dbsnp`.
 - `--gatk_pcr_indel_model` is passed to Parabricks HaplotypeCaller. Parabricks only accepts a subset of GATK HaplotypeCaller options, see the [Parabricks HaplotypeCaller documentation](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html).
-- Parabricks does not support the use of this pipeline with `-profile conda`.
 
 ### Start with duplicate marking (`--step markduplicates`)
 

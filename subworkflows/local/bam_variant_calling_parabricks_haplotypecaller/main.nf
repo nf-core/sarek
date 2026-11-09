@@ -31,8 +31,7 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER {
 
     PARABRICKS_HAPLOTYPECALLER(cram_intervals, fasta)
 
-    // pbrun haplotypecaller does not accept --dbsnp, so rsIDs are added in a separate step.
-    // dbsnp/dbsnp_tbi are wrapped so an empty list stays a single element and can be branched on.
+    // pbrun haplotypecaller has no --dbsnp, so rsIDs are added separately; dbsnp/dbsnp_tbi are wrapped so an empty list stays one element to branch on.
     vcf_dbsnp = PARABRICKS_HAPLOTYPECALLER.out.vcf
         .combine(dbsnp.map { dbsnp_ -> [ dbsnp_ ] })
         .combine(dbsnp_tbi.map { dbsnp_tbi_ -> [ dbsnp_tbi_ ] })
@@ -47,9 +46,8 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER {
         .mix(vcf_dbsnp.skip.map { meta, vcf_, _dbsnp, _dbsnp_tbi -> [ meta, vcf_ ] })
 
     // Depending on ext.args (e.g. '--gvcf'), PARABRICKS_HAPLOTYPECALLER emits either an
-    // uncompressed VCF or an already-bgzipped gVCF, never both. HTSLIB_BGZIPTABIX detects the
-    // input compression itself, so it both compresses the plain VCF and indexes
-    // the already-compressed gVCF.
+    // uncompressed VCF or an already-bgzipped gVCF, never both. HTSLIB_BGZIPTABIX symlinks
+    // and indexes BGZF input (the gVCF) and compresses plain input (the VCF).
     TABIX_BGZIPTABIX_VCF(vcf_raw.map { meta, vcf_ -> [ meta, vcf_, [], [] ] }, 'compress', true, 'vcf')
     TABIX_BGZIPTABIX_GVCF(PARABRICKS_HAPLOTYPECALLER.out.gvcf.map { meta, gvcf_ -> [ meta, gvcf_, [], [] ] }, 'compress', true, 'g.vcf')
 
