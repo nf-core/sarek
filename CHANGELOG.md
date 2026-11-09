@@ -24,7 +24,7 @@ Njoatsosvágge is a long valley crossing the northern part of Sarek National Par
 
 ### Fixed
 
-- [#2392](https://github.com/nf-core/sarek/pull/2391) - `--tools` and `--skip_tools` are now case-insensitive, based on [#1188](https://github.com/nf-core/sarek/pull/1188) by [@adamrtalbot](https://github.com/adamrtalbot)
+- [#2392](https://github.com/nf-core/sarek/pull/2392) - `--tools` and `--skip_tools` are now case-insensitive, based on [#1188](https://github.com/nf-core/sarek/pull/1188) by [@adamrtalbot](https://github.com/adamrtalbot)
 - [#2322](https://github.com/nf-core/sarek/pull/2322) - Fix validation for step annotate
 - [#2333](https://github.com/nf-core/sarek/pull/2333) - Run `samtools/fixmate` before fgbio `GroupReadsByUmi` for `bwa-mem2`, which does not write the `MQ` tag, fixing fgbio crashes during UMI consensus
 - [#2347](https://github.com/nf-core/sarek/pull/2347) - Fix DeepSomatic VCF merge failing with `sample entries that don't match the other files` when an interval yields no records (e.g. `*_alt` contigs): pass tumor and normal sample names explicitly, including to `postprocess_variants`, which otherwise writes `default`
