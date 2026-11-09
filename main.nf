@@ -158,7 +158,7 @@ workflow NFCORE_SAREK {
         [num_intervals < 1 ? [] : file[0], num_intervals < 1 ? [] : file[1], num_intervals]
     }
 
-    if (params.tools && params.tools.toLowerCase().split(',').contains('cnvkit')) {
+    if (params.tools && SarekUtils.hasTool(params.tools, 'cnvkit')) {
         if (params.cnvkit_reference) {
             cnvkit_reference = channel.fromPath(params.cnvkit_reference).collect()
         }
@@ -194,10 +194,10 @@ workflow NFCORE_SAREK {
             params.vep_custom_args,
             params.vep_genome,
             params.vep_species,
-            (params.vep_cache && params.tools && (params.tools.toLowerCase().split(',').contains("vep") || params.tools.toLowerCase().split(',').contains('merge'))),
+            (params.vep_cache && params.tools && (SarekUtils.hasTool(params.tools, "vep") || SarekUtils.hasTool(params.tools, 'merge'))),
             params.snpeff_cache,
             params.snpeff_db,
-            (params.snpeff_cache && params.tools && (params.tools.toLowerCase().split(',').contains("snpeff") || params.tools.toLowerCase().split(',').contains('merge'))),
+            (params.snpeff_cache && params.tools && (SarekUtils.hasTool(params.tools, "snpeff") || SarekUtils.hasTool(params.tools, 'merge'))),
             "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.",
         )
 
@@ -269,7 +269,7 @@ workflow NFCORE_SAREK {
 
     // Prepare SnpSift databases (build if vardb not provided, returns tuple for SNPSIFT_ANNMEM)
     ch_snpsift_db = channel.value([[], [], [], [], []])
-    if (params.tools && params.tools.toLowerCase().split(',').contains('snpsift') && snpsift_db_configs) {
+    if (params.tools && SarekUtils.hasTool(params.tools, 'snpsift') && snpsift_db_configs) {
         PREPARE_SNPSIFT_DATABASES(snpsift_db_configs)
         ch_snpsift_db = PREPARE_SNPSIFT_DATABASES.out.db_tuple
     }

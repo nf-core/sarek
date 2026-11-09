@@ -45,7 +45,7 @@ workflow POST_VARIANTCALLING {
     //
     // VARLOCIRAPTOR
     //
-    if (tools && tools.split(',').contains('varlociraptor')) {
+    if (tools && SarekUtils.hasTool(tools, 'varlociraptor')) {
         // GERMLINE
         VCF_VARLOCIRAPTOR_GERMLINE(cram_germline, fasta, fai, varlociraptor_scenario_germline, germline_vcfs, varlociraptor_chunk_size, 'normal', varlociraptor_events_germline, varlociraptor_fdr)
 

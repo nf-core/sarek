@@ -11,7 +11,7 @@ workflow CHANNEL_BASERECALIBRATOR_CREATE_CSV {
 
     main:
         // Creating csv files to restart from this step
-        if ( tools && tools.split(',').contains('sentieon_dedup') ) {
+        if ( tools && SarekUtils.hasTool(tools, 'sentieon_dedup') ) {
             cram_table_bqsr.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: "${outdir}/csv") { meta, file, index, _table ->
                 def patient    = meta.patient
                 def sample     = meta.sample
@@ -26,7 +26,7 @@ workflow CHANNEL_BASERECALIBRATOR_CREATE_CSV {
 
                 ["markduplicates.csv", "patient,sex,status,sample,${type},${type_index},table\n${patient},${sex},${status},${sample},${align_file},${align_index},${table_file}\n"]
             }
-        } else if (!(skip_tools && (skip_tools.split(',').contains('markduplicates')))) {
+        } else if (!(skip_tools && (SarekUtils.hasTool(skip_tools, 'markduplicates')))) {
             cram_table_bqsr.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: "${outdir}/csv") { meta, file, index, _table ->
                 def patient    = meta.patient
                 def sample     = meta.sample

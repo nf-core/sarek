@@ -147,10 +147,10 @@ workflow PIPELINE_INITIALISATION {
     ]
 
     // only check if we are using the tools
-    if (params.tools && (params.tools.toLowerCase().split(',').contains('snpeff') || params.tools.toLowerCase().split(',').contains('merge'))) {
+    if (params.tools && (SarekUtils.hasTool(params.tools, 'snpeff') || SarekUtils.hasTool(params.tools, 'merge'))) {
         checkPathParamList.add(params.snpeff_cache)
     }
-    if (params.tools && (params.tools.toLowerCase().split(',').contains('vep') || params.tools.toLowerCase().split(',').contains('merge'))) {
+    if (params.tools && (SarekUtils.hasTool(params.tools, 'vep') || SarekUtils.hasTool(params.tools, 'merge'))) {
         checkPathParamList.add(params.vep_cache)
     }
 
@@ -294,7 +294,7 @@ def sparkAndBam() {
 
 // Warn about options that the Parabricks mutectcaller path cannot honor
 def parabricksMutectcallerIgnoredParams() {
-    if (params.tools && params.tools.toLowerCase().split(',').contains('parabricks_mutectcaller')) {
+    if (params.tools && SarekUtils.hasTool(params.tools, 'parabricks_mutectcaller')) {
         if (params.joint_mutect2) {
             log.warn("`--joint_mutect2` is not supported by Parabricks mutectcaller and is ignored for `parabricks_mutectcaller`: samples are called per tumor-normal pair or per tumor-only sample.")
         }

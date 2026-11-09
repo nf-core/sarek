@@ -31,7 +31,7 @@ workflow VCF_ANNOTATE_ALL {
     tab_ann = channel.empty()
     json_ann = channel.empty()
 
-    if (tools.split(',').contains('bcfann')) {
+    if (SarekUtils.hasTool(tools, 'bcfann')) {
         BCFTOOLS_ANNOTATE(
             vcf.map { meta, vcf_ -> [meta, vcf_, []] }.combine(bcftools_annotations).combine(bcftools_annotations_index).combine(bcftools_columns).combine(bcftools_header_lines).map{meta, vcf_, index, ann, ann_index, cols, header -> [meta, vcf_, index, ann, ann_index, cols, header, []]}
         )
@@ -39,20 +39,20 @@ workflow VCF_ANNOTATE_ALL {
         vcf_ann = vcf_ann.mix(BCFTOOLS_ANNOTATE.out.vcf.join(BCFTOOLS_ANNOTATE.out.index, failOnDuplicate: true, failOnMismatch: true))
     }
 
-    if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff')) {
+    if (SarekUtils.hasTool(tools, 'merge') || SarekUtils.hasTool(tools, 'snpeff')) {
         VCF_ANNOTATE_SNPEFF(vcf, snpeff_db, snpeff_cache)
 
         vcf_ann = vcf_ann.mix(VCF_ANNOTATE_SNPEFF.out.vcf_tbi)
     }
 
-    if (tools.split(',').contains('merge')) {
+    if (SarekUtils.hasTool(tools, 'merge')) {
         vcf_ann_for_merge = VCF_ANNOTATE_SNPEFF.out.vcf_tbi.map { meta, vcf_, _tbi -> [meta, vcf_, []] }
         VCF_ANNOTATE_MERGE(vcf_ann_for_merge, vep_genome, vep_species, vep_cache_version, vep_cache, fasta, vep_extra_files, [[], []])
 
         vcf_ann = vcf_ann.mix(VCF_ANNOTATE_MERGE.out.vcf.join(VCF_ANNOTATE_MERGE.out.tbi, failOnDuplicate: true, failOnMismatch: true))
     }
 
-    if (tools.split(',').contains('vep')) {
+    if (SarekUtils.hasTool(tools, 'vep')) {
         vcf_for_vep = vcf.map { meta, vcf_ -> [meta, vcf_, []] }
         ENSEMBLVEP_VEP(vcf_for_vep, vep_genome, vep_species, vep_cache_version, vep_cache, fasta, vep_extra_files, [[], []])
 
@@ -63,9 +63,9 @@ workflow VCF_ANNOTATE_ALL {
 
     // SnpSift runs on all final annotated outputs
     // If no other annotators were used, fall back to original vcf
-    if (tools.split(',').contains('snpsift')) {
-        def has_other_annotators = ['merge', 'snpeff', 'vep', 'bcfann'].any { tool -> tools.split(',').contains(tool) }
-        def snpsift_input = tools.split(',').contains('merge')
+    if (SarekUtils.hasTool(tools, 'snpsift')) {
+        def has_other_annotators = ['merge', 'snpeff', 'vep', 'bcfann'].any { tool -> SarekUtils.hasTool(tools, tool) }
+        def snpsift_input = SarekUtils.hasTool(tools, 'merge')
             ? VCF_ANNOTATE_MERGE.out.vcf.map { meta, vcf_ -> [meta, vcf_, []] }
             : (has_other_annotators ? vcf_ann.map { meta, vcf_, _tbi -> [meta, vcf_, []] } : vcf.map { meta, vcf_ -> [meta, vcf_, []] })
 

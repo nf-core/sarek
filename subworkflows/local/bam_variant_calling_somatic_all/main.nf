@@ -76,7 +76,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     tbi_tiddit       = channel.empty()
     tbi_tnscope      = channel.empty()
 
-    if (tools && tools.split(',').contains('ascat')) {
+    if (tools && SarekUtils.hasTool(tools, 'ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
             cram,
             allele_files,
@@ -90,7 +90,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // CONTROLFREEC
-    if (tools && tools.split(',').contains('controlfreec')) {
+    if (tools && SarekUtils.hasTool(tools, 'controlfreec')) {
         cram_normal = cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] }
         cram_tumor = cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
 
@@ -128,7 +128,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // CNVKIT
-    if (tools && tools.split(',').contains('cnvkit')) {
+    if (tools && SarekUtils.hasTool(tools, 'cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT(
             bam.map { meta, normal_bam, _normal_bai, tumor_bam, _tumor_bai -> [meta, tumor_bam, normal_bam] },
             fasta,
@@ -139,7 +139,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // FREEBAYES
-    if (tools && tools.split(',').contains('freebayes')) {
+    if (tools && SarekUtils.hasTool(tools, 'freebayes')) {
         BAM_VARIANT_CALLING_FREEBAYES(
             cram,
             dict,
@@ -154,7 +154,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // DEEPSOMATIC
     cram_deepsomatic = cram.filter { _meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai ->
-        tools && tools.split(',').contains('deepsomatic')
+        tools && SarekUtils.hasTool(tools, 'deepsomatic')
     }
 
     BAM_VARIANT_CALLING_SOMATIC_DEEPSOMATIC(
@@ -169,7 +169,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     tbi_deepsomatic = BAM_VARIANT_CALLING_SOMATIC_DEEPSOMATIC.out.tbi
 
     // MANTA
-    if (tools && tools.split(',').contains('manta')) {
+    if (tools && SarekUtils.hasTool(tools, 'manta')) {
         BAM_VARIANT_CALLING_SOMATIC_MANTA(
             cram,
             fasta,
@@ -183,7 +183,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // INDEXCOV
     //   WGS only
-    if (wes == false && tools.split(',').contains('indexcov')) {
+    if (wes == false && SarekUtils.hasTool(tools, 'indexcov')) {
         BAM_VARIANT_CALLING_INDEXCOV(
             cram,
             fasta,
@@ -194,8 +194,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // STRELKA
-    if (tools && tools.split(',').contains('strelka')) {
-        cram_strelka = tools.split(',').contains('manta')
+    if (tools && SarekUtils.hasTool(tools, 'strelka')) {
+        cram_strelka = SarekUtils.hasTool(tools, 'manta')
             // Manta's candidate small indels feed Strelka; strip the manta variantcaller tag so the meta matches cram for the join
             ? cram.join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf.map { meta, vcf -> [meta - meta.subMap('variantcaller'), vcf] }, failOnDuplicate: true, failOnMismatch: true).join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf_tbi.map { meta, tbi -> [meta - meta.subMap('variantcaller'), tbi] }, failOnDuplicate: true, failOnMismatch: true)
             : cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], []] }
@@ -213,14 +213,14 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // MSISENSORPRO
-    if (tools && tools.split(',').contains('msisensorpro')) {
+    if (tools && SarekUtils.hasTool(tools, 'msisensorpro')) {
         MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta, msisensorpro_scan)
 
         out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSISOMATIC.out.output_report)
     }
 
     // MuSE
-    if (tools && tools.split(',').contains('muse')) {
+    if (tools && SarekUtils.hasTool(tools, 'muse')) {
         BAM_VARIANT_CALLING_SOMATIC_MUSE(
             bam.map { meta, normal_bam, normal_bai, _tumor_bam, _tumor_bai -> [meta, normal_bam, normal_bai] },
             bam.map { meta, _normal_bam, _normal_bai, tumor_bam, tumor_bai -> [meta, tumor_bam, tumor_bai] },
@@ -234,7 +234,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // MUTECT2
-    if (tools && tools.split(',').contains('mutect2')) {
+    if (tools && SarekUtils.hasTool(tools, 'mutect2')) {
         BAM_VARIANT_CALLING_MUTECT2(
             cram,
             fasta,
@@ -259,7 +259,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // PARABRICKS DEEPSOMATIC
     cram_parabricks_deepsomatic = cram.filter { _meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai ->
-        tools && tools.split(',').contains('parabricks_deepsomatic')
+        tools && SarekUtils.hasTool(tools, 'parabricks_deepsomatic')
     }
 
     BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC(
@@ -273,7 +273,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // PARABRICKS MUTECTCALLER
     cram_parabricks_mutectcaller = cram.filter { _meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai ->
-        tools && tools.split(',').contains('parabricks_mutectcaller')
+        tools && SarekUtils.hasTool(tools, 'parabricks_mutectcaller')
     }
 
     BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER(
@@ -298,7 +298,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     tbi_parabricks_mutectcaller = BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER.out.tbi
 
     // TNSCOPE
-    if (tools && tools.split(',').contains('sentieon_tnscope')) {
+    if (tools && SarekUtils.hasTool(tools, 'sentieon_tnscope')) {
 
         BAM_VARIANT_CALLING_SOMATIC_TNSCOPE(
             cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
@@ -319,7 +319,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // TIDDIT
-    if (tools && tools.split(',').contains('tiddit')) {
+    if (tools && SarekUtils.hasTool(tools, 'tiddit')) {
         BAM_VARIANT_CALLING_SOMATIC_TIDDIT(
             cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] },
             cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] },
