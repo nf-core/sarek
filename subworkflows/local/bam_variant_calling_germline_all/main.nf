@@ -49,6 +49,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     known_sites_snps_tbi
     known_snps_vqsr
     joint_germline                    // boolean: [mandatory] [default: false] joint calling of germline variants
+    wes                               // boolean: [mandatory] [default: false] whether targeted data is processed
     skip_haplotypecaller_filter       // boolean: [mandatory] [default: false] whether to filter haplotypecaller single sample vcfs
     sentieon_haplotyper_emit_mode     // channel: [mandatory] value channel with string
     sentieon_dnascope_emit_mode       // channel: [mandatory] value channel with string
@@ -283,7 +284,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // INDEXCOV, for WGS only
-    if (params.wes == false && tools_list.contains('indexcov')) {
+    if (wes == false && tools_list.contains('indexcov')) {
         BAM_VARIANT_CALLING_INDEXCOV (
             cram,
             fasta,

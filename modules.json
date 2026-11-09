@@ -393,7 +393,7 @@
                     },
                     "msisensorpro/msisomatic": {
                         "branch": "master",
-                        "git_sha": "8f37155cb42259efed9e9aef24f7d1ba66ea983f",
+                        "git_sha": "5cc340f1930693e556e7f0ce4bf1ce29e1370565",
                         "installed_by": ["modules"]
                     },
                     "msisensorpro/scan": {
@@ -478,6 +478,11 @@
                         "installed_by": ["modules"]
                     },
                     "samtools/faidx": {
+                        "branch": "master",
+                        "git_sha": "9339809fcb90af8a8b7051e6cd914894d5c52002",
+                        "installed_by": ["modules"]
+                    },
+                    "samtools/fixmate": {
                         "branch": "master",
                         "git_sha": "9339809fcb90af8a8b7051e6cd914894d5c52002",
                         "installed_by": ["modules"]
