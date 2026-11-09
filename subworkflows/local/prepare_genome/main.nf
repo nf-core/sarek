@@ -115,7 +115,7 @@ workflow PREPARE_GENOME {
 
     // Prepare genome for BBSplit contamination filtering
     bbsplit_index = channel.empty()
-    if (tools && SarekUtils.hasTool(tools, 'bbsplit')) {
+    if (SarekUtils.hasTool(tools, 'bbsplit')) {
         if (bbsplit_index_in) {
             // Use user-provided bbsplit index
             if (bbsplit_index_in.endsWith('.tar.gz')) {

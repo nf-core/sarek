@@ -132,7 +132,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // PARABRICKS DEEPVARIANT
-    if (tools && SarekUtils.hasTool(tools, 'parabricks_deepvariant')) {
+    if (SarekUtils.hasTool(tools, 'parabricks_deepvariant')) {
         BAM_VARIANT_CALLING_PARABRICKS_DEEPVARIANT(
             cram,
             fasta,
