@@ -492,7 +492,7 @@
                     "format": "file-path",
                     "pattern": "^\\S+\\.vcf\\.gz\\.tbi$",
                     "exists": true,
-                    "description": "Index of the GATK Mutect2 force-call alleles VCF.",
+                    "description": "Index of the force-call alleles VCF for GATK Mutect2 and Parabricks MutectCaller.",
                     "help_text": "If none provided, will be generated automatically from the force-call alleles bgzipped VCF file."
                 },
                 "pon": {

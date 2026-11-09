@@ -26,8 +26,8 @@ Njoatsosvágge is a long valley crossing the northern part of Sarek National Par
 
 - [#2322](https://github.com/nf-core/sarek/pull/2322) - Fix validation for step annotate
 - [#2333](https://github.com/nf-core/sarek/pull/2333) - Run `samtools/fixmate` before fgbio `GroupReadsByUmi` for `bwa-mem2`, which does not write the `MQ` tag, fixing fgbio crashes during UMI consensus
-- [#2347](https://github.com/nf-core/sarek/pull/2347) - Fix DeepSomatic VCF merge failing with `sample entries that don't match the other files` when an interval yields no records (e.g. `*_alt` contigs): pass tumour and normal sample names explicitly, including to `postprocess_variants`, which otherwise writes `default`
-- [#2349](https://github.com/nf-core/sarek/pull/2349) - Filter Mutect2 calls with `FilterMutectCalls` also without `--germline_resource` ([#1546](https://github.com/nf-core/sarek/issues/1546)), so downstream files of such runs are now named after `*.mutect2.filtered.vcf.gz`; with `--joint_mutect2`, tumours of one patient with different samplesheet `contamination` values no longer split the patient into several joint calls
+- [#2347](https://github.com/nf-core/sarek/pull/2347) - Fix DeepSomatic VCF merge failing with `sample entries that don't match the other files` when an interval yields no records (e.g. `*_alt` contigs): pass tumor and normal sample names explicitly, including to `postprocess_variants`, which otherwise writes `default`
+- [#2349](https://github.com/nf-core/sarek/pull/2349) - Filter Mutect2 calls with `FilterMutectCalls` also without `--germline_resource` ([#1546](https://github.com/nf-core/sarek/issues/1546)), so downstream files of such runs are now named after `*.mutect2.filtered.vcf.gz`; with `--joint_mutect2`, tumors of one patient with different samplesheet `contamination` values no longer split the patient into several joint calls
 - [#2352](https://github.com/nf-core/sarek/pull/2352) - Sort the `--intervals` BED in reference order with `bedtools sort` before splitting it, fixing out-of-order pileup tables that made `CalculateContamination` fail with `Invalid interval` ([#899](https://github.com/nf-core/sarek/issues/899), [#2281](https://github.com/nf-core/sarek/issues/2281)). Fail early when the BED has contigs missing from the reference, start > end, or intervals past the contig end ([#97](https://github.com/nf-core/sarek/issues/97), [#934](https://github.com/nf-core/sarek/issues/934)). CNVKit target and antitarget BED names now carry the `.sorted` suffix of the sorted intervals file
 - [#2357](https://github.com/nf-core/sarek/pull/2357) - Clarify annotation cache and software version selection, and correct the SnpEff cache directory documentation
 - [#2358](https://github.com/nf-core/sarek/pull/2358) - Pass the Mutect2 and Parabricks MutectCaller stats file to `FilterMutectCalls` with `--stats` ([#2191](https://github.com/nf-core/sarek/issues/2191))
@@ -36,7 +36,8 @@ Njoatsosvágge is a long valley crossing the northern part of Sarek National Par
 - [#2362](https://github.com/nf-core/sarek/pull/2362) - Avoid misleading error messages concerning sample-sheets being issued on unrelated errors
 - [#2363](https://github.com/nf-core/sarek/pull/2363) - Fail when `--no_intervals` is combined with a user-provided `--intervals` file, which it would ignore ([#2131](https://github.com/nf-core/sarek/issues/2131))
 - [#2364](https://github.com/nf-core/sarek/pull/2364) - Restore `--intervals false` to ignore the intervals from `--genome` and generate them from the FASTA reference, which stopped working with nf-schema 2.7.2 and Nextflow 26 passing CLI values as strings
-- [#2370](https://github.com/nf-core/sarek/pull/2370) - Run MSIsensorPro on every tumor/normal pair when `--msisensorpro_scan` is provided, for example by `--genome`; previously only the first pair was analysed. Publish the MSIsensorPro `_all` and `_unstable` outputs, which the `msisensorpro/msisomatic` module did not capture (module updated with [nf-core/modules#13613](https://github.com/nf-core/modules/pull/13613)) ([#2192](https://github.com/nf-core/sarek/issues/2192)). Correct the MSI documentation: MSIsensor2 runs on tumor-only samples, the MSIsensorPro output directory is `variant_calling/msisensorpro/`, and the reference scan and models are published to `reference/msisensorpro/` and `reference/msisensor2/`
+- [#2370](https://github.com/nf-core/sarek/pull/2370) - Run MSIsensorPro on every tumor/normal pair when `--msisensorpro_scan` is provided, for example by `--genome`; previously only the first pair was analyzed. Publish the MSIsensorPro `_all` and `_unstable` outputs, which the `msisensorpro/msisomatic` module did not capture (module updated with [nf-core/modules#13613](https://github.com/nf-core/modules/pull/13613)) ([#2192](https://github.com/nf-core/sarek/issues/2192)). Correct the MSI documentation: MSIsensor2 runs on tumor-only samples, the MSIsensorPro output directory is `variant_calling/msisensorpro/`, and the reference scan and models are published to `reference/msisensorpro/` and `reference/msisensor2/`
+- [#2386](https://github.com/nf-core/sarek/pull/2386) - Fix `--intervals` BED files with `track`, `browser` or `#` header lines failing the run: `BEDTOOLS_SORT` no longer keeps them with `-header`
 
 ### Removed
 
@@ -46,7 +47,7 @@ Njoatsosvágge is a long valley crossing the northern part of Sarek National Par
 | ---------- | ----------- | ----------- |
 | bedtools   | -           | 2.31.1      |
 | fastqc     | 0.12.1      | 0.13.0      |
-| parabricks | 4.7.1       | 4.8.0       |
+| parabricks | 4.7.1-1     | 4.8.0-1     |
 
 ### Dependencies - plugins
 
@@ -72,12 +73,17 @@ Njoatsosvágge is a long valley crossing the northern part of Sarek National Par
 
 - [#2345](https://github.com/nf-core/sarek/pull/2345) - Template update for nf-core/tools v4.2.1
 - [#2346](https://github.com/nf-core/sarek/pull/2346) - Back to dev (3.11.1dev)
-- [#2349](https://github.com/nf-core/sarek/pull/2349) - Mutect2 and Parabricks MutectCaller share one GATK filtering subworkflow (`vcf_variant_filtering_mutect2`), with Parabricks MutectCaller pileups scattered over the intervals; paired and tumour-only Mutect2 calling merged into `bam_variant_calling_mutect2`; `vcf_variant_filtering_gatk` renamed to `vcf_variant_filtering_haplotypecaller`. Published files are unchanged
+- [#2349](https://github.com/nf-core/sarek/pull/2349) - Mutect2 and Parabricks MutectCaller share one GATK filtering subworkflow (`vcf_variant_filtering_mutect2`), with Parabricks MutectCaller pileups scattered over the intervals; paired and tumor-only Mutect2 calling merged into `bam_variant_calling_mutect2`; `vcf_variant_filtering_gatk` renamed to `vcf_variant_filtering_haplotypecaller`. Published files are unchanged
 - [#2375](https://github.com/nf-core/sarek/pull/2375) - Prepare release 3.12.0
+- [#2378](https://github.com/nf-core/sarek/pull/2378) - `SAMPLESHEET_TO_CHANNEL` builds the duplicate-row check from one ordered field list per step instead of two key shapes and two error messages; the `--step annotate` halt message no longer wrongly mentions `lane`. The Mutect2 and Parabricks MutectCaller resource warnings share one loop, and the warning about filtering without contamination estimation is only shown when neither `--contamination_resource` nor `--germline_resource` is provided
+- [#2379](https://github.com/nf-core/sarek/pull/2379) - `POST_VARIANTCALLING` carries `[meta, vcf, tbi]` internally and splits VCFs and indexes only at `emit:`, so each post-processing step exists once. Published files and `csv/variantcalled.csv` are unchanged
+- [#2383](https://github.com/nf-core/sarek/pull/2383) - `PREPARE_GENOME` checks for Mutect2 and Parabricks MutectCaller once instead of repeating the `--tools` check in four conditions
+- [#2385](https://github.com/nf-core/sarek/pull/2385) - `PREPARE_INTERVALS` checks intervals against contig lengths in a `checkIntervalsWithinContigs()` function instead of inline in a `.map`
+- [#2387](https://github.com/nf-core/sarek/pull/2387) - Simplify the Mutect2 subworkflows: one shared `patientMeta()` for joint calling, joint contamination tables grouped with `groupTuple` as on master, `variantcaller` set inside `VCF_VARIANT_FILTERING_MUTECT2`, scattered outputs branched once, and `contamination_resource_provided` computed once in `main.nf`
 
 #### Fixed
 
-- [#2277](https://github.com/nf-core/sarek/pull/2277) - Fix `BAM_MARKDUPLICATES` emitting each alignment twice under `-stub`, which failed the tumour-normal pairing join ([#2280](https://github.com/nf-core/sarek/issues/2280))
+- [#2277](https://github.com/nf-core/sarek/pull/2277) - Fix `BAM_MARKDUPLICATES` emitting each alignment twice under `-stub`, which failed the tumor-normal pairing join ([#2280](https://github.com/nf-core/sarek/issues/2280))
 - [#2371](https://github.com/nf-core/sarek/pull/2371) - Correct the dev CHANGELOG: move refactoring entries to the developer section, move #2339 out of 3.11.0, and complete the dependency and parameter tables
 - [#2372](https://github.com/nf-core/sarek/pull/2372) - Follow up #2333: move its CHANGELOG entry to dev, pass the aligner to `FASTQ_CREATE_UMI_CONSENSUS_FGBIO` as an input, and update the bwa-mem2 UMI snapshots to FastQC 0.13.0
 - [#2373](https://github.com/nf-core/sarek/pull/2373) - Fix consensus VCFs intermittently listed under `variant_calling/normalized/` instead of `variant_calling/consensus/` in `csv/variantcalled.csv`: consensus calls no longer set `variantcaller` on a meta map shared across channels
@@ -220,7 +226,7 @@ Aktse is a mountain hut on the northern shore of Laitaure, on the Kungsleden tra
 | mosdepth      | 0.3.10      | 0.3.14      |
 | cnvkit        | 0.9.11      | 0.9.12      |
 | xz            | -           | 5.8.3       |
-| parabricks    | 4.7.1-1     | 4.8.0-1     |
+| parabricks    | 4.6.0-1     | 4.7.1-1     |
 | snpsift       | 5.4.0a      | 5.4.0c      |
 
 ### Dependencies - plugins
