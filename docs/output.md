@@ -613,9 +613,9 @@ Files created:
 **Output directory: `{outdir}/variant_calling/parabricks_haplotypecaller/<sample>/`**
 
 - `<sample>.parabricks_haplotypecaller.vcf.gz` and `<sample>.parabricks_haplotypecaller.vcf.gz.tbi`
-  - VCF with tabix index
+  - VCF with tabix index (without `--joint_germline`)
 - `<sample>.parabricks_haplotypecaller.filtered.vcf.gz` and `<sample>.parabricks_haplotypecaller.filtered.vcf.gz.tbi`
-  - VCF filtered with GATK's CNNScoreVariants and FilterVariantTranches, with tabix index (unless `parabricks_haplotypecaller_filter` is listed under `--skip_tools`)
+  - VCF filtered with GATK's CNNScoreVariants and FilterVariantTranches, with tabix index (without `--joint_germline`, and unless `parabricks_haplotypecaller_filter` is listed under `--skip_tools`)
 - `<sample>.parabricks_haplotypecaller.g.vcf.gz` and `<sample>.parabricks_haplotypecaller.g.vcf.gz.tbi`
   - gVCF with tabix index (with `--joint_germline`)
 

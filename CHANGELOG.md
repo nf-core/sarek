@@ -22,6 +22,7 @@ Njoatsosvágge is a long valley crossing the northern part of Sarek National Par
 
 - [#2339](https://github.com/nf-core/sarek/pull/2339) - Update `parabricks/applybqsr`, `parabricks/deepsomatic`, `parabricks/deepvariant`, `parabricks/fq2bam` and `parabricks/haplotypecaller` modules to Parabricks 4.8.0
 - [#2349](https://github.com/nf-core/sarek/pull/2349) - Process `MUTECT2_PAIRED` is now `MUTECT2`; custom configs selecting `withName: 'MUTECT2_PAIRED'` need to select `MUTECT2` instead
+- [#2353](https://github.com/nf-core/sarek/pull/2353) - `--tools parabricks_haplotypecaller` now filters single-sample VCFs with GATK CNNScoreVariants and FilterVariantTranches by default, published as `<sample>.parabricks_haplotypecaller.filtered.vcf.gz`; use `--skip_tools parabricks_haplotypecaller_filter` for the previous unfiltered output. The `FILTERVARIANTTRANCHES` config for GATK, Sentieon and Parabricks HaplotypeCaller is now one shared `withName` block in `conf/modules/haplotypecaller.config`
 
 ### Fixed
 
