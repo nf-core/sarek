@@ -4,9 +4,9 @@ description: |
   Filter somatic calls from GATK Mutect2 or Parabricks mutectcaller with GATK filtermutectcalls, using
   read-orientation priors from learnreadorientationmodel and, when a contamination resource is provided,
   contamination and segmentation tables from getpileupsummaries (scattered over the intervals and
-  gathered) and calculatecontamination. Supports tumour-normal pairs, tumour-only samples and joint
+  gathered) and calculatecontamination. Supports tumor-normal pairs, tumor-only samples and joint
   calling per patient. The normal pileup is computed once per normal sample, even when it is shared by
-  several tumours.
+  several tumors.
 keywords:
   - mutect2
   - mutectcaller
@@ -30,7 +30,7 @@ input:
   - calls:
       type: list
       description: |
-        Somatic calls merged across intervals, one row per tumour-normal pair, tumour-only sample, or
+        Somatic calls merged across intervals, one row per tumor-normal pair, tumor-only sample, or
         patient in joint mode. f1r2 is a file or a list of files. meta must contain variantcaller and,
         when a contamination resource is provided, match the meta rebuilt for the contamination tables
         (the pair or sample meta, or the patient meta without normal_id, sample and tumor_id in joint mode).
@@ -39,11 +39,11 @@ input:
   - cram:
       type: list
       description: |
-        Normal and tumour BAM/CRAM files with their indexes, one row per tumour-normal pair or
-        tumour-only sample (not grouped by patient, also in joint mode). The normal file and index are []
-        for tumour-only. meta must contain variantcaller, and patient, normal_id and tumor_id for pairs
-        or sample for tumour-only.
-        Structure: [ val(meta), path(normal_cram), path(normal_crai), path(tumour_cram), path(tumour_crai) ]
+        Normal and tumor BAM/CRAM files with their indexes, one row per tumor-normal pair or
+        tumor-only sample (not grouped by patient, also in joint mode). The normal file and index are []
+        for tumor-only. meta must contain variantcaller, and patient, normal_id and tumor_id for pairs
+        or sample for tumor-only.
+        Structure: [ val(meta), path(normal_cram), path(normal_crai), path(tumor_cram), path(tumor_crai) ]
       pattern: "*.{bam,bai,cram,crai}"
   - intervals:
       type: file
@@ -115,20 +115,20 @@ output:
   - artifact_priors:
       type: file
       description: |
-        Read-orientation artefact priors produced by learnreadorientationmodel.
+        Read-orientation artifact priors produced by learnreadorientationmodel.
         Structure: [ val(meta), path(artifactprior) ]
       pattern: "*.artifactprior.tar.gz"
   - contamination_table:
       type: file
       description: |
-        Contamination tables produced by calculatecontamination, one per pair or tumour-only sample,
+        Contamination tables produced by calculatecontamination, one per pair or tumor-only sample,
         or a list per patient in joint mode (empty channel without contamination resource).
         Structure: [ val(meta), path(table) ]
       pattern: "*.contamination.table"
   - segmentation_table:
       type: file
       description: |
-        Tumour segmentation tables produced by calculatecontamination, one per pair or tumour-only
+        Tumor segmentation tables produced by calculatecontamination, one per pair or tumor-only
         sample, or a list per patient in joint mode (empty channel without contamination resource).
         Structure: [ val(meta), path(table) ]
       pattern: "*.segmentation.table"
@@ -136,13 +136,13 @@ output:
       type: file
       description: |
         Pileup summary table of each normal sample, gathered across intervals (empty channel without
-        contamination resource or in tumour-only mode).
+        contamination resource or in tumor-only mode).
         Structure: [ val(meta), path(table) ]
       pattern: "*.pileups.table"
   - pileup_table_tumor:
       type: file
       description: |
-        Pileup summary table of each tumour sample, gathered across intervals (empty channel without
+        Pileup summary table of each tumor sample, gathered across intervals (empty channel without
         contamination resource).
         Structure: [ val(meta), path(table) ]
       pattern: "*.pileups.table"
