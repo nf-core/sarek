@@ -464,7 +464,7 @@
                 "variant_calling/parabricks_haplotypecaller/testT/testT.parabricks_haplotypecaller.g.vcf.gz.tbi"
             ],
             [
-                "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.",
+                "WARN: If GATK's or Parabricks' Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.",
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
@@ -705,7 +705,7 @@
                 "testT.parabricks_haplotypecaller.g.vcf.gz:md5,47d78e8c17e2e9d24528fa81541d35cc"
             ],
             [
-                "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
+                "WARN: If GATK's or Parabricks' Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
             ]
         ],
         "timestamp": "2026-11-05T07:43:41.906212975",

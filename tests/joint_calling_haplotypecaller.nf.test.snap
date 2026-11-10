@@ -226,7 +226,7 @@
                 "testT.haplotypecaller.g.vcf.gz:md5,e37d210dda0bfe2716502353328b1103"
             ],
             [
-                "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
+                "WARN: If GATK's or Parabricks' Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
             ]
         ],
         "timestamp": "2026-11-05T07:37:18.849644881",
@@ -465,7 +465,7 @@
                 "testT.haplotypecaller.g.vcf.gz:md5,e37d210dda0bfe2716502353328b1103"
             ],
             [
-                "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
+                "WARN: If GATK's or Parabricks' Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
             ]
         ],
         "timestamp": "2026-11-05T07:35:49.533842873",
