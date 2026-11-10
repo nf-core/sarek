@@ -508,7 +508,8 @@
                 "variant_calling/tiddit/test2_vs_test/test2_vs_test.tiddit.ploidies.tab",
                 "variant_calling/tiddit/test2_vs_test/test2_vs_test.tiddit.tumor.vcf.gz",
                 "variant_calling/tiddit/test2_vs_test/test2_vs_test.tiddit.tumor.vcf.gz.tbi",
-                "variant_calling/tiddit/test2_vs_test/test2_vs_test.tiddit_sv_merge.vcf.gz"
+                "variant_calling/tiddit/test2_vs_test/test2_vs_test.tiddit_sv_merge.vcf.gz",
+                "variant_calling/tiddit/test2_vs_test/test2_vs_test.tiddit_sv_merge.vcf.gz.tbi"
             ],
             [
                 "fastqc-status-check-heatmap.txt:md5,eeb4e7e7a45f4223c86bfe3aea81f90b",
