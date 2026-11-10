@@ -871,7 +871,7 @@ It is optimized for analysis of germline variation in small sets of individuals 
   - VCF with tabix index containing SV calls
 - `<tumorsample_vs_normalsample>.tiddit.tumor.vcf.gz` and `<tumorsample_vs_normalsample>.tiddit.tumor.vcf.gz.tbi`
   - VCF with tabix index containing SV calls
-- `<tumorsample_vs_normalsample>_sv_merge.tiddit.vcf.gz` and `<tumorsample_vs_normalsample>_sv_merge.tiddit.vcf.gz.tbi`
+- `<tumorsample_vs_normalsample>.tiddit_sv_merge.vcf.gz` and `<tumorsample_vs_normalsample>.tiddit_sv_merge.vcf.gz.tbi`
   - merged tumor/normal VCF with tabix index
 - `<tumorsample_vs_normalsample>.tiddit.ploidies.tab`
   - tab file describing the estimated ploidy and coverage across each contig
