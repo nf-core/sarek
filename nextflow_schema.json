@@ -114,12 +114,6 @@
                     "description": "Enable when exome or panel data is provided.",
                     "help_text": "With this parameter flags in various tools are set for targeted sequencing data. It is recommended to enable for whole-exome and panel data analysis."
                 },
-                "deepsomatic_ffpe": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-vial",
-                    "description": "Enable when tumor samples are FFPE (DeepSomatic only).",
-                    "help_text": "Selects the FFPE model of DeepSomatic (`FFPE_WGS`, or `FFPE_WES` together with `--wes`). Only used by `--tools deepsomatic`; other callers have no FFPE mode."
-                },
                 "tools": {
                     "type": "string",
                     "fa_icon": "fas fa-toolbox",
@@ -547,6 +541,12 @@
                     "type": "string",
                     "default": "CONSERVATIVE",
                     "help_text": "Option for selecting the PCR indel model used by GATK HaplotypeCaller."
+                },
+                "deepsomatic_ffpe": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-vial",
+                    "description": "Enable when tumor samples are FFPE (DeepSomatic only).",
+                    "help_text": "Selects the FFPE model of DeepSomatic (`FFPE_WGS`, or `FFPE_WES` together with `--wes`). Only used by `--tools deepsomatic`; other callers have no FFPE mode."
                 }
             }
         },
