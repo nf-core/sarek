@@ -153,6 +153,8 @@
         "content": [
             [
                 "csv",
+                "multiqc",
+                "multiqc/index.json",
                 "pipeline_info"
             ],
             "No stable content",
@@ -161,10 +163,10 @@
             "No VCF files",
             "No warnings"
         ],
-        "timestamp": "2026-11-09T21:11:00.987863392",
+        "timestamp": "2026-11-10T08:32:14.323829959",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.10.3"
+            "nextflow": "25.10.4"
         }
     }
 }
