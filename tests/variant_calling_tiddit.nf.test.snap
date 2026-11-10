@@ -335,7 +335,7 @@
             "nextflow": "25.10.4"
         }
     },
-    "-profile test --tools tiddit somatic": {
+    "-profile test --tools tiddit somatic --filter_vcfs": {
         "content": [
             24,
             {
