@@ -114,6 +114,12 @@
                     "description": "Enable when exome or panel data is provided.",
                     "help_text": "With this parameter flags in various tools are set for targeted sequencing data. It is recommended to enable for whole-exome and panel data analysis."
                 },
+                "ffpe": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-vial",
+                    "description": "Enable when tumor samples are FFPE.",
+                    "help_text": "Selects the FFPE model of DeepSomatic (`FFPE_WGS`, or `FFPE_WES` together with `--wes`). Only used by `--tools deepsomatic`."
+                },
                 "tools": {
                     "type": "string",
                     "fa_icon": "fas fa-toolbox",
