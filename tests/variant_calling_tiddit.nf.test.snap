@@ -496,7 +496,8 @@
                 "variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.ploidies.tab",
                 "variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.tumor.vcf.gz",
                 "variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.tumor.vcf.gz.tbi",
-                "variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.vcf.gz"
+                "variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.vcf.gz",
+                "variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.vcf.gz.tbi"
             ],
             [
                 "mosdepth-coverage-per-contig-single.txt:md5,336d786b273c4d4e714d51c44207ff56",
