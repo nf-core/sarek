@@ -55,7 +55,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_mutect2    = channel.empty()
     vcf_tiddit     = channel.empty()
     vcf_tnscope    = channel.empty()
-    vcf_varnet     = channel.empty()
 
     // Initialize empty TBI channels
     tbi_freebayes  = channel.empty()
@@ -65,7 +64,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     tbi_mutect2    = channel.empty()
     tbi_tiddit     = channel.empty()
     tbi_tnscope    = channel.empty()
-    tbi_varnet     = channel.empty()
 
     // MPILEUP
     if (tools && tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')) {
@@ -230,18 +228,20 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // VARNET
-    if (tools && tools.split(',').contains('varnet')) {
-        BAM_VARIANT_CALLING_VARNET(
-            bam.map { meta_, bam_, bai -> [meta_, [], [], bam_, bai] },
-            fasta,
-            fasta_fai,
-            intervals_bed_combined,
-            varnet_resources,
-        )
+    bam_varnet = bam
+        .filter { _meta, _bam, _bai -> tools && tools.split(',').contains('varnet') }
+        .map { meta_, bam_, bai -> [meta_, [], [], bam_, bai] }
 
-        vcf_varnet = BAM_VARIANT_CALLING_VARNET.out.vcf
-        tbi_varnet = BAM_VARIANT_CALLING_VARNET.out.tbi
-    }
+    BAM_VARIANT_CALLING_VARNET(
+        bam_varnet,
+        fasta,
+        fasta_fai,
+        intervals_bed_combined,
+        varnet_resources,
+    )
+
+    vcf_varnet = BAM_VARIANT_CALLING_VARNET.out.vcf
+    tbi_varnet = BAM_VARIANT_CALLING_VARNET.out.tbi
 
     vcf_all = channel.empty()
         .mix(

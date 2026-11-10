@@ -65,7 +65,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_strelka      = channel.empty()
     vcf_tiddit       = channel.empty()
     vcf_tnscope      = channel.empty()
-    vcf_varnet       = channel.empty()
     tbi_freebayes    = channel.empty()
     tbi_manta        = channel.empty()
     tbi_muse         = channel.empty()
@@ -73,7 +72,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     tbi_strelka      = channel.empty()
     tbi_tiddit       = channel.empty()
     tbi_tnscope      = channel.empty()
-    tbi_varnet       = channel.empty()
 
     if (tools && tools.split(',').contains('ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
@@ -325,18 +323,20 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // VARNET
-    if (tools && tools.split(',').contains('varnet')) {
-        BAM_VARIANT_CALLING_VARNET(
-            bam,
-            fasta,
-            fasta_fai,
-            intervals_bed_combined,
-            channel.value([]),
-        )
-
-        vcf_varnet = BAM_VARIANT_CALLING_VARNET.out.vcf
-        tbi_varnet = BAM_VARIANT_CALLING_VARNET.out.tbi
+    bam_varnet = bam.filter { _meta, _normal_bam, _normal_bai, _tumor_bam, _tumor_bai ->
+        tools && tools.split(',').contains('varnet')
     }
+
+    BAM_VARIANT_CALLING_VARNET(
+        bam_varnet,
+        fasta,
+        fasta_fai,
+        intervals_bed_combined,
+        channel.value([]),
+    )
+
+    vcf_varnet = BAM_VARIANT_CALLING_VARNET.out.vcf
+    tbi_varnet = BAM_VARIANT_CALLING_VARNET.out.tbi
 
     vcf_all = channel.empty()
         .mix(
