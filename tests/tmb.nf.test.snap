@@ -53,7 +53,7 @@
                     "xz": "5.8.3"
                 },
                 "TMB_PYTMB": {
-                    "tmb": "pyTMB 1.6.0"
+                    "tmb": "1.6.0"
                 },
                 "VCFTOOLS_SUMMARY": {
                     "vcftools": "0.1.17"
@@ -156,7 +156,7 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-11-02T18:21:09.97225",
+        "timestamp": "2026-11-11T11:04:02.886751",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -222,7 +222,7 @@
                     "xz": "5.8.3"
                 },
                 "TMB_PYTMB": {
-                    "tmb": "pyTMB 1.6.0"
+                    "tmb": "1.6.0"
                 },
                 "VCFTOOLS_SUMMARY": {
                     "vcftools": "0.1.17"
@@ -323,7 +323,7 @@
                 "WARN: No Panel-of-normal was specified for Mutect2."
             ]
         ],
-        "timestamp": "2026-11-02T18:22:58.072791",
+        "timestamp": "2026-11-11T11:05:51.937269",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"

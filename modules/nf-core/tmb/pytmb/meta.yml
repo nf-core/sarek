@@ -97,7 +97,7 @@ output:
       - tmb:
           type: string
           description: The name of the tool
-      - "pyTMB --version | awk '{print \\$2}' | tr -d '()'":
+      - "pyTMB --version | cut -d ' ' -f 2 | tr -d '()'":
           type: eval
           description: The expression to obtain the version of the tool
 
@@ -109,7 +109,7 @@ topics:
       - tmb:
           type: string
           description: The name of the tool
-      - "pyTMB --version | awk '{print \\$2}' | tr -d '()'":
+      - "pyTMB --version | cut -d ' ' -f 2 | tr -d '()'":
           type: eval
           description: The expression to obtain the version of the tool
 
