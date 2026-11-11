@@ -545,7 +545,9 @@
             "No BAM files",
             "No CRAM files",
             "No VCF files",
-            "No warnings",
+            [
+                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
+            ],
             [
                 "--intervals: 1 interval(s) end past their contig in the reference (genome.fasta.fai), for example: chr22:30000-50000 (chr22 is 40001 bp)"
             ]
