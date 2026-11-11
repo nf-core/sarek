@@ -99,6 +99,35 @@ Output from Variant Calling and/or Annotation will be in a specific directory fo
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
+### Sample names in BAM and CRAM read groups
+
+During mapping, Sarek sets the sample name (`SM` tag) of every read group to `<patient>_<sample>`, using the `patient` and `sample` columns of the samplesheet.
+The following somatic variant callers select the tumor and normal sample by this name:
+
+- GATK Mutect2 (`--normal-sample`)
+- DeepSomatic
+- Parabricks MutectCaller
+- Sentieon TNscope
+
+When you start from BAM or CRAM files (any `--step` after `mapping`), the `SM` tag in each file must equal `<patient>_<sample>` as written in your samplesheet.
+Files created by Sarek and listed in the CSV files under `results/csv/` already fulfil this, as long as the `patient` and `sample` values stay unchanged.
+Files mapped outside of Sarek, or samplesheets with renamed patients or samples, usually do not.
+Mutect2 then fails with an error such as:
+
+```console
+A USER ERROR has occurred: Bad input: Sample patient1_normal_sample is not in BAM header: [normal_sample, tumor_sample]
+```
+
+The first name in this message is the one Sarek expects, and the list contains the names found in the read groups.
+Inspect the read groups of a file with:
+
+```bash
+samtools view -H normal_sample.cram | grep '^@RG'
+```
+
+To resolve a mismatch, set the `patient` and `sample` columns so that `<patient>_<sample>` matches the existing `SM` tag.
+Otherwise, rewrite the `SM` tag in the file headers to `<patient>_<sample>`, for example with [`samtools reheader`](https://www.htslib.org/doc/samtools-reheader.html), and index the files again.
+
 ### Start with mapping (`--step mapping` [default])
 
 This step can be started either from FastQ files (gzip-compressed or gzip+spring-compressed) or (u)BAMs. The CSV must contain at least the columns `patient`, `sample`, `lane`, and `fastq_1/fastq_2`, `spring_1`, `spring_1/spring_2` or `bam`.
@@ -172,28 +201,24 @@ patient1,XX,1,relapse_sample,lane_1,test3_L001.bam
 > [!NOTE]
 > This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
 
-To use the GPU based `parabricks/fq2bam` as an alternative to the CPU bsed GATK implementation add `--aligner parabricks --profile <docker/singularity>,gpu` to your run command. The parabricks implementation does not support the use of this pipeline with `--profile conda`.
+Add `--aligner parabricks` with `-profile <docker/singularity>,gpu` (see [`-profile`](#-profile)) to replace mapping and BAM processing with [Parabricks fq2bam](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html).
+FQ2BAM runs bwa-mem alignment, coordinate sorting, duplicate marking and, when known sites (`--dbsnp`, `--known_indels`) are available, the base recalibration table in a single GPU step.
+[Parabricks ApplyBQSR](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_applybqsr.html) then applies the table on the GPU, unless `baserecalibrator` is listed in `--skip_tools`.
+Duplicate marking cannot be skipped yet, see [Issue #1853](https://github.com/nf-core/sarek/issues/1853).
 
-At the moment the implementation supports running the complete fq2bam module which does bwa-mem based alignment, coordinate sorting, duplicate marking and base quality score recalibration. We are working on making these individual components skippable (comparable to the GATK implementation) see [Issue #1853](https://github.com/nf-core/sarek/issues/1853) for more details on the ongoing work.
-
-To apply Base Quality Score Recalibration (BQSR) using the GPU-accelerated `parabricks/applybqsr` module after fq2bam, add `--parabricks_applybqsr` to your run command. This will run fq2bam, generate the recalibration table, apply it via the parabricks applybqsr module. The known variant sites (`--dbsnp`, `--known_indels`) used to build the recalibration table are provided by the iGenomes reference configuration or can be set via command-line arguments.
+FQ2BAM requests 4 GPUs by default (`accelerator = 4`, passed to Parabricks as `--num-gpus`). On a machine with fewer GPUs, lower `accelerator` for `PARABRICKS_FQ2BAM` in a custom config, as in the example below.
 
 The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if `--save_mapped` is set.
 
-You can find more information on using GPUs with nf-core pipelines in our [GPU documentation](https://nf-co.re/docs/running/configuration/gpu-pipelines).
+**Adapting fq2bam to your hardware:**
 
-**Hints for custom configuration based on your local hardware setup:**
-
-You can supply more command-line arguments to the `fq2bam` process depending on your local setup. The performance depends on the type of GPU and the amount of CPU RAM that parabricks is able to utilize. The `--read-group-*` arguments are used by mutect2 and need to be added to your local config. Lowering `--bwa-nstreams` from 4 (standard) to 2 can help with memory issues. As well as `--gpuwrite` and `--gpusort`. For a more in-depth description of the available arguments please read the [parabricks fq2bam documentation](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html).
-
-You will need to add the accelerator directive to your local config in order to make use of the GPUs correctly if you do not use a cluster setup with a dedicated GPU queue. See [Nextflow executors](https://www.nextflow.io/docs/latest/executor.html) for more infos. To setup your local config you can check `task.accelerator` to identify jobs that need a GPU.
-
-If you need to adapt parabricks to your hardware, please copy and adapt the `custom-parabricks.config` provided below. More info on custom configs can be found [here](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
+Performance depends on the GPU type and the CPU RAM available to Parabricks. Lowering `--bwa-nstreams` from 4 (default) to 2, and adding `--gpuwrite` and `--gpusort`, can help with memory issues; see the [fq2bam documentation](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html) for all arguments.
+When overriding `ext.args` in a [custom config](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files), keep the default `--read-group-*` arguments (the sample name must match [the samplesheet](#sample-names-in-bam-and-cram-read-groups)) and the tumor-specific `--bwa-options`:
 
 ```groovy title="custom-parabricks.config"
 process {
     withName: 'PARABRICKS_FQ2BAM' {
-        accelerator = 4
+        accelerator = 2 // number of GPUs, default: 4
         ext.args    = { [
             // Using specific read group tags for mutect compability (keep if using mutect)
             "--read-group-id-prefix ${meta.sample_lane_id}",
@@ -214,29 +239,22 @@ process {
 #### Using GPU accelerated variant calling
 
 > [!NOTE]
-> Parabricks DeepVariant and Parabricks HaplotypeCaller are experimental additions to the pipeline.
+> Parabricks HaplotypeCaller is an experimental addition to the pipeline.
 
-Sarek supports the following GPU-accelerated variant callers from [NVIDIA Parabricks](https://docs.nvidia.com/clara/parabricks/latest/) as an alternative to CPU based implementations:
+The following [NVIDIA Parabricks](https://docs.nvidia.com/clara/parabricks/latest/) callers are GPU-accelerated alternatives to their CPU equivalents. Enable them with `--tools <value>` and `-profile <docker/singularity>,gpu` (see [`-profile`](#-profile)):
 
-| Tool                                                                                                                          | `--tools` value              | Equivalent to        | Command                                                                                            |
-| ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | -------------------- | -------------------------------------------------------------------------------------------------- |
-| [Parabricks DeepSomatic](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepsomatic.html)         | `parabricks_deepsomatic`     | Google DeepSomatic   | `nextflow run nf-core/sarek --tools parabricks_deepsomatic --profile <docker/singularity>,gpu`     |
-| [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html)         | `parabricks_deepvariant`     | Google DeepVariant   | `nextflow run nf-core/sarek --tools parabricks_deepvariant --profile <docker/singularity>,gpu`     |
-| [Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) | `parabricks_haplotypecaller` | GATK HaplotypeCaller | `nextflow run nf-core/sarek --tools parabricks_haplotypecaller --profile <docker/singularity>,gpu` |
+| Tool                                                                                                                          | `--tools` value              | Equivalent to        |
+| ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | -------------------- |
+| [Parabricks DeepSomatic](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepsomatic.html)         | `parabricks_deepsomatic`     | Google DeepSomatic   |
+| [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html)         | `parabricks_deepvariant`     | Google DeepVariant   |
+| [Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) | `parabricks_haplotypecaller` | GATK HaplotypeCaller |
+| [Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html)       | `parabricks_mutectcaller`    | GATK Mutect2         |
 
-There are a few differences to note about the Parabricks versions of these tools:
+Differences to the CPU equivalents:
 
-- Parabricks variant callers support gVCF generation but cannot perform joint calling on their own. Combine them with other variant callers such as GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as follows:
-
-```
-nextflow run nf-core/sarek \
-  -profile docker,test,gpu \
-  --outdir results \
-  --tools parabricks_haplotypecaller,haplotypecaller \
-  --joint_germline
-```
-
-- Parabricks does not support the use of this pipeline with `--profile conda`.
+- Each Parabricks caller runs once per sample (or tumor/normal pair) on the combined intervals BED, instead of being scattered per [interval group](#intervals-for-base-quality-score-recalibration-and-variantcalling).
+- Parabricks DeepVariant only outputs a VCF, no gVCF.
+- Parabricks HaplotypeCaller outputs a gVCF with `--joint_germline`, but there is no Parabricks joint genotyping and its gVCFs are not included in any joint call. For a joint-genotyped callset, run a caller that supports joint calling alongside it, e.g. `--tools parabricks_haplotypecaller,haplotypecaller --joint_germline`.
 
 ### Start with duplicate marking (`--step markduplicates`)
 
@@ -462,7 +480,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 - `gpu`
-  - A generic configuration profile which adds necessary flags to `docker` and `singularity` profiles.
+  - A generic configuration profile which adds necessary flags to `docker` and `singularity` profiles. Required for the Parabricks tools (`--aligner parabricks`, `--tools parabricks_*`). Each Parabricks process requests one GPU (`accelerator = 1`), except fq2bam, which requests four; set `accelerator` for `PARABRICKS_*` processes in a custom config to change this. Parabricks does not support `-profile conda`. See the [nf-core GPU documentation](https://nf-co.re/docs/running/configuration/gpu-pipelines) for more information.
 
 ## `-resume`
 
@@ -535,6 +553,35 @@ To use a different container from the default container or conda environment spe
 A pipeline might not always support every possible argument or option of a particular tool used in pipeline. Fortunately, nf-core pipelines provide some freedom to users to insert additional parameters that the pipeline does not include by default.
 
 To learn how to provide additional arguments to a particular tool of the pipeline, please see the [customising tool arguments](https://nf-co.re/docs/usage/configuration#customising-tool-arguments) section of the nf-core website.
+
+#### Keep the default arguments when overriding `ext.args`
+
+Sarek defines the default `ext.args` of each process in the files in [`conf/modules/`](../conf/modules/), not in a single `conf/modules.config`.
+Copy the defaults from the file of the pipeline version you run before [adding arguments](https://nf-co.re/docs/running/configuration/nextflow-for-your-system#customise-tool-arguments).
+
+GATK Mutect2 needs `--f1r2-tar-gz` to produce the input for `LearnReadOrientationModel`, and `--normal-sample` to identify the normal sample in tumor/normal pairs.
+Without `--f1r2-tar-gz`, the pipeline stops with a `Join mismatch` error.
+Without `--normal-sample`, Mutect2 treats the normal sample as a second tumor sample.
+The following config adds `--genotype-germline-sites` and `--genotype-pon-sites` and keeps the defaults:
+
+```groovy title="custom-mutect2.config"
+process {
+    withName: 'GATK4_MUTECT2' {
+        ext.args = { [
+            // Sarek defaults, keep these
+            params.ignore_soft_clipped_bases ? "--dont-use-soft-clipped-bases true" : "",
+            "--f1r2-tar-gz ${task.ext.prefix}.f1r2.tar.gz",
+            meta.normal_id ? "--normal-sample ${meta.patient}_${meta.normal_id}" : "",
+            // Additional arguments
+            "--genotype-germline-sites true",
+            "--genotype-pon-sites true",
+        ].findAll().join(' ') }
+    }
+}
+```
+
+Sarek 3.11.0 and earlier set the Mutect2 arguments for tumor/normal pairs on `MUTECT2_PAIRED`.
+This pipeline version sets them on `GATK4_MUTECT2`, so custom configs that target `MUTECT2_PAIRED` no longer apply.
 
 ## nf-core/configs
 
@@ -684,6 +731,7 @@ Sarek can be started at different points in the analysis by setting the paramete
 | [Parabricks DeepSomatic](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepsomatic.html) (GPU)         |  x  |  x  |   -   |    -     |     -      |           x            |
 | [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html) (GPU)         |  x  |  x  |   x   |    x     |     -      |           -            |
 | [Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) (GPU) |  x  |  x  |   x   |    x     |     -      |           -            |
+| [Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html) (GPU)       |  x  |  x  |   x   |    -     |     x      |           x            |
 | [Strelka](https://github.com/Illumina/strelka)                                                                                      |  x  |  x  |   -   |    -     |     -      |           x            |
 | [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                                                      |  x  |  x  |   x   |    x     |     x      |           x            |
 | [Varlociraptor](https://varlociraptor.github.io/landing/)                                                                           |  x  |  x  |   x   |    x     |     x      |           x            |
@@ -931,6 +979,9 @@ For this, a bed file containing genomic regions of interest is used, it's the in
 By default, the intervals file for WGS used is the one provided by GATK (details [here](https://gatk.broadinstitute.org/hc/en-us/articles/360035889551-When-should-I-restrict-my-analysis-to-specific-intervals-)).
 When running targeted analysis, it is recommended to use the bed file containing the targeted regions.
 
+To ignore the intervals file from `--genome` and generate intervals from the FASTA reference instead, set `--intervals false`.
+To run without any intervals, set `--no_intervals`.
+
 The amount of scatter/gathering can be customized by adjusting the parameter `--nucleotides_per_second`.
 
 > **NB:** The _same_ intervals are processed regardless of the number of groups. The number of groups however determines over how many compute nodes the analysis is scattered on.
@@ -938,6 +989,12 @@ The amount of scatter/gathering can be customized by adjusting the parameter `--
 The default value is `200000`, increasing this value will _reduce_ the number of groups that are processed in parallel.
 Generally, smaller numbers of groups (each group has more regions), the slower the processing, and less storage space is consumed.
 In particular, in cloud computing setting it is often advisable to reduce the number of groups to be run in parallel to reduce data staging steps.
+
+## How to provide a contamination resource for Mutect2
+
+GATK `GetPileupSummaries` loads every site of its VCF within each interval into memory, so using a full population resource such as af-only gnomAD is slow and can run out of memory.
+Set `--contamination_resource` to a small set of common biallelic SNPs, for example `small_exac_common_3.hg38.vcf.gz` from the [GATK somatic resource bundle](https://console.cloud.google.com/storage/browser/gatk-best-practices/somatic-hg38).
+Without it, `GetPileupSummaries` uses `--germline_resource`.
 
 ## How to create a panel-of-normals for Mutect2
 
@@ -1077,16 +1134,16 @@ For GATK.GRCh38 the links for each reference file and the corresponding processe
 | dict                  | Baserecalibrator(Spark), CNNScoreVariant, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, MarkDulpicates(Spark), MergeVCFs, Mutect2, Variantrecalibrator                                                                                                                                                                                                                                                            | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
 | fasta                 | ApplyBQSR(Spark), ApplyVQSR, ASCAT, Baserecalibrator(Spark), BWA, BWAMem2, CNNScoreVariant, CNVKit, ControlFREEC, DeepSomatic, DragMap, DEEPVariant, EnsemblVEP, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, FreeBayes, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, indexcov, interval building, Manta, MarkDuplicates(Spark), MergeVCFs, MSIsensor2, MSISensorPro, Mutect2, Parabricks DeepSomatic, Samtools, SnpEff, Strelka, Tiddit, Variantrecalibrator | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
 | fasta_fai             | ApplyBQSR(Spark), ApplyVQSR, ASCAT, Baserecalibrator(Spark), BWA, BWAMem2, CNNScoreVariant, CNVKit, ControlFREEC, DeepSomatic, DragMap, DEEPVariant, EnsemblVEP, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, FreeBayes, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, indexcov, interval building, Manta, MarkDuplicates(Spark), MergeVCFs, MSIsensor2, MSISensorPro, Mutect2, Samtools, SnpEff, Strelka, Tiddit, Variantrecalibrator                         | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
-| germline_resource     | GetPileupsummaries,Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
-| germline_resource_tbi | GetPileupsummaries,Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
-| intervals             | ApplyBQSR(Spark), ASCAT, Baserecalibrator(Spark), BCFTools, CNNScoreVariants, ControlFREEC, DeepSomatic, Deepvariant, FilterVariantTranches, FreeBayes, GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, Strelka, mpileup, MSIsensor2, MSISensorPro, Mutect2, Parabricks DeepSomatic, VCFTools                                                                                                                                                                                                                  | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
+| germline_resource     | Mutect2, Parabricks MutectCaller, GetPileupSummaries (fallback)                                                                                                                                                                                                                                                                                                                                                                                                                                                   | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
+| germline_resource_tbi | Mutect2, Parabricks MutectCaller, GetPileupSummaries (fallback)                                                                                                                                                                                                                                                                                                                                                                                                                                                   | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
+| intervals             | ApplyBQSR(Spark), ASCAT, Baserecalibrator(Spark), BCFTools, CNNScoreVariants, ControlFREEC, DeepSomatic, Deepvariant, FilterVariantTranches, FreeBayes, GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, Strelka, mpileup, MSIsensor2, MSISensorPro, Mutect2, Parabricks DeepSomatic, Parabricks DeepVariant, Parabricks HaplotypeCaller, Parabricks MutectCaller, VCFTools                                                                                                                                     | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
 | known_indels          | BaseRecalibrator(Spark), FilterVariantTranches                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
 | known_indels_tbi      | BaseRecalibrator(Spark), FilterVariantTranches                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
 | known_snps            | BaseRecalibrator(Spark), FilterVariantTranches, VariantRecalibrator                                                                                                                                                                                                                                                                                                                                                                                                                                               | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
 | known_snps_tbi        | BaseRecalibrator(Spark), FilterVariantTranches, VariantRecalibrator                                                                                                                                                                                                                                                                                                                                                                                                                                               | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |
 | mappability           | ControlFREEC                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | http://xfer.curie.fr/get/vyIi4w8EONl/out100m2_hg38.zip                                                                | http://boevalab.inf.ethz.ch/FREEC/tutorial.html                                      |
-| pon                   | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
-| pon_tbi               | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
+| pon                   | Mutect2,Parabricks MutectCaller                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
+| pon_tbi               | Mutect2,Parabricks MutectCaller                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 
 ## What happened with snpeff db 105
 
@@ -1111,7 +1168,7 @@ To use these, supply the parameters `--vep_cache` and/or `--snpeff_cache` with t
 ### Specify the cache location
 
 Params `--snpeff_cache` and `--vep_cache` are used to specify the locations to the root of the annotation cache folder.
-The cache will be located within a subfolder with the path `${snpeff_species}.${snpeff_version}` for SnpEff and `${vep_species}/${vep_cache_version}_${vep_genome}` for VEP.
+The cache will be located within a subfolder with the path `${snpeff_db}` for SnpEff and `${vep_species}/${vep_cache_version}_${vep_genome}` for VEP.
 If this directory is missing, Sarek will raise an error.
 
 For example this is a typical folder structure for `GRCh38` and `WBCel235`, with SNPeff cache version 99 and VEP cache version 110:
@@ -1132,6 +1189,12 @@ For this example, the parameters `--snpeff_cache /data/snpeff_cache` and `--vep_
 Both SnpEff and VEP will figure out internally the path towards the specific cache version / species the annotation should be performed given the parameters specified to Sarek.
 
 ### Change cache version and species
+
+Cache parameters select annotation data and do not change the software version.
+Use `--snpeff_db` to select the SnpEff database and `--vep_cache_version` to select the VEP cache release.
+To change the SnpEff or VEP software version, [override the process container](#custom-containers) in a custom configuration.
+The `--vep_version` parameter only sets the VEP installation path used by LOFTEE; it does not select the container.
+Ensure that the selected cache is compatible with the software version.
 
 By default all is specified in the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file.
 Explanation can be found for all params in the documentation:

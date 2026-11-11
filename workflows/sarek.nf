@@ -64,9 +64,11 @@ workflow SAREK {
     take:
     input_sample
     aligner
+    group_by_umi_strategy
     skip_tools
     step
     tools
+    wes
     ascat_alleles
     ascat_loci
     ascat_loci_gc
@@ -85,8 +87,13 @@ workflow SAREK {
     dict
     fasta
     fasta_fai
+    force_call_alleles
+    force_call_alleles_tbi
     germline_resource
     germline_resource_tbi
+    contamination_resource
+    contamination_resource_tbi
+    contamination_resource_provided // boolean: contamination (or germline) resource given, so Mutect2 contamination tables are expected
     index_alignment
     intervals_and_num_intervals
     intervals_bed_combined
@@ -241,6 +248,8 @@ workflow SAREK {
                 known_sites_indels_tbi,
                 bbsplit_index,
                 params.save_output_as_bam,
+                aligner,
+                group_by_umi_strategy,
             )
 
             // Gather preprocessing output
@@ -420,6 +429,7 @@ workflow SAREK {
             known_sites_snps_tbi,
             known_snps_vqsr,
             params.joint_germline,
+            wes,
             skip_tools.split(',').contains('haplotypecaller_filter'),
             params.sentieon_haplotyper_emit_mode,
             params.sentieon_dnascope_emit_mode,
@@ -445,8 +455,12 @@ workflow SAREK {
             dict,
             fasta,
             fasta_fai,
+            force_call_alleles,
+            force_call_alleles_tbi,
             germline_resource,
             germline_resource_tbi,
+            contamination_resource,
+            contamination_resource_tbi,
             intervals_and_num_intervals,
             intervals_bed_combined,
             intervals_bed_gz_tbi_combined,
@@ -455,7 +469,8 @@ workflow SAREK {
             pon,
             pon_tbi,
             params.joint_mutect2,
-            params.wes,
+            wes,
+            contamination_resource_provided,
         )
 
         // PAIR VARIANT CALLING
@@ -475,8 +490,12 @@ workflow SAREK {
             dict,
             fasta,
             fasta_fai,
+            force_call_alleles,
+            force_call_alleles_tbi,
             germline_resource,
             germline_resource_tbi,
+            contamination_resource,
+            contamination_resource_tbi,
             intervals_and_num_intervals,
             intervals_bed_gz_tbi_and_num_intervals,
             intervals_bed_combined,
@@ -490,7 +509,8 @@ workflow SAREK {
             ascat_loci_gc,
             ascat_loci_rt,
             params.joint_mutect2,
-            params.wes,
+            wes,
+            contamination_resource_provided,
         )
 
         // QC on raw variant calls

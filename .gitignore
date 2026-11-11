@@ -17,3 +17,5 @@ test.xml
 modules/nf-core/**/tests/
 subworkflows/nf-core/**/tests/
 .lineage/
+.nf-test/
+.nf-test.log

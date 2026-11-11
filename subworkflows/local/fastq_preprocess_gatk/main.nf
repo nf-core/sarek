@@ -59,6 +59,8 @@ workflow FASTQ_PREPROCESS_GATK {
     known_sites_indels_tbi
     bbsplit_index
     save_output_as_bam
+    aligner
+    group_by_umi_strategy
 
     main:
 
@@ -80,7 +82,8 @@ workflow FASTQ_PREPROCESS_GATK {
                 fasta,
                 fasta_fai,
                 index_alignment,
-                params.group_by_umi_strategy,
+                group_by_umi_strategy,
+                aligner,
             )
 
             bam_converted_from_fastq = FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.consensusbam.map { meta, bam -> [meta, bam, []] }
@@ -321,6 +324,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing,
+                save_output_as_bam,
             )
 
             cram_markduplicates_no_spark = BAM_MARKDUPLICATES.out.alignment
