@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Changed
 
 - [#2399](https://github.com/nf-core/sarek/pull/2399) - Back to dev (3.12.1dev)
+- [#2401](https://github.com/nf-core/sarek/pull/2401) - Template update 4.2.2
 
 #### Fixed
 
