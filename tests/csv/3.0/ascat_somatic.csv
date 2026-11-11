@@ -1,0 +1,3 @@
+patient,sex,status,sample,bam,bai
+NA12878,XX,0,NA12878,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/bam/NA12878.chr22.bam,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/bam/NA12878.chr22.bam.bai
+NA12878,XX,1,NA12878_1X,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/bam/NA12878.chr22.1X.bam,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/bam/NA12878.chr22.1X.bam.bai

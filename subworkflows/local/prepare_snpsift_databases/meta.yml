@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/meta-schema.json
+name: "prepare_snpsift_databases"
+description: Prepare SnpSift annotation databases, creating vardb directories where needed
+keywords:
+  - snpsift
+  - annotation
+  - database
+  - vcf
+components:
+  - snpsift/annmem
+input:
+  - val_db_configs:
+      type: list
+      description: |
+        List of maps containing database configuration.
+        Each map should contain:
+        - vcf: VCF database file
+        - tbi: Tabix index file
+        - fields: Comma-separated INFO fields to annotate (optional)
+        - prefix: Prefix for annotated field names (optional)
+        - vardb: Pre-built vardb directory (optional, will be created if null)
+output:
+  - db_tuple:
+      type: tuple
+      description: |
+        Tuple containing lists for SNPSIFT_ANNMEM input:
+        [[databases], [tbis], [vardbs], [fields], [prefixes]]
+authors:
+  - "@friederike-hanssen"
+maintainers:
+  - "@friederike-hanssen"

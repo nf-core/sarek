@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/environment-schema.json
+channels:
+  - conda-forge
+  - bioconda
+
+dependencies:
+  # renovate: datasource=conda depName=bioconda/bwa-mem2
+  - bwa-mem2=2.3
+  # renovate: datasource=conda depName=bioconda/htslib
+  - htslib=1.22.1
+  # renovate: datasource=conda depName=bioconda/samtools
+  - samtools=1.22.1

@@ -1,0 +1,179 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "bam_variant_calling_parabricks_mutectcaller"
+description: |
+  Perform somatic variant calling on paired tumor-normal or tumor-only samples with the
+  Parabricks GPU-accelerated mutectcaller, run as a single job per pair or sample on the combined
+  intervals, optionally with a panel of normals and a germline resource. The calls are filtered on
+  CPU by the vcf_variant_filtering_mutect2 subworkflow (GATK filtermutectcalls with
+  read-orientation priors and, when a germline resource is provided, contamination and segmentation
+  tables), shared with the GATK Mutect2 subworkflows.
+keywords:
+  - parabricks
+  - mutectcaller
+  - mutect2
+  - somatic
+  - variant_calling
+  - tumor_normal
+  - tumor_only
+  - getpileupsummaries
+  - calculatecontamination
+  - learnreadorientationmodel
+  - filtermutectcalls
+  - filtered_vcf
+  - gpu
+components:
+  - parabricks/mutectcaller
+  - vcf_variant_filtering_mutect2
+input:
+  - cram:
+      type: list
+      description: |
+        Normal and tumor BAM/CRAM files with their indexes. The normal file and index are [] for tumor-only.
+        Structure: [ val(meta), path(normal_cram), path(normal_crai), path(tumor_cram), path(tumor_crai) ]
+      pattern: "*.{bam,bai,cram,crai}"
+  - fasta:
+      type: file
+      description: |
+        Reference FASTA file.
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.{fa,fasta}"
+  - fasta_fai:
+      type: file
+      description: |
+        Index of the reference FASTA file.
+        Structure: [ val(meta), path(fasta_fai) ]
+      pattern: "*.fai"
+  - dict:
+      type: file
+      description: |
+        GATK sequence dictionary of the reference FASTA file (used by the GATK4 modules).
+        Structure: [ val(meta), path(dict) ]
+      pattern: "*.dict"
+  - force_call_alleles:
+      type: file
+      description: |
+        VCF of alleles that the Parabricks mutectcaller force-calls in addition to the variants it discovers (--mutect-alleles).
+        Structure: [ path(force_call_alleles) ] or []
+      pattern: "*.vcf.gz"
+  - force_call_alleles_tbi:
+      type: file
+      description: |
+        Index of the force-call alleles VCF.
+        Structure: [ path(force_call_alleles_tbi) ] or []
+      pattern: "*.vcf.gz.tbi"
+  - germline_resource:
+      type: file
+      description: |
+        Population VCF of germline sequencing containing allele fractions, used by the Parabricks
+        mutectcaller as the germline prior.
+        Structure: [ path(germline_resource) ] or []
+      pattern: "*.vcf.gz"
+  - germline_resource_tbi:
+      type: file
+      description: |
+        Index of the germline resource VCF.
+        Structure: [ path(germline_resource_tbi) ] or []
+      pattern: "*.vcf.gz.tbi"
+  - contamination_resource:
+      type: file
+      description: |
+        VCF of common biallelic germline SNPs with population allele frequencies, used by
+        getpileupsummaries. Pass [] to skip getpileupsummaries and calculatecontamination.
+        Structure: [ path(contamination_resource) ] or []
+      pattern: "*.vcf.gz"
+  - contamination_resource_tbi:
+      type: file
+      description: |
+        Index of the contamination resource VCF.
+        Structure: [ path(contamination_resource_tbi) ] or []
+      pattern: "*.vcf.gz.tbi"
+  - panel_of_normals:
+      type: file
+      description: |
+        Panel of normals VCF used by the Parabricks mutectcaller.
+        Structure: [ path(panel_of_normals) ] or []
+      pattern: "*.vcf.gz"
+  - panel_of_normals_tbi:
+      type: file
+      description: |
+        Index of the panel of normals VCF.
+        Structure: [ path(panel_of_normals_tbi) ] or []
+      pattern: "*.vcf.gz.tbi"
+  - intervals_bed_combined:
+      type: file
+      description: |
+        Single combined BED file of target regions, or [] when running without intervals.
+        Structure: [ path(intervals) ] or []
+      pattern: "*.bed"
+  - intervals:
+      type: file
+      description: |
+        Scattered interval files with their count, used to scatter getpileupsummaries,
+        or [ [], 0 ] when running without intervals.
+        Structure: [ path(intervals), val(num_intervals) ]
+      pattern: "*.bed"
+  - contamination_resource_provided:
+      type: boolean
+      description: |
+        Whether a contamination resource was provided. When true, every VCF must be matched by a
+        contamination and segmentation table before filtermutectcalls; when false, filtermutectcalls
+        runs without them as soon as each VCF is ready.
+output:
+  - vcf:
+      type: file
+      description: |
+        Somatic variant calls filtered by filtermutectcalls, with variantcaller: 'parabricks_mutectcaller' added to meta.
+        Structure: [ val(meta), path(vcf) ]
+      pattern: "*.filtered.vcf.gz"
+  - tbi:
+      type: file
+      description: |
+        Index of the filtered VCF, with variantcaller: 'parabricks_mutectcaller' added to meta.
+        Structure: [ val(meta), path(tbi) ]
+      pattern: "*.filtered.vcf.gz.tbi"
+  - stats:
+      type: file
+      description: |
+        Mutect stats produced by the Parabricks mutectcaller, used by filtermutectcalls.
+        Structure: [ val(meta), path(stats) ]
+      pattern: "*.vcf.gz.stats"
+  - stats_filtered:
+      type: file
+      description: |
+        Filtering statistics produced by filtermutectcalls.
+        Structure: [ val(meta), path(stats) ]
+      pattern: "*.filteringStats.tsv"
+  - artifact_priors:
+      type: file
+      description: |
+        Read-orientation artifact priors produced by learnreadorientationmodel.
+        Structure: [ val(meta), path(artifactprior) ]
+      pattern: "*.artifactprior.tar.gz"
+  - contamination_table:
+      type: file
+      description: |
+        Contamination table produced by calculatecontamination (empty channel without germline resource).
+        Structure: [ val(meta), path(table) ]
+      pattern: "*.contamination.table"
+  - segmentation_table:
+      type: file
+      description: |
+        Tumor segmentation table produced by calculatecontamination (empty channel without germline resource).
+        Structure: [ val(meta), path(table) ]
+      pattern: "*.segmentation.table"
+  - pileup_table_normal:
+      type: file
+      description: |
+        Pileup summary table of the normal sample (empty channel without germline resource or in tumor-only mode).
+        Structure: [ val(meta), path(table) ]
+      pattern: "*.pileups.table"
+  - pileup_table_tumor:
+      type: file
+      description: |
+        Pileup summary table of the tumor sample (empty channel without germline resource).
+        Structure: [ val(meta), path(table) ]
+      pattern: "*.pileups.table"
+authors:
+  - "@JoeSaelens"
+maintainers:
+  - "@JoeSaelens"

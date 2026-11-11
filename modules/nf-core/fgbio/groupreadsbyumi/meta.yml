@@ -1,0 +1,99 @@
+name: fgbio_groupreadsbyumi
+description: |
+  Groups reads together that appear to have come from the same original molecule.
+  Reads are grouped by template, and then templates are sorted by the 5’ mapping positions
+  of the reads from the template, used from earliest mapping position to latest.
+  Reads that have the same end positions are then sub-grouped by UMI sequence.
+  (!) Note: the MQ tag is required on reads with mapped mates (!)
+  This can be added using samblaster with the optional argument --addMateTags.
+keywords:
+  - UMI
+  - groupreads
+  - fgbio
+tools:
+  - fgbio:
+      description: A set of tools for working with genomic and high throughput sequencing
+        data, including UMIs
+      homepage: http://fulcrumgenomics.github.io/fgbio/
+      documentation: http://fulcrumgenomics.github.io/fgbio/tools/latest/
+      tool_dev_url: https://github.com/fulcrumgenomics/fgbio
+      licence: ["MIT"]
+      identifier: biotools:fgbio
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - bam:
+        type: file
+        description: |
+          BAM file. Note: the MQ tag is required on reads with mapped mates (!)
+        pattern: "*.bam"
+        ontologies: []
+  - strategy:
+      type: string
+      enum: ["Identity", "Edit", "Adjacency", "Paired"]
+      description: |
+        Required argument: defines the UMI assignment strategy.
+        Must be chosen among: Identity, Edit, Adjacency, Paired.
+output:
+  bam:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bam":
+          type: file
+          description: UMI-grouped BAM
+          pattern: "*.bam"
+          ontologies: []
+  histogram:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*histogram.txt":
+          type: file
+          description: A text file containing the tag family size counts
+          pattern: "*.txt"
+          ontologies: []
+  read_metrics:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*read-metrics.txt":
+          type: file
+          description: A text file containing the read count metrics from grouping
+          pattern: "*.txt"
+          ontologies: []
+  versions_fgbio:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - fgbio:
+          type: string
+          description: The tool name
+      - 'fgbio --version 2>&1 | tr -d "[:cntrl:]" | sed -e "s/^.*Version: //;s/\[.*$//"':
+          type: eval
+          description: The expression to obtain the version of the tool
+
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - fgbio:
+          type: string
+          description: The tool name
+      - 'fgbio --version 2>&1 | tr -d "[:cntrl:]" | sed -e "s/^.*Version: //;s/\[.*$//"':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@lescai"
+maintainers:
+  - "@lescai"

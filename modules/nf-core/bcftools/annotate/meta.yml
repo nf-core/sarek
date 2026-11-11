@@ -1,0 +1,104 @@
+name: bcftools_annotate
+description: Add or remove annotations.
+keywords:
+  - bcftools
+  - annotate
+  - vcf
+  - remove
+  - add
+tools:
+  - annotate:
+      description: Add or remove annotations.
+      homepage: http://samtools.github.io/bcftools/bcftools.html
+      documentation: https://samtools.github.io/bcftools/bcftools.html#annotate
+      doi: 10.1093/bioinformatics/btp352
+      licence:
+        - "MIT"
+      identifier: biotools:bcftools
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input:
+        type: file
+        description: Query VCF or BCF file, can be either uncompressed or
+          compressed
+        ontologies: []
+    - index:
+        type: file
+        description: Index of the query VCF or BCF file
+        ontologies: []
+    - annotations:
+        type: file
+        description: Bgzip-compressed file with annotations
+        ontologies: []
+    - annotations_index:
+        type: file
+        description: Index of the annotations file
+        ontologies: []
+    - columns:
+        type: file
+        description: List of columns in the annotations file, one name per row
+        ontologies: []
+    - header_lines:
+        type: file
+        description: Contains lines to append to the output VCF header
+        ontologies: []
+    - rename_chrs:
+        type: file
+        description: Rename annotations according to this file containing
+          "old_name new_name\n" pairs separated by whitespaces, each on a separate
+          line.
+        ontologies: []
+output:
+  vcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.${extension}:
+          type: file
+          description: Compressed annotated VCF file
+          pattern: "*{vcf,vcf.gz,bcf,bcf.gz}"
+          ontologies: []
+  index:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "${prefix}.${extension}.{tbi,csi}":
+          type: file
+          description: VCF file index
+          pattern: "*.{tbi,csi}"
+          ontologies: []
+  versions_bcftools:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - bcftools:
+          type: string
+          description: The tool name
+      - bcftools --version | sed '1!d; s/^.*bcftools //':
+          type: eval
+          description: The command used to generate the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - bcftools:
+          type: string
+          description: The tool name
+      - bcftools --version | sed '1!d; s/^.*bcftools //':
+          type: eval
+          description: The command used to generate the version of the tool
+authors:
+  - "@projectoriented"
+  - "@ramprasadn"
+maintainers:
+  - "@projectoriented"
+  - "@ramprasadn"

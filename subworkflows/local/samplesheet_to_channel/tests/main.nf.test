@@ -1,0 +1,64 @@
+nextflow_workflow {
+
+    name "Test Workflow SAMPLESHEET_TO_CHANNEL"
+    script "../main.nf"
+    workflow "SAMPLESHEET_TO_CHANNEL"
+
+    test("Should run without failures") {
+        when {
+            params {
+            }
+            workflow {
+                """
+                // define inputs of the workflow here. Example:
+                input[0] = channel.of([
+                    ['patient':'test', 'sample':'test',
+                    'sex':'XX', 'status':0, 'lane':'test_L1'],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true),
+                    [], [], [], [], [], [], [], [], [], [] // spring_1, spring_2, table, cram, crai, bam, bai, contamination, vcf, variantcaller
+                ])
+                input[1] = 'bwa-mem' // aligner
+                input[2] = [] // ascat_alleles
+                input[3] = [] // ascat_loci
+                input[4] = [] // ascat_loci_gc
+                input[5] = [] // ascat_loci_rt
+                input[6] = [] // bcftools_annotations
+                input[7] = [] // bcftools_annotations_tbi
+                input[8] = [] // bcftools_header_lines
+                input[9] = false // build_only_index
+                input[10] = [] // contamination_resource
+                input[11] = [] // dbsnp
+                input[12] = [] // fasta
+                input[13] = [] // germline_resource
+                input[14] = [] // intervals
+                input[15] = false // joint_germline
+                input[16] = false // joint_mutect2
+                input[17] = [] // known_indels
+                input[18] = [] // known_snps
+                input[19] = false // no_intervals
+                input[20] = [] // pon
+                input[21] = 'variant' // sentieon_dnascope_emit_mode
+                input[22] = 'variant' // sentieon_haplotyper_emit_mode
+                input[23] = '' // seq_center
+                input[24] = 'ILLUMINA' // seq_platform
+                input[25] = 'baserecalibrator' // skip_tools
+                input[26] = [] // snpeff_cache
+                input[27] = 'WBcel235.99' // snpeff_db
+                input[28] = 'mapping' // step
+                input[29] = 'strelka' // tools
+                input[30] = null // umi_length
+                input[31] = null // umi_location
+                input[32] = false // umi_in_read_header
+                input[33] = [] // umi_read_structure
+                input[34] = false // wes
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+    }
+}

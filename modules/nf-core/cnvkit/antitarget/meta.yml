@@ -1,0 +1,70 @@
+name: cnvkit_antitarget
+description: Derive off-target (“antitarget”) bins from target regions.
+keywords:
+  - cvnkit
+  - antitarget
+  - cnv
+  - copy number
+tools:
+  - cnvkit:
+      description: |
+        CNVkit is a Python library and command-line software toolkit to infer and visualize copy number from high-throughput DNA sequencing data.
+        It is designed for use with hybrid capture, including both whole-exome and custom target panels, and short-read sequencing platforms such as Illumina and Ion Torrent.
+      homepage: https://cnvkit.readthedocs.io/en/stable/index.html
+      documentation: https://cnvkit.readthedocs.io/en/stable/index.html
+      tool_dev_url: "https://github.com/etal/cnvkit"
+      doi: 10.1371/journal.pcbi.1004873
+      licence: ["Apache-2.0"]
+      identifier: biotools:cnvkit
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - targets:
+        type: file
+        description: File containing genomic regions
+        pattern: "*.{bed}"
+        ontologies: []
+output:
+  bed:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bed":
+          type: file
+          description: File containing off-target regions
+          pattern: "*.{bed}"
+          ontologies: []
+  versions_cnvkit:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - cnvkit:
+          type: string
+          description: The name of the tool
+      - 'cnvkit.py version | sed -e "s/cnvkit v//g"':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - cnvkit:
+          type: string
+          description: The name of the tool
+      - 'cnvkit.py version | sed -e "s/cnvkit v//g"':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@adamrtalbot"
+  - "@priesgo"
+  - "@SusiJo"
+maintainers:
+  - "@adamrtalbot"
+  - "@priesgo"
+  - "@SusiJo"

@@ -1,0 +1,69 @@
+name: "bam_applybqsr"
+description: |
+  Apply Base Quality Score Recalibration (BQSR) to a BAM or CRAM file using
+  GATK4 ApplyBQSR. Supports scatter-gather across genomic intervals: when
+  more than one interval file is supplied per sample, the interval-level
+  outputs are merged back together with samtools merge. When no intervals
+  are supplied (num_intervals: 0), ApplyBQSR is run once on the whole
+  input and no merge step is performed.
+keywords:
+  - bam
+  - cram
+  - bqsr
+  - recalibration
+  - gatk4
+components:
+  - gatk4/applybqsr
+  - samtools/merge
+input:
+  - input:
+      type: file
+      description: |
+        BAM or CRAM file to recalibrate, its index, and the recalibration
+        table produced by GATK4 BaseRecalibrator.
+
+        Structure: [ val(meta), path(reads), path(index), path(recal) ]
+      pattern: "*.{bam,cram}"
+
+  - references:
+      type: file
+      description: |
+        Reference genome fasta file, its index, and the GATK sequence dictionary.
+
+        Structure: [ val(meta2), path(fasta), path(fai), path(dict) ]
+
+  - intervals:
+      type: file
+      description: |
+        Bed file (or interval_list) with the genomic regions to restrict
+        recalibration to, together with the number of interval files being
+        processed for this sample. Pass [ [], 0 ] to run without intervals.
+
+        Structure: [ path(intervals), val(num_intervals) ]
+      pattern: "*.{bed,interval_list}"
+
+  - output_format:
+      type: tuple
+      description: |
+        Output file type and index format as a two-element tuple, passed to
+        GATK4 ApplyBQSR (which validates the combination) and to samtools merge.
+        First element: 'bam' or 'cram'.
+        Second element: 'bai', 'csi', or 'crai'.
+
+        Valid combinations: ['bam', 'bai'], ['bam', 'csi'], ['cram', 'crai'].
+      pattern: "{bam,cram}"
+output:
+  - recal_out:
+      type: file
+      description: |
+        Recalibrated BAM or CRAM file and its index. If more than one interval
+        was used, this is the merged output; otherwise it is the direct
+        ApplyBQSR output.
+
+        Structure: [ val(meta), path(reads), path(index) ]
+      pattern: "*.{bam,cram}"
+authors:
+  - "@agrima2010"
+maintainers:
+  - "@agrima2010"
+  - "@maxulysse"

@@ -1,0 +1,159 @@
+name: bwa_mem
+description: Performs fastq alignment to a fasta reference using BWA
+keywords:
+  - mem
+  - bwa
+  - alignment
+  - map
+  - fastq
+  - bam
+  - sam
+tools:
+  - bwa:
+      description: |
+        BWA is a software package for mapping DNA sequences against
+        a large reference genome, such as the human genome.
+      homepage: http://bio-bwa.sourceforge.net/
+      documentation: https://bio-bwa.sourceforge.net/bwa.shtml
+      arxiv: arXiv:1303.3997
+      licence:
+        - "GPL-3.0-or-later"
+      identifier: "biotools:bwa"
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: |
+          List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+          respectively.
+        ontologies:
+          - edam: "http://edamontology.org/data_2044"
+          - edam: "http://edamontology.org/format_1930"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          e.g. [ id:'test', single_end:false ]
+    - index:
+        type: file
+        description: BWA genome index files
+        pattern: "Directory containing BWA index *.{amb,ann,bwt,pac,sa}"
+        ontologies:
+          - edam: "http://edamontology.org/data_3210"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - fasta:
+        type: file
+        description: Reference genome in FASTA format
+        pattern: "*.{fasta,fa}"
+        ontologies:
+          - edam: "http://edamontology.org/data_2044"
+          - edam: "http://edamontology.org/format_1929"
+  - sort_bam:
+      type: boolean
+      description: use samtools sort (true) or samtools view (false)
+      pattern: "true or false"
+output:
+  bam:
+    - - meta:
+          type: map
+          description: Groovy Map containing sample information
+      - "*.bam":
+          type: file
+          description: Output BAM file containing read alignments
+          pattern: "*.{bam}"
+          ontologies:
+            - edam: "http://edamontology.org/format_2572"
+  cram:
+    - - meta:
+          type: map
+          description: Groovy Map containing sample information
+      - "*.cram":
+          type: file
+          description: Output CRAM file containing read alignments
+          pattern: "*.{cram}"
+          ontologies:
+            - edam: "http://edamontology.org/format_3462"
+  sam:
+    - - meta:
+          type: map
+          description: Groovy Map containing sample information
+      - "*.sam":
+          type: file
+          description: Output SAM file containing read alignments
+          pattern: "*.{sam}"
+          ontologies:
+            - edam: "http://edamontology.org/format_2573"
+  csi:
+    - - meta:
+          type: map
+          description: Groovy Map containing sample information
+      - "*.csi":
+          type: file
+          description: Optional index file for BAM file
+          pattern: "*.{csi}"
+          ontologies: []
+  crai:
+    - - meta:
+          type: map
+          description: Groovy Map containing sample information
+      - "*.crai":
+          type: file
+          description: Optional index file for CRAM file
+          pattern: "*.{crai}"
+          ontologies: []
+  versions_bwa:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bwa:
+          type: string
+          description: The name of the tool
+      - 'bwa 2>&1 | sed -n "s/^Version: //p"':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_samtools:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - samtools version | sed '1!d;s/.* //':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bwa:
+          type: string
+          description: The name of the tool
+      - 'bwa 2>&1 | sed -n "s/^Version: //p"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - samtools:
+          type: string
+          description: The name of the tool
+      - samtools version | sed '1!d;s/.* //':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@drpatelh"
+  - "@jeremy1805"
+  - "@matthdsm"
+maintainers:
+  - "@drpatelh"
+  - "@jeremy1805"
+  - "@matthdsm"

@@ -1,0 +1,36 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/sarek/master/assets/schema_snpsift_databases.json",
+    "title": "nf-core/sarek - params.snpsift_databases schema",
+    "description": "Schema for the SnpSift annotation databases CSV samplesheet",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "vcf": {
+                "type": "string",
+                "pattern": "^\\S+\\.vcf(\\.gz)?$",
+                "errorMessage": "VCF file path must be provided and end with .vcf or .vcf.gz"
+            },
+            "tbi": {
+                "type": "string",
+                "pattern": "^\\S+\\.tbi$",
+                "errorMessage": "Index file must end with .tbi"
+            },
+            "fields": {
+                "type": "string",
+                "errorMessage": "Semicolon-separated INFO field names to extract (e.g., DP;AF;MQ)"
+            },
+            "prefix": {
+                "type": "string",
+                "errorMessage": "Prefix for annotated field names"
+            },
+            "vardb": {
+                "type": "string",
+                "format": "directory-path",
+                "errorMessage": "Path to pre-built .snpsift.vardb directory"
+            }
+        },
+        "required": ["vcf"]
+    }
+}

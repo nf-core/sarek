@@ -1,0 +1,59 @@
+name: "add_info_to_vcf"
+description: Add a SOURCE INFO tag to every variant record in a VCF, naming the file it came from
+keywords:
+  - vcf
+  - annotation
+  - info
+tools:
+  - "gawk":
+      description: "GNU awk, a pattern scanning and processing language"
+      homepage: "https://www.gnu.org/software/gawk/"
+      documentation: "https://www.gnu.org/software/gawk/manual/gawk.html"
+      licence: ["GPL-3.0-or-later"]
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'sample1' ]
+    - vcf_gz:
+        type: file
+        description: Input VCF file, optionally gzipped
+        pattern: "*.{vcf,vcf.gz}"
+output:
+  vcf:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'sample1' ]
+      - "*.added_info.vcf":
+          type: file
+          description: VCF file with the SOURCE INFO tag added to every variant record
+          pattern: "*.added_info.vcf"
+  versions_gawk:
+    - - "${task.process}":
+          type: string
+          description: The name of the process
+      - gawk:
+          type: string
+          description: The name of the tool
+      - "awk --version | head -n1 | sed 's/GNU Awk //; s/, .*//'":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - "${task.process}":
+          type: string
+          description: The name of the process
+      - gawk:
+          type: string
+          description: The name of the tool
+      - "awk --version | head -n1 | sed 's/GNU Awk //; s/, .*//'":
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@asp8200"
+maintainers:
+  - "@FriederikeHanssen"
+  - "@maxulysse"
