@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
 name: "bam_variant_calling_parabricks_mutectcaller"
 description: |
-  Perform somatic variant calling on paired tumour-normal or tumour-only samples with the
+  Perform somatic variant calling on paired tumor-normal or tumor-only samples with the
   Parabricks GPU-accelerated mutectcaller, run as a single job per pair or sample on the combined
   intervals, optionally with a panel of normals and a germline resource. The calls are filtered on
   CPU by the vcf_variant_filtering_mutect2 subworkflow (GATK filtermutectcalls with
@@ -28,8 +28,8 @@ input:
   - cram:
       type: list
       description: |
-        Normal and tumour BAM/CRAM files with their indexes. The normal file and index are [] for tumour-only.
-        Structure: [ val(meta), path(normal_cram), path(normal_crai), path(tumour_cram), path(tumour_crai) ]
+        Normal and tumor BAM/CRAM files with their indexes. The normal file and index are [] for tumor-only.
+        Structure: [ val(meta), path(normal_cram), path(normal_crai), path(tumor_cram), path(tumor_crai) ]
       pattern: "*.{bam,bai,cram,crai}"
   - fasta:
       type: file
@@ -65,7 +65,7 @@ input:
       type: file
       description: |
         Population VCF of germline sequencing containing allele fractions, used by the Parabricks
-        mutectcaller and getpileupsummaries. Pass [] to skip getpileupsummaries and calculatecontamination.
+        mutectcaller as the germline prior.
         Structure: [ path(germline_resource) ] or []
       pattern: "*.vcf.gz"
   - germline_resource_tbi:
@@ -73,6 +73,19 @@ input:
       description: |
         Index of the germline resource VCF.
         Structure: [ path(germline_resource_tbi) ] or []
+      pattern: "*.vcf.gz.tbi"
+  - contamination_resource:
+      type: file
+      description: |
+        VCF of common biallelic germline SNPs with population allele frequencies, used by
+        getpileupsummaries. Pass [] to skip getpileupsummaries and calculatecontamination.
+        Structure: [ path(contamination_resource) ] or []
+      pattern: "*.vcf.gz"
+  - contamination_resource_tbi:
+      type: file
+      description: |
+        Index of the contamination resource VCF.
+        Structure: [ path(contamination_resource_tbi) ] or []
       pattern: "*.vcf.gz.tbi"
   - panel_of_normals:
       type: file
@@ -99,10 +112,10 @@ input:
         or [ [], 0 ] when running without intervals.
         Structure: [ path(intervals), val(num_intervals) ]
       pattern: "*.bed"
-  - germline_resource_provided:
+  - contamination_resource_provided:
       type: boolean
       description: |
-        Whether a germline resource was provided. When true, every VCF must be matched by a
+        Whether a contamination resource was provided. When true, every VCF must be matched by a
         contamination and segmentation table before filtermutectcalls; when false, filtermutectcalls
         runs without them as soon as each VCF is ready.
 output:
@@ -133,7 +146,7 @@ output:
   - artifact_priors:
       type: file
       description: |
-        Read-orientation artefact priors produced by learnreadorientationmodel.
+        Read-orientation artifact priors produced by learnreadorientationmodel.
         Structure: [ val(meta), path(artifactprior) ]
       pattern: "*.artifactprior.tar.gz"
   - contamination_table:
@@ -145,19 +158,19 @@ output:
   - segmentation_table:
       type: file
       description: |
-        Tumour segmentation table produced by calculatecontamination (empty channel without germline resource).
+        Tumor segmentation table produced by calculatecontamination (empty channel without germline resource).
         Structure: [ val(meta), path(table) ]
       pattern: "*.segmentation.table"
   - pileup_table_normal:
       type: file
       description: |
-        Pileup summary table of the normal sample (empty channel without germline resource or in tumour-only mode).
+        Pileup summary table of the normal sample (empty channel without germline resource or in tumor-only mode).
         Structure: [ val(meta), path(table) ]
       pattern: "*.pileups.table"
   - pileup_table_tumor:
       type: file
       description: |
-        Pileup summary table of the tumour sample (empty channel without germline resource).
+        Pileup summary table of the tumor sample (empty channel without germline resource).
         Structure: [ val(meta), path(table) ]
       pattern: "*.pileups.table"
 authors:

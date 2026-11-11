@@ -33,16 +33,18 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     force_call_alleles_tbi        // channel: [optional]  force_call_alleles_tbi
     germline_resource             // channel: [optional]  germline_resource
     germline_resource_tbi         // channel: [optional]  germline_resource_tbi
+    contamination_resource        // channel: [optional]  contamination_resource
+    contamination_resource_tbi    // channel: [optional]  contamination_resource_tbi
     intervals                     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
     intervals_bed_gz_tbi_combined // channel: [mandatory] intervals/target regions in one file zipped
     mappability
     msisensor2_models
-    panel_of_normals              // channel: [optional]  panel_of_normals
-    panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
-    joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
-    wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
-    germline_resource_provided    // boolean: [mandatory] whether a germline resource was provided
+    panel_of_normals                // channel: [optional]  panel_of_normals
+    panel_of_normals_tbi            // channel: [optional]  panel_of_normals_tbi
+    joint_mutect2                   // boolean: [mandatory] [default: false] run mutect2 in joint mode
+    wes                             // boolean: [mandatory] [default: false] whether targeted data is processed
+    contamination_resource_provided // boolean: [mandatory] whether a contamination resource was provided
 
     main:
     // Channels are often remapped to match module/subworkflow
@@ -128,10 +130,13 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         out_msisensor2 = out_msisensor2.mix(MSISENSOR2_MSI.out.somatic)
     }
 
+    // Mutect2 and Parabricks MutectCaller take [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ], with no normal here
+    cram_tumor_only = cram.map { meta, tumor_cram, tumor_crai -> [meta, [], [], tumor_cram, tumor_crai] }
+
     // MUTECT2
     if (tools && tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_MUTECT2(
-            cram.map { meta_, cram_, crai_ -> [meta_ - meta_.subMap('data_type'), [], [], cram_, crai_] },
+            cram_tumor_only,
             fasta,
             fasta_fai,
             dict,
@@ -139,11 +144,13 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             force_call_alleles_tbi,
             germline_resource,
             germline_resource_tbi,
+            contamination_resource,
+            contamination_resource_tbi,
             panel_of_normals,
             panel_of_normals_tbi,
             intervals,
             joint_mutect2,
-            germline_resource_provided,
+            contamination_resource_provided,
         )
 
         vcf_mutect2 = BAM_VARIANT_CALLING_MUTECT2.out.vcf
@@ -151,11 +158,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // PARABRICKS MUTECTCALLER
-    cram_parabricks_mutectcaller = cram
-        .filter { _meta, _cram, _crai ->
-            tools && tools.split(',').contains('parabricks_mutectcaller')
-        }
-        .map { meta, tumor_cram, tumor_crai -> [meta, [], [], tumor_cram, tumor_crai] }
+    cram_parabricks_mutectcaller = cram_tumor_only.filter { _meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai ->
+        tools && tools.split(',').contains('parabricks_mutectcaller')
+    }
 
     BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER(
         cram_parabricks_mutectcaller,
@@ -166,11 +171,13 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         force_call_alleles_tbi,
         germline_resource,
         germline_resource_tbi,
+        contamination_resource,
+        contamination_resource_tbi,
         panel_of_normals,
         panel_of_normals_tbi,
         intervals_bed_combined,
         intervals,
-        germline_resource_provided,
+        contamination_resource_provided,
     )
 
     vcf_parabricks_mutectcaller = BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER.out.vcf

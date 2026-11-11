@@ -28,6 +28,10 @@
 
   > Li H: A statistical framework for SNP calling, mutation discovery, association mapping and population genetical parameter estimation from sequencing data. Bioinformatics. 2011 Nov 1;27(21):2987-93. doi: 10.1093/bioinformatics/btr509. PubMed PMID: 21903627; PubMed Central PMCID: PMC3198575.
 
+- [BEDTools](https://pubmed.ncbi.nlm.nih.gov/20110278/)
+
+  > Quinlan AR, Hall IM: BEDTools: a flexible suite of utilities for comparing genomic features. Bioinformatics. 2010 Mar 15;26(6):841-2. doi: 10.1093/bioinformatics/btq033. PubMed PMID: 20110278; PubMed Central PMCID: PMC2832824.
+
 - [BGZip](https://github.com/madler/pigz)
 
 - [BWA-MEM](https://arxiv.org/abs/1303.3997v2)

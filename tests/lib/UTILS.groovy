@@ -54,7 +54,10 @@ class UTILS {
         }
 
         // At least always pipeline_info/ is created and stable
-        assertion.add(stable_name)
+        // Opt out for failing runs where parallel tasks may publish before the run is cancelled
+        if (!scenario.ignoreFileListing) {
+            assertion.add(stable_name)
+        }
 
         if (!scenario.stub) {
             assertion.add(stable_content.isEmpty() ? 'No stable content' : stable_content.collect { file -> path(absolutePath(file)) })
@@ -185,7 +188,15 @@ class UTILS {
                             scenario: scenario,
                             workflow: workflow
                         )
-                    ).match() }
+                    ).match() },
+                    // variantcalled.csv is the input to restart at --step annotate
+                    { if (!scenario.stub && !scenario.failure) {
+                        def variantcalled_csv = new File("${params.outdir}/csv/variantcalled.csv")
+                        if (variantcalled_csv.exists()) {
+                            def missing_vcfs = variantcalled_csv.readLines().drop(1).findAll { it }.collect { it.tokenize(',').last() }.findAll { !new File(it).exists() }
+                            assert missing_vcfs.isEmpty() : "VCFs listed in csv/variantcalled.csv do not exist: ${missing_vcfs}"
+                        }
+                    } }
                 )
             }
             cleanup {
