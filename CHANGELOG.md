@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#2402](https://github.com/nf-core/sarek/pull/2402) - Add `--deepsomatic_ffpe` to use DeepSomatic's `FFPE_WGS`/`FFPE_WES` models
+
 ### Changed
 
 ### Fixed
@@ -27,8 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params | status |
-| ------ | ------ |
+| Params               | status |
+| -------------------- | ------ |
+| `--deepsomatic_ffpe` | Added  |
 
 ### Developer section
 
