@@ -302,7 +302,7 @@ def checkIntervalsWithinContigs(bed, fai) {
         if (!contig_length.containsKey(contig)) {
             unknown << contig
         } else if (end.toLong() > contig_length[contig]) {
-            past_end_count++
+            past_end_count += 1
             if (past_end.size() < 3) {
                 past_end << "${contig}:${start}-${end} (${contig} is ${contig_length[contig]} bp)"
             }
