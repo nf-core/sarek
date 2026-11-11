@@ -41,19 +41,22 @@ jobs:
               "profile": "test_full_aws",
               "test": "somatic",
               "compute_env": "TOWER_COMPUTE_ENV",
-              "workdir": "TOWER_BUCKET_AWS"
+              "workdir": "TOWER_BUCKET_AWS",
+              "snapshot": "tests/snapshots/test_full.json"
             },
             {
               "profile": "test_full_germline_aws",
               "test": "germline",
               "compute_env": "TOWER_COMPUTE_ENV",
-              "workdir": "TOWER_BUCKET_AWS"
+              "workdir": "TOWER_BUCKET_AWS",
+              "snapshot": ""
             },
             {
               "profile": "test_full_germline_ncbench_agilent",
               "test": "germline_ncbench_agilent",
               "compute_env": "TOWER_COMPUTE_ENV",
-              "workdir": "TOWER_BUCKET_AWS"
+              "workdir": "TOWER_BUCKET_AWS",
+              "snapshot": ""
             }
           ]'
 
@@ -104,6 +107,13 @@ jobs:
             plugins {
               id 'nf-slack@0.5.0'
               id 'nf-schema@2.7.2'
+              id 'nf-snapshot@0.1.0'
+            }
+            snapshot {
+              enabled = ${{ matrix.snapshot != '' }}
+              file = '${{ matrix.snapshot }}'
+              ignore = ['pipeline_info/**']
+              nameOnly = ['{*.html,**/*.html}', '**/*.log', '**/*.pdf', '**/*.png']
             }
             slack {
               enabled = true
