@@ -55,10 +55,9 @@ Njoatsosvágge is a long valley crossing the northern part of Sarek National Par
 - [#2351](https://github.com/nf-core/sarek/pull/2351) - Add `--mosdepth_fast_mode` to control Mosdepth fast mode for whole-genome coverage calculations. Fast mode remains enabled by default.
 - [#2365](https://github.com/nf-core/sarek/pull/2365) - Add `--force_call_alleles` and `--force_call_alleles_tbi` to force-call alleles from a VCF with GATK Mutect2 `--alleles` and Parabricks MutectCaller `--mutect-alleles` ([#1883](https://github.com/nf-core/sarek/issues/1883)), based on [#1952](https://github.com/nf-core/sarek/pull/1952) by [@jchchiu](https://github.com/jchchiu)
 - [#2367](https://github.com/nf-core/sarek/pull/2367) - Add `--contamination_resource` and `--contamination_resource_tbi` to give GATK `GetPileupSummaries` a set of common biallelic SNPs instead of `--germline_resource` ([#959](https://github.com/nf-core/sarek/issues/959))
+- [#2391](https://github.com/nf-core/sarek/pull/2391) - Make the `lane` column of the samplesheet optional for samples with a single row (`--step mapping`), based on [#1943](https://github.com/nf-core/sarek/pull/1943) by [@animesh](https://github.com/animesh)
 
 ### Changed
-
-- [#2391](https://github.com/nf-core/sarek/pull/2391) - Make the `lane` column of the samplesheet optional for samples with a single row (`--step mapping`), based on [#1943](https://github.com/nf-core/sarek/pull/1943) by [@animesh](https://github.com/animesh)
 
 - [#2339](https://github.com/nf-core/sarek/pull/2339) - Update `parabricks/applybqsr`, `parabricks/deepsomatic`, `parabricks/deepvariant`, `parabricks/fq2bam` and `parabricks/haplotypecaller` modules to Parabricks 4.8.0
 - [#2349](https://github.com/nf-core/sarek/pull/2349) - Process `MUTECT2_PAIRED` is now `MUTECT2`; custom configs selecting `withName: 'MUTECT2_PAIRED'` need to select `MUTECT2` instead
