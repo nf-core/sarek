@@ -5,6 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev - unreleased
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+### Dependencies - modules
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Dependencies - plugins
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
+| Params | status |
+| ------ | ------ |
+
+### Developer section
+
+#### Added
+
+#### Changed
+
+- [#2399](https://github.com/nf-core/sarek/pull/2399) - Back to dev (3.12.1dev)
+
+#### Fixed
+
+#### Removed
+
 ## [3.12.0](https://github.com/nf-core/sarek/releases/tag/3.12.0) - Njoatsosvágge
 
 Njoatsosvágge is a long valley crossing the northern part of Sarek National Park.
