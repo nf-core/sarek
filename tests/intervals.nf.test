@@ -57,6 +57,35 @@ nextflow_pipeline {
             snapshot_ignore: 'Killing running tasks',
         ],
         [
+            // No user-provided FAI: the pipeline builds it, so the check runs in PREPARE_INTERVALS instead of at start-up
+            name: "Fails with profile test --intervals intervals_past_end.bed and no fasta_fai",
+            params: [
+                fasta_fai: null,
+                intervals: pipelines_testdata_base_path + 'genomics/homo_sapiens/genome/intervals_past_end.bed',
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null,
+                wes: true
+            ],
+            failure: true,
+            snapshot: 'stdout',
+            snapshot_include: 'past their contig',
+            // Whether a running task gets killed, whether the reports render, and which tasks publish before the run is cancelled, depends on timing
+            snapshot_ignore: ['Killing running tasks', 'Failed to render'],
+            ignoreFileListing: true,
+        ],
+        [
+            name: "Fails with profile test --intervals genome.multi_intervals.bed --no_intervals",
+            params: [
+                intervals: modules_testdata_base_path + "genomics/homo_sapiens/genome/genome.multi_intervals.bed",
+                no_intervals: true,
+                skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
+                tools: null
+            ],
+            failure: true,
+            snapshot: 'stdout',
+            snapshot_include: 'cannot be used together',
+        ],
+        [
             name: "-profile test --no_intervals --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
             params: [
                 no_intervals: true,
@@ -65,9 +94,9 @@ nextflow_pipeline {
             ]
         ],
         [
-            name: "-profile test --intervals null --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
+            name: "-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools",
             params: [
-                intervals: null,
+                intervals: 'false',
                 save_reference: true,
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: null
@@ -94,9 +123,9 @@ nextflow_pipeline {
             stub: true
         ],
         [
-            name: "-profile test --intervals null --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
+            name: "-profile test --intervals false --save_reference --tools null --skip_tools baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools -stub",
             params: [
-                intervals: null,
+                intervals: 'false',
                 save_reference: true,
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: null

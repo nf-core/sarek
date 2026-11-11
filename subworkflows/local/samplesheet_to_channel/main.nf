@@ -12,6 +12,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
     bcftools_annotations_tbi      // Path: bcftools annotations tbi
     bcftools_header_lines         // Path: bcftools header lines
     build_only_index              // Boolean: build only index
+    contamination_resource        // Path: contamination resource
     dbsnp                         // Path: dbsnp
     fasta                         // Path: fasta
     germline_resource             // Path: germline resource
@@ -59,21 +60,25 @@ workflow SAMPLESHEET_TO_CHANNEL {
             }
         }
 
+    // variantcalled.csv (step annotate) has one row per VCF and no lane
+    def duplicate_key_fields = step == 'annotate'
+        ? ['patient', 'sample', 'status', 'variantcaller', 'vcf']
+        : ['patient', 'sample', 'status', 'lane']
+
     ch_from_samplesheet
         .map { meta, _fastq_1, _fastq_2, _spring_1, _spring_2, _table, _cram, _crai, _bam, _bai, _contamination, _vcf, _variantcaller ->
-            // Create a unique key for patient-sample-status-lane combination
-            def combination_key = "${meta.patient}-${meta.sample}-${meta.status}-${meta.lane}"
-            [combination_key, [meta.patient, meta.sample, meta.status, meta.lane]]
+            def row_fields = [patient: meta.patient, sample: meta.sample, status: meta.status, lane: meta.lane, variantcaller: _variantcaller, vcf: _vcf]
+            def key_fields = row_fields.subMap(duplicate_key_fields)
+            [key_fields.values().join('-'), key_fields]
         }
         .groupTuple()
         .map { _combination_key, combination_list ->
             if (combination_list.size() > 1) {
-                def patient = combination_list[0][0]
-                def sample = combination_list[0][1]
-                def status = combination_list[0][2]
-                def lane = combination_list[0][3]
-                System.err.println("Duplicate patient-sample-status-lane combination found: Patient '${patient}', Sample '${sample}', Status '${status}', Lane '${lane}' appears ${combination_list.size()} times. Please ensure each combination is unique.")
-                error("Execution halted due to duplicate patient-sample-status-lane combination.")
+                def key_fields = combination_list[0]
+                def combination_name = key_fields.keySet().join('-')
+                def combination_values = key_fields.collect { field, value -> "${field} '${value}'" }.join(', ')
+                System.err.println("Duplicate ${combination_name} combination found: ${combination_values} appears ${combination_list.size()} times. Please ensure each combination is unique.")
+                error("Execution halted due to duplicate ${combination_name} combination.")
             }
         }
 
@@ -236,6 +241,13 @@ workflow SAMPLESHEET_TO_CHANNEL {
             }
         }
 
+    // Parabricks' HaplotypeCaller is deliberately absent from this list: joint genotyping is not
+    // wired up for it, so it cannot satisfy `--joint_germline` on its own. It always emits
+    // per-sample VCFs and ignores the flag, so combining it with a joint-capable caller is fine.
+    if (joint_germline && (!tools || !(tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope')))) {
+        error("The GATK's Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper should be specified as one of the tools when doing joint germline variant calling.) ")
+    }
+
     if (step != 'annotate' && tools && !build_only_index) {
         // Two checks for ensuring that the pipeline stops with a meaningful error message if
         // 1. the sample-sheet only contains normal-samples, but some of the requested tools require tumor-samples, and
@@ -373,16 +385,21 @@ workflow SAMPLESHEET_TO_CHANNEL {
         }
     }
 
-    // Warns when missing files or params for mutect2
-    if (tools && tools.split(',').contains('mutect2')) {
-        if (!pon) {
-            log.warn("No Panel-of-normal was specified for Mutect2.\nIt is highly recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2\nFor more information on how to create one: https://gatk.broadinstitute.org/hc/en-us/articles/5358921041947-CreateSomaticPanelOfNormals-BETA-")
-        }
-        if (!germline_resource) {
-            log.warn("If Mutect2 is specified without a germline resource, no filtering will be done.\nIt is recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2")
-        }
-        if (pon && pon.contains("/Homo_sapiens/GATK/GRCh38/Annotation/GATKBundle/1000g_pon.hg38.vcf.gz")) {
-            log.warn("The default Panel-of-Normals provided by GATK is used for Mutect2.\nIt is highly recommended to generate one from normal samples that are technical similar to the tumor ones.\nFor more information: https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-")
+    // Warns when missing files or params for mutect2 and parabricks_mutectcaller
+    [mutect2: 'Mutect2', parabricks_mutectcaller: 'Parabricks MutectCaller'].each { tool, tool_name ->
+        if (tools && tools.split(',').contains(tool)) {
+            if (!pon) {
+                log.warn("No Panel-of-normal was specified for ${tool_name}.\nIt is highly recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2\nFor more information on how to create one: https://gatk.broadinstitute.org/hc/en-us/articles/5358921041947-CreateSomaticPanelOfNormals-BETA-")
+            }
+            if (!germline_resource) {
+                log.warn("If ${tool_name} is specified without a germline resource, calling runs without the germline prior.\nIt is recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2")
+            }
+            if (!germline_resource && !contamination_resource) {
+                log.warn("If ${tool_name} is specified without a germline resource or a contamination resource, calls are filtered without contamination estimation.\nTo estimate contamination, provide `--contamination_resource` or `--germline_resource`: https://nf-co.re/sarek/usage#how-to-provide-a-contamination-resource-for-mutect2")
+            }
+            if (pon && pon.contains("/Homo_sapiens/GATK/GRCh38/Annotation/GATKBundle/1000g_pon.hg38.vcf.gz")) {
+                log.warn("The default Panel-of-Normals provided by GATK is used for ${tool_name}.\nIt is highly recommended to generate one from normal samples that are technically similar to the tumor ones.\nFor more information: https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-")
+            }
         }
     }
 
@@ -396,13 +413,6 @@ workflow SAMPLESHEET_TO_CHANNEL {
             log.warn("If GATK's Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-")
         }
     }
-    // Parabricks' HaplotypeCaller is deliberately absent from this list: joint genotyping is not
-    // wired up for it, so it cannot satisfy `--joint_germline` on its own. It always emits
-    // per-sample VCFs and ignores the flag, so combining it with a joint-capable caller is fine.
-    if (joint_germline && (!tools || !(tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope')))) {
-        error("The GATK's Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper should be specified as one of the tools when doing joint germline variant calling.) ")
-    }
-
     if (tools && tools.split(',').contains('haplotypecaller') && joint_germline && no_intervals) {
         System.err.println("Joint germline variant calling with GATK's HaplotypeCaller requires intervals because GenomicsDB cannot be used without them. Please provide intervals or remove `--no_intervals`.")
         error("Execution halted due to missing intervals.")

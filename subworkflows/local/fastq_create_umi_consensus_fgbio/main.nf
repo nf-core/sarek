@@ -11,6 +11,7 @@ include { FGBIO_FASTQTOBAM                  as FASTQTOBAM       } from '../../..
 include { FGBIO_GROUPREADSBYUMI             as GROUPREADSBYUMI  } from '../../../modules/nf-core/fgbio/groupreadsbyumi/main'
 include { FASTQ_ALIGN                       as ALIGN_UMI        } from '../fastq_align/main'
 include { SAMTOOLS_MERGE                    as MERGE_CONSENSUS  } from '../../../modules/nf-core/samtools/merge/main'
+include { SAMTOOLS_FIXMATE                                      } from '../../../modules/nf-core/samtools/fixmate/main'
 include { SAMTOOLS_BAM2FQ                   as BAM2FASTQ        } from '../../../modules/nf-core/samtools/bam2fq/main.nf'
 
 workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
@@ -20,6 +21,7 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     fai                       // channel: [optional] /path/to/reference/fasta_fai, needed for Sentieon
     map_index                 // channel: [mandatory] Pre-computed mapping index
     groupreadsbyumi_strategy  // string:  [mandatory] grouping strategy - default: "Adjacency"
+    aligner                   // string:  [mandatory] aligner used to map the reads, e.g. "bwa-mem2"
 
     main:
 
@@ -39,7 +41,17 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     sort = false
     ALIGN_UMI(BAM2FASTQ.out.reads, map_index, sort, fasta, fai)
 
-    bams_to_merge = ALIGN_UMI.out.bam
+    // fixmate adds MQ tag which is required by fgbio GroupReadsByUmi
+    // and is not emitted by bwa-mem2
+    bams_to_fixmate = ALIGN_UMI.out.bam
+        .branch { meta, bam ->
+            fixmate:      aligner == 'bwa-mem2'
+            skip_fixmate: true
+        }
+
+    SAMTOOLS_FIXMATE(bams_to_fixmate.fixmate, [[], [], []])
+
+    bams_to_merge = SAMTOOLS_FIXMATE.out.bam.mix(bams_to_fixmate.skip_fixmate)
     // id currently includes the lane, so swap to just id=sample and groupKey to avoid blocking
     // Remove lane-specific fields (id, sample_lane_id) so groupTuple can match lanes from the same sample
         .map { meta, bam ->

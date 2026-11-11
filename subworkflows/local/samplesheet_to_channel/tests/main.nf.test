@@ -16,7 +16,7 @@ nextflow_workflow {
                     'sex':'XX', 'status':0, 'lane':'test_L1'],
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true),
-                    [], [], [], [], [], [], [], [], []
+                    [], [], [], [], [], [], [], [], [], [] // spring_1, spring_2, table, cram, crai, bam, bai, contamination, vcf, variantcaller
                 ])
                 input[1] = 'bwa-mem' // aligner
                 input[2] = [] // ascat_alleles
@@ -27,27 +27,31 @@ nextflow_workflow {
                 input[7] = [] // bcftools_annotations_tbi
                 input[8] = [] // bcftools_header_lines
                 input[9] = false // build_only_index
-                input[10] = [] // dbsnp
-                input[11] = [] // fasta
-                input[12] = [] // germline_resource
-                input[13] = [] // intervals
-                input[14] = false // joint_germline
-                input[15] = false // joint_mutect2
-                input[16] = [] // known_indels
-                input[17] = [] // known_snps
-                input[18] = false // no_intervals
-                input[19] = [] // pon
-                input[20] = 'variant' // sentieon_dnascope_emit_mode
-                input[21] = 'variant' // sentieon_haplotyper_emit_mode
-                input[22] = '' // seq_center
-                input[23] = 'ILLUMINA' // seq_platform
-                input[24] = 'baserecalibrator' // skip_tools
-                input[25] = [] // snpeff_cache
-                input[26] = 'WBcel235.99' // snpeff_db
-                input[27] = 'mapping' // step
-                input[28] = 'strelka' // tools
-                input[29] = [] // umi_read_structure
-                input[30] = false // wes
+                input[10] = [] // contamination_resource
+                input[11] = [] // dbsnp
+                input[12] = [] // fasta
+                input[13] = [] // germline_resource
+                input[14] = [] // intervals
+                input[15] = false // joint_germline
+                input[16] = false // joint_mutect2
+                input[17] = [] // known_indels
+                input[18] = [] // known_snps
+                input[19] = false // no_intervals
+                input[20] = [] // pon
+                input[21] = 'variant' // sentieon_dnascope_emit_mode
+                input[22] = 'variant' // sentieon_haplotyper_emit_mode
+                input[23] = '' // seq_center
+                input[24] = 'ILLUMINA' // seq_platform
+                input[25] = 'baserecalibrator' // skip_tools
+                input[26] = [] // snpeff_cache
+                input[27] = 'WBcel235.99' // snpeff_db
+                input[28] = 'mapping' // step
+                input[29] = 'strelka' // tools
+                input[30] = null // umi_length
+                input[31] = null // umi_location
+                input[32] = false // umi_in_read_header
+                input[33] = [] // umi_read_structure
+                input[34] = false // wes
                 """
             }
         }

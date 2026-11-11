@@ -92,13 +92,13 @@
                 "WARN: Failed to render execution timeline -- see the log file for details"
             ],
             [
-                "Duplicate patient-sample-status-lane combination found: Patient 'test2', Sample 'test2', Status '0', Lane 'test_L1' appears 2 times. Please ensure each combination is unique."
+                "Duplicate patient-sample-status-lane combination found: patient 'test2', sample 'test2', status '0', lane 'test_L1' appears 2 times. Please ensure each combination is unique."
             ]
         ],
-        "timestamp": "2026-02-06T13:54:04.695361045",
+        "timestamp": "2026-11-06T16:22:07.708419013",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.3"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
         }
     },
     "-profile test,spark --input tests/csv/3.0/fastq_single.csv --use_gatk_spark baserecalibrator,markduplicates --save_mapped --save_output_as_bam": {

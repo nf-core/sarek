@@ -9,17 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- [#2180](https://github.com/nf-core/sarek/pull/2180) - Add Parabricks MutectCaller (`--tools parabricks_mutectcaller`) as GPU-accelerated somatic variant caller for tumor-only and tumor/normal samples (raw, unfiltered calls)
-- [#2351](https://github.com/nf-core/sarek/pull/2351) - Add `--mosdepth_fast_mode` to control Mosdepth fast mode for whole-genome coverage calculations. Fast mode remains enabled by default.
 - [#2311](https://github.com/nf-core/sarek/pull/2311) - Add VarNet (`--tools varnet`) as somatic SNV and indel caller for tumor-normal pairs and tumor-only samples
 
 ### Changed
 
 ### Fixed
-
-- [#2277](https://github.com/nf-core/sarek/pull/2277) - fix(markduplicates): avoid duplicate alignment emission under -stub
-- [#2347](https://github.com/nf-core/sarek/pull/2347) - Fix DeepSomatic VCF merge failing with `sample entries that don't match the other files` when an interval yields no records (e.g. `*_alt` contigs): pass tumour and normal sample names explicitly, including to `postprocess_variants`, which otherwise writes `default`
-- [#2352](https://github.com/nf-core/sarek/pull/2352) - Sort the `--intervals` BED in reference order with `bedtools sort` before splitting it, fixing out-of-order pileup tables that made `CalculateContamination` fail with `Invalid interval` ([#899](https://github.com/nf-core/sarek/issues/899), [#2281](https://github.com/nf-core/sarek/issues/2281)). Fail early when the BED has contigs missing from the reference, start > end, or intervals past the contig end ([#97](https://github.com/nf-core/sarek/issues/97), [#934](https://github.com/nf-core/sarek/issues/934)). CNVKit target and antitarget BED names now carry the `.sorted` suffix of the sorted intervals file
 
 ### Removed
 
@@ -27,8 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
-| varnet     |             | 1.5.4       |
-| bedtools   | -           | 2.31.1      |
 
 ### Dependencies - plugins
 
@@ -39,7 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Params                 | status |
 | ---------------------- | ------ |
-| `--mosdepth_fast_mode` | Added  |
 | `--varnet_resources`   | Added  |
 
 ### Developer section
@@ -48,11 +39,103 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Changed
 
-- [#2346](https://github.com/nf-core/sarek/pull/2346) - Back to dev (3.11.1dev)
+- [#2399](https://github.com/nf-core/sarek/pull/2399) - Back to dev (3.12.1dev)
+- [#2401](https://github.com/nf-core/sarek/pull/2401) - Template update 4.2.2
 
 #### Fixed
 
 #### Removed
+
+## [3.12.0](https://github.com/nf-core/sarek/releases/tag/3.12.0) - Njoatsosvágge
+
+Njoatsosvágge is a long valley crossing the northern part of Sarek National Park.
+
+### Added
+
+- [#2180](https://github.com/nf-core/sarek/pull/2180) - Add Parabricks MutectCaller (`--tools parabricks_mutectcaller`) as GPU-accelerated somatic variant caller for tumor-only and tumor/normal samples
+- [#2349](https://github.com/nf-core/sarek/pull/2349) - Add GATK filtering after Parabricks MutectCaller: `FilterMutectCalls` with read-orientation priors (`LearnReadOrientationModel`), and with contamination estimation (`GetPileupSummaries`, `CalculateContamination`) and the germline resource passed to the caller when `--germline_resource` is provided
+- [#2351](https://github.com/nf-core/sarek/pull/2351) - Add `--mosdepth_fast_mode` to control Mosdepth fast mode for whole-genome coverage calculations. Fast mode remains enabled by default.
+- [#2365](https://github.com/nf-core/sarek/pull/2365) - Add `--force_call_alleles` and `--force_call_alleles_tbi` to force-call alleles from a VCF with GATK Mutect2 `--alleles` and Parabricks MutectCaller `--mutect-alleles` ([#1883](https://github.com/nf-core/sarek/issues/1883)), based on [#1952](https://github.com/nf-core/sarek/pull/1952) by [@jchchiu](https://github.com/jchchiu)
+- [#2367](https://github.com/nf-core/sarek/pull/2367) - Add `--contamination_resource` and `--contamination_resource_tbi` to give GATK `GetPileupSummaries` a set of common biallelic SNPs instead of `--germline_resource` ([#959](https://github.com/nf-core/sarek/issues/959))
+
+### Changed
+
+- [#2339](https://github.com/nf-core/sarek/pull/2339) - Update `parabricks/applybqsr`, `parabricks/deepsomatic`, `parabricks/deepvariant`, `parabricks/fq2bam` and `parabricks/haplotypecaller` modules to Parabricks 4.8.0
+- [#2349](https://github.com/nf-core/sarek/pull/2349) - Process `MUTECT2_PAIRED` is now `MUTECT2`; custom configs selecting `withName: 'MUTECT2_PAIRED'` need to select `MUTECT2` instead
+
+### Fixed
+
+- [#2322](https://github.com/nf-core/sarek/pull/2322) - Fix validation for step annotate
+- [#2333](https://github.com/nf-core/sarek/pull/2333) - Run `samtools/fixmate` before fgbio `GroupReadsByUmi` for `bwa-mem2`, which does not write the `MQ` tag, fixing fgbio crashes during UMI consensus
+- [#2347](https://github.com/nf-core/sarek/pull/2347) - Fix DeepSomatic VCF merge failing with `sample entries that don't match the other files` when an interval yields no records (e.g. `*_alt` contigs): pass tumor and normal sample names explicitly, including to `postprocess_variants`, which otherwise writes `default`
+- [#2349](https://github.com/nf-core/sarek/pull/2349) - Filter Mutect2 calls with `FilterMutectCalls` also without `--germline_resource` ([#1546](https://github.com/nf-core/sarek/issues/1546)), so downstream files of such runs are now named after `*.mutect2.filtered.vcf.gz`; with `--joint_mutect2`, tumors of one patient with different samplesheet `contamination` values no longer split the patient into several joint calls
+- [#2352](https://github.com/nf-core/sarek/pull/2352) - Sort the `--intervals` BED in reference order with `bedtools sort` before splitting it, fixing out-of-order pileup tables that made `CalculateContamination` fail with `Invalid interval` ([#899](https://github.com/nf-core/sarek/issues/899), [#2281](https://github.com/nf-core/sarek/issues/2281)). Fail early when the BED has contigs missing from the reference, start > end, or intervals past the contig end ([#97](https://github.com/nf-core/sarek/issues/97), [#934](https://github.com/nf-core/sarek/issues/934)). CNVKit target and antitarget BED names now carry the `.sorted` suffix of the sorted intervals file
+- [#2357](https://github.com/nf-core/sarek/pull/2357) - Clarify annotation cache and software version selection, and correct the SnpEff cache directory documentation
+- [#2358](https://github.com/nf-core/sarek/pull/2358) - Pass the Mutect2 and Parabricks MutectCaller stats file to `FilterMutectCalls` with `--stats` ([#2191](https://github.com/nf-core/sarek/issues/2191))
+- [#2359](https://github.com/nf-core/sarek/pull/2359) - Document the `<patient>_<sample>` read group sample name required for BAM/CRAM input to somatic callers ([#1655](https://github.com/nf-core/sarek/issues/1655)) and how to keep the default `ext.args` when adding Mutect2 arguments ([#1455](https://github.com/nf-core/sarek/issues/1455))
+- [#2360](https://github.com/nf-core/sarek/pull/2360) - Point `csv/variantcalled.csv` at the published filtered, normalized, concatenated and Varlociraptor VCFs instead of the `variant_calling/<variantcaller>/` directory ([#2204](https://github.com/nf-core/sarek/issues/2204))
+- [#2363](https://github.com/nf-core/sarek/pull/2363) - Fail when `--no_intervals` is combined with a user-provided `--intervals` file, which it would ignore ([#2131](https://github.com/nf-core/sarek/issues/2131))
+- [#2364](https://github.com/nf-core/sarek/pull/2364) - Restore `--intervals false` to ignore the intervals from `--genome` and generate them from the FASTA reference, which stopped working with nf-schema 2.7.2 and Nextflow 26 passing CLI values as strings
+- [#2370](https://github.com/nf-core/sarek/pull/2370) - Run MSIsensorPro on every tumor/normal pair when `--msisensorpro_scan` is provided, for example by `--genome`; previously only the first pair was analyzed. Publish the MSIsensorPro `_all` and `_unstable` outputs, which the `msisensorpro/msisomatic` module did not capture (module updated with [nf-core/modules#13613](https://github.com/nf-core/modules/pull/13613)) ([#2192](https://github.com/nf-core/sarek/issues/2192)). Correct the MSI documentation: MSIsensor2 runs on tumor-only samples, the MSIsensorPro output directory is `variant_calling/msisensorpro/`, and the reference scan and models are published to `reference/msisensorpro/` and `reference/msisensor2/`
+- [#2386](https://github.com/nf-core/sarek/pull/2386) - Fix `--intervals` BED files with `track`, `browser` or `#` header lines failing the run: `BEDTOOLS_SORT` no longer keeps them with `-header`
+- [#2390](https://github.com/nf-core/sarek/pull/2390) - Remove the per-process `containerOptions` from the Parabricks MutectCaller, HaplotypeCaller and DeepSomatic test config: MutectCaller passed the Docker-only `--gpus all`, which failed the GPU Singularity tests, and the `gpu` profile already sets the engine-specific GPU run options
+- [#2393](https://github.com/nf-core/sarek/pull/2393) - Index and publish the index of the merged somatic TIDDIT VCF (`SVDB_MERGE`), fixing a `Join mismatch` in post-variant-calling for `--tools tiddit` with `--filter_vcfs`, `--normalize_vcfs` or `--concatenate_vcfs`
+- [#2398](https://github.com/nf-core/sarek/pull/2398) - Check `--intervals` against a user-provided `--fasta_fai` before any process runs, so a wrong contig or an interval past the contig end fails the run immediately
+
+### Removed
+
+### Dependencies - modules
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| varnet     |             | 1.5.4       |
+| bedtools   | -           | 2.31.1      |
+| fastqc     | 0.12.1      | 0.13.0      |
+| parabricks | 4.7.1-1     | 4.8.0-1     |
+
+### Dependencies - plugins
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| nft-utils  | 1.0.0       | 1.2.1       |
+
+### Parameters
+
+| Params                         | status |
+| ------------------------------ | ------ |
+| `--contamination_resource`     | Added  |
+| `--contamination_resource_tbi` | Added  |
+| `--force_call_alleles`         | Added  |
+| `--force_call_alleles_tbi`     | Added  |
+| `--mosdepth_fast_mode`         | Added  |
+
+### Developer section
+
+#### Added
+
+#### Changed
+
+- [#2345](https://github.com/nf-core/sarek/pull/2345) - Template update for nf-core/tools v4.2.1
+- [#2346](https://github.com/nf-core/sarek/pull/2346) - Back to dev (3.11.1dev)
+- [#2349](https://github.com/nf-core/sarek/pull/2349) - Mutect2 and Parabricks MutectCaller share one GATK filtering subworkflow (`vcf_variant_filtering_mutect2`), with Parabricks MutectCaller pileups scattered over the intervals; paired and tumor-only Mutect2 calling merged into `bam_variant_calling_mutect2`; `vcf_variant_filtering_gatk` renamed to `vcf_variant_filtering_haplotypecaller`. Published files are unchanged
+- [#2375](https://github.com/nf-core/sarek/pull/2375) - Prepare release 3.12.0
+- [#2378](https://github.com/nf-core/sarek/pull/2378) - `SAMPLESHEET_TO_CHANNEL` builds the duplicate-row check from one ordered field list per step instead of two key shapes and two error messages; the `--step annotate` halt message no longer wrongly mentions `lane`. The Mutect2 and Parabricks MutectCaller resource warnings share one loop, and the warning about filtering without contamination estimation is only shown when neither `--contamination_resource` nor `--germline_resource` is provided
+- [#2379](https://github.com/nf-core/sarek/pull/2379) - `POST_VARIANTCALLING` carries `[meta, vcf, tbi]` internally and splits VCFs and indexes only at `emit:`, so each post-processing step exists once. Published files and `csv/variantcalled.csv` are unchanged
+- [#2383](https://github.com/nf-core/sarek/pull/2383) - `PREPARE_GENOME` checks for Mutect2 and Parabricks MutectCaller once instead of repeating the `--tools` check in four conditions
+- [#2385](https://github.com/nf-core/sarek/pull/2385) - `PREPARE_INTERVALS` checks intervals against contig lengths in a `checkIntervalsWithinContigs()` function instead of inline in a `.map`
+- [#2387](https://github.com/nf-core/sarek/pull/2387) - Simplify the Mutect2 subworkflows: one shared `patientMeta()` for joint calling, joint contamination tables grouped with `groupTuple` as on master, `variantcaller` set inside `VCF_VARIANT_FILTERING_MUTECT2`, scattered outputs branched once, and `contamination_resource_provided` computed once in `main.nf`
+
+#### Fixed
+
+- [#2277](https://github.com/nf-core/sarek/pull/2277) - Fix `BAM_MARKDUPLICATES` emitting each alignment twice under `-stub`, which failed the tumor-normal pairing join ([#2280](https://github.com/nf-core/sarek/issues/2280))
+- [#2371](https://github.com/nf-core/sarek/pull/2371) - Correct the dev CHANGELOG: move refactoring entries to the developer section, move #2339 out of 3.11.0, and complete the dependency and parameter tables
+- [#2372](https://github.com/nf-core/sarek/pull/2372) - Follow up #2333: move its CHANGELOG entry to dev, pass the aligner to `FASTQ_CREATE_UMI_CONSENSUS_FGBIO` as an input, and update the bwa-mem2 UMI snapshots to FastQC 0.13.0
+- [#2373](https://github.com/nf-core/sarek/pull/2373) - Fix consensus VCFs intermittently listed under `variant_calling/normalized/` instead of `variant_calling/consensus/` in `csv/variantcalled.csv`: consensus calls no longer set `variantcaller` on a meta map shared across channels
+- [#2394](https://github.com/nf-core/sarek/pull/2394) - Add the merged somatic TIDDIT index published since #2393 to the `variant_calling_all` test snapshot
+
+#### Removed
+
+- [#2380](https://github.com/nf-core/sarek/pull/2380) - Remove `CLAUDE.md` so Claude Code loads `AGENTS.md` directly
 
 ## [3.11.0](https://github.com/nf-core/sarek/releases/tag/3.11.0) - Guhkesvákkjåhkå
 

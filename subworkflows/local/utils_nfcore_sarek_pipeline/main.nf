@@ -114,6 +114,8 @@ workflow PIPELINE_INITIALISATION {
         params.cf_chrom_len,
         params.chr_dir,
         params.cnvkit_reference,
+        params.contamination_resource,
+        params.contamination_resource_tbi,
         params.dbnsfp,
         params.dbnsfp_tbi,
         params.dbsnp,
@@ -122,6 +124,8 @@ workflow PIPELINE_INITIALISATION {
         params.dragmap,
         params.fasta,
         params.fasta_fai,
+        params.force_call_alleles,
+        params.force_call_alleles_tbi,
         params.germline_resource,
         params.germline_resource_tbi,
         params.input,
@@ -169,10 +173,11 @@ workflow PIPELINE_INITIALISATION {
         params.bcftools_annotations_tbi,
         params.bcftools_header_lines,
         params.build_only_index,
+        params.contamination_resource,
         params.dbsnp,
         params.fasta,
         params.germline_resource,
-        params.intervals,
+        intervalsParam(),
         params.joint_germline,
         params.joint_mutect2,
         params.known_indels,
@@ -228,7 +233,7 @@ workflow PIPELINE_COMPLETION {
                 plaintext_email,
                 outdir,
                 monochrome_logs,
-                multiqc_reports.getVal(),
+                multiqc_reports.isBound() ? multiqc_reports.getVal() : [],
             )
         }
 
@@ -250,6 +255,70 @@ def validateInputParameters() {
     genomeExistsError()
     sparkAndBam()
     parabricksMutectcallerIgnoredParams()
+    noIntervalsWithIntervals()
+    intervalsMatchReference()
+}
+
+// Exit if --no_intervals would ignore a user-provided --intervals file
+def noIntervalsWithIntervals() {
+    // params.intervals is filled from the genome config by default
+    def genome_intervals = params.genomes && params.genome ? params.genomes[params.genome]?.intervals : null
+    if (params.no_intervals && intervalsParam() && params.intervals != genome_intervals) {
+        error("`--intervals ${params.intervals}` and `--no_intervals` cannot be used together: `--no_intervals` would ignore the intervals file. Remove one of them.")
+    }
+}
+
+// Intervals are checked at start-up (before any process runs) only for a user-provided FAI and a BED file,
+// and only for steps that use intervals. Otherwise PREPARE_INTERVALS checks them once the FAI exists.
+def intervalsChecked() {
+    def intervals = intervalsParam()
+    return !!(intervals && !params.no_intervals && params.fasta_fai && intervals.toLowerCase().endsWith('.bed') && !(params.step in ['annotate', 'controlfreec']))
+}
+
+// Fail before any process starts when --intervals does not fit a user-provided FAI
+def intervalsMatchReference() {
+    if (intervalsChecked()) {
+        checkIntervalsWithinContigs(file(intervalsParam()), file(params.fasta_fai))
+    }
+}
+
+// Fail if any BED interval is on a contig missing from the FAI or ends past its contig
+def checkIntervalsWithinContigs(bed, fai) {
+    def contig_length = [:]
+    fai.eachLine { line ->
+        def fields = line.split('\t')
+        contig_length[fields[0]] = fields[1].toLong()
+    }
+    def unknown = [] as Set
+    def past_end = []     // first 3 examples only
+    def past_end_count = 0
+    bed.eachLine { line ->
+        if (line =~ /^(#|track|browser)/ || !line.trim()) return
+        def fields = line.split('\t')
+        if (fields.size() < 3 || !fields[2].isLong()) {
+            error("--intervals: expected tab-separated columns contig, start, end (end must be a number), got: ${line}")
+        }
+        def (contig, start, end) = fields
+        if (!contig_length.containsKey(contig)) {
+            unknown << contig
+        } else if (end.toLong() > contig_length[contig]) {
+            past_end_count += 1
+            if (past_end.size() < 3) {
+                past_end << "${contig}:${start}-${end} (${contig} is ${contig_length[contig]} bp)"
+            }
+        }
+    }
+    if (unknown) {
+        error("--intervals: contig(s) undefined in ${fai.name}: " + unknown.take(3).join(', '))
+    }
+    if (past_end_count) {
+        error("--intervals: ${past_end_count} interval(s) end past their contig in the reference (${fai.name}), for example: " + past_end.join(', '))
+    }
+}
+
+// `--intervals false` skips the genome intervals; Nextflow 26 passes it from the CLI as a string
+def intervalsParam() {
+    return params.intervals in [false, 'false'] ? null : params.intervals
 }
 
 // Exit pipeline if incorrect --genome key provided
@@ -272,7 +341,7 @@ def sparkAndBam() {
     }
 }
 
-// Warn about options that the Parabricks mutectcaller path cannot honour
+// Warn about options that the Parabricks mutectcaller path cannot honor
 def parabricksMutectcallerIgnoredParams() {
     if (params.tools && params.tools.split(',').contains('parabricks_mutectcaller')) {
         if (params.joint_mutect2) {
