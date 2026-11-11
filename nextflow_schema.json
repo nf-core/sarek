@@ -541,6 +541,12 @@
                     "type": "string",
                     "default": "CONSERVATIVE",
                     "help_text": "Option for selecting the PCR indel model used by GATK HaplotypeCaller."
+                },
+                "deepsomatic_ffpe": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-vial",
+                    "description": "Enable when tumor samples are FFPE (DeepSomatic only).",
+                    "help_text": "Selects the FFPE model of DeepSomatic (`FFPE_WGS`, or `FFPE_WES` together with `--wes`). Only used by `--tools deepsomatic`; other callers have no FFPE mode."
                 }
             }
         },
