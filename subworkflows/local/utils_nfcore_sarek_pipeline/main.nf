@@ -290,24 +290,29 @@ def checkIntervalsWithinContigs(bed, fai) {
         contig_length[fields[0]] = fields[1].toLong()
     }
     def unknown = [] as Set
-    def past_end = []
+    def past_end = []     // first 3 examples only
+    def past_end_count = 0
     bed.eachLine { line ->
         if (line =~ /^(#|track|browser)/ || !line.trim()) return
         def fields = line.split('\t')
-        if (fields.size() < 3) {
-            error("--intervals: expected at least 3 tab-separated columns (contig, start, end), got: ${line}")
+        if (fields.size() < 3 || !fields[2].isLong()) {
+            error("--intervals: expected tab-separated columns contig, start, end (end must be a number), got: ${line}")
         }
-        if (!contig_length.containsKey(fields[0])) {
-            unknown << fields[0]
-        } else if (fields[2].toLong() > contig_length[fields[0]]) {
-            past_end << "${fields[0]}:${fields[1]}-${fields[2]} (${fields[0]} is ${contig_length[fields[0]]} bp)"
+        def (contig, start, end) = fields
+        if (!contig_length.containsKey(contig)) {
+            unknown << contig
+        } else if (end.toLong() > contig_length[contig]) {
+            past_end_count++
+            if (past_end.size() < 3) {
+                past_end << "${contig}:${start}-${end} (${contig} is ${contig_length[contig]} bp)"
+            }
         }
     }
     if (unknown) {
         error("--intervals: contig(s) undefined in ${fai.name}: " + unknown.take(3).join(', '))
     }
-    if (past_end) {
-        error("--intervals: ${past_end.size()} interval(s) end past their contig in the reference (${fai.name}), for example: " + past_end.take(3).join(', '))
+    if (past_end_count) {
+        error("--intervals: ${past_end_count} interval(s) end past their contig in the reference (${fai.name}), for example: " + past_end.join(', '))
     }
 }
 
