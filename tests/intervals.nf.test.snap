@@ -22,26 +22,18 @@
     "Fails with profile test --intervals intervals_past_end.bed": {
         "content": [
             [
-                "csv",
-                "multiqc",
-                "multiqc/index.json",
-                "pipeline_info",
-                "reference"
+                "pipeline_info"
             ],
             "No stable content",
             "No BAM files",
             "No CRAM files",
             "No VCF files",
-            [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
-                "WARN: Failed to render execution report -- see the log file for details",
-                "WARN: Failed to render execution timeline -- see the log file for details"
-            ],
+            "No warnings",
             [
                 "--intervals: 1 interval(s) end past their contig in the reference (genome.fasta.fai), for example: chr22:30000-50000 (chr22 is 40001 bp)"
             ]
         ],
-        "timestamp": "2026-10-30T12:40:17.790715484",
+        "timestamp": "2026-11-11T08:53:54.316611969",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -370,24 +362,18 @@
     "Fails with profile test --intervals intervals_wrong_contig.bed": {
         "content": [
             [
-                "csv",
-                "multiqc",
-                "multiqc/index.json",
-                "pipeline_info",
-                "reference"
+                "pipeline_info"
             ],
             "No stable content",
             "No BAM files",
             "No CRAM files",
             "No VCF files",
+            "No warnings",
             [
-                "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
-            ],
-            [
-                "  Chromosome \"1\" undefined in genome.fasta.fai"
+                "--intervals: contig(s) undefined in genome.fasta.fai: 1"
             ]
         ],
-        "timestamp": "2026-10-30T08:36:42.880747927",
+        "timestamp": "2026-11-11T08:05:06.616363903",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -548,6 +534,23 @@
             ]
         ],
         "timestamp": "2026-10-30T12:37:46.201650161",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
+    },
+    "Fails with profile test --intervals intervals_past_end.bed and no fasta_fai": {
+        "content": [
+            "No stable content",
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files",
+            "No warnings",
+            [
+                "--intervals: 1 interval(s) end past their contig in the reference (genome.fasta.fai), for example: chr22:30000-50000 (chr22 is 40001 bp)"
+            ]
+        ],
+        "timestamp": "2026-11-11T09:14:38.116469901",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
