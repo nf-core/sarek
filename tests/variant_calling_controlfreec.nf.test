@@ -20,7 +20,8 @@ nextflow_pipeline {
                 step: "variant_calling",
                 tools: 'controlfreec',
                 wes: true
-            ]
+            ],
+            include_freec_sex: true
         ],
         [
             name: "-profile test --tools controlfreec somatic --nucleotides_per_second 20",
@@ -36,7 +37,8 @@ nextflow_pipeline {
                 step: "variant_calling",
                 tools: 'controlfreec',
                 wes: true
-            ]
+            ],
+            include_freec_sex: true
         ],
         [
             name: "-profile test --tools controlfreec --no_intervals tumoronly",
@@ -51,7 +53,42 @@ nextflow_pipeline {
                 step: "variant_calling",
                 tools: 'controlfreec',
                 wes: true
-            ]
+            ],
+            include_freec_sex: true
+        ],
+        [
+            name: "-profile test --tools controlfreec somatic --cf_omit_sex",
+            params: [
+                cf_omit_sex: true,
+                chr_dir: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz',
+                dbsnp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+                dbsnp_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                step: "variant_calling",
+                tools: 'controlfreec',
+                wes: true
+            ],
+            include_freec_sex: true
+        ],
+        [
+            name: "-profile test --tools controlfreec --no_intervals tumoronly --cf_omit_sex",
+            params: [
+                cf_omit_sex: true,
+                chr_dir: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz',
+                dbsnp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+                dbsnp_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
+                no_intervals: true,
+                step: "variant_calling",
+                tools: 'controlfreec',
+                wes: true
+            ],
+            include_freec_sex: true
         ],
         [
             name: "-profile test --tools controlfreec --no_intervals somatic -stub",
@@ -89,61 +126,5 @@ nextflow_pipeline {
 
     test_scenario.each { scenario ->
         test(scenario.name, UTILS.getTest(scenario))
-    }
-
-    // The published config.txt is in tests/.nftignore, so a snapshot cannot show whether `sex` was passed.
-    // These tests read it directly, for tumor-only (FREEC_TUMORONLY) and tumor/normal (FREEC_SOMATIC):
-    // the samplesheet sex is written by default and left out with --cf_omit_sex.
-    def sex_params = [
-        chr_dir: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz',
-        dbsnp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
-        dbsnp_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
-        fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
-        fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
-        step: "variant_calling",
-        tools: 'controlfreec',
-        wes: true
-    ]
-    // Paired mode runs on intervals, like the somatic scenario above: real FREEC_SOMATIC on this test data
-    // with --no_intervals exits 255 with or without --cf_omit_sex (the suite only runs that combination as a stub).
-    def sex_modes = [
-        [mode: "--no_intervals tumoronly", id: "sample2", params: [
-            input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
-            no_intervals: true]],
-        [mode: "somatic", id: "sample4_vs_sample3", params: [
-            input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
-            intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed']],
-    ]
-
-    sex_modes.collectMany { m -> [
-        m + [name: "-profile test --tools controlfreec ${m.mode} passes the samplesheet sex to Control-FREEC", omit: false],
-        m + [name: "-profile test --tools controlfreec ${m.mode} --cf_omit_sex leaves sex out of the Control-FREEC config", omit: true],
-    ] }.each { sex_test ->
-        test(sex_test.name) {
-            tag "pipeline"
-            tag "pipeline_sarek"
-            tag "cpu_conda"
-
-            options "-output-dir ${outputDir}"
-
-            when {
-                params {
-                    outdir = "${outputDir}"
-                    sex_params.each { key, value -> delegate."$key" = value }
-                    sex_test.params.each { key, value -> delegate."$key" = value }
-                    cf_omit_sex = sex_test.omit
-                }
-            }
-
-            then {
-                assert workflow.success
-                def config = path("${outputDir}/variant_calling/controlfreec/${sex_test.id}/config.txt").text
-                def has_sex = config.readLines().any { it ==~ /^sex\s*=.*/ }
-                assert has_sex == !sex_test.omit
-                if (!sex_test.omit) {
-                    assert config.contains("sex = XX")
-                }
-            }
-        }
     }
 }
