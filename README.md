@@ -164,6 +164,7 @@ We thank the following people for their extensive assistance in the development 
 - [Hongwei Ye](https://github.com/YeHW)
 - [James A. Fellows Yates](https://github.com/jfy133)
 - [Jesper Eisfeldt](https://github.com/J35P312)
+- [João Luiz de Meirelles](https://github.com/Joaodemeirelles)
 - [Johannes Alneberg](https://github.com/alneberg)
 - [Jonas Kjellin](https://github.com/kjellinjonas)
 - [José Fernández Navarro](https://github.com/jfnavarro)
