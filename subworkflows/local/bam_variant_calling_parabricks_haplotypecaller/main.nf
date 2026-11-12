@@ -13,6 +13,7 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER {
     dbsnp_tbi               // channel: [optional]  [] or [ dbsnp.vcf.gz.tbi ]
     intervals               // channel: [mandatory] [ interval.bed, num_intervals ], used to scatter joint genotyping
     intervals_bed_combined  // channel: [optional]  [] or [ intervals.bed ]
+    joint_germline          // boolean: [mandatory] [default: false] write a gVCF for joint germline calling
 
     main:
     // Combine each sample with the (optional) intervals list
@@ -28,8 +29,10 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER {
         }
 
     // pbrun haplotypecaller has no --dbsnp: with --dbsnp it writes a plain VCF, which pbrun dbsnp annotates, bgzips and indexes;
-    // otherwise pbrun haplotypecaller writes the bgzipped, indexed VCF itself
-    PARABRICKS_HAPLOTYPECALLER(cram_intervals, fasta, dbsnp.map { dbsnp_ -> dbsnp_ ? 'vcf' : 'vcf.gz' })
+    // otherwise pbrun haplotypecaller writes the bgzipped, indexed (g)VCF itself
+    out_ext = dbsnp.map { dbsnp_ -> joint_germline ? 'g.vcf.gz' : dbsnp_ ? 'vcf' : 'vcf.gz' }
+
+    PARABRICKS_HAPLOTYPECALLER(cram_intervals, fasta, out_ext)
 
     PARABRICKS_DBSNP(PARABRICKS_HAPLOTYPECALLER.out.vcf.combine(dbsnp).combine(dbsnp_tbi))
 

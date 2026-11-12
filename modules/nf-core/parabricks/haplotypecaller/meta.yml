@@ -49,9 +49,10 @@ input:
   - out_ext:
       type: string
       description: |
-        Extension of the variant file when --gvcf is not set, either `vcf` or `vcf.gz`.
+        Extension of the output variant file: `vcf`, `vcf.gz` or `g.vcf.gz`.
         With `vcf.gz`, pbrun writes a bgzipped VCF and its tabix index.
-        Ignored with --gvcf, which always writes a bgzipped gVCF and its tabix index.
+        With `g.vcf.gz`, the module runs pbrun with --gvcf, which writes a bgzipped gVCF
+        and its tabix index. Do not pass --gvcf in ext.args.
 output:
   vcf:
     - - meta:
@@ -61,8 +62,7 @@ output:
             e.g. [ id:'test' ]
       - ${prefix}.vcf:
           type: file
-          description: variant file. Emitted when out_ext is "vcf"
-            and --gvcf is not set.
+          description: variant file. Emitted when out_ext is "vcf".
           pattern: "*.vcf"
           ontologies: []
   vcf_gz:
@@ -73,8 +73,7 @@ output:
             e.g. [ id:'test' ]
       - ${prefix}.vcf.gz:
           type: file
-          description: bgzipped variant file, written by pbrun when out_ext
-            is "vcf.gz" and --gvcf is not set.
+          description: bgzipped variant file. Emitted when out_ext is "vcf.gz".
           pattern: "*.vcf.gz"
           ontologies:
             - edam: http://edamontology.org/format_3989 # GZIP format
@@ -86,8 +85,8 @@ output:
             e.g. [ id:'test' ]
       - ${prefix}.vcf.gz.tbi:
           type: file
-          description: tabix index of the bgzipped variant file, written by pbrun
-            when out_ext is "vcf.gz" and --gvcf is not set.
+          description: tabix index of the bgzipped variant file. Emitted when
+            out_ext is "vcf.gz".
           pattern: "*.vcf.gz.tbi"
           ontologies: []
   gvcf:
@@ -98,7 +97,7 @@ output:
             e.g. [ id:'test' ]
       - ${prefix}.g.vcf.gz:
           type: file
-          description: genomic variant file, gzipped.
+          description: bgzipped genomic variant file. Emitted when out_ext is "g.vcf.gz".
           pattern: "*.g.vcf.gz"
           ontologies:
             - edam: http://edamontology.org/format_3989 # GZIP format
@@ -110,7 +109,8 @@ output:
             e.g. [ id:'test' ]
       - ${prefix}.g.vcf.gz.tbi:
           type: file
-          description: tabix index of the genomic variant file.
+          description: tabix index of the genomic variant file. Emitted when
+            out_ext is "g.vcf.gz".
           pattern: "*.g.vcf.gz.tbi"
           ontologies: []
   compatible_versions:

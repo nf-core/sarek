@@ -223,7 +223,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             dbsnp,
             dbsnp_tbi,
             intervals,
-            intervals_bed_combined
+            intervals_bed_combined,
+            joint_germline
         )
 
         vcf_parabricks_haplotypecaller      = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.vcf

@@ -1,85 +1,4 @@
 Changes in component 'nf-core/parabricks/haplotypecaller'
-Changes in 'parabricks/haplotypecaller/meta.yml':
---- modules/nf-core/parabricks/haplotypecaller/meta.yml
-+++ modules/nf-core/parabricks/haplotypecaller/meta.yml
-@@ -46,6 +46,12 @@
-         description: reference fasta - must be unzipped.
-         pattern: "*.fasta"
-         ontologies: []
-+  - out_ext:
-+      type: string
-+      description: |
-+        Extension of the variant file when --gvcf is not set, either `vcf` or `vcf.gz`.
-+        With `vcf.gz`, pbrun writes a bgzipped VCF and its tabix index.
-+        Ignored with --gvcf, which always writes a bgzipped gVCF and its tabix index.
- output:
-   vcf:
-     - - meta:
-@@ -53,10 +59,36 @@
-           description: |
-             Groovy Map containing sample information.
-             e.g. [ id:'test' ]
--      - "*.vcf":
-+      - ${prefix}.vcf:
-           type: file
--          description: variant file.
-+          description: variant file. Emitted when out_ext is "vcf"
-+            and --gvcf is not set.
-           pattern: "*.vcf"
-+          ontologies: []
-+  vcf_gz:
-+    - - meta:
-+          type: map
-+          description: |
-+            Groovy Map containing sample information.
-+            e.g. [ id:'test' ]
-+      - ${prefix}.vcf.gz:
-+          type: file
-+          description: bgzipped variant file, written by pbrun when out_ext
-+            is "vcf.gz" and --gvcf is not set.
-+          pattern: "*.vcf.gz"
-+          ontologies:
-+            - edam: http://edamontology.org/format_3989 # GZIP format
-+  vcf_tbi:
-+    - - meta:
-+          type: map
-+          description: |
-+            Groovy Map containing sample information.
-+            e.g. [ id:'test' ]
-+      - ${prefix}.vcf.gz.tbi:
-+          type: file
-+          description: tabix index of the bgzipped variant file, written by pbrun
-+            when out_ext is "vcf.gz" and --gvcf is not set.
-+          pattern: "*.vcf.gz.tbi"
-           ontologies: []
-   gvcf:
-     - - meta:
-@@ -64,12 +96,23 @@
-           description: |
-             Groovy Map containing sample information.
-             e.g. [ id:'test' ]
--      - "*.g.vcf.gz":
-+      - ${prefix}.g.vcf.gz:
-           type: file
-           description: genomic variant file, gzipped.
-           pattern: "*.g.vcf.gz"
-           ontologies:
-             - edam: http://edamontology.org/format_3989 # GZIP format
-+  gvcf_tbi:
-+    - - meta:
-+          type: map
-+          description: |
-+            Groovy Map containing sample information.
-+            e.g. [ id:'test' ]
-+      - ${prefix}.g.vcf.gz.tbi:
-+          type: file
-+          description: tabix index of the genomic variant file.
-+          pattern: "*.g.vcf.gz.tbi"
-+          ontologies: []
-   compatible_versions:
-     - compatible_versions.yml:
-         type: file
-
 Changes in 'parabricks/haplotypecaller/main.nf':
 --- modules/nf-core/parabricks/haplotypecaller/main.nf
 +++ modules/nf-core/parabricks/haplotypecaller/main.nf
@@ -102,7 +21,7 @@ Changes in 'parabricks/haplotypecaller/main.nf':
      tuple val("${task.process}"), val('parabricks'), eval("pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'"), topic: versions, emit: versions_parabricks
  
      when:
-@@ -26,13 +30,14 @@
+@@ -26,19 +30,24 @@
      if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
          exit(1, "Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
      }
@@ -113,33 +32,124 @@ Changes in 'parabricks/haplotypecaller/main.nf':
 -    def intervals_command     = intervals     ? (intervals instanceof List ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : "--interval-file ${intervals}") : ""
 -
 -    def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
-+    if (out_ext !in ['vcf', 'vcf.gz']) {
-+        error("parabricks/haplotypecaller: Invalid out_ext: ${out_ext}. Allowed values are: vcf, vcf.gz")
-+    }
 +    def args              = task.ext.args ?: ''
 +    prefix                = task.ext.prefix ?: "${meta.id}"
-+    def output_file       = args.contains("--gvcf") ? "${prefix}.g.vcf.gz" : "${prefix}.${out_ext}"
++    def gvcf              = out_ext == 'g.vcf.gz' ? "--gvcf" : ''
 +    def intervals_command = intervals ? (intervals instanceof List ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : "--interval-file ${intervals}") : ""
 +    def num_gpus          = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
++    if (out_ext !in ['vcf', 'vcf.gz', 'g.vcf.gz']) {
++        error("parabricks/haplotypecaller: Invalid out_ext: ${out_ext}. Allowed values are: vcf, vcf.gz, g.vcf.gz")
++    }
++    if (args.contains("--gvcf")) {
++        error("parabricks/haplotypecaller: Do not pass --gvcf in ext.args, set out_ext to 'g.vcf.gz' instead")
++    }
      """
      pbrun \\
          haplotypecaller \\
-@@ -46,9 +51,10 @@
+         --ref ${fasta} \\
+         --in-bam ${input} \\
+-        --out-variants ${output_file} \\
++        --out-variants ${prefix}.${out_ext} \\
++        ${gvcf} \\
+         ${intervals_command} \\
+         ${num_gpus} \\
+         --preserve-file-symlinks \\
+@@ -46,9 +55,8 @@
      """
  
      stub:
 -    def args = task.ext.args ?: ''
 -    def prefix = task.ext.prefix ?: "${meta.id}"
 -    def output_cmd = args.contains("--gvcf") ? "echo '' | gzip > ${prefix}.g.vcf.gz" : "touch ${prefix}.vcf"
-+    def args        = task.ext.args ?: ''
-+    prefix          = task.ext.prefix ?: "${meta.id}"
-+    def output_file = args.contains("--gvcf") ? "${prefix}.g.vcf.gz" : "${prefix}.${out_ext}"
-+    def output_cmd  = output_file.endsWith(".gz") ? "echo \"\" | gzip > ${output_file}; touch ${output_file}.tbi" : "touch ${output_file}"
++    prefix         = task.ext.prefix ?: "${meta.id}"
++    def output_cmd = out_ext.endsWith(".gz") ? "echo \"\" | gzip > ${prefix}.${out_ext}; touch ${prefix}.${out_ext}.tbi" : "touch ${prefix}.${out_ext}"
      """
      ${output_cmd}
  
 
-'modules/nf-core/parabricks/haplotypecaller/tests/main.nf.test' is unchanged
-'modules/nf-core/parabricks/haplotypecaller/tests/main.nf.test.snap' is unchanged
-'modules/nf-core/parabricks/haplotypecaller/tests/nextflow.config' is unchanged
+Changes in 'parabricks/haplotypecaller/meta.yml':
+--- modules/nf-core/parabricks/haplotypecaller/meta.yml
++++ modules/nf-core/parabricks/haplotypecaller/meta.yml
+@@ -46,6 +46,13 @@
+         description: reference fasta - must be unzipped.
+         pattern: "*.fasta"
+         ontologies: []
++  - out_ext:
++      type: string
++      description: |
++        Extension of the output variant file: `vcf`, `vcf.gz` or `g.vcf.gz`.
++        With `vcf.gz`, pbrun writes a bgzipped VCF and its tabix index.
++        With `g.vcf.gz`, the module runs pbrun with --gvcf, which writes a bgzipped gVCF
++        and its tabix index. Do not pass --gvcf in ext.args.
+ output:
+   vcf:
+     - - meta:
+@@ -53,10 +60,34 @@
+           description: |
+             Groovy Map containing sample information.
+             e.g. [ id:'test' ]
+-      - "*.vcf":
++      - ${prefix}.vcf:
+           type: file
+-          description: variant file.
++          description: variant file. Emitted when out_ext is "vcf".
+           pattern: "*.vcf"
++          ontologies: []
++  vcf_gz:
++    - - meta:
++          type: map
++          description: |
++            Groovy Map containing sample information.
++            e.g. [ id:'test' ]
++      - ${prefix}.vcf.gz:
++          type: file
++          description: bgzipped variant file. Emitted when out_ext is "vcf.gz".
++          pattern: "*.vcf.gz"
++          ontologies:
++            - edam: http://edamontology.org/format_3989 # GZIP format
++  vcf_tbi:
++    - - meta:
++          type: map
++          description: |
++            Groovy Map containing sample information.
++            e.g. [ id:'test' ]
++      - ${prefix}.vcf.gz.tbi:
++          type: file
++          description: tabix index of the bgzipped variant file. Emitted when
++            out_ext is "vcf.gz".
++          pattern: "*.vcf.gz.tbi"
+           ontologies: []
+   gvcf:
+     - - meta:
+@@ -64,12 +95,24 @@
+           description: |
+             Groovy Map containing sample information.
+             e.g. [ id:'test' ]
+-      - "*.g.vcf.gz":
++      - ${prefix}.g.vcf.gz:
+           type: file
+-          description: genomic variant file, gzipped.
++          description: bgzipped genomic variant file. Emitted when out_ext is "g.vcf.gz".
+           pattern: "*.g.vcf.gz"
+           ontologies:
+             - edam: http://edamontology.org/format_3989 # GZIP format
++  gvcf_tbi:
++    - - meta:
++          type: map
++          description: |
++            Groovy Map containing sample information.
++            e.g. [ id:'test' ]
++      - ${prefix}.g.vcf.gz.tbi:
++          type: file
++          description: tabix index of the genomic variant file. Emitted when
++            out_ext is "g.vcf.gz".
++          pattern: "*.g.vcf.gz.tbi"
++          ontologies: []
+   compatible_versions:
+     - compatible_versions.yml:
+         type: file
+
+'modules/nf-core/parabricks/haplotypecaller/tests/main.nf.test' was removed
+'modules/nf-core/parabricks/haplotypecaller/tests/main.nf.test.snap' was removed
+'modules/nf-core/parabricks/haplotypecaller/tests/nextflow.config' was removed
 ************************************************************

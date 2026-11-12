@@ -30,20 +30,24 @@ process PARABRICKS_HAPLOTYPECALLER {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         exit(1, "Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
-    if (out_ext !in ['vcf', 'vcf.gz']) {
-        error("parabricks/haplotypecaller: Invalid out_ext: ${out_ext}. Allowed values are: vcf, vcf.gz")
-    }
     def args              = task.ext.args ?: ''
     prefix                = task.ext.prefix ?: "${meta.id}"
-    def output_file       = args.contains("--gvcf") ? "${prefix}.g.vcf.gz" : "${prefix}.${out_ext}"
+    def gvcf              = out_ext == 'g.vcf.gz' ? "--gvcf" : ''
     def intervals_command = intervals ? (intervals instanceof List ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : "--interval-file ${intervals}") : ""
     def num_gpus          = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
+    if (out_ext !in ['vcf', 'vcf.gz', 'g.vcf.gz']) {
+        error("parabricks/haplotypecaller: Invalid out_ext: ${out_ext}. Allowed values are: vcf, vcf.gz, g.vcf.gz")
+    }
+    if (args.contains("--gvcf")) {
+        error("parabricks/haplotypecaller: Do not pass --gvcf in ext.args, set out_ext to 'g.vcf.gz' instead")
+    }
     """
     pbrun \\
         haplotypecaller \\
         --ref ${fasta} \\
         --in-bam ${input} \\
-        --out-variants ${output_file} \\
+        --out-variants ${prefix}.${out_ext} \\
+        ${gvcf} \\
         ${intervals_command} \\
         ${num_gpus} \\
         --preserve-file-symlinks \\
@@ -51,10 +55,8 @@ process PARABRICKS_HAPLOTYPECALLER {
     """
 
     stub:
-    def args        = task.ext.args ?: ''
-    prefix          = task.ext.prefix ?: "${meta.id}"
-    def output_file = args.contains("--gvcf") ? "${prefix}.g.vcf.gz" : "${prefix}.${out_ext}"
-    def output_cmd  = output_file.endsWith(".gz") ? "echo \"\" | gzip > ${output_file}; touch ${output_file}.tbi" : "touch ${output_file}"
+    prefix         = task.ext.prefix ?: "${meta.id}"
+    def output_cmd = out_ext.endsWith(".gz") ? "echo \"\" | gzip > ${prefix}.${out_ext}; touch ${prefix}.${out_ext}.tbi" : "touch ${prefix}.${out_ext}"
     """
     ${output_cmd}
 
