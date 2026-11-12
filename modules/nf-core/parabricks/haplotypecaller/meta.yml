@@ -48,6 +48,7 @@ input:
         ontologies: []
   - out_ext:
       type: string
+      enum: ["vcf", "vcf.gz", "g.vcf.gz"]
       description: |
         Extension of the output variant file: `vcf`, `vcf.gz` or `g.vcf.gz`.
         With `vcf.gz`, pbrun writes a bgzipped VCF and its tabix index.

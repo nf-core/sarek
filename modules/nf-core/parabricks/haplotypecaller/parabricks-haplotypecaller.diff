@@ -54,15 +54,22 @@ Changes in 'parabricks/haplotypecaller/main.nf':
          ${intervals_command} \\
          ${num_gpus} \\
          --preserve-file-symlinks \\
-@@ -46,9 +55,8 @@
+@@ -46,9 +55,15 @@
      """
  
      stub:
 -    def args = task.ext.args ?: ''
 -    def prefix = task.ext.prefix ?: "${meta.id}"
 -    def output_cmd = args.contains("--gvcf") ? "echo '' | gzip > ${prefix}.g.vcf.gz" : "touch ${prefix}.vcf"
++    def args       = task.ext.args ?: ''
 +    prefix         = task.ext.prefix ?: "${meta.id}"
 +    def output_cmd = out_ext.endsWith(".gz") ? "echo \"\" | gzip > ${prefix}.${out_ext}; touch ${prefix}.${out_ext}.tbi" : "touch ${prefix}.${out_ext}"
++    if (out_ext !in ['vcf', 'vcf.gz', 'g.vcf.gz']) {
++        error("parabricks/haplotypecaller: Invalid out_ext: ${out_ext}. Allowed values are: vcf, vcf.gz, g.vcf.gz")
++    }
++    if (args.tokenize().contains('--gvcf')) {
++        error("parabricks/haplotypecaller: Do not pass --gvcf in ext.args, set out_ext to 'g.vcf.gz' instead")
++    }
      """
      ${output_cmd}
  
@@ -70,12 +77,13 @@ Changes in 'parabricks/haplotypecaller/main.nf':
 Changes in 'parabricks/haplotypecaller/meta.yml':
 --- modules/nf-core/parabricks/haplotypecaller/meta.yml
 +++ modules/nf-core/parabricks/haplotypecaller/meta.yml
-@@ -46,6 +46,13 @@
+@@ -46,6 +46,14 @@
          description: reference fasta - must be unzipped.
          pattern: "*.fasta"
          ontologies: []
 +  - out_ext:
 +      type: string
++      enum: ["vcf", "vcf.gz", "g.vcf.gz"]
 +      description: |
 +        Extension of the output variant file: `vcf`, `vcf.gz` or `g.vcf.gz`.
 +        With `vcf.gz`, pbrun writes a bgzipped VCF and its tabix index.
@@ -84,7 +92,7 @@ Changes in 'parabricks/haplotypecaller/meta.yml':
  output:
    vcf:
      - - meta:
-@@ -53,10 +60,34 @@
+@@ -53,10 +61,34 @@
            description: |
              Groovy Map containing sample information.
              e.g. [ id:'test' ]
@@ -121,7 +129,7 @@ Changes in 'parabricks/haplotypecaller/meta.yml':
            ontologies: []
    gvcf:
      - - meta:
-@@ -64,12 +95,24 @@
+@@ -64,12 +96,24 @@
            description: |
              Groovy Map containing sample information.
              e.g. [ id:'test' ]

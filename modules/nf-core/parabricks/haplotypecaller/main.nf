@@ -55,8 +55,15 @@ process PARABRICKS_HAPLOTYPECALLER {
     """
 
     stub:
+    def args       = task.ext.args ?: ''
     prefix         = task.ext.prefix ?: "${meta.id}"
     def output_cmd = out_ext.endsWith(".gz") ? "echo \"\" | gzip > ${prefix}.${out_ext}; touch ${prefix}.${out_ext}.tbi" : "touch ${prefix}.${out_ext}"
+    if (out_ext !in ['vcf', 'vcf.gz', 'g.vcf.gz']) {
+        error("parabricks/haplotypecaller: Invalid out_ext: ${out_ext}. Allowed values are: vcf, vcf.gz, g.vcf.gz")
+    }
+    if (args.tokenize().contains('--gvcf')) {
+        error("parabricks/haplotypecaller: Do not pass --gvcf in ext.args, set out_ext to 'g.vcf.gz' instead")
+    }
     """
     ${output_cmd}
 
