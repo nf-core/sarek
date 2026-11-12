@@ -43,10 +43,22 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'test', single_end:false ]`
-      - "*.vcf":
+      - "*.vcf.gz":
           type: file
-          description: VCF file.
-          pattern: "*{.vcf}"
+          description: Annotated, bgzipped VCF file.
+          pattern: "*.vcf.gz"
+          ontologies:
+            - edam: http://edamontology.org/format_3989 # GZIP format
+  tbi:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - "*.vcf.gz.tbi":
+          type: file
+          description: Tabix index of the annotated VCF file.
+          pattern: "*.vcf.gz.tbi"
           ontologies: []
   compatible_versions:
     - compatible_versions.yml:
