@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2391](https://github.com/nf-core/sarek/pull/2391) - Make the `lane` column of the samplesheet optional for samples with a single row (`--step mapping`), based on [#1943](https://github.com/nf-core/sarek/pull/1943) by [@animesh](https://github.com/animesh)
 - [#2408](https://github.com/nf-core/sarek/pull/2408) - Add `--vep_loftee_gerp_bigwig` to supply a GERP BigWig file to the VEP LOFTEE plugin ([#2295](https://github.com/nf-core/sarek/issues/2295)), based on [#2301](https://github.com/nf-core/sarek/pull/2301) by [@Joaodemeirelles](https://github.com/Joaodemeirelles)
+- [#2307](https://github.com/nf-core/sarek/pull/2307) - Add `--references` datasheet input (alternative to iGenomes)
 
 ### Changed
 
@@ -25,14 +26,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies - plugins
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
+| Dependency      | Old version | New version |
+| --------------- | ----------- | ----------- |
+| `nf-core-utils` | 0.4.0       | 0.7.0       |
+| `nf-schema`     | 2.7.2       | 3.0.0       |
 
 ### Parameters
 
-| Params                     | status |
-| -------------------------- | ------ |
-| `--vep_loftee_gerp_bigwig` | Added  |
+| Params                         | status |
+| ------------------------------ | ------ |
+| `--references`                 | Added  |
+| `--references_base_path`       | Added  |
+| `--references_datasheets_path` | Added  |
+| `--vep_loftee_gerp_bigwig`     | Added  |
 
 ### Developer section
 
@@ -147,7 +153,6 @@ Guhkesvákkjåhkå is a big stream in Sarek. You can cross it via suspension bri
 - [#2177](https://github.com/nf-core/sarek/pull/2177) - Add Parabricks DeepVariant (`--tools parabricks_deepvariant`) as GPU-accelerated germline variant caller
 - [#2268](https://github.com/nf-core/sarek/pull/2268) - Add parabricks/applybqsr
 - [#2284](https://github.com/nf-core/sarek/pull/2284) - Add `manifest.diagram` to `nextflow.config`
-- [#2307](https://github.com/nf-core/sarek/pull/2307) - Add `--references` datasheet input (alternative to iGenomes)
 - [#2293](https://github.com/nf-core/sarek/pull/2293) - Add DeepSomatic and Parabricks DeepSomatic as short-read tumour-normal variant callers (`--tools deepsomatic` and `--tools parabricks_deepsomatic`)
 - [#2328](https://github.com/nf-core/sarek/pull/2328) - Add `ascat_penalty` as configurable ASCAT parameter (default 70)
 
