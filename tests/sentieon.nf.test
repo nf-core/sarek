@@ -1,3 +1,5 @@
+def projectDir = new File('.').absolutePath
+
 nextflow_pipeline {
 
     name "Test sentieon"
@@ -9,6 +11,22 @@ nextflow_pipeline {
             params: [
                 aligner: "sentieon-bwamem",
                 tools: ''
+            ],
+            stub: true,
+            sentieon: true
+        ],
+        [
+            name: "-profile test --tools sentieon_dnascope,sentieon_haplotyper --joint_germline -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
+                step: "variant_calling",
+                tools: 'sentieon_dnascope,sentieon_haplotyper',
+                joint_germline: true,
+                sentieon_dnascope_emit_mode: 'gvcf',
+                sentieon_haplotyper_emit_mode: 'gvcf',
+                dbsnp_vqsr: null,
+                known_snps_vqsr: null,
+                known_indels_vqsr: null
             ],
             stub: true,
             sentieon: true

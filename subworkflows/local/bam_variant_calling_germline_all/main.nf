@@ -3,7 +3,8 @@
 //
 
 include { BAM_JOINT_CALLING_GERMLINE_GATK                                                                    } from '../bam_joint_calling_germline_gatk/main'
-include { BAM_JOINT_CALLING_GERMLINE_SENTIEON                                                                } from '../bam_joint_calling_germline_sentieon/main'
+include { BAM_JOINT_CALLING_GERMLINE_SENTIEON as BAM_JOINT_CALLING_GERMLINE_SENTIEON_DNASCOPE              } from '../bam_joint_calling_germline_sentieon/main'
+include { BAM_JOINT_CALLING_GERMLINE_SENTIEON as BAM_JOINT_CALLING_GERMLINE_SENTIEON_HAPLOTYPER            } from '../bam_joint_calling_germline_sentieon/main'
 include { BAM_VARIANT_CALLING_CNVKIT                                                                         } from '../bam_variant_calling_cnvkit/main'
 include { BAM_VARIANT_CALLING_DEEPVARIANT                                                                    } from '../bam_variant_calling_deepvariant/main'
 include { BAM_VARIANT_CALLING_PARABRICKS_DEEPVARIANT                                                         } from '../bam_variant_calling_parabricks_deepvariant/main'
@@ -271,7 +272,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         gvcf_tbi_sentieon_dnascope = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.gvcf_tbi
 
         if (joint_germline) {
-            BAM_JOINT_CALLING_GERMLINE_SENTIEON(
+            BAM_JOINT_CALLING_GERMLINE_SENTIEON_DNASCOPE(
                 BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.genotype_intervals,
                 fasta,
                 fasta_fai,
@@ -287,8 +288,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 known_snps_vqsr,
                 'sentieon_dnascope')
 
-            vcf_sentieon_dnascope = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
-            tbi_sentieon_dnascope = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_index
+            vcf_sentieon_dnascope = BAM_JOINT_CALLING_GERMLINE_SENTIEON_DNASCOPE.out.genotype_vcf
+            tbi_sentieon_dnascope = BAM_JOINT_CALLING_GERMLINE_SENTIEON_DNASCOPE.out.genotype_index
         } else {
             // If single sample track, check if filtering should be done
             if (!skip_tools_list.contains('dnascope_filter')) {
@@ -325,7 +326,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         gvcf_tbi_sentieon_haplotyper = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.gvcf_tbi
 
         if (joint_germline) {
-            BAM_JOINT_CALLING_GERMLINE_SENTIEON(
+            BAM_JOINT_CALLING_GERMLINE_SENTIEON_HAPLOTYPER(
                 BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.genotype_intervals,
                 fasta,
                 fasta_fai,
@@ -341,8 +342,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 known_snps_vqsr,
                 'sentieon_haplotyper')
 
-            vcf_sentieon_haplotyper = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
-            tbi_sentieon_haplotyper = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_index
+            vcf_sentieon_haplotyper = BAM_JOINT_CALLING_GERMLINE_SENTIEON_HAPLOTYPER.out.genotype_vcf
+            tbi_sentieon_haplotyper = BAM_JOINT_CALLING_GERMLINE_SENTIEON_HAPLOTYPER.out.genotype_index
         } else {
 
             // If single sample track, check if filtering should be done
