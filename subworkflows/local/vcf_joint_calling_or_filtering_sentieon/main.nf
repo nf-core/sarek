@@ -47,7 +47,9 @@ workflow VCF_JOINT_CALLING_OR_FILTERING_SENTIEON {
         known_sites_snps,
         known_sites_snps_tbi,
         known_snps_vqsr,
-        variant_caller)
+        variant_caller,
+        // As advised by Don Freed (Sentieon), VQSR is skipped for DnaScope
+        variant_caller == 'sentieon_dnascope')
 
     vcf_tbi_to_filter = vcf.join(tbi, failOnDuplicate: true, failOnMismatch: true).filter { _meta, _vcf, _tbi -> !joint_germline && !skip_filter }
 
@@ -59,12 +61,14 @@ workflow VCF_JOINT_CALLING_OR_FILTERING_SENTIEON {
 
     VCF_VARIANT_FILTERING_HAPLOTYPECALLER(
         vcf_tbi_to_filter.filter { _meta, _vcf, _tbi -> variant_caller == 'sentieon_haplotyper' },
-        fasta.map{ _meta, fasta_ -> [ fasta_ ] },
-        fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] },
-        dict.map{ _meta, dict_ -> [ dict_ ] },
+        fasta,
+        fasta_fai,
+        dict,
         intervals_bed_combined,
-        known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
-        known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
+        known_sites_indels,
+        known_sites_indels_tbi,
+        known_sites_snps,
+        known_sites_snps_tbi)
 
     emit:
     vcf = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf

@@ -28,6 +28,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     resource_snps_tbi
     known_snps_vqsr
     variant_caller       // string: name of the caller that produced the gVCFs
+    skip_vqsr            // boolean: skip variant recalibration
 
     main:
     sentieon_input = input
@@ -49,9 +50,8 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     // Rework meta for variantscalled.csv and annotation tools
     MERGE_GENOTYPEGVCFS(gvcf_to_merge, dict)
 
-    // As advised by Don Freed (Sentieon), VQSR is skipped for DnaScope
     vqsr_input = MERGE_GENOTYPEGVCFS.out.vcf.join(MERGE_GENOTYPEGVCFS.out.tbi, failOnDuplicate: true)
-        .filter { _meta, _vcf, _tbi -> variant_caller != 'sentieon_dnascope' }
+        .filter { _meta, _vcf, _tbi -> !skip_vqsr }
     indels_resource_label = known_indels_vqsr.mix(dbsnp_vqsr).collect()
     snps_resource_label = known_snps_vqsr.mix(dbsnp_vqsr).collect()
 

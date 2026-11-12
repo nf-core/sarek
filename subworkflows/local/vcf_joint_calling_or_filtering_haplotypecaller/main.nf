@@ -49,12 +49,14 @@ workflow VCF_JOINT_CALLING_OR_FILTERING_HAPLOTYPECALLER {
 
     VCF_VARIANT_FILTERING_HAPLOTYPECALLER(
         vcf.join(tbi, failOnDuplicate: true, failOnMismatch: true).filter { _meta, _vcf, _tbi -> !joint_germline && !skip_filter },
-        fasta.map{ _meta, fasta_ -> [ fasta_ ] },
-        fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] },
-        dict.map{ _meta, dict_ -> [ dict_ ] },
+        fasta,
+        fasta_fai,
+        dict,
         intervals_bed_combined,
-        known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
-        known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
+        known_sites_indels,
+        known_sites_indels_tbi,
+        known_sites_snps,
+        known_sites_snps_tbi)
 
     emit:
     vcf = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_vcf
