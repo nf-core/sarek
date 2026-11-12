@@ -256,6 +256,7 @@ def validateInputParameters() {
     sparkAndBam()
     parabricksMutectcallerIgnoredParams()
     noIntervalsWithIntervals()
+    intervalsMatchReference()
 }
 
 // Exit if --no_intervals would ignore a user-provided --intervals file
@@ -264,6 +265,54 @@ def noIntervalsWithIntervals() {
     def genome_intervals = params.genomes && params.genome ? params.genomes[params.genome]?.intervals : null
     if (params.no_intervals && intervalsParam() && params.intervals != genome_intervals) {
         error("`--intervals ${params.intervals}` and `--no_intervals` cannot be used together: `--no_intervals` would ignore the intervals file. Remove one of them.")
+    }
+}
+
+// Intervals are checked at start-up (before any process runs) only for a user-provided FAI and a BED file,
+// and only for steps that use intervals. Otherwise PREPARE_INTERVALS checks them once the FAI exists.
+def intervalsChecked() {
+    def intervals = intervalsParam()
+    return !!(intervals && !params.no_intervals && params.fasta_fai && intervals.toLowerCase().endsWith('.bed') && !(params.step in ['annotate', 'controlfreec']))
+}
+
+// Fail before any process starts when --intervals does not fit a user-provided FAI
+def intervalsMatchReference() {
+    if (intervalsChecked()) {
+        checkIntervalsWithinContigs(file(intervalsParam()), file(params.fasta_fai))
+    }
+}
+
+// Fail if any BED interval is on a contig missing from the FAI or ends past its contig
+def checkIntervalsWithinContigs(bed, fai) {
+    def contig_length = [:]
+    fai.eachLine { line ->
+        def fields = line.split('\t')
+        contig_length[fields[0]] = fields[1].toLong()
+    }
+    def unknown = [] as Set
+    def past_end = []     // first 3 examples only
+    def past_end_count = 0
+    bed.eachLine { line ->
+        if (line =~ /^(#|track|browser)/ || !line.trim()) return
+        def fields = line.split('\t')
+        if (fields.size() < 3 || !fields[2].isLong()) {
+            error("--intervals: expected tab-separated columns contig, start, end (end must be a number), got: ${line}")
+        }
+        def (contig, start, end) = fields
+        if (!contig_length.containsKey(contig)) {
+            unknown << contig
+        } else if (end.toLong() > contig_length[contig]) {
+            past_end_count += 1
+            if (past_end.size() < 3) {
+                past_end << "${contig}:${start}-${end} (${contig} is ${contig_length[contig]} bp)"
+            }
+        }
+    }
+    if (unknown) {
+        error("--intervals: contig(s) undefined in ${fai.name}: " + unknown.take(3).join(', '))
+    }
+    if (past_end_count) {
+        error("--intervals: ${past_end_count} interval(s) end past their contig in the reference (${fai.name}), for example: " + past_end.join(', '))
     }
 }
 

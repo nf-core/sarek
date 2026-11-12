@@ -5,6 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev - unreleased
+
+### Added
+
+- [#2391](https://github.com/nf-core/sarek/pull/2391) - Make the `lane` column of the samplesheet optional for samples with a single row (`--step mapping`), based on [#1943](https://github.com/nf-core/sarek/pull/1943) by [@animesh](https://github.com/animesh)
+
+### Changed
+
+### Fixed
+
+### Removed
+
+### Dependencies - modules
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Dependencies - plugins
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
+| Params | status |
+| ------ | ------ |
+
+### Developer section
+
+#### Added
+
+#### Changed
+
+- [#2399](https://github.com/nf-core/sarek/pull/2399) - Back to dev (3.12.1dev)
+- [#2401](https://github.com/nf-core/sarek/pull/2401) - Template update 4.2.2
+- [#2395](https://github.com/nf-core/sarek/pull/2395) - Run all nf-tests when a `conf/modules/*` config changes, since nf-test cannot link these configs to the pipeline tests that depend on them
+
+#### Fixed
+
+#### Removed
+
 ## [3.12.0](https://github.com/nf-core/sarek/releases/tag/3.12.0) - Njoatsosvágge
 
 Njoatsosvágge is a long valley crossing the northern part of Sarek National Park.
@@ -40,6 +81,8 @@ Njoatsosvágge is a long valley crossing the northern part of Sarek National Par
 - [#2370](https://github.com/nf-core/sarek/pull/2370) - Run MSIsensorPro on every tumor/normal pair when `--msisensorpro_scan` is provided, for example by `--genome`; previously only the first pair was analyzed. Publish the MSIsensorPro `_all` and `_unstable` outputs, which the `msisensorpro/msisomatic` module did not capture (module updated with [nf-core/modules#13613](https://github.com/nf-core/modules/pull/13613)) ([#2192](https://github.com/nf-core/sarek/issues/2192)). Correct the MSI documentation: MSIsensor2 runs on tumor-only samples, the MSIsensorPro output directory is `variant_calling/msisensorpro/`, and the reference scan and models are published to `reference/msisensorpro/` and `reference/msisensor2/`
 - [#2386](https://github.com/nf-core/sarek/pull/2386) - Fix `--intervals` BED files with `track`, `browser` or `#` header lines failing the run: `BEDTOOLS_SORT` no longer keeps them with `-header`
 - [#2390](https://github.com/nf-core/sarek/pull/2390) - Remove the per-process `containerOptions` from the Parabricks MutectCaller, HaplotypeCaller and DeepSomatic test config: MutectCaller passed the Docker-only `--gpus all`, which failed the GPU Singularity tests, and the `gpu` profile already sets the engine-specific GPU run options
+- [#2393](https://github.com/nf-core/sarek/pull/2393) - Index and publish the index of the merged somatic TIDDIT VCF (`SVDB_MERGE`), fixing a `Join mismatch` in post-variant-calling for `--tools tiddit` with `--filter_vcfs`, `--normalize_vcfs` or `--concatenate_vcfs`
+- [#2398](https://github.com/nf-core/sarek/pull/2398) - Check `--intervals` against a user-provided `--fasta_fai` before any process runs, so a wrong contig or an interval past the contig end fails the run immediately
 
 ### Removed
 
@@ -89,6 +132,7 @@ Njoatsosvágge is a long valley crossing the northern part of Sarek National Par
 - [#2371](https://github.com/nf-core/sarek/pull/2371) - Correct the dev CHANGELOG: move refactoring entries to the developer section, move #2339 out of 3.11.0, and complete the dependency and parameter tables
 - [#2372](https://github.com/nf-core/sarek/pull/2372) - Follow up #2333: move its CHANGELOG entry to dev, pass the aligner to `FASTQ_CREATE_UMI_CONSENSUS_FGBIO` as an input, and update the bwa-mem2 UMI snapshots to FastQC 0.13.0
 - [#2373](https://github.com/nf-core/sarek/pull/2373) - Fix consensus VCFs intermittently listed under `variant_calling/normalized/` instead of `variant_calling/consensus/` in `csv/variantcalled.csv`: consensus calls no longer set `variantcaller` on a meta map shared across channels
+- [#2394](https://github.com/nf-core/sarek/pull/2394) - Add the merged somatic TIDDIT index published since #2393 to the `variant_calling_all` test snapshot
 
 #### Removed
 
