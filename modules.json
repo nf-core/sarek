@@ -449,7 +449,7 @@
                     },
                     "parabricks/haplotypecaller": {
                         "branch": "master",
-                        "git_sha": "78522f4889133e32443c76ba9b4703cbdf3ac331",
+                        "git_sha": "b205fddb6874f8bf00c1d9d98246686b7b071e48",
                         "installed_by": ["modules"]
                     },
                     "parabricks/mutectcaller": {
