@@ -38,7 +38,7 @@ process PARABRICKS_HAPLOTYPECALLER {
     if (out_ext !in ['vcf', 'vcf.gz', 'g.vcf.gz']) {
         error("parabricks/haplotypecaller: Invalid out_ext: ${out_ext}. Allowed values are: vcf, vcf.gz, g.vcf.gz")
     }
-    if (args.contains("--gvcf")) {
+    if (args.tokenize().contains('--gvcf')) {
         error("parabricks/haplotypecaller: Do not pass --gvcf in ext.args, set out_ext to 'g.vcf.gz' instead")
     }
     """
