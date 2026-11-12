@@ -1006,7 +1006,7 @@ It also detects subclonal gains and losses and evaluates the most likely average
 **Output directory: `{outdir}/variant_calling/controlfreec/{tumorsample,tumorsample_vs_normalsample}/`**
 
 - `config.txt`
-  - Configuration file used to run Control-FREEC
+  - Configuration file used to run Control-FREEC. It contains the sample `sex` from the samplesheet, unless `--cf_omit_sex` is set (see [usage](../usage#handle-control-freec-error-stdlength_error-cannot-create-stdvector-larger-than-max_size))
 - `<tumorsample>_BAF.png` and `<tumorsample_vs_normalsample>_BAF.png`
   - image of BAF plot
 - `<tumorsample>_ratio.log2.png` and `<tumorsample_vs_normalsample>_ratio.log2.png`

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2391](https://github.com/nf-core/sarek/pull/2391) - Make the `lane` column of the samplesheet optional for samples with a single row (`--step mapping`), based on [#1943](https://github.com/nf-core/sarek/pull/1943) by [@animesh](https://github.com/animesh)
 - [#2408](https://github.com/nf-core/sarek/pull/2408) - Add `--vep_loftee_gerp_bigwig` to supply a GERP BigWig file to the VEP LOFTEE plugin ([#2295](https://github.com/nf-core/sarek/issues/2295)), based on [#2301](https://github.com/nf-core/sarek/pull/2301) by [@Joaodemeirelles](https://github.com/Joaodemeirelles)
+- [#2389](https://github.com/nf-core/sarek/pull/2389) - Add `--cf_omit_sex` to leave the `sex` line out of the Control-FREEC config. Control-FREEC 11.6b can abort with `std::length_error` on some tumor-only WES samples when `sex` and `minimalSubclonePresence` are both set ([#1376](https://github.com/nf-core/sarek/issues/1376)); omitting `sex` avoids it. With it set, the samplesheet `sex` is no longer required for Control-FREEC. Default `false`, so results are unchanged
 
 ### Changed
 
