@@ -540,7 +540,7 @@
                 "gatk_pcr_indel_model": {
                     "type": "string",
                     "default": "CONSERVATIVE",
-                    "help_text": "Option for selecting the PCR indel model used by GATK HaplotypeCaller."
+                    "help_text": "Option for selecting the PCR indel model used by GATK HaplotypeCaller. It is also used by Parabricks HaplotypeCaller."
                 }
             }
         },
