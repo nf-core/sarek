@@ -42,7 +42,7 @@ Changes in 'parabricks/dbsnp/main.nf':
      def prefix = task.ext.prefix ?: "${meta.id}"
      """
 -    touch ${prefix}.vcf
-+    echo '' | gzip > ${prefix}.vcf.gz
++    echo "" | gzip > ${prefix}.vcf.gz
 +    touch ${prefix}.vcf.gz.tbi
  
      # Capture the full version output once and store it in a variable
