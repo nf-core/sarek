@@ -748,7 +748,7 @@ Sarek can be started at different points in the analysis by setting the paramete
 | [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                                                      |  x  |  x  |   x   |    x     |     x      |           x            |
 | [Varlociraptor](https://varlociraptor.github.io/landing/)                                                                           |  x  |  x  |   x   |    x     |     x      |           x            |
 
-## How to leave the sample sex out of Control-FREEC
+## Handle Control-FREEC error `std::length_error: cannot create std::vector larger than max_size()`
 
 By default, Control-FREEC receives the `sex` of each sample from the samplesheet and writes it as `sex = XX` or `sex = XY` in its `config.txt`.
 This applies to both modes: tumor-only samples (`FREEC_TUMORONLY`) and tumor/normal pairs (`FREEC_SOMATIC`).
