@@ -29,9 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params                 | status |
-| ---------------------- | ------ |
-| `--varnet_resources`   | Added  |
+| Params               | status |
+| -------------------- | ------ |
+| `--varnet_resources` | Added  |
 
 ### Developer section
 
