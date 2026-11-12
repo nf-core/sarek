@@ -4,8 +4,6 @@
 process PARABRICKS_DBSNP {
     tag "${meta.id}"
     label 'process_high'
-    // needed by the module to work properly can be removed when fixed upstream - see: https://github.com/nf-core/modules/issues/7226
-    stageInMode 'copy'
 
     container "nvcr.io/nvidia/clara/clara-parabricks:4.8.0-1"
 
@@ -33,6 +31,7 @@ process PARABRICKS_DBSNP {
         --in-vcf ${vcf_file} \\
         --in-dbsnp-file ${dbsnp_file} \\
         --out-vcf ${prefix}.vcf \\
+        --preserve-file-symlinks \\
         ${args}
     """
 

@@ -428,7 +428,7 @@
                     },
                     "parabricks/dbsnp": {
                         "branch": "master",
-                        "git_sha": "7b3452a23773f687ededb4befd037920e5a51341",
+                        "git_sha": "b205fddb6874f8bf00c1d9d98246686b7b071e48",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/parabricks/dbsnp/parabricks-dbsnp.diff"
                     },

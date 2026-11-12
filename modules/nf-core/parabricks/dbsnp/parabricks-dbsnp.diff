@@ -1,4 +1,5 @@
 Changes in component 'nf-core/parabricks/dbsnp'
+'modules/nf-core/parabricks/dbsnp/meta.yml' is unchanged
 Changes in 'parabricks/dbsnp/main.nf':
 --- modules/nf-core/parabricks/dbsnp/main.nf
 +++ modules/nf-core/parabricks/dbsnp/main.nf
@@ -7,10 +8,10 @@ Changes in 'parabricks/dbsnp/main.nf':
      tag "${meta.id}"
      label 'process_high'
 -    label 'process_gpu'
-     // needed by the module to work properly can be removed when fixed upstream - see: https://github.com/nf-core/modules/issues/7226
-     stageInMode 'copy'
  
-@@ -28,14 +27,12 @@
+     container "nvcr.io/nvidia/clara/clara-parabricks:4.8.0-1"
+ 
+@@ -26,14 +25,12 @@
      }
      def args = task.ext.args ?: ''
      def prefix = task.ext.prefix ?: "${meta.id}"
@@ -22,11 +23,10 @@ Changes in 'parabricks/dbsnp/main.nf':
          --in-dbsnp-file ${dbsnp_file} \\
          --out-vcf ${prefix}.vcf \\
 -        ${num_gpus} \\
+         --preserve-file-symlinks \\
          ${args}
      """
- 
 
-'modules/nf-core/parabricks/dbsnp/meta.yml' is unchanged
 'modules/nf-core/parabricks/dbsnp/tests/main.nf.test' is unchanged
 'modules/nf-core/parabricks/dbsnp/tests/main.nf.test.snap' is unchanged
 ************************************************************
