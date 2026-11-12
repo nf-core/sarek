@@ -52,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2395](https://github.com/nf-core/sarek/pull/2395) - Run all nf-tests when a `conf/modules/*` config changes, since nf-test cannot link these configs to the pipeline tests that depend on them
 - [#2417](https://github.com/nf-core/sarek/pull/2417) - Sentieon DnaScope and Haplotyper share `vcf_joint_calling_or_filtering_sentieon` (joint germline calling with Sentieon tools, or single-sample filtering); `bam_joint_calling_germline_sentieon` gates VQSR with a filter instead of if/else
 - [#2420](https://github.com/nf-core/sarek/pull/2420) - Use `=` instead of `.tap{}` for channel assignment in `samplesheet_to_channel`, and document `=` over `.set{}`/`.tap{}` in `CONTRIBUTING.md`
-- [#PRNUM](https://github.com/nf-core/sarek/pull/PRNUM) - Remove the `--tools`/`--skip_tools` based `ext.when` gates from `conf/modules/*.config`: the decision is now taken in the workflow code (subworkflows get `tools`/`skip_tools` via `take:`, cache downloads are selected in `main.nf`)
+- [#2410](https://github.com/nf-core/sarek/pull/2410) - Remove the `--tools`/`--skip_tools` based `ext.when` gates from `conf/modules/*.config`: the decision is now taken in the workflow code (subworkflows get `tools`/`skip_tools` via `take:`, cache downloads are selected in `main.nf`)
 
 #### Fixed
 
