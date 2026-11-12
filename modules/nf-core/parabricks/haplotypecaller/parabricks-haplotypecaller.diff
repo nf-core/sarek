@@ -1,0 +1,57 @@
+Changes in component 'nf-core/parabricks/haplotypecaller'
+'modules/nf-core/parabricks/haplotypecaller/meta.yml' is unchanged
+Changes in 'parabricks/haplotypecaller/main.nf':
+--- modules/nf-core/parabricks/haplotypecaller/main.nf
++++ modules/nf-core/parabricks/haplotypecaller/main.nf
+@@ -13,9 +13,12 @@
+     tuple val(ref_meta), path(fasta)
+ 
+     output:
+-    tuple val(meta), path("*.vcf"),      emit: vcf,                 optional: true
+-    tuple val(meta), path("*.g.vcf.gz"), emit: gvcf,                optional: true
+-    path "compatible_versions.yml",      emit: compatible_versions, optional: true
++    tuple val(meta), path("*.vcf"),                emit: vcf,                 optional: true
++    tuple val(meta), path("${prefix}.vcf.gz"),     emit: vcf_gz,              optional: true
++    tuple val(meta), path("${prefix}.vcf.gz.tbi"), emit: vcf_tbi,             optional: true
++    tuple val(meta), path("*.g.vcf.gz"),           emit: gvcf,                optional: true
++    tuple val(meta), path("*.g.vcf.gz.tbi"),       emit: gvcf_tbi,            optional: true
++    path "compatible_versions.yml",                emit: compatible_versions, optional: true
+     tuple val("${task.process}"), val('parabricks'), eval("pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'"), topic: versions, emit: versions_parabricks
+ 
+     when:
+@@ -26,10 +29,12 @@
+     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+         exit(1, "Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
+     }
+-    def args   = task.ext.args ?: ''
+-    def prefix = task.ext.prefix ?: "${meta.id}"
++    def args      = task.ext.args ?: ''
++    prefix        = task.ext.prefix ?: "${meta.id}"
++    // pbrun bgzips and indexes the output itself when it ends in .gz
++    def extension = task.ext.suffix ?: "vcf"
+ 
+-    def output_file           = args.contains("--gvcf") ? "${prefix}.g.vcf.gz" : "${prefix}.vcf"
++    def output_file           = args.contains("--gvcf") ? "${prefix}.g.vcf.gz" : "${prefix}.${extension}"
+     def intervals_command     = intervals     ? (intervals instanceof List ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : "--interval-file ${intervals}") : ""
+ 
+     def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
+@@ -46,9 +51,11 @@
+     """
+ 
+     stub:
+-    def args = task.ext.args ?: ''
+-    def prefix = task.ext.prefix ?: "${meta.id}"
+-    def output_cmd = args.contains("--gvcf") ? "echo '' | gzip > ${prefix}.g.vcf.gz" : "touch ${prefix}.vcf"
++    def args      = task.ext.args ?: ''
++    prefix        = task.ext.prefix ?: "${meta.id}"
++    def extension = task.ext.suffix ?: "vcf"
++    def output_file = args.contains("--gvcf") ? "${prefix}.g.vcf.gz" : "${prefix}.${extension}"
++    def output_cmd  = output_file.endsWith(".gz") ? "echo '' | gzip > ${output_file}; touch ${output_file}.tbi" : "touch ${output_file}"
+     """
+     ${output_cmd}
+ 
+
+'modules/nf-core/parabricks/haplotypecaller/tests/main.nf.test' is unchanged
+'modules/nf-core/parabricks/haplotypecaller/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/parabricks/haplotypecaller/tests/nextflow.config' is unchanged
+************************************************************

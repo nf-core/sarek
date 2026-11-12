@@ -450,7 +450,8 @@
                     "parabricks/haplotypecaller": {
                         "branch": "master",
                         "git_sha": "b205fddb6874f8bf00c1d9d98246686b7b071e48",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/parabricks/haplotypecaller/parabricks-haplotypecaller.diff"
                     },
                     "parabricks/mutectcaller": {
                         "branch": "master",

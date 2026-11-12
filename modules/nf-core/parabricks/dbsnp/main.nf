@@ -11,7 +11,8 @@ process PARABRICKS_DBSNP {
     tuple val(meta), path(vcf_file), path(dbsnp_file), path(tabix_file)
 
     output:
-    tuple val(meta), path("*.vcf"), emit: vcf
+    tuple val(meta), path("*.vcf.gz"),     emit: vcf
+    tuple val(meta), path("*.vcf.gz.tbi"), emit: tbi
     path "compatible_versions.yml", emit: compatible_versions, optional: true
     tuple val("${task.process}"), val('parabricks'), eval("pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'"), topic: versions, emit: versions_parabricks
 
@@ -30,7 +31,7 @@ process PARABRICKS_DBSNP {
         dbsnp \\
         --in-vcf ${vcf_file} \\
         --in-dbsnp-file ${dbsnp_file} \\
-        --out-vcf ${prefix}.vcf \\
+        --out-vcf ${prefix}.vcf.gz \\
         --preserve-file-symlinks \\
         ${args}
     """
@@ -38,7 +39,8 @@ process PARABRICKS_DBSNP {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}.vcf
+    echo '' | gzip > ${prefix}.vcf.gz
+    touch ${prefix}.vcf.gz.tbi
 
     # Capture the full version output once and store it in a variable
     pbrun_version_output=\$(pbrun dbsnp --version 2>&1)

@@ -21,7 +21,7 @@
     },
     "-profile test --tools parabricks_haplotypecaller --skip_tools parabricks_haplotypecaller_filter -stub": {
         "content": [
-            14,
+            13,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -50,10 +50,6 @@
                     "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "TABIX_BGZIPTABIX_VCF": {
                     "htslib": "1.24",
                     "xz": "5.8.3"
                 },
@@ -177,7 +173,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-11-05T07:42:03.186317794",
+        "timestamp": "2026-11-12T12:02:41.499251604",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -185,7 +181,7 @@
     },
     "-profile test --tools parabricks_haplotypecaller,haplotypecaller --joint_germline -stub": {
         "content": [
-            39,
+            37,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": "1.23.1"
@@ -226,10 +222,6 @@
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
-                },
-                "TABIX_BGZIPTABIX_GVCF": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "htslib": "1.24",
@@ -468,7 +460,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-11-05T07:45:10.707753185",
+        "timestamp": "2026-11-12T12:07:11.539795329",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -476,7 +468,7 @@
     },
     "-profile test,gpu --tools parabricks_haplotypecaller --joint_germline": {
         "content": [
-            25,
+            23,
             {
                 "BCFTOOLS_SORT": {
                     "bcftools": "1.23.1"
@@ -508,10 +500,6 @@
                 },
                 "SAMTOOLS_STATS": {
                     "samtools": "1.24"
-                },
-                "TABIX_BGZIPTABIX_GVCF": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
                     "htslib": "1.24",
@@ -708,7 +696,7 @@
                 "WARN: If GATK's or Parabricks' Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
             ]
         ],
-        "timestamp": "2026-11-05T07:43:41.906212975",
+        "timestamp": "2026-11-12T12:04:24.783275163",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -716,7 +704,7 @@
     },
     "-profile test --tools parabricks_haplotypecaller --no_intervals -stub": {
         "content": [
-            13,
+            12,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -741,10 +729,6 @@
                     "samtools": "1.24"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "TABIX_BGZIPTABIX_VCF": {
                     "htslib": "1.24",
                     "xz": "5.8.3"
                 },
@@ -871,7 +855,7 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
-        "timestamp": "2026-10-29T16:49:12.89651309",
+        "timestamp": "2026-11-12T12:01:22.705245705",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
@@ -879,7 +863,7 @@
     },
     "-profile test,gpu --tools parabricks_haplotypecaller": {
         "content": [
-            16,
+            15,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": "1.23.1"
@@ -914,10 +898,6 @@
                     "xz": "5.8.3"
                 },
                 "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
-                    "htslib": "1.24",
-                    "xz": "5.8.3"
-                },
-                "TABIX_BGZIPTABIX_VCF": {
                     "htslib": "1.24",
                     "xz": "5.8.3"
                 },
@@ -1080,7 +1060,7 @@
             ],
             "No warnings"
         ],
-        "timestamp": "2026-11-05T07:40:04.217223662",
+        "timestamp": "2026-11-12T11:59:26.393560778",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
