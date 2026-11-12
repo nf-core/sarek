@@ -326,7 +326,6 @@ ch_multiqc_files = ch_multiqc_files.mix(TOOL_A.out.report)
 
 - Use 4-space indentation
 - Put channel operations on separate lines for readability
-- Assign channels with `=` (`ch_out = ch_in.map { ... }`), not `.set { ch_out }` or `.tap { ch_out }`
 - Add comments for complex logic
 - Use descriptive variable names
 
