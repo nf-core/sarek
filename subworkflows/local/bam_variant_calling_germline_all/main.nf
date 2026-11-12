@@ -232,8 +232,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         gvcf_tbi_parabricks_haplotypecaller = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.gvcf_tbi
 
         // Joint calling only gets gVCFs with --joint_germline, single-sample VCFs are only filtered without it
-        def parabricks_filter = !joint_germline && !skip_tools_list.contains('parabricks_haplotypecaller_filter')
-
         BAM_JOINT_CALLING_GERMLINE_PARABRICKS_HAPLOTYPECALLER(
             BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.gvcf_tbi_intervals.filter { _meta, _gvcf, _gvcf_tbi, _intervals -> joint_germline },
             fasta,
@@ -253,7 +251,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         PARABRICKS_HAPLOTYPECALLER_VCF_VARIANT_FILTERING_HAPLOTYPECALLER(
             vcf_parabricks_haplotypecaller
                 .join(tbi_parabricks_haplotypecaller, failOnDuplicate: true, failOnMismatch: true)
-                .filter { _meta, _vcf, _tbi -> parabricks_filter },
+                .filter { _meta, _vcf, _tbi -> !joint_germline && !skip_tools_list.contains('parabricks_haplotypecaller_filter') },
             fasta.map{ _meta, fasta_ -> [ fasta_ ] },
             fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] },
             dict.map{ _meta, dict_ -> [ dict_ ] },
@@ -263,10 +261,10 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         vcf_parabricks_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_PARABRICKS_HAPLOTYPECALLER.out.genotype_vcf
             .mix(PARABRICKS_HAPLOTYPECALLER_VCF_VARIANT_FILTERING_HAPLOTYPECALLER.out.filtered_vcf)
-            .mix(vcf_parabricks_haplotypecaller.filter { _meta, _vcf -> !joint_germline && !parabricks_filter })
+            .mix(vcf_parabricks_haplotypecaller.filter { _meta, _vcf -> !joint_germline && skip_tools_list.contains('parabricks_haplotypecaller_filter') })
         tbi_parabricks_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_PARABRICKS_HAPLOTYPECALLER.out.genotype_index
             .mix(PARABRICKS_HAPLOTYPECALLER_VCF_VARIANT_FILTERING_HAPLOTYPECALLER.out.filtered_tbi)
-            .mix(tbi_parabricks_haplotypecaller.filter { _meta, _tbi -> !joint_germline && !parabricks_filter })
+            .mix(tbi_parabricks_haplotypecaller.filter { _meta, _tbi -> !joint_germline && skip_tools_list.contains('parabricks_haplotypecaller_filter') })
     }
 
     // MANTA
