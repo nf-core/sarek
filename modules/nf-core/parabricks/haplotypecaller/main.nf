@@ -14,12 +14,12 @@ process PARABRICKS_HAPLOTYPECALLER {
     val out_ext
 
     output:
-    tuple val(meta), path("*.vcf"),                emit: vcf,                 optional: true
-    tuple val(meta), path("${prefix}.vcf.gz"),     emit: vcf_gz,              optional: true
-    tuple val(meta), path("${prefix}.vcf.gz.tbi"), emit: vcf_tbi,             optional: true
-    tuple val(meta), path("*.g.vcf.gz"),           emit: gvcf,                optional: true
-    tuple val(meta), path("*.g.vcf.gz.tbi"),       emit: gvcf_tbi,            optional: true
-    path "compatible_versions.yml",                emit: compatible_versions, optional: true
+    tuple val(meta), path("${prefix}.vcf"),          emit: vcf,                 optional: true
+    tuple val(meta), path("${prefix}.vcf.gz"),       emit: vcf_gz,              optional: true
+    tuple val(meta), path("${prefix}.vcf.gz.tbi"),   emit: vcf_tbi,             optional: true
+    tuple val(meta), path("${prefix}.g.vcf.gz"),     emit: gvcf,                optional: true
+    tuple val(meta), path("${prefix}.g.vcf.gz.tbi"), emit: gvcf_tbi,            optional: true
+    path "compatible_versions.yml",                  emit: compatible_versions, optional: true
     tuple val("${task.process}"), val('parabricks'), eval("pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'"), topic: versions, emit: versions_parabricks
 
     when:

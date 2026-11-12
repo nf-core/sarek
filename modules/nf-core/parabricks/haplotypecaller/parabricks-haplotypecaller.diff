@@ -15,9 +15,12 @@ Changes in 'parabricks/haplotypecaller/meta.yml':
  output:
    vcf:
      - - meta:
-@@ -55,8 +61,34 @@
+@@ -53,10 +59,36 @@
+           description: |
+             Groovy Map containing sample information.
              e.g. [ id:'test' ]
-       - "*.vcf":
+-      - "*.vcf":
++      - ${prefix}.vcf:
            type: file
 -          description: variant file.
 +          description: variant file. Emitted when out_ext is "vcf"
@@ -51,7 +54,14 @@ Changes in 'parabricks/haplotypecaller/meta.yml':
            ontologies: []
    gvcf:
      - - meta:
-@@ -70,6 +102,17 @@
+@@ -64,12 +96,23 @@
+           description: |
+             Groovy Map containing sample information.
+             e.g. [ id:'test' ]
+-      - "*.g.vcf.gz":
++      - ${prefix}.g.vcf.gz:
+           type: file
+           description: genomic variant file, gzipped.
            pattern: "*.g.vcf.gz"
            ontologies:
              - edam: http://edamontology.org/format_3989 # GZIP format
@@ -61,7 +71,7 @@ Changes in 'parabricks/haplotypecaller/meta.yml':
 +          description: |
 +            Groovy Map containing sample information.
 +            e.g. [ id:'test' ]
-+      - "*.g.vcf.gz.tbi":
++      - ${prefix}.g.vcf.gz.tbi:
 +          type: file
 +          description: tabix index of the genomic variant file.
 +          pattern: "*.g.vcf.gz.tbi"
@@ -83,12 +93,12 @@ Changes in 'parabricks/haplotypecaller/main.nf':
 -    tuple val(meta), path("*.vcf"),      emit: vcf,                 optional: true
 -    tuple val(meta), path("*.g.vcf.gz"), emit: gvcf,                optional: true
 -    path "compatible_versions.yml",      emit: compatible_versions, optional: true
-+    tuple val(meta), path("*.vcf"),                emit: vcf,                 optional: true
-+    tuple val(meta), path("${prefix}.vcf.gz"),     emit: vcf_gz,              optional: true
-+    tuple val(meta), path("${prefix}.vcf.gz.tbi"), emit: vcf_tbi,             optional: true
-+    tuple val(meta), path("*.g.vcf.gz"),           emit: gvcf,                optional: true
-+    tuple val(meta), path("*.g.vcf.gz.tbi"),       emit: gvcf_tbi,            optional: true
-+    path "compatible_versions.yml",                emit: compatible_versions, optional: true
++    tuple val(meta), path("${prefix}.vcf"),          emit: vcf,                 optional: true
++    tuple val(meta), path("${prefix}.vcf.gz"),       emit: vcf_gz,              optional: true
++    tuple val(meta), path("${prefix}.vcf.gz.tbi"),   emit: vcf_tbi,             optional: true
++    tuple val(meta), path("${prefix}.g.vcf.gz"),     emit: gvcf,                optional: true
++    tuple val(meta), path("${prefix}.g.vcf.gz.tbi"), emit: gvcf_tbi,            optional: true
++    path "compatible_versions.yml",                  emit: compatible_versions, optional: true
      tuple val("${task.process}"), val('parabricks'), eval("pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'"), topic: versions, emit: versions_parabricks
  
      when:

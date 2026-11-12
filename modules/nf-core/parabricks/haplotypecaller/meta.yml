@@ -59,7 +59,7 @@ output:
           description: |
             Groovy Map containing sample information.
             e.g. [ id:'test' ]
-      - "*.vcf":
+      - ${prefix}.vcf:
           type: file
           description: variant file. Emitted when out_ext is "vcf"
             and --gvcf is not set.
@@ -96,7 +96,7 @@ output:
           description: |
             Groovy Map containing sample information.
             e.g. [ id:'test' ]
-      - "*.g.vcf.gz":
+      - ${prefix}.g.vcf.gz:
           type: file
           description: genomic variant file, gzipped.
           pattern: "*.g.vcf.gz"
@@ -108,7 +108,7 @@ output:
           description: |
             Groovy Map containing sample information.
             e.g. [ id:'test' ]
-      - "*.g.vcf.gz.tbi":
+      - ${prefix}.g.vcf.gz.tbi:
           type: file
           description: tabix index of the genomic variant file.
           pattern: "*.g.vcf.gz.tbi"
