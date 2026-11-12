@@ -30,8 +30,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params | status |
-| ------ | ------ |
+| Params                     | status |
+| -------------------------- | ------ |
+| `--vep_loftee_gerp_bigwig` | Added  |
 
 ### Developer section
 

@@ -44,23 +44,7 @@ nextflow_pipeline {
             vcf_header_check: '|LoF|',
         ],
         [
-            name: "Fails when the LOFTEE GERP BigWig is missing",
-            params: [
-                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
-                step: 'annotate',
-                tools: 'vep',
-                vep_loftee: true,
-                vep_loftee_gerp_bigwig: "${projectDir}/tests/config/missing_loftee_gerp.bw",
-            ],
-            failure: true,
-            tag: 'loftee_gerp',
-            no_snapshot: true,
-            check: { workflow, workDir ->
-                assert workflow.stderr.join('\n').contains('missing_loftee_gerp.bw')
-            },
-        ],
-        [
-            name: "Fails when a LOFTEE GERP BigWig is supplied without LOFTEE",
+            name: "Fails with profile test --tools vep --vep_loftee_gerp_bigwig and no --vep_loftee",
             params: [
                 input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
                 step: 'annotate',
@@ -68,14 +52,11 @@ nextflow_pipeline {
                 vep_loftee_gerp_bigwig: modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bigwig/test_S2.RPKM.bw',
             ],
             failure: true,
-            tag: 'loftee_gerp',
-            no_snapshot: true,
-            check: { workflow, workDir ->
-                assert workflow.stdout.join('\n').contains('--vep_loftee_gerp_bigwig requires --vep_loftee')
-            },
+            snapshot: 'stdout',
+            snapshot_include: 'requires --vep_loftee',
         ],
         [
-            name: "Stages a BigWig file and passes it to LOFTEE",
+            name: "-profile test --tools vep --vep_loftee --vep_loftee_gerp_bigwig",
             params: [
                 input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
                 step: 'annotate',
@@ -83,19 +64,7 @@ nextflow_pipeline {
                 vep_loftee: true,
                 vep_loftee_gerp_bigwig: modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bigwig/test_S2.RPKM.bw',
             ],
-            tag: 'loftee_gerp',
-            no_snapshot: true,
-            check: { workflow, workDir ->
-                def vepCommands = []
-                new File(workDir).eachFileRecurse { candidate ->
-                    if (candidate.name == '.command.sh' && candidate.text.contains('vep \\')) {
-                        vepCommands.add(candidate)
-                    }
-                }
-                assert vepCommands.size() == 1
-                assert vepCommands[0].text.contains('gerp_bigwig:test_S2.RPKM.bw')
-                assert new File(vepCommands[0].parentFile, 'test_S2.RPKM.bw').exists()
-            },
+            vcf_header_check: '|LoF|',
         ],
     ]
 

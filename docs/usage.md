@@ -1388,11 +1388,7 @@ For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/
 
 Enable with `--vep_loftee`.
 
-For GRCh38, `--vep_loftee_gerp_bigwig` can provide the GERP BigWig file used by LOFTEE. This parameter requires `--vep_loftee`. Sarek stages the file with the VEP inputs and passes it to the plugin. If this parameter is omitted, Sarek retains its existing LOFTEE invocation.
-
-```bash
-nextflow run nf-core/sarek --step annotate --tools vep --vep_loftee --vep_loftee_gerp_bigwig /path/to/gerp_conservation_scores.homo_sapiens.GRCh38.bw --input samplesheet.csv --outdir results
-```
+For GRCh38, use `--vep_loftee_gerp_bigwig` to provide the GERP BigWig file to LOFTEE (requires `--vep_loftee`).
 
 For more details, see [here](https://github.com/konradjk/loftee).
 
