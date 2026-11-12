@@ -750,9 +750,6 @@ Sarek can be started at different points in the analysis by setting the paramete
 
 ## Handle Control-FREEC error `std::length_error: cannot create std::vector larger than max_size()`
 
-By default, Control-FREEC receives the `sex` of each sample from the samplesheet and writes it as `sex = XX` or `sex = XY` in its `config.txt`.
-This applies to both modes: tumor-only samples (`FREEC_TUMORONLY`) and tumor/normal pairs (`FREEC_SOMATIC`).
-
 Control-FREEC 11.6b can abort with `std::length_error: cannot create std::vector larger than max_size()` on some tumor-only WES samples when `sex` and `minimalSubclonePresence` are both set ([#1376](https://github.com/nf-core/sarek/issues/1376)).
 Removing either setting avoids the crash.
 To leave `sex` out of the Control-FREEC configuration, use `--cf_omit_sex`:
