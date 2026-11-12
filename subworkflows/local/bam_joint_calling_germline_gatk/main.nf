@@ -123,18 +123,15 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     merge_vcf_for_join = MERGE_GENOTYPEGVCFS.out.vcf.map{_meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
     merge_tbi_for_join = MERGE_GENOTYPEGVCFS.out.tbi.map{_meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
 
-    // Remap for both to have the same key, if ApplyBQSR is not run, the channel is empty --> populate with empty elements
-    vqsr_vcf_for_join = GATK4_APPLYVQSR_INDEL.out.vcf.ifEmpty([[:], []]).map{_meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
-    vqsr_tbi_for_join = GATK4_APPLYVQSR_INDEL.out.tbi.ifEmpty([[:], []]).map{_meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
+    // Remap for both to have the same key; if VQSR is not run, join(remainder: true) below keeps the merged VCF alone
+    vqsr_vcf_for_join = GATK4_APPLYVQSR_INDEL.out.vcf.map{_meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
+    vqsr_tbi_for_join = GATK4_APPLYVQSR_INDEL.out.tbi.map{_meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
 
     // Join on metamap
     // If both --> meta, vcf_merged, vcf_bqsr
-    // If not VQSR --> meta, vcf_merged, []
+    // If not VQSR --> meta, vcf_merged, null
     // if the second is empty, use the first
-    genotype_vcf = merge_vcf_for_join.join(vqsr_vcf_for_join, remainder: true)
-        // Without input, ifEmpty above still emits a placeholder: drop it so callers get an empty channel
-        .filter { _meta, joint_vcf, _recal_vcf -> joint_vcf }
-        .map{
+    genotype_vcf = merge_vcf_for_join.join(vqsr_vcf_for_join, remainder: true).map{
         _meta, joint_vcf, recal_vcf ->
 
         def vcf_out = recal_vcf ?: joint_vcf
@@ -142,10 +139,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         [[id:"joint_variant_calling", patient:"all_samples", variantcaller:variant_caller], vcf_out]
     }
 
-    genotype_index = merge_tbi_for_join.join(vqsr_tbi_for_join, remainder: true)
-        // Without input, ifEmpty above still emits a placeholder: drop it so callers get an empty channel
-        .filter { _meta, joint_tbi, _recal_tbi -> joint_tbi }
-        .map{
+    genotype_index = merge_tbi_for_join.join(vqsr_tbi_for_join, remainder: true).map{
         _meta, joint_tbi, recal_tbi ->
 
         def tbi_out = recal_tbi ?: joint_tbi
