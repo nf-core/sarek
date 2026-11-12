@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#2416](https://github.com/nf-core/sarek/pull/2416) - Without `--dbsnp`, `--known_indels` or `--known_snps`, single-sample VCFs from GATK HaplotypeCaller, Parabricks HaplotypeCaller and Sentieon Haplotyper are passed on unfiltered instead of being dropped from annotation and QC
+- [#2417](https://github.com/nf-core/sarek/pull/2417) - `--tools sentieon_dnascope,sentieon_haplotyper --joint_germline` no longer fails at start-up, and the two joint VCFs are published to their own caller's folder instead of overwriting each other in `sentieon_dnascope`
 
 ### Removed
 
@@ -45,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2399](https://github.com/nf-core/sarek/pull/2399) - Back to dev (3.12.1dev)
 - [#2401](https://github.com/nf-core/sarek/pull/2401) - Template update 4.2.2
 - [#2395](https://github.com/nf-core/sarek/pull/2395) - Run all nf-tests when a `conf/modules/*` config changes, since nf-test cannot link these configs to the pipeline tests that depend on them
+- [#2417](https://github.com/nf-core/sarek/pull/2417) - Sentieon DnaScope and Haplotyper share `vcf_joint_calling_or_filtering_sentieon` (joint germline calling with Sentieon tools, or single-sample filtering); `bam_joint_calling_germline_sentieon` gates VQSR with a filter instead of if/else
 
 #### Fixed
 
