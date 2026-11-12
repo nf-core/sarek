@@ -1186,7 +1186,7 @@
                     "format": "directory-path",
                     "fa_icon": "fas fa-folder-open",
                     "description": "Path to the folder with the VarNet germline resources.",
-                    "help_text": "Required to run VarNet on tumor-only samples. The folder holds the GRCh38 dbSNP, gnomAD and panel of normals files from https://doi.org/10.6084/m9.figshare.34420128, which `varnet-download-resources` also downloads."
+                    "help_text": "Used by VarNet on tumor-only samples. The folder holds the GRCh38 dbSNP, gnomAD and panel of normals files from https://doi.org/10.6084/m9.figshare.34420128.\n\n> **NB** If none provided, the resources (3.9 GB) will be downloaded automatically when VarNet runs on tumor-only samples. Combine with `--save_reference` to save them for future runs."
                 },
                 "snpeff_cache": {
                     "type": "string",

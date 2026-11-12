@@ -628,12 +628,17 @@
                     },
                     "varnet/filter": {
                         "branch": "master",
-                        "git_sha": "8bc51f2971a284eba5629c9e7c53474933a339aa",
+                        "git_sha": "5b9979df06d76ad512a133aca995138ab8c2eb75",
+                        "installed_by": ["modules"]
+                    },
+                    "varnet/getref": {
+                        "branch": "master",
+                        "git_sha": "5b9979df06d76ad512a133aca995138ab8c2eb75",
                         "installed_by": ["modules"]
                     },
                     "varnet/predict": {
                         "branch": "master",
-                        "git_sha": "8bc51f2971a284eba5629c9e7c53474933a339aa",
+                        "git_sha": "5b9979df06d76ad512a133aca995138ab8c2eb75",
                         "installed_by": ["modules"]
                     },
                     "vcflib/vcffilter": {

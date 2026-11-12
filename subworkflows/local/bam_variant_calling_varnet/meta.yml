@@ -36,11 +36,24 @@ input:
         Channel with the target regions as a single BED file, or an empty list for none
         Structure: [ path(bed) ]
       pattern: "*.bed"
-  - resources:
-      type: directory
+  - dbsnp:
+      type: file
       description: |
-        Channel with the folder of tumor-only germline resources, or an empty list for tumor-normal pairs
-        Structure: path(resources)
+        Channel with the common dbSNP sites for tumor-only germline filtering, or an empty list for tumor-normal pairs
+        Structure: [ val(meta), path(dbsnp) ]
+      pattern: "*.npz"
+  - gnomad:
+      type: file
+      description: |
+        Channel with the gnomAD variants for tumor-only germline filtering, or an empty list for tumor-normal pairs
+        Structure: [ val(meta), path(gnomad) ]
+      pattern: "*.npz"
+  - pon:
+      type: file
+      description: |
+        Channel with the panel of normals for tumor-only calling, or an empty list for tumor-normal pairs
+        Structure: [ val(meta), path(pon) ]
+      pattern: "*.vcf.gz"
 output:
   - vcf:
       type: file

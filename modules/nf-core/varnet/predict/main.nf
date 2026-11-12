@@ -6,9 +6,9 @@ process VARNET_PREDICT {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/varnet:1.5.4--pyhdfd78af_0':
-        'quay.io/biocontainers/varnet:1.5.4--pyhdfd78af_0' }"
+    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
+        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/95/952c5ca190b3f0c8937f0b71bd43cc3741eb3065705dc253bd669ea18bc0b91d/data'
+        : 'community.wave.seqera.io/library/varnet:1.5.4--fbf7cf960ce9c736'}"
 
     input:
     tuple val(meta), path(input_tumor), path(index_tumor), path(input_normal), path(index_normal), path(candidates, stageAs: 'candidates')

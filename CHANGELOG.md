@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- [#2311](https://github.com/nf-core/sarek/pull/2311) - Add VarNet (`--tools varnet`) as somatic SNV and indel caller for tumor-normal pairs and tumor-only samples
+- [#2311](https://github.com/nf-core/sarek/pull/2311) - Add VarNet (`--tools varnet`) as somatic SNV and indel caller for tumor-normal pairs and tumor-only samples, downloading the tumor-only resources when `--varnet_resources` is not set
 
 ### Changed
 

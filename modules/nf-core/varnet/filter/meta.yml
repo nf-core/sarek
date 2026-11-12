@@ -1,6 +1,5 @@
 name: "varnet_filter"
-description: Finds candidate somatic variants in a tumor/normal pair. This is the first
-  of VarNet's two stages; the candidates it emits are scored by varnet/predict.
+description: Finds candidate somatic variants in a tumor/normal pair. This is the first of VarNet's two stages; the candidates it emits are scored by varnet/predict.
 keywords:
   - variant calling
   - machine learning
@@ -82,10 +81,7 @@ input:
           Groovy Map containing resource information
     - dbsnp:
         type: file
-        description: VarNet-T common dbSNP build 156 positions (GRCh38),
-          GrCh38-dbSNP-build-156-common-variants-0-indexed-CHROMPOS.npz from
-          https://doi.org/10.6084/m9.figshare.34420128. Required when no normal BAM
-          is given, otherwise optional.
+        description: VarNet-T common dbSNP build 156 positions (GRCh38), GrCh38-dbSNP-build-156-common-variants-0-indexed-CHROMPOS.npz from https://doi.org/10.6084/m9.figshare.34420128. Required when no normal BAM is given, otherwise optional.
         pattern: "*.npz"
   - - meta6:
         type: map
@@ -93,10 +89,7 @@ input:
           Groovy Map containing resource information
     - gnomad:
         type: file
-        description: VarNet-T gnomAD v4.1 genomes and exomes variants (GRCh38),
-          combined_gnomAD_v4.1_genomes_exomes_dict.hg38.chunks.npz from
-          https://doi.org/10.6084/m9.figshare.34420128. Required when no normal BAM
-          is given, otherwise optional.
+        description: VarNet-T gnomAD v4.1 genomes and exomes variants (GRCh38), combined_gnomAD_v4.1_genomes_exomes_dict.hg38.chunks.npz from https://doi.org/10.6084/m9.figshare.34420128. Required when no normal BAM is given, otherwise optional.
         pattern: "*.npz"
 output:
   candidates:
@@ -107,8 +100,7 @@ output:
             e.g. `[ id:'sample1', single_end:false ]`
       - ${prefix}/candidates:
           type: directory
-          description: Directory of candidate variant positions, holding snvs/Positions.csv
-            and indels/Positions.csv. Pass this to varnet/predict.
+          description: Directory of candidate variant positions, holding snvs/Positions.csv and indels/Positions.csv. Pass this to varnet/predict.
 
   versions_varnet:
     - - ${task.process}:
@@ -135,3 +127,17 @@ authors:
   - "@kiranchari"
 maintainers:
   - "@kiranchari"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/varnet:1.5.4--fbf7cf960ce9c736
+      build_id: bd-fbf7cf960ce9c736_1
+      scan_id: sc-6cf3f4e8aa119882_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/varnet:1.5.4--53912a00be292d5e
+      build_id: bd-53912a00be292d5e_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/95/952c5ca190b3f0c8937f0b71bd43cc3741eb3065705dc253bd669ea18bc0b91d/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/varnet/filter/.conda-lock/linux_amd64-bd-fbf7cf960ce9c736_1.txt

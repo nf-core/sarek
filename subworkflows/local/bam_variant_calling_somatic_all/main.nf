@@ -343,7 +343,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         fasta,
         fasta_fai,
         intervals_bed_combined,
-        channel.value([]),
+        channel.value([[id: 'varnet_resources'], []]),
+        channel.value([[id: 'varnet_resources'], []]),
+        channel.value([[id: 'varnet_resources'], []]),
     )
 
     vcf_varnet = BAM_VARIANT_CALLING_VARNET.out.vcf

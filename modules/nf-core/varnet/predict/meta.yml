@@ -1,7 +1,5 @@
 name: "varnet_predict"
-description: Scores candidate somatic variants with VarNet's neural network and writes
-  a VCF. This is the second of VarNet's two stages; it consumes the candidates emitted
-  by varnet/filter.
+description: Scores candidate somatic variants with VarNet's neural network and writes a VCF. This is the second of VarNet's two stages; it consumes the candidates emitted by varnet/filter.
 keywords:
   - variant calling
   - machine learning
@@ -49,8 +47,7 @@ input:
           - edam: http://edamontology.org/format_3327 # BAI
     - candidates:
         type: directory
-        description: Candidates directory emitted by varnet/filter, holding snvs/Positions.csv
-          and indels/Positions.csv
+        description: Candidates directory emitted by varnet/filter, holding snvs/Positions.csv and indels/Positions.csv
   - - meta2:
         type: map
         description: |
@@ -77,10 +74,7 @@ input:
           Groovy Map containing resource information
     - pon:
         type: file
-        description: Panel of normals used by VarNet-T (GRCh38), 1000g_pon.hg38.vcf.gz
-          from https://doi.org/10.6084/m9.figshare.34420128 (the GATK best-practices
-          1000 Genomes panel of normals). Required when no normal BAM is given, otherwise
-          optional.
+        description: Panel of normals used by VarNet-T (GRCh38), 1000g_pon.hg38.vcf.gz from https://doi.org/10.6084/m9.figshare.34420128 (the GATK best-practices 1000 Genomes panel of normals). Required when no normal BAM is given, otherwise optional.
         pattern: "*.vcf.gz"
         ontologies:
           - edam: http://edamontology.org/format_3016 # VCF
@@ -107,8 +101,7 @@ output:
             e.g. `[ id:'sample1', single_end:false ]`
       - ${prefix}/predictions:
           type: directory
-          description: Directory of per-variant model predictions, holding snvs/Predictions.csv
-            and indels/Predictions.csv
+          description: Directory of per-variant model predictions, holding snvs/Predictions.csv and indels/Predictions.csv
 
   versions_varnet:
     - - ${task.process}:
@@ -135,3 +128,17 @@ authors:
   - "@kiranchari"
 maintainers:
   - "@kiranchari"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/varnet:1.5.4--fbf7cf960ce9c736
+      build_id: bd-fbf7cf960ce9c736_1
+      scan_id: sc-6cf3f4e8aa119882_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/varnet:1.5.4--53912a00be292d5e
+      build_id: bd-53912a00be292d5e_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/95/952c5ca190b3f0c8937f0b71bd43cc3741eb3065705dc253bd669ea18bc0b91d/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/varnet/predict/.conda-lock/linux_amd64-bd-fbf7cf960ce9c736_1.txt

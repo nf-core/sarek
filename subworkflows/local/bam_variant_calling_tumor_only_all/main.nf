@@ -15,6 +15,7 @@ include { BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ                  } from '../bam_
 include { BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER            } from '../bam_variant_calling_parabricks_mutectcaller'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE                 } from '../bam_variant_calling_tumor_only_tnscope'
 include { MSISENSOR2_MSI                                         } from '../../../modules/nf-core/msisensor2/msi'
+include { VARNET_GETREF                                          } from '../../../modules/nf-core/varnet/getref'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
@@ -43,7 +44,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     msisensor2_models
     panel_of_normals              // channel: [optional]  panel_of_normals
     panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
-    varnet_resources              // channel: [optional]  folder with the VarNet germline resources
+    varnet_resources              // channel: [optional]  folder with the VarNet germline resources, downloaded if not set
     joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
     wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
     contamination_resource_provided // boolean: [mandatory] whether a contamination resource was provided
@@ -247,12 +248,38 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         .filter { _meta, _bam, _bai -> tools && tools.split(',').contains('varnet') }
         .map { meta_, bam_, bai -> [meta_, [], [], bam_, bai] }
 
+    // download the germline resources once if --varnet_resources is not set and VarNet runs on tumor-only samples
+    VARNET_GETREF(
+        varnet_resources
+            .filter { dir -> !dir }
+            .combine(bam_varnet.first())
+            .map { _resources_and_bam -> [id: 'varnet_resources'] }
+    )
+
+    varnet_dbsnp = varnet_resources
+        .filter { dir -> dir }
+        .map { dir -> [[id: 'varnet_resources'], file("${dir}/GrCh38-dbSNP-build-156-common-variants-0-indexed-CHROMPOS.npz", checkIfExists: true)] }
+        .mix(VARNET_GETREF.out.dbsnp)
+        .first()
+    varnet_gnomad = varnet_resources
+        .filter { dir -> dir }
+        .map { dir -> [[id: 'varnet_resources'], file("${dir}/combined_gnomAD_v4.1_genomes_exomes_dict.hg38.chunks.npz", checkIfExists: true)] }
+        .mix(VARNET_GETREF.out.gnomad)
+        .first()
+    varnet_pon = varnet_resources
+        .filter { dir -> dir }
+        .map { dir -> [[id: 'varnet_resources'], file("${dir}/1000g_pon.hg38.vcf.gz", checkIfExists: true)] }
+        .mix(VARNET_GETREF.out.pon)
+        .first()
+
     BAM_VARIANT_CALLING_VARNET(
         bam_varnet,
         fasta,
         fasta_fai,
         intervals_bed_combined,
-        varnet_resources,
+        varnet_dbsnp,
+        varnet_gnomad,
+        varnet_pon,
     )
 
     vcf_varnet = BAM_VARIANT_CALLING_VARNET.out.vcf

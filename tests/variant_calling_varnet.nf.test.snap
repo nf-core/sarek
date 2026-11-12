@@ -1017,5 +1017,189 @@
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
+    },
+    "-profile test --tools varnet --input recalibrated_tumoronly.csv --save_reference -stub": {
+        "content": [
+            17,
+            {
+                "BCFTOOLS_STATS": {
+                    "bcftools": "1.23.1"
+                },
+                "BEDTOOLS_SORT": {
+                    "bedtools": "2.31.1"
+                },
+                "CRAM_TO_BAM": {
+                    "samtools": "1.24"
+                },
+                "CREATE_INTERVALS_BED": {
+                    "gawk": "5.3.0"
+                },
+                "GATK4_CREATESEQUENCEDICTIONARY": {
+                    "gatk4": "4.7.0.0"
+                },
+                "MOSDEPTH": {
+                    "gzip": "1.14",
+                    "mosdepth": "0.3.14"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": "1.24"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_COMBINED": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_BGZIPTABIX_INTERVAL_SPLIT": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "TABIX_VARNET": {
+                    "htslib": "1.24",
+                    "xz": "5.8.3"
+                },
+                "VARNET_FILTER": {
+                    "varnet": "1.5.4"
+                },
+                "VARNET_GETREF": {
+                    "varnet": "1.5.4"
+                },
+                "VARNET_PREDICT": {
+                    "varnet": "1.5.4"
+                },
+                "VCFTOOLS_SUMMARY": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.17"
+                },
+                "VCFTOOLS_TSTV_QUAL": {
+                    "vcftools": "0.1.17"
+                }
+            },
+            [
+                "csv",
+                "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/index.json",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/.stub",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/.stub",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/dict",
+                "reference/dict/genome.dict",
+                "reference/intervals",
+                "reference/intervals/multi_intervals.bed.gz",
+                "reference/intervals/multi_intervals.sorted.bed",
+                "reference/intervals/multi_intervals.sorted.stub.bed",
+                "reference/intervals/multi_intervals.sorted.stub.bed.gz",
+                "reference/varnet",
+                "reference/varnet/1000g_pon.hg38.vcf.gz",
+                "reference/varnet/GrCh38-dbSNP-build-156-common-variants-0-indexed-CHROMPOS.npz",
+                "reference/varnet/combined_gnomAD_v4.1_genomes_exomes_dict.hg38.chunks.npz",
+                "reports",
+                "reports/bcftools",
+                "reports/bcftools/varnet",
+                "reports/bcftools/varnet/sample2",
+                "reports/bcftools/varnet/sample2/sample2.varnet.bcftools_stats.txt",
+                "reports/mosdepth",
+                "reports/mosdepth/sample2",
+                "reports/mosdepth/sample2/sample2.recal.global.dist.txt",
+                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample2/sample2.recal.per-base.d4",
+                "reports/mosdepth/sample2/sample2.recal.quantized.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.quantized.bed.gz.csi",
+                "reports/mosdepth/sample2/sample2.recal.region.dist.txt",
+                "reports/mosdepth/sample2/sample2.recal.regions.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.regions.bed.gz.csi",
+                "reports/mosdepth/sample2/sample2.recal.summary.txt",
+                "reports/mosdepth/sample2/sample2.recal.thresholds.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.thresholds.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample2",
+                "reports/samtools/sample2/sample2.recal.cram.stats",
+                "reports/vcftools",
+                "reports/vcftools/varnet",
+                "reports/vcftools/varnet/sample2",
+                "reports/vcftools/varnet/sample2/sample2.varnet.012",
+                "reports/vcftools/varnet/sample2/sample2.varnet.012.indv",
+                "reports/vcftools/varnet/sample2/sample2.varnet.012.pos",
+                "reports/vcftools/varnet/sample2/sample2.varnet.BEAGLE.GL",
+                "reports/vcftools/varnet/sample2/sample2.varnet.BEAGLE.PL",
+                "reports/vcftools/varnet/sample2/sample2.varnet.FILTER.summary",
+                "reports/vcftools/varnet/sample2/sample2.varnet.FORMAT",
+                "reports/vcftools/varnet/sample2/sample2.varnet.INFO",
+                "reports/vcftools/varnet/sample2/sample2.varnet.LROH",
+                "reports/vcftools/varnet/sample2/sample2.varnet.Tajima.D",
+                "reports/vcftools/varnet/sample2/sample2.varnet.TsTv",
+                "reports/vcftools/varnet/sample2/sample2.varnet.TsTv.count",
+                "reports/vcftools/varnet/sample2/sample2.varnet.TsTv.qual",
+                "reports/vcftools/varnet/sample2/sample2.varnet.TsTv.summary",
+                "reports/vcftools/varnet/sample2/sample2.varnet.bcf",
+                "reports/vcftools/varnet/sample2/sample2.varnet.diff.discordance.matrix",
+                "reports/vcftools/varnet/sample2/sample2.varnet.diff.indv",
+                "reports/vcftools/varnet/sample2/sample2.varnet.diff.indv_in_files",
+                "reports/vcftools/varnet/sample2/sample2.varnet.diff.sites",
+                "reports/vcftools/varnet/sample2/sample2.varnet.diff.sites_in_files",
+                "reports/vcftools/varnet/sample2/sample2.varnet.diff.switch",
+                "reports/vcftools/varnet/sample2/sample2.varnet.frq",
+                "reports/vcftools/varnet/sample2/sample2.varnet.frq.count",
+                "reports/vcftools/varnet/sample2/sample2.varnet.gdepth",
+                "reports/vcftools/varnet/sample2/sample2.varnet.geno.chisq",
+                "reports/vcftools/varnet/sample2/sample2.varnet.geno.ld",
+                "reports/vcftools/varnet/sample2/sample2.varnet.hap.ld",
+                "reports/vcftools/varnet/sample2/sample2.varnet.hapcount",
+                "reports/vcftools/varnet/sample2/sample2.varnet.het",
+                "reports/vcftools/varnet/sample2/sample2.varnet.hwe",
+                "reports/vcftools/varnet/sample2/sample2.varnet.idepth",
+                "reports/vcftools/varnet/sample2/sample2.varnet.ifreqburden",
+                "reports/vcftools/varnet/sample2/sample2.varnet.imiss",
+                "reports/vcftools/varnet/sample2/sample2.varnet.impute.hap",
+                "reports/vcftools/varnet/sample2/sample2.varnet.impute.hap.indv",
+                "reports/vcftools/varnet/sample2/sample2.varnet.impute.hap.legend",
+                "reports/vcftools/varnet/sample2/sample2.varnet.indel.hist",
+                "reports/vcftools/varnet/sample2/sample2.varnet.interchrom.geno.ld",
+                "reports/vcftools/varnet/sample2/sample2.varnet.interchrom.hap.ld",
+                "reports/vcftools/varnet/sample2/sample2.varnet.kept.sites",
+                "reports/vcftools/varnet/sample2/sample2.varnet.ldepth",
+                "reports/vcftools/varnet/sample2/sample2.varnet.ldepth.mean",
+                "reports/vcftools/varnet/sample2/sample2.varnet.ldhat.locs",
+                "reports/vcftools/varnet/sample2/sample2.varnet.ldhat.sites",
+                "reports/vcftools/varnet/sample2/sample2.varnet.list.geno.ld",
+                "reports/vcftools/varnet/sample2/sample2.varnet.list.hap.ld",
+                "reports/vcftools/varnet/sample2/sample2.varnet.lmiss",
+                "reports/vcftools/varnet/sample2/sample2.varnet.lqual",
+                "reports/vcftools/varnet/sample2/sample2.varnet.map",
+                "reports/vcftools/varnet/sample2/sample2.varnet.mendel",
+                "reports/vcftools/varnet/sample2/sample2.varnet.ped",
+                "reports/vcftools/varnet/sample2/sample2.varnet.relatedness",
+                "reports/vcftools/varnet/sample2/sample2.varnet.relatedness2",
+                "reports/vcftools/varnet/sample2/sample2.varnet.removed.sites",
+                "reports/vcftools/varnet/sample2/sample2.varnet.singletons",
+                "reports/vcftools/varnet/sample2/sample2.varnet.sites.pi",
+                "reports/vcftools/varnet/sample2/sample2.varnet.snpden",
+                "reports/vcftools/varnet/sample2/sample2.varnet.tfam",
+                "reports/vcftools/varnet/sample2/sample2.varnet.tped",
+                "reports/vcftools/varnet/sample2/sample2.varnet.vcf",
+                "reports/vcftools/varnet/sample2/sample2.varnet.weir.fst",
+                "reports/vcftools/varnet/sample2/sample2.varnet.windowed.pi",
+                "variant_calling",
+                "variant_calling/varnet",
+                "variant_calling/varnet/sample2",
+                "variant_calling/varnet/sample2/sample2.varnet.vcf.gz",
+                "variant_calling/varnet/sample2/sample2.varnet.vcf.gz.tbi"
+            ],
+            [
+                "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
+            ]
+        ],
+        "timestamp": "2026-11-12T12:04:54.606388963",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

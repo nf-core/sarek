@@ -739,19 +739,21 @@ Sarek can be started at different points in the analysis by setting the paramete
 
 ## How to run VarNet on tumor-only samples?
 
-VarNet needs germline filtering resources to call tumor-only samples. Tumor-normal pairs do not use them. The resources take 3.9 GB and are available for GRCh38 only. Download them from [figshare](https://doi.org/10.6084/m9.figshare.34420128) or with `varnet-download-resources`, then pass the folder with `--varnet_resources`:
+VarNet needs germline filtering resources to call tumor-only samples. Tumor-normal pairs do not use them. The resources take 3.9 GB and are available for GRCh38 only.
+
+Sarek downloads them from [figshare](https://doi.org/10.6084/m9.figshare.34420128) automatically when VarNet runs on tumor-only samples. Add `--save_reference` to keep them in `{outdir}/reference/varnet/`, then pass that folder with `--varnet_resources` in future runs to skip the download:
 
 ```bash
-nextflow run nf-core/sarek --tools varnet --varnet_resources /path/to/varnet_resources <other options>
+nextflow run nf-core/sarek --tools varnet --varnet_resources /path/to/varnet <other options>
 ```
 
-The folder must contain these files:
+A folder given with `--varnet_resources` must contain these files:
 
 - `GrCh38-dbSNP-build-156-common-variants-0-indexed-CHROMPOS.npz`
 - `combined_gnomAD_v4.1_genomes_exomes_dict.hg38.chunks.npz`
 - `1000g_pon.hg38.vcf.gz`
 
-VarNet fails on tumor-only samples when `--varnet_resources` is not set.
+On compute nodes without internet access, download the resources beforehand from [figshare](https://doi.org/10.6084/m9.figshare.34420128) and pass them with `--varnet_resources`.
 
 VarNet is distributed under the [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0/), which does not permit commercial use.
 
