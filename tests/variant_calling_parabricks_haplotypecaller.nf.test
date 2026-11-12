@@ -62,7 +62,7 @@ nextflow_pipeline {
                 joint_germline: true
             ],
             failure: true,
-            snapshot: 'stdout',
+            snapshot: 'stdout,stderr',
             snapshot_include: 'should be specified as one of the tools',
             no_conda: true
         ]

@@ -2,25 +2,28 @@
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS
+IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
-include { UTILS_NFSCHEMA_PLUGIN   } from '../../nf-core/utils_nfschema_plugin'
-include { paramsSummaryMap        } from 'plugin/nf-schema'
-include { samplesheetToList       } from 'plugin/nf-schema'
-include { paramsHelp              } from 'plugin/nf-schema'
-include { completionEmail         } from '../../nf-core/utils_nfcore_pipeline'
-include { completionSummary       } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NFCORE_PIPELINE   } from '../../nf-core/utils_nfcore_pipeline'
+include { UTILS_NFSCHEMA_PLUGIN } from '../../nf-core/utils_nfschema_plugin'
+include { paramsSummaryMap } from 'plugin/nf-schema'
+include { samplesheetToList } from 'plugin/nf-schema'
+include { paramsHelp } from 'plugin/nf-schema'
+include { getReferencePath } from 'plugin/nf-core-utils'
+include { getReferenceAttribute } from 'plugin/nf-core-utils'
+include { getReferenceMetadata } from 'plugin/nf-core-utils'
+include { completionEmail } from '../../nf-core/utils_nfcore_pipeline'
+include { completionSummary } from '../../nf-core/utils_nfcore_pipeline'
+include { UTILS_NFCORE_PIPELINE } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE } from '../../nf-core/utils_nextflow_pipeline'
-include { SAMPLESHEET_TO_CHANNEL  } from '../samplesheet_to_channel'
+include { SAMPLESHEET_TO_CHANNEL } from '../samplesheet_to_channel'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    SUBWORKFLOW TO INITIALISE PIPELINE
+SUBWORKFLOW TO INITIALISE PIPELINE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 workflow PIPELINE_INITIALISATION {
     take:
@@ -35,6 +38,12 @@ workflow PIPELINE_INITIALISATION {
     show_hidden // boolean: Show hidden parameters in the help message
     vep_loftee // boolean: Enable the VEP LOFTEE plugin
     vep_loftee_gerp_bigwig //  string: Path to the GERP BigWig file for LOFTEE
+    genome // string: iGenomes key, or datasheet path with igenomes_ignore
+    genomes // map: iGenomes catalogue
+    igenomes_ignore // boolean: Read --genome as a datasheet path
+    references_datasheet // string: Path to a references datasheet
+    references_datasheets_path // string: Location of the datasheets used with igenomes_ignore
+    explicit_references // map: Reference parameters set by the user, even to null
 
     main:
 
@@ -99,62 +108,7 @@ workflow PIPELINE_INITIALISATION {
     UTILS_NFCORE_PIPELINE(nextflow_cli_args)
 
     // Custom validation for pipeline parameters
-    validateInputParameters(vep_loftee, vep_loftee_gerp_bigwig)
-
-    // Check input path parameters to see if they exist
-    def checkPathParamList = [
-        params.ascat_alleles,
-        params.ascat_loci,
-        params.ascat_loci_gc,
-        params.ascat_loci_rt,
-        params.bwa,
-        params.bwamem2,
-        params.bcftools_annotations,
-        params.bcftools_annotations_tbi,
-        params.bcftools_columns,
-        params.bcftools_header_lines,
-        params.cf_chrom_len,
-        params.chr_dir,
-        params.cnvkit_reference,
-        params.contamination_resource,
-        params.contamination_resource_tbi,
-        params.dbnsfp,
-        params.dbnsfp_tbi,
-        params.dbsnp,
-        params.dbsnp_tbi,
-        params.dict,
-        params.dragmap,
-        params.fasta,
-        params.fasta_fai,
-        params.force_call_alleles,
-        params.force_call_alleles_tbi,
-        params.germline_resource,
-        params.germline_resource_tbi,
-        params.input,
-        params.intervals,
-        params.known_indels,
-        params.known_indels_tbi,
-        params.known_snps,
-        params.known_snps_tbi,
-        params.mappability,
-        params.multiqc_config,
-        params.ngscheckmate_bed,
-        params.pon,
-        params.pon_tbi,
-        params.sentieon_dnascope_model,
-        params.spliceai_indel,
-        params.spliceai_indel_tbi,
-        params.spliceai_snv,
-        params.spliceai_snv_tbi,
-    ]
-
-    // only check if we are using the tools
-    if (params.tools && (params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('merge'))) {
-        checkPathParamList.add(params.snpeff_cache)
-    }
-    if (params.tools && (params.tools.split(',').contains('vep') || params.tools.split(',').contains('merge'))) {
-        checkPathParamList.add(params.vep_cache)
-    }
+    validateInputParameters(genome, genomes, references_datasheet, explicit_references.intervals, vep_loftee, vep_loftee_gerp_bigwig)
 
     params.input_restart = retrieveInput((!params.build_only_index && !input), params.step, params.outdir)
 
@@ -164,35 +118,56 @@ workflow PIPELINE_INITIALISATION {
             ? channel.fromList(samplesheetToList(input, "${projectDir}/assets/schema_input.json"))
             : channel.fromList(samplesheetToList(params.input_restart, "${projectDir}/assets/schema_input.json"))
 
+    //
+    // References come from --genome (iGenomes) or from a references datasheet; an explicit parameter, even null, wins
+    //
+    def reference_path = getReferencePath(
+        references: references_datasheet,
+        genome: genome,
+        igenomesIgnore: igenomes_ignore,
+        datasheetPath: references_datasheets_path,
+    )
+    def datasheet = reference_path
+        ? getReferenceMetadata(rows: samplesheetToList(reference_path, "${projectDir}/assets/schema_references.json"))
+        : null
+    def resolved_references = referenceParams().collectEntries { name ->
+        [name, explicit_references.containsKey(name) ? explicit_references[name] : getReferenceAttribute(param: name, datasheet: datasheet, genomeMap: genomes, genomeKey: genome)]
+    }
+    // `--intervals false` skips the genome intervals; Nextflow 26 passes it from the CLI as a string
+    if (resolved_references.intervals in [false, 'false']) {
+        resolved_references.intervals = null
+    }
+    intervalsMatchReference(resolved_references.intervals, resolved_references.fasta_fai)
+
     SAMPLESHEET_TO_CHANNEL(
         ch_from_samplesheet,
         params.aligner,
-        params.ascat_alleles,
-        params.ascat_loci,
-        params.ascat_loci_gc,
-        params.ascat_loci_rt,
+        resolved_references.ascat_alleles,
+        resolved_references.ascat_loci,
+        resolved_references.ascat_loci_gc,
+        resolved_references.ascat_loci_rt,
         params.bcftools_annotations,
         params.bcftools_annotations_tbi,
         params.bcftools_header_lines,
         params.build_only_index,
-        params.contamination_resource,
-        params.dbsnp,
-        params.fasta,
-        params.germline_resource,
-        intervalsParam(),
+        resolved_references.contamination_resource,
+        resolved_references.dbsnp,
+        resolved_references.fasta,
+        resolved_references.germline_resource,
+        resolved_references.intervals,
         params.joint_germline,
         params.joint_mutect2,
-        params.known_indels,
-        params.known_snps,
+        resolved_references.known_indels,
+        resolved_references.known_snps,
         params.no_intervals,
-        params.pon,
+        resolved_references.pon,
         params.sentieon_dnascope_emit_mode,
         params.sentieon_haplotyper_emit_mode,
         params.seq_center,
         params.seq_platform,
         params.skip_tools,
         params.snpeff_cache,
-        params.snpeff_db,
+        resolved_references.snpeff_db,
         params.step,
         params.tools,
         params.umi_length,
@@ -203,14 +178,15 @@ workflow PIPELINE_INITIALISATION {
     )
 
     emit:
+    references = resolved_references
     samplesheet = SAMPLESHEET_TO_CHANNEL.out.input_sample
 }
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    SUBWORKFLOW FOR PIPELINE COMPLETION
+SUBWORKFLOW FOR PIPELINE COMPLETION
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 
 workflow PIPELINE_COMPLETION {
     take:
@@ -222,7 +198,7 @@ workflow PIPELINE_COMPLETION {
     multiqc_report //  string: Path to MultiQC report
 
     main:
-    summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    summary_params = paramsSummaryMap(parameters_schema: "nextflow_schema.json")
     def multiqc_reports = multiqc_report.toList()
 
     // Completion email and summary
@@ -249,39 +225,35 @@ workflow PIPELINE_COMPLETION {
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    FUNCTIONS
+FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+ */
 // Check and validate pipeline parameters
-def validateInputParameters(vep_loftee, vep_loftee_gerp_bigwig) {
-    genomeExistsError()
+def validateInputParameters(genome, genomes, references_datasheet, intervals, vep_loftee, vep_loftee_gerp_bigwig) {
+    genomeExistsError(genome, genomes, references_datasheet)
     sparkAndBam()
     parabricksMutectcallerIgnoredParams()
-    noIntervalsWithIntervals()
-    intervalsMatchReference()
+    noIntervalsWithIntervals(intervals)
     lofteeGerpRequiresLoftee(vep_loftee, vep_loftee_gerp_bigwig)
 }
 
 // Exit if --no_intervals would ignore a user-provided --intervals file
-def noIntervalsWithIntervals() {
-    // params.intervals is filled from the genome config by default
-    def genome_intervals = params.genomes && params.genome ? params.genomes[params.genome]?.intervals : null
-    if (params.no_intervals && intervalsParam() && params.intervals != genome_intervals) {
-        error("`--intervals ${params.intervals}` and `--no_intervals` cannot be used together: `--no_intervals` would ignore the intervals file. Remove one of them.")
+def noIntervalsWithIntervals(intervals) {
+    if (params.no_intervals && intervals && intervals !in [false, 'false']) {
+        error("`--intervals ${intervals}` and `--no_intervals` cannot be used together: `--no_intervals` would ignore the intervals file. Remove one of them.")
     }
 }
 
 // Intervals are checked at start-up (before any process runs) only for a user-provided FAI and a BED file,
 // and only for steps that use intervals. Otherwise PREPARE_INTERVALS checks them once the FAI exists.
-def intervalsChecked() {
-    def intervals = intervalsParam()
-    return !!(intervals && !params.no_intervals && params.fasta_fai && intervals.toLowerCase().endsWith('.bed') && !(params.step in ['annotate', 'controlfreec']))
+def intervalsChecked(intervals, fasta_fai) {
+    return !!(intervals && !params.no_intervals && fasta_fai && intervals.toLowerCase().endsWith('.bed') && !(params.step in ['annotate', 'controlfreec']))
 }
 
 // Fail before any process starts when --intervals does not fit a user-provided FAI
-def intervalsMatchReference() {
-    if (intervalsChecked()) {
-        checkIntervalsWithinContigs(file(intervalsParam()), file(params.fasta_fai))
+def intervalsMatchReference(intervals, fasta_fai) {
+    if (intervalsChecked(intervals, fasta_fai)) {
+        checkIntervalsWithinContigs(file(intervals), file(fasta_fai))
     }
 }
 
@@ -319,15 +291,58 @@ def checkIntervalsWithinContigs(bed, fai) {
     }
 }
 
-// `--intervals false` skips the genome intervals; Nextflow 26 passes it from the CLI as a string
-def intervalsParam() {
-    return params.intervals in [false, 'false'] ? null : params.intervals
+// Reference params resolved from --references, a genome datasheet, or params.genomes
+def referenceParams() {
+    return [
+        'ascat_alleles',
+        'ascat_genome',
+        'ascat_loci',
+        'ascat_loci_gc',
+        'ascat_loci_rt',
+        'bwa',
+        'bwamem2',
+        'cf_chrom_len',
+        'chr_dir',
+        'contamination_resource',
+        'contamination_resource_tbi',
+        'dbsnp',
+        'dbsnp_tbi',
+        'dbsnp_vqsr',
+        'dict',
+        'dragmap',
+        'fasta',
+        'fasta_fai',
+        'germline_resource',
+        'germline_resource_tbi',
+        'intervals',
+        'known_indels',
+        'known_indels_tbi',
+        'known_indels_vqsr',
+        'known_snps',
+        'known_snps_tbi',
+        'known_snps_vqsr',
+        'mappability',
+        'msisensor2_models',
+        'msisensorpro_scan',
+        'ngscheckmate_bed',
+        'pon',
+        'pon_tbi',
+        'sentieon_dnascope_model',
+        'snpeff_db',
+        'vep_cache_version',
+        'vep_genome',
+        'vep_species',
+    ]
 }
 
 // Exit pipeline if incorrect --genome key provided
-def genomeExistsError() {
-    if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" + "  Currently, the available genome keys are:\n" + "  ${params.genomes.keySet().join(", ")}\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+def genomeExistsError(genome, genomes, references_datasheet) {
+    // Skip with --references: --genome must be unset there, and "--genome null" is a truthy string the key check would reject
+    if (references_datasheet) {
+        return null
+    }
+    if (genomes && genome && !genomes.containsKey(genome)) {
+        def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" + "  Genome '${genome}' not found in any config files provided to the pipeline.\n" + "  Currently, the available genome keys are:\n" + "  ${genomes.keySet().join(", ")}\n" + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         error(error_string)
     }
 }
