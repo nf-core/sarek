@@ -754,10 +754,6 @@ Control-FREEC 11.6b can abort with `std::length_error: cannot create std::vector
 Removing either setting avoids the crash.
 To leave `sex` out of the Control-FREEC configuration, use `--cf_omit_sex`:
 
-```bash
-nextflow run nf-core/sarek --tools controlfreec --cf_omit_sex ...
-```
-
 `--cf_omit_sex` applies to every Control-FREEC run in that pipeline run, tumor-only and tumor/normal alike, and it is `false` by default.
 Only Control-FREEC is affected: the `sex` in the samplesheet is still used by other tools, such as ASCAT.
 Check `{outdir}/variant_calling/controlfreec/<sample>/config.txt` to see whether a `sex` line was written.
