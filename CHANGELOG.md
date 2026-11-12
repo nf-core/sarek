@@ -44,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2399](https://github.com/nf-core/sarek/pull/2399) - Back to dev (3.12.1dev)
 - [#2401](https://github.com/nf-core/sarek/pull/2401) - Template update 4.2.2
 - [#2395](https://github.com/nf-core/sarek/pull/2395) - Run all nf-tests when a `conf/modules/*` config changes, since nf-test cannot link these configs to the pipeline tests that depend on them
-- [#2420](https://github.com/nf-core/sarek/pull/2420) - Document `=` over `.set{}` for channel assignment in `CONTRIBUTING.md`
+- [#2420](https://github.com/nf-core/sarek/pull/2420) - Use `=` instead of `.tap{}` for channel assignment in `samplesheet_to_channel`, and document `=` over `.set{}`/`.tap{}` in `CONTRIBUTING.md`
 
 #### Fixed
 
