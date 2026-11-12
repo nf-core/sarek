@@ -35,7 +35,6 @@ process PARABRICKS_HAPLOTYPECALLER {
     }
     def args              = task.ext.args ?: ''
     prefix                = task.ext.prefix ?: "${meta.id}"
-    // pbrun bgzips and indexes the output itself when it ends in .gz
     def output_file       = args.contains("--gvcf") ? "${prefix}.g.vcf.gz" : "${prefix}.${out_ext}"
     def intervals_command = intervals ? (intervals instanceof List ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : "--interval-file ${intervals}") : ""
     def num_gpus          = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
