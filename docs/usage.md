@@ -744,6 +744,7 @@ To leave `sex` out of the Control-FREEC configuration, use `--cf_omit_sex`.
 
 `--cf_omit_sex` applies to every Control-FREEC run in that pipeline run, tumor-only and tumor/normal alike, and it is `false` by default.
 Only Control-FREEC is affected: the `sex` in the samplesheet is still used by other tools, such as ASCAT.
+With `--cf_omit_sex`, Control-FREEC no longer needs a `sex` column in the samplesheet. ASCAT and Varlociraptor still require it.
 Check `{outdir}/variant_calling/controlfreec/<sample>/config.txt` to see whether a `sex` line was written.
 
 ## How to run ASCAT with whole-exome sequencing data?
