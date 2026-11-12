@@ -20,17 +20,15 @@ workflow CRAM_QC_MOSDEPTH_SAMTOOLS {
 
     // Reports run on cram
     // `--skip_tools samtools` to skip samtools stats
-    if (!(skip_tools && skip_tools.split(',').contains('samtools'))) {
-        SAMTOOLS_STATS(cram, fasta.combine(fasta_fai).map { meta, fasta_, _fai_meta, fai -> [ meta, fasta_, fai ] }.collect())
-        reports = reports.mix(SAMTOOLS_STATS.out.stats)
-    }
+    SAMTOOLS_STATS(cram.filter { !(skip_tools && skip_tools.split(',').contains('samtools')) }, fasta.combine(fasta_fai).map { meta, fasta_, _fai_meta, fai -> [ meta, fasta_, fai ] }.collect())
 
     // `--skip_tools mosdepth` to skip mosdepth
-    if (!(skip_tools && skip_tools.split(',').contains('mosdepth'))) {
-        MOSDEPTH(cram.combine(intervals.map { _meta, bed -> [bed ?: []] }), fasta, [])
-        reports = reports.mix(MOSDEPTH.out.global_txt)
-        reports = reports.mix(MOSDEPTH.out.regions_txt)
-    }
+    MOSDEPTH(cram.filter { !(skip_tools && skip_tools.split(',').contains('mosdepth')) }.combine(intervals.map { _meta, bed -> [bed ?: []] }), fasta, [])
+
+    // Gather all reports generated
+    reports = reports.mix(SAMTOOLS_STATS.out.stats)
+    reports = reports.mix(MOSDEPTH.out.global_txt)
+    reports = reports.mix(MOSDEPTH.out.regions_txt)
 
     emit:
     reports

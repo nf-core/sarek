@@ -11,31 +11,19 @@ workflow VCF_QC_BCFTOOLS_VCFTOOLS {
 
     main:
 
-    bcftools_stats          = channel.empty()
-    vcftools_tstv_counts    = channel.empty()
-    vcftools_tstv_qual      = channel.empty()
-    vcftools_filter_summary = channel.empty()
+    // `--skip_tools bcftools` to skip bcftools stats, `--skip_tools vcftools` to skip vcftools
+    vcf_bcftools = vcf.filter { !(skip_tools && skip_tools.split(',').contains('bcftools')) }
+    vcf_vcftools = vcf.filter { !(skip_tools && skip_tools.split(',').contains('vcftools')) }
 
-    // `--skip_tools bcftools` to skip bcftools stats
-    if (!(skip_tools && skip_tools.split(',').contains('bcftools'))) {
-        BCFTOOLS_STATS(vcf.map{ meta, vcf_ -> [ meta, vcf_, [] ] }, [[:],[]], [[:],[]], [[:],[]], [[:],[]], [[:],[]])
-        bcftools_stats = BCFTOOLS_STATS.out.stats
-    }
-
-    // `--skip_tools vcftools` to skip vcftools
-    if (!(skip_tools && skip_tools.split(',').contains('vcftools'))) {
-        VCFTOOLS_TSTV_COUNT(vcf, target_bed, [])
-        VCFTOOLS_TSTV_QUAL(vcf, target_bed, [])
-        VCFTOOLS_SUMMARY(vcf, target_bed, [])
-        vcftools_tstv_counts    = VCFTOOLS_TSTV_COUNT.out.tstv_count
-        vcftools_tstv_qual      = VCFTOOLS_TSTV_QUAL.out.tstv_qual
-        vcftools_filter_summary = VCFTOOLS_SUMMARY.out.filter_summary
-    }
+    BCFTOOLS_STATS(vcf_bcftools.map{ meta, vcf_ -> [ meta, vcf_, [] ] }, [[:],[]], [[:],[]], [[:],[]], [[:],[]], [[:],[]])
+    VCFTOOLS_TSTV_COUNT(vcf_vcftools, target_bed, [])
+    VCFTOOLS_TSTV_QUAL(vcf_vcftools, target_bed, [])
+    VCFTOOLS_SUMMARY(vcf_vcftools, target_bed, [])
 
     emit:
-    bcftools_stats
-    vcftools_tstv_counts
-    vcftools_tstv_qual
-    vcftools_filter_summary
+    bcftools_stats          = BCFTOOLS_STATS.out.stats
+    vcftools_tstv_counts    = VCFTOOLS_TSTV_COUNT.out.tstv_count
+    vcftools_tstv_qual      = VCFTOOLS_TSTV_QUAL.out.tstv_qual
+    vcftools_filter_summary = VCFTOOLS_SUMMARY.out.filter_summary
 
 }

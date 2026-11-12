@@ -34,36 +34,26 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
     fasta_fai = fasta.combine(fai).map { meta, fasta_, _meta2, fai_ -> [meta, fasta_, fai_] }.collect()
 
     // Run, if --tools mpileup
-    bcftools_vcf = channel.empty()
-    bcftools_tbi = channel.empty()
-    if (tools && tools.split(',').contains('mpileup')) {
-        keep_bcftools_mpileup = false
-        BCFTOOLS_MPILEUP(cram_intervals_bcftools, fasta_fai, keep_bcftools_mpileup)
-        bcftools_vcf = BCFTOOLS_MPILEUP.out.vcf
-        bcftools_tbi = BCFTOOLS_MPILEUP.out.index
-    }
+    keep_bcftools_mpileup = false
+    BCFTOOLS_MPILEUP(cram_intervals_bcftools.filter { tools && tools.split(',').contains('mpileup') }, fasta_fai, keep_bcftools_mpileup)
 
     // Only run, if --tools controlfreec
-    samtools_mpileup = channel.empty()
-    if (tools && tools.split(',').contains('controlfreec')) {
-        SAMTOOLS_MPILEUP(cram_crai_intervals, fasta_fai)
-        samtools_mpileup = SAMTOOLS_MPILEUP.out.mpileup
-    }
+    SAMTOOLS_MPILEUP(cram_crai_intervals.filter { tools && tools.split(',').contains('controlfreec') }, fasta_fai)
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    vcf_mpileup = bcftools_vcf.branch { meta, _vcf ->
+    vcf_mpileup = BCFTOOLS_MPILEUP.out.vcf.branch { meta, _vcf ->
         intervals: meta.num_intervals > 1
         no_intervals: meta.num_intervals <= 1
     }
 
     // Figuring out if there is one or more tbi(s) from the same sample
-    tbi_mpileup = bcftools_tbi.branch { meta, _tbi ->
+    tbi_mpileup = BCFTOOLS_MPILEUP.out.index.branch { meta, _tbi ->
         intervals: meta.num_intervals > 1
         no_intervals: meta.num_intervals <= 1
     }
 
     // Figuring out if there is one or more mpileup(s) from the same sample
-    mpileup_samtools = samtools_mpileup.branch { meta, _mpileup ->
+    mpileup_samtools = SAMTOOLS_MPILEUP.out.mpileup.branch { meta, _mpileup ->
         intervals: meta.num_intervals > 1
         no_intervals: meta.num_intervals <= 1
     }

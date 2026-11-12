@@ -182,10 +182,10 @@ workflow NFCORE_SAREK {
     if (params.download_cache) {
         // Assuming that even if the cache is provided, if the user specify download_cache, sarek will download the cache
         // Only download the cache(s) of the requested annotation tool(s): an empty input channel means the download process does not run
-        download_vep = params.tools && (params.tools.split(',').contains('vep') || params.tools.split(',').contains('merge'))
-        download_snpeff = params.tools && (params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('merge'))
-        ensemblvep_info = download_vep ? channel.of([[id: "${params.vep_cache_version}_${params.vep_genome}"], params.vep_genome, params.vep_species, params.vep_cache_version]) : channel.empty()
-        snpeff_info = download_snpeff ? channel.of([[id: "${params.snpeff_db}"], params.snpeff_db]) : channel.empty()
+        ensemblvep_info = channel.of([[id: "${params.vep_cache_version}_${params.vep_genome}"], params.vep_genome, params.vep_species, params.vep_cache_version])
+            .filter { params.tools && (params.tools.split(',').contains('vep') || params.tools.split(',').contains('merge')) }
+        snpeff_info = channel.of([[id: "${params.snpeff_db}"], params.snpeff_db])
+            .filter { params.tools && (params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('merge')) }
         CACHE_DOWNLOAD_ENSEMBLVEP_SNPEFF(ensemblvep_info, snpeff_info, params.vep_cache_preflight_check)
         snpeff_cache = CACHE_DOWNLOAD_ENSEMBLVEP_SNPEFF.out.snpeff_cache
         vep_cache = CACHE_DOWNLOAD_ENSEMBLVEP_SNPEFF.out.ensemblvep_cache

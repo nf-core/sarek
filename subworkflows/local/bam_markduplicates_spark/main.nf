@@ -36,12 +36,10 @@ workflow BAM_MARKDUPLICATES_SPARK {
 
     // When running Marduplicates spark, and saving reports
     // `--skip_tools markduplicates_report` to skip it
-    if (!(skip_tools && skip_tools.split(',').contains('markduplicates_report'))) {
-        GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta.map{ _meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] }, dict.map{ _meta, dict_ -> [ dict_ ] })
-        reports = reports.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics)
-    }
+    GATK4_ESTIMATELIBRARYCOMPLEXITY(bam.filter { !(skip_tools && skip_tools.split(',').contains('markduplicates_report')) }, fasta.map{ _meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] }, dict.map{ _meta, dict_ -> [ dict_ ] })
 
     // Gather all reports generated
+    reports = reports.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics)
     reports = reports.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.reports)
 
 
