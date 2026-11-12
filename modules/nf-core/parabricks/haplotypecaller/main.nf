@@ -11,6 +11,7 @@ process PARABRICKS_HAPLOTYPECALLER {
     input:
     tuple val(meta), path(input), path(input_index), path(intervals)
     tuple val(ref_meta), path(fasta)
+    val out_ext
 
     output:
     tuple val(meta), path("*.vcf"),                emit: vcf,                 optional: true
@@ -29,11 +30,13 @@ process PARABRICKS_HAPLOTYPECALLER {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         exit(1, "Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
+    if (out_ext !in ['vcf', 'vcf.gz']) {
+        error("parabricks/haplotypecaller: Invalid out_ext: ${out_ext}. Allowed values are: vcf, vcf.gz")
+    }
     def args              = task.ext.args ?: ''
     prefix                = task.ext.prefix ?: "${meta.id}"
     // pbrun bgzips and indexes the output itself when it ends in .gz
-    def extension         = task.ext.suffix ?: "vcf"
-    def output_file       = args.contains("--gvcf") ? "${prefix}.g.vcf.gz" : "${prefix}.${extension}"
+    def output_file       = args.contains("--gvcf") ? "${prefix}.g.vcf.gz" : "${prefix}.${out_ext}"
     def intervals_command = intervals ? (intervals instanceof List ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : "--interval-file ${intervals}") : ""
     def num_gpus          = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
     """
@@ -51,8 +54,7 @@ process PARABRICKS_HAPLOTYPECALLER {
     stub:
     def args        = task.ext.args ?: ''
     prefix          = task.ext.prefix ?: "${meta.id}"
-    def extension   = task.ext.suffix ?: "vcf"
-    def output_file = args.contains("--gvcf") ? "${prefix}.g.vcf.gz" : "${prefix}.${extension}"
+    def output_file = args.contains("--gvcf") ? "${prefix}.g.vcf.gz" : "${prefix}.${out_ext}"
     def output_cmd  = output_file.endsWith(".gz") ? "echo \"\" | gzip > ${output_file}; touch ${output_file}.tbi" : "touch ${output_file}"
     """
     ${output_cmd}

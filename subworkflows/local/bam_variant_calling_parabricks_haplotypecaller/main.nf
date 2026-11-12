@@ -27,9 +27,10 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER {
             [ meta + [ variantcaller:'parabricks_haplotypecaller' ], cram_, crai, intervals_ ]
         }
 
-    PARABRICKS_HAPLOTYPECALLER(cram_intervals, fasta)
+    // pbrun haplotypecaller has no --dbsnp: with --dbsnp it writes a plain VCF, which pbrun dbsnp annotates, bgzips and indexes;
+    // otherwise pbrun haplotypecaller writes the bgzipped, indexed VCF itself
+    PARABRICKS_HAPLOTYPECALLER(cram_intervals, fasta, dbsnp.map { dbsnp_ -> dbsnp_ ? 'vcf' : 'vcf.gz' })
 
-    // pbrun haplotypecaller has no --dbsnp: with --dbsnp it writes a plain VCF (ext.suffix), which pbrun dbsnp annotates, bgzips and indexes
     PARABRICKS_DBSNP(PARABRICKS_HAPLOTYPECALLER.out.vcf.combine(dbsnp).combine(dbsnp_tbi))
 
     vcf      = PARABRICKS_DBSNP.out.vcf.mix(PARABRICKS_HAPLOTYPECALLER.out.vcf_gz)
