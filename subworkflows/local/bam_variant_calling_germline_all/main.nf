@@ -2,26 +2,24 @@
 // GERMLINE VARIANT CALLING
 //
 
-include { BAM_JOINT_CALLING_GERMLINE_GATK                                                                           } from '../bam_joint_calling_germline_gatk/main'
-include { BAM_JOINT_CALLING_GERMLINE_GATK as BAM_JOINT_CALLING_GERMLINE_PARABRICKS_HAPLOTYPECALLER                  } from '../bam_joint_calling_germline_gatk/main'
-include { BAM_JOINT_CALLING_GERMLINE_SENTIEON                                                                       } from '../bam_joint_calling_germline_sentieon/main'
-include { BAM_VARIANT_CALLING_CNVKIT                                                                                } from '../bam_variant_calling_cnvkit/main'
-include { BAM_VARIANT_CALLING_DEEPVARIANT                                                                           } from '../bam_variant_calling_deepvariant/main'
-include { BAM_VARIANT_CALLING_PARABRICKS_DEEPVARIANT                                                                } from '../bam_variant_calling_parabricks_deepvariant/main'
-include { BAM_VARIANT_CALLING_FREEBAYES                                                                             } from '../bam_variant_calling_freebayes/main'
-include { BAM_VARIANT_CALLING_GERMLINE_MANTA                                                                        } from '../bam_variant_calling_germline_manta/main'
-include { BAM_VARIANT_CALLING_HAPLOTYPECALLER                                                                       } from '../bam_variant_calling_haplotypecaller/main'
-include { BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER                                                            } from '../bam_variant_calling_parabricks_haplotypecaller/main'
-include { BAM_VARIANT_CALLING_INDEXCOV                                                                              } from '../bam_variant_calling_indexcov/main'
-include { BAM_VARIANT_CALLING_SENTIEON_DNASCOPE                                                                     } from '../bam_variant_calling_sentieon_dnascope/main'
-include { BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER                                                                   } from '../bam_variant_calling_sentieon_haplotyper/main'
-include { BAM_VARIANT_CALLING_MPILEUP                                                                               } from '../bam_variant_calling_mpileup/main'
-include { BAM_VARIANT_CALLING_SINGLE_STRELKA                                                                        } from '../bam_variant_calling_single_strelka/main'
-include { BAM_VARIANT_CALLING_SINGLE_TIDDIT                                                                         } from '../bam_variant_calling_single_tiddit/main'
-include { SENTIEON_DNAMODELAPPLY                                                                                    } from '../../../modules/nf-core/sentieon/dnamodelapply/main'
-include { VCF_VARIANT_FILTERING_HAPLOTYPECALLER                                                                     } from '../vcf_variant_filtering_haplotypecaller'
-include { VCF_VARIANT_FILTERING_HAPLOTYPECALLER as SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_HAPLOTYPECALLER        } from '../vcf_variant_filtering_haplotypecaller'
-include { VCF_VARIANT_FILTERING_HAPLOTYPECALLER as PARABRICKS_HAPLOTYPECALLER_VCF_VARIANT_FILTERING_HAPLOTYPECALLER } from '../vcf_variant_filtering_haplotypecaller'
+include { BAM_JOINT_CALLING_GERMLINE_SENTIEON                                                                         } from '../bam_joint_calling_germline_sentieon/main'
+include { BAM_VARIANT_CALLING_CNVKIT                                                                                  } from '../bam_variant_calling_cnvkit/main'
+include { BAM_VARIANT_CALLING_DEEPVARIANT                                                                             } from '../bam_variant_calling_deepvariant/main'
+include { BAM_VARIANT_CALLING_PARABRICKS_DEEPVARIANT                                                                  } from '../bam_variant_calling_parabricks_deepvariant/main'
+include { BAM_VARIANT_CALLING_FREEBAYES                                                                               } from '../bam_variant_calling_freebayes/main'
+include { BAM_VARIANT_CALLING_GERMLINE_MANTA                                                                          } from '../bam_variant_calling_germline_manta/main'
+include { BAM_VARIANT_CALLING_HAPLOTYPECALLER                                                                         } from '../bam_variant_calling_haplotypecaller/main'
+include { BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER                                                              } from '../bam_variant_calling_parabricks_haplotypecaller/main'
+include { BAM_VARIANT_CALLING_INDEXCOV                                                                                } from '../bam_variant_calling_indexcov/main'
+include { BAM_VARIANT_CALLING_SENTIEON_DNASCOPE                                                                       } from '../bam_variant_calling_sentieon_dnascope/main'
+include { BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER                                                                     } from '../bam_variant_calling_sentieon_haplotyper/main'
+include { BAM_VARIANT_CALLING_MPILEUP                                                                                 } from '../bam_variant_calling_mpileup/main'
+include { BAM_VARIANT_CALLING_SINGLE_STRELKA                                                                          } from '../bam_variant_calling_single_strelka/main'
+include { BAM_VARIANT_CALLING_SINGLE_TIDDIT                                                                           } from '../bam_variant_calling_single_tiddit/main'
+include { SENTIEON_DNAMODELAPPLY                                                                                      } from '../../../modules/nf-core/sentieon/dnamodelapply/main'
+include { VCF_JOINT_CALLING_OR_FILTERING_HAPLOTYPECALLER                                                              } from '../vcf_joint_calling_or_filtering_haplotypecaller/main'
+include { VCF_JOINT_CALLING_OR_FILTERING_HAPLOTYPECALLER as PARABRICKS_HAPLOTYPECALLER_VCF_JOINT_CALLING_OR_FILTERING } from '../vcf_joint_calling_or_filtering_haplotypecaller/main'
+include { VCF_VARIANT_FILTERING_HAPLOTYPECALLER as SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_HAPLOTYPECALLER          } from '../vcf_variant_filtering_haplotypecaller'
 
 workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
@@ -172,47 +170,29 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             dbsnp_tbi.map{dbsnp_tbi_ -> [[:], dbsnp_tbi_]},
             intervals)
 
-        vcf_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf
-        tbi_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.tbi
+        VCF_JOINT_CALLING_OR_FILTERING_HAPLOTYPECALLER(
+            BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.gvcf_tbi_intervals,
+            BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf,
+            BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.tbi,
+            fasta,
+            fasta_fai,
+            dict,
+            dbsnp,
+            dbsnp_tbi,
+            dbsnp_vqsr,
+            known_sites_indels,
+            known_sites_indels_tbi,
+            known_indels_vqsr,
+            known_sites_snps,
+            known_sites_snps_tbi,
+            known_snps_vqsr,
+            intervals_bed_combined_haplotypec,
+            'haplotypecaller',
+            joint_germline,
+            skip_haplotypecaller_filter)
 
-        if (joint_germline) {
-            BAM_JOINT_CALLING_GERMLINE_GATK(
-                BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.gvcf_tbi_intervals,
-                fasta,
-                fasta_fai,
-                dict,
-                dbsnp,
-                dbsnp_tbi,
-                dbsnp_vqsr,
-                known_sites_indels,
-                known_sites_indels_tbi,
-                known_indels_vqsr,
-                known_sites_snps,
-                known_sites_snps_tbi,
-                known_snps_vqsr,
-                'haplotypecaller')
-
-            vcf_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_vcf
-            tbi_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_index
-        } else {
-
-            // If single sample track, check if filtering should be done
-            if (!skip_haplotypecaller_filter) {
-
-                VCF_VARIANT_FILTERING_HAPLOTYPECALLER(
-                    vcf_haplotypecaller.join(tbi_haplotypecaller, failOnDuplicate: true, failOnMismatch: true),
-                    fasta.map{ _meta, fasta_ -> [ fasta_ ] },
-                    fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] },
-                    dict.map{ _meta, dict_ -> [ dict_ ] },
-                    intervals_bed_combined_haplotypec,
-                    known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
-                    known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
-
-                vcf_haplotypecaller = VCF_VARIANT_FILTERING_HAPLOTYPECALLER.out.filtered_vcf
-                tbi_haplotypecaller = VCF_VARIANT_FILTERING_HAPLOTYPECALLER.out.filtered_tbi
-
-            }
-        }
+        vcf_haplotypecaller = VCF_JOINT_CALLING_OR_FILTERING_HAPLOTYPECALLER.out.vcf
+        tbi_haplotypecaller = VCF_JOINT_CALLING_OR_FILTERING_HAPLOTYPECALLER.out.tbi
     }
 
     // PARABRICKS HAPLOTYPECALLER
@@ -227,14 +207,13 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             joint_germline
         )
 
-        vcf_parabricks_haplotypecaller      = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.vcf
-        tbi_parabricks_haplotypecaller      = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.tbi
         gvcf_parabricks_haplotypecaller     = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.gvcf
         gvcf_tbi_parabricks_haplotypecaller = BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.gvcf_tbi
 
-        // Joint calling only gets gVCFs with --joint_germline, single-sample VCFs are only filtered without it
-        BAM_JOINT_CALLING_GERMLINE_PARABRICKS_HAPLOTYPECALLER(
-            BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.gvcf_tbi_intervals.filter { _meta, _gvcf, _gvcf_tbi, _intervals -> joint_germline },
+        PARABRICKS_HAPLOTYPECALLER_VCF_JOINT_CALLING_OR_FILTERING(
+            BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.gvcf_tbi_intervals,
+            BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.vcf,
+            BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER.out.tbi,
             fasta,
             fasta_fai,
             dict,
@@ -247,25 +226,13 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             known_sites_snps,
             known_sites_snps_tbi,
             known_snps_vqsr,
-            'parabricks_haplotypecaller')
-
-        PARABRICKS_HAPLOTYPECALLER_VCF_VARIANT_FILTERING_HAPLOTYPECALLER(
-            vcf_parabricks_haplotypecaller
-                .join(tbi_parabricks_haplotypecaller, failOnDuplicate: true, failOnMismatch: true)
-                .filter { _meta, _vcf, _tbi -> !joint_germline && !skip_tools_list.contains('parabricks_haplotypecaller_filter') },
-            fasta.map{ _meta, fasta_ -> [ fasta_ ] },
-            fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] },
-            dict.map{ _meta, dict_ -> [ dict_ ] },
             intervals_bed_combined_haplotypec,
-            known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
-            known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
+            'parabricks_haplotypecaller',
+            joint_germline,
+            skip_tools_list.contains('parabricks_haplotypecaller_filter'))
 
-        vcf_parabricks_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_PARABRICKS_HAPLOTYPECALLER.out.genotype_vcf
-            .mix(PARABRICKS_HAPLOTYPECALLER_VCF_VARIANT_FILTERING_HAPLOTYPECALLER.out.filtered_vcf)
-            .mix(vcf_parabricks_haplotypecaller.filter { _meta, _vcf -> !joint_germline && skip_tools_list.contains('parabricks_haplotypecaller_filter') })
-        tbi_parabricks_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_PARABRICKS_HAPLOTYPECALLER.out.genotype_index
-            .mix(PARABRICKS_HAPLOTYPECALLER_VCF_VARIANT_FILTERING_HAPLOTYPECALLER.out.filtered_tbi)
-            .mix(tbi_parabricks_haplotypecaller.filter { _meta, _tbi -> !joint_germline && skip_tools_list.contains('parabricks_haplotypecaller_filter') })
+        vcf_parabricks_haplotypecaller = PARABRICKS_HAPLOTYPECALLER_VCF_JOINT_CALLING_OR_FILTERING.out.vcf
+        tbi_parabricks_haplotypecaller = PARABRICKS_HAPLOTYPECALLER_VCF_JOINT_CALLING_OR_FILTERING.out.tbi
     }
 
     // MANTA
