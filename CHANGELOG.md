@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#2391](https://github.com/nf-core/sarek/pull/2391) - Make the `lane` column of the samplesheet optional for samples with a single row (`--step mapping`), based on [#1943](https://github.com/nf-core/sarek/pull/1943) by [@animesh](https://github.com/animesh)
+
 ### Changed
 
 ### Fixed
@@ -38,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2399](https://github.com/nf-core/sarek/pull/2399) - Back to dev (3.12.1dev)
 - [#2401](https://github.com/nf-core/sarek/pull/2401) - Template update 4.2.2
+- [#2395](https://github.com/nf-core/sarek/pull/2395) - Run all nf-tests when a `conf/modules/*` config changes, since nf-test cannot link these configs to the pipeline tests that depend on them
 
 #### Fixed
 

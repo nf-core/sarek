@@ -127,6 +127,14 @@ workflow SAMPLESHEET_TO_CHANNEL {
             if (contamination) {
                 meta = meta + [ contamination: contamination]
             }
+            // `lane` is optional for a sample with a single row: default it so ids and read groups stay unique
+            if (step == 'mapping' && !(meta.lane || meta.lane == 0) && (fastq_1 || spring_1 || bam)) {
+                if (num_lanes > 1) {
+                    System.err.println("Sample '${meta.sample}' of patient '${meta.patient}' has ${num_lanes} rows but no `lane`. The `lane` column is required when a sample has more than one row.")
+                    error("Execution halted due to missing lane.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+                }
+                meta = meta + [lane: 1]
+            }
             if ((meta.lane || meta.lane == 0) && fastq_2) {
                 // mapping from fastq files
                 meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "fastq_gz", num_lanes: num_lanes.toInteger(), size: 1]
