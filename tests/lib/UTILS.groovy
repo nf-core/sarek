@@ -55,7 +55,10 @@ class UTILS {
         }
 
         // At least always pipeline_info/ is created and stable
-        assertion.add(stable_name)
+        // Opt out for failing runs where parallel tasks may publish before the run is cancelled
+        if (!scenario.ignoreFileListing) {
+            assertion.add(stable_name)
+        }
 
         if (!scenario.stub) {
             assertion.add(stable_content.isEmpty() ? 'No stable content' : stable_content.collect { file -> path(absolutePath(file)) })

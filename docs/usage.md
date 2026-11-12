@@ -79,30 +79,30 @@ Output from Variant Calling and/or Annotation will be in a specific directory fo
 
 ### Overview: Samplesheet Columns
 
-| Column     | Description                                                                                                                                                                                                                                                                                                                       |
-| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `patient`  | **Custom patient ID**; designates the patient/subject; must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor). <br /> _Required_                                                                                                                                                      |
-| `sex`      | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                                  |
-| `status`   | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> _Optional, Default: `0`_                                                                                                                                                                                                                             |
-| `sample`   | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the _same_ ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples <br /> _Required_ |
-| `lane`     | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Required for `--step mapping`_                                                                                 |
-| `fastq_1`  | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                        |
-| `fastq_2`  | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                        |
-| `spring_1` | Full path to spring-compressed, gzipped FastQ file for read 1 or for reads 1 and 2. The Fastq file has to be first gzipped, then spring-compressed, and it must have the extension `.fastq.gz.spring` or `.fq.gz.spring`.                                                                                                         |
-| `spring_2` | Full path to spring-compressed, gzipped FastQ file for read 2. The Fastq file has to be first gzipped, then spring-compressed, and it must have the extension `.fastq.gz.spring` or `.fq.gz.spring`.                                                                                                                              |
-| `bam`      | Full path to (u)BAM file                                                                                                                                                                                                                                                                                                          |
-| `bai`      | Full path to BAM index file                                                                                                                                                                                                                                                                                                       |
-| `cram`     | Full path to CRAM file                                                                                                                                                                                                                                                                                                            |
-| `crai`     | Full path to CRAM index file                                                                                                                                                                                                                                                                                                      |
-| `table`    | Full path to recalibration table file                                                                                                                                                                                                                                                                                             |
-| `vcf`      | Full path to vcf file                                                                                                                                                                                                                                                                                                             |
+| Column     | Description                                                                                                                                                                                                                                                                                                                               |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `patient`  | **Custom patient ID**; designates the patient/subject; must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor). <br /> _Required_                                                                                                                                                              |
+| `sex`      | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                                          |
+| `status`   | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> _Optional, Default: `0`_                                                                                                                                                                                                                                     |
+| `sample`   | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the _same_ ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples <br /> _Required_         |
+| `lane`     | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Optional for `--step mapping` if the sample has a single row (defaults to `1`); required if a sample has several rows_ |
+| `fastq_1`  | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                                |
+| `fastq_2`  | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                                |
+| `spring_1` | Full path to spring-compressed, gzipped FastQ file for read 1 or for reads 1 and 2. The Fastq file has to be first gzipped, then spring-compressed, and it must have the extension `.fastq.gz.spring` or `.fq.gz.spring`.                                                                                                                 |
+| `spring_2` | Full path to spring-compressed, gzipped FastQ file for read 2. The Fastq file has to be first gzipped, then spring-compressed, and it must have the extension `.fastq.gz.spring` or `.fq.gz.spring`.                                                                                                                                      |
+| `bam`      | Full path to (u)BAM file                                                                                                                                                                                                                                                                                                                  |
+| `bai`      | Full path to BAM index file                                                                                                                                                                                                                                                                                                               |
+| `cram`     | Full path to CRAM file                                                                                                                                                                                                                                                                                                                    |
+| `crai`     | Full path to CRAM index file                                                                                                                                                                                                                                                                                                              |
+| `table`    | Full path to recalibration table file                                                                                                                                                                                                                                                                                                     |
+| `vcf`      | Full path to vcf file                                                                                                                                                                                                                                                                                                                     |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
 ### Sample names in BAM and CRAM read groups
 
 During mapping, Sarek sets the sample name (`SM` tag) of every read group to `<patient>_<sample>`, using the `patient` and `sample` columns of the samplesheet.
-The following somatic variant callers select the tumour and normal sample by this name:
+The following somatic variant callers select the tumor and normal sample by this name:
 
 - GATK Mutect2 (`--normal-sample`)
 - DeepSomatic
@@ -130,7 +130,7 @@ Otherwise, rewrite the `SM` tag in the file headers to `<patient>_<sample>`, for
 
 ### Start with mapping (`--step mapping` [default])
 
-This step can be started either from FastQ files (gzip-compressed or gzip+spring-compressed) or (u)BAMs. The CSV must contain at least the columns `patient`, `sample`, `lane`, and `fastq_1/fastq_2`, `spring_1`, `spring_1/spring_2` or `bam`.
+This step can be started either from FastQ files (gzip-compressed or gzip+spring-compressed) or (u)BAMs. The CSV must contain at least the columns `patient`, `sample`, and `fastq_1/fastq_2`, `spring_1`, `spring_1/spring_2` or `bam`. The `lane` column can be left out for samples with a single row, but is required for samples with several rows (e.g. multiple lanes).
 
 #### Examples
 
@@ -201,28 +201,24 @@ patient1,XX,1,relapse_sample,lane_1,test3_L001.bam
 > [!NOTE]
 > This is an experimental addition to the pipeline which is not at feature parity with the GATK implementation.
 
-To use the GPU based `parabricks/fq2bam` as an alternative to the CPU based GATK implementation add `--aligner parabricks -profile <docker/singularity>,gpu` to your run command. The parabricks implementation does not support the use of this pipeline with `-profile conda`.
+Add `--aligner parabricks` with `-profile <docker/singularity>,gpu` (see [`-profile`](#-profile)) to replace mapping and BAM processing with [Parabricks fq2bam](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html).
+FQ2BAM runs bwa-mem alignment, coordinate sorting, duplicate marking and, when known sites (`--dbsnp`, `--known_indels`) are available, the base recalibration table in a single GPU step.
+[Parabricks ApplyBQSR](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_applybqsr.html) then applies the table on the GPU, unless `baserecalibrator` is listed in `--skip_tools`.
+Duplicate marking cannot be skipped yet, see [Issue #1853](https://github.com/nf-core/sarek/issues/1853).
 
-At the moment the implementation supports running the complete fq2bam module which does bwa-mem based alignment, coordinate sorting, duplicate marking and base quality score recalibration. We are working on making these individual components skippable (comparable to the GATK implementation) see [Issue #1853](https://github.com/nf-core/sarek/issues/1853) for more details on the ongoing work.
-
-To apply Base Quality Score Recalibration (BQSR) using the GPU-accelerated `parabricks/applybqsr` module after fq2bam, add `--parabricks_applybqsr` to your run command. This will run fq2bam, generate the recalibration table, apply it via the parabricks applybqsr module. The known variant sites (`--dbsnp`, `--known_indels`) used to build the recalibration table are provided by the iGenomes reference configuration or can be set via command-line arguments.
+FQ2BAM requests 4 GPUs by default (`accelerator = 4`, passed to Parabricks as `--num-gpus`). On a machine with fewer GPUs, lower `accelerator` for `PARABRICKS_FQ2BAM` in a custom config, as in the example below.
 
 The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if `--save_mapped` is set.
 
-You can find more information on using GPUs with nf-core pipelines in our [GPU documentation](https://nf-co.re/docs/running/configuration/gpu-pipelines).
+**Adapting fq2bam to your hardware:**
 
-**Hints for custom configuration based on your local hardware setup:**
-
-You can supply more command-line arguments to the `fq2bam` process depending on your local setup. The performance depends on the type of GPU and the amount of CPU RAM that parabricks is able to utilize. The `--read-group-*` arguments are used by mutect2 and need to be added to your local config. Lowering `--bwa-nstreams` from 4 (standard) to 2 can help with memory issues. As well as `--gpuwrite` and `--gpusort`. For a more in-depth description of the available arguments please read the [parabricks fq2bam documentation](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html).
-
-You will need to add the accelerator directive to your local config in order to make use of the GPUs correctly if you do not use a cluster setup with a dedicated GPU queue. See [Nextflow executors](https://www.nextflow.io/docs/latest/executor.html) for more infos. To setup your local config you can check `task.accelerator` to identify jobs that need a GPU.
-
-If you need to adapt parabricks to your hardware, please copy and adapt the `custom-parabricks.config` provided below. More info on custom configs can be found [here](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
+Performance depends on the GPU type and the CPU RAM available to Parabricks. Lowering `--bwa-nstreams` from 4 (default) to 2, and adding `--gpuwrite` and `--gpusort`, can help with memory issues; see the [fq2bam documentation](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_fq2bam.html) for all arguments.
+When overriding `ext.args` in a [custom config](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files), keep the default `--read-group-*` arguments (the sample name must match [the samplesheet](#sample-names-in-bam-and-cram-read-groups)) and the tumor-specific `--bwa-options`:
 
 ```groovy title="custom-parabricks.config"
 process {
     withName: 'PARABRICKS_FQ2BAM' {
-        accelerator = 4
+        accelerator = 2 // number of GPUs, default: 4
         ext.args    = { [
             // Using specific read group tags for mutect compability (keep if using mutect)
             "--read-group-id-prefix ${meta.sample_lane_id}",
@@ -243,30 +239,22 @@ process {
 #### Using GPU accelerated variant calling
 
 > [!NOTE]
-> Parabricks DeepVariant, Parabricks HaplotypeCaller and Parabricks MutectCaller are experimental additions to the pipeline.
+> Parabricks HaplotypeCaller is an experimental addition to the pipeline.
 
-Sarek supports the following GPU-accelerated variant callers from [NVIDIA Parabricks](https://docs.nvidia.com/clara/parabricks/latest/) as an alternative to CPU based implementations:
+The following [NVIDIA Parabricks](https://docs.nvidia.com/clara/parabricks/latest/) callers are GPU-accelerated alternatives to their CPU equivalents. Enable them with `--tools <value>` and `-profile <docker/singularity>,gpu` (see [`-profile`](#-profile)):
 
-| Tool                                                                                                                          | `--tools` value              | Equivalent to        | Command                                                                                           |
-| ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | -------------------- | ------------------------------------------------------------------------------------------------- |
-| [Parabricks DeepSomatic](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepsomatic.html)         | `parabricks_deepsomatic`     | Google DeepSomatic   | `nextflow run nf-core/sarek --tools parabricks_deepsomatic -profile <docker/singularity>,gpu`     |
-| [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html)         | `parabricks_deepvariant`     | Google DeepVariant   | `nextflow run nf-core/sarek --tools parabricks_deepvariant -profile <docker/singularity>,gpu`     |
-| [Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) | `parabricks_haplotypecaller` | GATK HaplotypeCaller | `nextflow run nf-core/sarek --tools parabricks_haplotypecaller -profile <docker/singularity>,gpu` |
-| [Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html)       | `parabricks_mutectcaller`    | GATK Mutect2         | `nextflow run nf-core/sarek --tools parabricks_mutectcaller -profile <docker/singularity>,gpu`    |
+| Tool                                                                                                                          | `--tools` value              | Equivalent to        |
+| ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | -------------------- |
+| [Parabricks DeepSomatic](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepsomatic.html)         | `parabricks_deepsomatic`     | Google DeepSomatic   |
+| [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html)         | `parabricks_deepvariant`     | Google DeepVariant   |
+| [Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) | `parabricks_haplotypecaller` | GATK HaplotypeCaller |
+| [Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html)       | `parabricks_mutectcaller`    | GATK Mutect2         |
 
-There are a few differences to note about the Parabricks versions of these tools:
+Differences to the CPU equivalents:
 
-- Parabricks variant callers support gVCF generation but cannot perform joint calling on their own. Combine them with other variant callers such as GATK's HaplotypeCaller, Sentieon's DNAscope or Sentieon's Haplotyper if you need a joint call as follows:
-
-```
-nextflow run nf-core/sarek \
-  -profile docker,test,gpu \
-  --outdir results \
-  --tools parabricks_haplotypecaller,haplotypecaller \
-  --joint_germline
-```
-
-- Parabricks does not support the use of this pipeline with `-profile conda`.
+- Each Parabricks caller runs once per sample (or tumor/normal pair) on the combined intervals BED, instead of being scattered per [interval group](#intervals-for-base-quality-score-recalibration-and-variantcalling).
+- Parabricks DeepVariant only outputs a VCF, no gVCF.
+- Parabricks HaplotypeCaller outputs a gVCF with `--joint_germline`, but there is no Parabricks joint genotyping and its gVCFs are not included in any joint call. For a joint-genotyped callset, run a caller that supports joint calling alongside it, e.g. `--tools parabricks_haplotypecaller,haplotypecaller --joint_germline`.
 
 ### Start with duplicate marking (`--step markduplicates`)
 
@@ -508,7 +496,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 - `gpu`
-  - A generic configuration profile which adds necessary flags to `docker` and `singularity` profiles.
+  - A generic configuration profile which adds necessary flags to `docker` and `singularity` profiles. Required for the Parabricks tools (`--aligner parabricks`, `--tools parabricks_*`). Each Parabricks process requests one GPU (`accelerator = 1`), except fq2bam, which requests four; set `accelerator` for `PARABRICKS_*` processes in a custom config to change this. Parabricks does not support `-profile conda`. See the [nf-core GPU documentation](https://nf-co.re/docs/running/configuration/gpu-pipelines) for more information.
 
 ## `-resume`
 
@@ -587,9 +575,9 @@ To learn how to provide additional arguments to a particular tool of the pipelin
 Sarek defines the default `ext.args` of each process in the files in [`conf/modules/`](../conf/modules/), not in a single `conf/modules.config`.
 Copy the defaults from the file of the pipeline version you run before [adding arguments](https://nf-co.re/docs/running/configuration/nextflow-for-your-system#customise-tool-arguments).
 
-GATK Mutect2 needs `--f1r2-tar-gz` to produce the input for `LearnReadOrientationModel`, and `--normal-sample` to identify the normal sample in tumour/normal pairs.
+GATK Mutect2 needs `--f1r2-tar-gz` to produce the input for `LearnReadOrientationModel`, and `--normal-sample` to identify the normal sample in tumor/normal pairs.
 Without `--f1r2-tar-gz`, the pipeline stops with a `Join mismatch` error.
-Without `--normal-sample`, Mutect2 treats the normal sample as a second tumour sample.
+Without `--normal-sample`, Mutect2 treats the normal sample as a second tumor sample.
 The following config adds `--genotype-germline-sites` and `--genotype-pon-sites` and keeps the defaults:
 
 ```groovy title="custom-mutect2.config"
@@ -608,7 +596,7 @@ process {
 }
 ```
 
-Sarek 3.11.0 and earlier set the Mutect2 arguments for tumour/normal pairs on `MUTECT2_PAIRED`.
+Sarek 3.11.0 and earlier set the Mutect2 arguments for tumor/normal pairs on `MUTECT2_PAIRED`.
 This pipeline version sets them on `GATK4_MUTECT2`, so custom configs that target `MUTECT2_PAIRED` no longer apply.
 
 ## nf-core/configs
@@ -1164,7 +1152,7 @@ For GATK.GRCh38 the links for each reference file and the corresponding processe
 | fasta_fai             | ApplyBQSR(Spark), ApplyVQSR, ASCAT, Baserecalibrator(Spark), BWA, BWAMem2, CNNScoreVariant, CNVKit, ControlFREEC, DeepSomatic, DragMap, DEEPVariant, EnsemblVEP, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, FreeBayes, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, indexcov, interval building, Manta, MarkDuplicates(Spark), MergeVCFs, MSIsensor2, MSISensorPro, Mutect2, Samtools, SnpEff, Strelka, Tiddit, Variantrecalibrator                         | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
 | germline_resource     | Mutect2, Parabricks MutectCaller, GetPileupSummaries (fallback)                                                                                                                                                                                                                                                                                                                                                                                                                                                   | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
 | germline_resource_tbi | Mutect2, Parabricks MutectCaller, GetPileupSummaries (fallback)                                                                                                                                                                                                                                                                                                                                                                                                                                                   | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
-| intervals             | ApplyBQSR(Spark), ASCAT, Baserecalibrator(Spark), BCFTools, CNNScoreVariants, ControlFREEC, DeepSomatic, Deepvariant, FilterVariantTranches, FreeBayes, GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, Strelka, mpileup, MSIsensor2, MSISensorPro, Mutect2, Parabricks MutectCaller, Parabricks DeepSomatic, VCFTools                                                                                                                                                                                         | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
+| intervals             | ApplyBQSR(Spark), ASCAT, Baserecalibrator(Spark), BCFTools, CNNScoreVariants, ControlFREEC, DeepSomatic, Deepvariant, FilterVariantTranches, FreeBayes, GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, Strelka, mpileup, MSIsensor2, MSISensorPro, Mutect2, Parabricks DeepSomatic, Parabricks DeepVariant, Parabricks HaplotypeCaller, Parabricks MutectCaller, VCFTools                                                                                                                                     | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
 | known_indels          | BaseRecalibrator(Spark), FilterVariantTranches                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
 | known_indels_tbi      | BaseRecalibrator(Spark), FilterVariantTranches                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
 | known_snps            | BaseRecalibrator(Spark), FilterVariantTranches, VariantRecalibrator                                                                                                                                                                                                                                                                                                                                                                                                                                               | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
@@ -1415,6 +1403,8 @@ For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/
 #### LOFTEE
 
 Enable with `--vep_loftee`.
+
+For GRCh38, use `--vep_loftee_gerp_bigwig` to provide the GERP BigWig file to LOFTEE (requires `--vep_loftee`).
 
 For more details, see [here](https://github.com/konradjk/loftee).
 

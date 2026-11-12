@@ -43,6 +43,7 @@ include { SAREK } from './workflows/sarek'
 include { PIPELINE_COMPLETION } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { referenceParams } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { intervalsChecked } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { PREPARE_GENOME } from './subworkflows/local/prepare_genome'
 include { PREPARE_INTERVALS } from './subworkflows/local/prepare_intervals'
 include { PREPARE_REFERENCE_CNVKIT } from './subworkflows/local/prepare_reference_cnvkit'
@@ -103,7 +104,7 @@ workflow NFCORE_SAREK {
     )
 
     // Build intervals if needed
-    PREPARE_INTERVALS(PREPARE_GENOME.out.fasta_fai, references.intervals, params.no_intervals, params.nucleotides_per_second, params.outdir, params.step)
+    PREPARE_INTERVALS(PREPARE_GENOME.out.fasta_fai, references.intervals, params.no_intervals, params.nucleotides_per_second, params.outdir, params.step, intervalsChecked(references.intervals, references.fasta_fai))
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     // [interval.bed] all intervals in one file
@@ -176,6 +177,10 @@ workflow NFCORE_SAREK {
     }
 
     vep_extra_files = []
+
+    if (params.vep_loftee && params.vep_loftee_gerp_bigwig) {
+        vep_extra_files.add(file(params.vep_loftee_gerp_bigwig, checkIfExists: true))
+    }
 
     if (params.dbnsfp && params.dbnsfp_tbi) {
         vep_extra_files.add(file(params.dbnsfp, checkIfExists: true))
@@ -250,9 +255,11 @@ workflow NFCORE_SAREK {
     SAREK(
         samplesheet,
         params.aligner,
+        params.group_by_umi_strategy,
         params.skip_tools ?: 'no_tools',
         params.step,
         params.tools ?: 'no_tools',
+        params.wes,
         PREPARE_GENOME.out.ascat_alleles,
         PREPARE_GENOME.out.ascat_loci,
         PREPARE_GENOME.out.ascat_loci_gc,
@@ -345,6 +352,8 @@ workflow {
         params.help,
         params.help_full,
         params.show_hidden,
+        params.vep_loftee,
+        params.vep_loftee_gerp_bigwig,
         params.genome,
         params.genomes,
         params.igenomes_ignore,

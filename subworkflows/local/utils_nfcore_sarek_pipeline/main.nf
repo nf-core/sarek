@@ -36,6 +36,8 @@ workflow PIPELINE_INITIALISATION {
     help // boolean: Display help message and exit
     help_full // boolean: Show the full help message
     show_hidden // boolean: Show hidden parameters in the help message
+    vep_loftee // boolean: Enable the VEP LOFTEE plugin
+    vep_loftee_gerp_bigwig //  string: Path to the GERP BigWig file for LOFTEE
     genome // string: iGenomes key, or datasheet path with igenomes_ignore
     genomes // map: iGenomes catalogue
     igenomes_ignore // boolean: Read --genome as a datasheet path
@@ -106,7 +108,7 @@ workflow PIPELINE_INITIALISATION {
     UTILS_NFCORE_PIPELINE(nextflow_cli_args)
 
     // Custom validation for pipeline parameters
-    validateInputParameters(genome, genomes, references_datasheet, explicit_references.intervals)
+    validateInputParameters(genome, genomes, references_datasheet, explicit_references.intervals, vep_loftee, vep_loftee_gerp_bigwig)
 
     params.input_restart = retrieveInput((!params.build_only_index && !input), params.step, params.outdir)
 
@@ -135,6 +137,7 @@ workflow PIPELINE_INITIALISATION {
     if (resolved_references.intervals in [false, 'false']) {
         resolved_references.intervals = null
     }
+    intervalsMatchReference(resolved_references.intervals, resolved_references.fasta_fai)
 
     SAMPLESHEET_TO_CHANNEL(
         ch_from_samplesheet,
@@ -147,6 +150,7 @@ workflow PIPELINE_INITIALISATION {
         params.bcftools_annotations_tbi,
         params.bcftools_header_lines,
         params.build_only_index,
+        resolved_references.contamination_resource,
         resolved_references.dbsnp,
         resolved_references.fasta,
         resolved_references.germline_resource,
@@ -225,17 +229,65 @@ FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 // Check and validate pipeline parameters
-def validateInputParameters(genome, genomes, references_datasheet, intervals) {
+def validateInputParameters(genome, genomes, references_datasheet, intervals, vep_loftee, vep_loftee_gerp_bigwig) {
     genomeExistsError(genome, genomes, references_datasheet)
     sparkAndBam()
     parabricksMutectcallerIgnoredParams()
     noIntervalsWithIntervals(intervals)
+    lofteeGerpRequiresLoftee(vep_loftee, vep_loftee_gerp_bigwig)
 }
 
 // Exit if --no_intervals would ignore a user-provided --intervals file
 def noIntervalsWithIntervals(intervals) {
     if (params.no_intervals && intervals && intervals !in [false, 'false']) {
         error("`--intervals ${intervals}` and `--no_intervals` cannot be used together: `--no_intervals` would ignore the intervals file. Remove one of them.")
+    }
+}
+
+// Intervals are checked at start-up (before any process runs) only for a user-provided FAI and a BED file,
+// and only for steps that use intervals. Otherwise PREPARE_INTERVALS checks them once the FAI exists.
+def intervalsChecked(intervals, fasta_fai) {
+    return !!(intervals && !params.no_intervals && fasta_fai && intervals.toLowerCase().endsWith('.bed') && !(params.step in ['annotate', 'controlfreec']))
+}
+
+// Fail before any process starts when --intervals does not fit a user-provided FAI
+def intervalsMatchReference(intervals, fasta_fai) {
+    if (intervalsChecked(intervals, fasta_fai)) {
+        checkIntervalsWithinContigs(file(intervals), file(fasta_fai))
+    }
+}
+
+// Fail if any BED interval is on a contig missing from the FAI or ends past its contig
+def checkIntervalsWithinContigs(bed, fai) {
+    def contig_length = [:]
+    fai.eachLine { line ->
+        def fields = line.split('\t')
+        contig_length[fields[0]] = fields[1].toLong()
+    }
+    def unknown = [] as Set
+    def past_end = []     // first 3 examples only
+    def past_end_count = 0
+    bed.eachLine { line ->
+        if (line =~ /^(#|track|browser)/ || !line.trim()) return
+        def fields = line.split('\t')
+        if (fields.size() < 3 || !fields[2].isLong()) {
+            error("--intervals: expected tab-separated columns contig, start, end (end must be a number), got: ${line}")
+        }
+        def (contig, start, end) = fields
+        if (!contig_length.containsKey(contig)) {
+            unknown << contig
+        } else if (end.toLong() > contig_length[contig]) {
+            past_end_count += 1
+            if (past_end.size() < 3) {
+                past_end << "${contig}:${start}-${end} (${contig} is ${contig_length[contig]} bp)"
+            }
+        }
+    }
+    if (unknown) {
+        error("--intervals: contig(s) undefined in ${fai.name}: " + unknown.take(3).join(', '))
+    }
+    if (past_end_count) {
+        error("--intervals: ${past_end_count} interval(s) end past their contig in the reference (${fai.name}), for example: " + past_end.join(', '))
     }
 }
 
@@ -307,7 +359,7 @@ def sparkAndBam() {
     }
 }
 
-// Warn about options that the Parabricks mutectcaller path cannot honour
+// Warn about options that the Parabricks mutectcaller path cannot honor
 def parabricksMutectcallerIgnoredParams() {
     if (params.tools && params.tools.split(',').contains('parabricks_mutectcaller')) {
         if (params.joint_mutect2) {
@@ -316,6 +368,13 @@ def parabricksMutectcallerIgnoredParams() {
         if (params.ignore_soft_clipped_bases) {
             log.warn("`--ignore_soft_clipped_bases` is not supported by Parabricks mutectcaller and is ignored for `parabricks_mutectcaller`: soft-clipped bases are used during calling.")
         }
+    }
+}
+
+// Exit if --vep_loftee_gerp_bigwig is used without --vep_loftee
+def lofteeGerpRequiresLoftee(vep_loftee, vep_loftee_gerp_bigwig) {
+    if (vep_loftee_gerp_bigwig && !vep_loftee) {
+        error("--vep_loftee_gerp_bigwig requires --vep_loftee.")
     }
 }
 

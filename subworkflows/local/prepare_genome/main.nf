@@ -161,10 +161,13 @@ workflow PREPARE_GENOME {
         dbsnp_tbi = TABIX_DBSNP.out.index.map { _meta, tbi -> [tbi] }.collect()
     }
 
+    // Mutect2 and Parabricks MutectCaller need the same indexed resources
+    def run_mutect2 = tools.split(',').contains('mutect2') || tools.split(',').contains('parabricks_mutectcaller')
+
     germline_resource = germline_resource_in ? channel.fromPath(germline_resource_in).collect() : channel.value([])
     germline_resource_tbi = germline_resource_tbi_in ? channel.fromPath(germline_resource_tbi_in).collect() : channel.value([])
 
-    if (!germline_resource_tbi_in && germline_resource_in && (tools.split(',').contains('mutect2') || tools.split(',').contains('parabricks_mutectcaller') || tools.split(',').contains('sentieon_tnscope'))) {
+    if (!germline_resource_tbi_in && germline_resource_in && (run_mutect2 || tools.split(',').contains('sentieon_tnscope'))) {
         TABIX_GERMLINE_RESOURCE(germline_resource.flatten().map { vcf -> [[id: vcf.baseName], vcf, [], []] }, 'compress', true, '')
         germline_resource_tbi = TABIX_GERMLINE_RESOURCE.out.index.map { _meta, tbi -> [tbi] }.collect()
     }
@@ -173,7 +176,7 @@ workflow PREPARE_GENOME {
     contamination_resource = contamination_resource_in ? channel.fromPath(contamination_resource_in).collect() : germline_resource
     contamination_resource_tbi = contamination_resource_in ? (contamination_resource_tbi_in ? channel.fromPath(contamination_resource_tbi_in).collect() : channel.value([])) : germline_resource_tbi
 
-    if (contamination_resource_in && !contamination_resource_tbi_in && (tools.split(',').contains('mutect2') || tools.split(',').contains('parabricks_mutectcaller'))) {
+    if (contamination_resource_in && !contamination_resource_tbi_in && run_mutect2) {
         TABIX_CONTAMINATION_RESOURCE(contamination_resource.flatten().map { vcf -> [[id: vcf.baseName], vcf, [], []] }, 'compress', true, '')
         contamination_resource_tbi = TABIX_CONTAMINATION_RESOURCE.out.index.map { _meta, tbi -> [tbi] }.collect()
     }
@@ -197,7 +200,7 @@ workflow PREPARE_GENOME {
     force_call_alleles = force_call_alleles_in ? channel.fromPath(force_call_alleles_in).collect() : channel.value([])
     force_call_alleles_tbi = force_call_alleles_tbi_in ? channel.fromPath(force_call_alleles_tbi_in).collect() : channel.value([])
 
-    if (!force_call_alleles_tbi_in && force_call_alleles_in && (tools.split(',').contains('mutect2') || tools.split(',').contains('parabricks_mutectcaller'))) {
+    if (!force_call_alleles_tbi_in && force_call_alleles_in && run_mutect2) {
         TABIX_FORCE_CALL_ALLELES(force_call_alleles.flatten().map { vcf -> [[id: vcf.baseName], vcf, [], []] }, 'compress', true, '')
         force_call_alleles_tbi = TABIX_FORCE_CALL_ALLELES.out.index.map { _meta, tbi -> [tbi] }.collect()
     }
@@ -205,7 +208,7 @@ workflow PREPARE_GENOME {
     pon = pon_in ? channel.fromPath(pon_in).collect() : channel.value([])
     pon_tbi = pon_tbi_in ? channel.fromPath(pon_tbi_in).collect() : channel.value([])
 
-    if (!pon_tbi_in && pon_in && (tools.split(',').contains('mutect2') || tools.split(',').contains('parabricks_mutectcaller'))) {
+    if (!pon_tbi_in && pon_in && run_mutect2) {
         TABIX_PON(pon.flatten().map { vcf -> [[id: vcf.baseName], vcf, [], []] }, 'compress', true, '')
         pon_tbi = TABIX_PON.out.index.map { _meta, tbi -> [tbi] }.collect()
     }
@@ -230,7 +233,7 @@ workflow PREPARE_GENOME {
     }
 
     if (msisensorpro_scan_in) {
-        msisensorpro_scan = channel.fromPath(msisensorpro_scan_in)
+        msisensorpro_scan = channel.fromPath(msisensorpro_scan_in).collect()
     }
     else if (tools.split(',').contains('msisensorpro')) {
         MSISENSORPRO_SCAN(fasta)

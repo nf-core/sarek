@@ -880,7 +880,8 @@
                 "variant_calling/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.vcf.gz.tbi"
             ],
             [
-                "WARN: If Parabricks MutectCaller is specified without a germline resource, calls are filtered without contamination estimation and calling runs without the germline prior.",
+                "WARN: If Parabricks MutectCaller is specified without a germline resource or a contamination resource, calls are filtered without contamination estimation.",
+                "WARN: If Parabricks MutectCaller is specified without a germline resource, calling runs without the germline prior.",
                 "WARN: No Panel-of-normal was specified for Parabricks MutectCaller.",
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
@@ -2119,7 +2120,8 @@
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
-                "WARN: If Parabricks MutectCaller is specified without a germline resource, calls are filtered without contamination estimation and calling runs without the germline prior.",
+                "WARN: If Parabricks MutectCaller is specified without a germline resource or a contamination resource, calls are filtered without contamination estimation.",
+                "WARN: If Parabricks MutectCaller is specified without a germline resource, calling runs without the germline prior.",
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
@@ -3183,7 +3185,8 @@
                 "variant_calling/parabricks_mutectcaller/sample4_vs_sample3/sample4_vs_sample3.parabricks_mutectcaller.vcf.gz.tbi"
             ],
             [
-                "WARN: If Parabricks MutectCaller is specified without a germline resource, calls are filtered without contamination estimation and calling runs without the germline prior.",
+                "WARN: If Parabricks MutectCaller is specified without a germline resource or a contamination resource, calls are filtered without contamination estimation.",
+                "WARN: If Parabricks MutectCaller is specified without a germline resource, calling runs without the germline prior.",
                 "WARN: No Panel-of-normal was specified for Parabricks MutectCaller.",
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
@@ -3890,7 +3893,8 @@
             [
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test2_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998513#1/1",
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1",
-                "WARN: If Parabricks MutectCaller is specified without a germline resource, calls are filtered without contamination estimation and calling runs without the germline prior."
+                "WARN: If Parabricks MutectCaller is specified without a germline resource or a contamination resource, calls are filtered without contamination estimation.",
+                "WARN: If Parabricks MutectCaller is specified without a germline resource, calling runs without the germline prior."
             ]
         ],
         "timestamp": "2026-11-03T08:53:30.974288713",
