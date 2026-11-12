@@ -238,9 +238,6 @@ process {
 
 #### Using GPU accelerated variant calling
 
-> [!NOTE]
-> Parabricks HaplotypeCaller is an experimental addition to the pipeline.
-
 The following [NVIDIA Parabricks](https://docs.nvidia.com/clara/parabricks/latest/) callers are GPU-accelerated alternatives to their CPU equivalents. Enable them with `--tools <value>` and `-profile <docker/singularity>,gpu` (see [`-profile`](#-profile)):
 
 | Tool                                                                                                                          | `--tools` value              | Equivalent to        |
