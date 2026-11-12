@@ -596,6 +596,11 @@
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",
                         "installed_by": ["modules"]
                     },
+                    "tmb/pytmb": {
+                        "branch": "master",
+                        "git_sha": "5a779c9926fb560cf7ddaa5ac044cfb56b29945b",
+                        "installed_by": ["modules"]
+                    },
                     "untar": {
                         "branch": "master",
                         "git_sha": "6d46786420b4d7bc88eba026eb389c0c5535d120",

@@ -71,6 +71,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - Filtering (`bcftools view` (default: filter by `PASS,.`)), normalisation (`bcftools norm`) and consensus calling (`bcftools isec`, default: called by at least 2 tools `-n+2`) on all vcfs and/or `bcftools concat` for germline vcfs
   - `Varlociraptor` for all vcfs
 - Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`, `SnpSift`)
+- Tumour mutational burden on Mutect2 calls annotated with snpEff (`pyTMB`, enabled by `--tools tmb`)
 - Summarise and represent QC (`MultiQC`)
 
 <p align="center">
