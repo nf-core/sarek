@@ -1,4 +1,5 @@
 def projectDir = new File('.').absolutePath
+def modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
 
 nextflow_pipeline {
 
@@ -30,7 +31,30 @@ nextflow_pipeline {
                 tools: 'merge,snpsift',
                 snpsift_databases: "${projectDir}/tests/config/snpsift_test_databases.csv"
             ]
-        ]
+        ],
+        [
+            name: "Stages a BigWig file for LOFTEE in the VEP merge path",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
+                step: 'annotate',
+                tools: 'merge,snpeff,vep',
+                vep_loftee: true,
+                vep_loftee_gerp_bigwig: modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bigwig/test_S2.RPKM.bw',
+            ],
+            tag: 'loftee_gerp',
+            no_snapshot: true,
+            check: { workflow, workDir ->
+                def mergeCommands = []
+                new File(workDir).eachFileRecurse { candidate ->
+                    if (candidate.name == '.command.sh' && candidate.text.contains('-i test_snpEff.ann.vcf.gz')) {
+                        mergeCommands.add(candidate)
+                    }
+                }
+                assert mergeCommands.size() == 1
+                assert mergeCommands[0].text.contains('gerp_bigwig:test_S2.RPKM.bw')
+                assert new File(mergeCommands[0].parentFile, 'test_S2.RPKM.bw').exists()
+            },
+        ],
     ]
 
     // Generate tests for each scenario

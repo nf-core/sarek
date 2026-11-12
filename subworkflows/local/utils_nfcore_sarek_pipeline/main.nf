@@ -257,6 +257,7 @@ def validateInputParameters() {
     parabricksMutectcallerIgnoredParams()
     noIntervalsWithIntervals()
     intervalsMatchReference()
+    lofteeGerpRequiresLoftee()
 }
 
 // Exit if --no_intervals would ignore a user-provided --intervals file
@@ -350,6 +351,13 @@ def parabricksMutectcallerIgnoredParams() {
         if (params.ignore_soft_clipped_bases) {
             log.warn("`--ignore_soft_clipped_bases` is not supported by Parabricks mutectcaller and is ignored for `parabricks_mutectcaller`: soft-clipped bases are used during calling.")
         }
+    }
+}
+
+// Exit if --vep_loftee_gerp_bigwig is used without --vep_loftee
+def lofteeGerpRequiresLoftee() {
+    if (params.vep_loftee_gerp_bigwig && !params.vep_loftee) {
+        error("--vep_loftee_gerp_bigwig requires --vep_loftee.")
     }
 }
 
