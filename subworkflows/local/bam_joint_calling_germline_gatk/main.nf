@@ -131,7 +131,10 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     // If both --> meta, vcf_merged, vcf_bqsr
     // If not VQSR --> meta, vcf_merged, []
     // if the second is empty, use the first
-    genotype_vcf = merge_vcf_for_join.join(vqsr_vcf_for_join, remainder: true).map{
+    genotype_vcf = merge_vcf_for_join.join(vqsr_vcf_for_join, remainder: true)
+        // Without input, ifEmpty above still emits a placeholder: drop it so callers get an empty channel
+        .filter { _meta, joint_vcf, _recal_vcf -> joint_vcf }
+        .map{
         _meta, joint_vcf, recal_vcf ->
 
         def vcf_out = recal_vcf ?: joint_vcf
@@ -139,7 +142,10 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         [[id:"joint_variant_calling", patient:"all_samples", variantcaller:variant_caller], vcf_out]
     }
 
-    genotype_index = merge_tbi_for_join.join(vqsr_tbi_for_join, remainder: true).map{
+    genotype_index = merge_tbi_for_join.join(vqsr_tbi_for_join, remainder: true)
+        // Without input, ifEmpty above still emits a placeholder: drop it so callers get an empty channel
+        .filter { _meta, joint_tbi, _recal_tbi -> joint_tbi }
+        .map{
         _meta, joint_tbi, recal_tbi ->
 
         def tbi_out = recal_tbi ?: joint_tbi
