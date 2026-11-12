@@ -409,14 +409,15 @@ workflow SAMPLESHEET_TO_CHANNEL {
     def has_gatk_joint_caller = tool_list.any { tool -> tool in ['haplotypecaller', 'parabricks_haplotypecaller'] }
 
     // Fails when missing resources for baserecalibrator
-    // Warns when missing resources for haplotypecaller
     if (!dbsnp && !known_indels) {
         if (step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!skip_tools || (skip_tools && !skip_tools.split(',').contains('baserecalibrator')))) {
             error("Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command.")
         }
-        if (has_germline_caller) {
-            log.warn("If GATK's or Parabricks' Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-")
-        }
+    }
+
+    // Without any FilterVariantTranches resource, the single-sample VCFs skip filtering
+    if (!dbsnp && !known_indels && !known_snps && tool_list.any { tool -> tool in ['haplotypecaller', 'parabricks_haplotypecaller', 'sentieon_haplotyper'] }) {
+        log.warn("GATK's or Parabricks' HaplotypeCaller or Sentieon's Haplotyper is specified without `--dbsnp`, `--known_indels` or `--known_snps`, so the single-sample VCFs are not filtered with FilterVariantTranches and are passed on unfiltered. For filtering, please provide at least one of these resources.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-")
     }
     if (joint_germline && !has_germline_caller) {
         error("The GATK's Haplotypecaller, Parabricks' HaplotypeCaller, Sentieon's Dnascope or Sentieon's Haplotyper should be specified as one of the tools when doing joint germline variant calling.")
