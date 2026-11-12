@@ -17,7 +17,7 @@ nextflow_pipeline {
                 tools: 'snpeff'
             ],
             failure: true,
-            snapshot: 'stdout',
+            snapshot: 'stdout,stderr',
             snapshot_include: 'annotation-cache'
         ]
     ]
