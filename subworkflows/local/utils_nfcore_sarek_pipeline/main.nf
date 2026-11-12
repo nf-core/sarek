@@ -33,6 +33,8 @@ workflow PIPELINE_INITIALISATION {
     help // boolean: Display help message and exit
     help_full // boolean: Show the full help message
     show_hidden // boolean: Show hidden parameters in the help message
+    vep_loftee // boolean: Enable the VEP LOFTEE plugin
+    vep_loftee_gerp_bigwig //  string: Path to the GERP BigWig file for LOFTEE
 
     main:
 
@@ -97,7 +99,7 @@ workflow PIPELINE_INITIALISATION {
     UTILS_NFCORE_PIPELINE(nextflow_cli_args)
 
     // Custom validation for pipeline parameters
-    validateInputParameters()
+    validateInputParameters(vep_loftee, vep_loftee_gerp_bigwig)
 
     // Check input path parameters to see if they exist
     def checkPathParamList = [
@@ -251,13 +253,13 @@ workflow PIPELINE_COMPLETION {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 // Check and validate pipeline parameters
-def validateInputParameters() {
+def validateInputParameters(vep_loftee, vep_loftee_gerp_bigwig) {
     genomeExistsError()
     sparkAndBam()
     parabricksMutectcallerIgnoredParams()
     noIntervalsWithIntervals()
     intervalsMatchReference()
-    lofteeGerpRequiresLoftee()
+    lofteeGerpRequiresLoftee(vep_loftee, vep_loftee_gerp_bigwig)
 }
 
 // Exit if --no_intervals would ignore a user-provided --intervals file
@@ -355,8 +357,8 @@ def parabricksMutectcallerIgnoredParams() {
 }
 
 // Exit if --vep_loftee_gerp_bigwig is used without --vep_loftee
-def lofteeGerpRequiresLoftee() {
-    if (params.vep_loftee_gerp_bigwig && !params.vep_loftee) {
+def lofteeGerpRequiresLoftee(vep_loftee, vep_loftee_gerp_bigwig) {
+    if (vep_loftee_gerp_bigwig && !vep_loftee) {
         error("--vep_loftee_gerp_bigwig requires --vep_loftee.")
     }
 }

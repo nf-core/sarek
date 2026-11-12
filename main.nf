@@ -380,6 +380,8 @@ workflow {
         params.help,
         params.help_full,
         params.show_hidden,
+        params.vep_loftee,
+        params.vep_loftee_gerp_bigwig,
     )
 
     //
