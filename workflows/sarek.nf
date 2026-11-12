@@ -251,6 +251,7 @@ workflow SAREK {
                 aligner,
                 group_by_umi_strategy,
                 skip_tools,
+                tools,
             )
 
             // Gather preprocessing output
