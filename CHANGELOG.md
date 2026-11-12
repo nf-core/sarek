@@ -39,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Changed
 
-- [#2353](https://github.com/nf-core/sarek/pull/2353) - All haplotypecaller tools (GATK, Sentieon, Parabricks) now share the joint germline and filtering subworkflows and the `FILTERVARIANTTRANCHES` config
+- [#2353](https://github.com/nf-core/sarek/pull/2353) - GATK and Parabricks HaplotypeCaller share the GATK joint germline subworkflow; GATK HaplotypeCaller, Sentieon Haplotyper and Parabricks HaplotypeCaller share one `FILTERVARIANTTRANCHES` config
 - [#2399](https://github.com/nf-core/sarek/pull/2399) - Back to dev (3.12.1dev)
 - [#2401](https://github.com/nf-core/sarek/pull/2401) - Template update 4.2.2
 - [#2395](https://github.com/nf-core/sarek/pull/2395) - Run all nf-tests when a `conf/modules/*` config changes, since nf-test cannot link these configs to the pipeline tests that depend on them
