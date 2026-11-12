@@ -1388,6 +1388,8 @@ For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/
 
 Enable with `--vep_loftee`.
 
+For GRCh38, use `--vep_loftee_gerp_bigwig` to provide the GERP BigWig file to LOFTEE (requires `--vep_loftee`).
+
 For more details, see [here](https://github.com/konradjk/loftee).
 
 #### Mastermind
