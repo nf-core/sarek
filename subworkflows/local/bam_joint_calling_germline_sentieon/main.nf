@@ -27,7 +27,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     resource_snps_vcf
     resource_snps_tbi
     known_snps_vqsr
-    variant_caller
+    variant_caller       // string: name of the caller that produced the gVCFs
 
     main:
     sentieon_input = input
@@ -49,89 +49,65 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     // Rework meta for variantscalled.csv and annotation tools
     MERGE_GENOTYPEGVCFS(gvcf_to_merge, dict)
 
-    merged_vcf = MERGE_GENOTYPEGVCFS.out.vcf.map{_meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
-    merged_tbi = MERGE_GENOTYPEGVCFS.out.tbi.map{_meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
+    // As advised by Don Freed (Sentieon), VQSR is skipped for DnaScope
+    vqsr_input = MERGE_GENOTYPEGVCFS.out.vcf.join(MERGE_GENOTYPEGVCFS.out.tbi, failOnDuplicate: true)
+        .filter { _meta, _vcf, _tbi -> variant_caller != 'sentieon_dnascope' }
+    indels_resource_label = known_indels_vqsr.mix(dbsnp_vqsr).collect()
+    snps_resource_label = known_snps_vqsr.mix(dbsnp_vqsr).collect()
 
-    if (variant_caller == 'sentieon_dnascope') {
-        // As advised by Don Freed (Sentieon), VQSR is skipped for DnaScope
-        genotype_vcf   = merged_vcf.map{
-            meta, vcf -> [ meta + [ patient:"all_samples", variantcaller:'sentieon_dnascope'], vcf ]
-        }
-        genotype_index = merged_tbi.map{
-            meta, tbi -> [ meta + [ patient:"all_samples", variantcaller:'sentieon_dnascope'], tbi ]
-        }
-    } else {
-        vqsr_input = MERGE_GENOTYPEGVCFS.out.vcf.join(MERGE_GENOTYPEGVCFS.out.tbi, failOnDuplicate: true)
-        indels_resource_label = known_indels_vqsr.mix(dbsnp_vqsr).collect()
-        snps_resource_label = known_snps_vqsr.mix(dbsnp_vqsr).collect()
+    // Recalibrate INDELs and SNPs separately
+    SENTIEON_VARCAL_INDEL(
+        vqsr_input,
+        resource_indels_vcf,
+        resource_indels_tbi,
+        indels_resource_label,
+        fasta.map{_meta, it -> [ it ]},
+        fai.map{_meta, it -> [ it ]})
 
-        // Recalibrate INDELs and SNPs separately
-        SENTIEON_VARCAL_INDEL(
-            vqsr_input,
-            resource_indels_vcf,
-            resource_indels_tbi,
-            indels_resource_label,
-            fasta.map{_meta, it -> [ it ]},
-            fai.map{_meta, it -> [ it ]})
+    SENTIEON_VARCAL_SNP(
+        vqsr_input,
+        resource_snps_vcf,
+        resource_snps_tbi,
+        snps_resource_label,
+        fasta.map{_meta, it -> [ it ]},
+        fai.map{_meta, it -> [ it ]})
 
-        SENTIEON_VARCAL_SNP(
-            vqsr_input,
-            resource_snps_vcf,
-            resource_snps_tbi,
-            snps_resource_label,
-            fasta.map{_meta, it -> [ it ]},
-            fai.map{_meta, it -> [ it ]})
+    //Prepare SNPs and INDELs for Sentieon's applyvarcal
+    // Step 1. : applyvarcal to SNPs
+    // Step 2. : Use SENTIEON_APPLYVARCAL_SNP output and run ApplyVQSR_INDEL. This avoids duplicate entries in the vcf as described here: https://hpc.nih.gov/training/gatk_tutorial/vqsr.html
 
-        //Prepare SNPs and INDELs for Sentieon's applyvarcal
-        // Step 1. : applyvarcal to SNPs
-        // Step 2. : Use SENTIEON_APPLYVARCAL_SNP output and run ApplyVQSR_INDEL. This avoids duplicate entries in the vcf as described here: https://hpc.nih.gov/training/gatk_tutorial/vqsr.html
+    // Join results of variant recalibration into a single channel tuple
+    // Rework meta for variantscalled.csv and annotation tools
+    vqsr_input_snp = vqsr_input.join(SENTIEON_VARCAL_SNP.out.recal, failOnDuplicate: true)
+        .join(SENTIEON_VARCAL_SNP.out.idx, failOnDuplicate: true)
+        .join(SENTIEON_VARCAL_SNP.out.tranches, failOnDuplicate: true)
+        .map{ meta, vcf, tbi, recal, index, tranche -> [ meta + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
 
-        // Join results of variant recalibration into a single channel tuple
-        // Rework meta for variantscalled.csv and annotation tools
-        vqsr_input_snp = vqsr_input.join(SENTIEON_VARCAL_SNP.out.recal, failOnDuplicate: true)
-            .join(SENTIEON_VARCAL_SNP.out.idx, failOnDuplicate: true)
-            .join(SENTIEON_VARCAL_SNP.out.tranches, failOnDuplicate: true)
-            .map{ meta, vcf, tbi, recal, index, tranche -> [ meta + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
+    SENTIEON_APPLYVARCAL_SNP(vqsr_input_snp, fasta, fai)
 
-        SENTIEON_APPLYVARCAL_SNP(vqsr_input_snp, fasta, fai)
+    // Join results of SENTIEON_APPLYVARCAL_SNP and use as input for SENTIEON_APPLYVARCAL_INDEL to avoid duplicate entries in the result
+    // Rework meta for variantscalled.csv and annotation tools
+    vqsr_input_indel = SENTIEON_APPLYVARCAL_SNP.out.vcf.join(SENTIEON_APPLYVARCAL_SNP.out.tbi).map{ meta, vcf, tbi -> [ meta + [ id:'joint_variant_calling' ], vcf, tbi ]}
+        .join(SENTIEON_VARCAL_INDEL.out.recal, failOnDuplicate: true)
+        .join(SENTIEON_VARCAL_INDEL.out.idx, failOnDuplicate: true)
+        .join(SENTIEON_VARCAL_INDEL.out.tranches, failOnDuplicate: true)
+        .map{ meta, vcf, tbi, recal, index, tranche -> [ meta + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
 
-        // Join results of SENTIEON_APPLYVARCAL_SNP and use as input for SENTIEON_APPLYVARCAL_INDEL to avoid duplicate entries in the result
-        // Rework meta for variantscalled.csv and annotation tools
-        vqsr_input_indel = SENTIEON_APPLYVARCAL_SNP.out.vcf.join(SENTIEON_APPLYVARCAL_SNP.out.tbi).map{ meta, vcf, tbi -> [ meta + [ id:'joint_variant_calling' ], vcf, tbi ]}
-            .join(SENTIEON_VARCAL_INDEL.out.recal, failOnDuplicate: true)
-            .join(SENTIEON_VARCAL_INDEL.out.idx, failOnDuplicate: true)
-            .join(SENTIEON_VARCAL_INDEL.out.tranches, failOnDuplicate: true)
-            .map{ meta, vcf, tbi, recal, index, tranche -> [ meta + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
+    SENTIEON_APPLYVARCAL_INDEL(vqsr_input_indel, fasta, fai)
 
-        SENTIEON_APPLYVARCAL_INDEL(vqsr_input_indel, fasta, fai)
+    // Use the recalibrated calls when VQSR ran, otherwise the merged calls; remap both to the same key,
+    // join(remainder: true) keeps the merged VCF alone when VQSR did not run
+    merged_vcf        = MERGE_GENOTYPEGVCFS.out.vcf.map{_meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
+    merged_tbi        = MERGE_GENOTYPEGVCFS.out.tbi.map{_meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
+    vqsr_vcf_for_join = SENTIEON_APPLYVARCAL_INDEL.out.vcf.map{_meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
+    vqsr_tbi_for_join = SENTIEON_APPLYVARCAL_INDEL.out.tbi.map{_meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
 
-        // The following is an ugly monster to achieve the following:
-        // When MERGE_GENOTYPEGVCFS and SENTIEON_APPLYVARCAL are run, then use output from SENTIEON_APPLYVARCAL
-        // When MERGE_GENOTYPEGVCFS and NOT SENTIEON_APPLYVARCAL, then use the output from MERGE_GENOTYPEGVCFS
+    genotype_vcf = merged_vcf.join(vqsr_vcf_for_join, remainder: true).map{
+        _meta, joint_vcf, recal_vcf -> [[id:"joint_variant_calling", patient:"all_samples", variantcaller:variant_caller], recal_vcf ?: joint_vcf]
+    }
 
-        // Remap for both to have the same key, if ApplyBQSR is not run, the channel is empty --> populate with empty elements
-        vqsr_vcf_for_join = SENTIEON_APPLYVARCAL_INDEL.out.vcf.ifEmpty([[:], []]).map{_meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
-        vqsr_tbi_for_join = SENTIEON_APPLYVARCAL_INDEL.out.tbi.ifEmpty([[:], []]).map{_meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
-
-        // Join on metamap
-        // If both --> meta, vcf_merged, vcf_bqsr
-        // If not VQSR --> meta, vcf_merged, []
-        // if the second is empty, use the first
-        genotype_vcf = merged_vcf.join(vqsr_vcf_for_join, remainder: true).map{
-            _meta, joint_vcf, recal_vcf ->
-
-            def vcf_out = recal_vcf ?: joint_vcf
-
-            [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"sentieon_haplotyper"], vcf_out]
-        }
-
-        genotype_index = merged_tbi.join(vqsr_tbi_for_join, remainder: true).map{
-            _meta, joint_tbi, recal_tbi ->
-
-            def tbi_out = recal_tbi ?: joint_tbi
-            [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"sentieon_haplotyper"], tbi_out]
-        }
-
+    genotype_index = merged_tbi.join(vqsr_tbi_for_join, remainder: true).map{
+        _meta, joint_tbi, recal_tbi -> [[id:"joint_variant_calling", patient:"all_samples", variantcaller:variant_caller], recal_tbi ?: joint_tbi]
     }
 
     emit:
