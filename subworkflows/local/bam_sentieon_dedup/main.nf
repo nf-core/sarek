@@ -11,6 +11,7 @@ workflow BAM_SENTIEON_DEDUP {
     fasta                  // channel: [mandatory] [ fasta ]
     fasta_fai              // channel: [mandatory] [ fasta_fai ]
     intervals_bed_combined // channel: [optional]  [ intervals_bed ]
+    skip_tools             // string:  [mandatory] --skip_tools
 
     main:
     reports  = channel.empty()
@@ -29,7 +30,7 @@ workflow BAM_SENTIEON_DEDUP {
         : SENTIEON_DEDUP.out.cram.join(SENTIEON_DEDUP.out.crai, failOnDuplicate: true, failOnMismatch: true)
 
     // QC on alignment
-    CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, fasta_fai, intervals_bed_combined)
+    CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, fasta_fai, intervals_bed_combined, skip_tools)
 
     // Gather all reports generated
     reports = reports.mix(SENTIEON_DEDUP.out.metrics)

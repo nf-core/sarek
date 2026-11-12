@@ -98,7 +98,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             dict,
             fasta,
             fasta_fai,
-            intervals
+            intervals,
+            tools,
         )
         vcf_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.vcf
         tbi_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.tbi

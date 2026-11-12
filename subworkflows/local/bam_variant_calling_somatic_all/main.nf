@@ -100,6 +100,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             fasta,
             fasta_fai,
             intervals,
+            tools,
         )
 
         MPILEUP_TUMOR(
@@ -108,6 +109,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             fasta,
             fasta_fai,
             intervals,
+            tools,
         )
 
         mpileup_normal = MPILEUP_NORMAL.out.mpileup
