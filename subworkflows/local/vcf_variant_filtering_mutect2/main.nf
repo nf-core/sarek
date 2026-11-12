@@ -13,8 +13,8 @@ include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL } from '.
 
 workflow VCF_VARIANT_FILTERING_MUTECT2 {
     take:
-    calls                           // channel: [mandatory] [ meta, vcf, tbi, stats, f1r2 ] one row per pair, tumour-only sample or patient (joint), meta.variantcaller set
-    cram                            // channel: [mandatory] [ meta, normal_cram, normal_crai, tumour_cram, tumour_crai ] one row per pair or tumour-only sample ([] for the normal)
+    calls_in                        // channel: [mandatory] [ meta, vcf, tbi, stats, f1r2 ] one row per pair, tumor-only sample or patient (joint)
+    cram_in                         // channel: [mandatory] [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ] one row per pair or tumor-only sample ([] for the normal)
     intervals                       // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     fasta                           // channel: [mandatory] [ meta, fasta ]
     fai                             // channel: [mandatory] [ meta, fai ]
@@ -23,8 +23,12 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
     contamination_resource_tbi      // channel: [optional]  [ contamination_resource_tbi ] or []
     contamination_resource_provided // boolean: [mandatory] whether a contamination resource was provided, so contamination tables are expected
     joint                           // boolean: [mandatory] joint calling, calls are per patient
+    variantcaller                   // string:  [mandatory] caller of the calls, set as meta.variantcaller on all outputs
 
     main:
+    calls = calls_in.map { meta, vcf, tbi, stats, f1r2 -> [meta + [variantcaller: variantcaller], vcf, tbi, stats, f1r2] }
+    cram = cram_in.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [meta + [variantcaller: variantcaller], normal_cram, normal_crai, tumor_cram, tumor_crai] }
+
     LEARNREADORIENTATIONMODEL(calls.map { meta, _vcf, _tbi, _stats, f1r2 -> [meta, f1r2] })
 
     vcf_with_priors = calls
@@ -44,40 +48,29 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
             }
 
         // In joint mode meta.id may be the patient, so the pileup ids come from the sample keys.
-        // Dropping the tumour-specific keys (tumor_id, contamination) lets a normal shared by several tumours be summarised once.
+        // Dropping the tumor-specific keys (tumor_id, contamination) lets a normal shared by several tumors be summarized once.
         pileup = cram_intervals.multiMap { meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals_ ->
             tumor: [meta + [id: meta.tumor_id ?: meta.sample], tumor_cram, tumor_crai, intervals_]
             normal: [meta - meta.subMap('tumor_id', 'contamination') + [id: meta.normal_id], normal_cram, normal_crai, intervals_]
         }
 
-        // Tumour-only rows have no normal to summarise
+        // Tumor-only rows have no normal to summarize
         pileup_normal = pileup.normal.filter { meta, _cram, _crai, _intervals -> meta.normal_id }.unique()
 
         GETPILEUPSUMMARIES_NORMAL(pileup_normal, fasta, fai, dict, contamination_resource, contamination_resource_tbi)
         GETPILEUPSUMMARIES_TUMOR(pileup.tumor, fasta, fai, dict, contamination_resource, contamination_resource_tbi)
 
-        // Figuring out if there is one or more table(s) from the same sample
-        pileup_table_normal_branch = GETPILEUPSUMMARIES_NORMAL.out.table.branch { meta, _table ->
-            intervals: meta.num_intervals > 1
-            no_intervals: meta.num_intervals <= 1
-        }
-        pileup_table_tumor_branch = GETPILEUPSUMMARIES_TUMOR.out.table.branch { meta, _table ->
-            intervals: meta.num_intervals > 1
-            no_intervals: meta.num_intervals <= 1
-        }
+        pileup_normal_gather = gatherPileups(GETPILEUPSUMMARIES_NORMAL.out.table)
+        pileup_tumor_gather = gatherPileups(GETPILEUPSUMMARIES_TUMOR.out.table)
 
-        // Only when using intervals
-        pileup_table_normal_to_merge = pileup_table_normal_branch.intervals.map { meta, table -> [groupKey(meta, meta.num_intervals), table] }.groupTuple()
-        pileup_table_tumor_to_merge = pileup_table_tumor_branch.intervals.map { meta, table -> [groupKey(meta, meta.num_intervals), table] }.groupTuple()
-
-        GATHERPILEUPSUMMARIES_NORMAL(pileup_table_normal_to_merge, dict.map { _meta, dict_ -> [dict_] })
-        GATHERPILEUPSUMMARIES_TUMOR(pileup_table_tumor_to_merge, dict.map { _meta, dict_ -> [dict_] })
+        GATHERPILEUPSUMMARIES_NORMAL(pileup_normal_gather.intervals, dict.map { _meta, dict_ -> [dict_] })
+        GATHERPILEUPSUMMARIES_TUMOR(pileup_tumor_gather.intervals, dict.map { _meta, dict_ -> [dict_] })
 
         pileup_table_normal = channel.empty()
-            .mix(GATHERPILEUPSUMMARIES_NORMAL.out.table, pileup_table_normal_branch.no_intervals)
+            .mix(GATHERPILEUPSUMMARIES_NORMAL.out.table, pileup_normal_gather.no_intervals)
             .map { meta, table -> [meta - meta.subMap('num_intervals'), table] }
         pileup_table_tumor = channel.empty()
-            .mix(GATHERPILEUPSUMMARIES_TUMOR.out.table, pileup_table_tumor_branch.no_intervals)
+            .mix(GATHERPILEUPSUMMARIES_TUMOR.out.table, pileup_tumor_gather.no_intervals)
             .map { meta, table -> [meta - meta.subMap('num_intervals'), table] }
 
         pileup_table_tumor_branch_status = pileup_table_tumor.branch { meta, _table ->
@@ -85,7 +78,7 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
             tumor_only: true
         }
 
-        // One normal table per [patient, normal_id] is combined with every tumour of that normal.
+        // One normal table per [patient, normal_id] is combined with every tumor of that normal.
         // The pair meta is the cram meta with the pair id, so it matches the calls meta outside joint mode.
         pileup_table_normal_by_normal = pileup_table_normal.map { meta, table -> [[meta.patient, meta.normal_id], table] }
 
@@ -98,14 +91,9 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
         CALCULATECONTAMINATION(calculatecontamination_in)
 
         if (joint) {
-            // One table per input row, so each patient's group is released as soon as its own tables are done
-            tables_per_patient = cram
-                .map { meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai -> [meta.patient, meta] }
-                .groupTuple()
-                .map { patient, metas -> [patient, metas.size()] }
-
-            contamination_table = groupTablesByPatient(CALCULATECONTAMINATION.out.contamination, tables_per_patient)
-            segmentation_table = groupTablesByPatient(CALCULATECONTAMINATION.out.segmentation, tables_per_patient)
+            // Joint calls are per patient, so are their tables. Without a group size, groupTuple waits for the tables of all patients.
+            contamination_table = CALCULATECONTAMINATION.out.contamination.map { meta, table -> [patientMeta(meta), table] }.groupTuple()
+            segmentation_table = CALCULATECONTAMINATION.out.segmentation.map { meta, table -> [patientMeta(meta), table] }.groupTuple()
         }
         else {
             contamination_table = CALCULATECONTAMINATION.out.contamination
@@ -145,12 +133,26 @@ workflow VCF_VARIANT_FILTERING_MUTECT2 {
     pileup_table_tumor                                                  // channel: [ meta, table ]
 }
 
-// Joint calls are per patient: drop the per-sample keys as the caller does and group the tables by patient
-def groupTablesByPatient(tables, tables_per_patient) {
-    return tables
-        .map { meta, table -> [meta.patient, meta - meta.subMap('normal_id', 'tumor_id', 'sample', 'contamination') + [id: meta.patient], table] }
-        .combine(tables_per_patient, by: 0)
-        .map { _patient, meta, table, n -> [groupKey(meta, n), table] }
+// Patient-level meta of joint calling: the per-sample keys are dropped and the id is the patient.
+// Used for the joint Mutect2 calls and for their contamination tables, which are joined on it.
+// data_type (bam or cram) is per sample in tumor-only meta: samples of one patient may differ.
+def patientMeta(meta) {
+    return meta - meta.subMap('normal_id', 'tumor_id', 'sample', 'contamination', 'data_type') + [id: meta.patient]
+}
+
+// One row per call or sample with the outputs of all its intervals (a single one without intervals, num_intervals 0 or 1).
+// groupKey releases each row as soon as its intervals are done.
+def groupByIntervals(ch) {
+    return ch
+        .map { meta, file -> [groupKey(meta, Math.max(meta.num_intervals, 1)), file] }
         .groupTuple()
-        .map { key, grouped_tables -> [key.getGroupTarget(), grouped_tables] }
+}
+
+// Scattered pileup tables of a sample are to be gathered, a single table passes through
+def gatherPileups(tables) {
+    return groupByIntervals(tables).branch { meta, tables_ ->
+        intervals: meta.num_intervals > 1
+        no_intervals: true
+            return [meta, tables_[0]]
+    }
 }

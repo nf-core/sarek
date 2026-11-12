@@ -49,6 +49,23 @@ nextflow_pipeline {
             ],
             failure: true,
             snapshot: 'stderr',
+        ],
+        [
+            name: "-profile test --input tests/csv/3.0/fastq_no_lane_multi_row.csv",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_no_lane_multi_row.csv"
+            ],
+            failure: true,
+            snapshot_ignore: ['Cannot extract flowcell ID', 'Failed to render execution'], // timing dependent, the pipeline halts early
+        ],
+        [
+            name: "-profile test --input tests/csv/3.0/fastq_mixed_lane.csv",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/fastq_mixed_lane.csv"
+            ],
+            failure: true,
+            snapshot_ignore: ['Cannot extract flowcell ID', 'Failed to render execution'], // timing dependent, the pipeline halts early
+            snapshot: 'stderr',
         ]
     ]
 

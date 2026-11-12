@@ -498,7 +498,7 @@
                     "format": "file-path",
                     "pattern": "^\\S+\\.vcf\\.gz\\.tbi$",
                     "exists": true,
-                    "description": "Index of the GATK Mutect2 force-call alleles VCF.",
+                    "description": "Index of the force-call alleles VCF for GATK Mutect2 and Parabricks MutectCaller.",
                     "help_text": "If none provided, will be generated automatically from the force-call alleles bgzipped VCF file."
                 },
                 "pon": {
@@ -703,6 +703,14 @@
                     "fa_icon": "fas fa-database",
                     "description": "Enable the use of the VEP LOFTEE plugin.",
                     "help_text": "For details, see [here](https://github.com/konradjk/loftee)."
+                },
+                "vep_loftee_gerp_bigwig": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to the GERP conservation BigWig file for the VEP LOFTEE plugin.",
+                    "help_text": "Requires `--vep_loftee`. Use a BigWig file for the same genome assembly as the VEP cache."
                 },
                 "vep_mastermind": {
                     "type": "boolean",

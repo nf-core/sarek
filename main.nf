@@ -73,6 +73,7 @@ include { SAREK                            } from './workflows/sarek'
 include { PIPELINE_COMPLETION              } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { PIPELINE_INITIALISATION          } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { intervalsParam                   } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { intervalsChecked                 } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { PREPARE_GENOME                   } from './subworkflows/local/prepare_genome'
 include { PREPARE_INTERVALS                } from './subworkflows/local/prepare_intervals'
 include { PREPARE_REFERENCE_CNVKIT         } from './subworkflows/local/prepare_reference_cnvkit'
@@ -133,7 +134,7 @@ workflow NFCORE_SAREK {
     )
 
     // Build intervals if needed
-    PREPARE_INTERVALS(PREPARE_GENOME.out.fasta_fai, intervalsParam(), params.no_intervals, params.nucleotides_per_second, params.outdir, params.step)
+    PREPARE_INTERVALS(PREPARE_GENOME.out.fasta_fai, intervalsParam(), params.no_intervals, params.nucleotides_per_second, params.outdir, params.step, intervalsChecked())
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     // [interval.bed] all intervals in one file
@@ -206,6 +207,10 @@ workflow NFCORE_SAREK {
     }
 
     vep_extra_files = []
+
+    if (params.vep_loftee && params.vep_loftee_gerp_bigwig) {
+        vep_extra_files.add(file(params.vep_loftee_gerp_bigwig, checkIfExists: true))
+    }
 
     if (params.dbnsfp && params.dbnsfp_tbi) {
         vep_extra_files.add(file(params.dbnsfp, checkIfExists: true))
@@ -280,9 +285,11 @@ workflow NFCORE_SAREK {
     SAREK(
         samplesheet,
         params.aligner,
+        params.group_by_umi_strategy,
         params.skip_tools ?: 'no_tools',
         params.step,
         params.tools ?: 'no_tools',
+        params.wes,
         PREPARE_GENOME.out.ascat_alleles,
         PREPARE_GENOME.out.ascat_loci,
         PREPARE_GENOME.out.ascat_loci_gc,
@@ -307,6 +314,7 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.germline_resource_tbi,
         PREPARE_GENOME.out.contamination_resource,
         PREPARE_GENOME.out.contamination_resource_tbi,
+        (params.contamination_resource || params.germline_resource) as boolean,
         PREPARE_GENOME.out.index_alignment,
         intervals_and_num_intervals,
         intervals_bed_combined,
@@ -372,6 +380,8 @@ workflow {
         params.help,
         params.help_full,
         params.show_hidden,
+        params.vep_loftee,
+        params.vep_loftee_gerp_bigwig,
     )
 
     //
