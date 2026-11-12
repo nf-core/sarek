@@ -29,15 +29,13 @@ process PARABRICKS_HAPLOTYPECALLER {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         exit(1, "Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
-    def args      = task.ext.args ?: ''
-    prefix        = task.ext.prefix ?: "${meta.id}"
+    def args              = task.ext.args ?: ''
+    prefix                = task.ext.prefix ?: "${meta.id}"
     // pbrun bgzips and indexes the output itself when it ends in .gz
-    def extension = task.ext.suffix ?: "vcf"
-
-    def output_file           = args.contains("--gvcf") ? "${prefix}.g.vcf.gz" : "${prefix}.${extension}"
-    def intervals_command     = intervals     ? (intervals instanceof List ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : "--interval-file ${intervals}") : ""
-
-    def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
+    def extension         = task.ext.suffix ?: "vcf"
+    def output_file       = args.contains("--gvcf") ? "${prefix}.g.vcf.gz" : "${prefix}.${extension}"
+    def intervals_command = intervals ? (intervals instanceof List ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : "--interval-file ${intervals}") : ""
+    def num_gpus          = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
     """
     pbrun \\
         haplotypecaller \\
@@ -51,11 +49,11 @@ process PARABRICKS_HAPLOTYPECALLER {
     """
 
     stub:
-    def args      = task.ext.args ?: ''
-    prefix        = task.ext.prefix ?: "${meta.id}"
-    def extension = task.ext.suffix ?: "vcf"
+    def args        = task.ext.args ?: ''
+    prefix          = task.ext.prefix ?: "${meta.id}"
+    def extension   = task.ext.suffix ?: "vcf"
     def output_file = args.contains("--gvcf") ? "${prefix}.g.vcf.gz" : "${prefix}.${extension}"
-    def output_cmd  = output_file.endsWith(".gz") ? "echo '' | gzip > ${output_file}; touch ${output_file}.tbi" : "touch ${output_file}"
+    def output_cmd  = output_file.endsWith(".gz") ? "echo \"\" | gzip > ${output_file}; touch ${output_file}.tbi" : "touch ${output_file}"
     """
     ${output_cmd}
 
