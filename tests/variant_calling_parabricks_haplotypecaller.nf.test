@@ -44,6 +44,19 @@ nextflow_pipeline {
             no_conda: true
         ],
         [
+            name: "-profile test --tools parabricks_haplotypecaller --dbsnp null -stub",
+            params: [
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
+                input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
+                tools: "parabricks_haplotypecaller",
+                step: "variant_calling",
+                dbsnp: null,
+                dbsnp_tbi: null
+            ],
+            stub: true,
+            no_conda: true
+        ],
+        [
             name: "-profile test,gpu --tools parabricks_haplotypecaller --joint_germline",
             params: [
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
