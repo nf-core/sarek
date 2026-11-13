@@ -213,7 +213,7 @@
                 "test.haplotyper.g.vcf.gz:md5,5a556dc23ecea0e9f15c7eeeff563a5f"
             ],
             [
-                "WARN: If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
+                "WARN: If GATK's or Parabricks' Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources."
             ]
         ],
         "timestamp": "2026-10-01T21:00:20.307194895",

@@ -2,15 +2,18 @@
 // PARABRICKS HAPLOTYPECALLER germline variant calling (GPU-accelerated)
 //
 
-include { PARABRICKS_HAPLOTYPECALLER                  } from '../../../modules/nf-core/parabricks/haplotypecaller'
-include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX_VCF   } from '../../../modules/nf-core/htslib/bgziptabix'
-include { HTSLIB_BGZIPTABIX as TABIX_BGZIPTABIX_GVCF  } from '../../../modules/nf-core/htslib/bgziptabix'
+include { PARABRICKS_DBSNP           } from '../../../modules/nf-core/parabricks/dbsnp'
+include { PARABRICKS_HAPLOTYPECALLER } from '../../../modules/nf-core/parabricks/haplotypecaller'
 
 workflow BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER {
     take:
     cram                    // channel: [mandatory] [ meta, cram, crai ]
     fasta                   // channel: [mandatory] [ meta, fasta ]
+    dbsnp                   // channel: [optional]  [] or [ dbsnp.vcf.gz ]
+    dbsnp_tbi               // channel: [optional]  [] or [ dbsnp.vcf.gz.tbi ]
+    intervals               // channel: [mandatory] [ interval.bed, num_intervals ], used to scatter joint genotyping
     intervals_bed_combined  // channel: [optional]  [] or [ intervals.bed ]
+    joint_germline          // boolean: [mandatory] [default: false] write a gVCF for joint germline calling
 
     main:
     // Combine each sample with the (optional) intervals list
@@ -25,26 +28,28 @@ workflow BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER {
             [ meta + [ variantcaller:'parabricks_haplotypecaller' ], cram_, crai, intervals_ ]
         }
 
-    PARABRICKS_HAPLOTYPECALLER(cram_intervals, fasta)
+    // pbrun haplotypecaller has no --dbsnp: with --dbsnp it writes a plain VCF, which pbrun dbsnp annotates, bgzips and indexes;
+    // otherwise pbrun haplotypecaller writes the bgzipped, indexed (g)VCF itself
+    out_ext = dbsnp.map { dbsnp_ -> joint_germline ? 'g.vcf.gz' : dbsnp_ ? 'vcf' : 'vcf.gz' }
 
-    // Depending on ext.args (e.g. '--gvcf'), PARABRICKS_HAPLOTYPECALLER emits either an
-    // uncompressed VCF or an already-bgzipped gVCF, never both. HTSLIB_BGZIPTABIX detects the
-    // input compression itself, so it both compresses the plain VCF and indexes
-    // the already-compressed gVCF.
-    TABIX_BGZIPTABIX_VCF(PARABRICKS_HAPLOTYPECALLER.out.vcf.map { meta, vcf_ -> [ meta, vcf_, [], [] ] }, 'compress', true, 'vcf')
-    TABIX_BGZIPTABIX_GVCF(PARABRICKS_HAPLOTYPECALLER.out.gvcf.map { meta, gvcf_ -> [ meta, gvcf_, [], [] ] }, 'compress', true, 'g.vcf')
+    PARABRICKS_HAPLOTYPECALLER(cram_intervals, fasta, out_ext)
 
-    vcf_tbi_joined  = TABIX_BGZIPTABIX_VCF.out.output.join(TABIX_BGZIPTABIX_VCF.out.index)
-    gvcf_tbi_joined = TABIX_BGZIPTABIX_GVCF.out.output.join(TABIX_BGZIPTABIX_GVCF.out.index)
+    PARABRICKS_DBSNP(PARABRICKS_HAPLOTYPECALLER.out.vcf.combine(dbsnp).combine(dbsnp_tbi))
 
-    vcf      = vcf_tbi_joined.map  { meta, vcf_,  _tbi -> [ meta, vcf_  ] }
-    tbi      = vcf_tbi_joined.map  { meta, _vcf,  tbi_ -> [ meta, tbi_  ] }
-    gvcf     = gvcf_tbi_joined.map { meta, gvcf_, _tbi -> [ meta, gvcf_ ] }
-    gvcf_tbi = gvcf_tbi_joined.map { meta, _gvcf, gvcf_tbi_ -> [ meta, gvcf_tbi_ ] }
+    vcf      = PARABRICKS_DBSNP.out.vcf.mix(PARABRICKS_HAPLOTYPECALLER.out.vcf_gz)
+    tbi      = PARABRICKS_DBSNP.out.tbi.mix(PARABRICKS_HAPLOTYPECALLER.out.vcf_tbi)
+    gvcf     = PARABRICKS_HAPLOTYPECALLER.out.gvcf
+    gvcf_tbi = PARABRICKS_HAPLOTYPECALLER.out.gvcf_tbi
+
+    // The gVCF covers all intervals in one file; GenomicsDBImport restricts each import to its own interval
+    gvcf_tbi_intervals = gvcf.join(gvcf_tbi, failOnDuplicate: true, failOnMismatch: true)
+        .combine(intervals)
+        .map { meta, gvcf_, gvcf_tbi_, intervals_, num_intervals -> [ meta + [ num_intervals:num_intervals ], gvcf_, gvcf_tbi_, intervals_ ] }
 
     emit:
-    vcf       // channel: [ val(meta), vcf.gz ]
-    tbi       // channel: [ val(meta), vcf.gz.tbi ]
-    gvcf      // channel: [ val(meta), g.vcf.gz ]
-    gvcf_tbi  // channel: [ val(meta), g.vcf.gz.tbi ]
+    vcf                 // channel: [ val(meta), vcf.gz ]
+    tbi                 // channel: [ val(meta), vcf.gz.tbi ]
+    gvcf                // channel: [ val(meta), g.vcf.gz ]
+    gvcf_tbi            // channel: [ val(meta), g.vcf.gz.tbi ]
+    gvcf_tbi_intervals  // channel: [ val(meta), g.vcf.gz, g.vcf.gz.tbi, interval.bed ], for joint genotyping
 }

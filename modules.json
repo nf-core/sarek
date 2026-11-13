@@ -288,7 +288,7 @@
                     },
                     "gatk4/haplotypecaller": {
                         "branch": "master",
-                        "git_sha": "b2bcd8312599aacd849e69721e20ac8138018f83",
+                        "git_sha": "a727b680a30724b24ae4d346c9f95ee37a1691f1",
                         "installed_by": ["modules"]
                     },
                     "gatk4/intervallisttobed": {
@@ -426,6 +426,11 @@
                         "git_sha": "78522f4889133e32443c76ba9b4703cbdf3ac331",
                         "installed_by": ["modules"]
                     },
+                    "parabricks/dbsnp": {
+                        "branch": "master",
+                        "git_sha": "75a894467e613591b25718c577dedfb6e2ce57cf",
+                        "installed_by": ["modules"]
+                    },
                     "parabricks/deepsomatic": {
                         "branch": "master",
                         "git_sha": "78522f4889133e32443c76ba9b4703cbdf3ac331",
@@ -443,7 +448,7 @@
                     },
                     "parabricks/haplotypecaller": {
                         "branch": "master",
-                        "git_sha": "78522f4889133e32443c76ba9b4703cbdf3ac331",
+                        "git_sha": "72f815e273b68c748f43cebebbd27a6f209007cd",
                         "installed_by": ["modules"]
                     },
                     "parabricks/mutectcaller": {

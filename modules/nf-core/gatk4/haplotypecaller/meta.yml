@@ -12,7 +12,12 @@ tools:
         and high-performance computing features make it capable of taking on projects of any size.
       homepage: https://gatk.broadinstitute.org/hc/en-us
       documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
-      doi: 10.1158/1538-7445.AM2017-3590
+      doi: "10.1101/gr.107524.110"
+      publication:
+        author: "McKenna, A., Hanna, M., Banks, E., Sivachenko, A., Cibulskis, K., Kernytsky, A., Garimella, K., Altshuler, D., Gabriel, S., Daly, M. & DePristo, M. A."
+        year: 2010
+        title: "The Genome Analysis Toolkit: A MapReduce framework for analyzing next-generation DNA sequencing data"
+        source: "Genome Research"
       licence: ["Apache-2.0"]
       identifier: ""
 input:
@@ -37,8 +42,7 @@ input:
         ontologies: []
     - dragstr_model:
         type: file
-        description: Text file containing the DragSTR model of the used BAM/CRAM file
-          (optional)
+        description: Text file containing the DragSTR model of the used BAM/CRAM file (optional)
         pattern: "*.txt"
         ontologies: []
   - - meta2:
@@ -96,10 +100,10 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.vcf.gz":
+      - "${prefix}.vcf.gz":
           type: file
           description: Compressed VCF file
-          pattern: "*.vcf.gz"
+          pattern: "${prefix}.vcf.gz"
           ontologies:
             - edam: http://edamontology.org/format_3989 # GZIP format
   tbi:
@@ -108,10 +112,10 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.tbi":
+      - "${prefix}.vcf.gz.tbi":
           type: file
           description: Index of VCF file
-          pattern: "*.vcf.gz.tbi"
+          pattern: "${prefix}.vcf.gz.tbi"
           ontologies: []
   bam:
     - - meta:
@@ -123,6 +127,17 @@ output:
           type: file
           description: Assembled haplotypes and locally realigned reads
           pattern: "*.realigned.bam"
+          ontologies: []
+  bai:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.realigned.bai":
+          type: file
+          description: Index of the realigned BAM file (written by GATK when `--bam-writer-type` is set and BAM index creation is enabled, which is the default)
+          pattern: "*.realigned.bai"
           ontologies: []
   versions_gatk4:
     - - ${task.process}:
@@ -151,3 +166,17 @@ authors:
 maintainers:
   - "@suzannejin"
   - "@FriederikeHanssen"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/gatk4-lite:4.7.0.0--79918b8b2632f4b1
+      build_id: bd-79918b8b2632f4b1_1
+      scan_id: sc-3494a4d719069a23_2
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/gatk4-lite:4.7.0.0--f28eb03ad3b2bcd5
+      build_id: bd-f28eb03ad3b2bcd5_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/ce/ce8f4142326abbb74e28b97633a200b09439c54480803343b1cf13dc19e51ae5/data
+  conda:
+    linux/amd64:
+      lock_file: modules/nf-core/gatk4/haplotypecaller/.conda-lock/linux_amd64-bd-79918b8b2632f4b1_1.txt
