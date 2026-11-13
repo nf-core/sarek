@@ -48,6 +48,20 @@ nextflow_pipeline {
                 sentieon_haplotyper_emit_mode: "gvcf"
             ],
             sentieon: true
+        ],
+        [
+            name: "-profile test --tools sentieon_dnascope,sentieon_haplotyper --joint_germline -stub",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/mapped_joint_bam.csv",
+                tools: "sentieon_dnascope,sentieon_haplotyper",
+                step: "variant_calling",
+                joint_germline: true,
+                sentieon_dnascope_emit_mode: "gvcf",
+                sentieon_haplotyper_emit_mode: "gvcf"
+            ],
+            stub: true,
+            no_conda: true,
+            sentieon: true
         ]
     ]
 
