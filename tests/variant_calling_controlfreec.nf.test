@@ -20,7 +20,8 @@ nextflow_pipeline {
                 step: "variant_calling",
                 tools: 'controlfreec',
                 wes: true
-            ]
+            ],
+            include_freec_sex: true
         ],
         [
             name: "-profile test --tools controlfreec somatic --nucleotides_per_second 20",
@@ -36,7 +37,8 @@ nextflow_pipeline {
                 step: "variant_calling",
                 tools: 'controlfreec',
                 wes: true
-            ]
+            ],
+            include_freec_sex: true
         ],
         [
             name: "-profile test --tools controlfreec --no_intervals tumoronly",
@@ -51,7 +53,59 @@ nextflow_pipeline {
                 step: "variant_calling",
                 tools: 'controlfreec',
                 wes: true
-            ]
+            ],
+            include_freec_sex: true
+        ],
+        [
+            name: "-profile test --tools controlfreec somatic --cf_omit_sex",
+            params: [
+                cf_omit_sex: true,
+                chr_dir: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz',
+                dbsnp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+                dbsnp_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_somatic.csv",
+                intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed',
+                step: "variant_calling",
+                tools: 'controlfreec',
+                wes: true
+            ],
+            include_freec_sex: true
+        ],
+        [
+            name: "-profile test --tools controlfreec --no_intervals tumoronly --cf_omit_sex",
+            params: [
+                cf_omit_sex: true,
+                chr_dir: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz',
+                dbsnp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+                dbsnp_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
+                no_intervals: true,
+                step: "variant_calling",
+                tools: 'controlfreec',
+                wes: true
+            ],
+            include_freec_sex: true
+        ],
+        [
+            name: "-profile test --tools controlfreec --no_intervals tumoronly --cf_omit_sex without sex in the samplesheet",
+            params: [
+                cf_omit_sex: true,
+                chr_dir: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz',
+                dbsnp: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz',
+                dbsnp_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi',
+                fasta: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta',
+                fasta_fai: modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai',
+                input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly_no_sex.csv",
+                no_intervals: true,
+                step: "variant_calling",
+                tools: 'controlfreec',
+                wes: true
+            ],
+            include_freec_sex: true
         ],
         [
             name: "-profile test --tools controlfreec --no_intervals somatic -stub",
