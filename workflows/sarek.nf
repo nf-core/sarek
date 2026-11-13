@@ -431,6 +431,7 @@ workflow SAREK {
             params.joint_germline,
             wes,
             skip_tools.split(',').contains('haplotypecaller_filter'),
+            (params.dbsnp || params.known_indels || params.known_snps) as boolean,
             params.sentieon_haplotyper_emit_mode,
             params.sentieon_dnascope_emit_mode,
             params.sentieon_dnascope_pcr_indel_model,

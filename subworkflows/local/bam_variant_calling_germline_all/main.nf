@@ -49,6 +49,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     joint_germline                    // boolean: [mandatory] [default: false] joint calling of germline variants
     wes                               // boolean: [mandatory] [default: false] whether targeted data is processed
     skip_haplotypecaller_filter       // boolean: [mandatory] [default: false] whether to filter haplotypecaller single sample vcfs
+    filter_resource_provided          // boolean: [mandatory] dbsnp, known indels or known snps given, needed by FilterVariantTranches
     sentieon_haplotyper_emit_mode     // channel: [mandatory] value channel with string
     sentieon_dnascope_emit_mode       // channel: [mandatory] value channel with string
     sentieon_dnascope_pcr_indel_model // channel: [mandatory] value channel with string
@@ -189,7 +190,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             intervals_bed_combined_haplotypec,
             'haplotypecaller',
             joint_germline,
-            skip_haplotypecaller_filter)
+            skip_haplotypecaller_filter || !filter_resource_provided)
 
         vcf_haplotypecaller = VCF_JOINT_CALLING_OR_FILTERING_HAPLOTYPECALLER.out.vcf
         tbi_haplotypecaller = VCF_JOINT_CALLING_OR_FILTERING_HAPLOTYPECALLER.out.tbi
@@ -229,7 +230,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             intervals_bed_combined_haplotypec,
             'parabricks_haplotypecaller',
             joint_germline,
-            skip_tools_list.contains('parabricks_haplotypecaller_filter'))
+            skip_tools_list.contains('parabricks_haplotypecaller_filter') || !filter_resource_provided)
 
         vcf_parabricks_haplotypecaller = PARABRICKS_HAPLOTYPECALLER_VCF_JOINT_CALLING_OR_FILTERING.out.vcf
         tbi_parabricks_haplotypecaller = PARABRICKS_HAPLOTYPECALLER_VCF_JOINT_CALLING_OR_FILTERING.out.tbi
@@ -355,7 +356,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         } else {
 
             // If single sample track, check if filtering should be done
-            if (!skip_tools_list.contains('haplotyper_filter')) {
+            if (!skip_tools_list.contains('haplotyper_filter') && filter_resource_provided) {
 
                 SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_HAPLOTYPECALLER(
                     vcf_sentieon_haplotyper.join(tbi_sentieon_haplotyper, failOnDuplicate: true, failOnMismatch: true),

@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#2353](https://github.com/nf-core/sarek/pull/2353) - Update `gatk4/haplotypecaller` so dbSNP is no longer copied back from scratch into every HaplotypeCaller work directory ([#1127](https://github.com/nf-core/sarek/issues/1127))
+- [#2416](https://github.com/nf-core/sarek/pull/2416) - Without `--dbsnp`, `--known_indels` or `--known_snps`, single-sample VCFs from GATK HaplotypeCaller, Parabricks HaplotypeCaller and Sentieon Haplotyper are passed on unfiltered instead of being dropped from annotation and QC
 
 ### Removed
 
