@@ -12,6 +12,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
     bcftools_annotations_tbi      // Path: bcftools annotations tbi
     bcftools_header_lines         // Path: bcftools header lines
     build_only_index              // Boolean: build only index
+    cf_omit_sex                   // Boolean: leave sex out of the Control-FREEC config, so sex is not required for it
     contamination_resource        // Path: contamination resource
     dbsnp                         // Path: dbsnp
     fasta                         // Path: fasta
@@ -107,15 +108,15 @@ workflow SAMPLESHEET_TO_CHANNEL {
 
     // Process the input channel to group lanes by patient and sample
     // Generate patient_sample key to group lanes together
-    // Save the channel ch_with_patient_sample for later use
     // Group by patient_sample to get all lanes
     // Count number of lanes per sample
     // Combine with channel ch_with_patient_sample to add numLanes information
-    input_sample = ch_from_samplesheet
+    ch_with_patient_sample = ch_from_samplesheet
         .map { meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, contamination, vcf, variantcaller ->
             [meta.patient + meta.sample, [meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, contamination, vcf, variantcaller]]
         }
-        .tap { ch_with_patient_sample }
+
+    input_sample = ch_with_patient_sample
         .groupTuple()
         .map { patient_sample, ch_items ->
             [patient_sample, ch_items.size()]
@@ -452,11 +453,11 @@ workflow SAMPLESHEET_TO_CHANNEL {
         error("Please specify at least one tool when using `--step ${step}`.\nhttps://nf-co.re/sarek/parameters#tools")
     }
 
-    // Fails when missing sex information for CNV tools or varlociraptor
-    if (tools && (tools.split(',').contains('ascat') || tools.split(',').contains('controlfreec') || tools.split(',').contains('varlociraptor'))) {
+    // Fails when missing sex information for CNV tools or varlociraptor (Control-FREEC does not need it with --cf_omit_sex)
+    if (tools && (tools.split(',').contains('ascat') || (tools.split(',').contains('controlfreec') && !cf_omit_sex) || tools.split(',').contains('varlociraptor'))) {
         input_sample.map { sample ->
             if (sample[0].sex == 'NA') {
-                error("Please specify sex information for each sample in your samplesheet when using '--tools' with 'ascat' or 'controlfreec' or 'varlociraptor'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+                error("Please specify sex information for each sample in your samplesheet when using '--tools' with 'ascat' or 'controlfreec' (unless '--cf_omit_sex' is set) or 'varlociraptor'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
             }
         }
     }

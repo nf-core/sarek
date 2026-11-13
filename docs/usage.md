@@ -736,6 +736,17 @@ Sarek can be started at different points in the analysis by setting the paramete
 | [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                                                      |  x  |  x  |   x   |    x     |     x      |           x            |
 | [Varlociraptor](https://varlociraptor.github.io/landing/)                                                                           |  x  |  x  |   x   |    x     |     x      |           x            |
 
+## Handle Control-FREEC error `std::length_error: cannot create std::vector larger than max_size()`
+
+Control-FREEC 11.6b can abort with `std::length_error: cannot create std::vector larger than max_size()` on some tumor-only WES samples when `sex` and `minimalSubclonePresence` are both set ([#1376](https://github.com/nf-core/sarek/issues/1376)).
+Removing either setting avoids the crash.
+To leave `sex` out of the Control-FREEC configuration, use `--cf_omit_sex`.
+
+`--cf_omit_sex` applies to every Control-FREEC run in that pipeline run, tumor-only and tumor/normal alike, and it is `false` by default.
+Only Control-FREEC is affected: the `sex` in the samplesheet is still used by other tools, such as ASCAT.
+With `--cf_omit_sex`, Control-FREEC no longer needs a `sex` column in the samplesheet. ASCAT and Varlociraptor still require it.
+Check `{outdir}/variant_calling/controlfreec/<sample>/config.txt` to see whether a `sex` line was written.
+
 ## How to run ASCAT with whole-exome sequencing data?
 
 ASCAT runs out of the box on whole genome sequencing data using iGenomes resources. While the ASCAT implementation in sarek is capable of running with whole-exome sequencing data, the needed references are currently not provided with the igenomes.config. According to the [developers](https://github.com/VanLoo-lab/ascat/issues/97) of ASCAT, loci and allele files (one file per chromosome) can be downloaded directly from the [Battenberg repository](https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52).
