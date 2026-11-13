@@ -23,7 +23,7 @@ workflow BAM_VARIANT_CALLING_CNVKIT {
     // tumor/normal index slots are unused (CNVKIT_BATCH indexes CRAMs internally)
     cram_input = cram.map { meta, tumor, normal -> [meta, tumor, [], normal, []] }
 
-    fasta_input = fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fasta_fai_ -> [meta, fasta_, fasta_fai_] }
+    fasta_input = fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fasta_fai_ -> [meta, fasta_, fasta_fai_] }.collect()
 
     CNVKIT_BATCH(cram_input, fasta_input, targets, reference, generate_pon)
 
