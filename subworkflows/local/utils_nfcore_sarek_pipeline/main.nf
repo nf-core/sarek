@@ -35,8 +35,8 @@ workflow PIPELINE_INITIALISATION {
     show_hidden // boolean: Show hidden parameters in the help message
     vep_loftee // boolean: Enable the VEP LOFTEE plugin
     vep_loftee_gerp_bigwig //  string: Path to the GERP BigWig file for LOFTEE
-    skip_tools //  string: Comma-separated list of tools to skip
-    tools //  string: Comma-separated list of tools to run
+    skip_tools //   list: lowercased tools to skip
+    tools //   list: lowercased tools to run
 
     main:
 
@@ -151,10 +151,10 @@ workflow PIPELINE_INITIALISATION {
     ]
 
     // only check if we are using the tools
-    if (tools && (tools.split(',').contains('snpeff') || tools.split(',').contains('merge'))) {
+    if (('snpeff' in tools || 'merge' in tools)) {
         checkPathParamList.add(params.snpeff_cache)
     }
-    if (tools && (tools.split(',').contains('vep') || tools.split(',').contains('merge'))) {
+    if (('vep' in tools || 'merge' in tools)) {
         checkPathParamList.add(params.vep_cache)
     }
 
@@ -349,7 +349,7 @@ def sparkAndBam() {
 
 // Warn about options that the Parabricks mutectcaller path cannot honor
 def parabricksMutectcallerIgnoredParams(tools) {
-    if (tools && tools.split(',').contains('parabricks_mutectcaller')) {
+    if ('parabricks_mutectcaller' in tools) {
         if (params.joint_mutect2) {
             log.warn("`--joint_mutect2` is not supported by Parabricks mutectcaller and is ignored for `parabricks_mutectcaller`: samples are called per tumor-normal pair or per tumor-only sample.")
         }

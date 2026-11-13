@@ -56,7 +56,7 @@ workflow PREPARE_GENOME {
     pon_tbi_in                    // params.pon_tbi
     aligner                       // params.aligner
     step                          // params.step
-    tools                         // params.tools
+    tools                         // list: lowercased --tools
     vep_include_fasta             // params.vep_include_fasta
 
     main:
@@ -115,7 +115,7 @@ workflow PREPARE_GENOME {
 
     // Prepare genome for BBSplit contamination filtering
     bbsplit_index = channel.empty()
-    if (tools && tools.split(',').contains('bbsplit')) {
+    if ('bbsplit' in tools) {
         if (bbsplit_index_in) {
             // Use user-provided bbsplit index
             if (bbsplit_index_in.endsWith('.tar.gz')) {
@@ -156,20 +156,18 @@ workflow PREPARE_GENOME {
     dbsnp = dbsnp_in ? channel.fromPath(dbsnp_in).collect() : channel.value([])
     dbsnp_tbi = dbsnp_tbi_in ? channel.fromPath(dbsnp_tbi_in).collect() : channel.value([])
 
-    def tool_list = tools.split(',') as List
-
-    if (!dbsnp_tbi_in && dbsnp_in && (step in ['mapping', 'markduplicates', 'prepare_recalibration'] || tool_list.any { tool -> tool in ['controlfreec', 'haplotypecaller', 'parabricks_haplotypecaller', 'sentieon_haplotyper', 'sentieon_dnascope', 'muse', 'mutect2'] })) {
+    if (!dbsnp_tbi_in && dbsnp_in && (step in ['mapping', 'markduplicates', 'prepare_recalibration'] || tools.any { tool -> tool in ['controlfreec', 'haplotypecaller', 'parabricks_haplotypecaller', 'sentieon_haplotyper', 'sentieon_dnascope', 'muse', 'mutect2'] })) {
         TABIX_DBSNP(dbsnp.flatten().map { vcf -> [[id: vcf.baseName], vcf, [], []] }, 'compress', true, '')
         dbsnp_tbi = TABIX_DBSNP.out.index.map { _meta, tbi -> [tbi] }.collect()
     }
 
     // Mutect2 and Parabricks MutectCaller need the same indexed resources
-    def run_mutect2 = tools.split(',').contains('mutect2') || tools.split(',').contains('parabricks_mutectcaller')
+    def run_mutect2 = 'mutect2' in tools || 'parabricks_mutectcaller' in tools
 
     germline_resource = germline_resource_in ? channel.fromPath(germline_resource_in).collect() : channel.value([])
     germline_resource_tbi = germline_resource_tbi_in ? channel.fromPath(germline_resource_tbi_in).collect() : channel.value([])
 
-    if (!germline_resource_tbi_in && germline_resource_in && (run_mutect2 || tools.split(',').contains('sentieon_tnscope'))) {
+    if (!germline_resource_tbi_in && germline_resource_in && (run_mutect2 || 'sentieon_tnscope' in tools)) {
         TABIX_GERMLINE_RESOURCE(germline_resource.flatten().map { vcf -> [[id: vcf.baseName], vcf, [], []] }, 'compress', true, '')
         germline_resource_tbi = TABIX_GERMLINE_RESOURCE.out.index.map { _meta, tbi -> [tbi] }.collect()
     }
@@ -186,7 +184,7 @@ workflow PREPARE_GENOME {
     known_indels = known_indels_in ? channel.fromPath(known_indels_in).collect() : channel.value([])
     known_indels_tbi = known_indels_tbi_in ? channel.fromPath(known_indels_tbi_in).collect() : channel.value([])
 
-    if (!known_indels_tbi_in && known_indels_in && (step in ['mapping', 'markduplicates', 'prepare_recalibration'] || tool_list.any { tool -> tool in ['haplotypecaller', 'parabricks_haplotypecaller', 'sentieon_haplotyper', 'sentieon_dnascope'] })) {
+    if (!known_indels_tbi_in && known_indels_in && (step in ['mapping', 'markduplicates', 'prepare_recalibration'] || tools.any { tool -> tool in ['haplotypecaller', 'parabricks_haplotypecaller', 'sentieon_haplotyper', 'sentieon_dnascope'] })) {
         TABIX_KNOWN_INDELS(known_indels.flatten().map { vcf -> [[id: vcf.baseName], vcf, [], []] }, 'compress', true, '')
         known_indels_tbi = TABIX_KNOWN_INDELS.out.index.map { _meta, tbi -> [tbi] }.collect()
     }
@@ -194,7 +192,7 @@ workflow PREPARE_GENOME {
     known_snps = known_snps_in ? channel.fromPath(known_snps_in).collect() : channel.value([])
     known_snps_tbi = known_snps_tbi_in ? channel.fromPath(known_snps_tbi_in).collect() : channel.value([])
 
-    if (!known_snps_tbi_in && known_snps_in && (step in ['mapping', 'markduplicates', 'prepare_recalibration'] || tool_list.any { tool -> tool in ['haplotypecaller', 'parabricks_haplotypecaller', 'sentieon_haplotyper'] })) {
+    if (!known_snps_tbi_in && known_snps_in && (step in ['mapping', 'markduplicates', 'prepare_recalibration'] || tools.any { tool -> tool in ['haplotypecaller', 'parabricks_haplotypecaller', 'sentieon_haplotyper'] })) {
         TABIX_KNOWN_SNPS(known_snps.flatten().map { vcf -> [[id: vcf.baseName], vcf, [], []] }, 'compress', true, '')
         known_snps_tbi = TABIX_KNOWN_SNPS.out.index.map { _meta, tbi -> [tbi] }.collect()
     }
@@ -223,11 +221,11 @@ workflow PREPARE_GENOME {
     known_sites_snps_tbi = dbsnp_tbi.concat(known_snps_tbi).collect()
 
     // MSI
-    if (msisensor2_models_in && msisensor2_models_in.endsWith(".tar.gz") && tools.split(',').contains('msisensor2')) {
+    if (msisensor2_models_in && msisensor2_models_in.endsWith(".tar.gz") && 'msisensor2' in tools) {
         UNTAR_MSISENSOR2_MODELS(channel.fromPath(file(msisensor2_models_in)).map { archive -> [[id: archive.baseName], archive] })
         msisensor2_models = UNTAR_MSISENSOR2_MODELS.out.untar.collect()
     }
-    else if (msisensor2_models_in && tools.split(',').contains('msisensor2')) {
+    else if (msisensor2_models_in && 'msisensor2' in tools) {
         msisensor2_models = channel.fromPath(msisensor2_models_in).map { model -> [[id:model.baseName], model] }.collect()
     }
     else {
@@ -237,7 +235,7 @@ workflow PREPARE_GENOME {
     if (msisensorpro_scan_in) {
         msisensorpro_scan = channel.fromPath(msisensorpro_scan_in).collect()
     }
-    else if (tools.split(',').contains('msisensorpro')) {
+    else if ('msisensorpro' in tools) {
         MSISENSORPRO_SCAN(fasta)
         msisensorpro_scan = MSISENSORPRO_SCAN.out.list.map { _meta, list -> [list] }.collect()
     }
@@ -249,7 +247,7 @@ workflow PREPARE_GENOME {
     if (!ascat_alleles_in) {
         ascat_alleles = channel.empty()
     }
-    else if (ascat_alleles_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
+    else if (ascat_alleles_in.endsWith(".zip") && 'ascat' in tools) {
         UNZIP_ALLELES(channel.fromPath(file(ascat_alleles_in)).map { archive -> [[id: archive.baseName], archive] })
         ascat_alleles = UNZIP_ALLELES.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }.collect()
     }
@@ -260,7 +258,7 @@ workflow PREPARE_GENOME {
     if (!ascat_loci_in) {
         ascat_loci = channel.empty()
     }
-    else if (ascat_loci_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
+    else if (ascat_loci_in.endsWith(".zip") && 'ascat' in tools) {
         UNZIP_LOCI(channel.fromPath(file(ascat_loci_in)).map { archive -> [[id: archive.baseName], archive] })
         ascat_loci = UNZIP_LOCI.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }.collect()
     }
@@ -271,7 +269,7 @@ workflow PREPARE_GENOME {
     if (!ascat_loci_gc_in) {
         ascat_loci_gc = channel.value([])
     }
-    else if (ascat_loci_gc_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
+    else if (ascat_loci_gc_in.endsWith(".zip") && 'ascat' in tools) {
         UNZIP_GC(channel.fromPath(file(ascat_loci_gc_in)).map { archive -> [[id: archive.baseName], archive] })
         ascat_loci_gc = UNZIP_GC.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }.collect()
     }
@@ -282,7 +280,7 @@ workflow PREPARE_GENOME {
     if (!ascat_loci_rt_in) {
         ascat_loci_rt = channel.value([])
     }
-    else if (ascat_loci_rt_in.endsWith(".zip") && tools.split(',').contains('ascat')) {
+    else if (ascat_loci_rt_in.endsWith(".zip") && 'ascat' in tools) {
         UNZIP_RT(channel.fromPath(file(ascat_loci_rt_in)).map { archive -> [[id: archive.baseName], archive] })
         ascat_loci_rt = UNZIP_RT.out.unzipped_archive.map { _meta, extracted_archive -> extracted_archive }.collect()
     }
@@ -293,7 +291,7 @@ workflow PREPARE_GENOME {
     if (!chr_dir_in) {
         chr_dir = channel.value([])
     }
-    else if (chr_dir_in.endsWith(".tar.gz") && tools.split(',').contains('controlfreec')) {
+    else if (chr_dir_in.endsWith(".tar.gz") && 'controlfreec' in tools) {
         UNTAR_CHR_DIR(channel.fromPath(file(chr_dir_in)).map { archive -> [[id: archive.baseName], archive] })
         chr_dir = UNTAR_CHR_DIR.out.untar.map { _meta, extracted_archive -> extracted_archive }.collect()
     }
