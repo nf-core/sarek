@@ -11,11 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2391](https://github.com/nf-core/sarek/pull/2391) - Make the `lane` column of the samplesheet optional for samples with a single row (`--step mapping`), based on [#1943](https://github.com/nf-core/sarek/pull/1943) by [@animesh](https://github.com/animesh)
 - [#2353](https://github.com/nf-core/sarek/pull/2353) - Add joint germline calling (`--joint_germline`), dbSNP annotation and `--gatk_pcr_indel_model` support to Parabricks HaplotypeCaller. Single-sample VCFs are now also filtered with CNNScoreVariants/FilterVariantTranches by default, published as `<sample>.parabricks_haplotypecaller.filtered.vcf.gz`; use `--skip_tools parabricks_haplotypecaller_filter` for the previous unfiltered output
+- [#2408](https://github.com/nf-core/sarek/pull/2408) - Add `--vep_loftee_gerp_bigwig` to supply a GERP BigWig file to the VEP LOFTEE plugin ([#2295](https://github.com/nf-core/sarek/issues/2295)), based on [#2301](https://github.com/nf-core/sarek/pull/2301) by [@Joaodemeirelles](https://github.com/Joaodemeirelles)
 
 ### Changed
 
 ### Fixed
 
+- [#2353](https://github.com/nf-core/sarek/pull/2353) - Update `gatk4/haplotypecaller` so dbSNP is no longer copied back from scratch into every HaplotypeCaller work directory ([#1127](https://github.com/nf-core/sarek/issues/1127))
 - [#2416](https://github.com/nf-core/sarek/pull/2416) - Without `--dbsnp`, `--known_indels` or `--known_snps`, single-sample VCFs from GATK HaplotypeCaller, Parabricks HaplotypeCaller and Sentieon Haplotyper are passed on unfiltered instead of being dropped from annotation and QC
 
 ### Removed
@@ -32,8 +34,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params | status |
-| ------ | ------ |
+| Params                     | status |
+| -------------------------- | ------ |
+| `--vep_loftee_gerp_bigwig` | Added  |
 
 ### Developer section
 

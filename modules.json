@@ -288,7 +288,7 @@
                     },
                     "gatk4/haplotypecaller": {
                         "branch": "master",
-                        "git_sha": "b2bcd8312599aacd849e69721e20ac8138018f83",
+                        "git_sha": "a727b680a30724b24ae4d346c9f95ee37a1691f1",
                         "installed_by": ["modules"]
                     },
                     "gatk4/intervallisttobed": {
