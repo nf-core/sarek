@@ -385,6 +385,8 @@ workflow {
         params.show_hidden,
         params.vep_loftee,
         params.vep_loftee_gerp_bigwig,
+        params.skip_tools,
+        params.tools,
     )
 
     //

@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [#2411](https://github.com/nf-core/sarek/pull/2411) - Pass `tools` and `skip_tools` into `PIPELINE_INITIALISATION` and `FASTQ_PREPROCESS_GATK` via `take:` instead of reading `params` directly
+
 ### Fixed
 
 - [#2353](https://github.com/nf-core/sarek/pull/2353) - Update `gatk4/haplotypecaller` so dbSNP is no longer copied back from scratch into every HaplotypeCaller work directory ([#1127](https://github.com/nf-core/sarek/issues/1127))
