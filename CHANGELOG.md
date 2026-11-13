@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2391](https://github.com/nf-core/sarek/pull/2391) - Make the `lane` column of the samplesheet optional for samples with a single row (`--step mapping`), based on [#1943](https://github.com/nf-core/sarek/pull/1943) by [@animesh](https://github.com/animesh)
 - [#2353](https://github.com/nf-core/sarek/pull/2353) - Add joint germline calling (`--joint_germline`), dbSNP annotation and `--gatk_pcr_indel_model` support to Parabricks HaplotypeCaller. Single-sample VCFs are now also filtered with CNNScoreVariants/FilterVariantTranches by default, published as `<sample>.parabricks_haplotypecaller.filtered.vcf.gz`; use `--skip_tools parabricks_haplotypecaller_filter` for the previous unfiltered output
 - [#2408](https://github.com/nf-core/sarek/pull/2408) - Add `--vep_loftee_gerp_bigwig` to supply a GERP BigWig file to the VEP LOFTEE plugin ([#2295](https://github.com/nf-core/sarek/issues/2295)), based on [#2301](https://github.com/nf-core/sarek/pull/2301) by [@Joaodemeirelles](https://github.com/Joaodemeirelles)
+- [#2389](https://github.com/nf-core/sarek/pull/2389) - Add `--cf_omit_sex` to leave the `sex` line out of the Control-FREEC config. Control-FREEC 11.6b can abort with `std::length_error` on some tumor-only WES samples when `sex` and `minimalSubclonePresence` are both set ([#1376](https://github.com/nf-core/sarek/issues/1376)); omitting `sex` avoids it. With it set, the samplesheet `sex` is no longer required for Control-FREEC. Default `false`, so results are unchanged
 
 ### Changed
 
@@ -48,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2399](https://github.com/nf-core/sarek/pull/2399) - Back to dev (3.12.1dev)
 - [#2401](https://github.com/nf-core/sarek/pull/2401) - Template update 4.2.2
 - [#2395](https://github.com/nf-core/sarek/pull/2395) - Run all nf-tests when a `conf/modules/*` config changes, since nf-test cannot link these configs to the pipeline tests that depend on them
+- [#2420](https://github.com/nf-core/sarek/pull/2420) - Use `=` instead of `.tap{}` for channel assignment in `samplesheet_to_channel`, and document `=` over `.set{}`/`.tap{}` in `CONTRIBUTING.md`
 
 #### Fixed
 

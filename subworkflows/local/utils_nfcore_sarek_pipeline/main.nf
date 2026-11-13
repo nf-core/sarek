@@ -175,6 +175,7 @@ workflow PIPELINE_INITIALISATION {
         params.bcftools_annotations_tbi,
         params.bcftools_header_lines,
         params.build_only_index,
+        params.cf_omit_sex,
         params.contamination_resource,
         params.dbsnp,
         params.fasta,
