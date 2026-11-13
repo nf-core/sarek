@@ -198,7 +198,7 @@ workflow SAREK {
 
         // QC
         // `--skip_tools fastqc` to skip fastqc
-        if (!(skip_tools.split(',').contains('fastqc'))) {
+        if ('fastqc' !in skip_tools) {
             FASTQC(input_fastq)
 
             reports = reports.mix(FASTQC.out.zip.collect { _meta, logs -> logs })
@@ -220,7 +220,7 @@ workflow SAREK {
                 intervals_bed_combined,
                 known_sites_indels,
                 known_sites_indels_tbi,
-                skip_tools.split(',').contains('baserecalibrator'),
+                'baserecalibrator' in skip_tools,
                 params.save_mapped,
                 params.save_output_as_bam,
                 params.outdir,
@@ -278,7 +278,6 @@ workflow SAREK {
         cram_variant_calling,
         ngscheckmate_bed,
         fasta.combine(fasta_fai).map { meta_fasta_, fasta_file, _meta_fai, fai -> [meta_fasta_, fasta_file, fai] }.collect(),
-        skip_tools.split(',').contains('baserecalibrator'),
         intervals_for_preprocessing,
         skip_tools,
         tools,
@@ -291,7 +290,7 @@ workflow SAREK {
         bam_variant_calling = channel.empty()
 
         //  For cnvkit, msisensor2 and muse we need to use bam input and not cram
-        if (tools.split(',').contains('cnvkit') || tools.split(',').contains('msisensor2') || tools.split(',').contains('muse')) {
+        if ('cnvkit' in tools || 'msisensor2' in tools || 'muse' in tools) {
 
             // Differentiate between bam and cram files
             cram_variant_calling_status_tmp = cram_variant_calling.branch { _meta, file, _index ->
@@ -407,7 +406,7 @@ workflow SAREK {
         //     intervals_bed_combined: [] if no_intervals, else interval_bed_combined
         //     intervals_bed_gz_tbi_combined, [] if no_intervals, else interval_bed_combined_gz_tbi
         //     intervals_bed_combined_for_variant_calling, no_intervals.bed if no intervals, else interval_bed_combined.bed
-        //   skip_tools.split(',').contains('haplotypecaller_filter') is true if filtering should be skipped
+        //   'haplotypecaller_filter' in skip_tools is true if filtering should be skipped
         BAM_VARIANT_CALLING_GERMLINE_ALL(
             tools,
             skip_tools,
@@ -434,7 +433,7 @@ workflow SAREK {
             known_snps_vqsr,
             params.joint_germline,
             wes,
-            skip_tools.split(',').contains('haplotypecaller_filter'),
+            'haplotypecaller_filter' in skip_tools,
             (params.dbsnp || params.known_indels || params.known_snps) as boolean,
             params.sentieon_haplotyper_emit_mode,
             params.sentieon_dnascope_emit_mode,
@@ -571,7 +570,7 @@ workflow SAREK {
             vcf_to_annotate = input_sample
         }
 
-        if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff') || tools.split(',').contains('vep') || tools.split(',').contains('bcfann') || tools.split(',').contains('snpsift')) {
+        if ('merge' in tools || 'snpeff' in tools || 'vep' in tools || 'bcfann' in tools || 'snpsift' in tools) {
 
             vep_fasta = params.vep_include_fasta ? fasta : [[id: 'null'], []]
 
@@ -599,7 +598,7 @@ workflow SAREK {
     // Collate and save software versions
     //
     def collated_versions = channel.empty()
-    if (!(skip_tools.split(',').contains('versions'))) {
+    if ('versions' !in skip_tools) {
         collated_versions = softwareVersionsToYAML(
             softwareVersions: channel.topic("versions"),
             nextflowVersion: workflow.nextflow.version,
@@ -644,7 +643,7 @@ workflow SAREK {
                 [],
                 [],
             ]
-        }.filter { !skip_tools.split(',').contains('multiqc') }
+        }.filter { 'multiqc' !in skip_tools }
     )
 
     emit:

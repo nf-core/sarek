@@ -87,12 +87,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     tbi_strelka                        = channel.empty()
     tbi_tiddit                         = channel.empty()
 
-    // Split once rather than on every tool check below
-    def tools_list = tools ? tools.split(',') as List : []
-    def skip_tools_list = skip_tools ? skip_tools.split(',') as List : []
-
     // BCFTOOLS MPILEUP
-    if (tools_list.contains('mpileup')) {
+    if ('mpileup' in tools) {
         BAM_VARIANT_CALLING_MPILEUP(
             cram,
             dict,
@@ -106,7 +102,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // CNVKIT
-    if (tools_list.contains('cnvkit')) {
+    if ('cnvkit' in tools) {
         BAM_VARIANT_CALLING_CNVKIT(
             // Remap channel to match module/subworkflow
             // Use the already-converted BAM (shared with somatic/tumor-only) instead of CRAM
@@ -119,7 +115,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // DEEPVARIANT
-    if (tools_list.contains('deepvariant')) {
+    if ('deepvariant' in tools) {
         BAM_VARIANT_CALLING_DEEPVARIANT(
             cram,
             dict,
@@ -133,7 +129,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // PARABRICKS DEEPVARIANT
-    if (tools && tools.split(',').contains('parabricks_deepvariant')) {
+    if ('parabricks_deepvariant' in tools) {
         BAM_VARIANT_CALLING_PARABRICKS_DEEPVARIANT(
             cram,
             fasta,
@@ -145,7 +141,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // FREEBAYES
-    if (tools_list.contains('freebayes')) {
+    if ('freebayes' in tools) {
         // Input channel is remapped to match input of module/subworkflow
         BAM_VARIANT_CALLING_FREEBAYES(
             // Remap channel to match module/subworkflow
@@ -161,7 +157,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // HAPLOTYPECALLER
-    if (tools_list.contains('haplotypecaller')) {
+    if ('haplotypecaller' in tools) {
         BAM_VARIANT_CALLING_HAPLOTYPECALLER(
             cram,
             fasta,
@@ -197,7 +193,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // PARABRICKS HAPLOTYPECALLER
-    if (tools_list.contains('parabricks_haplotypecaller')) {
+    if ('parabricks_haplotypecaller' in tools) {
         BAM_VARIANT_CALLING_PARABRICKS_HAPLOTYPECALLER(
             cram,
             fasta,
@@ -230,14 +226,14 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             intervals_bed_combined_haplotypec,
             'parabricks_haplotypecaller',
             joint_germline,
-            skip_tools_list.contains('parabricks_haplotypecaller_filter') || !filter_resource_provided)
+            'parabricks_haplotypecaller_filter' in skip_tools || !filter_resource_provided)
 
         vcf_parabricks_haplotypecaller = PARABRICKS_HAPLOTYPECALLER_VCF_JOINT_CALLING_OR_FILTERING.out.vcf
         tbi_parabricks_haplotypecaller = PARABRICKS_HAPLOTYPECALLER_VCF_JOINT_CALLING_OR_FILTERING.out.tbi
     }
 
     // MANTA
-    if (tools_list.contains('manta')) {
+    if ('manta' in tools) {
         BAM_VARIANT_CALLING_GERMLINE_MANTA (
             cram,
             fasta,
@@ -250,7 +246,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // INDEXCOV, for WGS only
-    if (wes == false && tools_list.contains('indexcov')) {
+    if (wes == false && 'indexcov' in tools) {
         BAM_VARIANT_CALLING_INDEXCOV (
             cram,
             fasta,
@@ -261,7 +257,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // SENTIEON DNASCOPE
-    if (tools_list.contains('sentieon_dnascope')) {
+    if ('sentieon_dnascope' in tools) {
         BAM_VARIANT_CALLING_SENTIEON_DNASCOPE(
             cram,
             fasta,
@@ -298,14 +294,14 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             sentieon_dnascope_model,
             'sentieon_dnascope',
             joint_germline,
-            skip_tools_list.contains('dnascope_filter'))
+            'dnascope_filter' in skip_tools)
 
         vcf_sentieon_dnascope = VCF_JOINT_CALLING_OR_FILTERING_SENTIEON.out.vcf
         tbi_sentieon_dnascope = VCF_JOINT_CALLING_OR_FILTERING_SENTIEON.out.tbi
     }
 
     // SENTIEON HAPLOTYPER
-    if (tools_list.contains('sentieon_haplotyper')) {
+    if ('sentieon_haplotyper' in tools) {
         BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER(
             cram,
             fasta,
@@ -340,7 +336,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             sentieon_dnascope_model,
             'sentieon_haplotyper',
             joint_germline,
-            skip_tools_list.contains('haplotyper_filter') || !filter_resource_provided)
+            'haplotyper_filter' in skip_tools || !filter_resource_provided)
 
         vcf_sentieon_haplotyper = SENTIEON_HAPLOTYPER_VCF_JOINT_CALLING_OR_FILTERING.out.vcf
         tbi_sentieon_haplotyper = SENTIEON_HAPLOTYPER_VCF_JOINT_CALLING_OR_FILTERING.out.tbi
@@ -348,7 +344,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
     // STRELKA
 
-    if (tools_list.contains('strelka')) {
+    if ('strelka' in tools) {
 
         BAM_VARIANT_CALLING_SINGLE_STRELKA(
             cram,
@@ -363,7 +359,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // TIDDIT
-    if (tools_list.contains('tiddit')) {
+    if ('tiddit' in tools) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram,
             // Remap channel to match module/subworkflow

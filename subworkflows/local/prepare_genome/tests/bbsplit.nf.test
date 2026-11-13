@@ -50,7 +50,7 @@ nextflow_workflow {
                 input[28] = channel.empty()                                                                                                                            // pon_tbi
                 input[29] = 'bwa-mem'                                                                                                                                  // aligner
                 input[30] = 'mapping'                                                                                                                                  // step
-                input[31] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
+                input[31] = ["bbsplit"]                                                                                                                                  // tools - enable bbsplit
                 input[32] = false                                                                                                                                      // vep_include_fasta
                 """
             }
@@ -107,7 +107,7 @@ nextflow_workflow {
                 input[28] = channel.empty()                                                                                                                            // pon_tbi
                 input[29] = 'bwa-mem'                                                                                                                                  // aligner
                 input[30] = 'mapping'                                                                                                                                  // step
-                input[31] = "no_tools"                                                                                                                                 // tools - bbsplit not enabled
+                input[31] = []                                                                                                                                        // tools - bbsplit not enabled
                 input[32] = false                                                                                                                                      // vep_include_fasta
                 """
             }
@@ -166,7 +166,7 @@ nextflow_workflow {
                 input[28] = channel.empty()                                                                                                                            // pon_tbi
                 input[29] = 'bwa-mem'                                                                                                                                  // aligner
                 input[30] = 'mapping'                                                                                                                                  // step
-                input[31] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
+                input[31] = ["bbsplit"]                                                                                                                                  // tools - enable bbsplit
                 input[32] = false                                                                                                                                      // vep_include_fasta
                 """
             }
@@ -226,7 +226,7 @@ nextflow_workflow {
                 input[28] = channel.empty()                                                                                                                            // pon_tbi
                 input[29] = 'bwa-mem'                                                                                                                                  // aligner
                 input[30] = 'mapping'                                                                                                                                  // step
-                input[31] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
+                input[31] = ["bbsplit"]                                                                                                                                  // tools - enable bbsplit
                 input[32] = false                                                                                                                                      // vep_include_fasta
                 """
             }
@@ -289,7 +289,7 @@ nextflow_workflow {
                 input[28] = channel.empty()                                                                                                                            // pon_tbi
                 input[29] = 'bwa-mem'                                                                                                                                  // aligner
                 input[30] = 'mapping'                                                                                                                                  // step
-                input[31] = "bbsplit"                                                                                                                                  // tools - enable bbsplit
+                input[31] = ["bbsplit"]                                                                                                                                  // tools - enable bbsplit
                 input[32] = false                                                                                                                                      // vep_include_fasta
                 """
             }

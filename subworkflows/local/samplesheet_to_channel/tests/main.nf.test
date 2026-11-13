@@ -43,11 +43,11 @@ nextflow_workflow {
                 input[23] = 'variant' // sentieon_haplotyper_emit_mode
                 input[24] = '' // seq_center
                 input[25] = 'ILLUMINA' // seq_platform
-                input[26] = 'baserecalibrator' // skip_tools
+                input[26] = ['baserecalibrator'] // skip_tools
                 input[27] = [] // snpeff_cache
                 input[28] = 'WBcel235.99' // snpeff_db
                 input[29] = 'mapping' // step
-                input[30] = 'strelka' // tools
+                input[30] = ['strelka'] // tools
                 input[31] = null // umi_length
                 input[32] = null // umi_location
                 input[33] = false // umi_in_read_header

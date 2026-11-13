@@ -16,7 +16,7 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
     fasta     // channel: [mandatory] [ meta, fasta ]
     fai       // channel: [mandatory] [ meta, fasta_fai ]
     intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
-    tools     // string:  [mandatory] --tools
+    tools     // list:    [mandatory] lowercased --tools
 
     main:
 
@@ -35,10 +35,10 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
 
     // Run, if --tools mpileup
     keep_bcftools_mpileup = false
-    BCFTOOLS_MPILEUP(cram_intervals_bcftools.filter { tools && tools.split(',').contains('mpileup') }, fasta_fai, keep_bcftools_mpileup)
+    BCFTOOLS_MPILEUP(cram_intervals_bcftools.filter { 'mpileup' in tools }, fasta_fai, keep_bcftools_mpileup)
 
     // Only run, if --tools controlfreec
-    SAMTOOLS_MPILEUP(cram_crai_intervals.filter { tools && tools.split(',').contains('controlfreec') }, fasta_fai)
+    SAMTOOLS_MPILEUP(cram_crai_intervals.filter { 'controlfreec' in tools }, fasta_fai)
 
     // Figuring out if there is one or more vcf(s) from the same sample
     vcf_mpileup = BCFTOOLS_MPILEUP.out.vcf.branch { meta, _vcf ->
