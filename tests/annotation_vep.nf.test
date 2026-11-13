@@ -43,6 +43,29 @@ nextflow_pipeline {
             ],
             vcf_header_check: '|LoF|',
         ],
+        [
+            name: "Fails with profile test --tools vep --vep_loftee_gerp_bigwig and no --vep_loftee",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
+                step: 'annotate',
+                tools: 'vep',
+                vep_loftee_gerp_bigwig: modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bigwig/test_S2.RPKM.bw',
+            ],
+            failure: true,
+            snapshot: 'stdout',
+            snapshot_include: 'requires --vep_loftee',
+        ],
+        [
+            name: "-profile test --tools vep --vep_loftee --vep_loftee_gerp_bigwig",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/vcf_single.csv",
+                step: 'annotate',
+                tools: 'vep',
+                vep_loftee: true,
+                vep_loftee_gerp_bigwig: modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bigwig/test_S2.RPKM.bw',
+            ],
+            vcf_header_check: '|LoF|',
+        ],
     ]
 
     // Generate tests for each scenario
