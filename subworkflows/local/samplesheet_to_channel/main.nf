@@ -108,15 +108,15 @@ workflow SAMPLESHEET_TO_CHANNEL {
 
     // Process the input channel to group lanes by patient and sample
     // Generate patient_sample key to group lanes together
-    // Save the channel ch_with_patient_sample for later use
     // Group by patient_sample to get all lanes
     // Count number of lanes per sample
     // Combine with channel ch_with_patient_sample to add numLanes information
-    input_sample = ch_from_samplesheet
+    ch_with_patient_sample = ch_from_samplesheet
         .map { meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, contamination, vcf, variantcaller ->
             [meta.patient + meta.sample, [meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, contamination, vcf, variantcaller]]
         }
-        .tap { ch_with_patient_sample }
+
+    input_sample = ch_with_patient_sample
         .groupTuple()
         .map { patient_sample, ch_items ->
             [patient_sample, ch_items.size()]
