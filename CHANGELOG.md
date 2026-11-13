@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - [#2411](https://github.com/nf-core/sarek/pull/2411) - Pass `tools` and `skip_tools` into `PIPELINE_INITIALISATION` and `FASTQ_PREPROCESS_GATK` via `take:` instead of reading `params` directly
+- [#2421](https://github.com/nf-core/sarek/pull/2421) - Shorten the `--tools` parameter help to one line that links to the usage docs. Correct the variant caller data-type table (Strelka, CNVkit), add the Sentieon callers, a `--tools` value column, caveats per tool, and `--tools` examples
 
 ### Fixed
 
