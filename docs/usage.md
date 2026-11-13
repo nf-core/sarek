@@ -711,30 +711,32 @@ Sarek can be started at different points in the analysis by setting the paramete
 
 ## Which variant calling tool is implemented for which data type?
 
-| Tool                                                                                                                                | WGS | WES | Panel | Germline | Tumor-Only | Somatic (Tumor-Normal) |
-| :---------------------------------------------------------------------------------------------------------------------------------- | :-: | :-: | :---: | :------: | :--------: | :--------------------: |
-| [ASCAT](https://github.com/VanLoo-lab/ascat)                                                                                        |  x  |  x  |   -   |    -     |     -      |           x            |
-| [CNVKit](https://cnvkit.readthedocs.io/en/stable/)                                                                                  |  x  |  x  |   -   |    x     |     x      |           x            |
-| [Control-FREEC](https://github.com/BoevaLab/FREEC)                                                                                  |  x  |  x  |   x   |    -     |     x      |           x            |
-| [DeepSomatic](https://github.com/google/deepsomatic)                                                                                |  x  |  x  |   -   |    -     |     -      |           x            |
-| [DeepVariant](https://github.com/google/deepvariant)                                                                                |  x  |  x  |   x   |    x     |     -      |           -            |
-| [FreeBayes](https://github.com/ekg/freebayes)                                                                                       |  x  |  x  |   x   |    x     |     x      |           x            |
-| [GATK HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/5358864757787-HaplotypeCaller)                             |  x  |  x  |   x   |    x     |     -      |           -            |
-| [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2)                                             |  x  |  x  |   x   |    -     |     x      |           x            |
-| [indexcov](https://github.com/brentp/goleft/tree/master/indexcov)                                                                   |  x  |  -  |   -   |    x     |     -      |           x            |
-| [lofreq](https://github.com/CSB5/lofreq)                                                                                            |  x  |  x  |   x   |    -     |     x      |           -            |
-| [Manta](https://github.com/Illumina/manta)                                                                                          |  x  |  x  |   x   |    x     |     x      |           x            |
-| [mpileup](https://www.htslib.org/doc/samtools-mpileup.html)                                                                         |  x  |  x  |   x   |    x     |     x      |           -            |
-| [MSIsensor2](https://github.com/niu-lab/msisensor2)                                                                                 |  x  |  x  |   x   |    -     |     x      |           -            |
-| [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro)                                                                         |  x  |  x  |   x   |    -     |     -      |           x            |
-| [MuSE](https://github.com/wwylab/MuSE)                                                                                              |  x  |  x  |   x   |    -     |     -      |           x            |
-| [Parabricks DeepSomatic](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepsomatic.html) (GPU)         |  x  |  x  |   -   |    -     |     -      |           x            |
-| [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html) (GPU)         |  x  |  x  |   x   |    x     |     -      |           -            |
-| [Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) (GPU) |  x  |  x  |   x   |    x     |     -      |           -            |
-| [Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html) (GPU)       |  x  |  x  |   x   |    -     |     x      |           x            |
-| [Strelka](https://github.com/Illumina/strelka)                                                                                      |  x  |  x  |   -   |    -     |     -      |           x            |
-| [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                                                      |  x  |  x  |   x   |    x     |     x      |           x            |
-| [Varlociraptor](https://varlociraptor.github.io/landing/)                                                                           |  x  |  x  |   x   |    x     |     x      |           x            |
+Use the value in the `--tools` column, e.g. `--tools strelka,manta`. Values are case-insensitive.
+
+| Tool                                                                                                                                | `--tools` value              | WGS | WES | Panel | Germline | Tumor-Only | Somatic (Tumor-Normal) |
+| :---------------------------------------------------------------------------------------------------------------------------------- | :--------------------------- | :-: | :-: | :---: | :------: | :--------: | :--------------------: |
+| [ASCAT](https://github.com/VanLoo-lab/ascat)                                                                                        | `ascat`                      |  x  |  x  |   -   |    -     |     -      |           x            |
+| [CNVKit](https://cnvkit.readthedocs.io/en/stable/)                                                                                  | `cnvkit`                     |  x  |  x  |   -   |    x     |     x      |           x            |
+| [Control-FREEC](https://github.com/BoevaLab/FREEC)                                                                                  | `controlfreec`               |  x  |  x  |   x   |    -     |     x      |           x            |
+| [DeepSomatic](https://github.com/google/deepsomatic)                                                                                | `deepsomatic`                |  x  |  x  |   -   |    -     |     -      |           x            |
+| [DeepVariant](https://github.com/google/deepvariant)                                                                                | `deepvariant`                |  x  |  x  |   x   |    x     |     -      |           -            |
+| [FreeBayes](https://github.com/ekg/freebayes)                                                                                       | `freebayes`                  |  x  |  x  |   x   |    x     |     x      |           x            |
+| [GATK HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/5358864757787-HaplotypeCaller)                             | `haplotypecaller`            |  x  |  x  |   x   |    x     |     -      |           -            |
+| [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2)                                             | `mutect2`                    |  x  |  x  |   x   |    -     |     x      |           x            |
+| [indexcov](https://github.com/brentp/goleft/tree/master/indexcov)                                                                   | `indexcov`                   |  x  |  -  |   -   |    x     |     -      |           x            |
+| [lofreq](https://github.com/CSB5/lofreq)                                                                                            | `lofreq`                     |  x  |  x  |   x   |    -     |     x      |           -            |
+| [Manta](https://github.com/Illumina/manta)                                                                                          | `manta`                      |  x  |  x  |   x   |    x     |     x      |           x            |
+| [mpileup](https://www.htslib.org/doc/samtools-mpileup.html)                                                                         | `mpileup`                    |  x  |  x  |   x   |    x     |     x      |           -            |
+| [MSIsensor2](https://github.com/niu-lab/msisensor2)                                                                                 | `msisensor2`                 |  x  |  x  |   x   |    -     |     x      |           -            |
+| [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro)                                                                         | `msisensorpro`               |  x  |  x  |   x   |    -     |     -      |           x            |
+| [MuSE](https://github.com/wwylab/MuSE)                                                                                              | `muse`                       |  x  |  x  |   x   |    -     |     -      |           x            |
+| [Parabricks DeepSomatic](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepsomatic.html) (GPU)         | `parabricks_deepsomatic`     |  x  |  x  |   -   |    -     |     -      |           x            |
+| [Parabricks DeepVariant](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_deepvariant.html) (GPU)         | `parabricks_deepvariant`     |  x  |  x  |   x   |    x     |     -      |           -            |
+| [Parabricks HaplotypeCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_haplotypecaller.html) (GPU) | `parabricks_haplotypecaller` |  x  |  x  |   x   |    x     |     -      |           -            |
+| [Parabricks MutectCaller](https://docs.nvidia.com/clara/parabricks/latest/documentation/tooldocs/man_mutectcaller.html) (GPU)       | `parabricks_mutectcaller`    |  x  |  x  |   x   |    -     |     x      |           x            |
+| [Strelka](https://github.com/Illumina/strelka)                                                                                      | `strelka`                    |  x  |  x  |   -   |    -     |     -      |           x            |
+| [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                                                      | `tiddit`                     |  x  |  x  |   x   |    x     |     x      |           x            |
+| [Varlociraptor](https://varlociraptor.github.io/landing/)                                                                           | `varlociraptor`              |  x  |  x  |   x   |    x     |     x      |           x            |
 
 ## Handle Control-FREEC error `std::length_error: cannot create std::vector larger than max_size()`
 
