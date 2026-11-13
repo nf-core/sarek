@@ -16,6 +16,7 @@ workflow BAM_MARKDUPLICATES_SPARK {
     fasta                         // channel: [mandatory] fasta
     fasta_fai                     // channel: [mandatory] fasta_fai
     intervals_bed_combined        // channel: [optional]  intervals_bed
+    skip_tools                    // string:  [mandatory] --skip_tools
 
     main:
     reports = channel.empty()
@@ -31,10 +32,11 @@ workflow BAM_MARKDUPLICATES_SPARK {
         .join(INDEX_MARKDUPLICATES.out.index, failOnDuplicate: true, failOnMismatch: true)
 
     // QC on alignment
-    CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, fasta_fai, intervals_bed_combined)
+    CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, fasta_fai, intervals_bed_combined, skip_tools)
 
     // When running Marduplicates spark, and saving reports
-    GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta.map{ _meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] }, dict.map{ _meta, dict_ -> [ dict_ ] })
+    // `--skip_tools markduplicates_report` to skip it
+    GATK4_ESTIMATELIBRARYCOMPLEXITY(bam.filter { !(skip_tools && skip_tools.split(',').contains('markduplicates_report')) }, fasta.map{ _meta, fasta_ -> [ fasta_ ] }, fasta_fai.map{ _meta, fasta_fai_ -> [ fasta_fai_ ] }, dict.map{ _meta, dict_ -> [ dict_ ] })
 
     // Gather all reports generated
     reports = reports.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics)

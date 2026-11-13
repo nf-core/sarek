@@ -7,13 +7,18 @@ workflow VCF_QC_BCFTOOLS_VCFTOOLS {
     take:
     vcf
     target_bed
+    skip_tools // string: --skip_tools
 
     main:
 
-    BCFTOOLS_STATS(vcf.map{ meta, vcf_ -> [ meta, vcf_, [] ] }, [[:],[]], [[:],[]], [[:],[]], [[:],[]], [[:],[]])
-    VCFTOOLS_TSTV_COUNT(vcf, target_bed, [])
-    VCFTOOLS_TSTV_QUAL(vcf, target_bed, [])
-    VCFTOOLS_SUMMARY(vcf, target_bed, [])
+    // `--skip_tools bcftools` to skip bcftools stats, `--skip_tools vcftools` to skip vcftools
+    vcf_bcftools = vcf.filter { !(skip_tools && skip_tools.split(',').contains('bcftools')) }
+    vcf_vcftools = vcf.filter { !(skip_tools && skip_tools.split(',').contains('vcftools')) }
+
+    BCFTOOLS_STATS(vcf_bcftools.map{ meta, vcf_ -> [ meta, vcf_, [] ] }, [[:],[]], [[:],[]], [[:],[]], [[:],[]], [[:],[]])
+    VCFTOOLS_TSTV_COUNT(vcf_vcftools, target_bed, [])
+    VCFTOOLS_TSTV_QUAL(vcf_vcftools, target_bed, [])
+    VCFTOOLS_SUMMARY(vcf_vcftools, target_bed, [])
 
     emit:
     bcftools_stats          = BCFTOOLS_STATS.out.stats

@@ -61,6 +61,7 @@ workflow FASTQ_PREPROCESS_GATK {
     save_output_as_bam
     aligner
     group_by_umi_strategy
+    skip_tools
 
     main:
 
@@ -282,7 +283,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 cram_skip_markduplicates = channel.empty().mix(input_sample)
             }
 
-            CRAM_QC_NO_MD(cram_skip_markduplicates, fasta, fasta_fai, intervals_for_preprocessing)
+            CRAM_QC_NO_MD(cram_skip_markduplicates, fasta, fasta_fai, intervals_for_preprocessing, skip_tools)
 
             // Gather QC reports
             reports = reports.mix(CRAM_QC_NO_MD.out.reports.collect { _meta, report -> [report] })
@@ -294,6 +295,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing,
+                skip_tools,
             )
             cram_markduplicates_spark = BAM_MARKDUPLICATES_SPARK.out.alignment
 
@@ -310,6 +312,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing,
+                skip_tools,
             )
 
             cram_sentieon_dedup = BAM_SENTIEON_DEDUP.out.alignment
@@ -325,6 +328,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 fasta_fai,
                 intervals_for_preprocessing,
                 save_output_as_bam,
+                skip_tools,
             )
 
             cram_markduplicates_no_spark = BAM_MARKDUPLICATES.out.alignment
