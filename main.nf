@@ -340,6 +340,7 @@ workflow NFCORE_SAREK {
         PREPARE_GENOME.out.pon,
         PREPARE_GENOME.out.pon_tbi,
         params.sentieon_dnascope_model ? channel.fromPath(params.sentieon_dnascope_model).collect() : channel.value([]),
+        channel.value(params.varnet_resources ?: []),
         params.varlociraptor_chunk_size,
         params.varlociraptor_events_germline,
         params.varlociraptor_events_somatic,

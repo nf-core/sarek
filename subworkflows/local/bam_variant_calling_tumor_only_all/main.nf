@@ -7,6 +7,7 @@ include { BAM_VARIANT_CALLING_CNVKIT                             } from '../bam_
 include { BAM_VARIANT_CALLING_FREEBAYES                          } from '../bam_variant_calling_freebayes'
 include { BAM_VARIANT_CALLING_MPILEUP                            } from '../bam_variant_calling_mpileup'
 include { BAM_VARIANT_CALLING_SINGLE_TIDDIT                      } from '../bam_variant_calling_single_tiddit'
+include { BAM_VARIANT_CALLING_VARNET                             } from '../bam_variant_calling_varnet'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC            } from '../bam_variant_calling_tumor_only_controlfreec'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA                   } from '../bam_variant_calling_tumor_only_manta'
 include { BAM_VARIANT_CALLING_MUTECT2                            } from '../bam_variant_calling_mutect2'
@@ -14,6 +15,7 @@ include { BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ                  } from '../bam_
 include { BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER            } from '../bam_variant_calling_parabricks_mutectcaller'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE                 } from '../bam_variant_calling_tumor_only_tnscope'
 include { MSISENSOR2_MSI                                         } from '../../../modules/nf-core/msisensor2/msi'
+include { VARNET_GETREF                                          } from '../../../modules/nf-core/varnet/getref'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
@@ -40,10 +42,11 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     intervals_bed_gz_tbi_combined // channel: [mandatory] intervals/target regions in one file zipped
     mappability
     msisensor2_models
-    panel_of_normals                // channel: [optional]  panel_of_normals
-    panel_of_normals_tbi            // channel: [optional]  panel_of_normals_tbi
-    joint_mutect2                   // boolean: [mandatory] [default: false] run mutect2 in joint mode
-    wes                             // boolean: [mandatory] [default: false] whether targeted data is processed
+    panel_of_normals              // channel: [optional]  panel_of_normals
+    panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
+    varnet_resources              // channel: [optional]  folder with the VarNet germline resources, downloaded if not set
+    joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
+    wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
     contamination_resource_provided // boolean: [mandatory] whether a contamination resource was provided
 
     main:
@@ -241,6 +244,48 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         tbi_tnscope = BAM_VARIANT_CALLING_TUMOR_ONLY_TNSCOPE.out.tbi
     }
 
+    // VARNET
+    bam_varnet = bam
+        .filter { _meta, _bam, _bai -> 'varnet' in tools }
+        .map { meta_, bam_, bai -> [meta_, [], [], bam_, bai] }
+
+    // download the germline resources once if --varnet_resources is not set and VarNet runs on tumor-only samples
+    VARNET_GETREF(
+        varnet_resources
+            .filter { dir -> !dir }
+            .combine(bam_varnet.first())
+            .map { _resources_and_bam -> [id: 'varnet_resources'] }
+    )
+
+    varnet_dbsnp = varnet_resources
+        .filter { dir -> dir }
+        .map { dir -> [[id: 'varnet_resources'], file("${dir}/GrCh38-dbSNP-build-156-common-variants-0-indexed-CHROMPOS.npz", checkIfExists: true)] }
+        .mix(VARNET_GETREF.out.dbsnp)
+        .first()
+    varnet_gnomad = varnet_resources
+        .filter { dir -> dir }
+        .map { dir -> [[id: 'varnet_resources'], file("${dir}/combined_gnomAD_v4.1_genomes_exomes_dict.hg38.chunks.npz", checkIfExists: true)] }
+        .mix(VARNET_GETREF.out.gnomad)
+        .first()
+    varnet_pon = varnet_resources
+        .filter { dir -> dir }
+        .map { dir -> [[id: 'varnet_resources'], file("${dir}/1000g_pon.hg38.vcf.gz", checkIfExists: true)] }
+        .mix(VARNET_GETREF.out.pon)
+        .first()
+
+    BAM_VARIANT_CALLING_VARNET(
+        bam_varnet,
+        fasta,
+        fasta_fai,
+        intervals_bed_combined,
+        varnet_dbsnp,
+        varnet_gnomad,
+        varnet_pon,
+    )
+
+    vcf_varnet = BAM_VARIANT_CALLING_VARNET.out.vcf
+    tbi_varnet = BAM_VARIANT_CALLING_VARNET.out.tbi
+
     vcf_all = channel.empty()
         .mix(
             vcf_freebayes,
@@ -251,6 +296,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             vcf_parabricks_mutectcaller,
             vcf_tiddit,
             vcf_tnscope,
+            vcf_varnet,
         )
 
     tbi_all = channel.empty()
@@ -263,6 +309,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             tbi_parabricks_mutectcaller,
             tbi_tiddit,
             tbi_tnscope,
+            tbi_varnet,
         )
 
     emit:
@@ -277,6 +324,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_parabricks_mutectcaller
     vcf_tiddit
     vcf_tnscope
+    vcf_varnet
     tbi_freebayes
     tbi_lofreq
     tbi_manta
@@ -285,4 +333,5 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     tbi_parabricks_mutectcaller
     tbi_tiddit
     tbi_tnscope
+    tbi_varnet
 }

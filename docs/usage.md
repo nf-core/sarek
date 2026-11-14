@@ -735,6 +735,27 @@ Sarek can be started at different points in the analysis by setting the paramete
 | [Strelka](https://github.com/Illumina/strelka)                                                                                      |  x  |  x  |   -   |    -     |     -      |           x            |
 | [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                                                      |  x  |  x  |   x   |    x     |     x      |           x            |
 | [Varlociraptor](https://varlociraptor.github.io/landing/)                                                                           |  x  |  x  |   x   |    x     |     x      |           x            |
+| [VarNet](https://github.com/skandlab/VarNet)                                                                                        |  x  |  x  |   x   |    -     |     x      |           x            |
+
+## How to run VarNet on tumor-only samples?
+
+VarNet needs germline filtering resources to call tumor-only samples. Tumor-normal pairs do not use them. The resources take 3.9 GB and are available for GRCh38 only.
+
+Sarek downloads them from [figshare](https://doi.org/10.6084/m9.figshare.34420128) automatically when VarNet runs on tumor-only samples. Add `--save_reference` to keep them in `{outdir}/reference/varnet/`, then pass that folder with `--varnet_resources` in future runs to skip the download:
+
+```bash
+nextflow run nf-core/sarek --tools varnet --varnet_resources /path/to/varnet <other options>
+```
+
+A folder given with `--varnet_resources` must contain these files:
+
+- `GrCh38-dbSNP-build-156-common-variants-0-indexed-CHROMPOS.npz`
+- `combined_gnomAD_v4.1_genomes_exomes_dict.hg38.chunks.npz`
+- `1000g_pon.hg38.vcf.gz`
+
+On compute nodes without internet access, download the resources beforehand from [figshare](https://doi.org/10.6084/m9.figshare.34420128) and pass them with `--varnet_resources`.
+
+VarNet is distributed under the [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0/), which does not permit commercial use.
 
 ## Handle Control-FREEC error `std::length_error: cannot create std::vector larger than max_size()`
 
