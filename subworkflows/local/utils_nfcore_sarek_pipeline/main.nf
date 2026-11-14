@@ -35,6 +35,8 @@ workflow PIPELINE_INITIALISATION {
     show_hidden // boolean: Show hidden parameters in the help message
     vep_loftee // boolean: Enable the VEP LOFTEE plugin
     vep_loftee_gerp_bigwig //  string: Path to the GERP BigWig file for LOFTEE
+    skip_tools //   list: lowercased tools to skip
+    tools //   list: lowercased tools to run
 
     main:
 
@@ -99,7 +101,7 @@ workflow PIPELINE_INITIALISATION {
     UTILS_NFCORE_PIPELINE(nextflow_cli_args)
 
     // Custom validation for pipeline parameters
-    validateInputParameters(vep_loftee, vep_loftee_gerp_bigwig)
+    validateInputParameters(vep_loftee, vep_loftee_gerp_bigwig, tools)
 
     // Check input path parameters to see if they exist
     def checkPathParamList = [
@@ -149,10 +151,10 @@ workflow PIPELINE_INITIALISATION {
     ]
 
     // only check if we are using the tools
-    if (params.tools && (params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('merge'))) {
+    if (('snpeff' in tools || 'merge' in tools)) {
         checkPathParamList.add(params.snpeff_cache)
     }
-    if (params.tools && (params.tools.split(',').contains('vep') || params.tools.split(',').contains('merge'))) {
+    if (('vep' in tools || 'merge' in tools)) {
         checkPathParamList.add(params.vep_cache)
     }
 
@@ -175,6 +177,7 @@ workflow PIPELINE_INITIALISATION {
         params.bcftools_annotations_tbi,
         params.bcftools_header_lines,
         params.build_only_index,
+        params.cf_omit_sex,
         params.contamination_resource,
         params.dbsnp,
         params.fasta,
@@ -190,11 +193,11 @@ workflow PIPELINE_INITIALISATION {
         params.sentieon_haplotyper_emit_mode,
         params.seq_center,
         params.seq_platform,
-        params.skip_tools,
+        skip_tools,
         params.snpeff_cache,
         params.snpeff_db,
         params.step,
-        params.tools,
+        tools,
         params.umi_length,
         params.umi_location,
         params.umi_in_read_header,
@@ -253,10 +256,10 @@ workflow PIPELINE_COMPLETION {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 // Check and validate pipeline parameters
-def validateInputParameters(vep_loftee, vep_loftee_gerp_bigwig) {
+def validateInputParameters(vep_loftee, vep_loftee_gerp_bigwig, tools) {
     genomeExistsError()
     sparkAndBam()
-    parabricksMutectcallerIgnoredParams()
+    parabricksMutectcallerIgnoredParams(tools)
     noIntervalsWithIntervals()
     intervalsMatchReference()
     lofteeGerpRequiresLoftee(vep_loftee, vep_loftee_gerp_bigwig)
@@ -345,8 +348,8 @@ def sparkAndBam() {
 }
 
 // Warn about options that the Parabricks mutectcaller path cannot honor
-def parabricksMutectcallerIgnoredParams() {
-    if (params.tools && params.tools.split(',').contains('parabricks_mutectcaller')) {
+def parabricksMutectcallerIgnoredParams(tools) {
+    if ('parabricks_mutectcaller' in tools) {
         if (params.joint_mutect2) {
             log.warn("`--joint_mutect2` is not supported by Parabricks mutectcaller and is ignored for `parabricks_mutectcaller`: samples are called per tumor-normal pair or per tumor-only sample.")
         }

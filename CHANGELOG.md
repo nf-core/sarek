@@ -11,11 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2311](https://github.com/nf-core/sarek/pull/2311) - Add VarNet (`--tools varnet`) as somatic SNV and indel caller for tumor-normal pairs and tumor-only samples, downloading the tumor-only resources when `--varnet_resources` is not set
 - [#2391](https://github.com/nf-core/sarek/pull/2391) - Make the `lane` column of the samplesheet optional for samples with a single row (`--step mapping`), based on [#1943](https://github.com/nf-core/sarek/pull/1943) by [@animesh](https://github.com/animesh)
+- [#2353](https://github.com/nf-core/sarek/pull/2353) - Add joint germline calling (`--joint_germline`), dbSNP annotation and `--gatk_pcr_indel_model` support to Parabricks HaplotypeCaller. Single-sample VCFs are now also filtered with CNNScoreVariants/FilterVariantTranches by default, published as `<sample>.parabricks_haplotypecaller.filtered.vcf.gz`; use `--skip_tools parabricks_haplotypecaller_filter` for the previous unfiltered output
 - [#2408](https://github.com/nf-core/sarek/pull/2408) - Add `--vep_loftee_gerp_bigwig` to supply a GERP BigWig file to the VEP LOFTEE plugin ([#2295](https://github.com/nf-core/sarek/issues/2295)), based on [#2301](https://github.com/nf-core/sarek/pull/2301) by [@Joaodemeirelles](https://github.com/Joaodemeirelles)
+- [#2389](https://github.com/nf-core/sarek/pull/2389) - Add `--cf_omit_sex` to leave the `sex` line out of the Control-FREEC config. Control-FREEC 11.6b can abort with `std::length_error` on some tumor-only WES samples when `sex` and `minimalSubclonePresence` are both set ([#1376](https://github.com/nf-core/sarek/issues/1376)); omitting `sex` avoids it. With it set, the samplesheet `sex` is no longer required for Control-FREEC. Default `false`, so results are unchanged
 
 ### Changed
 
+- [#2411](https://github.com/nf-core/sarek/pull/2411) - Pass `tools` and `skip_tools` into `PIPELINE_INITIALISATION` and `FASTQ_PREPROCESS_GATK` via `take:` instead of reading `params` directly
+
 ### Fixed
+
+- [#2353](https://github.com/nf-core/sarek/pull/2353) - Update `gatk4/haplotypecaller` so dbSNP is no longer copied back from scratch into every HaplotypeCaller work directory ([#1127](https://github.com/nf-core/sarek/issues/1127))
+- [#2416](https://github.com/nf-core/sarek/pull/2416) - Without `--dbsnp`, `--known_indels` or `--known_snps`, single-sample VCFs from GATK HaplotypeCaller, Parabricks HaplotypeCaller and Sentieon Haplotyper are passed on unfiltered instead of being dropped from annotation and QC
+- [#2417](https://github.com/nf-core/sarek/pull/2417) - `--tools sentieon_dnascope,sentieon_haplotyper --joint_germline` no longer fails at start-up, and the two joint VCFs are published to their own caller's folder instead of overwriting each other in `sentieon_dnascope`
+- [#2412](https://github.com/nf-core/sarek/pull/2412) - `--tools` and `--skip_tools` are now case-insensitive (e.g. `--tools DeepVariant,Strelka`), based on [#1188](https://github.com/nf-core/sarek/pull/1188) by [@adamrtalbot](https://github.com/adamrtalbot)
 
 ### Removed
 
@@ -40,11 +49,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added
 
+- [#2412](https://github.com/nf-core/sarek/pull/2412) - Parse `--tools` / `--skip_tools` once in `main.nf` into lowercased Lists passed down via `take:` (use `'x' in tools` in `.nf` files), and lowercased `process.ext.tools` / `process.ext.skip_tools` lists for `'x' in task.ext.tools` checks in `conf/modules/*.config`
+
 #### Changed
 
+- [#2353](https://github.com/nf-core/sarek/pull/2353) - GATK and Parabricks HaplotypeCaller share `vcf_joint_calling_or_filtering_haplotypecaller` (joint germline calling, or single-sample filtering); GATK HaplotypeCaller, Sentieon Haplotyper and Parabricks HaplotypeCaller share one `FILTERVARIANTTRANCHES` config
 - [#2399](https://github.com/nf-core/sarek/pull/2399) - Back to dev (3.12.1dev)
 - [#2401](https://github.com/nf-core/sarek/pull/2401) - Template update 4.2.2
 - [#2395](https://github.com/nf-core/sarek/pull/2395) - Run all nf-tests when a `conf/modules/*` config changes, since nf-test cannot link these configs to the pipeline tests that depend on them
+- [#2417](https://github.com/nf-core/sarek/pull/2417) - Sentieon DnaScope and Haplotyper share `vcf_joint_calling_or_filtering_sentieon` (joint germline calling with Sentieon tools, or single-sample filtering); `bam_joint_calling_germline_sentieon` gates VQSR with a filter instead of if/else
+- [#2420](https://github.com/nf-core/sarek/pull/2420) - Use `=` instead of `.tap{}` for channel assignment in `samplesheet_to_channel`, and document `=` over `.set{}`/`.tap{}` in `CONTRIBUTING.md`
+- [#2410](https://github.com/nf-core/sarek/pull/2410) - Remove the `--tools`/`--skip_tools` based `ext.when` gates from `conf/modules/*.config`: the decision is now taken in the workflow code (subworkflows get `tools`/`skip_tools` via `take:`, cache downloads are selected in `main.nf`)
 
 #### Fixed
 

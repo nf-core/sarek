@@ -614,7 +614,18 @@ Files created:
 **Output directory: `{outdir}/variant_calling/parabricks_haplotypecaller/<sample>/`**
 
 - `<sample>.parabricks_haplotypecaller.vcf.gz` and `<sample>.parabricks_haplotypecaller.vcf.gz.tbi`
+  - VCF with tabix index (without `--joint_germline`), with dbSNP rsIDs added by `pbrun dbsnp` when `--dbsnp` is set
+- `<sample>.parabricks_haplotypecaller.filtered.vcf.gz` and `<sample>.parabricks_haplotypecaller.filtered.vcf.gz.tbi`
+  - VCF filtered with GATK's CNNScoreVariants and FilterVariantTranches, with tabix index (without `--joint_germline`, and unless `parabricks_haplotypecaller_filter` is listed under `--skip_tools`)
+- `<sample>.parabricks_haplotypecaller.g.vcf.gz` and `<sample>.parabricks_haplotypecaller.g.vcf.gz.tbi`
+  - gVCF with tabix index (with `--joint_germline`)
+
+**Output directory (with `--joint_germline`): `{outdir}/variant_calling/parabricks_haplotypecaller/joint_variant_calling/`**
+
+- `joint_germline.vcf.gz` and `joint_germline.vcf.gz.tbi`
   - VCF with tabix index
+- `joint_germline_recalibrated.vcf.gz` and `joint_germline_recalibrated.vcf.gz.tbi`
+  - variant recalibrated VCF with tabix index (if VQSR is applied)
 
 </details>
 
@@ -1031,7 +1042,7 @@ It also detects subclonal gains and losses and evaluates the most likely average
 **Output directory: `{outdir}/variant_calling/controlfreec/{tumorsample,tumorsample_vs_normalsample}/`**
 
 - `config.txt`
-  - Configuration file used to run Control-FREEC
+  - Configuration file used to run Control-FREEC. It contains the sample `sex` from the samplesheet, unless `--cf_omit_sex` is set (see [usage](../usage#handle-control-freec-error-stdlength_error-cannot-create-stdvector-larger-than-max_size))
 - `<tumorsample>_BAF.png` and `<tumorsample_vs_normalsample>_BAF.png`
   - image of BAF plot
 - `<tumorsample>_ratio.log2.png` and `<tumorsample_vs_normalsample>_ratio.log2.png`

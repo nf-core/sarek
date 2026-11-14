@@ -1,20 +1,25 @@
+// Copyright (c) the nf-core community under an open-source MIT license.
+// See https://github.com/nf-core/modules for full license, file patching instructions and upstream contributing.
+
 process PARABRICKS_HAPLOTYPECALLER {
     tag "${meta.id}"
     label 'process_high'
     label 'process_gpu'
-    // needed by the module to work properly can be removed when fixed upstream - see: https://github.com/nf-core/modules/issues/7226
-    stageInMode 'copy'
 
     container "nvcr.io/nvidia/clara/clara-parabricks:4.8.0-1"
 
     input:
     tuple val(meta), path(input), path(input_index), path(intervals)
     tuple val(ref_meta), path(fasta)
+    val out_ext
 
     output:
-    tuple val(meta), path("*.vcf"),      emit: vcf,                 optional: true
-    tuple val(meta), path("*.g.vcf.gz"), emit: gvcf,                optional: true
-    path "compatible_versions.yml",      emit: compatible_versions, optional: true
+    tuple val(meta), path("${prefix}.vcf"),          emit: vcf,                 optional: true
+    tuple val(meta), path("${prefix}.vcf.gz"),       emit: vcf_gz,              optional: true
+    tuple val(meta), path("${prefix}.vcf.gz.tbi"),   emit: vcf_tbi,             optional: true
+    tuple val(meta), path("${prefix}.g.vcf.gz"),     emit: gvcf,                optional: true
+    tuple val(meta), path("${prefix}.g.vcf.gz.tbi"), emit: gvcf_tbi,            optional: true
+    path "compatible_versions.yml",                  emit: compatible_versions, optional: true
     tuple val("${task.process}"), val('parabricks'), eval("pbrun version | grep -m1 '^pbrun:' | sed 's/^pbrun:[[:space:]]*//'"), topic: versions, emit: versions_parabricks
 
     when:
@@ -25,28 +30,40 @@ process PARABRICKS_HAPLOTYPECALLER {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         exit(1, "Parabricks module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
-    def args   = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-
-    def output_file           = args.contains("--gvcf") ? "${prefix}.g.vcf.gz" : "${prefix}.vcf"
-    def intervals_command     = intervals     ? (intervals instanceof List ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : "--interval-file ${intervals}") : ""
-
-    def num_gpus = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
+    def args              = task.ext.args ?: ''
+    prefix                = task.ext.prefix ?: "${meta.id}"
+    def gvcf              = out_ext == 'g.vcf.gz' ? "--gvcf" : ''
+    def intervals_command = intervals ? (intervals instanceof List ? intervals.collect { interval -> "--interval-file ${interval}" }.join(' ') : "--interval-file ${intervals}") : ""
+    def num_gpus          = task.accelerator ? "--num-gpus ${task.accelerator.request}" : ''
+    if (out_ext !in ['vcf', 'vcf.gz', 'g.vcf.gz']) {
+        error("parabricks/haplotypecaller: Invalid out_ext: ${out_ext}. Allowed values are: vcf, vcf.gz, g.vcf.gz")
+    }
+    if (args.tokenize().contains('--gvcf')) {
+        error("parabricks/haplotypecaller: Do not pass --gvcf in ext.args, set out_ext to 'g.vcf.gz' instead")
+    }
     """
     pbrun \\
         haplotypecaller \\
         --ref ${fasta} \\
         --in-bam ${input} \\
-        --out-variants ${output_file} \\
+        --out-variants ${prefix}.${out_ext} \\
+        ${gvcf} \\
         ${intervals_command} \\
         ${num_gpus} \\
+        --preserve-file-symlinks \\
         ${args}
     """
 
     stub:
-    def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def output_cmd = args.contains("--gvcf") ? "echo '' | gzip > ${prefix}.g.vcf.gz" : "touch ${prefix}.vcf"
+    def args       = task.ext.args ?: ''
+    prefix         = task.ext.prefix ?: "${meta.id}"
+    def output_cmd = out_ext.endsWith(".gz") ? "echo \"\" | gzip > ${prefix}.${out_ext}; touch ${prefix}.${out_ext}.tbi" : "touch ${prefix}.${out_ext}"
+    if (out_ext !in ['vcf', 'vcf.gz', 'g.vcf.gz']) {
+        error("parabricks/haplotypecaller: Invalid out_ext: ${out_ext}. Allowed values are: vcf, vcf.gz, g.vcf.gz")
+    }
+    if (args.tokenize().contains('--gvcf')) {
+        error("parabricks/haplotypecaller: Do not pass --gvcf in ext.args, set out_ext to 'g.vcf.gz' instead")
+    }
     """
     ${output_cmd}
 

@@ -77,7 +77,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     tbi_tiddit       = channel.empty()
     tbi_tnscope      = channel.empty()
 
-    if (tools && tools.split(',').contains('ascat')) {
+    if ('ascat' in tools) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
             cram,
             allele_files,
@@ -91,7 +91,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // CONTROLFREEC
-    if (tools && tools.split(',').contains('controlfreec')) {
+    if ('controlfreec' in tools) {
         cram_normal = cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] }
         cram_tumor = cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] }
 
@@ -101,6 +101,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             fasta,
             fasta_fai,
             intervals,
+            tools,
         )
 
         MPILEUP_TUMOR(
@@ -109,6 +110,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             fasta,
             fasta_fai,
             intervals,
+            tools,
         )
 
         mpileup_normal = MPILEUP_NORMAL.out.mpileup
@@ -129,7 +131,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // CNVKIT
-    if (tools && tools.split(',').contains('cnvkit')) {
+    if ('cnvkit' in tools) {
         BAM_VARIANT_CALLING_CNVKIT(
             bam.map { meta, normal_bam, _normal_bai, tumor_bam, _tumor_bai -> [meta, tumor_bam, normal_bam] },
             fasta,
@@ -140,7 +142,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // FREEBAYES
-    if (tools && tools.split(',').contains('freebayes')) {
+    if ('freebayes' in tools) {
         BAM_VARIANT_CALLING_FREEBAYES(
             cram,
             dict,
@@ -155,7 +157,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // DEEPSOMATIC
     cram_deepsomatic = cram.filter { _meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai ->
-        tools && tools.split(',').contains('deepsomatic')
+        'deepsomatic' in tools
     }
 
     BAM_VARIANT_CALLING_SOMATIC_DEEPSOMATIC(
@@ -170,7 +172,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     tbi_deepsomatic = BAM_VARIANT_CALLING_SOMATIC_DEEPSOMATIC.out.tbi
 
     // MANTA
-    if (tools && tools.split(',').contains('manta')) {
+    if ('manta' in tools) {
         BAM_VARIANT_CALLING_SOMATIC_MANTA(
             cram,
             fasta,
@@ -184,7 +186,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // INDEXCOV
     //   WGS only
-    if (wes == false && tools.split(',').contains('indexcov')) {
+    if (wes == false && 'indexcov' in tools) {
         BAM_VARIANT_CALLING_INDEXCOV(
             cram,
             fasta,
@@ -195,8 +197,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // STRELKA
-    if (tools && tools.split(',').contains('strelka')) {
-        cram_strelka = tools.split(',').contains('manta')
+    if ('strelka' in tools) {
+        cram_strelka = 'manta' in tools
             // Manta's candidate small indels feed Strelka; strip the manta variantcaller tag so the meta matches cram for the join
             ? cram.join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf.map { meta, vcf -> [meta - meta.subMap('variantcaller'), vcf] }, failOnDuplicate: true, failOnMismatch: true).join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf_tbi.map { meta, tbi -> [meta - meta.subMap('variantcaller'), tbi] }, failOnDuplicate: true, failOnMismatch: true)
             : cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], []] }
@@ -214,14 +216,14 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // MSISENSORPRO
-    if (tools && tools.split(',').contains('msisensorpro')) {
+    if ('msisensorpro' in tools) {
         MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta, msisensorpro_scan)
 
         out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSISOMATIC.out.output_report)
     }
 
     // MuSE
-    if (tools && tools.split(',').contains('muse')) {
+    if ('muse' in tools) {
         BAM_VARIANT_CALLING_SOMATIC_MUSE(
             bam.map { meta, normal_bam, normal_bai, _tumor_bam, _tumor_bai -> [meta, normal_bam, normal_bai] },
             bam.map { meta, _normal_bam, _normal_bai, tumor_bam, tumor_bai -> [meta, tumor_bam, tumor_bai] },
@@ -235,7 +237,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // MUTECT2
-    if (tools && tools.split(',').contains('mutect2')) {
+    if ('mutect2' in tools) {
         BAM_VARIANT_CALLING_MUTECT2(
             cram,
             fasta,
@@ -260,7 +262,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // PARABRICKS DEEPSOMATIC
     cram_parabricks_deepsomatic = cram.filter { _meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai ->
-        tools && tools.split(',').contains('parabricks_deepsomatic')
+        'parabricks_deepsomatic' in tools
     }
 
     BAM_VARIANT_CALLING_SOMATIC_PARABRICKS_DEEPSOMATIC(
@@ -274,7 +276,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // PARABRICKS MUTECTCALLER
     cram_parabricks_mutectcaller = cram.filter { _meta, _normal_cram, _normal_crai, _tumor_cram, _tumor_crai ->
-        tools && tools.split(',').contains('parabricks_mutectcaller')
+        'parabricks_mutectcaller' in tools
     }
 
     BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER(
@@ -299,7 +301,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     tbi_parabricks_mutectcaller = BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER.out.tbi
 
     // TNSCOPE
-    if (tools && tools.split(',').contains('sentieon_tnscope')) {
+    if ('sentieon_tnscope' in tools) {
 
         BAM_VARIANT_CALLING_SOMATIC_TNSCOPE(
             cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
@@ -320,7 +322,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // TIDDIT
-    if (tools && tools.split(',').contains('tiddit')) {
+    if ('tiddit' in tools) {
         BAM_VARIANT_CALLING_SOMATIC_TIDDIT(
             cram.map { meta, normal_cram, normal_crai, _tumor_cram, _tumor_crai -> [meta, normal_cram, normal_crai] },
             cram.map { meta, _normal_cram, _normal_crai, tumor_cram, tumor_crai -> [meta, tumor_cram, tumor_crai] },
@@ -335,7 +337,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // VARNET
     bam_varnet = bam.filter { _meta, _normal_bam, _normal_bai, _tumor_bam, _tumor_bai ->
-        tools && tools.split(',').contains('varnet')
+        'varnet' in tools
     }
 
     BAM_VARIANT_CALLING_VARNET(

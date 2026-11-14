@@ -119,14 +119,14 @@
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for contamination removal, duplicate marking, variant calling and/or for annotation.",
                     "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper, Parabricks DeepVariant, Parabricks Haplotypecaller \n- Structural Variants: indexcov, Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Lofreq, mpileup, Mutect2, Sentieon TNScope, Strelka\n- Structural Variants: Manta, Sentieon TNScope, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n- Microsatellite Instability: MSIsensor2\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: DeepSomatic, FreeBayes, Mutect2, Parabricks DeepSomatic, Parabricks MutectCaller, Sentieon TNScope, Strelka2 \n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC, Sentieon TNScope \n- Microsatellite Instability: MSIsensorpro\n\n> **NB** DeepSomatic and Parabricks DeepSomatic support paired short-read WGS and WES only. Parabricks DeepSomatic requires an NVIDIA GPU.\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively), and bcftools annotate (needs `--bcftools_annotation`).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
-                    "pattern": "^((ascat|bbsplit|bcfann|cnvkit|controlfreec|deepsomatic|deepvariant|freebayes|haplotypecaller|indexcov|lofreq|manta|merge|mpileup|msisensor2|msisensorpro|muse|mutect2|ngscheckmate|parabricks_deepsomatic|parabricks_deepvariant|parabricks_haplotypecaller|parabricks_mutectcaller|sentieon_dedup|sentieon_dnascope|sentieon_haplotyper|sentieon_tnscope|snpeff|snpsift|strelka|tiddit|varnet|vep|varlociraptor)?,?)*(?<!,)$"
+                    "pattern": "(?i)^((ascat|bbsplit|bcfann|cnvkit|controlfreec|deepsomatic|deepvariant|freebayes|haplotypecaller|indexcov|lofreq|manta|merge|mpileup|msisensor2|msisensorpro|muse|mutect2|ngscheckmate|parabricks_deepsomatic|parabricks_deepvariant|parabricks_haplotypecaller|parabricks_mutectcaller|sentieon_dedup|sentieon_dnascope|sentieon_haplotyper|sentieon_tnscope|snpeff|snpsift|strelka|tiddit|varnet|vep|varlociraptor)?,?)*(?<!,)$"
                 },
                 "skip_tools": {
                     "type": "string",
                     "fa_icon": "fas fa-forward",
                     "description": "Disable specified tools.",
                     "help_text": "Multiple tools can be specified, separated by commas.\n\n> **NB** `--skip_tools baserecalibrator_report` is actually just not saving the reports.\n> **NB** `--skip_tools markduplicates_report` does not skip `MarkDuplicates` but prevent the collection of duplicate metrics that slows down performance.",
-                    "pattern": "^((baserecalibrator|baserecalibrator_report|bcftools|dnascope_filter|documentation|fastqc|haplotypecaller_filter|haplotyper_filter|markduplicates|markduplicates_report|mosdepth|multiqc|samtools|vcftools|versions)?,?)*(?<!,)$"
+                    "pattern": "(?i)^((baserecalibrator|baserecalibrator_report|bcftools|dnascope_filter|documentation|fastqc|haplotypecaller_filter|haplotyper_filter|markduplicates|markduplicates_report|mosdepth|multiqc|parabricks_haplotypecaller_filter|samtools|vcftools|versions)?,?)*(?<!,)$"
                 }
             },
             "fa_icon": "fas fa-user-cog"
@@ -446,6 +446,12 @@
                     "description": "Overwrite Control-FREEC window size.",
                     "help_text": "Details, see [ControlFREEC manual](http://boevalab.inf.ethz.ch/FREEC/tutorial.html)."
                 },
+                "cf_omit_sex": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-venus-mars",
+                    "description": "Do not pass the sample sex to Control-FREEC (tumor-only and tumor/normal).",
+                    "help_text": "Leaves the `sex` line out of the Control-FREEC config. Control-FREEC 11.6b can abort with `std::length_error` on samples when `sex` and `minimalSubclonePresence` are both set; omitting `sex` avoids it. The sex in the samplesheet is still used by other tools such as ASCAT."
+                },
                 "cnvkit_reference": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
@@ -463,7 +469,7 @@
                 "joint_germline": {
                     "type": "boolean",
                     "fa_icon": "fas fa-toolbox",
-                    "description": "Turn on the joint germline variant calling for GATK haplotypecaller",
+                    "description": "Turn on the joint germline variant calling for GATK or Parabricks HaplotypeCaller",
                     "help_text": "Uses all normal germline samples (as designated by `status` in the input csv) in the joint germline variant calling process."
                 },
                 "joint_mutect2": {
@@ -540,7 +546,7 @@
                 "gatk_pcr_indel_model": {
                     "type": "string",
                     "default": "CONSERVATIVE",
-                    "help_text": "Option for selecting the PCR indel model used by GATK HaplotypeCaller."
+                    "help_text": "Option for selecting the PCR indel model used by GATK HaplotypeCaller. It is also used by Parabricks HaplotypeCaller."
                 }
             }
         },

@@ -61,6 +61,8 @@ workflow FASTQ_PREPROCESS_GATK {
     save_output_as_bam
     aligner
     group_by_umi_strategy
+    skip_tools
+    tools
 
     main:
 
@@ -140,7 +142,7 @@ workflow FASTQ_PREPROCESS_GATK {
         //
         // MODULE: Remove genome contaminant reads
         //
-        if (params.tools && params.tools.split(',').contains('bbsplit')) {
+        if ('bbsplit' in tools) {
 
             reads_for_alignment = BBMAP_BBSPLIT(
                 reads_for_bbsplit,
@@ -234,7 +236,7 @@ workflow FASTQ_PREPROCESS_GATK {
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
         // Except if and only if save_mapped or (skipping markduplicates and sentieon-dedup)
-        if (params.save_mapped || ((params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) && !(params.tools && params.tools.split(',').contains('sentieon_dedup')))) {
+        if (params.save_mapped || (('markduplicates' in skip_tools) && 'sentieon_dedup' !in tools)) {
             // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
             BAM_MERGE_INDEX_SAMTOOLS(bam_mapped)
 
@@ -274,7 +276,7 @@ workflow FASTQ_PREPROCESS_GATK {
         // Should it be possible to restart from converted crams?
         // For now, conversion from bam to cram is only done when skipping markduplicates
 
-        if (params.skip_tools && params.skip_tools.split(',').contains('markduplicates') && !(params.tools && params.tools.split(',').contains('sentieon_dedup'))) {
+        if ('markduplicates' in skip_tools && 'sentieon_dedup' !in tools) {
             if (params.step == 'mapping') {
                 cram_skip_markduplicates = BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true)
             }
@@ -282,7 +284,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 cram_skip_markduplicates = channel.empty().mix(input_sample)
             }
 
-            CRAM_QC_NO_MD(cram_skip_markduplicates, fasta, fasta_fai, intervals_for_preprocessing)
+            CRAM_QC_NO_MD(cram_skip_markduplicates, fasta, fasta_fai, intervals_for_preprocessing, skip_tools)
 
             // Gather QC reports
             reports = reports.mix(CRAM_QC_NO_MD.out.reports.collect { _meta, report -> [report] })
@@ -294,13 +296,14 @@ workflow FASTQ_PREPROCESS_GATK {
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing,
+                skip_tools,
             )
             cram_markduplicates_spark = BAM_MARKDUPLICATES_SPARK.out.alignment
 
             // Gather QC reports
             reports = reports.mix(BAM_MARKDUPLICATES_SPARK.out.reports.collect { _meta, report -> [report] })
         }
-        else if (params.tools && params.tools.split(',').contains('sentieon_dedup')) {
+        else if ('sentieon_dedup' in tools) {
             crai_for_markduplicates = params.step == 'mapping'
                 ? bai_mapped
                 : (params.umi_in_read_header ? FGBIO_COPYUMIFROMREADNAME.out.bai : input_sample.map { meta, _input, index -> [meta, index] })
@@ -310,6 +313,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing,
+                skip_tools,
             )
 
             cram_sentieon_dedup = BAM_SENTIEON_DEDUP.out.alignment
@@ -325,6 +329,7 @@ workflow FASTQ_PREPROCESS_GATK {
                 fasta_fai,
                 intervals_for_preprocessing,
                 save_output_as_bam,
+                skip_tools,
             )
 
             cram_markduplicates_no_spark = BAM_MARKDUPLICATES.out.alignment
@@ -343,7 +348,7 @@ workflow FASTQ_PREPROCESS_GATK {
 
         // CSV should be written for the file actually output, either CRAM or BAM
         // Create CSV to restart from this step
-        csv_subfolder = (params.tools && params.tools.split(',').contains('sentieon_dedup')) ? 'sentieon_dedup' : 'markduplicates'
+        csv_subfolder = ('sentieon_dedup' in tools) ? 'sentieon_dedup' : 'markduplicates'
 
         CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir)
     }
@@ -371,7 +376,7 @@ workflow FASTQ_PREPROCESS_GATK {
         }
 
         // STEP 3: Create recalibration tables
-        if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
+        if ('baserecalibrator' !in skip_tools) {
 
             ch_table_bqsr_no_spark = channel.empty()
             ch_table_bqsr_spark = channel.empty()
@@ -418,7 +423,7 @@ workflow FASTQ_PREPROCESS_GATK {
             cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
 
             // Create CSV to restart from this step
-            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), params.tools, params.skip_tools, params.outdir)
+            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), tools, skip_tools, params.outdir)
         }
     }
 
@@ -431,7 +436,7 @@ workflow FASTQ_PREPROCESS_GATK {
             cram_applybqsr = channel.empty().mix(input_sample)
         }
 
-        if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
+        if ('baserecalibrator' !in skip_tools) {
             cram_variant_calling_no_spark = channel.empty()
             cram_variant_calling_spark = channel.empty()
 

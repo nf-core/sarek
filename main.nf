@@ -92,6 +92,8 @@ include { samplesheetToList                } from 'plugin/nf-schema'
 workflow NFCORE_SAREK {
     take:
     samplesheet
+    tools
+    skip_tools
 
     main:
     // build indexes if needed
@@ -129,7 +131,7 @@ workflow NFCORE_SAREK {
         params.pon_tbi,
         params.aligner,
         params.step,
-        params.tools ?: 'no_tools',
+        tools,
         params.vep_include_fasta,
     )
 
@@ -159,7 +161,7 @@ workflow NFCORE_SAREK {
         [num_intervals < 1 ? [] : file[0], num_intervals < 1 ? [] : file[1], num_intervals]
     }
 
-    if (params.tools && params.tools.split(',').contains('cnvkit')) {
+    if ('cnvkit' in tools) {
         if (params.cnvkit_reference) {
             cnvkit_reference = channel.fromPath(params.cnvkit_reference).collect()
         }
@@ -181,8 +183,11 @@ workflow NFCORE_SAREK {
     // Download cache
     if (params.download_cache) {
         // Assuming that even if the cache is provided, if the user specify download_cache, sarek will download the cache
+        // Only download the cache(s) of the requested annotation tool(s): an empty input channel means the download process does not run
         ensemblvep_info = channel.of([[id: "${params.vep_cache_version}_${params.vep_genome}"], params.vep_genome, params.vep_species, params.vep_cache_version])
+            .filter { 'vep' in tools || 'merge' in tools }
         snpeff_info = channel.of([[id: "${params.snpeff_db}"], params.snpeff_db])
+            .filter { 'snpeff' in tools || 'merge' in tools }
         CACHE_DOWNLOAD_ENSEMBLVEP_SNPEFF(ensemblvep_info, snpeff_info, params.vep_cache_preflight_check)
         snpeff_cache = CACHE_DOWNLOAD_ENSEMBLVEP_SNPEFF.out.snpeff_cache
         vep_cache = CACHE_DOWNLOAD_ENSEMBLVEP_SNPEFF.out.ensemblvep_cache
@@ -195,10 +200,10 @@ workflow NFCORE_SAREK {
             params.vep_custom_args,
             params.vep_genome,
             params.vep_species,
-            (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))),
+            (params.vep_cache && ("vep" in tools || 'merge' in tools)),
             params.snpeff_cache,
             params.snpeff_db,
-            (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
+            (params.snpeff_cache && ("snpeff" in tools || 'merge' in tools)),
             "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.",
         )
 
@@ -274,7 +279,7 @@ workflow NFCORE_SAREK {
 
     // Prepare SnpSift databases (build if vardb not provided, returns tuple for SNPSIFT_ANNMEM)
     ch_snpsift_db = channel.value([[], [], [], [], []])
-    if (params.tools && params.tools.split(',').contains('snpsift') && snpsift_db_configs) {
+    if ('snpsift' in tools && snpsift_db_configs) {
         PREPARE_SNPSIFT_DATABASES(snpsift_db_configs)
         ch_snpsift_db = PREPARE_SNPSIFT_DATABASES.out.db_tuple
     }
@@ -286,9 +291,9 @@ workflow NFCORE_SAREK {
         samplesheet,
         params.aligner,
         params.group_by_umi_strategy,
-        params.skip_tools ?: 'no_tools',
+        skip_tools,
         params.step,
-        params.tools ?: 'no_tools',
+        tools,
         params.wes,
         PREPARE_GENOME.out.ascat_alleles,
         PREPARE_GENOME.out.ascat_loci,
@@ -368,6 +373,10 @@ workflow NFCORE_SAREK {
 workflow {
 
     main:
+    // Parse once, lowercased: the rest of the pipeline treats --tools / --skip_tools as Lists (same rule as process.ext.tools in nextflow.config)
+    def tools      = (params.tools      ?: '').toLowerCase().tokenize(',')
+    def skip_tools = (params.skip_tools ?: '').toLowerCase().tokenize(',')
+
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
@@ -383,12 +392,14 @@ workflow {
         params.show_hidden,
         params.vep_loftee,
         params.vep_loftee_gerp_bigwig,
+        skip_tools,
+        tools,
     )
 
     //
     // WORKFLOW: Run main workflow
     //
-    NFCORE_SAREK(PIPELINE_INITIALISATION.out.samplesheet)
+    NFCORE_SAREK(PIPELINE_INITIALISATION.out.samplesheet, tools, skip_tools)
 
     //
     // SUBWORKFLOW: Run completion tasks
