@@ -14,6 +14,7 @@ workflow BAM_MARKDUPLICATES {
     fasta_fai              // channel: [mandatory] [ fasta_fai ]
     intervals_bed_combined // channel: [optional]  [ intervals_bed ]
     save_output_as_bam     // boolean: [mandatory] true = emit bam, false = emit cram
+    skip_tools             // string:  [mandatory] --skip_tools
 
     main:
     reports  = channel.empty()
@@ -32,7 +33,7 @@ workflow BAM_MARKDUPLICATES {
         : GATK4_MARKDUPLICATES.out.cram.join(GATK4_MARKDUPLICATES.out.crai, failOnDuplicate: true, failOnMismatch: true)
 
     // QC on alignment
-    CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, fasta_fai, intervals_bed_combined)
+    CRAM_QC_MOSDEPTH_SAMTOOLS(alignment, fasta, fasta_fai, intervals_bed_combined, skip_tools)
 
     // Gather all reports generated
     reports = reports.mix(GATK4_MARKDUPLICATES.out.metrics)

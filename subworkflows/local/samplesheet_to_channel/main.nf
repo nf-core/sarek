@@ -12,6 +12,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
     bcftools_annotations_tbi      // Path: bcftools annotations tbi
     bcftools_header_lines         // Path: bcftools header lines
     build_only_index              // Boolean: build only index
+    cf_omit_sex                   // Boolean: leave sex out of the Control-FREEC config, so sex is not required for it
     contamination_resource        // Path: contamination resource
     dbsnp                         // Path: dbsnp
     fasta                         // Path: fasta
@@ -27,11 +28,11 @@ workflow SAMPLESHEET_TO_CHANNEL {
     sentieon_haplotyper_emit_mode // String: sentieon haplotyper emit mode
     seq_center                    // String: seq center
     seq_platform                  // String: seq platform
-    skip_tools                    // Array: skip tools
+    skip_tools                    // List: lowercased skip tools
     snpeff_cache                  // Path: snpeff cache
     snpeff_db                     // String: snpeff db
     step                          // String: step
-    tools                         // Array: tools
+    tools                         // List: lowercased tools
     umi_length                    // Integer: umi length for fastp extraction
     umi_location                  // String: umi location for fastp extraction
     umi_in_read_header            // Boolean: umi in read header
@@ -107,15 +108,15 @@ workflow SAMPLESHEET_TO_CHANNEL {
 
     // Process the input channel to group lanes by patient and sample
     // Generate patient_sample key to group lanes together
-    // Save the channel ch_with_patient_sample for later use
     // Group by patient_sample to get all lanes
     // Count number of lanes per sample
     // Combine with channel ch_with_patient_sample to add numLanes information
-    input_sample = ch_from_samplesheet
+    ch_with_patient_sample = ch_from_samplesheet
         .map { meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, contamination, vcf, variantcaller ->
             [meta.patient + meta.sample, [meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, contamination, vcf, variantcaller]]
         }
-        .tap { ch_with_patient_sample }
+
+    input_sample = ch_with_patient_sample
         .groupTuple()
         .map { patient_sample, ch_items ->
             [patient_sample, ch_items.size()]
@@ -249,13 +250,6 @@ workflow SAMPLESHEET_TO_CHANNEL {
             }
         }
 
-    // Parabricks' HaplotypeCaller is deliberately absent from this list: joint genotyping is not
-    // wired up for it, so it cannot satisfy `--joint_germline` on its own. It always emits
-    // per-sample VCFs and ignores the flag, so combining it with a joint-capable caller is fine.
-    if (joint_germline && (!tools || !(tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope')))) {
-        error("The GATK's Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper should be specified as one of the tools when doing joint germline variant calling.) ")
-    }
-
     if (step != 'annotate' && tools && !build_only_index) {
         // Two checks for ensuring that the pipeline stops with a meaningful error message if
         // 1. the sample-sheet only contains normal-samples, but some of the requested tools require tumor-samples, and
@@ -268,7 +262,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                     def tools_tumor = ['ascat', 'controlfreec', 'deepsomatic', 'mutect2', 'msisensorpro', 'parabricks_deepsomatic', 'parabricks_mutectcaller']
                     def tools_tumor_asked = []
                     tools_tumor.each { tool ->
-                        if (tools && tools.split(',').contains(tool)) {
+                        if (tool in tools) {
                             tools_tumor_asked.add(tool)
                         }
                     }
@@ -285,7 +279,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                 def tools_requiring_normal_samples = ['ascat', 'deepsomatic', 'deepvariant', 'haplotypecaller', 'msisensorpro', 'parabricks_deepsomatic', 'parabricks_deepvariant', 'parabricks_haplotypecaller']
                 def requested_tools_requiring_normal_samples = []
                 tools_requiring_normal_samples.each { tool_requiring_normal_samples ->
-                    if (tools && tools.split(',').contains(tool_requiring_normal_samples)) {
+                    if (tool_requiring_normal_samples in tools) {
                         requested_tools_requiring_normal_samples.add(tool_requiring_normal_samples)
                     }
                 }
@@ -308,7 +302,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
         error("Intervals file must end with .bed, .list, or .interval_list")
     }
 
-    if (step == 'mapping' && aligner.contains("dragmap") && !(skip_tools && skip_tools.split(',').contains("baserecalibrator"))) {
+    if (step == 'mapping' && aligner.contains("dragmap") && !("baserecalibrator" in skip_tools)) {
         log.warn("DragMap was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using DragMap\nhttps://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode")
     }
 
@@ -344,12 +338,12 @@ workflow SAMPLESHEET_TO_CHANNEL {
         error("UMI extraction (umi_location) from reads through fastp requires a UMI length to be specified.")
     }
 
-    if (tools && tools.split(',').contains("sentieon_haplotyper") && joint_germline && (!sentieon_haplotyper_emit_mode || !sentieon_haplotyper_emit_mode.contains('gvcf'))) {
+    if ("sentieon_haplotyper" in tools && joint_germline && (!sentieon_haplotyper_emit_mode || !sentieon_haplotyper_emit_mode.contains('gvcf'))) {
         error("When setting the option `--joint_germline` and including `sentieon_haplotyper` among the requested tools, please set `--sentieon_haplotyper_emit_mode` to include `gvcf`.")
     }
 
     // MarkDuplicatesSpark can't do UMI based deduplication
-    if (tools && tools.split(',').contains('markduplicates_spark') && (umi_in_read_header || umi_location )) {
+    if ('markduplicates_spark' in tools && (umi_in_read_header || umi_location )) {
         error("UMI based deduplication is not supported by MarkDuplicatesSpark. Please choose a different tool for deduplication.")
     }
 
@@ -378,7 +372,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
     }
 
     // Fails or warns when missing files or params for ascat
-    if (tools && tools.split(',').contains('ascat')) {
+    if ('ascat' in tools) {
         if (!ascat_alleles) {
             error("No allele files were provided for running ASCAT. Please provide a zip folder with allele files.")
         }
@@ -395,7 +389,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
 
     // Warns when missing files or params for mutect2 and parabricks_mutectcaller
     [mutect2: 'Mutect2', parabricks_mutectcaller: 'Parabricks MutectCaller'].each { tool, tool_name ->
-        if (tools && tools.split(',').contains(tool)) {
+        if (tool in tools) {
             if (!pon) {
                 log.warn("No Panel-of-normal was specified for ${tool_name}.\nIt is highly recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2\nFor more information on how to create one: https://gatk.broadinstitute.org/hc/en-us/articles/5358921041947-CreateSomaticPanelOfNormals-BETA-")
             }
@@ -411,38 +405,46 @@ workflow SAMPLESHEET_TO_CHANNEL {
         }
     }
 
+    def has_germline_caller = tools.any { tool -> tool in ['haplotypecaller', 'parabricks_haplotypecaller', 'sentieon_haplotyper', 'sentieon_dnascope'] }
+    def has_gatk_joint_caller = tools.any { tool -> tool in ['haplotypecaller', 'parabricks_haplotypecaller'] }
+
     // Fails when missing resources for baserecalibrator
-    // Warns when missing resources for haplotypecaller
     if (!dbsnp && !known_indels) {
-        if (step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!skip_tools || (skip_tools && !skip_tools.split(',').contains('baserecalibrator')))) {
+        if (step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && 'baserecalibrator' !in skip_tools) {
             error("Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command.")
         }
-        if (tools && (tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope'))) {
-            log.warn("If GATK's Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-")
-        }
     }
-    if (tools && tools.split(',').contains('haplotypecaller') && joint_germline && no_intervals) {
-        System.err.println("Joint germline variant calling with GATK's HaplotypeCaller requires intervals because GenomicsDB cannot be used without them. Please provide intervals or remove `--no_intervals`.")
+
+    // Without any FilterVariantTranches resource, the single-sample VCFs skip filtering
+    if (!dbsnp && !known_indels && !known_snps && tools.any { tool -> tool in ['haplotypecaller', 'parabricks_haplotypecaller', 'sentieon_haplotyper'] }) {
+        log.warn("GATK's or Parabricks' HaplotypeCaller or Sentieon's Haplotyper is specified without `--dbsnp`, `--known_indels` or `--known_snps`, so the single-sample VCFs are not filtered with FilterVariantTranches and are passed on unfiltered. For filtering, please provide at least one of these resources.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-")
+    }
+    if (joint_germline && !has_germline_caller) {
+        error("The GATK's Haplotypecaller, Parabricks' HaplotypeCaller, Sentieon's Dnascope or Sentieon's Haplotyper should be specified as one of the tools when doing joint germline variant calling.")
+    }
+
+    if (has_gatk_joint_caller && joint_germline && no_intervals) {
+        System.err.println("Joint germline variant calling with GATK's or Parabricks' HaplotypeCaller requires intervals because GenomicsDB cannot be used without them. Please provide intervals or remove `--no_intervals`.")
         error("Execution halted due to missing intervals.")
     }
 
-    if (tools && (tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope')) && joint_germline && (!dbsnp || !known_indels || !known_snps)) {
+    if (has_germline_caller && joint_germline && (!dbsnp || !known_indels || !known_snps)) {
         log.warn(
-            """If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator"""
+            """If GATK's or Parabricks' Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator"""
         )
     }
 
-    if (tools && tools.split(',').contains('sentieon_dnascope') && joint_germline && (!sentieon_dnascope_emit_mode || !sentieon_dnascope_emit_mode.split(',').contains('gvcf'))) {
+    if ('sentieon_dnascope' in tools && joint_germline && (!sentieon_dnascope_emit_mode || !sentieon_dnascope_emit_mode.split(',').contains('gvcf'))) {
         error("When using Sentieon Dnascope for joint-germline variant-calling the option `--sentieon_dnascope_emit_mode` has to include `gvcf`.")
     }
 
-    if (tools && tools.split(',').contains('sentieon_haplotyper') && joint_germline && (!sentieon_haplotyper_emit_mode || !sentieon_haplotyper_emit_mode.split(',').contains('gvcf'))) {
+    if ('sentieon_haplotyper' in tools && joint_germline && (!sentieon_haplotyper_emit_mode || !sentieon_haplotyper_emit_mode.split(',').contains('gvcf'))) {
         error("When using Sentieon Haplotyper for joint-germline variant-calling the option `--sentieon_haplotyper_emit_mode` has to include `gvcf`.")
     }
 
 
     // Fails when --joint_mutect2 is used without enabling mutect2
-    if (joint_mutect2 && (!tools || !tools.split(',').contains('mutect2'))) {
+    if (joint_mutect2 && 'mutect2' !in tools) {
         error("The mutect2 should be specified as one of the tools when doing joint somatic variant calling with Mutect2. (The mutect2 could be specified by adding `--tools mutect2` to the nextflow command.)")
     }
 
@@ -451,17 +453,17 @@ workflow SAMPLESHEET_TO_CHANNEL {
         error("Please specify at least one tool when using `--step ${step}`.\nhttps://nf-co.re/sarek/parameters#tools")
     }
 
-    // Fails when missing sex information for CNV tools or varlociraptor
-    if (tools && (tools.split(',').contains('ascat') || tools.split(',').contains('controlfreec') || tools.split(',').contains('varlociraptor'))) {
+    // Fails when missing sex information for CNV tools or varlociraptor (Control-FREEC does not need it with --cf_omit_sex)
+    if ('ascat' in tools || ('controlfreec' in tools && !cf_omit_sex) || 'varlociraptor' in tools) {
         input_sample.map { sample ->
             if (sample[0].sex == 'NA') {
-                error("Please specify sex information for each sample in your samplesheet when using '--tools' with 'ascat' or 'controlfreec' or 'varlociraptor'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+                error("Please specify sex information for each sample in your samplesheet when using '--tools' with 'ascat' or 'controlfreec' (unless '--cf_omit_sex' is set) or 'varlociraptor'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
             }
         }
     }
 
     // Fails when varlociraptor is enable for tumor samples but no contamination is provided
-    if (tools && tools.split(',').contains('varlociraptor')) {
+    if ('varlociraptor' in tools) {
         input_sample.map { sample ->
             if (sample[0].status == 1 && !sample[0].containsKey('contamination')) {
                 error("Please specify contamination information for each tumor sample in your samplesheet when using '--tools' with 'varlociraptor'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
@@ -470,12 +472,12 @@ workflow SAMPLESHEET_TO_CHANNEL {
     }
 
     // Fails when bcftools annotate is used but no files are supplied
-    if (tools && tools.split(',').contains('bcfann') && !(bcftools_annotations && bcftools_annotations_tbi && bcftools_header_lines)) {
+    if ('bcfann' in tools && !(bcftools_annotations && bcftools_annotations_tbi && bcftools_header_lines)) {
         error("Please specify --bcftools_annotations, --bcftools_annotations_tbi, and --bcftools_header_lines, when using BCFTools annotations")
     }
 
     // Fails when snpeff annotation is enabled but snpeff_db is not specified
-    if ((snpeff_cache && tools && (tools.split(',').contains("snpeff") || tools.split(',').contains('merge'))) && !snpeff_db) {
+    if ((snpeff_cache && ("snpeff" in tools || 'merge' in tools)) && !snpeff_db) {
         error("Please specify --snpeff_db")
     }
 

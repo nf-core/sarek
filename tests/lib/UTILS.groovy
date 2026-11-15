@@ -43,6 +43,8 @@ class UTILS {
         def freebayes_unfiltered = getAllFilesFromPath(outdir, include: ['**/*.freebayes.vcf.gz'])
         // varlociraptor vcf
         def varlociraptor_vcf = getAllFilesFromPath(outdir, include: ['**/*.varlociraptor.{vcf}{,.gz}'])
+        // freec_configs: Control-FREEC config files
+        def freec_configs = getAllFilesFromPath(outdir, include: ['**/controlfreec/*/config.txt'])
 
         def assertion = []
         // getAllFilesFromPath returns relative paths (strings), so this resolves to an absolute path
@@ -66,6 +68,10 @@ class UTILS {
             if (scenario.include_muse_txt) {
                 // It will skip the first line of the txt file
                 assertion.add(txt_files.isEmpty() ? 'No TXT files' : txt_files.collect { file -> file.tokenize('/').last() + ":md5," + path(absolutePath(file)).readLines().drop(2).join('\n').md5() })
+            }
+            if (scenario.include_freec_sex) {
+                // config.txt is in .nftignore (absolute paths), so only the `sex` line of each config is snapshotted
+                assertion.add(freec_configs.isEmpty() ? 'No Control-FREEC config files' : freec_configs.collect { file -> file.tokenize('/')[-2] + ":" + (path(absolutePath(file)).readLines().find { it ==~ /^sex\s*=.*/ } ?: 'no sex line') })
             }
             if (scenario.include_freebayes_unfiltered) {
                 // It will only print the vcf summary to avoid differing md5sums because of small differences in QUAL score
