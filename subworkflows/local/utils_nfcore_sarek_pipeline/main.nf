@@ -262,6 +262,7 @@ def validateInputParameters(vep_loftee, vep_loftee_gerp_bigwig, tools) {
     parabricksMutectcallerIgnoredParams(tools)
     noIntervalsWithIntervals()
     intervalsMatchReference()
+    tmbRequirements(tools)
     lofteeGerpRequiresLoftee(vep_loftee, vep_loftee_gerp_bigwig)
 }
 
@@ -355,6 +356,27 @@ def parabricksMutectcallerIgnoredParams(tools) {
         }
         if (params.ignore_soft_clipped_bases) {
             log.warn("`--ignore_soft_clipped_bases` is not supported by Parabricks mutectcaller and is ignored for `parabricks_mutectcaller`: soft-clipped bases are used during calling.")
+        }
+    }
+}
+
+// Exit if TMB is requested without what it needs
+def tmbRequirements(tools) {
+    if ('tmb' in tools) {
+        if (params.step == 'annotate') {
+            error("`--tools tmb` is not supported with `--step annotate`: start from `--step variant_calling` or earlier.")
+        }
+        if ('mutect2' !in tools || !('snpeff' in tools || 'merge' in tools)) {
+            error("`--tools tmb` needs `mutect2` and `snpeff` (or `merge`) in `--tools`: TMB is computed on Mutect2 calls annotated with snpEff.")
+        }
+        if (params.joint_mutect2) {
+            error("`--tools tmb` does not support `--joint_mutect2` yet: pyTMB scores one tumour sample per VCF.")
+        }
+        if ('varlociraptor' in tools) {
+            error("`--tools tmb` does not support `varlociraptor` yet: varlociraptor replaces the Mutect2 calls with its own before annotation.")
+        }
+        if (!params.tmb_eff_genome_size && (!params.wes || params.no_intervals || !intervalsParam())) {
+            error("`--tools tmb` needs an effective genome size: set `--tmb_eff_genome_size`, or use `--wes` with `--intervals`.")
         }
     }
 }
