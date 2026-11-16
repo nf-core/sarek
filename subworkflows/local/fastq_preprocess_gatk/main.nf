@@ -40,6 +40,7 @@ include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD } from '../../../subworkflo
 // Create recalibration tables
 include { BAM_BASERECALIBRATOR                       } from '../../../subworkflows/local/bam_baserecalibrator'
 include { BAM_BASERECALIBRATOR_SPARK                 } from '../../../subworkflows/local/bam_baserecalibrator_spark'
+include { BAM_PREPROCESS_XBQSR                       } from '../../../subworkflows/local/bam_preprocess_xbqsr'
 
 // Create recalibrated cram files to use for variant calling (+QC)
 include { BAM_APPLYBQSR                              } from '../../../subworkflows/nf-core/bam_applybqsr'
@@ -376,54 +377,75 @@ workflow FASTQ_PREPROCESS_GATK {
         }
 
         // STEP 3: Create recalibration tables
+        cram_variant_calling_xbqsr = channel.empty()
         if ('baserecalibrator' !in skip_tools) {
 
-            ch_table_bqsr_no_spark = channel.empty()
-            ch_table_bqsr_spark = channel.empty()
-
-            if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
-                BAM_BASERECALIBRATOR_SPARK(
+            if (params.bqsr_tool == 'xbqsr') {
+                BAM_PREPROCESS_XBQSR(
                     ch_cram_for_bam_baserecalibrator,
                     dict,
                     fasta,
                     fasta_fai,
-                    intervals_and_num_intervals,
                     known_sites_indels,
                     known_sites_indels_tbi,
+                    save_output_as_bam
                 )
 
-                ch_table_bqsr_spark = BAM_BASERECALIBRATOR_SPARK.out.table_bqsr
+                ch_table_bqsr = BAM_PREPROCESS_XBQSR.out.table
+                reports = reports.mix(ch_table_bqsr.collect { _meta, table -> [table] })
+                cram_variant_calling_xbqsr = BAM_PREPROCESS_XBQSR.out.recal_out
+
+                // Create CSV to restart from this step
+                CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), tools, skip_tools, params.outdir)
             }
             else {
+                ch_table_bqsr_no_spark = channel.empty()
+                ch_table_bqsr_spark = channel.empty()
 
-                BAM_BASERECALIBRATOR(
-                    ch_cram_for_bam_baserecalibrator,
-                    dict,
-                    fasta,
-                    fasta_fai,
-                    intervals_and_num_intervals,
-                    known_sites_indels,
-                    known_sites_indels_tbi,
-                )
+                if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
+                    BAM_BASERECALIBRATOR_SPARK(
+                        ch_cram_for_bam_baserecalibrator,
+                        dict,
+                        fasta,
+                        fasta_fai,
+                        intervals_and_num_intervals,
+                        known_sites_indels,
+                        known_sites_indels_tbi,
+                    )
 
-                ch_table_bqsr_no_spark = BAM_BASERECALIBRATOR.out.table_bqsr
+                    ch_table_bqsr_spark = BAM_BASERECALIBRATOR_SPARK.out.table_bqsr
+                }
+                else {
+
+                    BAM_BASERECALIBRATOR(
+                        ch_cram_for_bam_baserecalibrator,
+                        dict,
+                        fasta,
+                        fasta_fai,
+                        intervals_and_num_intervals,
+                        known_sites_indels,
+                        known_sites_indels_tbi,
+                    )
+
+                    ch_table_bqsr_no_spark = BAM_BASERECALIBRATOR.out.table_bqsr
+                }
+
+                // ch_table_bqsr contains either:
+                // - bqsr table from baserecalibrator
+                // - bqsr table from baserecalibrator_spark
+                ch_table_bqsr = channel.empty()
+                    .mix(
+                        ch_table_bqsr_no_spark,
+                        ch_table_bqsr_spark,
+                    )
+
+                reports = reports.mix(ch_table_bqsr.collect { _meta, table -> [table] })
+
+                cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
+
+                // Create CSV to restart from this step
+                CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), tools, skip_tools, params.outdir)
             }
-
-            // ch_table_bqsr contains either:
-            // - bqsr table from baserecalibrator
-            // - bqsr table from baserecalibrator_spark
-            ch_table_bqsr = channel.empty()
-                .mix(
-                    ch_table_bqsr_no_spark,
-                    ch_table_bqsr_spark,
-                )
-
-            reports = reports.mix(ch_table_bqsr.collect { _meta, table -> [table] })
-
-            cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
-
-            // Create CSV to restart from this step
-            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), tools, skip_tools, params.outdir)
         }
     }
 
@@ -437,45 +459,50 @@ workflow FASTQ_PREPROCESS_GATK {
         }
 
         if ('baserecalibrator' !in skip_tools) {
-            cram_variant_calling_no_spark = channel.empty()
-            cram_variant_calling_spark = channel.empty()
-
-            if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
-
-                BAM_APPLYBQSR_SPARK(
-                    cram_applybqsr,
-                    dict,
-                    fasta,
-                    fasta_fai,
-                    intervals_and_num_intervals,
-                    save_output_as_bam,
-                )
-
-                cram_variant_calling_spark = BAM_APPLYBQSR_SPARK.out.alignment
+            if (params.bqsr_tool == 'xbqsr') {
+                cram_variant_calling = cram_variant_calling_xbqsr
             }
             else {
+                cram_variant_calling_no_spark = channel.empty()
+                cram_variant_calling_spark = channel.empty()
 
-                references = fasta
-                    .combine(fasta_fai)
-                    .combine(dict)
-                    .map { meta_fasta, fasta_, _meta_fai, fai, _meta_dict, dict_ -> [meta_fasta, fasta_, fai, dict_] }
-                    .collect()
+                if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
 
-                BAM_APPLYBQSR(
-                    cram_applybqsr,
-                    references,
-                    intervals_and_num_intervals,
-                    save_output_as_bam ? ['bam', 'bai'] : ['cram', 'crai'],
-                )
+                    BAM_APPLYBQSR_SPARK(
+                        cram_applybqsr,
+                        dict,
+                        fasta,
+                        fasta_fai,
+                        intervals_and_num_intervals,
+                        save_output_as_bam,
+                    )
 
-                cram_variant_calling_no_spark = BAM_APPLYBQSR.out.recal_out
+                    cram_variant_calling_spark = BAM_APPLYBQSR_SPARK.out.alignment
+                }
+                else {
+
+                    references = fasta
+                        .combine(fasta_fai)
+                        .combine(dict)
+                        .map { meta_fasta, fasta_, _meta_fai, fai, _meta_dict, dict_ -> [meta_fasta, fasta_, fai, dict_] }
+                        .collect()
+
+                    BAM_APPLYBQSR(
+                        cram_applybqsr,
+                        references,
+                        intervals_and_num_intervals,
+                        save_output_as_bam ? ['bam', 'bai'] : ['cram', 'crai'],
+                    )
+
+                    cram_variant_calling_no_spark = BAM_APPLYBQSR.out.recal_out
+                }
+
+                cram_variant_calling = channel.empty()
+                    .mix(
+                        cram_variant_calling_no_spark,
+                        cram_variant_calling_spark,
+                    )
             }
-
-            cram_variant_calling = channel.empty()
-                .mix(
-                    cram_variant_calling_no_spark,
-                    cram_variant_calling_spark,
-                )
 
             // Create CSV to restart from this step
             CHANNEL_APPLYBQSR_CREATE_CSV(cram_variant_calling, params.outdir)
