@@ -372,6 +372,9 @@ def tmbRequirements(tools) {
         if (params.joint_mutect2) {
             error("`--tools tmb` does not support `--joint_mutect2` yet: pyTMB scores one tumour sample per VCF.")
         }
+        if ('varlociraptor' in tools) {
+            error("`--tools tmb` does not support `varlociraptor` yet: varlociraptor replaces the Mutect2 calls with its own before annotation.")
+        }
         if (!params.tmb_eff_genome_size && (!params.wes || params.no_intervals || !intervalsParam())) {
             error("`--tools tmb` needs an effective genome size: set `--tmb_eff_genome_size`, or use `--wes` with `--intervals`.")
         }

@@ -368,5 +368,25 @@
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
         }
+    },
+    "Fails with --tools mutect2,snpeff,tmb,varlociraptor": {
+        "content": [
+            [
+                "pipeline_info"
+            ],
+            "No stable content",
+            "No BAM files",
+            "No CRAM files",
+            "No VCF files",
+            "No warnings",
+            [
+                "`--tools tmb` does not support `varlociraptor` yet: varlociraptor replaces the Mutect2 calls with its own before annotation."
+            ]
+        ],
+        "timestamp": "2026-11-16T09:24:48.154635",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

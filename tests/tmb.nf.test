@@ -58,6 +58,17 @@ nextflow_pipeline {
             failure: true,
             snapshot: 'stderr,stdout',
             snapshot_include: '--tools tmb'
+        ],
+        [
+            name: "Fails with --tools mutect2,snpeff,tmb,varlociraptor",
+            params: [
+                input: "${projectDir}/tests/csv/3.0/recalibrated_tumoronly.csv",
+                step: 'variant_calling',
+                tools: 'mutect2,snpeff,tmb,varlociraptor'
+            ],
+            failure: true,
+            snapshot: 'stderr,stdout',
+            snapshot_include: '--tools tmb'
         ]
     ]
 

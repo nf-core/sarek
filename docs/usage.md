@@ -1499,6 +1499,8 @@ The pyTMB configuration files for Mutect2 and snpEff are in `assets/tmb/`.
 
 > **NB** TMB is not calculated with `--joint_mutect2` yet.
 
+> **NB** TMB is not calculated with `varlociraptor` in `--tools` yet: varlociraptor replaces the Mutect2 calls with its own before annotation.
+
 > **NB** TMB is not calculated with `--step annotate`: the samplesheet for this step does not carry the tumour sample name of paired VCFs, and no intervals BED is prepared. Start from `--step variant_calling` or earlier.
 
 > **NB** pyTMB stops with `No Annotation detected` on a VCF without any variant, which fails the run. This happens when Mutect2 makes no call at all, for example on a small panel.
