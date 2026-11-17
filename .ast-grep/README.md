@@ -31,6 +31,12 @@ policy. Markdown support is built into the pinned ast-grep binary.
 
 ## Search and add rules
 
+Extend the existing `ast-grep test` and `ast-grep scan` flow with YAML rules,
+native test fixtures and snapshots. Add file paths to the existing scan when
+needed. Separate mise tasks, CI steps or custom test harnesses require an
+explicit user request. Check the pinned binary's built-in language support,
+including Markdown, before adding a parser or another checker.
+
 Keep the configuration here and pass it explicitly:
 
 ```bash
