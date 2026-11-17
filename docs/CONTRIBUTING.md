@@ -924,7 +924,7 @@ Follow [Keep a Changelog](https://keepachangelog.com/) format.
   ```
 - Open a draft PR to obtain its number, then add its changelog entry with that number in both the link label and URL before requesting review. Local ast-grep checks reject placeholder links, so leave the entry uncommitted until the number exists.
 - Each PR needs its own changelog entry, including each PR in a stack. Preserve the actual numbers in inherited entries.
-- The ast-grep checks reject placeholder links in `CHANGELOG.md`. CI also checks added changelog lines against the current PR number; unchanged historical entries are outside this PR-diff check.
+- The existing ast-grep check rejects placeholder links in `CHANGELOG.md`. Verify numeric links against the actual PR before requesting review.
 - The issue number goes in the **PR description body** (for auto-close), not the changelog
 - Entries within each section are in **ascending order** by PR number
 

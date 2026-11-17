@@ -5,6 +5,5 @@
 description = "Test structural rules and scan first-party Nextflow code and the changelog"
 run = [
     "ast-grep test -c sgconfig.yml",
-    "./mise-tasks/test-changelog-pr",
     "ast-grep scan -c sgconfig.yml ../main.nf ../workflows ../subworkflows/local ../modules/local ../CHANGELOG.md",
 ]

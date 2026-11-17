@@ -59,20 +59,9 @@ and [rewriter guide](https://ast-grep.github.io/guide/rewrite/rewriter).
 in `CHANGELOG.md`. Fenced code examples and other Markdown files are excluded.
 The local hook runs its native YAML tests and scans the changelog.
 
-CI also runs `check-changelog-pr`. This task extracts added changelog lines from
-the PR's merge-base diff, then uses ast-grep Markdown rules to reject placeholders
-and require a list item linking to the current PR number. Both the link label and
-URL must use that number. The shell task supplies Git and PR metadata; matching
-and diagnostics come from ast-grep. Unchanged historical entries are excluded
-from this PR-diff check.
-
-```bash
-BASE_SHA=origin/dev PR_NUMBER=2424 mise -C .ast-grep run check-changelog-pr
-```
-
-Set `BASE_SHA` to the actual parent branch or commit for a stacked PR. Set
-`HEAD_SHA` to inspect a committed revision other than `HEAD`. The normal `check`
-task also runs temporary-Git-repository tests of the PR-diff task.
+The existing `check` task runs `ast-grep test` and `ast-grep scan` locally and in
+CI. No separate changelog task is needed. The rule detects placeholder links;
+it does not compare numeric links against GitHub PR metadata.
 
 Open a draft PR to obtain its number before committing a new changelog entry.
 Push the numbered entry before requesting review.
