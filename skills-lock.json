@@ -1,0 +1,11 @@
+{
+    "version": 1,
+    "skills": {
+        "issue-graph": {
+            "source": "vercel-labs/issue-graph",
+            "sourceType": "github",
+            "skillPath": "skills/issue-graph/SKILL.md",
+            "computedHash": "c4d8de4f9dbd9f1522c78f72a2c40c42af2c24f751c5025631770e2908ba9519"
+        }
+    }
+}
