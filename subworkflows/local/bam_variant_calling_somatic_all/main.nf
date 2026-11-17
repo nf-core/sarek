@@ -18,6 +18,7 @@ include { BAM_VARIANT_CALLING_PARABRICKS_MUTECTCALLER         } from '../bam_var
 include { BAM_VARIANT_CALLING_SOMATIC_STRELKA                 } from '../bam_variant_calling_somatic_strelka'
 include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT                  } from '../bam_variant_calling_somatic_tiddit'
 include { BAM_VARIANT_CALLING_SOMATIC_TNSCOPE                 } from '../bam_variant_calling_somatic_tnscope'
+include { BAM_VARIANT_CALLING_VARNET                          } from '../bam_variant_calling_varnet'
 include { MSISENSORPRO_MSISOMATIC                             } from '../../../modules/nf-core/msisensorpro/msisomatic'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
@@ -334,6 +335,24 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         tbi_tiddit = BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.tbi
     }
 
+    // VARNET
+    bam_varnet = bam.filter { _meta, _normal_bam, _normal_bai, _tumor_bam, _tumor_bai ->
+        'varnet' in tools
+    }
+
+    BAM_VARIANT_CALLING_VARNET(
+        bam_varnet,
+        fasta,
+        fasta_fai,
+        intervals_bed_combined,
+        [[], []],
+        [[], []],
+        [[], []],
+    )
+
+    vcf_varnet = BAM_VARIANT_CALLING_VARNET.out.vcf
+    tbi_varnet = BAM_VARIANT_CALLING_VARNET.out.tbi
+
     vcf_all = channel.empty()
         .mix(
             vcf_freebayes,
@@ -346,6 +365,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             vcf_strelka,
             vcf_tiddit,
             vcf_tnscope,
+            vcf_varnet,
         )
 
     tbi_all = channel.empty()
@@ -360,6 +380,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             tbi_strelka,
             tbi_tiddit,
             tbi_tnscope,
+            tbi_varnet,
         )
 
     emit:
@@ -376,6 +397,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_strelka
     vcf_tiddit
     vcf_tnscope
+    vcf_varnet
     tbi_all
     tbi_freebayes
     tbi_deepsomatic
@@ -387,4 +409,5 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     tbi_strelka
     tbi_tiddit
     tbi_tnscope
+    tbi_varnet
 }

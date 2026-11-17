@@ -114,6 +114,7 @@ workflow SAREK {
     pon
     pon_tbi
     sentieon_dnascope_model
+    varnet_resources
     varlociraptor_chunk_size
     varlociraptor_events_germline
     varlociraptor_events_somatic
@@ -289,8 +290,8 @@ workflow SAREK {
 
         bam_variant_calling = channel.empty()
 
-        //  For cnvkit, msisensor2 and muse we need to use bam input and not cram
-        if ('cnvkit' in tools || 'msisensor2' in tools || 'muse' in tools) {
+        //  For cnvkit, msisensor2, muse and varnet we need to use bam input and not cram
+        if ('cnvkit' in tools || 'msisensor2' in tools || 'muse' in tools || 'varnet' in tools) {
 
             // Differentiate between bam and cram files
             cram_variant_calling_status_tmp = cram_variant_calling.branch { _meta, file, _index ->
@@ -472,6 +473,7 @@ workflow SAREK {
             msisensor2_models,
             pon,
             pon_tbi,
+            varnet_resources,
             params.joint_mutect2,
             wes,
             contamination_resource_provided,

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#2311](https://github.com/nf-core/sarek/pull/2311) - Add VarNet (`--tools varnet`) as somatic SNV and indel caller for tumor-normal pairs and tumor-only samples, downloading the tumor-only resources when `--varnet_resources` is not set
 - [#2391](https://github.com/nf-core/sarek/pull/2391) - Make the `lane` column of the samplesheet optional for samples with a single row (`--step mapping`), based on [#1943](https://github.com/nf-core/sarek/pull/1943) by [@animesh](https://github.com/animesh)
 - [#2353](https://github.com/nf-core/sarek/pull/2353) - Add joint germline calling (`--joint_germline`), dbSNP annotation and `--gatk_pcr_indel_model` support to Parabricks HaplotypeCaller. Single-sample VCFs are now also filtered with CNNScoreVariants/FilterVariantTranches by default, published as `<sample>.parabricks_haplotypecaller.filtered.vcf.gz`; use `--skip_tools parabricks_haplotypecaller_filter` for the previous unfiltered output
 - [#2408](https://github.com/nf-core/sarek/pull/2408) - Add `--vep_loftee_gerp_bigwig` to supply a GERP BigWig file to the VEP LOFTEE plugin ([#2295](https://github.com/nf-core/sarek/issues/2295)), based on [#2301](https://github.com/nf-core/sarek/pull/2301) by [@Joaodemeirelles](https://github.com/Joaodemeirelles)
@@ -41,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Params                     | status |
 | -------------------------- | ------ |
+| `--varnet_resources`       | Added  |
 | `--vep_loftee_gerp_bigwig` | Added  |
 
 ### Developer section
@@ -105,6 +107,7 @@ Njoatsosvágge is a long valley crossing the northern part of Sarek National Par
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+| varnet     |             | 1.5.4       |
 | bedtools   | -           | 2.31.1      |
 | fastqc     | 0.12.1      | 0.13.0      |
 | parabricks | 4.7.1-1     | 4.8.0-1     |

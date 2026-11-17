@@ -119,7 +119,7 @@
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for contamination removal, duplicate marking, variant calling and/or for annotation.",
                     "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper, Parabricks DeepVariant, Parabricks Haplotypecaller \n- Structural Variants: indexcov, Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Lofreq, mpileup, Mutect2, Sentieon TNScope, Strelka\n- Structural Variants: Manta, Sentieon TNScope, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n- Microsatellite Instability: MSIsensor2\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: DeepSomatic, FreeBayes, Mutect2, Parabricks DeepSomatic, Parabricks MutectCaller, Sentieon TNScope, Strelka2 \n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC, Sentieon TNScope \n- Microsatellite Instability: MSIsensorpro\n\n> **NB** DeepSomatic and Parabricks DeepSomatic support paired short-read WGS and WES only. Parabricks DeepSomatic requires an NVIDIA GPU.\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively), and bcftools annotate (needs `--bcftools_annotation`).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
-                    "pattern": "(?i)^((ascat|bbsplit|bcfann|cnvkit|controlfreec|deepsomatic|deepvariant|freebayes|haplotypecaller|indexcov|lofreq|manta|merge|mpileup|msisensor2|msisensorpro|muse|mutect2|ngscheckmate|parabricks_deepsomatic|parabricks_deepvariant|parabricks_haplotypecaller|parabricks_mutectcaller|sentieon_dedup|sentieon_dnascope|sentieon_haplotyper|sentieon_tnscope|snpeff|snpsift|strelka|tiddit|vep|varlociraptor)?,?)*(?<!,)$"
+                    "pattern": "(?i)^((ascat|bbsplit|bcfann|cnvkit|controlfreec|deepsomatic|deepvariant|freebayes|haplotypecaller|indexcov|lofreq|manta|merge|mpileup|msisensor2|msisensorpro|muse|mutect2|ngscheckmate|parabricks_deepsomatic|parabricks_deepvariant|parabricks_haplotypecaller|parabricks_mutectcaller|sentieon_dedup|sentieon_dnascope|sentieon_haplotyper|sentieon_tnscope|snpeff|snpsift|strelka|tiddit|varnet|vep|varlociraptor)?,?)*(?<!,)$"
                 },
                 "skip_tools": {
                     "type": "string",
@@ -1194,6 +1194,13 @@
                     "mimetype": "text/plain",
                     "description": "Machine learning model for Sentieon Dnascope.",
                     "help_text": " It is recommended to use DNAscope with a machine learning model to perform variant calling with higher accuracy by improving the candidate detection and filtering. Sentieon can provide you with a model trained using a subset of the data from the GiAB truth-set found in https://github.com/genome-in-a-bottle. In addition, Sentieon can assist you in the creation of models using your own data, which will calibrate the specifics of your sequencing and bio-informatics processing.\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "varnet_resources": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "fa_icon": "fas fa-folder-open",
+                    "description": "Path to the folder with the VarNet germline resources.",
+                    "help_text": "Used by VarNet on tumor-only samples. The folder holds the GRCh38 dbSNP, gnomAD and panel of normals files from https://doi.org/10.6084/m9.figshare.34420128.\n\n> **NB** If none provided, the resources (3.9 GB) will be downloaded automatically when VarNet runs on tumor-only samples. Combine with `--save_reference` to save them for future runs."
                 },
                 "snpeff_cache": {
                     "type": "string",
