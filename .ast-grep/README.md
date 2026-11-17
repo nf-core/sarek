@@ -1,7 +1,8 @@
-# Nextflow structural checks
+# Structural checks
 
 This directory owns the ast-grep CLI, Nextflow parser setup, configuration, rules
-and rule tests. It does not replace Nextflow linting or pipeline execution tests.
+and rule tests for Nextflow and the Markdown changelog. It does not replace
+Nextflow linting or pipeline execution tests.
 
 ## Setup
 
@@ -24,10 +25,17 @@ Set `CC` to a compiler executable to override `cc`. Rerun setup-parser after
 changing the parser pin or moving the checkout to another platform.
 
 The existing prek hook runs the same check as CI. Run setup before using prek.
-The scan covers `main.nf`, `workflows/`, `subworkflows/local/` and `modules/local/`.
-Imported nf-core code and configuration files remain outside this policy.
+The scan covers `main.nf`, `workflows/`, `subworkflows/local/`, `modules/local/` and
+`CHANGELOG.md`. Imported nf-core code and configuration files remain outside this
+policy. Markdown support is built into the pinned ast-grep binary.
 
 ## Search and add rules
+
+Extend the existing `ast-grep test` and `ast-grep scan` flow with YAML rules,
+native test fixtures and snapshots. Add file paths to the existing scan when
+needed. Separate mise tasks, CI steps or custom test harnesses require an
+explicit user request. Check the pinned binary's built-in language support,
+including Markdown, before adding a parser or another checker.
 
 Keep the configuration here and pass it explicitly:
 
@@ -50,6 +58,19 @@ with `// ast-grep-ignore: <id>` and a reason on the preceding line.
 
 See ast-grep's [project configuration](https://ast-grep.github.io/guide/project/project-config)
 and [rewriter guide](https://ast-grep.github.io/guide/rewrite/rewriter).
+
+## Changelog PR references
+
+`changelog-pr-placeholder` reports placeholder PR links inside Markdown list items
+in `CHANGELOG.md`. Fenced code examples and other Markdown files are excluded.
+The local hook runs its native YAML tests and scans the changelog.
+
+The existing `check` task runs `ast-grep test` and `ast-grep scan` locally and in
+CI. No separate changelog task is needed. The rule detects placeholder links;
+it does not compare numeric links against GitHub PR metadata.
+
+Open a draft PR to obtain its number before committing a new changelog entry.
+Push the numbered entry before requesting review.
 
 ## Convert an if guard to a filter
 

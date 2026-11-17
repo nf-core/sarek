@@ -1,0 +1,14 @@
+id: changelog-pr-placeholder
+language: Markdown
+severity: error
+message: Replace the changelog placeholder in both the link label and URL with the actual PR number.
+files:
+  - "**/CHANGELOG.md"
+rule:
+  kind: inline
+  any:
+    - regex: '(?i)\[#XXX\]\(https://github\.com/nf-core/sarek/pull/(XXX|[0-9]+)\)'
+    - regex: '(?i)\[#(XXX|[0-9]+)\]\(https://github\.com/nf-core/sarek/pull/XXX\)'
+  inside:
+    kind: list_item
+    stopBy: end

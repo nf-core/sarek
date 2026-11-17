@@ -1,0 +1,36 @@
+id: changelog-pr-placeholder
+valid:
+  - |
+    - [#2323](https://github.com/nf-core/sarek/pull/2323) - Set up ast-grep.
+    - [#2324](https://github.com/nf-core/sarek/pull/2324) - Add the first rule.
+  - |
+    - [#2424](https://github.com/nf-core/sarek/pull/2424) - Check changelog entries.
+  - |
+    A PR number such as #XXX is a local drafting placeholder.
+  - |
+    ```markdown
+    - [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Documentation example.
+    ```
+  - |
+    - Documentation example:
+      ```markdown
+      - [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Example.
+      ```
+  - |
+    - [#XXX](https://github.com/another/project/pull/XXX) - Another repository.
+invalid:
+  - |
+    - [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Set up ast-grep.
+  - |
+    - [#XXX](https://github.com/nf-core/sarek/pull/2323) - Placeholder label.
+  - |
+    - [#2324](https://github.com/nf-core/sarek/pull/XXX) - Placeholder URL.
+  - |
+    - [#xxx](https://github.com/nf-core/sarek/pull/xxx) - Lowercase placeholders.
+  - |
+    - [#2323](https://github.com/nf-core/sarek/pull/2323) - Parent entry.
+    - [#XXX](https://github.com/nf-core/sarek/pull/XXX) - New entry.
+  - |
+    * [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Alternate list marker.
+  - |
+    - [#2323](https://github.com/nf-core/sarek/pull/2323), [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Multiple references.

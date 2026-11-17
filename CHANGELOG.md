@@ -49,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#2323](https://github.com/nf-core/sarek/pull/2323) - Set up pinned ast-grep tooling and the Nextflow parser for structural checks ([@edmundmiller](https://github.com/edmundmiller)).
 - [#2324](https://github.com/nf-core/sarek/pull/2324) - Warn about simple workflow `if` guards that should be reviewed for input-channel filtering ([@edmundmiller](https://github.com/edmundmiller)).
+- [#2424](https://github.com/nf-core/sarek/pull/2424) - Check Markdown changelog PR references with ast-grep and document draft-to-review publication steps ([@edmundmiller](https://github.com/edmundmiller)).
 
 #### Changed
 
