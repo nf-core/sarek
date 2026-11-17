@@ -84,6 +84,10 @@ Two types of tests are typically run:
 
 #### Lint tests
 
+Use [ast-grep](../.ast-grep/README.md) for Nextflow structural rules.
+Follow its setup instructions before running prek. Keep formatting and syntax
+validation in Nextflow lint, and runtime behaviour in nf-test.
+
 nf-core has a [set of guidelines](https://nf-co.re/docs/specifications/overview) which all pipelines must follow.
 To enforce these, run linting with nf-core/tools:
 

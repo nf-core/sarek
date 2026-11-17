@@ -16,6 +16,13 @@ jobs:
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v3
 
+      - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3
+        with:
+          working_directory: .ast-grep
+
+      - name: Set up Nextflow structural checks
+        run: mise -C .ast-grep run setup-parser
+
       - name: Run prek
         uses: j178/prek-action@44924fe9ef4a6f88253c4b6b1bf11c689d3ce53d # v3.1.0
 
