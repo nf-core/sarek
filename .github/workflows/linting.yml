@@ -8,6 +8,27 @@ on:
     types: [published]
 
 jobs:
+  changelog-pr:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Test changelog PR check
+        run: python3 -m unittest discover -s .github/scripts -p 'test_check_changelog_pr.py' -v
+
+      - name: Check changelog PR references
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: python3 .github/scripts/check_changelog_pr.py --base "$BASE_SHA" --head "$HEAD_SHA" --pr-number "$PR_NUMBER"
+
   pre-commit:
     runs-on: ubuntu-latest
     steps:
