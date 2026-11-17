@@ -1,7 +1,8 @@
-# Nextflow structural checks
+# Structural checks
 
 This directory owns the ast-grep CLI, Nextflow parser setup, configuration, rules
-and rule tests. It does not replace Nextflow linting or pipeline execution tests.
+and rule tests for Nextflow and the Markdown changelog. It does not replace
+Nextflow linting or pipeline execution tests.
 
 ## Setup
 
@@ -24,8 +25,9 @@ Set `CC` to a compiler executable to override `cc`. Rerun setup-parser after
 changing the parser pin or moving the checkout to another platform.
 
 The existing prek hook runs the same check as CI. Run setup before using prek.
-The scan covers `main.nf`, `workflows/`, `subworkflows/local/` and `modules/local/`.
-Imported nf-core code and configuration files remain outside this policy.
+The scan covers `main.nf`, `workflows/`, `subworkflows/local/`, `modules/local/` and
+`CHANGELOG.md`. Imported nf-core code and configuration files remain outside this
+policy. Markdown support is built into the pinned ast-grep binary.
 
 ## Search and add rules
 
@@ -50,6 +52,30 @@ with `// ast-grep-ignore: <id>` and a reason on the preceding line.
 
 See ast-grep's [project configuration](https://ast-grep.github.io/guide/project/project-config)
 and [rewriter guide](https://ast-grep.github.io/guide/rewrite/rewriter).
+
+## Changelog PR references
+
+`changelog-pr-placeholder` reports placeholder PR links inside Markdown list items
+in `CHANGELOG.md`. Fenced code examples and other Markdown files are excluded.
+The local hook runs its native YAML tests and scans the changelog.
+
+CI also runs `check-changelog-pr`. This task extracts added changelog lines from
+the PR's merge-base diff, then uses ast-grep Markdown rules to reject placeholders
+and require a list item linking to the current PR number. Both the link label and
+URL must use that number. The shell task supplies Git and PR metadata; matching
+and diagnostics come from ast-grep. Unchanged historical entries are excluded
+from this PR-diff check.
+
+```bash
+BASE_SHA=origin/dev PR_NUMBER=2424 mise -C .ast-grep run check-changelog-pr
+```
+
+Set `BASE_SHA` to the actual parent branch or commit for a stacked PR. Set
+`HEAD_SHA` to inspect a committed revision other than `HEAD`. The normal `check`
+task also runs temporary-Git-repository tests of the PR-diff task.
+
+Open a draft PR to obtain its number before committing a new changelog entry.
+Push the numbered entry before requesting review.
 
 ## Convert an if guard to a filter
 

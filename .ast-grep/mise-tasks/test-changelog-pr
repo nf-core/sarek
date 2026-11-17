@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+#MISE description="Test ast-grep PR metadata checks in a temporary Git repository"
+set -euo pipefail
+
+root=$(dirname "$(dirname "$(realpath "$0")")")
+temporary=$(mktemp -d)
+trap 'rm -rf "$temporary"' EXIT
+cd "$temporary"
+git init --quiet
+git config user.name 'Changelog test'
+git config user.email 'changelog@example.invalid'
+git config core.hooksPath /dev/null
+git config commit.gpgsign false
+printf '# Changelog\n\n- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Historical entry.\n' > CHANGELOG.md
+git add CHANGELOG.md
+git commit --quiet -m 'Add historical entry'
+base=$(git rev-parse HEAD)
+initial=$base
+
+check_changes() {
+    local expected=$1 name=$2 additions=$3 diagnostic=${4:-}
+    git show "$initial:CHANGELOG.md" > CHANGELOG.md
+    printf '%s\n' "$additions" >> CHANGELOG.md
+    git add CHANGELOG.md
+    git commit --quiet --allow-empty -m "$name"
+    local status=0
+    BASE_SHA=$base HEAD_SHA=HEAD PR_NUMBER=2424 "$root/mise-tasks/check-changelog-pr" > output 2>&1 || status=$?
+    if [[ $status != "$expected" ]] || { [[ -n $diagnostic ]] && ! grep -q "$diagnostic" output; }; then
+        echo "FAIL: $name (exit $status, expected $expected)" >&2
+        cat output >&2
+        exit 1
+    fi
+    echo "PASS: $name"
+}
+
+check_changes 0 'Current PR and unchanged historical placeholder' \
+    '- [#2424](https://github.com/nf-core/sarek/pull/2424) - Add rule.'
+check_changes 1 'Placeholder regression' \
+    '- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Add rule.' changelog-pr-placeholder
+check_changes 1 'Wrong PR number' \
+    '- [#2324](https://github.com/nf-core/sarek/pull/2324) - Add rule.' changelog-current-pr
+check_changes 1 'Mismatched PR URL' \
+    '- [#2424](https://github.com/nf-core/sarek/pull/2324) - Add rule.' changelog-current-pr
+check_changes 1 'Mismatched PR label' \
+    '- [#2324](https://github.com/nf-core/sarek/pull/2424) - Add rule.' changelog-current-pr
+check_changes 1 'No added entry' '' changelog-current-pr
+check_changes 1 'Heading is not a changelog entry' \
+    '## [#2424](https://github.com/nf-core/sarek/pull/2424)' changelog-current-pr
+check_changes 1 'Code example is not a changelog entry' \
+    $'```markdown\n- [#2424](https://github.com/nf-core/sarek/pull/2424) - Example.\n```' changelog-current-pr
+check_changes 0 'Parent reference alongside current PR' \
+    $'- [#2324](https://github.com/nf-core/sarek/pull/2324) - Parent.\n- [#2424](https://github.com/nf-core/sarek/pull/2424) - Add rule.'
+check_changes 1 'Placeholder alongside current PR' \
+    $'- [#2424](https://github.com/nf-core/sarek/pull/2424) - Add rule.\n- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Another entry.' changelog-pr-placeholder
+
+printf '%s\n' '- [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Example.' > README.md
+ast-grep scan --rule "$root/rules/changelog-pr-placeholder.yml" README.md
+echo 'PASS: Other Markdown files are excluded'
+
+git checkout --quiet -b advanced-base "$initial"
+printf '%s\n' '- [#2424](https://github.com/nf-core/sarek/pull/2424) - Base-only change.' >> CHANGELOG.md
+git add CHANGELOG.md
+git commit --quiet -m 'Advance base branch'
+base=$(git rev-parse HEAD)
+git checkout --quiet --detach "$initial"
+check_changes 1 'Base-only reference does not count' \
+    '- [#2324](https://github.com/nf-core/sarek/pull/2324) - Head-only change.' changelog-current-pr

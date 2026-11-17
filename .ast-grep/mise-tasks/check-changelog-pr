@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#MISE description="Check added changelog entries against the current PR with ast-grep"
+set -euo pipefail
+
+: "${BASE_SHA:?Set BASE_SHA to the PR base commit}"
+: "${PR_NUMBER:?Set PR_NUMBER to the current PR number}"
+[[ $PR_NUMBER =~ ^[1-9][0-9]*$ ]] || { echo 'PR_NUMBER must be a positive integer.' >&2; exit 1; }
+
+root=$(dirname "$(dirname "$(realpath "$0")")")
+repository=$(git rev-parse --show-toplevel)
+temporary=$(mktemp -d)
+trap 'rm -rf "$temporary"' EXIT
+git -C "$repository" diff --no-ext-diff --unified=0 "$BASE_SHA...${HEAD_SHA:-HEAD}" -- CHANGELOG.md > "$temporary/changes.diff"
+# A heading keeps the Markdown document non-empty when the PR adds no entries.
+printf '# PR changelog additions\n\n' > "$temporary/CHANGELOG.md"
+awk '/^\+\+\+/ {next} /^\+/ {print substr($0, 2)}' "$temporary/changes.diff" >> "$temporary/CHANGELOG.md"
+
+ast-grep scan --rule "$root/rules/changelog-pr-placeholder.yml" "$temporary/CHANGELOG.md"
+ast-grep scan --inline-rules "$(
+    cat <<YAML
+id: changelog-current-pr
+language: Markdown
+severity: error
+message: Add a changelog entry linking to [#$PR_NUMBER](https://github.com/nf-core/sarek/pull/$PR_NUMBER).
+rule:
+  kind: document
+  not:
+    has:
+      kind: inline
+      regex: '^\\[#$PR_NUMBER\\]\\(https://github\\.com/nf-core/sarek/pull/$PR_NUMBER\\)'
+      inside:
+        kind: list_item
+        stopBy: end
+      stopBy: end
+YAML
+)" "$temporary/CHANGELOG.md"

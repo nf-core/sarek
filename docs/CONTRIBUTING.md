@@ -922,9 +922,9 @@ Follow [Keep a Changelog](https://keepachangelog.com/) format.
   ```
   - [#XXX](https://github.com/nf-core/sarek/pull/XXX) - Description of change
   ```
-- Use `XXX` only while drafting locally. Open a draft PR to obtain its number, replace both the changelog link label and URL, then push the correction before requesting review.
+- Open a draft PR to obtain its number, then add its changelog entry with that number in both the link label and URL before requesting review. Local ast-grep checks reject placeholder links, so leave the entry uncommitted until the number exists.
 - Each PR needs its own changelog entry, including each PR in a stack. Preserve the actual numbers in inherited entries.
-- The `changelog-pr` CI job rejects placeholders in newly added changelog lines and requires an added entry linking to the current PR. Unchanged historical entries are outside this check.
+- The ast-grep checks reject placeholder links in `CHANGELOG.md`. CI also checks added changelog lines against the current PR number; unchanged historical entries are outside this PR-diff check.
 - The issue number goes in the **PR description body** (for auto-close), not the changelog
 - Entries within each section are in **ascending order** by PR number
 
