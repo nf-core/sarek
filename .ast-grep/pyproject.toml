@@ -1,0 +1,17 @@
+[project]
+name = "sarek-nextflow-checks"
+version = "0.0.0"
+description = "Structural Nextflow checks written with ast-grep's Python API"
+requires-python = ">=3.10"
+# Keep in step with the ast-grep CLI pinned in mise.toml.
+dependencies = ["ast-grep-py==0.44.1"]
+
+[dependency-groups]
+dev = ["pytest==9.2.0"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["checks"]
+addopts = "-p no:cacheprovider"

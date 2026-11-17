@@ -1,9 +1,11 @@
 [tools]
 "aqua:ast-grep/ast-grep" = "0.44.1"
+"aqua:astral-sh/uv" = "0.11.32"
 
 [tasks.check]
 description = "Test structural rules and scan first-party Nextflow code"
 run = [
     "ast-grep test -c sgconfig.yml",
-    "ast-grep scan -c sgconfig.yml ../main.nf ../workflows ../subworkflows/local ../modules/local",
+    "uv run --locked pytest -q",
+    "uv run --locked python -m checks.if_to_filter ../main.nf ../workflows ../subworkflows/local ../modules/local",
 ]

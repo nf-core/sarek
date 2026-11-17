@@ -14,7 +14,7 @@ mise -C .ast-grep run setup-parser
 mise -C .ast-grep run check
 ```
 
-Mise installs the pinned native ast-grep binary. Node.js and npm are not required.
+Mise installs the pinned native ast-grep binary and uv. Node.js and npm are not required.
 The file task `mise-tasks/setup-parser` downloads a pinned, SHA-256-verified
 [tree-sitter-nextflow](https://github.com/nextflow-io/tree-sitter-nextflow) source
 archive and compiles its generated C parser. It retains the upstream licence in
@@ -50,3 +50,50 @@ with `// ast-grep-ignore: <id>` and a reason on the preceding line.
 
 See ast-grep's [project configuration](https://ast-grep.github.io/guide/project/project-config)
 and [rewriter guide](https://ast-grep.github.io/guide/rewrite/rewriter).
+
+## Python checks
+
+Checks that need more than a YAML rule live in `checks/` and use ast-grep's
+[Python API](https://ast-grep.github.io/guide/api-usage/py-api). They load the same
+`lib/libnextflow` parser through `register_dynamic_language`. Mise installs a pinned
+[uv](https://docs.astral.sh/uv/), and `uv run --locked` installs `ast-grep-py` from
+`uv.lock` at the same version as the CLI. Run a check or its tests directly:
+
+```bash
+mise -C .ast-grep exec -- uv run --locked python -m checks.if_to_filter ../workflows
+mise -C .ast-grep exec -- uv run --locked pytest
+```
+
+Each check is a module with a `main()` entry point and a `test_<module>.py` holding
+its valid and invalid examples. `checks/nextflow.py` provides parser registration,
+the shared path ignores and `// ast-grep-ignore: <id>` suppression. Add the scan to
+the `check` task in `mise.toml`. Pass `--error` to fail on findings once the baseline
+is reviewed.
+
+## Convert an if guard to a filter
+
+`checks/if_to_filter.py` warns about a braced `if` containing a single uppercase call
+directly in a workflow's implicit body or `main:` section. Comments are allowed. It
+excludes `else`, nested guards, multi-statement bodies, assignments, closures,
+functions and qualified calls. Uppercase naming suggests a process or subworkflow
+but does not resolve its definition. Modules, imported subworkflows and test/work
+directories are excluded even when scanning a larger tree.
+
+For a process driven by a queue channel, review this manual conversion:
+
+```nextflow
+// Before
+if (params.align) {
+    ALIGN(reads, reference)
+}
+
+// After, when reads is the execution-driving queue channel
+ALIGN(reads.filter { _read -> params.align }, reference)
+```
+
+There is no automatic fix. A filter evaluates its predicate per item, whereas the
+guard evaluates it once. Confirm that the condition is stable and side-effect-free,
+and that the gated input is a queue channel. Review other inputs, output wiring and
+empty-input behaviour. Invoking a subworkflow with an empty input can still execute
+independent work inside it. Test enabled, disabled and empty-input cases before
+applying the conversion. Multi-call and `else` blocks need a separate design review.
