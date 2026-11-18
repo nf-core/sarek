@@ -149,6 +149,9 @@ jobs:
       - runs-on=${{ github.run_id }}-confirm-pass
       - runner=2cpu-linux-x64
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
       - name: One or more tests failed (excluding latest-everything)
         if: ${{ contains(needs.*.result, 'failure') }}
         run: exit 1
@@ -177,6 +180,33 @@ jobs:
           pattern: pr-comment-fragment-*
           path: pr-comment-fragments
           merge-multiple: true
+
+      - name: Download nf-test runtime reports
+        if: ${{ always() && needs.nf-test.result != 'skipped' }}
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: nf-test-results-*
+          path: nf-test-runtime-reports
+
+      - name: Summarise nf-test runtimes
+        if: ${{ always() && needs.nf-test.result != 'skipped' }}
+        run: |
+          python tests/ci/summarise_runtimes.py \
+            nf-test-runtime-reports \
+            --csv nf-test-runtimes.csv \
+            --markdown nf-test-runtimes.md
+          cat nf-test-runtimes.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload merged nf-test runtime report
+        if: ${{ always() && needs.nf-test.result != 'skipped' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: nf-test-runtimes
+          path: |
+            nf-test-runtimes.csv
+            nf-test-runtimes.md
+          if-no-files-found: warn
+          retention-days: 30
 
       # Build a comment for the shared pr-comment.yml poster to publish on the PR.
       # Based on the fragments above (not needs.*.result) so non-blocking failures are still reported.
