@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - [#2411](https://github.com/nf-core/sarek/pull/2411) - Pass `tools` and `skip_tools` into `PIPELINE_INITIALISATION` and `FASTQ_PREPROCESS_GATK` via `take:` instead of reading `params` directly
+- [#2307](https://github.com/nf-core/sarek/pull/2307) - Bump minimal Nextflow version to 26.04.0, nf-schema to 3.1.0 and nf-core-utils to 0.7.0
 
 ### Fixed
 
@@ -38,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency      | Old version | New version |
 | --------------- | ----------- | ----------- |
 | `nf-core-utils` | 0.4.0       | 0.7.0       |
-| `nf-schema`     | 2.7.2       | 3.0.0       |
+| `nf-schema`     | 2.7.2       | 3.1.0       |
 
 ### Parameters
 

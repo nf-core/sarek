@@ -130,7 +130,7 @@ workflow PIPELINE_INITIALISATION {
         datasheetPath: references_datasheets_path,
     )
     def datasheet = reference_path
-        ? getReferenceMetadata(rows: samplesheetToList(reference_path, "${projectDir}/assets/schema_references.json"))
+        ? getReferenceMetadata(rows: samplesheetToList(reference_path, "${projectDir}/assets/schema_references.json", unrecognisedHeaders: "skip"))
         : null
     def resolved_references = referenceParams().collectEntries { name ->
         [name, explicit_references.containsKey(name) ? explicit_references[name] : getReferenceAttribute(param: name, datasheet: datasheet, genomeMap: genomes, genomeKey: genome)]
