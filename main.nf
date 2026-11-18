@@ -374,10 +374,12 @@ workflow {
         tools,
     )
 
+    def references = PIPELINE_INITIALISATION.out.references.getVal()
+
     //
     // WORKFLOW: Run main workflow
     //
-    NFCORE_SAREK(PIPELINE_INITIALISATION.out.samplesheet, PIPELINE_INITIALISATION.out.references.getVal(), tools, skip_tools)
+    NFCORE_SAREK(PIPELINE_INITIALISATION.out.samplesheet, references, tools, skip_tools)
 
     //
     // SUBWORKFLOW: Run completion tasks
