@@ -44,6 +44,8 @@ workflow PIPELINE_INITIALISATION {
     references_datasheet // string: Path to a references datasheet
     references_datasheets_path // string: Location of the datasheets used with igenomes_ignore
     explicit_references // map: Reference parameters set by the user, even to null
+    skip_tools //   list: lowercased tools to skip
+    tools //   list: lowercased tools to run
 
     main:
 
@@ -108,7 +110,7 @@ workflow PIPELINE_INITIALISATION {
     UTILS_NFCORE_PIPELINE(nextflow_cli_args)
 
     // Custom validation for pipeline parameters
-    validateInputParameters(genome, genomes, references_datasheet, explicit_references.intervals, vep_loftee, vep_loftee_gerp_bigwig)
+    validateInputParameters(genome, genomes, references_datasheet, explicit_references.intervals, vep_loftee, vep_loftee_gerp_bigwig, tools)
 
     params.input_restart = retrieveInput((!params.build_only_index && !input), params.step, params.outdir)
 
@@ -150,6 +152,7 @@ workflow PIPELINE_INITIALISATION {
         params.bcftools_annotations_tbi,
         params.bcftools_header_lines,
         params.build_only_index,
+        params.cf_omit_sex,
         resolved_references.contamination_resource,
         resolved_references.dbsnp,
         resolved_references.fasta,
@@ -165,11 +168,11 @@ workflow PIPELINE_INITIALISATION {
         params.sentieon_haplotyper_emit_mode,
         params.seq_center,
         params.seq_platform,
-        params.skip_tools,
+        skip_tools,
         params.snpeff_cache,
         resolved_references.snpeff_db,
         params.step,
-        params.tools,
+        tools,
         params.umi_length,
         params.umi_location,
         params.umi_in_read_header,
@@ -229,10 +232,10 @@ FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 // Check and validate pipeline parameters
-def validateInputParameters(genome, genomes, references_datasheet, intervals, vep_loftee, vep_loftee_gerp_bigwig) {
+def validateInputParameters(genome, genomes, references_datasheet, intervals, vep_loftee, vep_loftee_gerp_bigwig, tools) {
     genomeExistsError(genome, genomes, references_datasheet)
     sparkAndBam()
-    parabricksMutectcallerIgnoredParams()
+    parabricksMutectcallerIgnoredParams(tools)
     noIntervalsWithIntervals(intervals)
     lofteeGerpRequiresLoftee(vep_loftee, vep_loftee_gerp_bigwig)
 }
@@ -360,8 +363,8 @@ def sparkAndBam() {
 }
 
 // Warn about options that the Parabricks mutectcaller path cannot honor
-def parabricksMutectcallerIgnoredParams() {
-    if (params.tools && params.tools.split(',').contains('parabricks_mutectcaller')) {
+def parabricksMutectcallerIgnoredParams(tools) {
+    if ('parabricks_mutectcaller' in tools) {
         if (params.joint_mutect2) {
             log.warn("`--joint_mutect2` is not supported by Parabricks mutectcaller and is ignored for `parabricks_mutectcaller`: samples are called per tumor-normal pair or per tumor-only sample.")
         }

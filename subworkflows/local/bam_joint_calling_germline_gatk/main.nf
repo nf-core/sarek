@@ -29,6 +29,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     resource_snps_vcf
     resource_snps_tbi
     known_snps_vqsr
+    variant_caller       // string: name of the caller that produced the gVCFs
 
     main:
 
@@ -54,7 +55,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     GATK4_GENOTYPEGVCFS(genotype_input, fasta, fai, dict, dbsnp.map{ dbsnp_ -> [ [:], dbsnp_ ] }, dbsnp_tbi.map{ dbsnp_tbi_ -> [ [:], dbsnp_tbi_ ] })
 
     BCFTOOLS_SORT(GATK4_GENOTYPEGVCFS.out.vcf)
-    gvcf_to_merge = BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [ meta.subMap('num_intervals') + [ id:'joint_variant_calling', patient:'all_samples', variantcaller:'haplotypecaller' ], vcf ]}.groupTuple()
+    gvcf_to_merge = BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [ meta.subMap('num_intervals') + [ id:'joint_variant_calling', patient:'all_samples', variantcaller:variant_caller ], vcf ]}.groupTuple()
 
     // Merge scatter/gather vcfs & index
     // Rework meta for variantscalled.csv and annotation tools
@@ -122,20 +123,20 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     merge_vcf_for_join = MERGE_GENOTYPEGVCFS.out.vcf.map{_meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
     merge_tbi_for_join = MERGE_GENOTYPEGVCFS.out.tbi.map{_meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
 
-    // Remap for both to have the same key, if ApplyBQSR is not run, the channel is empty --> populate with empty elements
-    vqsr_vcf_for_join = GATK4_APPLYVQSR_INDEL.out.vcf.ifEmpty([[:], []]).map{_meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
-    vqsr_tbi_for_join = GATK4_APPLYVQSR_INDEL.out.tbi.ifEmpty([[:], []]).map{_meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
+    // Remap for both to have the same key; if VQSR is not run, join(remainder: true) below keeps the merged VCF alone
+    vqsr_vcf_for_join = GATK4_APPLYVQSR_INDEL.out.vcf.map{_meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
+    vqsr_tbi_for_join = GATK4_APPLYVQSR_INDEL.out.tbi.map{_meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
 
     // Join on metamap
     // If both --> meta, vcf_merged, vcf_bqsr
-    // If not VQSR --> meta, vcf_merged, []
+    // If not VQSR --> meta, vcf_merged, null
     // if the second is empty, use the first
     genotype_vcf = merge_vcf_for_join.join(vqsr_vcf_for_join, remainder: true).map{
         _meta, joint_vcf, recal_vcf ->
 
         def vcf_out = recal_vcf ?: joint_vcf
 
-        [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"haplotypecaller"], vcf_out]
+        [[id:"joint_variant_calling", patient:"all_samples", variantcaller:variant_caller], vcf_out]
     }
 
     genotype_index = merge_tbi_for_join.join(vqsr_tbi_for_join, remainder: true).map{
@@ -143,7 +144,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
 
         def tbi_out = recal_tbi ?: joint_tbi
 
-        [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"haplotypecaller"], tbi_out]
+        [[id:"joint_variant_calling", patient:"all_samples", variantcaller:variant_caller], tbi_out]
     }
 
 
