@@ -44,31 +44,31 @@ nextflow_pipeline {
             no_conda: true
         ],
         [
-            name: "-profile test --tools parabricks_haplotypecaller --dbsnp null -stub",
+            name: "-profile test --tools parabricks_haplotypecaller --dbsnp false -stub",
             params: [
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
                 tools: "parabricks_haplotypecaller",
                 step: "variant_calling",
-                dbsnp: null,
-                dbsnp_tbi: null
+                dbsnp: false,
+                dbsnp_tbi: false
             ],
             stub: true,
             no_conda: true
         ],
         [
-            name: "-profile test --tools parabricks_haplotypecaller --dbsnp null --known_indels null --known_snps null -stub",
+            name: "-profile test --tools parabricks_haplotypecaller --dbsnp false --known_indels false --known_snps false -stub",
             params: [
                 intervals: modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.multi_intervals.bed',
                 input: "${projectDir}/tests/csv/3.0/mapped_single_bam.csv",
                 tools: "parabricks_haplotypecaller",
                 step: "variant_calling",
-                dbsnp: null,
-                dbsnp_tbi: null,
-                known_indels: null,
-                known_indels_tbi: null,
-                known_snps: null,
-                known_snps_tbi: null
+                dbsnp: false,
+                dbsnp_tbi: false,
+                known_indels: false,
+                known_indels_tbi: false,
+                known_snps: false,
+                known_snps_tbi: false
             ],
             stub: true,
             no_conda: true
@@ -81,9 +81,9 @@ nextflow_pipeline {
                 tools: "parabricks_haplotypecaller",
                 step: "variant_calling",
                 joint_germline: true,
-                dbsnp_vqsr: null,
-                known_snps_vqsr: null,
-                known_indels_vqsr: null,
+                dbsnp_vqsr: false,
+                known_snps_vqsr: false,
+                known_indels_vqsr: false,
                 wes: true,
                 nucleotides_per_second: 20
             ],

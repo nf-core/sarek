@@ -43,7 +43,7 @@ workflow PIPELINE_INITIALISATION {
     references_datasheet // string: Path to a references datasheet
     references_datasheets_path // string: Location of the datasheets used with igenomes_ignore
     references_schema // string: Path to the references datasheet schema
-    references_params // map: Reference params set by the user, even to null
+    references_params // map: Reference params: null reads the datasheet or genome config, false turns one off
     skip_tools //   list: lowercased tools to skip
     tools //   list: lowercased tools to run
 
@@ -121,7 +121,7 @@ workflow PIPELINE_INITIALISATION {
             : channel.fromList(samplesheetToList(params.input_restart, "${projectDir}/assets/schema_input.json"))
 
     //
-    // References come from --genome (iGenomes) or from a references datasheet; an explicit parameter, even null, wins
+    // References come from --genome (iGenomes) or from a references datasheet; a non-null parameter wins, false turns it off
     //
     def references_path = getReferencePath(
         references: references_datasheet,
@@ -136,10 +136,6 @@ workflow PIPELINE_INITIALISATION {
         genome: genome,
         genomes: genomes,
     )
-    // `--intervals false` skips the genome intervals; Nextflow 26 passes it from the CLI as a string
-    if (references_resolved.intervals in [false, 'false']) {
-        references_resolved.intervals = null
-    }
     intervalsMatchReference(references_resolved.intervals, references_resolved.fasta_fai)
 
     SAMPLESHEET_TO_CHANNEL(

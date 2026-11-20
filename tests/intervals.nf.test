@@ -60,7 +60,7 @@ nextflow_pipeline {
             // No user-provided FAI: the pipeline builds it, so the check runs in PREPARE_INTERVALS instead of at start-up
             name: "Fails with profile test --intervals intervals_past_end.bed and no fasta_fai",
             params: [
-                fasta_fai: null,
+                fasta_fai: false,
                 intervals: pipelines_testdata_base_path + 'genomics/homo_sapiens/genome/intervals_past_end.bed',
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: null,
