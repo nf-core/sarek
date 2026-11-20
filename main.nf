@@ -42,7 +42,7 @@ IMPORT MODULES / SUBWORKFLOWS / WORKFLOWS
 include { SAREK } from './workflows/sarek'
 include { PIPELINE_COMPLETION } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_sarek_pipeline'
-include { referenceParams } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { getReferenceNames } from 'plugin/nf-core-utils'
 include { intervalsChecked } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { PREPARE_GENOME } from './subworkflows/local/prepare_genome'
 include { PREPARE_INTERVALS } from './subworkflows/local/prepare_intervals'
@@ -349,6 +349,8 @@ workflow {
     def tools      = (params.tools      ?: '').toLowerCase().tokenize(',')
     def skip_tools = (params.skip_tools ?: '').toLowerCase().tokenize(',')
 
+    def references_schema = "${projectDir}/assets/schema_references.json"
+
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
@@ -369,7 +371,8 @@ workflow {
         params.igenomes_ignore,
         params.references,
         params.references_datasheets_path,
-        params.subMap(referenceParams()),
+        references_schema,
+        params.subMap(getReferenceNames(schema: references_schema)),
         skip_tools,
         tools,
     )
