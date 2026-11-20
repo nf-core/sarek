@@ -151,8 +151,8 @@ nextflow_pipeline {
         [
             name: "-profile test --tools parabricks_mutectcaller with pon without germline resource",
             params: [
-                germline_resource: null,
-                germline_resource_tbi: null,
+                germline_resource: false,
+                germline_resource_tbi: false,
                 input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 pon: modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz',
                 pon_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz.tbi',
@@ -165,8 +165,8 @@ nextflow_pipeline {
         [
             name: "-profile test --tools parabricks_mutectcaller with pon without germline resource -stub",
             params: [
-                germline_resource: null,
-                germline_resource_tbi: null,
+                germline_resource: false,
+                germline_resource_tbi: false,
                 input: "${projectDir}/tests/csv/3.0/fastq_pair.csv",
                 pon: modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz',
                 pon_tbi: modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz.tbi',

@@ -13,10 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#2353](https://github.com/nf-core/sarek/pull/2353) - Add joint germline calling (`--joint_germline`), dbSNP annotation and `--gatk_pcr_indel_model` support to Parabricks HaplotypeCaller. Single-sample VCFs are now also filtered with CNNScoreVariants/FilterVariantTranches by default, published as `<sample>.parabricks_haplotypecaller.filtered.vcf.gz`; use `--skip_tools parabricks_haplotypecaller_filter` for the previous unfiltered output
 - [#2408](https://github.com/nf-core/sarek/pull/2408) - Add `--vep_loftee_gerp_bigwig` to supply a GERP BigWig file to the VEP LOFTEE plugin ([#2295](https://github.com/nf-core/sarek/issues/2295)), based on [#2301](https://github.com/nf-core/sarek/pull/2301) by [@Joaodemeirelles](https://github.com/Joaodemeirelles)
 - [#2389](https://github.com/nf-core/sarek/pull/2389) - Add `--cf_omit_sex` to leave the `sex` line out of the Control-FREEC config. Control-FREEC 11.6b can abort with `std::length_error` on some tumor-only WES samples when `sex` and `minimalSubclonePresence` are both set ([#1376](https://github.com/nf-core/sarek/issues/1376)); omitting `sex` avoids it. With it set, the samplesheet `sex` is no longer required for Control-FREEC. Default `false`, so results are unchanged
+- [#2307](https://github.com/nf-core/sarek/pull/2307) - Add `--references` datasheet input (alternative to iGenomes)
 
 ### Changed
 
 - [#2411](https://github.com/nf-core/sarek/pull/2411) - Pass `tools` and `skip_tools` into `PIPELINE_INITIALISATION` and `FASTQ_PREPROCESS_GATK` via `take:` instead of reading `params` directly
+- [#2307](https://github.com/nf-core/sarek/pull/2307) - Bump minimal Nextflow version to 26.04.0, nf-schema to 3.1.0 and nf-core-utils to 0.7.0
 
 ### Fixed
 
@@ -34,14 +36,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies - plugins
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
+| Dependency      | Old version | New version |
+| --------------- | ----------- | ----------- |
+| `nf-core-utils` | 0.4.0       | 0.7.0       |
+| `nf-schema`     | 2.7.2       | 3.1.0       |
 
 ### Parameters
 
-| Params                     | status |
-| -------------------------- | ------ |
-| `--vep_loftee_gerp_bigwig` | Added  |
+| Params                         | status |
+| ------------------------------ | ------ |
+| `--references`                 | Added  |
+| `--references_base_path`       | Added  |
+| `--references_datasheets_path` | Added  |
+| `--vep_loftee_gerp_bigwig`     | Added  |
 
 ### Developer section
 

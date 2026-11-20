@@ -38,13 +38,13 @@
             [
                 "The following invalid input values have been detected:",
                 "* --input ([PATH]/./tests/csv/3.0/fastq_sample_with_space.csv): Validation of file failed:",
-                "\t-> Entry 2: Error for field 'sample' (test 2): \"test 2\" does not match regular expression [^\\S+$] (Sample ID must be provided, cannot contain spaces and must be a string value)"
+                "\t-> Entry 2: Error for field 'sample' (test 2): \"test 2\" does not match regular expression ^\\S+$ (Sample ID must be provided, cannot contain spaces and must be a string value)"
             ]
         ],
-        "timestamp": "2026-07-03T12:29:12.419007781",
+        "timestamp": "2026-11-03T10:55:59.149620604",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "26.04.4"
+            "nextflow": "26.04.0"
         }
     },
     "-profile test --input tests/csv/3.0/fastq_multiple_sample_ids.csv": {

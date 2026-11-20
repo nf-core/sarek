@@ -37,7 +37,7 @@ nextflow_pipeline {
                 wes: true
             ],
             failure: true,
-            snapshot: 'stdout',
+            snapshot: 'stdout,stderr',
             snapshot_include: 'undefined in',
             // Whether a running task gets killed when the run fails depends on timing
             snapshot_ignore: 'Killing running tasks',
@@ -51,7 +51,7 @@ nextflow_pipeline {
                 wes: true
             ],
             failure: true,
-            snapshot: 'stdout',
+            snapshot: 'stdout,stderr',
             snapshot_include: 'past their contig',
             // Whether a running task gets killed when the run fails depends on timing
             snapshot_ignore: 'Killing running tasks',
@@ -60,14 +60,14 @@ nextflow_pipeline {
             // No user-provided FAI: the pipeline builds it, so the check runs in PREPARE_INTERVALS instead of at start-up
             name: "Fails with profile test --intervals intervals_past_end.bed and no fasta_fai",
             params: [
-                fasta_fai: null,
+                fasta_fai: false,
                 intervals: pipelines_testdata_base_path + 'genomics/homo_sapiens/genome/intervals_past_end.bed',
                 skip_tools: 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools',
                 tools: null,
                 wes: true
             ],
             failure: true,
-            snapshot: 'stdout',
+            snapshot: 'stdout,stderr',
             snapshot_include: 'past their contig',
             // Whether a running task gets killed, whether the reports render, and which tasks publish before the run is cancelled, depends on timing
             snapshot_ignore: ['Killing running tasks', 'Failed to render'],
@@ -82,7 +82,7 @@ nextflow_pipeline {
                 tools: null
             ],
             failure: true,
-            snapshot: 'stdout',
+            snapshot: 'stdout,stderr',
             snapshot_include: 'cannot be used together',
         ],
         [

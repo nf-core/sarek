@@ -18,7 +18,7 @@ nextflow_pipeline {
                 tools: 'vep'
             ],
             failure: true,
-            snapshot: 'stdout',
+            snapshot: 'stdout,stderr',
             snapshot_include: 'annotation-cache',
         ],
         [
@@ -30,7 +30,7 @@ nextflow_pipeline {
                 tools: 'vep'
             ],
             failure: true,
-            snapshot: 'stdout',
+            snapshot: 'stdout,stderr',
             snapshot_include: 'dbnsfp inconsistency',
         ],
         [
@@ -52,7 +52,7 @@ nextflow_pipeline {
                 vep_loftee_gerp_bigwig: modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bigwig/test_S2.RPKM.bw',
             ],
             failure: true,
-            snapshot: 'stdout',
+            snapshot: 'stdout,stderr',
             snapshot_include: 'requires --vep_loftee',
         ],
         [
