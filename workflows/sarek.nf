@@ -252,6 +252,7 @@ workflow SAREK {
                 group_by_umi_strategy,
                 skip_tools,
                 tools,
+                step,
             )
 
             // Gather preprocessing output

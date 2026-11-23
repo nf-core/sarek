@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - [#2411](https://github.com/nf-core/sarek/pull/2411) - Pass `tools` and `skip_tools` into `PIPELINE_INITIALISATION` and `FASTQ_PREPROCESS_GATK` via `take:` instead of reading `params` directly
+- [#2426](https://github.com/nf-core/sarek/pull/2426) - Pass `step` into `FASTQ_PREPROCESS_GATK` via `take:` instead of reading `params.step`
 
 ### Fixed
 
