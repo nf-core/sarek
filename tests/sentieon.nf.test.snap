@@ -1,7 +1,7 @@
 {
     "-profile test --aligner sentieon-bwamem --tools null -stub": {
         "content": [
-            23,
+            17,
             {
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
