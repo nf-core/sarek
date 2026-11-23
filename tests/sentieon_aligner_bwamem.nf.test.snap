@@ -35,6 +35,9 @@
                 }
             },
             [
+                "mapped.csv:md5,eb535851c89e60c9cf357fa65ea80a31"
+            ],
+            [
                 "csv",
                 "csv/mapped.csv",
                 "multiqc",
@@ -121,6 +124,9 @@
                 }
             },
             [
+                "markduplicates_no_table.csv:md5,bf039cb49651687bf95926835c878059"
+            ],
+            [
                 "csv",
                 "csv/markduplicates_no_table.csv",
                 "multiqc",
@@ -184,6 +190,7 @@
                     "xz": "5.8.3"
                 }
             },
+            "No CSV files",
             [
                 "csv",
                 "multiqc",

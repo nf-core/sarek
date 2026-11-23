@@ -8,6 +8,7 @@ workflow CHANNEL_BASERECALIBRATOR_CREATE_CSV {
         tools                   //
         skip_tools              //
         step                    //
+        sentieon_consensus      //
         outdir                  //
 
     main:
@@ -21,8 +22,9 @@ workflow CHANNEL_BASERECALIBRATOR_CREATE_CSV {
                 def is_bam     = file.name.endsWith('.bam')
                 def type       = is_bam ? "bam" : "cram"
                 def type_index = is_bam ? "bai" : "crai"
-                def align_file  = "${outdir}/preprocessing/sentieon_dedup/${sample}/${file.name}"
-                def align_index = "${outdir}/preprocessing/sentieon_dedup/${sample}/${index.name}"
+                def dedup_dir   = sentieon_consensus ? "sentieon_consensus" : "sentieon_dedup"
+                def align_file  = "${outdir}/preprocessing/${dedup_dir}/${sample}/${file.name}"
+                def align_index = "${outdir}/preprocessing/${dedup_dir}/${sample}/${index.name}"
                 def table_file  = "${outdir}/preprocessing/recal_table/${sample}/${sample}.recal.table"
 
                 ["markduplicates.csv", "patient,sex,status,sample,${type},${type_index},table\n${patient},${sex},${status},${sample},${align_file},${align_index},${table_file}\n"]

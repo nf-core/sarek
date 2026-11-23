@@ -64,6 +64,7 @@ workflow FASTQ_PREPROCESS_GATK {
     skip_tools
     tools
     step
+    sentieon_consensus
 
     main:
 
@@ -349,7 +350,7 @@ workflow FASTQ_PREPROCESS_GATK {
 
         // CSV should be written for the file actually output, either CRAM or BAM
         // Create CSV to restart from this step
-        csv_subfolder = ('sentieon_dedup' in tools) ? 'sentieon_dedup' : 'markduplicates'
+        csv_subfolder = ('sentieon_dedup' in tools) ? (sentieon_consensus ? 'sentieon_consensus' : 'sentieon_dedup') : 'markduplicates'
 
         CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir)
     }
@@ -424,7 +425,7 @@ workflow FASTQ_PREPROCESS_GATK {
             cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
 
             // Create CSV to restart from this step
-            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), tools, skip_tools, step, params.outdir)
+            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), tools, skip_tools, step, sentieon_consensus, params.outdir)
         }
     }
 

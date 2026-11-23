@@ -472,6 +472,9 @@
                 }
             },
             [
+                "markduplicates_no_table.csv:md5,ffb1d62966e74f13feddf7c88f0b9032"
+            ],
+            [
                 "csv",
                 "csv/markduplicates_no_table.csv",
                 "multiqc",

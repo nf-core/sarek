@@ -295,6 +295,7 @@ workflow NFCORE_SAREK {
         params.step,
         tools,
         params.wes,
+        params.sentieon_consensus,
         PREPARE_GENOME.out.ascat_alleles,
         PREPARE_GENOME.out.ascat_loci,
         PREPARE_GENOME.out.ascat_loci_gc,

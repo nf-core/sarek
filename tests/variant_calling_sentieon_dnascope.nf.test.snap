@@ -41,6 +41,9 @@
                 }
             },
             [
+                "variantcalled.csv:md5,b747c302ed70b507747b11d3e4872a04"
+            ],
+            [
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
@@ -236,6 +239,9 @@
                     "vcftools": "0.1.17"
                 }
             },
+            [
+                "variantcalled.csv:md5,8e8fc08b102f0efb069cacf965dc6507"
+            ],
             [
                 "csv",
                 "csv/variantcalled.csv",
@@ -441,6 +447,9 @@
                     "vcftools": "0.1.17"
                 }
             },
+            [
+                "variantcalled.csv:md5,19445156bd7b487d4b5850a44ad5e296"
+            ],
             [
                 "csv",
                 "csv/variantcalled.csv",

@@ -41,6 +41,10 @@
                 }
             },
             [
+                "markduplicates_no_table.csv:md5,efcf0683c3cc51ee5dcee71c79f9f8cf",
+                "variantcalled.csv:md5,9c79d9f086aaf9899f2ee3de3433073a"
+            ],
+            [
                 "csv",
                 "csv/markduplicates_no_table.csv",
                 "csv/variantcalled.csv",
@@ -133,6 +137,10 @@
                     "vcftools": "0.1.17"
                 }
             },
+            [
+                "markduplicates_no_table.csv:md5,605e8f3174f76fb3dbf2881a08df7142",
+                "variantcalled.csv:md5,f4f40220d37e65f805032b2ba28cbadc"
+            ],
             [
                 "csv",
                 "csv/markduplicates_no_table.csv",
@@ -243,6 +251,10 @@
                 }
             },
             [
+                "markduplicates_no_table.csv:md5,d5c14ba1fc28ea4eb0e5407b41a36dd5",
+                "variantcalled.csv:md5,02b96d5ecf9b991fc926a37ce3284078"
+            ],
+            [
                 "csv",
                 "csv/markduplicates_no_table.csv",
                 "csv/variantcalled.csv",
@@ -346,6 +358,10 @@
                     "vcftools": "0.1.17"
                 }
             },
+            [
+                "markduplicates_no_table.csv:md5,d5c14ba1fc28ea4eb0e5407b41a36dd5",
+                "variantcalled.csv:md5,02b96d5ecf9b991fc926a37ce3284078"
+            ],
             [
                 "csv",
                 "csv/markduplicates_no_table.csv",

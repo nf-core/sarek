@@ -69,6 +69,7 @@ workflow SAREK {
     step
     tools
     wes
+    sentieon_consensus
     ascat_alleles
     ascat_loci
     ascat_loci_gc
@@ -253,6 +254,7 @@ workflow SAREK {
                 skip_tools,
                 tools,
                 step,
+                sentieon_consensus,
             )
 
             // Gather preprocessing output
