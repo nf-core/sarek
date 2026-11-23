@@ -494,7 +494,7 @@
                     "gawk": "5.3.0"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.7.0.0",
