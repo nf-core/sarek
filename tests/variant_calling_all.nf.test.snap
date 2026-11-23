@@ -127,6 +127,12 @@
                 }
             },
             [
+                "markduplicates.csv:md5,049dad8987834fcaf2a4a32aaf3523a4",
+                "markduplicates_no_table.csv:md5,bdc951dbefeb456687181637d5b6b4aa",
+                "recalibrated.csv:md5,c75538b7f89fa7fec9ea8907ff457d80",
+                "variantcalled.csv:md5,5027c0cd1539b8839eb9ff5128a93bcf"
+            ],
+            [
                 "csv",
                 "csv/markduplicates.csv",
                 "csv/markduplicates_no_table.csv",
@@ -768,6 +774,12 @@
                 }
             },
             [
+                "markduplicates.csv:md5,454f9a0aba3ada4a85c7de4376913646",
+                "markduplicates_no_table.csv:md5,196437a2e6436da0885b4173ae0290c1",
+                "recalibrated.csv:md5,64440882834102ede463f540f8268e5e",
+                "variantcalled.csv:md5,3ff7f40c4183727336c6ed1fd2f382b3"
+            ],
+            [
                 "csv",
                 "csv/markduplicates.csv",
                 "csv/markduplicates_no_table.csv",
@@ -1269,6 +1281,12 @@
                     "vcftools": "0.1.17"
                 }
             },
+            [
+                "markduplicates.csv:md5,b211cfa83c8b799d859286ead1fca849",
+                "markduplicates_no_table.csv:md5,03728be39fb9b6224e37d6ea4c9d33a2",
+                "recalibrated.csv:md5,68fc139f12c8764d0576c19a940083ab",
+                "variantcalled.csv:md5,e06d8627497c25010de603e171e30d94"
+            ],
             [
                 "csv",
                 "csv/markduplicates.csv",

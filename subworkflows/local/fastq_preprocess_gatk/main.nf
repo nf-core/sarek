@@ -63,6 +63,8 @@ workflow FASTQ_PREPROCESS_GATK {
     group_by_umi_strategy
     skip_tools
     tools
+    step
+    sentieon_consensus
 
     main:
 
@@ -71,7 +73,7 @@ workflow FASTQ_PREPROCESS_GATK {
 
     // PREPROCESSING
 
-    if (params.step == 'mapping') {
+    if (step == 'mapping') {
 
         // STEP 0: QC & TRIM
         // Trim only with `--trim_fastq`
@@ -251,7 +253,7 @@ workflow FASTQ_PREPROCESS_GATK {
         }
     }
 
-    if (params.step in ['mapping', 'markduplicates']) {
+    if (step in ['mapping', 'markduplicates']) {
 
         // ch_cram_no_markduplicates_restart = channel.empty()
         cram_markduplicates_no_spark = channel.empty()
@@ -262,9 +264,9 @@ workflow FASTQ_PREPROCESS_GATK {
 
         // ch_bam_for_markduplicates will contain bam mapped with FASTQ_ALIGN when step is mapping
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
-        cram_for_markduplicates = params.step == 'mapping' ? bam_mapped : input_sample.map { meta, input, _index -> [meta, input] }
+        cram_for_markduplicates = step == 'mapping' ? bam_mapped : input_sample.map { meta, input, _index -> [meta, input] }
 
-        if (params.step == 'markduplicates' && params.umi_in_read_header) {
+        if (step == 'markduplicates' && params.umi_in_read_header) {
             FGBIO_COPYUMIFROMREADNAME(cram_for_markduplicates.map { meta, bam -> [meta, bam, []] })
             cram_for_markduplicates = FGBIO_COPYUMIFROMREADNAME.out.bam
         }
@@ -277,7 +279,7 @@ workflow FASTQ_PREPROCESS_GATK {
         // For now, conversion from bam to cram is only done when skipping markduplicates
 
         if ('markduplicates' in skip_tools && 'sentieon_dedup' !in tools) {
-            if (params.step == 'mapping') {
+            if (step == 'mapping') {
                 cram_skip_markduplicates = BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true)
             }
             else {
@@ -304,7 +306,7 @@ workflow FASTQ_PREPROCESS_GATK {
             reports = reports.mix(BAM_MARKDUPLICATES_SPARK.out.reports.collect { _meta, report -> [report] })
         }
         else if ('sentieon_dedup' in tools) {
-            crai_for_markduplicates = params.step == 'mapping'
+            crai_for_markduplicates = step == 'mapping'
                 ? bai_mapped
                 : (params.umi_in_read_header ? FGBIO_COPYUMIFROMREADNAME.out.bai : input_sample.map { meta, _input, index -> [meta, index] })
             BAM_SENTIEON_DEDUP(
@@ -348,15 +350,15 @@ workflow FASTQ_PREPROCESS_GATK {
 
         // CSV should be written for the file actually output, either CRAM or BAM
         // Create CSV to restart from this step
-        csv_subfolder = ('sentieon_dedup' in tools) ? 'sentieon_dedup' : 'markduplicates'
+        csv_subfolder = ('sentieon_dedup' in tools) ? (sentieon_consensus ? 'sentieon_consensus' : 'sentieon_dedup') : 'markduplicates'
 
         CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir)
     }
 
-    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
+    if (step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
 
         // Run if starting from step "prepare_recalibration"
-        if (params.step == 'prepare_recalibration') {
+        if (step == 'prepare_recalibration') {
 
             ch_cram_for_bam_baserecalibrator = channel.empty().mix(input_sample)
 
@@ -423,15 +425,15 @@ workflow FASTQ_PREPROCESS_GATK {
             cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
 
             // Create CSV to restart from this step
-            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), tools, skip_tools, params.outdir)
+            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), tools, skip_tools, step, sentieon_consensus, params.outdir)
         }
     }
 
     // STEP 4: RECALIBRATING
-    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
+    if (step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
 
         // Run if starting from step "prepare_recalibration"
-        if (params.step == 'recalibrate') {
+        if (step == 'recalibrate') {
 
             cram_applybqsr = channel.empty().mix(input_sample)
         }
@@ -480,7 +482,7 @@ workflow FASTQ_PREPROCESS_GATK {
             // Create CSV to restart from this step
             CHANNEL_APPLYBQSR_CREATE_CSV(cram_variant_calling, params.outdir)
         }
-        else if (params.step == 'recalibrate') {
+        else if (step == 'recalibrate') {
             // cram_variant_calling contains either:
             // - input bams converted to crams, if started from step recal + skip BQSR
             // - input crams if started from step recal + skip BQSR

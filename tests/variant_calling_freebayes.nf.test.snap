@@ -57,6 +57,9 @@
                 }
             },
             [
+                "variantcalled.csv:md5,e43a57d59dc751b3ccec8809fc22b43c"
+            ],
+            [
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
@@ -287,6 +290,12 @@
                     "vcftools": "0.1.17"
                 }
             },
+            [
+                "markduplicates.csv:md5,049dad8987834fcaf2a4a32aaf3523a4",
+                "markduplicates_no_table.csv:md5,bdc951dbefeb456687181637d5b6b4aa",
+                "recalibrated.csv:md5,c75538b7f89fa7fec9ea8907ff457d80",
+                "variantcalled.csv:md5,3f486c6925b15e3541ecfd9d650cbf80"
+            ],
             [
                 "csv",
                 "csv/markduplicates.csv",
@@ -715,6 +724,12 @@
                 }
             },
             [
+                "markduplicates.csv:md5,454f9a0aba3ada4a85c7de4376913646",
+                "markduplicates_no_table.csv:md5,196437a2e6436da0885b4173ae0290c1",
+                "recalibrated.csv:md5,64440882834102ede463f540f8268e5e",
+                "variantcalled.csv:md5,dcbeb41f68d910ca3079e485aeb562be"
+            ],
+            [
                 "csv",
                 "csv/markduplicates.csv",
                 "csv/markduplicates_no_table.csv",
@@ -1078,6 +1093,12 @@
                 }
             },
             [
+                "markduplicates.csv:md5,454f9a0aba3ada4a85c7de4376913646",
+                "markduplicates_no_table.csv:md5,196437a2e6436da0885b4173ae0290c1",
+                "recalibrated.csv:md5,64440882834102ede463f540f8268e5e",
+                "variantcalled.csv:md5,dcbeb41f68d910ca3079e485aeb562be"
+            ],
+            [
                 "csv",
                 "csv/markduplicates.csv",
                 "csv/markduplicates_no_table.csv",
@@ -1418,6 +1439,9 @@
                 }
             },
             [
+                "variantcalled.csv:md5,e43a57d59dc751b3ccec8809fc22b43c"
+            ],
+            [
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
@@ -1660,6 +1684,12 @@
                     "vcftools": "0.1.17"
                 }
             },
+            [
+                "markduplicates.csv:md5,049dad8987834fcaf2a4a32aaf3523a4",
+                "markduplicates_no_table.csv:md5,bdc951dbefeb456687181637d5b6b4aa",
+                "recalibrated.csv:md5,c75538b7f89fa7fec9ea8907ff457d80",
+                "variantcalled.csv:md5,3f486c6925b15e3541ecfd9d650cbf80"
+            ],
             [
                 "csv",
                 "csv/markduplicates.csv",

@@ -33,6 +33,10 @@
                 }
             },
             [
+                "markduplicates.csv:md5,c3f5c460bf801a8bd326476256ba7b30",
+                "recalibrated.csv:md5,63ef5f2353c8e5065c3f6c4c56377f03"
+            ],
+            [
                 "csv",
                 "csv/markduplicates.csv",
                 "csv/recalibrated.csv",
@@ -180,6 +184,9 @@
                 }
             },
             [
+                "variantcalled.csv:md5,ee3717beadf9688972858f9893f3ff9a"
+            ],
+            [
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
@@ -314,6 +321,9 @@
                 }
             },
             [
+                "variantcalled.csv:md5,ee3717beadf9688972858f9893f3ff9a"
+            ],
+            [
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
@@ -446,6 +456,10 @@
                     "xz": "5.8.3"
                 }
             },
+            [
+                "markduplicates.csv:md5,1917f082e54ea85413fc082fe488df09",
+                "recalibrated.csv:md5,63ef5f2353c8e5065c3f6c4c56377f03"
+            ],
             [
                 "csv",
                 "csv/markduplicates.csv",

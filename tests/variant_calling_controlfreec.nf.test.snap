@@ -46,6 +46,7 @@
                     "untar": "1.34"
                 }
             },
+            "No CSV files",
             [
                 "csv",
                 "multiqc",
@@ -222,6 +223,7 @@
                     "untar": "1.34"
                 }
             },
+            "No CSV files",
             [
                 "csv",
                 "multiqc",
@@ -376,6 +378,7 @@
                     "untar": "1.34"
                 }
             },
+            "No CSV files",
             [
                 "csv",
                 "multiqc",
@@ -540,6 +543,7 @@
                     "untar": "1.34"
                 }
             },
+            "No CSV files",
             [
                 "csv",
                 "multiqc",
@@ -716,6 +720,7 @@
                     "untar": "1.34"
                 }
             },
+            "No CSV files",
             [
                 "csv",
                 "multiqc",
@@ -870,6 +875,7 @@
                     "untar": "1.34"
                 }
             },
+            "No CSV files",
             [
                 "csv",
                 "multiqc",
@@ -998,6 +1004,7 @@
                     "untar": "1.34"
                 }
             },
+            "No CSV files",
             [
                 "csv",
                 "multiqc",
@@ -1184,6 +1191,7 @@
                     "untar": "1.34"
                 }
             },
+            "No CSV files",
             [
                 "csv",
                 "multiqc",

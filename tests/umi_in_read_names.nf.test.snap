@@ -55,6 +55,12 @@
                 }
             },
             [
+                "markduplicates.csv:md5,9f0f671e9391d5f02e4181b332c83426",
+                "markduplicates_no_table.csv:md5,918fc38d3c82e7cc4f7b93215a780bd2",
+                "recalibrated.csv:md5,63ef5f2353c8e5065c3f6c4c56377f03",
+                "variantcalled.csv:md5,ee3717beadf9688972858f9893f3ff9a"
+            ],
+            [
                 "csv",
                 "csv/markduplicates.csv",
                 "csv/markduplicates_no_table.csv",
@@ -355,6 +361,12 @@
                     "vcftools": "0.1.17"
                 }
             },
+            [
+                "markduplicates.csv:md5,9f0f671e9391d5f02e4181b332c83426",
+                "markduplicates_no_table.csv:md5,918fc38d3c82e7cc4f7b93215a780bd2",
+                "recalibrated.csv:md5,63ef5f2353c8e5065c3f6c4c56377f03",
+                "variantcalled.csv:md5,ee3717beadf9688972858f9893f3ff9a"
+            ],
             [
                 "csv",
                 "csv/markduplicates.csv",

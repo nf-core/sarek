@@ -35,6 +35,9 @@
                 }
             },
             [
+                "mapped.csv:md5,eb535851c89e60c9cf357fa65ea80a31"
+            ],
+            [
                 "csv",
                 "csv/mapped.csv",
                 "multiqc",
@@ -79,10 +82,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-01T19:39:52.752367",
+        "timestamp": "2026-11-23T15:21:25.982364822",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --aligner bwa-mem --save_reference --build_only_index -stub": {
@@ -107,6 +110,7 @@
                     "xz": "5.8.3"
                 }
             },
+            "No CSV files",
             [
                 "csv",
                 "multiqc",
@@ -130,11 +134,11 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2025-12-15T18:57:28.07820518",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T18:57:28.07820518"
+        }
     },
     "-profile test --aligner bwa-mem --save_reference --build_only_index": {
         "content": [
@@ -158,6 +162,7 @@
                     "xz": "5.8.3"
                 }
             },
+            "No CSV files",
             [
                 "csv",
                 "multiqc",
@@ -235,6 +240,9 @@
                 }
             },
             [
+                "mapped.csv:md5,eb535851c89e60c9cf357fa65ea80a31"
+            ],
+            [
                 "csv",
                 "csv/mapped.csv",
                 "multiqc",
@@ -264,10 +272,10 @@
                 "WARN: nf-core pipelines do not accept positional arguments. The positional argument `true` has been detected."
             ]
         ],
+        "timestamp": "2025-12-15T18:56:44.455023922",
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
-        },
-        "timestamp": "2025-12-15T18:56:44.455023922"
+        }
     }
 }

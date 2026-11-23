@@ -62,6 +62,9 @@
                 }
             },
             [
+                "variantcalled.csv:md5,772c4d89f70cef78604a77f4c59a78c4"
+            ],
+            [
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
@@ -259,6 +262,9 @@
                     "vcftools": "0.1.17"
                 }
             },
+            [
+                "variantcalled.csv:md5,6418f8527b4cb8878bc66dafb403be26"
+            ],
             [
                 "csv",
                 "csv/variantcalled.csv",
@@ -459,6 +465,9 @@
                 }
             },
             [
+                "variantcalled.csv:md5,570302c776c360fc791b7fa39c59adca"
+            ],
+            [
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
@@ -657,6 +666,9 @@
                     "vcftools": "0.1.17"
                 }
             },
+            [
+                "variantcalled.csv:md5,6418f8527b4cb8878bc66dafb403be26"
+            ],
             [
                 "csv",
                 "csv/variantcalled.csv",
@@ -877,6 +889,9 @@
                     "vcftools": "0.1.17"
                 }
             },
+            [
+                "variantcalled.csv:md5,317b44378506f97cb632c81778207a14"
+            ],
             [
                 "csv",
                 "csv/variantcalled.csv",

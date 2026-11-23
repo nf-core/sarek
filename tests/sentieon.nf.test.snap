@@ -1,7 +1,7 @@
 {
     "-profile test --aligner sentieon-bwamem --tools null -stub": {
         "content": [
-            23,
+            17,
             {
                 "BWAMEM1_INDEX": {
                     "bwa": "0.7.19-r1273"
@@ -10,7 +10,7 @@
                     "gawk": "5.3.0"
                 },
                 "FASTQC": {
-                    "fastqc": "0.12.1"
+                    "fastqc": "0.13.0"
                 },
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.7.0.0",
@@ -46,6 +46,11 @@
                     "xz": "5.8.3"
                 }
             },
+            [
+                "markduplicates.csv:md5,83be8150252f1e9aaa0dd684771ea963",
+                "markduplicates_no_table.csv:md5,3654ba37b7e13e0f12dbe020c4e58325",
+                "recalibrated.csv:md5,64440882834102ede463f540f8268e5e"
+            ],
             [
                 "csv",
                 "csv/markduplicates.csv",

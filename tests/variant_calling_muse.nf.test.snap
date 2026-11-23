@@ -51,6 +51,9 @@
                 }
             },
             [
+                "variantcalled.csv:md5,62809ab4c6f145d5fcac68baef6807fa"
+            ],
+            [
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
@@ -234,6 +237,9 @@
                     "vcftools": "0.1.17"
                 }
             },
+            [
+                "variantcalled.csv:md5,62809ab4c6f145d5fcac68baef6807fa"
+            ],
             [
                 "csv",
                 "csv/variantcalled.csv",
