@@ -232,6 +232,11 @@
                 }
             },
             [
+                "markduplicates.csv:md5,e889f05df7c26607a7b2c0353eb81c71",
+                "markduplicates_no_table.csv:md5,b57b110bd7a902304f0b9f47af9f0c7a",
+                "recalibrated.csv:md5,63ef5f2353c8e5065c3f6c4c56377f03"
+            ],
+            [
                 "csv",
                 "csv/markduplicates.csv",
                 "csv/markduplicates_no_table.csv",
@@ -621,6 +626,11 @@
                     "xz": "5.8.3"
                 }
             },
+            [
+                "markduplicates.csv:md5,e889f05df7c26607a7b2c0353eb81c71",
+                "markduplicates_no_table.csv:md5,b57b110bd7a902304f0b9f47af9f0c7a",
+                "recalibrated.csv:md5,63ef5f2353c8e5065c3f6c4c56377f03"
+            ],
             [
                 "csv",
                 "csv/markduplicates.csv",
