@@ -50,6 +50,11 @@
                 }
             },
             [
+                "markduplicates.csv:md5,454f9a0aba3ada4a85c7de4376913646",
+                "markduplicates_no_table.csv:md5,196437a2e6436da0885b4173ae0290c1",
+                "recalibrated.csv:md5,64440882834102ede463f540f8268e5e"
+            ],
+            [
                 "csv",
                 "csv/markduplicates.csv",
                 "csv/markduplicates_no_table.csv",
@@ -411,6 +416,11 @@
                     "xz": "5.8.3"
                 }
             },
+            [
+                "markduplicates.csv:md5,454f9a0aba3ada4a85c7de4376913646",
+                "markduplicates_no_table.csv:md5,196437a2e6436da0885b4173ae0290c1",
+                "recalibrated.csv:md5,64440882834102ede463f540f8268e5e"
+            ],
             [
                 "csv",
                 "csv/markduplicates.csv",
@@ -797,6 +807,11 @@
                     "xz": "5.8.3"
                 }
             },
+            [
+                "markduplicates.csv:md5,454f9a0aba3ada4a85c7de4376913646",
+                "markduplicates_no_table.csv:md5,196437a2e6436da0885b4173ae0290c1",
+                "recalibrated.csv:md5,64440882834102ede463f540f8268e5e"
+            ],
             [
                 "csv",
                 "csv/markduplicates.csv",

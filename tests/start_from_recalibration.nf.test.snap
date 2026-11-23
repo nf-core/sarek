@@ -30,6 +30,9 @@
                 }
             },
             [
+                "recalibrated.csv:md5,63ef5f2353c8e5065c3f6c4c56377f03"
+            ],
+            [
                 "csv",
                 "csv/recalibrated.csv",
                 "multiqc",
@@ -159,6 +162,9 @@
                     "vcftools": "0.1.17"
                 }
             },
+            [
+                "variantcalled.csv:md5,ee3717beadf9688972858f9893f3ff9a"
+            ],
             [
                 "csv",
                 "csv/variantcalled.csv",
@@ -294,6 +300,9 @@
                 }
             },
             [
+                "variantcalled.csv:md5,ee3717beadf9688972858f9893f3ff9a"
+            ],
+            [
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
@@ -423,6 +432,9 @@
                     "xz": "5.8.3"
                 }
             },
+            [
+                "recalibrated.csv:md5,63ef5f2353c8e5065c3f6c4c56377f03"
+            ],
             [
                 "csv",
                 "csv/recalibrated.csv",

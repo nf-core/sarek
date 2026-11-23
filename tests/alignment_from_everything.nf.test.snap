@@ -83,6 +83,12 @@
                 }
             },
             [
+                "mapped.csv:md5,8222ebb4c62389a7fc041db45024c055",
+                "markduplicates.csv:md5,75954461cecffdae0113d6633825668f",
+                "markduplicates_no_table.csv:md5,04a308a6f30f89bdfd6b5aad7412f63d",
+                "recalibrated.csv:md5,fbcd8ae712d210d3cb3162c272aa8eff"
+            ],
+            [
                 "csv",
                 "csv/mapped.csv",
                 "csv/markduplicates.csv",

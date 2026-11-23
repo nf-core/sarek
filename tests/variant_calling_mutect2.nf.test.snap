@@ -50,6 +50,9 @@
                 }
             },
             [
+                "variantcalled.csv:md5,a04fb9a947b9e19b7819dd4bf44e941e"
+            ],
+            [
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
@@ -303,6 +306,9 @@
                     "vcftools": "0.1.17"
                 }
             },
+            [
+                "variantcalled.csv:md5,c329b1b655695d8bb173a55878f5b399"
+            ],
             [
                 "csv",
                 "csv/variantcalled.csv",
@@ -591,6 +597,9 @@
                 }
             },
             [
+                "variantcalled.csv:md5,a04fb9a947b9e19b7819dd4bf44e941e"
+            ],
+            [
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
@@ -839,6 +848,9 @@
                 }
             },
             [
+                "variantcalled.csv:md5,fb201add081c8daa33e45d48cc8d7819"
+            ],
+            [
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
@@ -1048,6 +1060,9 @@
                     "vcftools": "0.1.17"
                 }
             },
+            [
+                "variantcalled.csv:md5,fb201add081c8daa33e45d48cc8d7819"
+            ],
             [
                 "csv",
                 "csv/variantcalled.csv",
@@ -1265,6 +1280,9 @@
                     "vcftools": "0.1.17"
                 }
             },
+            [
+                "variantcalled.csv:md5,fb201add081c8daa33e45d48cc8d7819"
+            ],
             [
                 "csv",
                 "csv/variantcalled.csv",
@@ -1505,6 +1523,9 @@
                 }
             },
             [
+                "variantcalled.csv:md5,a04fb9a947b9e19b7819dd4bf44e941e"
+            ],
+            [
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",
@@ -1735,6 +1756,9 @@
                     "vcftools": "0.1.17"
                 }
             },
+            [
+                "variantcalled.csv:md5,a04fb9a947b9e19b7819dd4bf44e941e"
+            ],
             [
                 "csv",
                 "csv/variantcalled.csv",

@@ -14,6 +14,7 @@
                     "xz": "5.8.3"
                 }
             },
+            "No CSV files",
             [
                 "csv",
                 "multiqc",
@@ -78,6 +79,7 @@
                     "xz": "5.8.3"
                 }
             },
+            "No CSV files",
             [
                 "csv",
                 "multiqc",
@@ -197,6 +199,7 @@
                     "xz": "5.8.3"
                 }
             },
+            "No CSV files",
             [
                 "csv",
                 "multiqc",
@@ -334,6 +337,7 @@
                     "xz": "5.8.3"
                 }
             },
+            "No CSV files",
             [
                 "csv",
                 "multiqc",

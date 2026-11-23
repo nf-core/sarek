@@ -65,6 +65,12 @@
                 }
             },
             [
+                "markduplicates.csv:md5,049dad8987834fcaf2a4a32aaf3523a4",
+                "markduplicates_no_table.csv:md5,bdc951dbefeb456687181637d5b6b4aa",
+                "recalibrated.csv:md5,c75538b7f89fa7fec9ea8907ff457d80",
+                "variantcalled.csv:md5,9ef634693cc34d581868f48cfe6af3d0"
+            ],
+            [
                 "csv",
                 "csv/markduplicates.csv",
                 "csv/markduplicates_no_table.csv",

@@ -81,6 +81,12 @@
                 }
             },
             [
+                "markduplicates.csv:md5,d355001a326d941cb04f3ad6ae16a32b",
+                "markduplicates_no_table.csv:md5,f626e7d1121201a4e4ffa67face8638c",
+                "recalibrated.csv:md5,7c56beb5e23e657c2e0ec789150d2e70",
+                "variantcalled.csv:md5,ee3717beadf9688972858f9893f3ff9a"
+            ],
+            [
                 "csv",
                 "csv/markduplicates.csv",
                 "csv/markduplicates_no_table.csv",
@@ -372,10 +378,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-11-03T08:05:13.956502426",
+        "timestamp": "2026-11-23T15:23:43.165164735",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --save_output_as_bam skip QC/recal/md": {
@@ -410,6 +416,9 @@
                     "xz": "5.8.3"
                 }
             },
+            [
+                "mapped.csv:md5,8181226883453f58e564d981a2716298"
+            ],
             [
                 "csv",
                 "csv/mapped.csv",

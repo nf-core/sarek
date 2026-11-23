@@ -35,6 +35,9 @@
                 }
             },
             [
+                "mapped.csv:md5,eb535851c89e60c9cf357fa65ea80a31"
+            ],
+            [
                 "csv",
                 "csv/mapped.csv",
                 "multiqc",

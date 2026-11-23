@@ -45,6 +45,8 @@ class UTILS {
         def varlociraptor_vcf = getAllFilesFromPath(outdir, include: ['**/*.varlociraptor.{vcf}{,.gz}'])
         // freec_configs: Control-FREEC config files
         def freec_configs = getAllFilesFromPath(outdir, include: ['**/controlfreec/*/config.txt'])
+        // csv_files: csv/*.csv, used to restart at a later --step
+        def csv_files = getAllFilesFromPath(outdir, include: ['csv/*.csv'])
 
         def assertion = []
         // getAllFilesFromPath returns relative paths (strings), so this resolves to an absolute path
@@ -53,6 +55,8 @@ class UTILS {
         if (!scenario.failure) {
             assertion.add(workflow.trace.succeeded().size())
             assertion.add(removeFromYamlMap("${outdir}/pipeline_info/nf_core_sarek_software_mqc_versions.yml", "Workflow")?: 'No versions')
+            // csv/*.csv are in .nftignore (absolute paths), so the md5 is computed with outdir stripped
+            assertion.add(csv_files.isEmpty() ? 'No CSV files' : csv_files.collect { file -> file.tokenize('/').last() + ":md5," + path(absolutePath(file)).text.replace("${outdir}/", '').md5() })
         }
 
         // At least always pipeline_info/ is created and stable
@@ -195,13 +199,14 @@ class UTILS {
                             workflow: workflow
                         )
                     ).match() },
-                    // variantcalled.csv is the input to restart at --step annotate
+                    // csv/*.csv are the inputs to restart at a later --step, so every file they list must exist
                     { if (!scenario.stub && !scenario.failure) {
-                        def variantcalled_csv = new File("${params.outdir}/csv/variantcalled.csv")
-                        if (variantcalled_csv.exists()) {
-                            def missing_vcfs = variantcalled_csv.readLines().drop(1).findAll { it }.collect { it.tokenize(',').last() }.findAll { !new File(it).exists() }
-                            assert missing_vcfs.isEmpty() : "VCFs listed in csv/variantcalled.csv do not exist: ${missing_vcfs}"
-                        }
+                        def missing_files = (new File("${params.outdir}/csv").listFiles() ?: [])
+                            .findAll { it.name.endsWith('.csv') }
+                            .collectMany { csv -> csv.toPath().csv.rows.collectMany { it.values() }
+                                .findAll { it instanceof String && it.startsWith(params.outdir.toString()) && !new File(it).exists() }
+                                .collect { "${csv.name}: ${it}" } }
+                        assert missing_files.isEmpty() : "Files listed in csv/ do not exist: ${missing_files}"
                     } }
                 )
             }

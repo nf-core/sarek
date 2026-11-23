@@ -46,6 +46,12 @@
                 }
             },
             [
+                "mapped.csv:md5,072aed31b716f03b4f2d9be60c594a44",
+                "markduplicates.csv:md5,049dad8987834fcaf2a4a32aaf3523a4",
+                "markduplicates_no_table.csv:md5,bdc951dbefeb456687181637d5b6b4aa",
+                "recalibrated.csv:md5,c75538b7f89fa7fec9ea8907ff457d80"
+            ],
+            [
                 "csv",
                 "csv/mapped.csv",
                 "csv/markduplicates.csv",
@@ -184,6 +190,9 @@
                     "xz": "5.8.3"
                 }
             },
+            [
+                "mapped.csv:md5,eb535851c89e60c9cf357fa65ea80a31"
+            ],
             [
                 "csv",
                 "csv/mapped.csv",

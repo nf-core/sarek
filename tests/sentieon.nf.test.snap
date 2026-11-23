@@ -47,6 +47,11 @@
                 }
             },
             [
+                "markduplicates.csv:md5,83be8150252f1e9aaa0dd684771ea963",
+                "markduplicates_no_table.csv:md5,3654ba37b7e13e0f12dbe020c4e58325",
+                "recalibrated.csv:md5,64440882834102ede463f540f8268e5e"
+            ],
+            [
                 "csv",
                 "csv/markduplicates.csv",
                 "csv/markduplicates_no_table.csv",

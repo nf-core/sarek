@@ -21,6 +21,7 @@
                     "tabix": "1.21"
                 }
             },
+            "No CSV files",
             [
                 "annotation",
                 "annotation/test",
@@ -142,6 +143,7 @@
                     "tabix": "1.21"
                 }
             },
+            "No CSV files",
             [
                 "annotation",
                 "annotation/test",
@@ -259,6 +261,7 @@
                     "tabix": "1.21"
                 }
             },
+            "No CSV files",
             [
                 "annotation",
                 "annotation/test",
@@ -364,6 +367,7 @@
                     "tabix": "1.21"
                 }
             },
+            "No CSV files",
             [
                 "annotation",
                 "annotation/test",

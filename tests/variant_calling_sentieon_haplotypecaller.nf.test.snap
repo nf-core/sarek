@@ -878,6 +878,9 @@
                 }
             },
             [
+                "variantcalled.csv:md5,317b44378506f97cb632c81778207a14"
+            ],
+            [
                 "csv",
                 "csv/variantcalled.csv",
                 "multiqc",

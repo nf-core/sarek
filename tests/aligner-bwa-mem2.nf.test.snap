@@ -21,6 +21,7 @@
                     "xz": "5.8.3"
                 }
             },
+            "No CSV files",
             [
                 "csv",
                 "multiqc",
@@ -98,6 +99,9 @@
                 }
             },
             [
+                "mapped.csv:md5,eb535851c89e60c9cf357fa65ea80a31"
+            ],
+            [
                 "csv",
                 "csv/mapped.csv",
                 "multiqc",
@@ -142,10 +146,10 @@
                 "WARN: FASTQ file(/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz): Cannot extract flowcell ID from @normal#21#998579#1/1"
             ]
         ],
-        "timestamp": "2026-10-01T19:39:51.387128",
+        "timestamp": "2026-11-23T15:22:03.993390964",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.10.0"
         }
     },
     "-profile test --aligner bwa-mem2 --save_reference --build_only_index - stub": {
@@ -170,6 +174,7 @@
                     "xz": "5.8.3"
                 }
             },
+            "No CSV files",
             [
                 "csv",
                 "multiqc",
@@ -234,6 +239,9 @@
                     "xz": "5.8.3"
                 }
             },
+            [
+                "mapped.csv:md5,eb535851c89e60c9cf357fa65ea80a31"
+            ],
             [
                 "csv",
                 "csv/mapped.csv",
