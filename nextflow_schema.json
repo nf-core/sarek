@@ -198,6 +198,17 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-vial",
                     "description": "If set, publishes split FASTQ files. Intended for testing purposes."
+                },
+                "bqsr_tool": {
+                    "type": "string",
+                    "default": "gatk",
+                    "description": "Specify BQSR tool to use for base quality score recalibration.",
+                    "enum": [
+                        "gatk",
+                        "gatk_spark",
+                        "xbqsr"
+                    ],
+                    "fa_icon": "fas fa-tools"
                 }
             }
         },

@@ -1,0 +1,32 @@
+nextflow_pipeline {
+
+    name "Test X-BQSR"
+    script "../main.nf"
+
+    def test_scenario = [
+        [
+            name: "-profile test --bqsr_tool xbqsr --gpu_vendor cuda -stub",
+            params: [
+                bqsr_tool: "xbqsr",
+                gpu_vendor: "cuda",
+                tools: ''
+            ],
+            stub: true
+        ],
+        [
+            name: "-profile test --bqsr_tool xbqsr --gpu_vendor rocm -stub",
+            params: [
+                bqsr_tool: "xbqsr",
+                gpu_vendor: "rocm",
+                tools: ''
+            ],
+            stub: true
+        ]
+    ]
+
+    // Generate tests for each scenario
+    test_scenario.each { scenario ->
+        test(scenario.name, UTILS.getTest(scenario))
+    }
+}
+
