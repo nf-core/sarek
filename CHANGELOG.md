@@ -20,11 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- [#2428](https://github.com/nf-core/sarek/pull/2428) - Use the parameter names and values from `nextflow_schema.json` in the docs: `--step annotate` (not `annotation`), `--umi_location` and `--umi_length` (not `--umi_loc` and `--umi_len`) and `--save_split_fastqs` (not `--save_split`); UMI consensus BAMs are always published
 - [#2353](https://github.com/nf-core/sarek/pull/2353) - Update `gatk4/haplotypecaller` so dbSNP is no longer copied back from scratch into every HaplotypeCaller work directory ([#1127](https://github.com/nf-core/sarek/issues/1127))
 - [#2416](https://github.com/nf-core/sarek/pull/2416) - Without `--dbsnp`, `--known_indels` or `--known_snps`, single-sample VCFs from GATK HaplotypeCaller, Parabricks HaplotypeCaller and Sentieon Haplotyper are passed on unfiltered instead of being dropped from annotation and QC
 - [#2417](https://github.com/nf-core/sarek/pull/2417) - `--tools sentieon_dnascope,sentieon_haplotyper --joint_germline` no longer fails at start-up, and the two joint VCFs are published to their own caller's folder instead of overwriting each other in `sentieon_dnascope`
 - [#2412](https://github.com/nf-core/sarek/pull/2412) - `--tools` and `--skip_tools` are now case-insensitive (e.g. `--tools DeepVariant,Strelka`), based on [#1188](https://github.com/nf-core/sarek/pull/1188) by [@adamrtalbot](https://github.com/adamrtalbot)
+- [#2428](https://github.com/nf-core/sarek/pull/2428) - Use the parameter names and values from `nextflow_schema.json` in the docs: `--step annotate` (not `annotation`), `--umi_location` and `--umi_length` (not `--umi_loc` and `--umi_len`) and `--save_split_fastqs` (not `--save_split`); UMI consensus BAMs are always published
 
 ### Removed
 
