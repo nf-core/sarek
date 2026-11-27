@@ -403,7 +403,7 @@ patient,sample,vcf
 patient1,test_sample,test.vcf.gz
 ```
 
-The Sarek-generated CSV file is stored under `results/csv/variantcalled.csv` and will automatically be used as an input when specifying the parameter `--step annotation`.
+The Sarek-generated CSV file is stored under `results/csv/variantcalled.csv` and will automatically be used as an input when specifying the parameter `--step annotate`.
 
 #### Full samplesheet
 
@@ -683,7 +683,7 @@ For more extensive testing purpose, we have the `test_cache` profile that contai
 Annotation is generally tested separately from the remaining workflow, since we use references for `C.elegans`, while the remaining tests are run on downsampled human data.
 
 ```bash
-nextflow run nf-core/sarek -profile test_cache,<container/institute> --outdir results --tools snpeff --step annotation
+nextflow run nf-core/sarek -profile test_cache,<container/institute> --outdir results --tools snpeff --step annotate
 ```
 
 If you are interested in any of the other tests that are run on every code change or would like to run them yourself, you can take a look at `tests/<filename>.yml`.
@@ -1078,19 +1078,19 @@ Depending on the precise library preparation method the UMIs may exist in severa
 
 As an example: if your reads contain a UMI only on the forward read, the string can only represent one structure (i.e. "2M11S+T"); should your reads contain a UMI on both reads, the string will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T"); should your reads contain a UMI only on the reverse read, your structure must represent the template only for the forward read and template plus UMI for the reverse read (i.e. +T 12M11S+T). Please refer to [fgbio documentation](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures) for more details, as providing the correct structure is essential and specific to the UMI kit used. This structure can be passed to `--umi_read_structure`, and will enable the fgbio consensus read generation as detailed below.
 
-Alternatively, the tool `fastp` may be used to extract UMIs from the template read by setting the parameters `--umi_loc` and `--umi_len` (and optionally `--umi_base_skip`) as [detailed in its documentation](https://github.com/OpenGene/fastp?tab=readme-ov-file#unique-molecular-identifier-umi-processing).
+Alternatively, the tool `fastp` may be used to extract UMIs from the template read by setting the parameters `--umi_location` and `--umi_length` (and optionally `--umi_base_skip`) as [detailed in its documentation](https://github.com/OpenGene/fastp?tab=readme-ov-file#unique-molecular-identifier-umi-processing).
 
 We therefore have two parallel workflows:
 
 ### UMI-aware Deduplication
 
-GATK MarkDuplicates will _automatically_ use UMI aware deduplication provided the UMIs are present on the `RX` tag inside the bam/cram file; this is the case when either `--umi_in_read_header` or `--umi_loc` is specified. The appropriate flag for Sentieon dedup will be set provided one of these two parameters is set. Please note that GATK MarkDuplicates Spark [does not support UMIs](https://gatk.broadinstitute.org/hc/en-us/articles/360037224932-MarkDuplicatesSpark).
+GATK MarkDuplicates will _automatically_ use UMI aware deduplication provided the UMIs are present on the `RX` tag inside the bam/cram file; this is the case when either `--umi_in_read_header` or `--umi_location` is specified. The appropriate flag for Sentieon dedup will be set provided one of these two parameters is set. Please note that GATK MarkDuplicates Spark [does not support UMIs](https://gatk.broadinstitute.org/hc/en-us/articles/360037224932-MarkDuplicatesSpark).
 
 ### Consensus read generation
 
 Sarek will generate consensus reads using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools if `--umi_read_structure` is specified. For post-UMI processing depending on the experimental setup, duplicate marking and base quality recalibration can be skipped with [`--skip_tools`].
 
-Separately, the commercial Sentieon tool can perform consensus building within the `sentieon_dedup` step; this can be enabled by setting `--sentieon_consensus true`. This may be done with or without UMIs (specified via `--umi_loc` and `--umi_len` or via `--umi_in_read_header`).
+Separately, the commercial Sentieon tool can perform consensus building within the `sentieon_dedup` step; this can be enabled by setting `--sentieon_consensus true`. This may be done with or without UMIs (specified via `--umi_location` and `--umi_length` or via `--umi_in_read_header`).
 
 ### Limitations and future updates
 

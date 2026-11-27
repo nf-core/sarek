@@ -150,7 +150,7 @@ The resulting files are intermediate and by default not kept in the final files 
 
 [FastP](https://github.com/OpenGene/fastp) supports splitting of one FastQ file into multiple files allowing parallel alignment of sharded FastQ file. To enable splitting, the number of reads per output can be specified. For more information, take a look into the parameter `--split_fastq`in the parameter docs.
 
-These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_split` to enable publishing of these files to:
+These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_split_fastqs` to enable publishing of these files to:
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
@@ -166,7 +166,7 @@ These files are intermediate and by default not placed in the output-folder kept
 
 Sarek can create consensus reads when Unique Molecular Identifiers (UMIs) exist, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools. Please note that if your UMIs are part of additional index fastq files then you can use [nf-core/fastquorum](https://nf-co.re/fastquorum) to process them.
 
-These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_split` to enable publishing of these files to:
+These files are published to:
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
